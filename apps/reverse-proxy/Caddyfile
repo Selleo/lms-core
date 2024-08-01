@@ -1,0 +1,15 @@
+api.guidebook.localhost {
+	reverse_proxy localhost:3000
+}
+
+app.guidebook.localhost {
+	reverse_proxy localhost:5173
+}
+
+mailbox.guidebook.localhost {
+	reverse_proxy localhost:8025
+}
+
+storage.articulate.localhost {
+	reverse_proxy localhost:8069
+}

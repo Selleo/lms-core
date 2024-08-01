@@ -1,0 +1,23 @@
+{
+  "name": "common_nestjs_remix",
+  "private": true,
+  "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "generate:client": "pnpm run --filter=web generate:client",
+    "db:generate": "pnpm run --filter=api db:generate",
+    "db:migrate": "pnpm run --filter=api db:migrate"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "prettier": "^3.2.5",
+    "turbo": "^2.0.6"
+  },
+  "packageManager": "pnpm@9.4.0",
+  "engines": {
+    "node": ">=20"
+  }
+}

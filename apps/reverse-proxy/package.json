@@ -1,0 +1,6 @@
+{
+  "name": "guidebook_development_reverse_proxy",
+  "scripts": {
+    "dev": "caddy run"
+  }
+}

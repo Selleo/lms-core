@@ -1,0 +1,15 @@
+services:
+  project-db:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: guidebook 
+      POSTGRES_DB: guidebook 
+    volumes:
+      - guidebook-db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  guidebook-db-data:
+    driver: local
