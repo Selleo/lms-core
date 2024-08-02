@@ -18,6 +18,15 @@ export const routes: (
         index: true,
       });
       route(
+        "lessonitems",
+        "modules/Dashboard/LessonItems/LessonItems.layout.tsx",
+        () => {
+          route("", "modules/Dashboard/LessonItems/LessonItems.page.tsx", {
+            index: true,
+          });
+        }
+      );
+      route(
         "settings",
         "modules/Dashboard/Settings/Settings.layout.tsx",
         () => {
