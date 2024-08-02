@@ -31,7 +31,6 @@ export default function RegisterPage() {
   } = useForm<RegisterBody>({ resolver: zodResolver(registerSchema) });
 
   const onSubmit = async (data: RegisterBody) => {
-    console.log(data);
     registerUser({ data });
   };
 
