@@ -17,10 +17,12 @@ export const routes: (
       route("/pokemons", "modules/Landing/Pokemons.page.tsx");
       route("/pokemons/:id", "modules/Landing/Pokemon.page.tsx");
     });
+
     route("dashboard", "modules/Dashboard/Dashboard.layout.tsx", () => {
       route("", "modules/Dashboard/Dashboard.page.tsx", {
         index: true,
       });
+
       route(
         "lessonitems",
         "modules/Dashboard/LessonItems/LessonItems.layout.tsx",
@@ -28,6 +30,26 @@ export const routes: (
           route("", "modules/Dashboard/LessonItems/LessonItems.page.tsx", {
             index: true,
           });
+        }
+      );
+      route(
+        "lessonitems/edit",
+        "modules/Dashboard/LessonItems/Edit/EditLessonItems.layout.tsx",
+        () => {
+          route(
+            "",
+            "modules/Dashboard/LessonItems/Edit/EditLessonItems.page.tsx",
+            {
+              index: true,
+            }
+          );
+          route(
+            ":id",
+            "modules/Dashboard/LessonItems/Edit/[id]/LessonItemsEdit.page.tsx",
+            {
+              index: true,
+            }
+          );
         }
       );
       route(
@@ -40,6 +62,7 @@ export const routes: (
         }
       );
     });
+
     route("auth", "modules/Auth/Auth.layout.tsx", () => {
       route("login", "modules/Auth/Login.page.tsx");
       route("register", "modules/Auth/Register.page.tsx");

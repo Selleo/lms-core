@@ -26,7 +26,12 @@ export const TableOptionButtons = ({
         btnStyle={btnStyle}
       />{" "}
       /&nbsp;
-      <TableButtonEdit btnStyle={btnStyle} /> /&nbsp;
+      <TableButtonEdit
+        description={description}
+        id={id}
+        btnStyle={btnStyle}
+      />{" "}
+      /&nbsp;
       <TableButtonDelete
         id={id}
         setDataFetch={setDataFetch}

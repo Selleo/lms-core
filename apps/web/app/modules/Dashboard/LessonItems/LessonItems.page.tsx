@@ -1,5 +1,5 @@
 import React from "react";
 
-export default function ListItemPage() {
+export default function ListItemsPage() {
   return <></>;
 }

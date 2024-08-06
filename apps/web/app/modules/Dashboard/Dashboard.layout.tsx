@@ -13,6 +13,7 @@ import {
 import { useAuthEffect } from "../Auth/authEffect";
 import { authGuard } from "../Auth/authGuard";
 import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
+import { LessonItemsProvider } from "./LessonItemsContext";
 
 export function clientLoader() {
   return authGuard();
@@ -59,7 +60,9 @@ export default function DashboardLayout() {
           </DropdownMenu>
         </div>
       </header>
-      <Outlet />
+      <LessonItemsProvider>
+        <Outlet />
+      </LessonItemsProvider>
     </div>
   );
 }
