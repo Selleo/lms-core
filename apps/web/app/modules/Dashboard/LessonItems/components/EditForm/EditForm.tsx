@@ -106,7 +106,7 @@ export const EditForm = ({ editId }: { editId: string }) => {
           videoFile={videoFile}
           handleFileChange={handleFileChange}
         />
-        <div className="flex space-x-4">
+        <div className="flex space-x-4 my-10">
           <Button type="submit">Submit</Button>
           <Button type="button" variant="outline" onClick={onCancel}>
             Cancel

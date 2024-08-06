@@ -20,6 +20,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu.js";
+import { Button } from "~/components/ui/button.js";
 
 interface UploadMethod {
   text: string;
@@ -88,7 +89,7 @@ export const EditFormFileInput = ({
         <FormItem>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-start pb-15 py-10 gap-20">
               {getPrerview()}
               {uploadMethod.method === "sendFile" && (
                 <>
@@ -121,7 +122,10 @@ export const EditFormFileInput = ({
                 />
               )}
               <DropdownMenu>
-                <DropdownMenuTrigger>{uploadMethod.text}</DropdownMenuTrigger>
+                <DropdownMenuTrigger>
+                  <Button>{uploadMethod.text}</Button>
+                </DropdownMenuTrigger>
+
                 <DropdownMenuContent className="cursor-pointer">
                   <UploadFromYouTube setUploadMethod={setUploadMethod} />
                   <UploadFile
