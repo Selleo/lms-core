@@ -39,6 +39,13 @@ export const EditForm = ({ editId }: { editId: string }) => {
     },
   });
 
+  const handleFileChange = (files: FileList | null) => {
+    if (files && files.length > 0) {
+      console.log("jestem w handleFileChange", files[0]);
+      setVideoFile(files[0]);
+    }
+  };
+
   useEffect(() => {
     if (videoFile) {
       return () => URL.revokeObjectURL(URL.createObjectURL(videoFile));
@@ -62,12 +69,6 @@ export const EditForm = ({ editId }: { editId: string }) => {
         return item;
       });
     });
-  };
-
-  const handleFileChange = (files: FileList | null) => {
-    if (files && files.length > 0) {
-      setVideoFile(files[0]);
-    }
   };
 
   const onCancel = () => {

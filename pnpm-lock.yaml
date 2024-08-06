@@ -242,6 +242,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^8.19.3
         version: 8.19.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@vidstack/react':
+        specifier: ^1.12.1
+        version: 1.12.1(@types/react@18.2.61)(react@18.3.1)
       axios:
         specifier: ^1.7.2
         version: 1.7.2
@@ -2357,6 +2360,13 @@ packages:
 
   '@vanilla-extract/private@1.0.5':
     resolution: {integrity: sha512-6YXeOEKYTA3UV+RC8DeAjFk+/okoNz/h88R+McnzA2zpaVqTR/Ep+vszkWYlGBcMNO7vEkqbq5nT/JMMvhi+tw==}
+
+  '@vidstack/react@1.12.1':
+    resolution: {integrity: sha512-g05yXJ1nt2pTZHLYvUnSEPu9eBfN62lUtGZvzpQtfZGKnyIGrKL4WJd85gLezVV4PMPU93tUFXU/dXwkK3epJg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@types/react': ^18.0.0
+      react: ^18.0.0
 
   '@web3-storage/multipart-parser@1.0.0':
     resolution: {integrity: sha512-BEO6al7BYqcnfX15W2cnGR+Q566ACXAT9UQykORCWW80lmkpWsnEob6zJS1ZVBKsSJC8+7vJkHwlp+lXG1UCdw==}
@@ -4824,6 +4834,10 @@ packages:
 
   mdast-util-to-string@3.2.0:
     resolution: {integrity: sha512-V4Zn/ncyN1QNSqSBxTrMOLpjr+IKdHl2v3KVLoWmDPscP4r9GcCi71gjgvUV1SFSKh92AjAG4peFuBl2/YgCJg==}
+
+  media-captions@1.0.4:
+    resolution: {integrity: sha512-cyDNmuZvvO4H27rcBq2Eudxo9IZRDCOX/I7VEyqbxsEiD2Ei7UYUhG/Sc5fvMZjmathgz3fEK7iAKqvpY+Ux1w==}
+    engines: {node: '>=16'}
 
   media-query-parser@2.0.2:
     resolution: {integrity: sha512-1N4qp+jE0pL5Xv4uEcwVUhIkwdUO3S/9gML90nqKA7v7FcOS5vUtatfzok9S9U1EJU8dHWlcv95WLnKmmxZI9w==}
@@ -9069,6 +9083,13 @@ snapshots:
 
   '@vanilla-extract/private@1.0.5': {}
 
+  '@vidstack/react@1.12.1(@types/react@18.2.61)(react@18.3.1)':
+    dependencies:
+      '@floating-ui/dom': 1.6.7
+      '@types/react': 18.2.61
+      media-captions: 1.0.4
+      react: 18.3.1
+
   '@web3-storage/multipart-parser@1.0.0': {}
 
   '@webassemblyjs/ast@1.12.1':
@@ -12122,6 +12143,8 @@ snapshots:
   mdast-util-to-string@3.2.0:
     dependencies:
       '@types/mdast': 3.0.15
+
+  media-captions@1.0.4: {}
 
   media-query-parser@2.0.2:
     dependencies:

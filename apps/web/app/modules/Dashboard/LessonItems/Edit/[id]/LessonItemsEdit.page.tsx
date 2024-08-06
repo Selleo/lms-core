@@ -10,7 +10,6 @@ export default function LessonItemsEditPage() {
   }
   return (
     <div>
-      <h1>Edit Lesson Item</h1>
       <EditForm editId={id} />
     </div>
   );
