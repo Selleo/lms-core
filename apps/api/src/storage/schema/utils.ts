@@ -25,3 +25,9 @@ export const timestamps = {
     .notNull()
     .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
 };
+
+export const archivedAt = timestamp("archived_at", {
+  mode: "string",
+  withTimezone: true,
+  precision: 3,
+});
