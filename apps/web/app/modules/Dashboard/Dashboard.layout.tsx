@@ -14,6 +14,7 @@ import { useAuthEffect } from "../Auth/authEffect";
 import { authGuard } from "../Auth/authGuard";
 import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
 import { DashboardNavigation } from "./DashboardNavigation/DashboardNavigation";
+import { LessonItemsProvider } from "./LessonItemsContext";
 
 export const clientLoader = () => authGuard();
 
@@ -62,7 +63,9 @@ export default function DashboardLayout() {
       <div className="flex flex-1 overflow-hidden">
         <DashboardNavigation />
         <main className="flex-1 overflow-y-auto p-6">
-          <Outlet />
+          <LessonItemsProvider>
+            <Outlet />
+          </LessonItemsProvider>
         </main>
       </div>
     </div>

@@ -17,6 +17,7 @@ export const routes: (
       route("", "modules/Dashboard/Dashboard.page.tsx", {
         index: true,
       });
+
       route(
         "lessonitems",
         "modules/Dashboard/LessonItems/LessonItems.layout.tsx",
@@ -24,6 +25,26 @@ export const routes: (
           route("", "modules/Dashboard/LessonItems/LessonItems.page.tsx", {
             index: true,
           });
+        }
+      );
+      route(
+        "lessonitems/edit",
+        "modules/Dashboard/LessonItems/Edit/EditLessonItems.layout.tsx",
+        () => {
+          route(
+            "",
+            "modules/Dashboard/LessonItems/Edit/EditLessonItems.page.tsx",
+            {
+              index: true,
+            }
+          );
+          route(
+            ":id",
+            "modules/Dashboard/LessonItems/Edit/[id]/LessonItemsEdit.page.tsx",
+            {
+              index: true,
+            }
+          );
         }
       );
       route(
