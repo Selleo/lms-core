@@ -29,6 +29,13 @@
       "when": 1721046794234,
       "tag": "0003_credentials_delete_cascade",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1722945792399,
+      "tag": "0004_create_categories",
+      "breakpoints": true
     }
   ]
 }
