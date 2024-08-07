@@ -34,6 +34,18 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
   });
 
+  const pageCount = table.getPageCount();
+  const pageIndex = table.getState().pagination.pageIndex;
+
+  // Calculate the range of pages to be displayed
+  const pageRange = (pageIndex) => {
+    const start = Math.max(pageIndex - 1, 0);
+    const end = Math.min(start + 2, pageCount - 1);
+    return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  };
+
+  const pagesToShow = pageRange(pageIndex);
+
   return (
     <div>
       <div className="rounded-md border">
@@ -97,6 +109,16 @@ export function DataTable<TData, TValue>({
           >
             Previous
           </Button>
+          {pagesToShow.map((page) => (
+            <Button
+              key={page}
+              variant={page === pageIndex ? "ghost" : "outline"}
+              size="sm"
+              onClick={() => table.setPageIndex(page)}
+            >
+              {page + 1}
+            </Button>
+          ))}
           <Button
             variant="outline"
             size="sm"
