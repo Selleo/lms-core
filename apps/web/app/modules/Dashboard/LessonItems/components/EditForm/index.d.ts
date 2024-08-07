@@ -2,7 +2,7 @@ import { ControllerRenderProps } from "react-hook-form";
 
 interface UploadMethod {
   text: string;
-  method: "sendFile" | "youtube" | "vimeo" | "";
+  method: "sendFile" | "internet" | "";
 }
 
 interface UploadFileProps {

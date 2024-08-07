@@ -1,6 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import { MediaPlayer } from "@vidstack/react";
-
+import { useEffect, useState } from "react";
 import { Input } from "~/components/ui/input";
 import {
   FormControl,
@@ -13,18 +11,22 @@ import { Control } from "react-hook-form";
 import { z } from "zod";
 import { editLessonItemFormSchema } from "./zodFormType.js";
 import { UploadFile, UploadFileDialog } from "./uploadVideo/UploadFile";
-import { UploadFromVimeo } from "./uploadVideo/UploadFromVimeo";
-import { UploadFromYouTube } from "./uploadVideo/UploadFromYouTube";
+import {
+  UploadFromInternetDialog,
+  UploadFromInternet,
+} from "./uploadVideo/UploadFromInternet.js";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu.js";
 import { Button } from "~/components/ui/button.js";
+import ReactPlayer from "react-player";
+import { isObject } from "lodash-es";
 
 interface UploadMethod {
   text: string;
-  method: "sendFile" | "youtube" | "vimeo" | "";
+  method: "sendFile" | "internet" | "";
 }
 
 interface EditFormFileInputInterface {
@@ -47,40 +49,48 @@ export const EditFormFileInput = ({
     method: "",
   });
 
-  const getPrerview = () => {
+  const getPreview = () => {
     if (!videoFile) {
-      return <p>No video selected</p>;
+      return <p className="text-red-600">Video is required</p>;
     }
-    const objectUrl = URL.createObjectURL(videoFile);
 
-    return (
-      <div className="w-full" key={videoFile.name}>
-        <video controls className="w-1/6">
-          <source
-            src={objectUrl}
-            type={
-              videoFile.type === "video/quicktime"
-                ? "video/mp4"
-                : videoFile.type
-            }
-          />
-          <track
-            src="./vtt/captions_en.vtt"
-            kind="captions"
-            srcLang="en"
-            label="English captions"
-          />
-        </video>
-        <p className="mt-2">{videoFile.name}</p>
-      </div>
-    );
+    if (typeof videoFile === "string") {
+      return (
+        <div className="w-full" key={videoFile}>
+          <ReactPlayer url={videoFile} controls className="w-1/6" />
+          <p className="mt-2">{videoFile}</p>
+        </div>
+      );
+    }
+
+    if (isObject(videoFile)) {
+      const videoURL = URL.createObjectURL(videoFile);
+
+      return (
+        <div className="w-full" key={videoFile.name}>
+          <video controls className="w-1/6">
+            <source
+              src={videoURL}
+              type={
+                videoFile.type === "video/quicktime"
+                  ? "video/mp4"
+                  : videoFile.type
+              }
+            />
+            <track
+              src="./vtt/captions_en.vtt"
+              kind="captions"
+              srcLang="en"
+              label="English captions"
+            />
+          </video>
+          <p className="mt-2">{videoFile.name}</p>
+        </div>
+      );
+    }
+    return <p>Unsupported video type</p>;
   };
 
-  useEffect(() => {
-    console.log(uploadMethod.method);
-  }, [uploadMethod]);
-
-  console.log("#####", { preview: getPrerview() });
   return (
     <FormField
       control={control}
@@ -90,7 +100,7 @@ export const EditFormFileInput = ({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <div className="flex flex-col items-start pb-15 py-10 gap-20">
-              {getPrerview()}
+              {getPreview()}
               {uploadMethod.method === "sendFile" && (
                 <>
                   <UploadFileDialog
@@ -101,40 +111,22 @@ export const EditFormFileInput = ({
                   />
                 </>
               )}
-              {uploadMethod.method === "youtube" && (
-                <Input
-                  type="text"
-                  placeholder="Enter YouTube URL"
-                  className="mt-2"
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                  }}
+              {uploadMethod.method === "internet" && (
+                <UploadFromInternetDialog
+                  videoFile={videoFile}
+                  setUploadMethod={setUploadMethod}
+                  handleFileChange={handleFileChange}
+                  field={field}
                 />
               )}
-              {uploadMethod.method === "vimeo" && (
-                <Input
-                  type="text"
-                  placeholder="Enter Vimeo URL"
-                  className="mt-2"
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                  }}
-                />
-              )}
+
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <Button>{uploadMethod.text}</Button>
+                  <Button>Upload Video</Button>
                 </DropdownMenuTrigger>
-
                 <DropdownMenuContent className="cursor-pointer">
-                  <UploadFromYouTube setUploadMethod={setUploadMethod} />
-                  <UploadFile
-                    field={field}
-                    handleFileChange={handleFileChange}
-                    setUploadMethod={setUploadMethod}
-                    videoFile={videoFile}
-                  />
-                  <UploadFromVimeo setUploadMethod={setUploadMethod} />
+                  <UploadFromInternet setUploadMethod={setUploadMethod} />
+                  <UploadFile setUploadMethod={setUploadMethod} />
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

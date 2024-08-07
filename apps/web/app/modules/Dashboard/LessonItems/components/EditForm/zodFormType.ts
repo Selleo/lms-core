@@ -13,9 +13,5 @@ export const editLessonItemFormSchema = z.object({
     .string()
     .min(2, { message: "Description must be at least 2 characters long" })
     .max(500, { message: "Description must be less than 500 characters" }),
-  video: z
-    .any()
-    .refine((files) => files instanceof FileList && files.length === 1, {
-      message: "Please select one video file",
-    }),
+  video: z.any(),
 });
