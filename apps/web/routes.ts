@@ -53,6 +53,14 @@ export const routes: (
         }
       );
       route(
+        "lessonitems/add/video",
+        "modules/Dashboard/LessonItems/Add/Video/LessonItemsAddVideo.layout.tsx"
+      );
+      route(
+        "lessonitems/add/text",
+        "modules/Dashboard/LessonItems/Add/Text/LessonItemsAddText.layout.tsx"
+      );
+      route(
         "settings",
         "modules/Dashboard/Settings/Settings.layout.tsx",
         () => {
