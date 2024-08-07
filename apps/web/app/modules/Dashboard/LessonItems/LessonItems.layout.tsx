@@ -24,8 +24,7 @@ export default function ListItemsLayout() {
         data={{
           id: item.id,
           displayName: item.displayName,
-          description:
-            "Very very very very very very very very very very very very very great course :D",
+          description: item.description,
         }}
       />
     ),
