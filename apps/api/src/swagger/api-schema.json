@@ -293,13 +293,30 @@
               },
               "email": {
                 "type": "string"
+              },
+              "role": {
+                "anyOf": [
+                  {
+                    "const": "admin",
+                    "type": "string"
+                  },
+                  {
+                    "const": "student",
+                    "type": "string"
+                  },
+                  {
+                    "const": "tutor",
+                    "type": "string"
+                  }
+                ]
               }
             },
             "required": [
               "id",
               "createdAt",
               "updatedAt",
-              "email"
+              "email",
+              "role"
             ]
           }
         },
@@ -342,13 +359,30 @@
               },
               "email": {
                 "type": "string"
+              },
+              "role": {
+                "anyOf": [
+                  {
+                    "const": "admin",
+                    "type": "string"
+                  },
+                  {
+                    "const": "student",
+                    "type": "string"
+                  },
+                  {
+                    "const": "tutor",
+                    "type": "string"
+                  }
+                ]
               }
             },
             "required": [
               "id",
               "createdAt",
               "updatedAt",
-              "email"
+              "email",
+              "role"
             ]
           }
         },
@@ -379,13 +413,30 @@
               },
               "email": {
                 "type": "string"
+              },
+              "role": {
+                "anyOf": [
+                  {
+                    "const": "admin",
+                    "type": "string"
+                  },
+                  {
+                    "const": "student",
+                    "type": "string"
+                  },
+                  {
+                    "const": "tutor",
+                    "type": "string"
+                  }
+                ]
               }
             },
             "required": [
               "id",
               "createdAt",
               "updatedAt",
-              "email"
+              "email",
+              "role"
             ]
           }
         },
@@ -412,13 +463,30 @@
                 },
                 "email": {
                   "type": "string"
+                },
+                "role": {
+                  "anyOf": [
+                    {
+                      "const": "admin",
+                      "type": "string"
+                    },
+                    {
+                      "const": "student",
+                      "type": "string"
+                    },
+                    {
+                      "const": "tutor",
+                      "type": "string"
+                    }
+                  ]
                 }
               },
               "required": [
                 "id",
                 "createdAt",
                 "updatedAt",
-                "email"
+                "email",
+                "role"
               ]
             }
           }
@@ -444,13 +512,30 @@
               },
               "email": {
                 "type": "string"
+              },
+              "role": {
+                "anyOf": [
+                  {
+                    "const": "admin",
+                    "type": "string"
+                  },
+                  {
+                    "const": "student",
+                    "type": "string"
+                  },
+                  {
+                    "const": "tutor",
+                    "type": "string"
+                  }
+                ]
               }
             },
             "required": [
               "id",
               "createdAt",
               "updatedAt",
-              "email"
+              "email",
+              "role"
             ]
           }
         },
@@ -484,13 +569,30 @@
               },
               "email": {
                 "type": "string"
+              },
+              "role": {
+                "anyOf": [
+                  {
+                    "const": "admin",
+                    "type": "string"
+                  },
+                  {
+                    "const": "student",
+                    "type": "string"
+                  },
+                  {
+                    "const": "tutor",
+                    "type": "string"
+                  }
+                ]
               }
             },
             "required": [
               "id",
               "createdAt",
               "updatedAt",
-              "email"
+              "email",
+              "role"
             ]
           }
         },
