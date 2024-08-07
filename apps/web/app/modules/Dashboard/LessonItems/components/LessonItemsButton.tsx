@@ -16,12 +16,14 @@ export const LessonItemsButton = () => {
         <DropdownMenuContent align="end">
           <Link to="add/video">
             <DropdownMenuItem className="cursor-pointer">
-              Video
+              Video Lesson
             </DropdownMenuItem>
           </Link>
           <DropdownMenuSeparator />
           <Link to="add/text">
-            <DropdownMenuItem className="cursor-pointer">Text</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              Written Lesson
+            </DropdownMenuItem>
           </Link>
         </DropdownMenuContent>
       </DropdownMenuTrigger>
