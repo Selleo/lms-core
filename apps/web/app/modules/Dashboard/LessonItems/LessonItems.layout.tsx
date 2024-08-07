@@ -31,8 +31,7 @@ export default function ListItemsLayout() {
   }));
 
   return (
-    <div>
-      <LessonItemsButton />
+    <div className="w-4/5 mx-auto">
       <DataTable columns={columns} data={dataWithOptions} />
       <Outlet />
     </div>
