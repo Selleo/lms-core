@@ -14,14 +14,15 @@ export const LessonItemsButton = () => {
       <DropdownMenuTrigger>
         <Button>New</Button>
         <DropdownMenuContent align="end">
+          <Link to="add/video">
+            <DropdownMenuItem className="cursor-pointer">
+              Video
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <Link to="add/video">Video</Link>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <Link to="add/text">Text</Link>
-          </DropdownMenuItem>
+          <Link to="add/text">
+            <DropdownMenuItem className="cursor-pointer">Text</DropdownMenuItem>
+          </Link>
         </DropdownMenuContent>
       </DropdownMenuTrigger>
     </DropdownMenu>
