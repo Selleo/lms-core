@@ -1,5 +1,4 @@
 import { Outlet } from "@remix-run/react";
-import { EditForm } from "../components/EditForm/EditForm";
 
 const EditLessonItemsLayout = () => {
   return (
