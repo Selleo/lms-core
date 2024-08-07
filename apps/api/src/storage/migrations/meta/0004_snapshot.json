@@ -1,5 +1,5 @@
 {
-  "id": "21acdaee-8345-4d5b-8bef-345c41cad84e",
+  "id": "9fb7b9c4-b15f-4453-ae21-4c36c36a610b",
   "prevId": "eabef35e-9f36-43a4-8943-3e92344b856d",
   "version": "7",
   "dialect": "postgresql",
@@ -17,9 +17,9 @@
         },
         "title": {
           "name": "title",
-          "type": "varchar",
+          "type": "varchar(100)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "created_at": {
           "name": "created_at",

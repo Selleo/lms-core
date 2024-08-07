@@ -18,7 +18,7 @@ export const credentials = pgTable("credentials", {
 
 export const categories = pgTable("categories", {
   ...id,
-  title: varchar("title"),
+  title: varchar("title", { length: 100 }).notNull(),
   ...timestamps,
   archivedAt,
 });
