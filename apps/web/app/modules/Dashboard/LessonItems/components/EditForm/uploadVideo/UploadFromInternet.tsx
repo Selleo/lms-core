@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import ReactPlayer from "react-player";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -12,15 +12,31 @@ import {
 import { Input } from "~/components/ui/input.js";
 import { Button } from "~/components/ui/button.js";
 import { UploadAlertDialogProps, UploadFileProps } from "../index.js";
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 
-export const UploadFileDialog = ({
+export const UploadFromInternetDialog = ({
   setUploadMethod,
   handleFileChange,
   field,
 }: UploadAlertDialogProps) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [selectedVideo, setSelectedVideo] = useState<FileList | null>(null);
+  const [youtubeUrl, setYoutubeUrl] = useState<string>("");
   const [videoError, setVideoError] = useState<string>("");
+
+  const handleUpload = () => {
+    if (ReactPlayer.canPlay(youtubeUrl)) {
+      setUploadMethod({
+        text: "Upload Video",
+        method: "youtube",
+      });
+      setIsOpen(false);
+      handleFileChange(youtubeUrl);
+      setYoutubeUrl("");
+    } else {
+      setVideoError("Invalid video URL");
+      setIsOpen(true);
+    }
+  };
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -31,21 +47,20 @@ export const UploadFileDialog = ({
             Choose a video file to upload.
             <div className="mt-4">
               <Input
-                type="file"
-                accept="video/*"
-                className="cursor-pointer mt-2"
+                type="text"
+                placeholder="Enter the URL of the video"
+                className="mt-2"
+                value={youtubeUrl}
                 onChange={(e) => {
-                  field.onChange(e.target.files);
-                  setSelectedVideo(e.target.files);
-                  setVideoError("");
+                  setYoutubeUrl(e.target.value);
+                  field.onChange(e.target.value);
                 }}
               />
-              {videoError !== "" && (
-                <span className="text-red-600	">{videoError}</span>
-              )}
+              {videoError && <span className="text-red-600">{videoError}</span>}
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>
+
         <AlertDialogFooter>
           <AlertDialogCancel
             onClick={() => {
@@ -54,46 +69,31 @@ export const UploadFileDialog = ({
                 method: "",
               });
               setIsOpen(false);
-              setSelectedVideo(null);
+              setYoutubeUrl("");
             }}
           >
             Cancel
           </AlertDialogCancel>
-          <Button
-            onClick={() => {
-              if (selectedVideo) {
-                setUploadMethod({
-                  text: "Upload Video",
-                  method: "",
-                });
-                setIsOpen(false);
-                handleFileChange(selectedVideo);
-                setSelectedVideo(null);
-              } else {
-                setVideoError("video file is required");
-                setIsOpen(true);
-              }
-            }}
-          >
-            Upload
-          </Button>
+          <Button onClick={handleUpload}>Upload</Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
   );
 };
 
-export const UploadFile: React.FC<UploadFileProps> = ({ setUploadMethod }) => {
+export const UploadFromInternet: React.FC<UploadFileProps> = ({
+  setUploadMethod,
+}) => {
   return (
     <DropdownMenuItem
       onSelect={() =>
         setUploadMethod({
-          text: "Upload video file",
-          method: "sendFile",
+          text: "Upload from internet",
+          method: "internet",
         })
       }
     >
-      Upload video file
+      Upload from internet
     </DropdownMenuItem>
   );
 };

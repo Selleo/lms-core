@@ -9,8 +9,11 @@ import { EditFormTextarea } from "./EditFormTextarea.js";
 import { EditFormInput } from "./EditFormInput.js";
 import { editLessonItemFormSchema } from "./zodFormType.js";
 import { useLessonItems } from "~/modules/Dashboard/LessonItemsContext";
+import { isObject } from "lodash-es";
+import { useNavigate } from "@remix-run/react";
 
 export const EditForm = ({ editId }: { editId: string }) => {
+  const navigate = useNavigate();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const { lessonItems, setLessonItems } = useLessonItems();
   const [editForm, setEditForm] = useState({
@@ -27,7 +30,7 @@ export const EditForm = ({ editId }: { editId: string }) => {
       form.reset(defaultValue);
     }
     console.log(lessonItems);
-  }, [lessonItems, editId]);
+  }, [lessonItems, editId, editForm]);
 
   const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
     resolver: zodResolver(editLessonItemFormSchema),
@@ -40,26 +43,25 @@ export const EditForm = ({ editId }: { editId: string }) => {
   });
 
   const handleFileChange = (files: FileList | null) => {
-    if (files && files.length > 0) {
-      console.log("jestem w handleFileChange", files[0]);
+    if (isObject(files)) {
       setVideoFile(files[0]);
-    }
-  };
+    } else setVideoFile(files);
 
-  useEffect(() => {
-    if (videoFile) {
-      return () => URL.revokeObjectURL(URL.createObjectURL(videoFile));
-    }
-  }, [videoFile]);
+    console.log("plik: ", files);
+  };
 
   const onSubmit: SubmitHandler<z.infer<typeof editLessonItemFormSchema>> = (
     data
   ) => {
     if (data.video) {
-      setVideoFile(data.video[0]);
+      if (isObject(data.video)) {
+        setVideoFile(data.video[0]);
+      } else setVideoFile(data.video);
     } else {
-      console.error("Data does not contain video property", data);
+      return console.log("video is required");
     }
+
+    console.log("data", data);
 
     setLessonItems((prevItems) => {
       return prevItems.map((item) => {
@@ -73,7 +75,7 @@ export const EditForm = ({ editId }: { editId: string }) => {
 
   const onCancel = () => {
     form.reset(editForm);
-    setVideoFile(null);
+    navigate("/dashboard/lessonItems");
   };
 
   return (
@@ -109,7 +111,7 @@ export const EditForm = ({ editId }: { editId: string }) => {
         <div className="flex space-x-4 my-10">
           <Button type="submit">Submit</Button>
           <Button type="button" variant="outline" onClick={onCancel}>
-            Cancel
+            Back
           </Button>
         </div>
       </form>
