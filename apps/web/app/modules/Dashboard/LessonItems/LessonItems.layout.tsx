@@ -1,7 +1,5 @@
 import { columns } from "./components/table/columns";
 import { DataTable } from "./components/table/DataTable";
-
-import { LessonItemsButton } from "./components/LessonItemsButton.js";
 import { TableOptionButtons } from "./components/TableOptionButtons/TableOptionButtons";
 import { Outlet } from "@remix-run/react";
 import { useLessonItems } from "../LessonItemsContext";
