@@ -1,10 +1,11 @@
 import { pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
-import { archivedAt, id, timestamps } from "./utils";
+import { archivedAt, id, role, timestamps } from "./utils";
 
 export const users = pgTable("users", {
   ...id,
   ...timestamps,
   email: text("email").notNull().unique(),
+  ...role,
 });
 
 export const credentials = pgTable("credentials", {
