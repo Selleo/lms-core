@@ -27,7 +27,7 @@ export const UploadFromInternetDialog = ({
     if (ReactPlayer.canPlay(youtubeUrl)) {
       setUploadMethod({
         text: "Upload Video",
-        method: "youtube",
+        method: "internet",
       });
       setIsOpen(false);
       handleFileChange(youtubeUrl);

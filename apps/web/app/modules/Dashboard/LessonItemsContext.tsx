@@ -4,8 +4,8 @@ interface LessonItem {
   id: string;
   name: string;
   displayName: string;
+  description: string;
   video?: File | null;
-  description?: string;
 }
 
 interface EditLessonItem extends LessonItem {
