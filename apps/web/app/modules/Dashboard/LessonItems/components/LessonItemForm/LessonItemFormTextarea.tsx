@@ -10,19 +10,19 @@ import { Control } from "react-hook-form";
 import { z } from "zod";
 import { editLessonItemFormSchema } from "./zodFormType.js";
 
-interface EditFormTextareaInterface {
+interface LessonItemFormTextareaInterface {
   control: Control<z.infer<typeof editLessonItemFormSchema>>;
   name: "name" | "displayName" | "description" | "video";
   label: string;
   placeholder: string;
 }
 
-export const EditFormTextarea = ({
+export const LessonItemFormTextarea = ({
   control,
   name,
   label,
   placeholder,
-}: EditFormTextareaInterface) => (
+}: LessonItemFormTextareaInterface) => (
   <FormField
     control={control}
     name={name}
