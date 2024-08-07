@@ -20,24 +20,12 @@ export const routes: (
 
       route(
         "lessonitems",
-        "modules/Dashboard/LessonItems/LessonItems.layout.tsx",
-        () => {
-          route("", "modules/Dashboard/LessonItems/LessonItems.page.tsx", {
-            index: true,
-          });
-        }
+        "modules/Dashboard/LessonItems/LessonItems.layout.tsx"
       );
       route(
         "lessonitems/edit",
         "modules/Dashboard/LessonItems/Edit/EditLessonItems.layout.tsx",
         () => {
-          route(
-            "",
-            "modules/Dashboard/LessonItems/Edit/EditLessonItems.page.tsx",
-            {
-              index: true,
-            }
-          );
           route(
             ":id",
             "modules/Dashboard/LessonItems/Edit/[id]/LessonItemsEdit.page.tsx",
@@ -49,11 +37,11 @@ export const routes: (
       );
       route(
         "lessonitems/add/video",
-        "modules/Dashboard/LessonItems/Add/Video/LessonItemsAddVideo.layout.tsx"
+        "modules/Dashboard/LessonItems/Add/Video/LessonItemsAddVideo.page.tsx"
       );
       route(
         "lessonitems/add/text",
-        "modules/Dashboard/LessonItems/Add/Text/LessonItemsAddText.layout.tsx"
+        "modules/Dashboard/LessonItems/Add/Text/LessonItemsAddText.page.tsx"
       );
       route(
         "settings",
