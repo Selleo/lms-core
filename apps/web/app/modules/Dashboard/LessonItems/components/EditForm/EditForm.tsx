@@ -80,8 +80,19 @@ export const EditForm = ({ editId }: { editId: string }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="px-8">
-        <div className="grid grid-cols-2 gap-6">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="mx-auto px-12 md:w-3/5 w-4/5"
+      >
+        <div className="grid md:grid-cols-2 gap-6 grid-cols-1">
+          <div className="md:col-span-2 col-span-1">
+            <EditFormFileInput
+              control={form.control}
+              name="video"
+              videoFile={videoFile}
+              handleFileChange={handleFileChange}
+            />
+          </div>
           <EditFormInput
             control={form.control}
             name="name"
@@ -94,25 +105,20 @@ export const EditForm = ({ editId }: { editId: string }) => {
             label="Display Name"
             placeholder="Display name"
           />
-        </div>
-        <EditFormTextarea
-          control={form.control}
-          name="description"
-          label="Description"
-          placeholder="Description"
-        />
-        <EditFormFileInput
-          control={form.control}
-          name="video"
-          label="Video"
-          videoFile={videoFile}
-          handleFileChange={handleFileChange}
-        />
-        <div className="flex space-x-4 my-10">
-          <Button type="submit">Submit</Button>
-          <Button type="button" variant="outline" onClick={onCancel}>
-            Back
-          </Button>
+          <div className="md:col-span-2 col-span-1">
+            <EditFormTextarea
+              control={form.control}
+              name="description"
+              label="Description"
+              placeholder="Description"
+            />
+          </div>
+          <div className="flex space-x-4 my-10">
+            <Button type="submit">Submit</Button>
+            <Button type="button" variant="outline" onClick={onCancel}>
+              Back
+            </Button>
+          </div>
         </div>
       </form>
     </Form>

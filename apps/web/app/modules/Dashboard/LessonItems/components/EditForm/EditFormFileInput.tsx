@@ -32,7 +32,6 @@ interface UploadMethod {
 interface EditFormFileInputInterface {
   control: Control<z.infer<typeof editLessonItemFormSchema>>;
   name: "name" | "displayName" | "description" | "video" | "";
-  label: string;
   videoFile: File | null;
   handleFileChange: (files: FileList | null) => void;
 }
@@ -40,7 +39,6 @@ interface EditFormFileInputInterface {
 export const EditFormFileInput = ({
   control,
   name,
-  label,
   videoFile,
   handleFileChange,
 }: EditFormFileInputInterface) => {
@@ -51,13 +49,17 @@ export const EditFormFileInput = ({
 
   const getPreview = () => {
     if (!videoFile) {
-      return <p className="text-red-600">Video is required</p>;
+      return (
+        <div className="flex items-center justify-center w-full h-full radius-l border border-dashed border-red-600 text-red-600">
+          Video is required
+        </div>
+      );
     }
 
     if (typeof videoFile === "string") {
       return (
         <div className="w-full" key={videoFile}>
-          <ReactPlayer url={videoFile} controls className="w-1/6" />
+          <ReactPlayer url={videoFile} controls className="w-full" />
           <p className="mt-2">{videoFile}</p>
         </div>
       );
@@ -68,7 +70,7 @@ export const EditFormFileInput = ({
 
       return (
         <div className="w-full" key={videoFile.name}>
-          <video controls className="w-1/6">
+          <video controls className="w-full">
             <source
               src={videoURL}
               type={
@@ -97,10 +99,9 @@ export const EditFormFileInput = ({
       name={name || "name"}
       render={({ field }) => (
         <FormItem>
-          <FormLabel>{label}</FormLabel>
           <FormControl>
-            <div className="flex flex-col items-start pb-15 py-10 gap-20">
-              {getPreview()}
+            <div className="md:flex md:items-center	md:justify-between justify-center items-start md:pb-5">
+              <div className="aspect-video md:w-3/5 w-full">{getPreview()}</div>
               {uploadMethod.method === "sendFile" && (
                 <>
                   <UploadFileDialog
@@ -119,16 +120,17 @@ export const EditFormFileInput = ({
                   field={field}
                 />
               )}
-
-              <DropdownMenu>
-                <DropdownMenuTrigger>
-                  <Button>Upload Video</Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="cursor-pointer">
-                  <UploadFromInternet setUploadMethod={setUploadMethod} />
-                  <UploadFile setUploadMethod={setUploadMethod} />
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex md:tems-center justify-center my-5 md:w-2/5 w-full items-start">
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <Button>Upload Video</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="cursor-pointer">
+                    <UploadFromInternet setUploadMethod={setUploadMethod} />
+                    <UploadFile setUploadMethod={setUploadMethod} />
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </FormControl>
           <FormMessage />
