@@ -28,17 +28,8 @@ export const routes: (
         "modules/Dashboard/LessonItems/LessonItems.layout.tsx"
       );
       route(
-        "lessonitems/edit",
-        "modules/Dashboard/LessonItems/Edit/EditLessonItems.layout.tsx",
-        () => {
-          route(
-            ":id",
-            "modules/Dashboard/LessonItems/Edit/[id]/LessonItemsEdit.page.tsx",
-            {
-              index: true,
-            }
-          );
-        }
+        "lessonitems/edit/:id",
+        "modules/Dashboard/LessonItems/Edit/[id]/EditLessonItem.page.tsx"
       );
       route(
         "lessonitems/add/video",
