@@ -1,6 +1,6 @@
 {
-  "id": "9fb7b9c4-b15f-4453-ae21-4c36c36a610b",
-  "prevId": "eabef35e-9f36-43a4-8943-3e92344b856d",
+  "id": "b0f583d4-5619-4a84-843d-9a23316631f5",
+  "prevId": "85bb79ac-97e3-439b-b212-967b921b123b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -91,8 +91,12 @@
           "name": "credentials_user_id_users_id_fk",
           "tableFrom": "credentials",
           "tableTo": "users",
-          "columnsFrom": ["user_id"],
-          "columnsTo": ["id"],
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -130,6 +134,14 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'student'"
         }
       },
       "indexes": {},
@@ -139,7 +151,9 @@
         "users_email_unique": {
           "name": "users_email_unique",
           "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": [
+            "email"
+          ]
         }
       }
     }
