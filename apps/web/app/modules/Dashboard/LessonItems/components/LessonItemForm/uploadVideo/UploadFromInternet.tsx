@@ -42,9 +42,9 @@ export const UploadFromInternetDialog = ({
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Upload Video File</AlertDialogTitle>
+          <AlertDialogTitle>Upload Video From URL</AlertDialogTitle>
           <AlertDialogDescription>
-            Choose a video file to upload.
+            Paste Video URL
             <div className="mt-4">
               <Input
                 type="text"
