@@ -1,4 +1,5 @@
 import React from "react";
+import eye from "public/eye.svg";
 
 import {
   AlertDialog,
@@ -12,17 +13,19 @@ import {
 } from "~/components/ui/alert-dialog";
 
 export const TableButtonPreview = ({
-  btnStyle,
   displayName,
   description,
 }: {
-  btnStyle: string;
   displayName: string;
   description: string;
 }) => {
   return (
-    <AlertDialog className={btnStyle}>
-      <AlertDialogTrigger>preview</AlertDialogTrigger>
+    <AlertDialog>
+      <AlertDialogTrigger>
+        <p className="flex justify-center align-center width-border w-8 h-8 border border-blue-500 p-1 rounded-md">
+          <img className="w-5" src={eye} alt="eye" />
+        </p>
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{displayName}</AlertDialogTitle>

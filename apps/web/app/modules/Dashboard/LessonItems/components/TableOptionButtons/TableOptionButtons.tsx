@@ -4,7 +4,7 @@ import { TableButtonEdit } from "./TableButtonEdit";
 import { TableButtonPreview } from "./TableButtonPreview";
 
 const btnStyle =
-  "bg-inherit text-black hover:bg-inherit px-0 text-small font-normal";
+  "bg-inherit text-black hover:bg-inherit p-0 h-auto text-small font-normal";
 interface DataFetch {
   id: string;
   name: string;
@@ -19,24 +19,14 @@ export const TableOptionButtons = ({
 }) => {
   const { displayName, description, id } = data;
   return (
-    <>
-      <TableButtonPreview
-        displayName={displayName}
-        description={description}
-        btnStyle={btnStyle}
-      />{" "}
-      /&nbsp;
-      <TableButtonEdit
-        description={description}
-        id={id}
-        btnStyle={btnStyle}
-      />{" "}
-      /&nbsp;
+    <div className="flex gap-3">
+      <TableButtonPreview displayName={displayName} description={description} />
+      <TableButtonEdit description={description} id={id} />
       <TableButtonDelete
+        btnStyle={btnStyle}
         id={id}
         setDataFetch={setDataFetch}
-        btnStyle={btnStyle}
       />
-    </>
+    </div>
   );
 };
