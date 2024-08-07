@@ -50,7 +50,7 @@ export const EditFormFileInput = ({
   const getPreview = () => {
     if (!videoFile) {
       return (
-        <div className="flex items-center justify-center w-full h-full radius-l border border-dashed border-red-600 text-red-600">
+        <div className="flex items-center justify-center w-full h-full radius-l border border-dashed border-red-600 text-red-600 rounded-lg">
           Video is required
         </div>
       );
