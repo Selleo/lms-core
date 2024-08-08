@@ -1,4 +1,4 @@
-import { asc, desc } from "drizzle-orm";
+import { asc, count, desc, like } from "drizzle-orm";
 import { Inject, Injectable } from "@nestjs/common";
 
 import { DatabasePg } from "src/common";
@@ -9,16 +9,25 @@ import { categories } from "src/storage/schema";
 export class CategorieService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
   public async getCategories(query: TCategoriesQuery) {
+    const [totalItems] = await this.db
+      .select({ count: count() })
+      .from(categories)
+      .where(like(categories.title, `%${query?.filter || "%"}%`));
+
     const allCategories = await this.db.query.categories.findMany({
+      columns: {
+        id: true,
+        title: true,
+      },
       where: (categories, { like }) =>
         like(categories.title, `%${query?.filter || "%"}%`),
-      limit: +query?.limit,
-      offset: +query?.offset,
       orderBy: query.sort.startsWith("-")
         ? [desc(categories.title)]
         : [asc(categories.title)],
+      limit: +query?.limit,
+      offset: +query?.offset,
     });
 
-    return allCategories;
+    return { categories: allCategories, totalItems: totalItems.count };
   }
 }

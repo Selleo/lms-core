@@ -611,42 +611,35 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "title": {
-                  "type": "string",
-                  "maxLength": 100
-                },
-                "createdAt": {
-                  "type": "string"
-                },
-                "updatedAt": {
-                  "type": "string"
-                },
-                "archivedAt": {
-                  "anyOf": [
-                    {
+            "type": "object",
+            "properties": {
+              "categories": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
                       "type": "string"
                     },
-                    {
-                      "type": "null"
+                    "title": {
+                      "type": "string",
+                      "maxLength": 100
                     }
+                  },
+                  "required": [
+                    "id",
+                    "title"
                   ]
                 }
               },
-              "required": [
-                "id",
-                "title",
-                "createdAt",
-                "updatedAt",
-                "archivedAt"
-              ]
-            }
+              "totalItems": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "categories",
+              "totalItems"
+            ]
           }
         },
         "required": ["data"]
