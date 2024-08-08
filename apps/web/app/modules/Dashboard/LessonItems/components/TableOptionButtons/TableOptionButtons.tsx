@@ -3,30 +3,27 @@ import { TableButtonDelete } from "./TableButtonDelete";
 import { TableButtonEdit } from "./TableButtonEdit";
 import { TableButtonPreview } from "./TableButtonPreview";
 
-const btnStyle =
-  "bg-inherit text-black hover:bg-inherit p-0 h-auto text-small font-normal";
-interface DataFetch {
+interface LessonItem {
   id: string;
-  name: string;
-  displayName: string;
+  title: string;
+  status: "Completed" | "Not Started";
+  author: string;
+  description: string;
+  video?: File | null;
 }
 export const TableOptionButtons = ({
   setDataFetch,
   data,
 }: {
-  data: { id: string; displayName: string; description: string };
-  setDataFetch: React.Dispatch<React.SetStateAction<DataFetch[]>>;
+  data: { id: string; title: string; description: string };
+  setDataFetch: React.Dispatch<React.SetStateAction<LessonItem[]>>;
 }) => {
-  const { displayName, description, id } = data;
+  const { title, description, id } = data;
   return (
     <div className="flex gap-3">
-      <TableButtonPreview displayName={displayName} description={description} />
+      <TableButtonPreview title={title} description={description} />
       <TableButtonEdit description={description} id={id} />
-      <TableButtonDelete
-        btnStyle={btnStyle}
-        id={id}
-        setDataFetch={setDataFetch}
-      />
+      <TableButtonDelete id={id} setDataFetch={setDataFetch} />
     </div>
   );
 };

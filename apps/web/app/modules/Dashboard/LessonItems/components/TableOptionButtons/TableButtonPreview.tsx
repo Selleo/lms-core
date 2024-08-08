@@ -13,10 +13,10 @@ import {
 } from "~/components/ui/alert-dialog";
 
 export const TableButtonPreview = ({
-  displayName,
+  title,
   description,
 }: {
-  displayName: string;
+  title: string;
   description: string;
 }) => {
   return (
@@ -28,7 +28,7 @@ export const TableButtonPreview = ({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>{displayName}</AlertDialogTitle>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
           <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

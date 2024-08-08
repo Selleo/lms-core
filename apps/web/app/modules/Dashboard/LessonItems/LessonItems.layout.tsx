@@ -4,24 +4,17 @@ import { TableOptionButtons } from "./components/TableOptionButtons/TableOptionB
 import { Outlet } from "@remix-run/react";
 import { useLessonItems } from "../LessonItemsContext";
 
-interface DataItemWithOptions {
-  id: string;
-  name: string;
-  displayName: string;
-  options: JSX.Element;
-}
-
 export default function ListItemsLayout() {
   const { lessonItems, setLessonItems } = useLessonItems();
 
-  const dataWithOptions: DataItemWithOptions[] = lessonItems.map((item) => ({
+  const dataWithOptions: DataWithOptions[] = lessonItems.map((item) => ({
     ...item,
     options: (
       <TableOptionButtons
         setDataFetch={setLessonItems}
         data={{
           id: item.id,
-          displayName: item.displayName,
+          title: item.title,
           description: item.description,
         }}
       />

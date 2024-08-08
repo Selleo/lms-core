@@ -1,21 +1,9 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-interface LessonItem {
-  id: string;
-  name: string;
-  displayName: string;
-  description: string;
-  video?: File | null;
-}
-
-interface EditLessonItem extends LessonItem {
-  description: string;
-}
-
 interface LessonItemsContextType {
   lessonItems: LessonItem[];
   setLessonItems: React.Dispatch<React.SetStateAction<LessonItem[]>>;
-  updateLessonItem: (updatedItem: EditLessonItem) => void;
+  updateLessonItem: (updatedItem: LessonItem) => void;
 }
 
 const LessonItemsContext = createContext<LessonItemsContextType | undefined>(
@@ -24,171 +12,171 @@ const LessonItemsContext = createContext<LessonItemsContextType | undefined>(
 const initialLessonItems: LessonItem[] = [
   {
     id: "728ed51f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Testing",
+    status: "Completed",
+    author: "Ja",
+    type: "Video",
     description:
       "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed52f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Advanced Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Jan",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Learn advanced testing techniques to improve your software quality.",
     video: null,
   },
   {
     id: "728ed53f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Unit Testing",
+    status: "Completed",
+    type: "Text",
+    author: "Anna",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Understand the fundamentals of unit testing with practical examples.",
     video: null,
   },
   {
     id: "728ed54f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Integration Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Karol",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Master integration testing to ensure different parts of your application work together.",
     video: null,
   },
   {
     id: "728ed55f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "End-to-End Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Marta",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Comprehensive guide to end-to-end testing with real-world scenarios.",
     video: null,
   },
   {
     id: "728ed56f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Performance Testing",
+    status: "Completed",
+    type: "Text",
+    author: "Adam",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Learn how to perform performance testing to ensure your application can handle load.",
     video: null,
   },
   {
     id: "728ed57f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Security Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Ewa",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Introduction to security testing to protect your application from vulnerabilities.",
     video: null,
   },
   {
     id: "728ed58f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Automated Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Piotr",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Automate your testing process to save time and increase efficiency.",
     video: null,
   },
   {
     id: "728ed59f",
-    name: "Testing",
-    displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    title: "Manual Testing",
+    status: "Completed",
+    type: "Text",
+    author: "Ola",
+    description: "Detailed guide to manual testing practices and techniques.",
     video: null,
   },
   {
     id: "728ed510f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Regression Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Tomek",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Ensure your changes do not break existing functionality with regression testing.",
     video: null,
   },
   {
     id: "728ed511f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "User Acceptance Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Ania",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Learn how to perform user acceptance testing to meet user requirements.",
     video: null,
   },
   {
     id: "728ed512f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Load Testing",
+    status: "Completed",
+    type: "Text",
+    author: "Bartek",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Load testing strategies to ensure your application can handle expected traffic.",
     video: null,
   },
   {
     id: "728ed513f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Stress Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Kasia",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Identify breaking points with stress testing under extreme conditions.",
     video: null,
   },
   {
     id: "728ed514f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Exploratory Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Kuba",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Explore the application without predefined test cases to discover defects.",
     video: null,
   },
   {
     id: "728ed515f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Compatibility Testing",
+    status: "Completed",
+    type: "Text",
+    author: "Wojtek",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Ensure your application works across different browsers and devices.",
     video: null,
   },
   {
     id: "728ed516f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Functional Testing",
+    status: "Not Started",
+    type: "Text",
+    author: "Monika",
     description:
-      "Very very very very very very very very very very very very very great course :D",
+      "Verify that each function of the application operates according to requirements.",
     video: null,
   },
   {
     id: "728ed517f",
-    name: "Testing",
-    displayName: "Testing",
+    title: "Non-Functional Testing",
+    status: "Not Started",
+    type: "Text",
     description:
-      "Very very very very very very very very very very very very very great course :D",
-    video: null,
-  },
-  {
-    id: "728ed518f",
-    name: "Testing",
-    displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
-    video: null,
-  },
-  {
-    id: "728ed519f",
-    name: "Testing",
-    displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
-    video: null,
-  },
-  {
-    id: "728ed520f",
-    name: "Testing",
-    displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
-    video: null,
-  },
-  {
-    id: "728ed521f",
-    name: "Testing",
-    displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
-    video: null,
+      "Verify that each function of the application operates according to requirements.",
+    author: "Luk",
   },
 ];
 
@@ -196,7 +184,7 @@ const LessonItemsProvider = ({ children }: { children: ReactNode }) => {
   const [lessonItems, setLessonItems] =
     useState<LessonItem[]>(initialLessonItems);
 
-  const updateLessonItem = (updatedItem: EditLessonItem) => {
+  const updateLessonItem = (updatedItem: LessonItem) => {
     setLessonItems((prevItems) =>
       prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
     );

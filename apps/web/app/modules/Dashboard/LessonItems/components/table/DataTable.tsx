@@ -1,10 +1,13 @@
 import { Button } from "~/components/ui/button";
+import * as React from "react";
 
 import {
   ColumnDef,
+  SortingState,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  getSortedRowModel,
   getPaginationRowModel,
 } from "@tanstack/react-table";
 
@@ -27,18 +30,23 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+    state: {
+      sorting,
+    },  
   });
 
   const pageCount = table.getPageCount();
   const pageIndex = table.getState().pagination.pageIndex;
 
-  // Calculate the range of pages to be displayed
-  const pageRange = (pageIndex) => {
+  const pageRange = (pageIndex: number) => {
     const start = Math.max(pageIndex - 1, 0);
     const end = Math.min(start + 2, pageCount - 1);
     return Array.from({ length: end - start + 1 }, (_, i) => start + i);

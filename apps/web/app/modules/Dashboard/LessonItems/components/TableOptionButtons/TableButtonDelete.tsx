@@ -12,20 +12,21 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 
-interface DataFetch {
+interface LessonItem {
   id: string;
-  name: string;
-  displayName: string;
+  title: string;
+  status: "Completed" | "Not Started";
+  author: string;
+  description: string;
+  video?: File | null;
 }
 
 export const TableButtonDelete = ({
-  btnStyle,
   id,
   setDataFetch,
 }: {
-  btnStyle: string;
   id: string;
-  setDataFetch: React.Dispatch<React.SetStateAction<DataFetch[]>>;
+  setDataFetch: React.Dispatch<React.SetStateAction<LessonItem[]>>;
 }) => {
   const [isDeleted, setIsDeleted] = useState(false);
 
