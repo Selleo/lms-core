@@ -15,7 +15,7 @@ import {
 interface LessonItem {
   id: string;
   title: string;
-  status: "Completed" | "Not Started";
+  status: "Published first" | "Draft first";
   author: string;
   description: string;
   video?: File | null;

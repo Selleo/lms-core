@@ -6,8 +6,8 @@ interface UploadMethod {
 }
 
 interface DefaultValuesInterface {
-  name: string;
-  displayName: string;
+  title: string;
+  status: string;
   description: string;
   video?: File | null;
 }

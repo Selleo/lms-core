@@ -12,8 +12,8 @@ const LessonItemsAddVideoLayout = () => {
   const { setLessonItems } = useLessonItems();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [lessonItemForm, setLessonItemForm] = useState<DefaultValuesInterface>({
-    name: "",
-    displayName: "",
+    title: "",
+    status: "Published first",
     description: "",
     video: null,
   });

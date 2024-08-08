@@ -15,8 +15,8 @@ export default function LessonItemsEditPage() {
   const { lessonItems, setLessonItems } = useLessonItems();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [lessonItemForm, setLessonItemForm] = useState<DefaultValuesInterface>({
-    name: "",
-    displayName: "",
+    title: "",
+    status: "",
     description: "",
     video: null,
   });
@@ -33,6 +33,7 @@ export default function LessonItemsEditPage() {
       setLessonItemForm(defaultValue);
       form.reset(defaultValue);
     }
+    console.log(defaultValue);
   }, [lessonItems, id, form]);
 
   if (!id || !lessonItems.find((item) => item.id === id)) {

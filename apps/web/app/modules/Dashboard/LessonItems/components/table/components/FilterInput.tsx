@@ -63,17 +63,19 @@ export function FilterInput<TData>({
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem
-              onClick={() => handleStatusSort("completed", "Completed")}
+              onClick={() =>
+                handleStatusSort("Published first", "Published first")
+              }
               className="cursor-pointer"
             >
-              Completed
+              Published first
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => handleStatusSort("Not Started", "Not Started")}
+              onClick={() => handleStatusSort("Draft first", "Draft first")}
               className="cursor-pointer"
             >
-              Not Started
+              Draft first
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

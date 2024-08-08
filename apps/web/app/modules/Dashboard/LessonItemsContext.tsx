@@ -13,7 +13,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed51f",
     title: "Testing",
-    status: "Completed",
+    status: "Published first",
     author: "Ja",
     type: "Video",
     description:
@@ -23,7 +23,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed52f",
     title: "Advanced Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Jan",
     description:
@@ -33,7 +33,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed53f",
     title: "Unit Testing",
-    status: "Completed",
+    status: "Published first",
     type: "Text",
     author: "Anna",
     description:
@@ -43,7 +43,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed54f",
     title: "Integration Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Karol",
     description:
@@ -53,7 +53,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed55f",
     title: "End-to-End Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Marta",
     description:
@@ -63,7 +63,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed56f",
     title: "Performance Testing",
-    status: "Completed",
+    status: "Published first",
     type: "Text",
     author: "Adam",
     description:
@@ -73,7 +73,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed57f",
     title: "Security Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Ewa",
     description:
@@ -83,7 +83,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed58f",
     title: "Automated Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Piotr",
     description:
@@ -93,7 +93,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed59f",
     title: "Manual Testing",
-    status: "Completed",
+    status: "Published first",
     type: "Text",
     author: "Ola",
     description: "Detailed guide to manual testing practices and techniques.",
@@ -102,7 +102,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed510f",
     title: "Regression Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Tomek",
     description:
@@ -112,7 +112,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed511f",
     title: "User Acceptance Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Ania",
     description:
@@ -122,7 +122,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed512f",
     title: "Load Testing",
-    status: "Completed",
+    status: "Published first",
     type: "Text",
     author: "Bartek",
     description:
@@ -132,7 +132,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed513f",
     title: "Stress Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Kasia",
     description:
@@ -142,7 +142,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed514f",
     title: "Exploratory Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Kuba",
     description:
@@ -152,7 +152,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed515f",
     title: "Compatibility Testing",
-    status: "Completed",
+    status: "Published first",
     type: "Text",
     author: "Wojtek",
     description:
@@ -162,7 +162,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed516f",
     title: "Functional Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     author: "Monika",
     description:
@@ -172,7 +172,7 @@ const initialLessonItems: LessonItem[] = [
   {
     id: "728ed517f",
     title: "Non-Functional Testing",
-    status: "Not Started",
+    status: "Draft first",
     type: "Text",
     description:
       "Verify that each function of the application operates according to requirements.",

@@ -12,7 +12,7 @@ import { editLessonItemFormSchema } from "./zodFormType.js";
 
 interface LessonItemFormTextareaInterface {
   control: Control<z.infer<typeof editLessonItemFormSchema>>;
-  name: "name" | "displayName" | "description" | "video";
+  name: "title" | "status" | "description" | "video";
   label: string;
   placeholder: string;
 }

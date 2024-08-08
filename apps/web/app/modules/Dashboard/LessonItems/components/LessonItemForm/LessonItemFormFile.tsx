@@ -23,7 +23,7 @@ import { UploadMethod } from "./index.d.ts";
 
 interface LessonItemFormFileInterface {
   control: Control<z.infer<typeof editLessonItemFormSchema>>;
-  name: "name" | "displayName" | "description" | "video" | "";
+  name: "title" | "status" | "description" | "video" | "";
   videoFile: File | null;
   handleFileChange: (files: FileList | null) => void;
 }

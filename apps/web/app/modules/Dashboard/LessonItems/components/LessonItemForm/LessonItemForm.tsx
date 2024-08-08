@@ -8,6 +8,7 @@ import { LessonItemFormInput } from "./LessonItemFormInput.js";
 import { editLessonItemFormSchema } from "./zodFormType.js";
 import { useNavigate } from "@remix-run/react";
 import { DefaultValuesInterface } from "./index.js";
+import { LessonItemFormDropDown } from "./LessonItemFormDropDown.js";
 
 interface LessonItemForm {
   lessonItemForm: DefaultValuesInterface;
@@ -36,10 +37,13 @@ export const LessonItemForm = ({
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit((data) => {
+          console.log(data);
+          onSubmit(data);
+        })}
         className="mx-auto px-12 md:w-3/5 w-4/5"
       >
-        <div className="grid md:grid-cols-2 gap-6 grid-cols-1">
+        <div className="grid md:grid-cols-2 gap-6 grid-cols-1 items-end">
           {isVideoRequired && (
             <div className="md:col-span-2 col-span-1">
               <LessonItemFormFile
@@ -52,16 +56,11 @@ export const LessonItemForm = ({
           )}
           <LessonItemFormInput
             control={form.control}
-            name="name"
-            label="Name"
-            placeholder="Name"
+            name="title"
+            label="Title"
+            placeholder="Title"
           />
-          <LessonItemFormInput
-            control={form.control}
-            name="displayName"
-            label="Display Name"
-            placeholder="Display name"
-          />
+          <LessonItemFormDropDown control={form.control} name="status" />
           <div className="md:col-span-2 col-span-1">
             <LessonItemFormTextarea
               control={form.control}
