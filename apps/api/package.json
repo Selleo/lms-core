@@ -21,9 +21,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:e2e:watch": "jest --config ./test/jest-e2e.json --watch",
     "db:migrate": "drizzle-kit migrate",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "db:seed": "ts-node -r tsconfig-paths/register ./src/seed.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-ses": "^3.624.0",
     "@knaadh/nestjs-drizzle-postgres": "^1.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
@@ -33,6 +35,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.0",
+    "@repo/email-templates": "workspace:*",
     "@sinclair/typebox": "^0.32.34",
     "add": "^2.0.6",
     "bcrypt": "^5.1.1",
@@ -43,12 +46,14 @@
     "drizzle-typebox": "^0.1.1",
     "lodash": "^4.17.21",
     "nestjs-typebox": "3.0.0-next.8",
+    "nodemailer": "^6.9.14",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "postgres": "^3.4.4",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "ts-pattern": "^5.2.0",
     "uuid": "^10.0.0"
   },
   "devDependencies": {
@@ -63,12 +68,14 @@
     "@types/jest": "^29.5.2",
     "@types/lodash": "^4.17.6",
     "@types/node": "^20.3.1",
+    "@types/nodemailer": "^6.4.15",
     "@types/passport-jwt": "^4.0.1",
     "@types/passport-local": "^1.0.38",
     "@types/supertest": "^6.0.0",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
+    "dotenv": "^16.4.5",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
@@ -83,6 +90,6 @@
     "ts-loader": "^9.4.3",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.1.3"
+    "typescript": "^5.4.5"
   }
 }

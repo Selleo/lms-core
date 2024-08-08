@@ -246,6 +246,28 @@
           }
         }
       }
+    },
+    "/test-config/setup": {
+      "post": {
+        "operationId": "TestConfigController_setup",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/test-config/teardown": {
+      "post": {
+        "operationId": "TestConfigController_teardown",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "info": {

@@ -1,5 +1,5 @@
 {
-  "name": "common_nestjs_remix",
+  "name": "lms-core",
   "private": true,
   "scripts": {
     "build": "turbo build",
@@ -8,7 +8,11 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate:client": "pnpm run --filter=web generate:client",
     "db:generate": "pnpm run --filter=api db:generate",
-    "db:migrate": "pnpm run --filter=api db:migrate"
+    "db:migrate": "pnpm run --filter=api db:migrate",
+    "test:web": "pnpm run --filter=web test",
+    "test:api": "pnpm run --filter=api test",
+    "test:web:e2e": "pnpm run --filter=web test:e2e",
+    "test:api:e2e": "pnpm run --filter=api test:e2e"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",

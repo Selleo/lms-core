@@ -4,6 +4,8 @@ import { StartedTestContainer } from "testcontainers";
 import { AppModule } from "../src/app.module";
 import { DatabasePg } from "../src/common";
 import { setupTestDatabase } from "./test-database";
+import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
+import { EmailTestingAdapter } from "./helpers/test-email.adapter";
 
 export interface TestContext {
   module: TestingModule;
@@ -22,7 +24,10 @@ export async function createUnitTest(
   const module: TestingModule = await Test.createTestingModule({
     imports: [AppModule],
     providers: [...customProviders],
-  }).compile();
+  })
+    .overrideProvider(EmailAdapter)
+    .useClass(EmailTestingAdapter)
+    .compile();
 
   const teardown = async () => {
     if (container) {
