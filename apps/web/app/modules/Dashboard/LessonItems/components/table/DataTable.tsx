@@ -3,14 +3,22 @@ import * as React from "react";
 
 import {
   ColumnDef,
+  ColumnFiltersState,
   SortingState,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  getFilteredRowModel,
   getSortedRowModel,
   getPaginationRowModel,
 } from "@tanstack/react-table";
-
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -20,6 +28,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { LessonItemsButton } from "../LessonItemsButton";
+import { Input } from "~/components/ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,6 +40,11 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sortBy, setSortBy] = React.useState<string>("title");
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+
   const table = useReactTable({
     data,
     columns,
@@ -38,9 +52,12 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-    },  
+      columnFilters,
+    },
   });
 
   const pageCount = table.getPageCount();
@@ -55,7 +72,62 @@ export function DataTable<TData, TValue>({
   const pagesToShow = pageRange(pageIndex);
 
   return (
-    <div>
+    <>
+      <div className="flex gap-4 items-center py-4">
+        <Input
+          placeholder={`Filter by ${sortBy}...`}
+          value={(table.getColumn(sortBy)?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn(sortBy)?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button>Sort By</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              onClick={() => {
+                setSortBy("title");
+              }}
+              className="cursor-pointer"
+            >
+              Title
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setSortBy("type");
+              }}
+              className="cursor-pointer"
+            >
+              Type
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setSortBy("status");
+              }}
+              className="cursor-pointer"
+            >
+              Status
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => {
+                setSortBy("author");
+              }}
+              className="cursor-pointer"
+            >
+              Author
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <Button onClick={() => setColumnFilters([])} variant="outline">
+          Reset
+        </Button>
+      </div>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -104,39 +176,41 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      <div className="flex items-center justify-between w-full py-4">
-        <div>
-          <LessonItemsButton />
-        </div>
-        <div className="space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          {pagesToShow.map((page) => (
+      <div>
+        <div className="flex items-center justify-between w-full py-4">
+          <div>
+            <LessonItemsButton />
+          </div>
+          <div className="space-x-2">
             <Button
-              key={page}
-              variant={page === pageIndex ? "ghost" : "outline"}
+              variant="outline"
               size="sm"
-              onClick={() => table.setPageIndex(page)}
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
             >
-              {page + 1}
+              Previous
             </Button>
-          ))}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+            {pagesToShow.map((page) => (
+              <Button
+                key={page}
+                variant={page === pageIndex ? "ghost" : "outline"}
+                size="sm"
+                onClick={() => table.setPageIndex(page)}
+              >
+                {page + 1}
+              </Button>
+            ))}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

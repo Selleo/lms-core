@@ -61,7 +61,9 @@ export const TableButtonDelete = ({
               <AlertDialogTitle>Deleted</AlertDialogTitle>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Close</AlertDialogCancel>
+              <AlertDialogCancel onClick={() => setIsDeleted(false)}>
+                Close
+              </AlertDialogCancel>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
