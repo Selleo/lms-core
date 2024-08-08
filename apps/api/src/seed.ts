@@ -25,7 +25,8 @@ async function seed() {
       email: testUserEmail,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-    };
+      role: "admin",
+    } as const;
 
     const [insertedAdminUser] = await db
       .insert(users)
