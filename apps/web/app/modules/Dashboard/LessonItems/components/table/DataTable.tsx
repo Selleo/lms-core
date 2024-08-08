@@ -23,7 +23,8 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [sortBy, setSortBy] = React.useState<string>("title");
+  const [statusSort, setStatusSort] = React.useState<string>("");
+  const [typeSort, setTypeSort] = React.useState<string>("");
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -58,8 +59,10 @@ export function DataTable<TData, TValue>({
     <>
       <FilterInput
         table={table}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
+        statusSort={statusSort}
+        setStatusSort={setStatusSort}
+        typeSort={typeSort}
+        setTypeSort={setTypeSort}
         setColumnFilters={setColumnFilters}
       />
       <TableDisplay table={table} columns={columns} />

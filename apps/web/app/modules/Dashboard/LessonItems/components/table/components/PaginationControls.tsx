@@ -1,5 +1,4 @@
 import { Button } from "~/components/ui/button";
-import { LessonItemsButton } from "../../LessonItemsButton";
 import { Table as ReactTableInstance } from "@tanstack/react-table";
 
 interface PaginationControls<TData> {
@@ -15,9 +14,7 @@ export function PaginationControls<TData>({
 }: PaginationControls<TData>) {
   return (
     <div className="flex items-center justify-between w-full py-4">
-      <div>
-        <LessonItemsButton />
-      </div>
+      <div></div>
       <div className="space-x-2">
         <Button
           variant="outline"
