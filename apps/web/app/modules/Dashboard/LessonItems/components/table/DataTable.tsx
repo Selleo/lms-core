@@ -1,34 +1,17 @@
-import { Button } from "~/components/ui/button";
 import * as React from "react";
-
 import {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
-  flexRender,
   getCoreRowModel,
   useReactTable,
   getFilteredRowModel,
   getSortedRowModel,
   getPaginationRowModel,
 } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "~/components/ui/table";
-import { LessonItemsButton } from "../LessonItemsButton";
-import { Input } from "~/components/ui/input";
+import { FilterInput } from "./components/FilterInput";
+import { TableDisplay } from "./components/TableDisplay";
+import { PaginationControls } from "./components/PaginationControls";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -45,7 +28,7 @@ export function DataTable<TData, TValue>({
     []
   );
 
-  const table = useReactTable({
+  const table = useReactTable<TData>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -73,144 +56,18 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="flex gap-4 items-center py-4">
-        <Input
-          placeholder={`Filter by ${sortBy}...`}
-          value={(table.getColumn(sortBy)?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn(sortBy)?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button>Sort By</Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem
-              onClick={() => {
-                setSortBy("title");
-              }}
-              className="cursor-pointer"
-            >
-              Title
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                setSortBy("type");
-              }}
-              className="cursor-pointer"
-            >
-              Type
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                setSortBy("status");
-              }}
-              className="cursor-pointer"
-            >
-              Status
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                setSortBy("author");
-              }}
-              className="cursor-pointer"
-            >
-              Author
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-        <Button onClick={() => setColumnFilters([])} variant="outline">
-          Reset
-        </Button>
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div>
-        <div className="flex items-center justify-between w-full py-4">
-          <div>
-            <LessonItemsButton />
-          </div>
-          <div className="space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </Button>
-            {pagesToShow.map((page) => (
-              <Button
-                key={page}
-                variant={page === pageIndex ? "ghost" : "outline"}
-                size="sm"
-                onClick={() => table.setPageIndex(page)}
-              >
-                {page + 1}
-              </Button>
-            ))}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </Button>
-          </div>
-        </div>
-      </div>
+      <FilterInput
+        table={table}
+        sortBy={sortBy}
+        setSortBy={setSortBy}
+        setColumnFilters={setColumnFilters}
+      />
+      <TableDisplay table={table} columns={columns} />
+      <PaginationControls
+        table={table}
+        pageIndex={pageIndex}
+        pagesToShow={pagesToShow}
+      />
     </>
   );
 }
