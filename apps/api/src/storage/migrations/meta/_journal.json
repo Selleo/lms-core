@@ -43,6 +43,13 @@
       "when": 1723019583066,
       "tag": "0005_extend_users_with_roles",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1723107886166,
+      "tag": "0006_update_title_type_in_categories",
+      "breakpoints": true
     }
   ]
 }

@@ -1,11 +1,15 @@
-import { pgTable, text, uuid, varchar } from "drizzle-orm/pg-core";
-import { archivedAt, id, role, timestamps } from "./utils";
+import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
+
+import { archivedAt, id, timestamps } from "./utils";
+import { userRoles, UserRoles } from "src/users/schemas/user-roles";
+
+const roleEnum = pgEnum("role", userRoles);
 
 export const users = pgTable("users", {
   ...id,
   ...timestamps,
   email: text("email").notNull().unique(),
-  ...role,
+  role: roleEnum("role").notNull().default(UserRoles.student),
 });
 
 export const credentials = pgTable("credentials", {
@@ -19,7 +23,7 @@ export const credentials = pgTable("credentials", {
 
 export const categories = pgTable("categories", {
   ...id,
-  title: varchar("title", { length: 100 }).notNull(),
+  title: text("title").notNull(),
   ...timestamps,
   archivedAt,
 });
