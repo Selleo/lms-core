@@ -86,7 +86,7 @@ jobs:
         run: pnpm install
 
       - name: Run unit tests
-        run: pnpm --filter=api test
+        run: pnpm --filter=api test:ci
 
       - name: Run e2e tests
         run: pnpm --filter=api test:e2e
