@@ -8,6 +8,7 @@
     "dev": "vite dev",
     "dev_ssr": "node ./server.js",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
+    "lint-tsc": "tsc --noEmit && eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "start": "cross-env NODE_ENV=production node ./server.js",
     "generate:client": "swagger-typescript-api -p ../api/src/swagger/api-schema.json -o ./app/api --axios --name generated-api.ts --api-class-name API",
     "tsc": "tsc --noEmit",
