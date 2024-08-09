@@ -1,11 +1,11 @@
 import { Provider } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
+import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
 import { StartedTestContainer } from "testcontainers";
 import { AppModule } from "../src/app.module";
 import { DatabasePg } from "../src/common";
-import { closeTestDatabase, setupTestDatabase } from "./test-database";
-import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
 import { EmailTestingAdapter } from "./helpers/test-email.adapter";
+import { setupTestDatabase } from "./test-database";
 
 export interface TestContext {
   module: TestingModule;
@@ -33,8 +33,6 @@ export async function createUnitTest(
     if (container) {
       await container.stop();
     }
-    await module.close();
-    await closeTestDatabase();
   };
 
   return {
