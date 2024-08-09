@@ -11,7 +11,7 @@ elif [ $COMMAND = "migrate" ]; then
   npm run db:migrate
 elif [ $COMMAND = "seed" ]; then
   echo "Running seeds..."
-  node /app/dist/bin/seed.js
+  npm run db:seed-prod
 else
   echo "Usage: entrypoint.sh [server|migrate]"
   exit 1
