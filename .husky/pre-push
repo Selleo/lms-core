@@ -2,5 +2,3 @@ pnpm lint
 
 pnpm run test:web
 pnpm run test:api
-
-exit 1
