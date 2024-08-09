@@ -11,20 +11,20 @@ ApiClient.instance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const isLoggedIn = useAuthStore.getState().isLoggedIn;
 
-    if (!isLoggedIn) {
-      return Promise.reject(error);
-    }
+    const isLoginRequest = originalRequest.url.includes("/login");
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      try {
-        await ApiClient.auth.authControllerRefreshTokens();
-        return ApiClient.instance(originalRequest);
-      } catch (error) {
-        return Promise.reject(error);
+      if (!isLoginRequest && useAuthStore.getState().isLoggedIn) {
+        try {
+          await ApiClient.auth.authControllerRefreshTokens();
+          return ApiClient.instance(originalRequest);
+        } catch (refreshError) {
+          useAuthStore.getState().setLoggedIn(false);
+          return Promise.reject(refreshError);
+        }
       }
     }
 

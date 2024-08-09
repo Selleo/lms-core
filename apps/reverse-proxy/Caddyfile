@@ -1,12 +1,12 @@
-api.guidebook.localhost {
+api.lms.localhost {
 	reverse_proxy localhost:3000
 }
 
-app.guidebook.localhost {
+app.lms.localhost {
 	reverse_proxy localhost:5173
 }
 
-mailbox.guidebook.localhost {
+mailbox.lms.localhost {
 	reverse_proxy localhost:8025
 }
 

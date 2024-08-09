@@ -1,6 +1,6 @@
 import { registerAs } from "@nestjs/config";
 import { Static, Type } from "@sinclair/typebox";
-import { Value } from "@sinclair/typebox/value";
+import { configValidator } from "src/utils/configValidator";
 
 const schema = Type.Object({
   url: Type.String(),
@@ -8,10 +8,12 @@ const schema = Type.Object({
 
 type DatabaseConfig = Static<typeof schema>;
 
+const validateDatabaseConfig = configValidator(schema);
+
 export default registerAs("database", (): DatabaseConfig => {
   const values = {
     url: process.env.DATABASE_URL,
   };
 
-  return Value.Decode(schema, values);
+  return validateDatabaseConfig(values);
 });

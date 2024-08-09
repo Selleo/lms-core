@@ -1,0 +1,32 @@
+{
+  "name": "@repo/email-templates",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Email templates",
+  "main": "./dist/index.cjs",
+  "types": "./dist/index.d.cts",
+  "private": true,
+  "scripts": {
+    "build": "tsup",
+    "clean": "rm -rf dist",
+    "dev": "email dev -p 3001 --dir ./src/templates",
+    "export": "email export --dir ./src/templates"
+  },
+  "dependencies": {
+    "@react-email/components": "^0.0.17",
+    "react": "^18.2.0",
+    "react-email": "^2.1.4"
+  },
+  "devDependencies": {
+    "@babel/generator": "^7.24.7",
+    "@babel/parser": "^7.24.7",
+    "@babel/template": "^7.24.7",
+    "@babel/traverse": "^7.24.7",
+    "@babel/types": "^7.24.7",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^20.14.12",
+    "@types/react": "^18.2.61",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.5"
+  }
+}

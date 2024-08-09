@@ -6,9 +6,10 @@ import { JwtStrategy } from "./strategy/jwt.strategy";
 import { LocalStrategy } from "./strategy/local.strategy";
 import { TokenService } from "./token.service";
 import { UsersService } from "src/users/users.service";
+import { EmailModule } from "src/common/emails/emails.module";
 
 @Module({
-  imports: [PassportModule],
+  imports: [PassportModule, EmailModule],
   controllers: [AuthController],
   providers: [
     AuthService,

@@ -6,10 +6,15 @@ services:
       POSTGRES_PASSWORD: guidebook 
       POSTGRES_DB: guidebook 
     volumes:
-      - guidebook-db-data:/var/lib/postgresql/data
+      - lms-db-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
 
 volumes:
-  guidebook-db-data:
+  lms-db-data:
     driver: local

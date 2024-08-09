@@ -16,8 +16,8 @@ export default function ThemeToggle({
 
   const ToggleIcon: React.FC<LucideProps> = (props) =>
     match(theme)
-      .with("light", () => <Sun {...props} />)
-      .with("dark", () => <Moon {...props} />)
+      .with("light", () => <Sun aria-label="Switch to lightmode" {...props} />)
+      .with("dark", () => <Moon aria-label="Switch to darkmode" {...props} />)
       .exhaustive();
 
   return (

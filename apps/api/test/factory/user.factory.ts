@@ -13,6 +13,7 @@ export const credentialFactory = Factory.define<Credential>(() => ({
   id: faker.string.uuid(),
   userId: faker.string.uuid(),
   password: faker.internet.password(),
+  role: "student" as const,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 }));
@@ -57,6 +58,7 @@ export const createUserFactory = (db: DatabasePg) => {
       email: faker.internet.email(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      role: "student" as const,
     };
   });
 };

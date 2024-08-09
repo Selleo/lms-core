@@ -1,20 +1,25 @@
-import { APP_GUARD } from "@nestjs/core";
 import { AuthModule } from "./auth/auth.module";
 import { CategoriesModule } from "./categories/categories.module";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
-import { JwtAuthGuard } from "./common/guards/jwt-auth-guard";
 import { JwtModule } from "@nestjs/jwt";
 import { Module } from "@nestjs/common";
 import { UsersModule } from "./users/users.module";
 import * as schema from "./storage/schema";
 import database from "./common/configuration/database";
 import jwtConfig from "./common/configuration/jwt";
+import emailConfig from "./common/configuration/email";
+import awsConfig from "./common/configuration/aws";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
+import { EmailModule } from "./common/emails/emails.module";
+import { TestConfigModule } from "./test-config/test-config.module";
+import { StagingGuard } from "./common/guards/staging.guard";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database, jwtConfig],
+      load: [database, jwtConfig, emailConfig, awsConfig],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({
@@ -36,10 +41,7 @@ import jwtConfig from "./common/configuration/jwt";
         return {
           secret: configService.get<string>("jwt.secret")!,
           signOptions: {
-            expiresIn: configService.get<string>(
-              "JWT_EXPIRATION_TIME",
-              "15min",
-            ),
+            expiresIn: configService.get<string>("jwt.expirationTime"),
           },
         };
       },
@@ -48,6 +50,8 @@ import jwtConfig from "./common/configuration/jwt";
     }),
     AuthModule,
     UsersModule,
+    EmailModule,
+    TestConfigModule,
     CategoriesModule,
   ],
   controllers: [],
@@ -55,6 +59,10 @@ import jwtConfig from "./common/configuration/jwt";
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: StagingGuard,
     },
   ],
 })

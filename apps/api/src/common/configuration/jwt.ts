@@ -1,6 +1,6 @@
 import { registerAs } from "@nestjs/config";
 import { Static, Type } from "@sinclair/typebox";
-import { Value } from "@sinclair/typebox/value";
+import { configValidator } from "src/utils/configValidator";
 
 const schema = Type.Object({
   secret: Type.String(),
@@ -10,6 +10,8 @@ const schema = Type.Object({
 
 type JWTConfig = Static<typeof schema>;
 
+const valdateJWTConfig = configValidator(schema);
+
 export default registerAs("jwt", (): JWTConfig => {
   const values = {
     secret: process.env.JWT_SECRET,
@@ -17,5 +19,5 @@ export default registerAs("jwt", (): JWTConfig => {
     expirationTime: process.env.JWT_EXPIRATION_TIME,
   };
 
-  return Value.Decode(schema, values);
+  return valdateJWTConfig(values);
 });

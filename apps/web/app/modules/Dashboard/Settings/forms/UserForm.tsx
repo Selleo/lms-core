@@ -3,7 +3,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { UpdateUserBody } from "~/api/generated-api";
 import { useUpdateUser } from "~/api/mutations/useUpdateUser";
-import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
+import {
+  currentUserQueryOptions,
+  useCurrentUserSuspense,
+} from "~/api/queries/useCurrentUser";
+import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -16,6 +20,9 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
+
+export const clientLoader = () =>
+  queryClient.prefetchQuery(currentUserQueryOptions);
 
 const updateUserSchema = z.object({
   email: z.string().email(),

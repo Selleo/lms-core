@@ -12,6 +12,8 @@ import { DatabasePg, UUIDType } from "src/common";
 import { credentials, users } from "../storage/schema";
 import { UsersService } from "../users/users.service";
 import hashPassword from "src/common/helpers/hashPassword";
+import { EmailService } from "src/common/emails/emails.service";
+import { WelcomeEmail } from "@repo/email-templates";
 
 @Injectable()
 export class AuthService {
@@ -20,6 +22,7 @@ export class AuthService {
     private jwtService: JwtService,
     private usersService: UsersService,
     private configService: ConfigService,
+    private emailService: EmailService,
   ) {}
 
   public async register(email: string, password: string) {
@@ -40,6 +43,16 @@ export class AuthService {
       await trx
         .insert(credentials)
         .values({ userId: newUser.id, password: hashedPassword });
+
+      const emailTemplate = new WelcomeEmail({ email, name: email });
+
+      await this.emailService.sendEmail({
+        to: email,
+        subject: "Welcome to our platform",
+        text: emailTemplate.text,
+        html: emailTemplate.html,
+        from: "godfather@selleo.com",
+      });
 
       return newUser;
     });
@@ -125,7 +138,7 @@ export class AuthService {
       this.jwtService.signAsync(
         { userId, email },
         {
-          expiresIn: "15m",
+          expiresIn: this.configService.get<string>("jwt.expirationTime"),
           secret: this.configService.get<string>("jwt.secret"),
         },
       ),

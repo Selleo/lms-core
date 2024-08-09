@@ -14,6 +14,8 @@ import { createUserFactory } from "test/factory/user.factory";
 import { omit } from "lodash";
 import hashPassword from "src/common/helpers/hashPassword";
 import { truncateAllTables } from "test/helpers/test-helpers";
+import { EmailTestingAdapter } from "test/helpers/test-email.adapter";
+import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
 
 describe("AuthService", () => {
   let testContext: TestContext;
@@ -21,6 +23,7 @@ describe("AuthService", () => {
   let jwtService: JwtService;
   let db: DatabasePg;
   let userFactory: ReturnType<typeof createUserFactory>;
+  let emailAdapter: EmailTestingAdapter;
 
   beforeAll(async () => {
     testContext = await createUnitTest();
@@ -28,10 +31,12 @@ describe("AuthService", () => {
     jwtService = testContext.module.get(JwtService);
     db = testContext.db;
     userFactory = createUserFactory(db);
+    emailAdapter = testContext.module.get(EmailAdapter);
   }, 30000);
 
   afterEach(async () => {
     await truncateAllTables(db);
+    emailAdapter.clearEmails();
   });
 
   describe("register", () => {
@@ -58,6 +63,17 @@ describe("AuthService", () => {
       expect(await bcrypt.compare(password, savedCredentials.password)).toBe(
         true,
       );
+    });
+
+    it("should send a welcome email after successful registration", async () => {
+      const user = userFactory.build();
+      const password = "password123";
+
+      const allEmails = emailAdapter.getAllEmails();
+
+      expect(allEmails).toHaveLength(0);
+      await authService.register(user.email, password);
+      expect(allEmails).toHaveLength(1);
     });
 
     it("should throw ConflictException if user already exists", async () => {
