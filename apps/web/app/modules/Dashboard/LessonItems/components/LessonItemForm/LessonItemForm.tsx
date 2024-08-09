@@ -61,14 +61,16 @@ export const LessonItemForm = ({
             placeholder="Title"
           />
           <LessonItemFormDropDown control={form.control} name="status" />
-          <div className="md:col-span-2 col-span-1">
-            <LessonItemFormTextarea
-              control={form.control}
-              name="description"
-              label="Description"
-              placeholder="Description"
-            />
-          </div>
+          {!isVideoRequired && (
+            <div className="md:col-span-2 col-span-1">
+              <LessonItemFormTextarea
+                control={form.control}
+                name="description"
+                label="Description"
+                placeholder="Description"
+              />
+            </div>
+          )}
           <div className="flex space-x-4 my-10">
             <Button type="submit">Submit</Button>
             <Button type="button" variant="outline" onClick={onCancel}>
