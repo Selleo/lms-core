@@ -1,18 +1,19 @@
-name: Frontend Pull Request Check
+name: Backend Pull Request Check
 
 on:
   pull_request:
     branches:
-      - '*'
+      - "*"
     paths:
-      - apps/web/**
+      - apps/api/**
+
 jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./apps/web/
+        working-directory: ./apps/api/
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -25,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run ESLint & Compile Typescript
+      - name: Run ESLint
         run: pnpm lint-tsc
 
   build:
@@ -33,7 +34,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./apps/web/
+        working-directory: ./apps/api/
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -48,44 +49,28 @@ jobs:
         run: pnpm run build
 
   test:
-    name: Vitest tests
+    name: Jest tests
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./apps/web/
+        working-directory: ./apps/api/
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
 
+      - name: Start containers
+        run: docker compose -f "docker-compose.yml" up -d --build
+
       - uses: actions/setup-node@v4
         with:
-          node-version: 20.15.0
+          node-version: 20.9.0
           cache: pnpm
 
       - name: Install dependencies
         run: pnpm install
 
-      - name: Run Vite tests
+      - name: Run unit tests
         run: pnpm test
 
-  playwright:
-    needs: build
-    name: Playwright Tests
-    runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.45.3-jammy
-    defaults:
-      run:
-        working-directory: ./apps/web/
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20.15.0
-      - name: Install dependencies
-        run: pnpm install
-      - name: Run your tests
-        run: pnpm playwright test
-        env:
-          HOME: /root
+      - name: Run e2e tests
+        run: pnpm test:e2e
