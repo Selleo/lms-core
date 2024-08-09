@@ -33,6 +33,7 @@ export async function createUnitTest(
     if (container) {
       await container.stop();
     }
+    await module.close();
   };
 
   return {
