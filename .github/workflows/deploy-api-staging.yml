@@ -1,5 +1,8 @@
 name: STAGING - Deploy API
 
+env:
+  HUSKY: 0
+
 on:
   push:
     branches:

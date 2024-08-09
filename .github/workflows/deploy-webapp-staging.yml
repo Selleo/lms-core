@@ -1,5 +1,8 @@
 name: STAGING - Deploy Webapp
 
+env:
+  HUSKY: 0
+
 on:
   push:
     branches:

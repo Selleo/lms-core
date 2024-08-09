@@ -1,5 +1,8 @@
 name: Backend Pull Request Check
 
+env:
+  HUSKY: 0
+
 on:
   pull_request:
     branches:
