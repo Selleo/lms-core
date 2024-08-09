@@ -44,7 +44,12 @@ const LessonItemsAddVideoLayout = () => {
 
     setLessonItems((prevItems) => [
       ...prevItems,
-      { id: new Date().getTime().toString(), ...data },
+      {
+        id: new Date().getTime().toString(),
+        type: "Video",
+        author: "admin",
+        ...data,
+      },
     ]);
   };
 

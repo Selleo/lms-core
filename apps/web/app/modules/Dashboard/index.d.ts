@@ -4,7 +4,7 @@ interface LessonItem {
   status: "Published first" | "Draft first";
   type: "Text" | "Video";
   author: string;
-  description: string;
+  description?: string;
   video?: File | null | string;
 }
 

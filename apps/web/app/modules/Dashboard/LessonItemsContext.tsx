@@ -34,7 +34,7 @@ const initialLessonItems: LessonItem[] = [
     id: "728ed53f",
     title: "Unit Testing",
     status: "Published first",
-    type: "Text",
+    type: "Video",
     author: "Anna",
     description:
       "Understand the fundamentals of unit testing with practical examples.",
@@ -54,7 +54,7 @@ const initialLessonItems: LessonItem[] = [
     id: "728ed55f",
     title: "End-to-End Testing",
     status: "Draft first",
-    type: "Text",
+    type: "Video",
     author: "Marta",
     description:
       "Comprehensive guide to end-to-end testing with real-world scenarios.",
@@ -74,7 +74,7 @@ const initialLessonItems: LessonItem[] = [
     id: "728ed57f",
     title: "Security Testing",
     status: "Draft first",
-    type: "Text",
+    type: "Video",
     author: "Ewa",
     description:
       "Introduction to security testing to protect your application from vulnerabilities.",
@@ -94,7 +94,7 @@ const initialLessonItems: LessonItem[] = [
     id: "728ed59f",
     title: "Manual Testing",
     status: "Published first",
-    type: "Text",
+    type: "Video",
     author: "Ola",
     description: "Detailed guide to manual testing practices and techniques.",
     video: null,
@@ -133,7 +133,7 @@ const initialLessonItems: LessonItem[] = [
     id: "728ed513f",
     title: "Stress Testing",
     status: "Draft first",
-    type: "Text",
+    type: "Video",
     author: "Kasia",
     description:
       "Identify breaking points with stress testing under extreme conditions.",
@@ -153,7 +153,7 @@ const initialLessonItems: LessonItem[] = [
     id: "728ed515f",
     title: "Compatibility Testing",
     status: "Published first",
-    type: "Text",
+    type: "Video",
     author: "Wojtek",
     description:
       "Ensure your application works across different browsers and devices.",

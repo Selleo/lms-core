@@ -33,7 +33,12 @@ const LessonItemsAddTextLayout = () => {
   ) => {
     setLessonItems((prevItems) => [
       ...prevItems,
-      { id: new Date().getTime().toString(), ...data },
+      {
+        id: new Date().getTime().toString(),
+        type: "Text",
+        author: "admin",
+        ...data,
+      },
     ]);
   };
 
