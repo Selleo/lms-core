@@ -1,6 +1,6 @@
-export type TCategoriesQuery = {
-  filter: string;
-  limit: string;
-  offset: string;
-  sort: string;
+export type CategoriesQuery = {
+  filter?: string;
+  limit?: number;
+  offset?: number;
+  sort?: string;
 };

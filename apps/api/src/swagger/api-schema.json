@@ -622,8 +622,7 @@
                       "type": "string"
                     },
                     "title": {
-                      "type": "string",
-                      "maxLength": 100
+                      "type": "string"
                     }
                   },
                   "required": [

@@ -5,9 +5,9 @@ import {
   AllCategoriesResponse,
   allCategoriesSchema,
 } from "../schemas/categoty.schema";
-import { BaseResponse, baseResponse } from "src/common";
+import { BaseResponse, baseResponse, QueryParamsSchema } from "src/common";
 import { CategorieService } from "../categories.service";
-import { TCategoriesQuery } from "./types";
+import { CategoriesQuery } from "./types";
 
 @Controller("categories")
 export class CategorieController {
@@ -15,13 +15,14 @@ export class CategorieController {
 
   @Get()
   @Validate({
+    // request: [{ type: "query", name: "categories", schema: QueryParamsSchema }],
     response: baseResponse(allCategoriesSchema),
   })
   async getAllCategories(
-    @Query() query: TCategoriesQuery,
+    @Query() query: CategoriesQuery,
   ): Promise<BaseResponse<AllCategoriesResponse>> {
     const categories = await this.categoriesService.getCategories(query);
 
-    return new BaseResponse(categories);
+    return new BaseResponse(categories) as any;
   }
 }

@@ -29,3 +29,10 @@ export function baseResponse(data: TSchema) {
 export function nullResponse() {
   return Type.Null();
 }
+
+export const QueryParamsSchema = Type.Object({
+  limit: Type.Optional(Type.Number()),
+  offset: Type.Optional(Type.Number()),
+  sort: Type.Optional(Type.String()),
+  filter: Type.Optional(Type.String()),
+});
