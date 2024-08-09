@@ -484,8 +484,8 @@ importers:
         specifier: ^9.1.0
         version: 9.1.0(eslint@8.57.0)
       eslint-config-turbo:
-        specifier: ^1.12.4
-        version: 1.12.4(eslint@8.57.0)
+        specifier: ^2.0.12
+        version: 2.0.12(eslint@8.57.0)
       eslint-plugin-only-warn:
         specifier: ^1.1.0
         version: 1.1.0
@@ -20569,10 +20569,17 @@ snapshots:
       eslint: 8.57.0
       eslint-plugin-turbo: 1.10.12(eslint@8.57.0)
 
-  eslint-config-turbo@1.12.4(eslint@8.57.0):
+  /eslint-config-turbo@2.0.12(eslint@8.57.0):
+    resolution:
+      {
+        integrity: sha512-3PUzoyeJi2SjsTSjfWgTUIHK7kOqsapDEaOT7sCjFnZXvuhYLKxW37lysjq7+55abGGm0yQTXxNFLjrQKUORag==,
+      }
+    peerDependencies:
+      eslint: ">6.6.0"
     dependencies:
       eslint: 8.57.0
-      eslint-plugin-turbo: 1.12.4(eslint@8.57.0)
+      eslint-plugin-turbo: 2.0.12(eslint@8.57.0)
+    dev: true
 
   eslint-import-resolver-node@0.3.9:
     dependencies:
@@ -20694,7 +20701,13 @@ snapshots:
       dotenv: 16.0.3
       eslint: 8.57.0
 
-  eslint-plugin-turbo@1.12.4(eslint@8.57.0):
+  /eslint-plugin-turbo@2.0.12(eslint@8.57.0):
+    resolution:
+      {
+        integrity: sha512-vXWKer7F0RPTcVy1B+hFTEK4mlEOpouB8MCAFD3WW4C6t98wvuDCsIPjxIldpxg7CnwmRxALpNWgNVkU2LVVEQ==,
+      }
+    peerDependencies:
+      eslint: ">6.6.0"
     dependencies:
       dotenv: 16.0.3
       eslint: 8.57.0
