@@ -12,11 +12,13 @@
     "test:web": "pnpm run --filter=web test",
     "test:api": "pnpm run --filter=api test",
     "test:web:e2e": "pnpm run --filter=web test:e2e",
-    "test:api:e2e": "pnpm run --filter=api test:e2e"
+    "test:api:e2e": "pnpm run --filter=api test:e2e",
+    "prepare": "husky"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "husky": "^9.1.4",
     "prettier": "^3.2.5",
     "turbo": "^2.0.6"
   },
