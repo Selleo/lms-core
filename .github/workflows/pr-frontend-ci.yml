@@ -70,7 +70,7 @@ jobs:
 
   playwright:
     needs: build
-    name: "Playwright Tests"
+    name: Playwright Tests
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.46.0-jammy
@@ -80,8 +80,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with:
-          version: 8
       - uses: actions/setup-node@v4
         with:
           node-version: 20.15.0
