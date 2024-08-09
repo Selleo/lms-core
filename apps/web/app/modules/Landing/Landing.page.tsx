@@ -1,5 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import SheetMenu from "~/components/SheetMenu/SheetMenu";
 import { useLandingStore } from "~/modules/Landing/landingStore";
 
@@ -22,16 +22,6 @@ export default function LandingPage() {
     <div className="px-4">
       <SheetMenu isSheetOpen={isSheetOpen} setIsSheetOpen={setIsSheetOpen}>
         <div className="flex flex-col gap-2 px-2">
-          <div>
-            <p className="text-xl font-semibold">Check out our Pokemons!</p>
-            <ul className="list-disc">
-              <li>
-                <Link className="text-orange-500" to="/pokemons">
-                  Pokemons
-                </Link>
-              </li>
-            </ul>
-          </div>
           <p className="text-xl font-semibold">Usefull Remix Sources</p>
           <ul className="list-disc">
             <li>
