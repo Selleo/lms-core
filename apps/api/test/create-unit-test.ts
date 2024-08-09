@@ -3,7 +3,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { StartedTestContainer } from "testcontainers";
 import { AppModule } from "../src/app.module";
 import { DatabasePg } from "../src/common";
-import { setupTestDatabase } from "./test-database";
+import { closeTestDatabase, setupTestDatabase } from "./test-database";
 import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
 import { EmailTestingAdapter } from "./helpers/test-email.adapter";
 
@@ -34,6 +34,7 @@ export async function createUnitTest(
       await container.stop();
     }
     await module.close();
+    await closeTestDatabase();
   };
 
   return {
