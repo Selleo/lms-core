@@ -3,6 +3,10 @@ name: Frontend Pull Request Check
 env:
   HUSKY: 0
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   pull_request:
     branches:

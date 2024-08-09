@@ -10,6 +10,10 @@ on:
     paths:
       - apps/api/**
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: Lint
