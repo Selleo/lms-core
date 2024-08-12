@@ -24,6 +24,7 @@ export default function LessonItemsEditPage() {
 
   const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
     resolver: zodResolver(editLessonItemFormSchema),
+    // TODO ADD useLessonItem(id) when DB will be done
     defaultValues: lessonItemForm,
   });
 
@@ -31,7 +32,7 @@ export default function LessonItemsEditPage() {
     const defaultValue = lessonItems.find((item) => item.id === id);
     if (defaultValue) {
       setLessonItemForm(defaultValue);
-      form.reset(defaultValue);
+      form.reset();
     }
   }, [lessonItems, id, form]);
 
@@ -81,7 +82,6 @@ export default function LessonItemsEditPage() {
       <LessonItemForm
         handleFileChange={handleFileChange}
         onSubmit={onSubmit}
-        lessonItemForm={lessonItemForm}
         videoFile={videoFile}
         // TODO After adding the database connection, remove the conditional operator.
         isVideoRequired={Boolean(lessonItemForm.video) || true}

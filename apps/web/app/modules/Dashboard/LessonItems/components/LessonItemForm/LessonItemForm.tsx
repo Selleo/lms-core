@@ -7,10 +7,8 @@ import { LessonItemFormTextarea } from "./LessonItemFormTextarea.js";
 import { LessonItemFormInput } from "./LessonItemFormInput.js";
 import { editLessonItemFormSchema } from "./zodFormType.js";
 import { useNavigate } from "@remix-run/react";
-import { DefaultValuesInterface } from "./index.js";
 
 interface LessonItemForm {
-  lessonItemForm: DefaultValuesInterface;
   isVideoRequired: boolean;
   onSubmit: (data: z.infer<typeof editLessonItemFormSchema>) => void;
   videoFile: File | null;
@@ -19,7 +17,6 @@ interface LessonItemForm {
 }
 
 export const LessonItemForm = ({
-  lessonItemForm,
   isVideoRequired,
   onSubmit,
   videoFile = null,
@@ -27,9 +24,8 @@ export const LessonItemForm = ({
   form,
 }: LessonItemForm) => {
   const navigate = useNavigate();
-
   const onCancel = () => {
-    form.reset(lessonItemForm);
+    form.reset();
     navigate("/dashboard/lessonItems");
   };
 

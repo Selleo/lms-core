@@ -11,16 +11,15 @@ import { LessonItemForm } from "../../components/LessonItemForm/LessonItemForm";
 const LessonItemsAddVideoLayout = () => {
   const { setLessonItems } = useLessonItems();
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [lessonItemForm, setLessonItemForm] = useState<DefaultValuesInterface>({
-    name: "",
-    displayName: "",
-    description: "",
-    video: null,
-  });
 
   const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
     resolver: zodResolver(editLessonItemFormSchema),
-    defaultValues: lessonItemForm,
+    defaultValues: {
+      name: "",
+      displayName: "",
+      description: "",
+      video: null,
+    },
   });
 
   const handleFileChange = (files: FileList | null) => {
