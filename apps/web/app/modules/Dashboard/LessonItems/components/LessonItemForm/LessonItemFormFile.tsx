@@ -28,6 +28,44 @@ interface LessonItemFormFileInterface {
   handleFileChange: (files: FileList | null) => void;
 }
 
+const VideoRequired = () => {
+  return (
+    <div className="flex items-center justify-center w-full h-full radius-l border border-dashed border-red-600 text-red-600 rounded-lg">
+      Video is required
+    </div>
+  );
+};
+
+const VideoPlayer = ({ url }: { url: string }) => {
+  return (
+    <div className="w-full" key={url}>
+      <ReactPlayer url={url} controls className="w-full" />
+      <p className="mt-2">{url}</p>
+    </div>
+  );
+};
+
+const VideoFilePlayer = ({ file }: { file: File }) => {
+  const videoURL = URL.createObjectURL(file);
+  return (
+    <div className="w-full" key={file.name}>
+      <video controls className="w-full">
+        <source
+          src={videoURL}
+          type={file.type === "video/quicktime" ? "video/mp4" : file.type}
+        />
+        <track
+          src="./vtt/captions_en.vtt"
+          kind="captions"
+          srcLang="en"
+          label="English captions"
+        />
+      </video>
+      <p className="mt-2">{file.name}</p>
+    </div>
+  );
+};
+
 export const LessonItemFormFile = ({
   control,
   name,
@@ -41,45 +79,15 @@ export const LessonItemFormFile = ({
 
   const getPreview = () => {
     if (!videoFile) {
-      return (
-        <div className="flex items-center justify-center w-full h-full radius-l border border-dashed border-red-600 text-red-600 rounded-lg">
-          Video is required
-        </div>
-      );
+      return <VideoRequired />;
     }
 
     if (typeof videoFile === "string") {
-      return (
-        <div className="w-full" key={videoFile}>
-          <ReactPlayer url={videoFile} controls className="w-full" />
-          <p className="mt-2">{videoFile}</p>
-        </div>
-      );
+      return <VideoPlayer url={videoFile} />;
     }
 
     if (isObject(videoFile) && videoFile instanceof File) {
-      const videoURL = URL.createObjectURL(videoFile);
-      return (
-        <div className="w-full" key={videoFile.name}>
-          <video controls className="w-full">
-            <source
-              src={videoURL}
-              type={
-                videoFile.type === "video/quicktime"
-                  ? "video/mp4"
-                  : videoFile.type
-              }
-            />
-            <track
-              src="./vtt/captions_en.vtt"
-              kind="captions"
-              srcLang="en"
-              label="English captions"
-            />
-          </video>
-          <p className="mt-2">{videoFile.name}</p>
-        </div>
-      );
+      return <VideoFilePlayer file={videoFile} />;
     }
 
     return <p>Unsupported video type</p>;
