@@ -250,7 +250,40 @@
     "/categories": {
       "get": {
         "operationId": "CategorieController_getAllCategories",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -611,37 +644,37 @@
         "type": "object",
         "properties": {
           "data": {
-            "type": "object",
-            "properties": {
-              "categories": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "title": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "id",
-                    "title"
-                  ]
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
                 }
               },
+              "required": ["id", "title"]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
               "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "pageSize": {
                 "type": "number"
               }
             },
-            "required": [
-              "categories",
-              "totalItems"
-            ]
+            "required": ["totalItems", "page", "pageSize"]
           }
         },
-        "required": ["data"]
+        "required": ["data", "pagination"]
       }
     }
   }

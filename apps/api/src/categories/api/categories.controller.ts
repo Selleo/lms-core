@@ -1,13 +1,17 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get } from "@nestjs/common";
 import { Validate } from "nestjs-typebox";
 
 import {
   AllCategoriesResponse,
   allCategoriesSchema,
 } from "../schemas/categoty.schema";
-import { BaseResponse, baseResponse, QueryParamsSchema } from "src/common";
+import {
+  basePaginatedResponse,
+  BasePaginatedResponse,
+  BasePagination,
+  PaginationValidation,
+} from "src/common";
 import { CategorieService } from "../categories.service";
-import { CategoriesQuery } from "./types";
 
 @Controller("categories")
 export class CategorieController {
@@ -15,14 +19,19 @@ export class CategorieController {
 
   @Get()
   @Validate({
-    // request: [{ type: "query", name: "categories", schema: QueryParamsSchema }],
-    response: baseResponse(allCategoriesSchema),
+    request: PaginationValidation,
+    response: basePaginatedResponse(allCategoriesSchema),
   })
   async getAllCategories(
-    @Query() query: CategoriesQuery,
-  ): Promise<BaseResponse<AllCategoriesResponse>> {
-    const categories = await this.categoriesService.getCategories(query);
+    filter?: string,
+    limit?: number,
+    offset?: number,
+    sort?: string,
+  ): Promise<BasePaginatedResponse<AllCategoriesResponse, BasePagination>> {
+    const query = { filter, limit, offset, sort };
 
-    return new BaseResponse(categories) as any;
+    const data = await this.categoriesService.getCategories(query);
+
+    return new BasePaginatedResponse(data.categories, data.pagination);
   }
 }
