@@ -1,24 +1,25 @@
 import React, { useState } from "react";
 import { useLessonItems } from "~/modules/Dashboard/LessonItemsContext";
 import { DefaultValuesInterface } from "../../components/LessonItemForm";
-import { editLessonItemFormSchema } from "../../components/LessonItemForm/zodFormType";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isObject } from "lodash-es";
-import { LessonItemForm } from "../../components/LessonItemForm/LessonItemForm";
+import { useNavigate } from "@remix-run/react";
+import { LessonItemForm } from "~/components/LessonItems/LessonItemForm";
+import { editLessonItemFormTextSchema } from "~/components/Form/zodFormType";
 
 const LessonItemsAddTextLayout = () => {
   const { setLessonItems } = useLessonItems();
+  const navigate = useNavigate();
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [lessonItemForm, setLessonItemForm] = useState<DefaultValuesInterface>({
+  const lessonItemForm = {
     title: "",
     status: "",
     description: "",
-  });
-
-  const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
-    resolver: zodResolver(editLessonItemFormSchema),
+  };
+  const form = useForm<z.infer<typeof editLessonItemFormTextSchema>>({
+    resolver: zodResolver(editLessonItemFormTextSchema),
     defaultValues: lessonItemForm,
   });
 
@@ -28,9 +29,9 @@ const LessonItemsAddTextLayout = () => {
     } else setVideoFile(files);
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof editLessonItemFormSchema>> = (
-    data
-  ) => {
+  const onSubmit: SubmitHandler<
+    z.infer<typeof editLessonItemFormTextSchema>
+  > = (data) => {
     setLessonItems((prevItems) => [
       ...prevItems,
       {
@@ -42,6 +43,11 @@ const LessonItemsAddTextLayout = () => {
     ]);
   };
 
+  const onCancel = () => {
+    navigate("/dashboard/lessonItems");
+    form.reset();
+  };
+
   return (
     <div>
       <LessonItemForm
@@ -51,6 +57,7 @@ const LessonItemsAddTextLayout = () => {
         videoFile={videoFile}
         isVideoRequired={false}
         form={form}
+        onCancel={onCancel}
       />
     </div>
   );

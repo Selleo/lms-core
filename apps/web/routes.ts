@@ -33,11 +33,11 @@ export const routes: (
       );
       route(
         "lessonitems/add/video",
-        "modules/Dashboard/LessonItems/Add/Video/LessonItemsAddVideo.page.tsx"
+        "modules/Dashboard/LessonItems/Add/LessonItemsAddVideo.page.tsx"
       );
       route(
         "lessonitems/add/text",
-        "modules/Dashboard/LessonItems/Add/Text/LessonItemsAddText.page.tsx"
+        "modules/Dashboard/LessonItems/Add/LessonItemsAddText.page.tsx"
       );
       route(
         "settings",

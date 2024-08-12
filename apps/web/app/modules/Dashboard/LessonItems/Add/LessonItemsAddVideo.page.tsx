@@ -1,25 +1,32 @@
 import { useState } from "react";
 import { useLessonItems } from "~/modules/Dashboard/LessonItemsContext";
 import { DefaultValuesInterface } from "../../components/LessonItemForm";
-import { editLessonItemFormSchema } from "../../components/LessonItemForm/zodFormType";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isObject } from "lodash-es";
-import { LessonItemForm } from "../../components/LessonItemForm/LessonItemForm";
+import { useNavigate } from "@remix-run/react";
+import { LessonItemForm } from "~/components/LessonItems/LessonItemForm";
+import { editLessonItemFormVideoSchema } from "~/components/Form/zodFormType";
 
 const LessonItemsAddVideoLayout = () => {
+  const navigate = useNavigate();
   const { setLessonItems } = useLessonItems();
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [lessonItemForm, setLessonItemForm] = useState<DefaultValuesInterface>({
+  const lessonItemForm = {
     title: "",
-    status: "Published first",
+    status: "",
     description: "",
     video: null,
-  });
+  };
 
-  const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
-    resolver: zodResolver(editLessonItemFormSchema),
+  const onCancel = () => {
+    form.reset();
+    navigate("/dashboard/lessonItems");
+  };
+
+  const form = useForm<z.infer<typeof editLessonItemFormVideoSchema>>({
+    resolver: zodResolver(editLessonItemFormVideoSchema),
     defaultValues: lessonItemForm,
   });
 
@@ -29,9 +36,9 @@ const LessonItemsAddVideoLayout = () => {
     } else setVideoFile(files);
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof editLessonItemFormSchema>> = (
-    data
-  ) => {
+  const onSubmit: SubmitHandler<
+    z.infer<typeof editLessonItemFormVideoSchema>
+  > = (data) => {
     if (data.video) {
       if (data.video instanceof FileList) {
         setVideoFile(data.video[0]);
@@ -62,6 +69,7 @@ const LessonItemsAddVideoLayout = () => {
         videoFile={videoFile}
         isVideoRequired={true}
         form={form}
+        onCancel={onCancel}
       />
     </div>
   );
