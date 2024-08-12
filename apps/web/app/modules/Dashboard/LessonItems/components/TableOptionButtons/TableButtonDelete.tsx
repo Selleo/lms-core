@@ -18,7 +18,6 @@ interface DataFetch {
 }
 
 export const TableButtonDelete = ({
-  btnStyle,
   id,
   setDataFetch,
 }: {
@@ -27,7 +26,7 @@ export const TableButtonDelete = ({
   setDataFetch: React.Dispatch<React.SetStateAction<DataFetch[]>>;
 }) => {
   const [isDeleted, setIsDeleted] = useState(false);
-
+  // TODO when the backend is done, swap the handleDelete function with useDeleteLessonItem().
   const handleDelete = () => {
     setDataFetch((prev) => prev.filter((el) => el.id !== id));
     setIsDeleted(true);
