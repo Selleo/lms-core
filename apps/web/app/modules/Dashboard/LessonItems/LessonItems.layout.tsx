@@ -1,8 +1,8 @@
-import { columns } from "./components/table/columns";
-import { DataTable } from "./components/table/DataTable";
-import { TableOptionButtons } from "./components/TableOptionButtons/TableOptionButtons";
+import { TableOptionButtons } from "../../../components/LessonItems/TableOptionButtons/TableOptionButtons";
 import { Outlet } from "@remix-run/react";
 import { useLessonItems } from "../LessonItemsContext";
+import { columns } from "~/components/LessonItems/table/columns";
+import { DataTable } from "~/components/LessonItems/table/DataTable";
 
 export default function ListItemsLayout() {
   const { lessonItems, setLessonItems } = useLessonItems();
