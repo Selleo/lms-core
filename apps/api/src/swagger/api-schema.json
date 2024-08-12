@@ -282,7 +282,7 @@
             }
           },
           {
-            "name": "limit",
+            "name": "page",
             "required": false,
             "in": "query",
             "schema": {
@@ -290,7 +290,7 @@
             }
           },
           {
-            "name": "offset",
+            "name": "perPage",
             "required": false,
             "in": "query",
             "schema": {
@@ -727,14 +727,14 @@
               "page": {
                 "type": "number"
               },
-              "pageSize": {
+              "perPage": {
                 "type": "number"
               }
             },
             "required": [
               "totalItems",
               "page",
-              "pageSize"
+              "perPage"
             ]
           }
         },

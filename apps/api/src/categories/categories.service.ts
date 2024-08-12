@@ -6,8 +6,7 @@ import { CategoriesQuery } from "./api/types";
 import { categories } from "src/storage/schema";
 import {
   addPagination,
-  DEFAULT_PAGINATION_LIMIT,
-  getPageAndPageSize,
+  DEFAULT_PAGE_SIZE,
   getSortOptions,
 } from "src/utils/pagination";
 
@@ -22,34 +21,34 @@ export class CategorieService {
   public async getCategories(query: CategoriesQuery) {
     const {
       sort = "",
-      limit = DEFAULT_PAGINATION_LIMIT,
-      offset = 0,
+      perPage = DEFAULT_PAGE_SIZE,
+      page = 1,
       filter = "",
     } = query;
 
     const { sortOrder } = getSortOptions(sort);
     const filterCondition = this.createLikeFilter(filter);
 
-    const queryDB = this.db
-      .select()
-      .from(categories)
-      .where(filterCondition)
-      .orderBy(sortOrder(sql`LOWER(${categories.title})`));
+    return this.db.transaction(async (tx) => {
+      const queryDB = tx
+        .select()
+        .from(categories)
+        .where(filterCondition)
+        .orderBy(sortOrder(sql`LOWER(${categories.title})`));
 
-    const { pageSize, page } = getPageAndPageSize({ limit, offset });
+      const paginatedQuery = addPagination({ queryDB, page, perPage });
 
-    const paginatedData = addPagination({ queryDB, page, pageSize });
+      const data = await paginatedQuery;
 
-    const data = await paginatedData;
+      const [totalItems] = await tx
+        .select({ count: count() })
+        .from(categories)
+        .where(filterCondition);
 
-    const [totalItems] = await this.db
-      .select({ count: count() })
-      .from(categories)
-      .where(filterCondition);
-
-    return {
-      categories: data,
-      pagination: { totalItems: totalItems.count, page, pageSize },
-    };
+      return {
+        data,
+        pagination: { totalItems: totalItems.count, page, perPage },
+      };
+    });
   }
 }

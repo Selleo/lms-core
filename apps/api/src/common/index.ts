@@ -12,13 +12,12 @@ export class BaseResponse<T> {
   }
 }
 
-export class BasePaginatedResponse<T, K> {
+export class PaginatedResponse<T, K extends Pagination = Pagination> {
   data: T;
   pagination: K;
 
-  constructor(data: T, pagination: K) {
-    this.data = data;
-    this.pagination = pagination;
+  constructor(data: { data: T; pagination: K }) {
+    Object.assign(this, data);
   }
 }
 
@@ -36,10 +35,10 @@ export function baseResponse(data: TSchema) {
   });
 }
 
-export function basePaginatedResponse(data: TSchema) {
+export function paginatedResponse(data: TSchema) {
   return Type.Object({
     data,
-    pagination: basePagination,
+    pagination: pagination,
   });
 }
 
@@ -47,9 +46,9 @@ export function nullResponse() {
   return Type.Null();
 }
 
-export const basePagination = Type.Object({
+export const pagination = Type.Object({
   totalItems: Type.Number(),
   page: Type.Number(),
-  pageSize: Type.Number(),
+  perPage: Type.Number(),
 });
-export type BasePagination = Static<typeof basePagination>;
+export type Pagination = Static<typeof pagination>;

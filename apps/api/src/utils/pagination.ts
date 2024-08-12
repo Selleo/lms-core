@@ -2,28 +2,18 @@ import { asc, desc } from "drizzle-orm";
 
 type TProps = {
   page: number;
-  pageSize: number;
+  perPage: number;
   queryDB: any;
 };
 
-type PageAndPageSize = {
-  limit: number;
-  offset: number;
-};
-
-export const DEFAULT_PAGINATION_LIMIT = 20;
-
-export const getPageAndPageSize = ({ limit, offset }: PageAndPageSize) => ({
-  pageSize: limit,
-  page: Math.floor(offset / limit) + 1,
-});
+export const DEFAULT_PAGE_SIZE = 20;
 
 export const addPagination = async ({
   queryDB,
   page,
-  pageSize,
+  perPage,
 }: TProps): Promise<{ id: string; title: string }[]> =>
-  queryDB.limit(pageSize).offset((page - 1) * pageSize);
+  queryDB.limit(perPage).offset((page - 1) * perPage);
 
 export const getSortOptions = (sort: string) => ({
   sortOrder: sort.startsWith("-") ? desc : asc,

@@ -1,6 +1,6 @@
 export type CategoriesQuery = {
   filter?: string;
-  limit?: number;
-  offset?: number;
+  page?: number;
+  perPage?: number;
   sort?: string;
 };

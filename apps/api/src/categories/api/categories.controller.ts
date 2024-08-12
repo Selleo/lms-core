@@ -6,11 +6,7 @@ import {
   AllCategoriesResponse,
   allCategoriesSchema,
 } from "../schemas/categoty.schema";
-import {
-  basePaginatedResponse,
-  BasePaginatedResponse,
-  BasePagination,
-} from "src/common";
+import { paginatedResponse, PaginatedResponse } from "src/common";
 import { CategorieService } from "../categories.service";
 
 @Controller("categories")
@@ -19,23 +15,23 @@ export class CategorieController {
 
   @Get()
   @Validate({
-    response: basePaginatedResponse(allCategoriesSchema),
+    response: paginatedResponse(allCategoriesSchema),
     request: [
       { type: "query", name: "filter", schema: Type.String() },
-      { type: "query", name: "limit", schema: Type.Number() },
-      { type: "query", name: "offset", schema: Type.Number() },
+      { type: "query", name: "page", schema: Type.Number() },
+      { type: "query", name: "perPage", schema: Type.Number() },
       { type: "query", name: "sort", schema: Type.String() },
     ],
   })
   async getAllCategories(
     @Query("filter") filter?: string,
-    @Query("limit") limit?: number,
-    @Query("offset") offset?: number,
+    @Query("page") page?: number,
+    @Query("perPage") perPage?: number,
     @Query("sort") sort?: string,
-  ): Promise<BasePaginatedResponse<AllCategoriesResponse, BasePagination>> {
-    const query = { filter, limit, offset, sort };
-    const data = await this.categoriesService.getCategories(query);
+  ): Promise<PaginatedResponse<AllCategoriesResponse>> {
+    const query = { filter, page, perPage, sort };
 
-    return new BasePaginatedResponse(data.categories, data.pagination);
+    const data = await this.categoriesService.getCategories(query);
+    return new PaginatedResponse(data);
   }
 }
