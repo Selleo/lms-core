@@ -7,6 +7,7 @@
   "types": "./dist/index.d.cts",
   "private": true,
   "scripts": {
+    "prepare": "pnpm run build",
     "build": "tsup",
     "clean": "rm -rf dist",
     "dev": "email dev -p 3001 --dir ./src/templates",

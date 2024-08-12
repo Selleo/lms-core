@@ -39,6 +39,10 @@ describe("AuthService", () => {
     emailAdapter.clearEmails();
   });
 
+  afterAll(async () => {
+    await testContext.teardown();
+  });
+
   describe("register", () => {
     it("should register a new user successfully", async () => {
       const user = userFactory.build();

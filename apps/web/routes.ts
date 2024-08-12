@@ -14,8 +14,6 @@ export const routes: (
         index: true,
       });
       route("/about", "modules/Landing/About.page.tsx");
-      route("/pokemons", "modules/Landing/Pokemons.page.tsx");
-      route("/pokemons/:id", "modules/Landing/Pokemon.page.tsx");
     });
     route("dashboard", "modules/Dashboard/Dashboard.layout.tsx", () => {
       route("", "modules/Dashboard/Dashboard.page.tsx", {

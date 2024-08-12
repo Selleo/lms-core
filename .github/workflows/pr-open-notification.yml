@@ -1,0 +1,27 @@
+## Add SLACK_WEBHOOK for a channel notification
+
+# name: Pull Request Open Notification
+
+# on:
+#   pull_request:
+#     types: [ready_for_review, reopened]
+
+# jobs:
+#   slack_notification_pr:
+#     runs-on: ubuntu-latest
+#     name: Slack Notification
+#     if: ${{ always() }}
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Slack Notification
+#         uses: rtCamp/action-slack-notify@master
+#         env:
+#           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#           SLACK_COLOR: '#005994'
+#           SLACK_USERNAME: 'Github Project Notifier'
+#           SLACK_ICON_EMOJI: ':node:'
+#           SLACK_LINK_NAMES: true
+#           SLACK_TITLE: 'New Pull Request! :nerd_face:'
+#           MSG_MINIMAL: true
+#           SLACK_MESSAGE: ' ${{ github.event.pull_request.title }} - ${{ github.event.pull_request.html_url }}'
+#           SLACK_FOOTER: 'Please review in your  :coffee:  time'

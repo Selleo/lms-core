@@ -1,0 +1,76 @@
+name: Frontend Pull Request Check
+
+env:
+  HUSKY: 0
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  pull_request:
+    branches:
+      - "*"
+    paths:
+      - apps/web/**
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/web/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.15.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run ESLint & Compile Typescript
+        run: pnpm lint-tsc
+
+  build:
+    name: Build app
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/web/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.15.0
+          cache: pnpm
+
+      - run: pnpm install
+      - name: Build the app
+        run: pnpm run build
+
+  test:
+    name: Vitest tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/web/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.15.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Vite tests
+        run: pnpm test

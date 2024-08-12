@@ -1,0 +1,54 @@
+name: STAGING - Deploy Webapp
+
+env:
+  HUSKY: 0
+
+on:
+  push:
+    branches:
+      - main
+      - "deploy-staging/**"
+    paths:
+      - apps/web/**
+      - .github/workflows/deploy-webapp-staging.yml
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+    defaults:
+      run:
+        working-directory: ./apps/web/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.15.0
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build app
+        run: pnpm run build
+        env:
+          VITE_API_URL: ${{ vars.STAGING_API_URL }}
+      - name: Synchronize S3 Bucket
+        uses: jakejarvis/s3-sync-action@master
+        with:
+          args: --delete
+        env:
+          AWS_S3_BUCKET: ${{ secrets.STAGING_AWS_APPS_S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.STAGING_AWS_REGION }}
+          SOURCE_DIR: ./apps/web/dist
+          DEST_DIR: apps/webapp
+      - name: Invalidate CloudFront
+        uses: chetan/invalidate-cloudfront-action@v2
+        env:
+          DISTRIBUTION: ${{ secrets.STAGING_AWS_CDN_WEBAPP_ID }}
+          PATHS: "/*"
+          AWS_REGION: "us-east-1"
+          AWS_ACCESS_KEY_ID: ${{ secrets.STAGING_AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.STAGING_AWS_SECRET_ACCESS_KEY }}
