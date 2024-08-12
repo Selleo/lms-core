@@ -5,6 +5,7 @@ import { TableButtonPreview } from "./TableButtonPreview";
 
 const btnStyle =
   "bg-inherit text-black hover:bg-inherit p-0 h-auto text-small font-normal";
+
 interface DataFetch {
   id: string;
   name: string;
