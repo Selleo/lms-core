@@ -51,6 +51,7 @@
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "ts-pattern": "^5.2.0",
+    "vite-plugin-svgr": "^4.2.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.4"
   },

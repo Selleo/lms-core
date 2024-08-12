@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "~/components/ui/button";
-import trash from "public/trash.svg";
+import Trash from "~/assets/trash.svg?react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,7 +38,7 @@ export const TableButtonDelete = ({
       <AlertDialog>
         <AlertDialogTrigger>
           <p className="flex justify-center align-center width-border w-8 h-8 border border-red-600 p-1 rounded-md">
-            <img className="w-5" src={trash} alt="trash" />
+            <Trash className="w-5" />
           </p>
         </AlertDialogTrigger>
         <AlertDialogContent>

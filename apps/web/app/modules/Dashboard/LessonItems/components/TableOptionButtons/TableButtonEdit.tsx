@@ -1,5 +1,5 @@
 import { Link } from "@remix-run/react";
-import pencil from "public/pencil.svg";
+import Pencil from "~/assets/pencil.svg?react";
 
 export const TableButtonEdit = ({
   id,
@@ -9,8 +9,8 @@ export const TableButtonEdit = ({
 }) => {
   return (
     <Link to={`edit/${id}`} rel="noopener noreferrer" target="_blank">
-      <p className="flex justify-center align-center width-border w-8 h-8 border border-blue-500 p-1 rounded-md">
-        <img className="w-5" src={pencil} alt="pencil" />
+      <p className="flex justify-center align-center w-8 h-8 border border-blue-500 p-1 rounded-md">
+        <Pencil className="w-5" />
       </p>
     </Link>
   );
