@@ -32,7 +32,6 @@
     "@tanstack/react-query": "^5.40.1",
     "@tanstack/react-query-devtools": "5",
     "@tanstack/react-table": "^8.19.3",
-    "@vidstack/react": "^1.12.1",
     "axios": "^1.7.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
