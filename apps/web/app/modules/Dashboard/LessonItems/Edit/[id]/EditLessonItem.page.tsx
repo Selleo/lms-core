@@ -1,4 +1,4 @@
-import { useParams } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import { isObject } from "lodash-es";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -6,13 +6,14 @@ import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLessonItems } from "~/modules/Dashboard/LessonItemsContext";
 import { DefaultValuesInterface } from "../../components/LessonItemForm";
-import { editLessonItemFormSchema } from "../../components/LessonItemForm/zodFormType";
-import { LessonItemForm } from "../../components/LessonItemForm/LessonItemForm";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { editLessonItemFormSchema } from "~/components/Form/zodFormType";
+import { LessonItemForm } from "~/components/LessonItems/LessonItemForm";
 
 export default function LessonItemsEditPage() {
   const { lessonItems, setLessonItems } = useLessonItems();
+  const navigate = useNavigate();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [lessonItemForm, setLessonItemForm] = useState<DefaultValuesInterface>({
     title: "",
@@ -33,7 +34,6 @@ export default function LessonItemsEditPage() {
       setLessonItemForm(defaultValue);
       form.reset(defaultValue);
     }
-    console.log(defaultValue);
   }, [lessonItems, id, form]);
 
   if (!id || !lessonItems.find((item) => item.id === id)) {
@@ -67,6 +67,7 @@ export default function LessonItemsEditPage() {
     } else {
       console.log("video is required");
     }
+
     setLessonItems((prevItems) => {
       return prevItems.map((item) => {
         if (item.id === id) {
@@ -75,6 +76,10 @@ export default function LessonItemsEditPage() {
         return item;
       });
     });
+  };
+  const onCancel = () => {
+    navigate("/dashboard/lessonItems");
+    form.reset();
   };
 
   return (
@@ -87,6 +92,7 @@ export default function LessonItemsEditPage() {
         // TODO After adding the database connection, remove the conditional operator.
         isVideoRequired={Boolean(lessonItemForm.video) || true}
         form={form}
+        onCancel={onCancel}
       />
     </div>
   );
