@@ -19,19 +19,19 @@ export const routes: (
       });
 
       route(
-        "lessonitems",
+        "lesson-items",
         "modules/Dashboard/LessonItems/LessonItems.layout.tsx"
       );
       route(
-        "lessonitems/edit/:id",
+        "lesson-items/edit/:id",
         "modules/Dashboard/LessonItems/Edit/[id]/EditLessonItem.page.tsx"
       );
       route(
-        "lessonitems/add/video",
+        "lesson-items/add/video",
         "modules/Dashboard/LessonItems/Add/Video/LessonItemsAddVideo.page.tsx"
       );
       route(
-        "lessonitems/add/text",
+        "lesson-items/add/text",
         "modules/Dashboard/LessonItems/Add/Text/LessonItemsAddText.page.tsx"
       );
       route(
