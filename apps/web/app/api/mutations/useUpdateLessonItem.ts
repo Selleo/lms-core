@@ -3,6 +3,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+// TODO Connect to the database when the backend is completed
 
 export async function updateLessonItem(_id: string) {
   const defaultData = {

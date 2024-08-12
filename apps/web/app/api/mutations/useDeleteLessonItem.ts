@@ -3,7 +3,7 @@ import {
   useQueryClient,
   QueryClient,
 } from "@tanstack/react-query";
-
+// TODO Connect to the database when the backend is completed
 export async function deleteLessonItem(_id: string) {
   await new Promise((resolve) => setTimeout(resolve, 1000));
   return { id: _id };
