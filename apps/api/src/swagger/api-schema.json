@@ -247,56 +247,6 @@
         }
       }
     },
-    "/categories": {
-      "get": {
-        "operationId": "CategorieController_getAllCategories",
-        "parameters": [
-          {
-            "name": "filter",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sort",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "offset",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "number"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetAllCategoriesResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/test-config/setup": {
       "post": {
         "operationId": "TestConfigController_setup",
@@ -315,6 +265,56 @@
         "responses": {
           "201": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "operationId": "CategorieController_getAllCategories",
+        "parameters": [
+          {
+            "name": "filter",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllCategoriesResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -343,7 +343,10 @@
             "type": "string"
           }
         },
-        "required": ["email", "password"]
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "RegisterResponse": {
         "type": "object",
@@ -380,10 +383,18 @@
                 ]
               }
             },
-            "required": ["id", "createdAt", "updatedAt", "email", "role"]
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email",
+              "role"
+            ]
           }
         },
-        "required": ["data"]
+        "required": [
+          "data"
+        ]
       },
       "LoginBody": {
         "type": "object",
@@ -398,7 +409,10 @@
             "type": "string"
           }
         },
-        "required": ["email", "password"]
+        "required": [
+          "email",
+          "password"
+        ]
       },
       "LoginResponse": {
         "type": "object",
@@ -435,10 +449,18 @@
                 ]
               }
             },
-            "required": ["id", "createdAt", "updatedAt", "email", "role"]
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email",
+              "role"
+            ]
           }
         },
-        "required": ["data"]
+        "required": [
+          "data"
+        ]
       },
       "LogoutResponse": {
         "type": "null"
@@ -481,10 +503,18 @@
                 ]
               }
             },
-            "required": ["id", "createdAt", "updatedAt", "email", "role"]
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email",
+              "role"
+            ]
           }
         },
-        "required": ["data"]
+        "required": [
+          "data"
+        ]
       },
       "GetUsersResponse": {
         "type": "object",
@@ -523,11 +553,19 @@
                   ]
                 }
               },
-              "required": ["id", "createdAt", "updatedAt", "email", "role"]
+              "required": [
+                "id",
+                "createdAt",
+                "updatedAt",
+                "email",
+                "role"
+              ]
             }
           }
         },
-        "required": ["data"]
+        "required": [
+          "data"
+        ]
       },
       "GetUserByIdResponse": {
         "type": "object",
@@ -564,10 +602,18 @@
                 ]
               }
             },
-            "required": ["id", "createdAt", "updatedAt", "email", "role"]
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email",
+              "role"
+            ]
           }
         },
-        "required": ["data"]
+        "required": [
+          "data"
+        ]
       },
       "UpdateUserBody": {
         "type": "object",
@@ -613,10 +659,18 @@
                 ]
               }
             },
-            "required": ["id", "createdAt", "updatedAt", "email", "role"]
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email",
+              "role"
+            ]
           }
         },
-        "required": ["data"]
+        "required": [
+          "data"
+        ]
       },
       "ChangePasswordBody": {
         "type": "object",
@@ -632,7 +686,10 @@
             "type": "string"
           }
         },
-        "required": ["newPassword", "oldPassword"]
+        "required": [
+          "newPassword",
+          "oldPassword"
+        ]
       },
       "ChangePasswordResponse": {
         "type": "null"
@@ -655,7 +712,10 @@
                   "type": "string"
                 }
               },
-              "required": ["id", "title"]
+              "required": [
+                "id",
+                "title"
+              ]
             }
           },
           "pagination": {
@@ -671,10 +731,17 @@
                 "type": "number"
               }
             },
-            "required": ["totalItems", "page", "pageSize"]
+            "required": [
+              "totalItems",
+              "page",
+              "pageSize"
+            ]
           }
         },
-        "required": ["data", "pagination"]
+        "required": [
+          "data",
+          "pagination"
+        ]
       }
     }
   }

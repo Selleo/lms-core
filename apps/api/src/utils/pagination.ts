@@ -14,7 +14,7 @@ type PageAndPageSize = {
 export const DEFAULT_PAGINATION_LIMIT = 20;
 
 export const getPageAndPageSize = ({ limit, offset }: PageAndPageSize) => ({
-  pageSize: +limit,
+  pageSize: limit,
   page: Math.floor(offset / limit) + 1,
 });
 

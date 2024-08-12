@@ -47,31 +47,6 @@ export function nullResponse() {
   return Type.Null();
 }
 
-export const PaginationValidation = [
-  {
-    name: "limit" as const,
-    type: "query" as const,
-    schema: Type.Optional(Type.Number()),
-    coerceTypes: true,
-  },
-  {
-    name: "offset" as const,
-    type: "query" as const,
-    schema: Type.Optional(Type.Number()),
-    coerceTypes: true,
-  },
-  {
-    name: "sort" as const,
-    type: "query" as const,
-    schema: Type.Optional(Type.String()),
-  },
-  {
-    name: "filter" as const,
-    type: "query" as const,
-    schema: Type.Optional(Type.String()),
-  },
-];
-
 export const basePagination = Type.Object({
   totalItems: Type.Number(),
   page: Type.Number(),
