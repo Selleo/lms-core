@@ -5,8 +5,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import "./index.css";
 import { Toaster } from "./components/ui/sonner";
+import "./index.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
