@@ -710,6 +710,8 @@
               "createdAt",
               "updatedAt",
               "email",
+              "firstName",
+              "lastName",
               "role"
             ]
           }
