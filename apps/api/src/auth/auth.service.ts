@@ -84,6 +84,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.getTokens(
       user.id,
       user.email,
+      user.role,
     );
 
     return {
@@ -115,7 +116,7 @@ export class AuthService {
         throw new UnauthorizedException("User not found");
       }
 
-      const tokens = await this.getTokens(user.id, user.email);
+      const tokens = await this.getTokens(user.id, user.email, user.role);
       return tokens;
     } catch (error) {
       throw new UnauthorizedException("Invalid refresh token");
@@ -153,17 +154,17 @@ export class AuthService {
     return user;
   }
 
-  private async getTokens(userId: string, email: string) {
+  private async getTokens(userId: string, email: string, role: UserRole) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
-        { userId, email },
+        { userId, email, role },
         {
           expiresIn: this.configService.get<string>("jwt.expirationTime"),
           secret: this.configService.get<string>("jwt.secret"),
         },
       ),
       this.jwtService.signAsync(
-        { userId, email },
+        { userId, email, role },
         {
           expiresIn: "7d",
           secret: this.configService.get<string>("jwt.refreshSecret"),
