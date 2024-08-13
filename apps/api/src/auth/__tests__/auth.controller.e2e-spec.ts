@@ -33,6 +33,8 @@ describe("AuthController (e2e)", () => {
         .set("Content-Type", "application/json")
         .send({
           email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
           password: user.credentials?.password,
         });
 
@@ -45,9 +47,11 @@ describe("AuthController (e2e)", () => {
       const existingUser = {
         email: "existing@example.com",
         password: "password123",
+        firstName: "Tyler",
+        lastName: "Durden",
       };
 
-      await authService.register(existingUser.email, existingUser.password);
+      await authService.register(existingUser);
 
       await request(app.getHttpServer())
         .post("/auth/register")
@@ -97,7 +101,12 @@ describe("AuthController (e2e)", () => {
 
       const user = userFactory.build();
       const password = "password123";
-      await authService.register(user.email, password);
+      await authService.register({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        password,
+      });
 
       const loginResponse = await request(app.getHttpServer())
         .post("/auth/login")
@@ -136,7 +145,12 @@ describe("AuthController (e2e)", () => {
     it("should refresh tokens", async () => {
       const user = await userFactory.build();
       const password = "password123";
-      await authService.register(user.email, password);
+      await authService.register({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        password,
+      });
       let refreshToken = "";
 
       const loginResponse = await request(app.getHttpServer())

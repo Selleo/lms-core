@@ -12,6 +12,8 @@ type Credential = InferInsertModel<typeof credentials>;
 export const credentialFactory = Factory.define<Credential>(() => ({
   id: faker.string.uuid(),
   userId: faker.string.uuid(),
+  firstName: faker.person.firstName(),
+  lastName: faker.person.lastName(),
   password: faker.internet.password(),
   role: "student" as const,
   createdAt: new Date().toISOString(),
@@ -56,6 +58,8 @@ export const createUserFactory = (db: DatabasePg) => {
     return {
       id: faker.string.uuid(),
       email: faker.internet.email(),
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       role: "student" as const,
