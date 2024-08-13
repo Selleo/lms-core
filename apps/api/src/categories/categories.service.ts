@@ -1,4 +1,4 @@
-import { count, like, sql } from "drizzle-orm";
+import { count, like } from "drizzle-orm";
 import { Inject, Injectable } from "@nestjs/common";
 
 import {
@@ -8,6 +8,7 @@ import {
 } from "src/common/pagination";
 import { categories } from "src/storage/schema";
 import { CategoriesQuery } from "./api/types";
+import { CategoryQueries } from "./schemas/category-query";
 import { DatabasePg } from "src/common";
 import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 
@@ -16,7 +17,20 @@ export class CategorieService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
   private createLikeFilter(filter: string) {
-    return like(categories.title, `%${filter}%`);
+    return like(categories.title, `%${filter.toLowerCase()}%`);
+  }
+
+  private getColumnToSortBy(sort: string, isAdmin: boolean) {
+    if (!isAdmin) return categories.title;
+
+    switch (sort) {
+      case CategoryQueries.archivedAt:
+        return categories.archivedAt;
+      case CategoryQueries.createdAt:
+        return categories.createdAt;
+      default:
+        return categories.title;
+    }
   }
 
   public async getCategories(query: CategoriesQuery, userRole: UserRole) {
@@ -27,7 +41,7 @@ export class CategorieService {
       filter = "",
     } = query;
 
-    const { sortOrder } = getSortOptions(sort);
+    const { sortOrder, sortedField } = getSortOptions(sort);
     const filterCondition = this.createLikeFilter(filter);
 
     const isAdmin = userRole === UserRoles.admin;
@@ -45,7 +59,7 @@ export class CategorieService {
         .select(selectedColumns)
         .from(categories)
         .where(filterCondition)
-        .orderBy(sortOrder(sql`LOWER(${categories.title})`));
+        .orderBy(sortOrder(this.getColumnToSortBy(sortedField, isAdmin)));
 
       const paginatedQuery = addPagination({ queryDB, page, perPage });
 
