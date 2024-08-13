@@ -5,15 +5,16 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
-import { DatabasePg, UUIDType } from "src/common";
 import { credentials, users } from "../storage/schema";
-import { UsersService } from "../users/users.service";
-import hashPassword from "src/common/helpers/hashPassword";
+import { DatabasePg, UUIDType } from "src/common";
 import { EmailService } from "src/common/emails/emails.service";
+import { eq } from "drizzle-orm";
+import { JwtService } from "@nestjs/jwt";
+import { UserRole } from "src/users/schemas/user-roles";
+import { UsersService } from "../users/users.service";
 import { WelcomeEmail } from "@repo/email-templates";
+import * as bcrypt from "bcrypt";
+import hashPassword from "src/common/helpers/hashPassword";
 
 @Injectable()
 export class AuthService {
@@ -67,6 +68,7 @@ export class AuthService {
     const { accessToken, refreshToken } = await this.getTokens(
       user.id,
       user.email,
+      user.role,
     );
 
     return {
@@ -98,7 +100,7 @@ export class AuthService {
         throw new UnauthorizedException("User not found");
       }
 
-      const tokens = await this.getTokens(user.id, user.email);
+      const tokens = await this.getTokens(user.id, user.email, user.role);
       return tokens;
     } catch (error) {
       throw new UnauthorizedException("Invalid refresh token");
@@ -133,17 +135,17 @@ export class AuthService {
     return user;
   }
 
-  private async getTokens(userId: string, email: string) {
+  private async getTokens(userId: string, email: string, role: UserRole) {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
-        { userId, email },
+        { userId, email, role },
         {
           expiresIn: this.configService.get<string>("jwt.expirationTime"),
           secret: this.configService.get<string>("jwt.secret"),
         },
       ),
       this.jwtService.signAsync(
-        { userId, email },
+        { userId, email, role },
         {
           expiresIn: "7d",
           secret: this.configService.get<string>("jwt.refreshSecret"),
