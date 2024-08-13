@@ -12,13 +12,14 @@ import { CustomSelect } from "../CustomSelect.js";
 interface FormSelectInterface {
   control: Control<z.infer<typeof editFormSchema>>;
   name: "title" | "status" | "description" | "video";
+  defaultValue: string;
 }
 
-import { useState } from "react";
-
-export const FormSelect = ({ control, name }: FormSelectInterface) => {
-  const [updateField, setUpdateField] = useState<string>("");
-  // TODO the value does not refresh in UI
+export const FormSelect = ({
+  control,
+  name,
+  defaultValue,
+}: FormSelectInterface) => {
   return (
     <FormField
       control={control}
@@ -27,12 +28,10 @@ export const FormSelect = ({ control, name }: FormSelectInterface) => {
         <FormItem>
           <FormControl>
             <>
-              {"xd:" + field.value}
               <CustomSelect
-                value={field.value ? `Status: ${field.value}` : `Select status`}
+                value={field.value || defaultValue}
                 onValueChange={(value) => {
                   field.onChange(value);
-                  console.log(field.value);
                 }}
                 selectItems={[
                   {

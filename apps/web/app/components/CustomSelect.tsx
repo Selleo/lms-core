@@ -18,7 +18,6 @@ interface CustomSelectProps {
   onValueChange?: (value: string) => void;
   selectItems: SelectGroupProps[];
   value: string;
-  memoDependecy?: string[];
 }
 
 export const CustomSelect: React.FC<CustomSelectProps> = ({
@@ -47,7 +46,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger>
-        <SelectValue>{value}</SelectValue> {/* Poprawione */}
+        <SelectValue>{value}</SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup className="w-auto">{renderedItems}</SelectGroup>

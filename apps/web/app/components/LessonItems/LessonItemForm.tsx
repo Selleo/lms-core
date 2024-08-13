@@ -43,7 +43,11 @@ export const LessonItemForm = ({
           label="Title"
           placeholder="Title"
         />
-        <FormSelect control={form.control} name="status" />
+        <FormSelect
+          defaultValue="Select status"
+          control={form.control}
+          name="status"
+        />
         {!isVideoRequired && (
           <div className="md:col-span-2 col-span-1">
             <FormTextarea
