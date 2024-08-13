@@ -5,7 +5,7 @@ import { Validate } from "nestjs-typebox";
 import {
   AllCategoriesResponse,
   allCategoriesSchema,
-} from "../schemas/categoty.schema";
+} from "../schemas/category.schema";
 import { paginatedResponse, PaginatedResponse } from "src/common";
 import { CategorieService } from "../categories.service";
 import { CurrentUser } from "src/common/decorators/user.decorator";
