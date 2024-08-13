@@ -62,7 +62,7 @@ export function FilterInput<TData>({
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex gap-4 items-center py-4">
+      <div className="flex w-[600px] gap-4 items-center pb-4">
         <Input
           placeholder="Search by title..."
           value={searchValue}
