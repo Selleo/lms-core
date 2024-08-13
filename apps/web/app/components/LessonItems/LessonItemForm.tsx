@@ -47,6 +47,7 @@ export const LessonItemForm = ({
           defaultValue="Select status"
           control={form.control}
           name="status"
+          label="Status"
         />
         {!isVideoRequired && (
           <div className="md:col-span-2 col-span-1">

@@ -60,7 +60,9 @@ export const FormFile = ({
               </div>
             </div>
           </FormControl>
-          <FormMessage />
+          <div className="min-h-5">
+            <FormMessage />
+          </div>
         </FormItem>
       )}
     />

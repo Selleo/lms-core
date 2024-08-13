@@ -1,8 +1,9 @@
-import React, { useState, DragEvent } from "react";
+import React, { useState, DragEvent, useRef, useEffect } from "react";
 import { FormVideoFile } from "./FormVideoFile.js";
 import { UploadVideoButton } from "../uploadVideo/UploadVideoButton.js";
 import { UploadMethod } from "../index.js";
 import { ControllerRenderProps } from "react-hook-form";
+import { useFormField } from "~/components/ui/form.js";
 
 interface FormVideoDragAndDropProps {
   onFileSelect?: (file: File) => void;
@@ -19,6 +20,7 @@ export const FormVideoDragAndDrop: React.FC<FormVideoDragAndDropProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoURL, setVideoURL] = useState<string>("");
+  const { error } = useFormField();
 
   const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -42,14 +44,16 @@ export const FormVideoDragAndDrop: React.FC<FormVideoDragAndDropProps> = ({
       field.onChange(e.dataTransfer.files);
     }
   };
-
+  const borderColorClass = error ? "border-red-600" : "border-gray-500";
   return (
     <div
       onDrop={handleDrop}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       className={`flex flex-col align-center justify-center h-full p-4 ${
-        !dragActive ? "border-2 border-gray-500 rounded-md border-dashed" : ""
+        !dragActive
+          ? `border-2 rounded-md border-dashed ${borderColorClass}`
+          : ""
       }`}
       style={{ cursor: "pointer", textAlign: "center" }}
     >

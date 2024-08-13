@@ -16,6 +16,13 @@ export const editLessonItemFormTextSchema = z.object({
     .max(1000, { message: "Description must be less than 1000 characters" }),
 });
 
+export const videoSchema = z
+  .any()
+  .nullable()
+  .refine((val) => val !== null, {
+    message: "Video is required",
+  });
+
 export const editLessonItemFormVideoSchema = z.object({
   title: z
     .string()
@@ -26,5 +33,5 @@ export const editLessonItemFormVideoSchema = z.object({
     .refine((value) => value === "Published first" || value === "Draft first", {
       message: "Status must be either 'Published first' or 'Draft first'",
     }),
-  video: z.any(),
+  video: videoSchema,
 });

@@ -2,6 +2,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "~/components/ui/form";
 import { z } from "zod";
@@ -13,12 +14,14 @@ interface FormSelectInterface {
   control: Control<z.infer<typeof editFormSchema>>;
   name: "title" | "status" | "description" | "video";
   defaultValue: string;
+  label: string;
 }
 
 export const FormSelect = ({
   control,
   name,
   defaultValue,
+  label,
 }: FormSelectInterface) => {
   return (
     <FormField
@@ -28,6 +31,7 @@ export const FormSelect = ({
         <FormItem>
           <FormControl>
             <>
+              <FormLabel>{label}</FormLabel>
               <CustomSelect
                 value={field.value || defaultValue}
                 onValueChange={(value) => {
@@ -41,7 +45,9 @@ export const FormSelect = ({
               />
             </>
           </FormControl>
-          <FormMessage />
+          <div className="min-h-5">
+            <FormMessage />
+          </div>
         </FormItem>
       )}
     />

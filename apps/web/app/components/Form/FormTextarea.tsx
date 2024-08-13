@@ -32,7 +32,9 @@ export const FormTextarea = ({
         <FormControl>
           <Textarea placeholder={placeholder} {...field} />
         </FormControl>
-        <FormMessage />
+        <div className="min-h-5">
+          <FormMessage />
+        </div>
       </FormItem>
     )}
   />
