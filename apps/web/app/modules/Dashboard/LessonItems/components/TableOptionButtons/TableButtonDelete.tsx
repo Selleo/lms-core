@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import Trash from "~/assets/trash.svg?react";
 import {
   AlertDialog,
@@ -20,16 +19,16 @@ interface DataFetch {
 export const TableButtonDelete = ({
   id,
   setDataFetch,
+  setToast,
 }: {
-  btnStyle: string;
   id: string;
   setDataFetch: React.Dispatch<React.SetStateAction<DataFetch[]>>;
+  setToast: () => void;
 }) => {
-  const [isDeleted, setIsDeleted] = useState(false);
   // TODO when the backend is done, swap the handleDelete function with useDeleteLessonItem().
   const handleDelete = () => {
     setDataFetch((prev) => prev.filter((el) => el.id !== id));
-    setIsDeleted(true);
+    setToast();
   };
 
   return (
@@ -50,19 +49,6 @@ export const TableButtonDelete = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {isDeleted && (
-        <AlertDialog open={isDeleted} onOpenChange={setIsDeleted}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Deleted</AlertDialogTitle>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Close</AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
     </div>
   );
 };

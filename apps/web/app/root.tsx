@@ -5,7 +5,8 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import { Toaster } from "./components/ui/sonner";
+import { Toaster as ShadCNToaster } from "~/components/ui/toaster";
+import { Toaster as SonerToaster } from "./components/ui/sonner";
 import "./index.css";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -21,7 +22,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         {children}
         <ScrollRestoration />
         <Scripts />
-        <Toaster
+        <ShadCNToaster />
+        <SonerToaster
           position="top-right"
           richColors
           closeButton

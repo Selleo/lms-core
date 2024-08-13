@@ -3,9 +3,6 @@ import { TableButtonDelete } from "./TableButtonDelete";
 import { TableButtonEdit } from "./TableButtonEdit";
 import { TableButtonPreview } from "./TableButtonPreview";
 
-const btnStyle =
-  "bg-inherit text-black hover:bg-inherit p-0 h-auto text-small font-normal";
-
 interface DataFetch {
   id: string;
   name: string;
@@ -14,9 +11,11 @@ interface DataFetch {
 export const TableOptionButtons = ({
   setDataFetch,
   data,
+  setToast,
 }: {
   data: { id: string; displayName: string; description: string };
   setDataFetch: React.Dispatch<React.SetStateAction<DataFetch[]>>;
+  setToast: () => void;
 }) => {
   const { displayName, description, id } = data;
   return (
@@ -24,8 +23,8 @@ export const TableOptionButtons = ({
       <TableButtonPreview displayName={displayName} description={description} />
       <TableButtonEdit description={description} id={id} />
       <TableButtonDelete
-        btnStyle={btnStyle}
         id={id}
+        setToast={setToast}
         setDataFetch={setDataFetch}
       />
     </div>

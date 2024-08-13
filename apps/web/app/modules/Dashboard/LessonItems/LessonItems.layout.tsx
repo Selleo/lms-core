@@ -3,6 +3,7 @@ import { DataTable } from "./components/table/DataTable";
 import { TableOptionButtons } from "./components/TableOptionButtons/TableOptionButtons";
 import { Outlet } from "@remix-run/react";
 import { useLessonItems } from "../LessonItemsContext";
+import { useToast } from "~/components/ui/use-toast";
 
 interface DataItemWithOptions {
   id: string;
@@ -13,11 +14,19 @@ interface DataItemWithOptions {
 
 export default function ListItemsLayout() {
   const { lessonItems, setLessonItems } = useLessonItems();
+  const { toast } = useToast();
+
+  const setToast = () => {
+    toast({
+      description: "Deleted",
+    });
+  };
 
   const dataWithOptions: DataItemWithOptions[] = lessonItems.map((item) => ({
     ...item,
     options: (
       <TableOptionButtons
+      setToast={setToast}
         setDataFetch={setLessonItems}
         data={{
           id: item.id,
