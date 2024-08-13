@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { toast } from "sonner";
 import { ApiClient } from "../api-client";
 import { UpdateUserBody } from "../generated-api";
 import { queryClient } from "../queryClient";
@@ -8,6 +7,7 @@ import {
   currentUserQueryOptions,
   useCurrentUserSuspense,
 } from "../queries/useCurrentUser";
+import { useToast } from "~/components/ui/use-toast";
 
 type UpdateUserOptions = {
   data: UpdateUserBody;
@@ -15,6 +15,7 @@ type UpdateUserOptions = {
 
 export function useUpdateUser() {
   const { data: currentUser } = useCurrentUserSuspense();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (options: UpdateUserOptions) => {
@@ -27,13 +28,19 @@ export function useUpdateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast.success("User updated successfully");
+      toast({ description: "User updated successfully" });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.message);
+        return toast({
+          description: error.response?.data.message,
+          variant: "destructive",
+        });
       }
-      toast.error(error.message);
+      toast({
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
 }
