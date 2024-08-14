@@ -12,7 +12,7 @@ import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
 
 export default function LessonItemsEditPage() {
   const { lessonItems, setLessonItems } = useLessonItems();
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null | string>(null);
   const { id } = useParams<{ id: string }>();
 
   const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
@@ -38,7 +38,7 @@ export default function LessonItemsEditPage() {
       </div>
     );
   }
-  const handleFileChange = (files: FileList | null) => {
+  const handleFileChange = (files: FileList | null | string) => {
     if (isObject(files)) {
       setVideoFile(files[0]);
     } else setVideoFile(files);

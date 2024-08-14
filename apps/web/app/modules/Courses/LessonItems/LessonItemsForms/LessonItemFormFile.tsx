@@ -18,7 +18,7 @@ import { Button } from "~/components/ui/button";
 import ReactPlayer from "react-player";
 import { isObject } from "lodash-es";
 import { RenderDialogForm } from "./RenderDialogForm";
-import { UploadMethod } from "./index.js";
+import { UploadMethod } from "./types.js";
 import { UploadFile } from "../UploadLessonVideo/UploadFile";
 import { UploadFromInternet } from "../UploadLessonVideo/UploadFromInternet";
 

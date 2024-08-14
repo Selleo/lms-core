@@ -1,8 +1,5 @@
-import * as React from "react";
 import {
   ColumnDef,
-  ColumnFiltersState,
-  SortingState,
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,

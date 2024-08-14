@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { editLessonItemFormSchema } from "./LessonItemsForms/zodFormType";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -9,7 +9,7 @@ import { useLessonItems } from "./LessonItemsContext";
 
 const LessonItemsAddTextLayout = () => {
   const { setLessonItems } = useLessonItems();
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoFile, setVideoFile] = useState<File | null | string>(null);
 
   const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
     resolver: zodResolver(editLessonItemFormSchema),
@@ -20,7 +20,7 @@ const LessonItemsAddTextLayout = () => {
     },
   });
 
-  const handleFileChange = (files: FileList | null) => {
+  const handleFileChange = (files: FileList | null | string) => {
     if (isObject(files)) {
       setVideoFile(files[0]);
     } else setVideoFile(files);

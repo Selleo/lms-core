@@ -9,10 +9,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { Input } from "~/components/ui/input.js";
-import { Button } from "~/components/ui/button.js";
-import { UploadAlertDialogProps, UploadFileProps } from "../index.js";
+import { Input } from "~/components/ui/input";
+import { Button } from "~/components/ui/button";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { UploadAlertDialogProps, UploadFileProps } from "../LessonItemsForms/types";
 
 export const UploadFromInternetDialog = ({
   setUploadMethod,

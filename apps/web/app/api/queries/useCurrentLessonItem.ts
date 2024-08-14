@@ -1,23 +1,20 @@
-import {
-  useQuery,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 //TODO: ApiClient does not hav a authControllerCurrentLesson
-
+export const ApiClientTemporaryReturn = {
+  data: {
+    data: {
+      id: "xd",
+      name: "xd",
+      displayName: "xd",
+      description: "xd",
+    },
+  },
+};
 const ApiClientTemporary = {
   auth: {
     authControllerCurrentLesson: () => {
-      return {
-        data: {
-          data: {
-            id: "xd",
-            name: "xd",
-            displayName: "xd",
-            description: "xd",
-          },
-        },
-      };
+      return ApiClientTemporaryReturn;
     },
   },
 };

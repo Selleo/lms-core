@@ -1,4 +1,5 @@
 import { queryOptions } from "@tanstack/react-query";
+import { ApiClientTemporaryReturn } from "./useCurrentLessonItem";
 //TODO: Connect to the database when the backend is completed
 
 export const useLessonItem = (id: string) =>
@@ -6,6 +7,6 @@ export const useLessonItem = (id: string) =>
     queryKey: ["lesson-items", id],
     queryFn: async () => {
       const response = await fetch(`/api/lesson-items/${id}`);
-      return response.json() as Promise<any>;
+      return response.json() as Promise<typeof ApiClientTemporaryReturn>;
     },
   });

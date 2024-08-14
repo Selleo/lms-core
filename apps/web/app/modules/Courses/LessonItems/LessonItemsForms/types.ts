@@ -1,26 +1,26 @@
 import { ControllerRenderProps } from "react-hook-form";
 
-interface UploadMethod {
+export interface UploadMethod {
   text: string;
   method: "sendFile" | "internet" | "";
 }
 
-interface DefaultValuesInterface {
+export interface DefaultValuesInterface {
   name: string;
   displayName: string;
   description: string;
   video?: File | null;
 }
 
-interface UploadFileProps {
+export interface UploadFileProps {
   setUploadMethod: React.Dispatch<UploadMethod>;
 }
 
-interface UploadAlertDialogProps extends UploadFileProps {
+export interface UploadAlertDialogProps extends UploadFileProps {
   handleFileChange: (files: FileList | null) => void;
   field: ControllerRenderProps;
 }
 
-interface RenderDialogFormInterface extends UploadAlertDialogProps {
+export interface RenderDialogFormInterface extends UploadAlertDialogProps {
   uploadMethod: UploadMethod;
 }

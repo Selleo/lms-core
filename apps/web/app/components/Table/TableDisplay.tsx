@@ -1,4 +1,8 @@
-import { ColumnDef, flexRender } from "@tanstack/react-table";
+import {
+  ColumnDef,
+  flexRender,
+  Table as ReactTableInstance,
+} from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -7,8 +11,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-
-import { Table as ReactTableInstance } from "@tanstack/react-table";
 
 interface DataTableProps<TData, TValue> {
   table: ReactTableInstance<TData>;
