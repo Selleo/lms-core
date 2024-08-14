@@ -10,6 +10,7 @@ export const routes: (
       route("login", "modules/Auth/Login.page.tsx", { index: true });
       route("register", "modules/Auth/Register.page.tsx");
       route("create-new-password", "modules/Auth/CreateNewPassword.page.tsx");
+      route("password-recovery", "modules/Auth/PasswordRecovery.page.tsx");
     });
     route("", "modules/Dashboard/Dashboard.layout.tsx", () => {
       route("", "modules/Dashboard/Dashboard.page.tsx", {
