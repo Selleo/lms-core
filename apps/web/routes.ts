@@ -1,17 +1,15 @@
-import {
-  DefineRouteFunction,
-  RouteManifest,
-} from "@remix-run/dev/dist/config/routes";
+import {DefineRouteFunction, RouteManifest,} from "@remix-run/dev/dist/config/routes";
 
 export const routes: (
   defineRoutes: (
-    callback: (defineRoute: DefineRouteFunction) => void
-  ) => RouteManifest
+    callback: (defineRoute: DefineRouteFunction) => void,
+  ) => RouteManifest,
 ) => RouteManifest | Promise<RouteManifest> = (defineRoutes) => {
   return defineRoutes((route) => {
     route("auth", "modules/Auth/Auth.layout.tsx", () => {
       route("login", "modules/Auth/Login.page.tsx", { index: true });
       route("register", "modules/Auth/Register.page.tsx");
+      route("create-new-password", "modules/Auth/CreateNewPassword.page.tsx");
     });
     route("", "modules/Dashboard/Dashboard.layout.tsx", () => {
       route("", "modules/Dashboard/Dashboard.page.tsx", {
