@@ -18,21 +18,18 @@ export const routes: (
         index: true,
       });
 
+      route("lesson-items", "modules/LessonItems/LessonItems.layout.tsx");
       route(
-        "lesson-items",
-        "modules/Dashboard/LessonItems/LessonItems.layout.tsx"
-      );
-      route(
-        "lesson-items/edit/:id",
-        "modules/Dashboard/LessonItems/Edit/[id]/EditLessonItem.page.tsx"
+        "lesson-items/:id/edit",
+        "modules/LessonItems/EditLessonItem.page.tsx"
       );
       route(
         "lesson-items/add/video",
-        "modules/Dashboard/LessonItems/Add/Video/LessonItemsAddVideo.page.tsx"
+        "modules/LessonItems/LessonItemsAddVideo.page.tsx"
       );
       route(
         "lesson-items/add/text",
-        "modules/Dashboard/LessonItems/Add/Text/LessonItemsAddText.page.tsx"
+        "modules/LessonItems/LessonItemsAddText.page.tsx"
       );
       route(
         "settings",

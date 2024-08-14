@@ -1,9 +1,10 @@
-import { columns } from "./components/table/columns";
-import { DataTable } from "./components/table/DataTable";
-import { TableOptionButtons } from "./components/TableOptionButtons/TableOptionButtons";
 import { Outlet } from "@remix-run/react";
-import { useLessonItems } from "../LessonItemsContext";
 import { useToast } from "~/components/ui/use-toast";
+import { useLessonItems } from "./LessonItemsContext";
+import { columns } from "~/modules/LessonItems/LessonItemsTable/columns";
+import { TableData } from "~/components/Table/TableData";
+import { TableOptionButtons } from "./LessonTableOptionButtons/TableOptionButtons";
+import { LessonItemsButton } from "./LessonItemsButton";
 
 interface DataItemWithOptions {
   id: string;
@@ -26,7 +27,7 @@ export default function ListItemsLayout() {
     ...item,
     options: (
       <TableOptionButtons
-      setToast={setToast}
+        setToast={setToast}
         setDataFetch={setLessonItems}
         data={{
           id: item.id,
@@ -39,7 +40,10 @@ export default function ListItemsLayout() {
 
   return (
     <div className="w-4/5 mx-auto">
-      <DataTable columns={columns} data={dataWithOptions} />
+      <div className="flex justify-end w-full pb-3">
+        <LessonItemsButton />
+      </div>
+      <TableData columns={columns} data={dataWithOptions} />
       <Outlet />
     </div>
   );

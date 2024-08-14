@@ -1,5 +1,5 @@
-import { queryOptions, useQuery } from "@tanstack/react-query";
-// TODO Connect to the database when the backend is completed
+import { queryOptions } from "@tanstack/react-query";
+//TODO: Connect to the database when the backend is completed
 
 export const useLessonItem = (id: string) =>
   queryOptions({
@@ -9,7 +9,3 @@ export const useLessonItem = (id: string) =>
       return response.json() as Promise<any>;
     },
   });
-
-export function usePokemon(id: string) {
-  return useQuery(useLessonItem(id));
-}

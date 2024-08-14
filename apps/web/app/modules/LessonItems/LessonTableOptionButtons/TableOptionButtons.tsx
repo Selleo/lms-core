@@ -1,7 +1,7 @@
 import React from "react";
-import { TableButtonDelete } from "./TableButtonDelete";
-import { TableButtonEdit } from "./TableButtonEdit";
-import { TableButtonPreview } from "./TableButtonPreview";
+import { TableButtonDelete } from "./TableButtonDelete.js";
+import { TableButtonEdit } from "./TableButtonEdit.js";
+import { TableButtonPreview } from "./TableButtonPreview.js";
 
 interface DataFetch {
   id: string;

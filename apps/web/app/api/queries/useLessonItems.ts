@@ -1,5 +1,5 @@
 import { queryOptions, useQuery } from "@tanstack/react-query";
-// TODO Connect to the database when the backend is completed
+//TODO: Connect to the database when the backend is completed
 
 export const lessonsOptions = queryOptions({
   queryKey: ["lesson-items", "list"],

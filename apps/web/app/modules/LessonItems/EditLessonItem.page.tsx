@@ -2,40 +2,29 @@ import { useParams } from "@remix-run/react";
 import { isObject } from "lodash-es";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLessonItems } from "~/modules/Dashboard/LessonItemsContext";
-import { DefaultValuesInterface } from "../../components/LessonItemForm";
-import { editLessonItemFormSchema } from "../../components/LessonItemForm/zodFormType";
-import { LessonItemForm } from "../../components/LessonItemForm/LessonItemForm";
+import { editLessonItemFormSchema } from "./LessonItemsForms/zodFormType";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { useLessonItems } from "./LessonItemsContext";
+import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
 
 export default function LessonItemsEditPage() {
   const { lessonItems, setLessonItems } = useLessonItems();
   const [videoFile, setVideoFile] = useState<File | null>(null);
-  const [lessonItemForm, setLessonItemForm] = useState<DefaultValuesInterface>({
-    name: "",
-    displayName: "",
-    description: "",
-    video: null,
-  });
   const { id } = useParams<{ id: string }>();
 
   const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
     resolver: zodResolver(editLessonItemFormSchema),
-    // TODO ADD useLessonItem(id) when DB will be done
-    defaultValues: lessonItemForm,
+    //TODO: ADD useLessonItem(id) when DB will be done
+    defaultValues: {
+      name: "",
+      displayName: "",
+      description: "",
+      video: "null",
+    },
   });
-
-  useEffect(() => {
-    const defaultValue = lessonItems.find((item) => item.id === id);
-    if (defaultValue) {
-      setLessonItemForm(defaultValue);
-      form.reset();
-    }
-  }, [lessonItems, id, form]);
-
   if (!id || !lessonItems.find((item) => item.id === id)) {
     return (
       <div className="w-fit mx-auto">
@@ -83,8 +72,8 @@ export default function LessonItemsEditPage() {
         handleFileChange={handleFileChange}
         onSubmit={onSubmit}
         videoFile={videoFile}
-        // TODO After adding the database connection, remove the conditional operator.
-        isVideoRequired={Boolean(lessonItemForm.video) || true}
+        //TODO: After adding the database connection, remove the conditional operator.
+        isVideoRequired={Boolean(form.formState.defaultValues?.video) || true}
         form={form}
       />
     </div>

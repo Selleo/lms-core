@@ -1,6 +1,6 @@
-import { RenderDialogFormInterface } from ".";
-import { UploadFileDialog } from "./uploadVideo/UploadFile";
-import { UploadFromInternetDialog } from "./uploadVideo/UploadFromInternet";
+import { UploadFileDialog } from "../UploadLessonVideo/UploadFile.js";
+import { UploadFromInternetDialog } from "../UploadLessonVideo/UploadFromInternet.js";
+import { RenderDialogFormInterface } from "./index.js";
 
 export const RenderDialogForm = ({
   uploadMethod,

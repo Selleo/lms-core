@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import { useLessonItems } from "~/modules/Dashboard/LessonItemsContext";
-import { DefaultValuesInterface } from "../../components/LessonItemForm";
-import { editLessonItemFormSchema } from "../../components/LessonItemForm/zodFormType";
+import { useState } from "react";
+import { editLessonItemFormSchema } from "./LessonItemsForms/zodFormType";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isObject } from "lodash-es";
-import { LessonItemForm } from "../../components/LessonItemForm/LessonItemForm";
+import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
+import { useLessonItems } from "./LessonItemsContext";
 
-const LessonItemsAddTextLayout = () => {
+const LessonItemsAddVideoLayout = () => {
   const { setLessonItems } = useLessonItems();
   const [videoFile, setVideoFile] = useState<File | null>(null);
 
@@ -18,6 +17,7 @@ const LessonItemsAddTextLayout = () => {
       name: "",
       displayName: "",
       description: "",
+      video: null,
     },
   });
 
@@ -30,6 +30,16 @@ const LessonItemsAddTextLayout = () => {
   const onSubmit: SubmitHandler<z.infer<typeof editLessonItemFormSchema>> = (
     data
   ) => {
+    if (data.video) {
+      if (data.video instanceof FileList) {
+        setVideoFile(data.video[0]);
+      } else {
+        setVideoFile(data.video);
+      }
+    } else {
+      console.log("video is required");
+    }
+
     setLessonItems((prevItems) => [
       ...prevItems,
       { id: new Date().getTime().toString(), ...data },
@@ -41,13 +51,12 @@ const LessonItemsAddTextLayout = () => {
       <LessonItemForm
         handleFileChange={handleFileChange}
         onSubmit={onSubmit}
-        lessonItemForm={lessonItemForm}
         videoFile={videoFile}
-        isVideoRequired={false}
+        isVideoRequired={true}
         form={form}
       />
     </div>
   );
 };
 
-export default LessonItemsAddTextLayout;
+export default LessonItemsAddVideoLayout;

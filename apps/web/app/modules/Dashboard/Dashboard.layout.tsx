@@ -14,7 +14,7 @@ import { useAuthEffect } from "../Auth/authEffect";
 import { authGuard } from "../Auth/authGuard";
 import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
 import { DashboardNavigation } from "./DashboardNavigation/DashboardNavigation";
-import { LessonItemsProvider } from "./LessonItemsContext";
+import { LessonItemsProvider } from "../LessonItems/LessonItemsContext";
 
 export const clientLoader = () => authGuard();
 

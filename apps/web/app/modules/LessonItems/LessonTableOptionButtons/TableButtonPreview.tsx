@@ -1,4 +1,4 @@
-import Eye from "~/assets/eye.svg?react";
+import { EyeIcon } from "~/modules/icons/icons";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -21,7 +21,7 @@ export const TableButtonPreview = ({
     <AlertDialog>
       <AlertDialogTrigger>
         <p className="flex justify-center align-center width-border w-8 h-8 border border-blue-500 p-1 rounded-md">
-          <Eye className="w-5" />
+          <EyeIcon className="stroke-blue-500 fill-none w-5" />
         </p>
       </AlertDialogTrigger>
       <AlertDialogContent>

@@ -1,6 +1,4 @@
-import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import React from "react";
 
 export type Payment = {
   id: string;
@@ -21,6 +19,6 @@ export const columns: ColumnDef<Payment>[] = [
   {
     accessorKey: "options",
     header: "Options",
-    cell: (info) => info.getValue(), // render the content as is
+    cell: (info) => info.getValue(),
   },
 ];

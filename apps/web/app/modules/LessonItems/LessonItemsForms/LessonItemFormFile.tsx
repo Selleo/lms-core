@@ -8,18 +8,19 @@ import {
 import { Control } from "react-hook-form";
 import { z } from "zod";
 import { editLessonItemFormSchema } from "./zodFormType.js";
-import { UploadFile } from "./uploadVideo/UploadFile.js";
-import { UploadFromInternet } from "./uploadVideo/UploadFromInternet.js";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu.js";
-import { Button } from "~/components/ui/button.js";
+} from "~/components/ui/dropdown-menu";
+import { Button } from "~/components/ui/button";
 import ReactPlayer from "react-player";
 import { isObject } from "lodash-es";
-import { RenderDialogForm } from "./RenderDialogForm.js";
-import { UploadMethod } from "./index.d.ts";
+import { RenderDialogForm } from "./RenderDialogForm";
+import { UploadMethod } from "./index.js";
+import { UploadFile } from "../UploadLessonVideo/UploadFile";
+import { UploadFromInternet } from "../UploadLessonVideo/UploadFromInternet";
 
 interface LessonItemFormFileInterface {
   control: Control<z.infer<typeof editLessonItemFormSchema>>;

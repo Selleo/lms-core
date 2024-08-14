@@ -1,33 +1,44 @@
-import {
-  useMutation,
-  useQueryClient,
-  QueryClient,
-} from "@tanstack/react-query";
-// TODO Connect to the database when the backend is completed
+import { useMutation } from "@tanstack/react-query";
+import { queryClient } from "../queryClient";
+import { useToast } from "~/components/ui/use-toast";
+import { AxiosError } from "axios";
+import { currentLessonItemsQueryOptions } from "../queries/useCurrentLessonItem";
+import { useLessonItem } from "../queries/useLessonItem";
+
+//TODO: Connect to the database when the backend is completed
 export async function deleteLessonItem(_id: string) {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  //TODO: Implement the actual API call to delete the lesson item once the backend is available
   return { id: _id };
 }
-export async function invalidateLessonItemQueries(
-  queryClient: QueryClient,
-  id?: string
-) {
-  await queryClient.invalidateQueries("lessonItems");
+
+export async function invalidateLessonItemQueries(id: string) {
+  await queryClient.invalidateQueries(currentLessonItemsQueryOptions);
 
   if (id) {
-    await queryClient.invalidateQueries(["lessonItem", id]);
+    await queryClient.invalidateQueries(useLessonItem(id));
   }
 }
 
-// Hook do usuwania elementu lekcji
 export function useDeleteLessonItem() {
-  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation({
-    mutationKey: ["deleteLessonItem"],
+    mutationKey: ["delete-lesson-item"],
     mutationFn: ({ id }: { id: string }) => deleteLessonItem(id),
-    onSettled: (_data, _error, variables) => {
-      invalidateLessonItemQueries(queryClient, variables.id);
+    onSuccess: () => {
+      toast({ description: "Lesson item deleted successfully." });
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        return toast({
+          description: error.response?.data.message,
+          variant: "destructive",
+        });
+      }
+      toast({
+        description: error.message,
+        variant: "destructive",
+      });
     },
   });
 }
