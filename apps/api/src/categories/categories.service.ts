@@ -8,7 +8,7 @@ import {
   addPagination,
   DEFAULT_PAGE_SIZE,
   getSortOptions,
-} from "src/utils/pagination";
+} from "src/common/pagination";
 
 @Injectable()
 export class CategorieService {
