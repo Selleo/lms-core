@@ -1,3 +1,4 @@
+import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -7,14 +8,11 @@ import {
   CardContent,
   CardFooter,
 } from "~/components/ui/card";
+const LessonsButton = () => <Button>Create new</Button>;
 
 export default function LessonsPage() {
   return (
-    <div className="flex flex-1 flex-col gap-4 lg:gap-6 h-full">
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-semibold md:text-2xl">Lessons</h1>
-        <Button>Create lesson</Button>
-      </div>
+    <PageWrapper header="Lessons" PageWrapperButton={LessonsButton}>
       <div className="grid grid-cols-4 gap-4 w-fit">
         <Card className="overflow-hidden">
           <CardHeader className="p-0 mb-2 relative">
@@ -64,6 +62,6 @@ export default function LessonsPage() {
           </CardFooter>
         </Card>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

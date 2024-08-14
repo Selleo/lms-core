@@ -3,9 +3,11 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { routes } from "./routes";
 import path from "path";
+import svgr from "vite-plugin-svgr";
 
 export default defineConfig({
   plugins: [
+    svgr(),
     remix({
       future: {
         v3_fetcherPersist: true,
