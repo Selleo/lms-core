@@ -14,6 +14,8 @@ interface DataFetch {
   id: string;
   name: string;
   displayName: string;
+  description: string;
+  video: File | string | null | FileList;
 }
 
 export const TableButtonDelete = ({

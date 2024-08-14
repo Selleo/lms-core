@@ -7,13 +7,20 @@ interface DataFetch {
   id: string;
   name: string;
   displayName: string;
+  description: string;
+  video: File | string | null | FileList;
 }
+
 export const TableOptionButtons = ({
   setDataFetch,
   data,
   setToast,
 }: {
-  data: { id: string; displayName: string; description: string };
+  data: {
+    id: string;
+    displayName: string;
+    description: string;
+  };
   setDataFetch: React.Dispatch<React.SetStateAction<DataFetch[]>>;
   setToast: () => void;
 }) => {

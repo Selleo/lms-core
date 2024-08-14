@@ -20,9 +20,15 @@ export function useLogoutUser() {
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.message);
+        return toast({
+          variant: "destructive",
+          description: error.response?.data.message,
+        });
       }
-      toast.error(error.message);
+      toast({
+        variant: "destructive",
+        description: error.message,
+      });
     },
   });
 }

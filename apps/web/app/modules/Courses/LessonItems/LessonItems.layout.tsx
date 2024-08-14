@@ -10,6 +10,8 @@ interface DataItemWithOptions {
   id: string;
   name: string;
   displayName: string;
+  description: string;
+  video: string | File | FileList | null;
   options: JSX.Element;
 }
 

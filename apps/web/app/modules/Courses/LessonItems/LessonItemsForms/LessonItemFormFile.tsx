@@ -25,7 +25,7 @@ import { UploadFromInternet } from "../UploadLessonVideo/UploadFromInternet";
 interface LessonItemFormFileInterface {
   control: Control<z.infer<typeof editLessonItemFormSchema>>;
   name: "name" | "displayName" | "description" | "video" | "";
-  videoFile: File | null;
+  videoFile: File | null | string;
   handleFileChange: (files: FileList | null) => void;
 }
 

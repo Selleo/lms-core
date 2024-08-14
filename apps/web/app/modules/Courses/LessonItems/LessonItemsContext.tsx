@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
-interface LessonItem {
+export interface LessonItem {
   id: string;
   name: string;
   displayName: string;
   description: string;
-  video?: File | null;
+  video: File | null | string | FileList;
 }
 
 interface EditLessonItem extends LessonItem {

@@ -47,25 +47,27 @@ export default function LessonItemsEditPage() {
   const onSubmit: SubmitHandler<z.infer<typeof editLessonItemFormSchema>> = (
     data
   ) => {
+    let video: string | File | null | FileList = null;
+
     if (data.video) {
       if (data.video instanceof FileList) {
-        setVideoFile(data.video[0]);
-      } else {
-        setVideoFile(data.video);
+        video = data.video[0];
+      } else if (typeof data.video === "string" || data.video instanceof File) {
+        video = data.video;
       }
     } else {
       console.log("video is required");
     }
+
     setLessonItems((prevItems) => {
       return prevItems.map((item) => {
         if (item.id === id) {
-          return { ...item, ...data };
+          return { ...item, ...data, video };
         }
         return item;
       });
     });
   };
-
   return (
     <div>
       <LessonItemForm

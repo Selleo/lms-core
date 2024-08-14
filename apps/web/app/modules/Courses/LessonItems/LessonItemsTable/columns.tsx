@@ -1,13 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 
-export type Payment = {
+export type LessonItemsColumns = {
   id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
+  name: string;
+  displayName: string;
+  description: string;
+  video: null | string | File | FileList;
 };
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<LessonItemsColumns>[] = [
   {
     accessorKey: "name",
     header: "Name",

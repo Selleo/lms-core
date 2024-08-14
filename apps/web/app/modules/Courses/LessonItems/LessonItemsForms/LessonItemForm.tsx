@@ -11,7 +11,7 @@ import { useNavigate } from "@remix-run/react";
 interface LessonItemForm {
   isVideoRequired: boolean;
   onSubmit: (data: z.infer<typeof editLessonItemFormSchema>) => void;
-  videoFile: File | null;
+  videoFile: File | null | string;
   handleFileChange: (files: FileList | null) => void;
   form: UseFormReturn<z.infer<typeof editLessonItemFormSchema>>;
 }

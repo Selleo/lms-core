@@ -9,7 +9,7 @@ export interface DefaultValuesInterface {
   name: string;
   displayName: string;
   description: string;
-  video?: File | null;
+  video: string | File | FileList | null;
 }
 
 export interface UploadFileProps {

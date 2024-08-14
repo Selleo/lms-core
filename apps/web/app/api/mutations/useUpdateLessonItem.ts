@@ -14,7 +14,7 @@ type UpdateLessonItemOptions = {
     name: string;
     displayName: string;
     description: string;
-    video?: string | File | FileList;
+    video: string | File | FileList | null;
   }; //TODO: The generated API does not have a type for this
 };
 
