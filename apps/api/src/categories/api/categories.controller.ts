@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -6,10 +6,19 @@ import {
   AllCategoriesResponse,
   allCategoriesSchema,
 } from "../schemas/category.schema";
-import { paginatedResponse, PaginatedResponse } from "src/common";
+import {
+  baseResponse,
+  BaseResponse,
+  paginatedResponse,
+  PaginatedResponse,
+} from "src/common";
 import { CategoriesService } from "../categories.service";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { UserRole } from "src/users/schemas/user-roles";
+import {
+  CommonCategory,
+  commonCategorySchema,
+} from "../schemas/common-category.schema";
 
 @Controller("categories")
 export class CategorieController {
@@ -36,5 +45,22 @@ export class CategorieController {
 
     const data = await this.categoriesService.getCategories(query, userRole);
     return new PaginatedResponse(data);
+  }
+
+  @Post("/archive/:id")
+  @Validate({
+    request: [{ type: "param", name: "id", schema: Type.String() }],
+    response: baseResponse(commonCategorySchema),
+  })
+  async archiveCategory(
+    @Param("id") categoryId: string,
+    @CurrentUser("role") userRole: UserRole,
+  ): Promise<BaseResponse<CommonCategory>> {
+    const category = await this.categoriesService.archiveCategory(
+      categoryId,
+      userRole,
+    );
+
+    return new BaseResponse(category) as any;
   }
 }

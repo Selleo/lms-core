@@ -1,5 +1,5 @@
-import { count, like } from "drizzle-orm";
-import { Inject, Injectable } from "@nestjs/common";
+import { count, eq, like, sql } from "drizzle-orm";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
 import {
   addPagination,
@@ -74,6 +74,37 @@ export class CategoriesService {
         data,
         pagination: { totalItems: totalItems.count, page, perPage },
       };
+    });
+  }
+
+  public async archiveCategory(categoryId: string, userRole: UserRole) {
+    if (userRole !== UserRoles.admin) {
+      throw new HttpException(
+        "Only admins can archive the category",
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    return this.db.transaction(async (tx) => {
+      const [category] = await tx
+        .select()
+        .from(categories)
+        .where(eq(categories.id, categoryId));
+
+      if (category.archivedAt) {
+        throw new HttpException(
+          "Category already archived",
+          HttpStatus.UNPROCESSABLE_ENTITY,
+        );
+      }
+
+      const [updatedCategory] = await tx
+        .update(categories)
+        .set({ archivedAt: sql`CURRENT_TIMESTAMP` })
+        .where(eq(categories.id, categoryId))
+        .returning();
+
+      return updatedCategory;
     });
   }
 }

@@ -318,6 +318,32 @@
           }
         }
       }
+    },
+    "/categories/archive/{id}": {
+      "post": {
+        "operationId": "CategorieController_archiveCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArchiveCategoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "info": {
@@ -741,6 +767,48 @@
         "required": [
           "data",
           "pagination"
+        ]
+      },
+      "ArchiveCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "archivedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "createdAt",
+              "updatedAt",
+              "archivedAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       }
     }
