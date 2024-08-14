@@ -6,12 +6,32 @@ import {
   LayoutDashboard,
   Tag,
   Users,
+  LucideProps,
 } from "lucide-react";
 import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
 import { cn } from "~/lib/utils";
 import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
-import { MenuItemType } from "../types";
 import { MenuItem } from "./MenuItem";
+
+import { GetUsersResponse } from "~/api/generated-api";
+
+export type Role = GetUsersResponse["data"][number]["role"];
+
+export interface BaseMenuItem {
+  label: string;
+  roles: Role[];
+}
+
+export interface LeafMenuItem extends BaseMenuItem {
+  link: string;
+  Icon: React.FC<LucideProps>;
+}
+
+export interface ParentMenuItem extends BaseMenuItem {
+  children: MenuItemType[];
+}
+
+export type MenuItemType = LeafMenuItem | ParentMenuItem;
 
 const menuItems: MenuItemType[] = [
   {

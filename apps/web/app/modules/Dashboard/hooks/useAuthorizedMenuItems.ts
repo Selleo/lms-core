@@ -1,5 +1,8 @@
 import { useMemo } from "react";
-import { MenuItemType, Role } from "../types";
+import type {
+  MenuItemType,
+  Role,
+} from "../DashboardNavigation/DashboardNavigation";
 
 interface UseAuthorizedMenuItems {
   menuItems: MenuItemType[] | undefined;

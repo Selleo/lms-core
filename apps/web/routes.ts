@@ -31,9 +31,7 @@ export const routes: (
       });
       route("lessons", "modules/Courses/Lessons/Lessons.page.tsx");
       route("lesson-items", "modules/Courses/LessonItems/LessonItems.page.tsx");
-      route("users", "modules/Users/Users.layout.tsx", () => {
-        route("", "modules/Users/Users.page.tsx", { index: true });
-      });
+      route("users", "modules/Users/Users.page.tsx");
       route("categories", "modules/Courses/Categories/Categories.page.tsx");
     });
   });

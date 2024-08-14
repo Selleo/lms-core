@@ -1,7 +1,7 @@
 import { NavLink } from "@remix-run/react";
-import { LeafMenuItem } from "../types";
 import { cn } from "~/lib/utils";
 import { memo } from "react";
+import type { LeafMenuItem } from "./DashboardNavigation";
 
 export const MenuItemLink = memo(({ label, link, Icon }: LeafMenuItem) => (
   <NavLink

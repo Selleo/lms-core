@@ -1,6 +1,7 @@
-import dayjs from "dayjs";
+import { format } from "date-fns";
 import { EllipsisVertical } from "lucide-react";
-import { useAllUsersSuspense } from "~/api/queries/useUsers";
+import { useAllUsersSuspense, usersQueryOptions } from "~/api/queries/useUsers";
+import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import {
   Table,
@@ -10,6 +11,11 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+
+export const clientLoader = async () => {
+  await queryClient.prefetchQuery(usersQueryOptions);
+  return null;
+};
 
 export default function UsersPage() {
   const { data: users } = useAllUsersSuspense();
@@ -38,7 +44,7 @@ export default function UsersPage() {
                 {user.role}
               </TableCell>
               <TableCell className="hidden md:table-cell">
-                {dayjs(user.createdAt).format("DD/MM/YYYY")}
+                {format(user.createdAt, "dd/MM/yyyy")}
               </TableCell>
               <TableCell className="text-right">
                 <Button variant="ghost" size="sm">

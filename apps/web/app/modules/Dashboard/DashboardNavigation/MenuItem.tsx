@@ -1,6 +1,6 @@
 import { memo } from "react";
-import type { MenuItemType } from "../types";
 import { MenuItemLink } from "./MenuItemLink";
+import type { MenuItemType } from "./DashboardNavigation";
 
 export const MenuItem = memo(({ item }: { item: MenuItemType }) => {
   if ("children" in item) {

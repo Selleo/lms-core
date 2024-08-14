@@ -1,5 +1,6 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
+import { GetUsersResponse } from "../generated-api";
 
 export const usersQueryOptions = {
   queryKey: ["users"],
@@ -7,14 +8,13 @@ export const usersQueryOptions = {
     const response = await ApiClient.users.usersControllerGetUsers();
     return response.data;
   },
+  select: (data: GetUsersResponse) => data.data,
 };
 
 export function useAllUsers() {
-  const { data, ...rest } = useQuery(usersQueryOptions);
-  return { data: data?.data, ...rest };
+  return useQuery(usersQueryOptions);
 }
 
 export function useAllUsersSuspense() {
-  const { data, ...rest } = useSuspenseQuery(usersQueryOptions);
-  return { data: data.data, ...rest };
+  return useSuspenseQuery(usersQueryOptions);
 }
