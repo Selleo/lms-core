@@ -1,4 +1,4 @@
-import { count, eq, like, sql } from "drizzle-orm";
+import { and, count, eq, isNull, like, sql } from "drizzle-orm";
 import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 
 import {
@@ -16,8 +16,11 @@ import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 export class CategoriesService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  private createLikeFilter(filter: string) {
-    return like(categories.title, `%${filter.toLowerCase()}%`);
+  private createCategoriesFilters(filter: string, isAdmin: boolean) {
+    return and(
+      like(categories.title, `%${filter.toLowerCase()}%`),
+      isAdmin ? undefined : isNull(categories.archivedAt),
+    );
   }
 
   private getColumnToSortBy(sort: string, isAdmin: boolean) {
@@ -42,9 +45,8 @@ export class CategoriesService {
     } = query;
 
     const { sortOrder, sortedField } = getSortOptions(sort);
-    const filterCondition = this.createLikeFilter(filter);
-
     const isAdmin = userRole === UserRoles.admin;
+    const filterCondition = this.createCategoriesFilters(filter, isAdmin);
 
     const selectedColumns = {
       id: categories.id,
