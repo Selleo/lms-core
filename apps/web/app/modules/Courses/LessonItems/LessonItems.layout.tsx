@@ -1,10 +1,10 @@
 import { Outlet } from "@remix-run/react";
 import { useToast } from "~/components/ui/use-toast";
 import { useLessonItems } from "./LessonItemsContext";
-import { columns } from "~/modules/LessonItems/LessonItemsTable/columns";
 import { TableData } from "~/components/Table/TableData";
 import { TableOptionButtons } from "./LessonTableOptionButtons/TableOptionButtons";
 import { LessonItemsButton } from "./LessonItemsButton";
+import { columns } from "./LessonItemsTable/columns";
 
 interface DataItemWithOptions {
   id: string;

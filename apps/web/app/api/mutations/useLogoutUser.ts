@@ -1,11 +1,12 @@
 import { useAuthStore } from "./../../modules/Auth/authStore";
 import { useMutation } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
-import { toast } from "sonner";
+import { useToast } from "~/components/ui/use-toast";
 import { AxiosError } from "axios";
 import { queryClient } from "../queryClient";
 
 export function useLogoutUser() {
+  const { toast } = useToast();
   const { setLoggedIn } = useAuthStore();
   return useMutation({
     mutationFn: async () => {

@@ -2,8 +2,8 @@ import { useNavigate } from "@remix-run/react";
 import { useMutation } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
 import { RegisterBody } from "../generated-api";
-import { toast } from "sonner";
 import { AxiosError } from "axios";
+import { useToast } from "~/components/ui/use-toast";
 
 type RegisterUserOptions = {
   data: RegisterBody;
@@ -11,6 +11,7 @@ type RegisterUserOptions = {
 
 export function useRegisterUser() {
   const navigate = useNavigate();
+  const { toast } = useToast();
   return useMutation({
     mutationFn: async (options: RegisterUserOptions) => {
       const response = await ApiClient.auth.authControllerRegister(
@@ -24,9 +25,15 @@ export function useRegisterUser() {
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.message);
+        return toast({
+          variant: "destructive",
+          description: error.response?.data.message,
+        });
       }
-      toast.error(error.message);
+      toast({
+        variant: "destructive",
+        description: error.message,
+      });
     },
   });
 }

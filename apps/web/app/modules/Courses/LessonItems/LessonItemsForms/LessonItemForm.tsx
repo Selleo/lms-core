@@ -25,7 +25,7 @@ export const LessonItemForm = ({
 }: LessonItemForm) => {
   const navigate = useNavigate();
   const onCancel = () => {
-    navigate("/dashboard/lesson-items");
+    navigate("/lesson-items");
   };
 
   return (
