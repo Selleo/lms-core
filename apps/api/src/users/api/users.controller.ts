@@ -54,8 +54,6 @@ export class UsersController {
   async getUsers(
     @Query("page") page?: number,
     @Query("perPage") perPage?: number,
-    @Query("sort") sort?: string,
-    @Query("filter") filter?: string,
   ): Promise<PaginatedResponse<AllUsersResponse>> {
     const query = { page, perPage };
 

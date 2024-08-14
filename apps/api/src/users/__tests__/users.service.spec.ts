@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { credentials, users } from "../../storage/schema";
 import { DatabasePg } from "src/common";
 import { TestContext, createUnitTest } from "test/create-unit-test";
-import { UsersService } from "../users.service";
+import { UsersQuery, UsersService } from "../users.service";
 import { createUserFactory } from "test/factory/user.factory";
 import { truncateAllTables } from "test/helpers/test-helpers";
 
@@ -34,11 +34,15 @@ describe("UsersService", () => {
       const testUsers = Array.from({ length: 2 }, () => userFactory.build());
       await db.insert(users).values(testUsers);
 
-      const result = await usersService.getUsers();
+      const query: UsersQuery = {
+        filter: `email IN (${testUsers.map((user) => `'${user.email}'`).join(", ")})`,
+      };
 
-      expect(result).toHaveLength(2);
-      expect(result[0].email).toBe(testUsers[0].email);
-      expect(result[1].email).toBe(testUsers[1].email);
+      const result = await usersService.getUsers(query);
+
+      expect(result.data).toHaveLength(2);
+      expect(result.data[0].email).toBe(testUsers[0].email);
+      expect(result.data[1].email).toBe(testUsers[1].email);
     });
   });
 
