@@ -7,13 +7,13 @@ import {
   allCategoriesSchema,
 } from "../schemas/category.schema";
 import { paginatedResponse, PaginatedResponse } from "src/common";
-import { CategorieService } from "../categories.service";
+import { CategoriesService } from "../categories.service";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { UserRole } from "src/users/schemas/user-roles";
 
 @Controller("categories")
 export class CategorieController {
-  constructor(private readonly categoriesService: CategorieService) {}
+  constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
   @Validate({

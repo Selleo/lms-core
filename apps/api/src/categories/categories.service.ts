@@ -13,7 +13,7 @@ import { DatabasePg } from "src/common";
 import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 
 @Injectable()
-export class CategorieService {
+export class CategoriesService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
   private createLikeFilter(filter: string) {
