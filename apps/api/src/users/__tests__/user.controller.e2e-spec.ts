@@ -91,10 +91,12 @@ describe("UsersController (e2e)", () => {
     });
 
     it("should return 403 when updating another user", async () => {
-      const anotherUser = await authService.register(
-        "another@example.com",
-        "password123",
-      );
+      const anotherUser = await authService.register({
+        email: "another@example.com",
+        password: "password123",
+        firstName: "Another",
+        lastName: "User",
+      });
       await request(app.getHttpServer())
         .patch(`/users/${anotherUser.id}`)
         .set("Cookie", cookies)
@@ -136,10 +138,12 @@ describe("UsersController (e2e)", () => {
     });
 
     it("should return 403 when changing another user's password", async () => {
-      const anotherUser = await authService.register(
-        "another2@example.com",
-        "password123",
-      );
+      const anotherUser = await authService.register({
+        email: "another2@example.com",
+        password: "password123",
+        firstName: "Another",
+        lastName: "User",
+      });
       await request(app.getHttpServer())
         .patch(`/users/${anotherUser.id}/change-password`)
         .set("Cookie", cookies)
@@ -162,10 +166,12 @@ describe("UsersController (e2e)", () => {
     });
 
     it("should return 403 when deleting another user", async () => {
-      const anotherUser = await authService.register(
-        "another3@example.com",
-        "password123",
-      );
+      const anotherUser = await authService.register({
+        email: "another3@example.com",
+        password: "password123",
+        firstName: "Another",
+        lastName: "User",
+      });
       await request(app.getHttpServer())
         .delete(`/users/${anotherUser.id}`)
         .set("Cookie", cookies)

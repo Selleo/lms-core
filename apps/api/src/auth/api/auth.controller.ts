@@ -42,7 +42,7 @@ export class AuthController {
   async register(
     data: CreateAccountBody,
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
-    const account = await this.authService.register(data.email, data.password);
+    const account = await this.authService.register(data);
 
     return new BaseResponse(account);
   }

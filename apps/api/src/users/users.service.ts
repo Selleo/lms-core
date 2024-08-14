@@ -30,7 +30,10 @@ export class UsersService {
     return user;
   }
 
-  public async updateUser(id: string, data: { email?: string }) {
+  public async updateUser(
+    id: string,
+    data: { email?: string; firstName?: string; lastName?: string },
+  ) {
     const [existingUser] = await this.db
       .select()
       .from(users)

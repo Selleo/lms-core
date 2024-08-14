@@ -46,7 +46,11 @@ describe("UsersService", () => {
     it("should return a user by id", async () => {
       const [testUser] = await db
         .insert(users)
-        .values({ email: "test@example.com" })
+        .values({
+          email: "test@example.com",
+          firstName: "Test",
+          lastName: "User",
+        })
         .returning();
 
       const result = await usersService.getUserById(testUser.id);
@@ -66,11 +70,17 @@ describe("UsersService", () => {
     it("should update a user", async () => {
       const [testUser] = await db
         .insert(users)
-        .values({ email: "old@example.com" })
+        .values({
+          email: "old@example.com",
+          firstName: "Old",
+          lastName: "User",
+        })
         .returning();
 
       const updatedUser = await usersService.updateUser(testUser.id, {
         email: "new@example.com",
+        firstName: "Tyler",
+        lastName: "Durden",
       });
 
       const [dbUser] = await db
@@ -80,6 +90,8 @@ describe("UsersService", () => {
 
       expect(updatedUser).toBeDefined();
       expect(updatedUser.email).toBe("new@example.com");
+      expect(updatedUser.firstName).toBe("Tyler");
+      expect(updatedUser.lastName).toBe("Durden");
       expect(dbUser.email).toBe("new@example.com");
     });
 
@@ -100,7 +112,11 @@ describe("UsersService", () => {
 
       const [testUser] = await db
         .insert(users)
-        .values({ email: "test@example.com" })
+        .values({
+          email: "test@example.com",
+          firstName: "Test",
+          lastName: "User",
+        })
         .returning();
       await db
         .insert(credentials)
@@ -126,7 +142,11 @@ describe("UsersService", () => {
 
       const [testUser] = await db
         .insert(users)
-        .values({ email: "test@example.com" })
+        .values({
+          email: "test@example.com",
+          firstName: "Test",
+          lastName: "User",
+        })
         .returning();
       await db
         .insert(credentials)
@@ -156,7 +176,11 @@ describe("UsersService", () => {
     it("should delete a user", async () => {
       const [testUser] = await db
         .insert(users)
-        .values({ email: "test@example.com" })
+        .values({
+          email: "test@example.com",
+          firstName: "Test",
+          lastName: "User",
+        })
         .returning();
 
       await usersService.deleteUser(testUser.id);

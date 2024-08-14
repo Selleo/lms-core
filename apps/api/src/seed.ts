@@ -1,10 +1,10 @@
-import * as dotenv from "dotenv";
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
-import { users, credentials } from "./storage/schema";
-import { DatabasePg } from "./common";
 import { faker } from "@faker-js/faker";
+import * as dotenv from "dotenv";
+import { drizzle } from "drizzle-orm/postgres-js";
+import postgres from "postgres";
+import { DatabasePg } from "./common";
 import hashPassword from "./common/helpers/hashPassword";
+import { credentials, users } from "./storage/schema";
 
 dotenv.config({ path: "./.env" });
 
@@ -23,6 +23,8 @@ async function seed() {
     const studentUserData = {
       id: faker.string.uuid(),
       email: testUserEmail,
+      firstName: "Student",
+      lastName: "User",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       role: "student",
@@ -31,6 +33,8 @@ async function seed() {
     const adminUserData = {
       id: faker.string.uuid(),
       email: "admin@example.com",
+      firstName: "Admin",
+      lastName: "User",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       role: "admin",
@@ -93,6 +97,8 @@ async function seed() {
         const userData = {
           id: faker.string.uuid(),
           email: faker.internet.email(),
+          firstName: faker.person.firstName(),
+          lastName: faker.person.lastName(),
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };

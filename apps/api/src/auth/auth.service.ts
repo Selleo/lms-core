@@ -25,7 +25,17 @@ export class AuthService {
     private emailService: EmailService,
   ) {}
 
-  public async register(email: string, password: string) {
+  public async register({
+    email,
+    firstName,
+    lastName,
+    password,
+  }: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    password: string;
+  }) {
     const [existingUser] = await this.db
       .select()
       .from(users)
@@ -38,7 +48,10 @@ export class AuthService {
     const hashedPassword = await hashPassword(password);
 
     return this.db.transaction(async (trx) => {
-      const [newUser] = await trx.insert(users).values({ email }).returning();
+      const [newUser] = await trx
+        .insert(users)
+        .values({ email, firstName, lastName })
+        .returning();
 
       await trx
         .insert(credentials)
@@ -110,6 +123,8 @@ export class AuthService {
       .select({
         id: users.id,
         email: users.email,
+        firstName: users.firstName,
+        lastName: users.lastName,
         password: credentials.password,
         createdAt: users.createdAt,
         updatedAt: users.updatedAt,

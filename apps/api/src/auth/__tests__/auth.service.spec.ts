@@ -48,7 +48,12 @@ describe("AuthService", () => {
       const user = userFactory.build();
       const password = "password123";
 
-      const result = await authService.register(user.email, password);
+      const result = await authService.register({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        password,
+      });
 
       const [savedUser] = await db
         .select()
@@ -76,7 +81,12 @@ describe("AuthService", () => {
       const allEmails = emailAdapter.getAllEmails();
 
       expect(allEmails).toHaveLength(0);
-      await authService.register(user.email, password);
+      await authService.register({
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        password,
+      });
       expect(allEmails).toHaveLength(1);
     });
 
@@ -85,7 +95,12 @@ describe("AuthService", () => {
       const user = await userFactory.create({ email });
 
       await expect(
-        authService.register(user.email, "password123"),
+        authService.register({
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          password: "password123",
+        }),
       ).rejects.toThrow(ConflictException);
     });
   });
@@ -138,9 +153,14 @@ describe("AuthService", () => {
     it("should validate user successfully", async () => {
       const email = "test@example.com";
       const password = "password123";
+      const firstName = "Tyler";
+      const lastName = "Durden";
       const hashedPassword = await hashPassword(password);
 
-      const [user] = await db.insert(users).values({ email }).returning();
+      const [user] = await db
+        .insert(users)
+        .values({ email, firstName, lastName })
+        .returning();
       await db
         .insert(credentials)
         .values({ userId: user.id, password: hashedPassword });

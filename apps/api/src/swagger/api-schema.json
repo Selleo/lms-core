@@ -337,6 +337,16 @@
             "format": "email",
             "type": "string"
           },
+          "firstName": {
+            "minLength": 1,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "lastName": {
+            "minLength": 1,
+            "maxLength": 64,
+            "type": "string"
+          },
           "password": {
             "minLength": 8,
             "maxLength": 64,
@@ -345,6 +355,8 @@
         },
         "required": [
           "email",
+          "firstName",
+          "lastName",
           "password"
         ]
       },
@@ -364,6 +376,12 @@
                 "type": "string"
               },
               "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
                 "type": "string"
               },
               "role": {
@@ -388,6 +406,8 @@
               "createdAt",
               "updatedAt",
               "email",
+              "firstName",
+              "lastName",
               "role"
             ]
           }
@@ -432,6 +452,12 @@
               "email": {
                 "type": "string"
               },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
               "role": {
                 "anyOf": [
                   {
@@ -454,6 +480,8 @@
               "createdAt",
               "updatedAt",
               "email",
+              "firstName",
+              "lastName",
               "role"
             ]
           }
@@ -486,6 +514,12 @@
               "email": {
                 "type": "string"
               },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
               "role": {
                 "anyOf": [
                   {
@@ -508,6 +542,8 @@
               "createdAt",
               "updatedAt",
               "email",
+              "firstName",
+              "lastName",
               "role"
             ]
           }
@@ -536,6 +572,12 @@
                 "email": {
                   "type": "string"
                 },
+                "firstName": {
+                  "type": "string"
+                },
+                "lastName": {
+                  "type": "string"
+                },
                 "role": {
                   "anyOf": [
                     {
@@ -558,6 +600,8 @@
                 "createdAt",
                 "updatedAt",
                 "email",
+                "firstName",
+                "lastName",
                 "role"
               ]
             }
@@ -585,6 +629,12 @@
               "email": {
                 "type": "string"
               },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
               "role": {
                 "anyOf": [
                   {
@@ -607,6 +657,8 @@
               "createdAt",
               "updatedAt",
               "email",
+              "firstName",
+              "lastName",
               "role"
             ]
           }
@@ -642,6 +694,12 @@
               "email": {
                 "type": "string"
               },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
               "role": {
                 "anyOf": [
                   {
@@ -664,6 +722,8 @@
               "createdAt",
               "updatedAt",
               "email",
+              "firstName",
+              "lastName",
               "role"
             ]
           }
