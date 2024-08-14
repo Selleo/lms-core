@@ -21,8 +21,10 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 
-export const clientLoader = () =>
-  queryClient.prefetchQuery(currentUserQueryOptions);
+export const clientLoader = async () => {
+  await queryClient.prefetchQuery(currentUserQueryOptions);
+  return null;
+};
 
 const updateUserSchema = z.object({
   email: z.string().email(),

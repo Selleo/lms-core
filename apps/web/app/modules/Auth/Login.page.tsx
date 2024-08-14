@@ -1,12 +1,6 @@
 import { Link, useNavigate } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useLoginUser } from "~/api/mutations/useLoginUser";
@@ -15,6 +9,13 @@ import { cn } from "~/lib/utils";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { LoginBody } from "~/api/generated-api";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -34,7 +35,7 @@ export default function LoginPage() {
 
   const onSubmit = (data: LoginBody) => {
     loginUser({ data }).then(() => {
-      navigate("/dashboard");
+      navigate("/");
     });
   };
 

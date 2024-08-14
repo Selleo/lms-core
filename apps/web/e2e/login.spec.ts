@@ -16,10 +16,10 @@ test.describe("login page", () => {
 
   test("should login as test user", async ({ page }) => {
     await page.getByLabel("email").fill("user@example.com");
-    await page.getByLabel("password").fill("password");
+    await page.getByLabel("password").fill("studentpassword");
     await page.getByRole("button", { name: /login/i }).click();
 
-    await expect(page).toHaveURL(/dashboard/);
+    await expect(page).toHaveURL("/");
     await expect(page).toHaveTitle(/dashboard/i);
   });
 });

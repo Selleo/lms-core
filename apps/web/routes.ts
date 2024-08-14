@@ -9,13 +9,11 @@ export const routes: (
   ) => RouteManifest
 ) => RouteManifest | Promise<RouteManifest> = (defineRoutes) => {
   return defineRoutes((route) => {
-    route("", "modules/Landing/Landing.layout.tsx", () => {
-      route("", "modules/Landing/Landing.page.tsx", {
-        index: true,
-      });
-      route("/about", "modules/Landing/About.page.tsx");
+    route("auth", "modules/Auth/Auth.layout.tsx", () => {
+      route("login", "modules/Auth/Login.page.tsx", { index: true });
+      route("register", "modules/Auth/Register.page.tsx");
     });
-    route("dashboard", "modules/Dashboard/Dashboard.layout.tsx", () => {
+    route("", "modules/Dashboard/Dashboard.layout.tsx", () => {
       route("", "modules/Dashboard/Dashboard.page.tsx", {
         index: true,
       });
@@ -28,10 +26,13 @@ export const routes: (
           });
         }
       );
-    });
-    route("auth", "modules/Auth/Auth.layout.tsx", () => {
-      route("login", "modules/Auth/Login.page.tsx");
-      route("register", "modules/Auth/Register.page.tsx");
+      route("courses", "modules/Courses/Courses.page.tsx", {
+        index: true,
+      });
+      route("lessons", "modules/Courses/Lessons/Lessons.page.tsx");
+      route("lesson-items", "modules/Courses/LessonItems/LessonItems.page.tsx");
+      route("users", "modules/Users/Users.page.tsx");
+      route("categories", "modules/Courses/Categories/Categories.page.tsx");
     });
   });
 };

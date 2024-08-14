@@ -20,13 +20,26 @@ async function seed() {
   const db = drizzle(sql) as DatabasePg;
 
   try {
-    const adminUserData = {
+    const studentUserData = {
       id: faker.string.uuid(),
       email: testUserEmail,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      role: "student",
+    } as const;
+
+    const adminUserData = {
+      id: faker.string.uuid(),
+      email: "admin@example.com",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       role: "admin",
     } as const;
+
+    const [insertedStudentUser] = await db
+      .insert(users)
+      .values(studentUserData)
+      .returning();
 
     const [insertedAdminUser] = await db
       .insert(users)
@@ -41,12 +54,33 @@ async function seed() {
       updatedAt: new Date().toISOString(),
     };
 
+    const studentCredentialData = {
+      id: faker.string.uuid(),
+      userId: insertedStudentUser.id,
+      password: await hashPassword("studentpassword"),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
     const [insertedAdminCredential] = await db
       .insert(credentials)
       .values(adminCredentialData)
       .returning();
 
+    const [insertedStudentCredential] = await db
+      .insert(credentials)
+      .values(studentCredentialData)
+      .returning();
+
     console.log("Created admin user:", {
+      ...insertedStudentUser,
+      credentials: {
+        ...insertedStudentCredential,
+        password: adminPassword,
+      },
+    });
+
+    console.log("Created student user:", {
       ...insertedAdminUser,
       credentials: {
         ...insertedAdminCredential,

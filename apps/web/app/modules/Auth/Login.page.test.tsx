@@ -40,7 +40,7 @@ describe("Login page", () => {
     await user.click(screen.getByRole("button", { name: "Login" }));
 
     await waitFor(() => {
-      expect(mockedUseNavigate).toHaveBeenCalledWith("/dashboard");
+      expect(mockedUseNavigate).toHaveBeenCalledWith("/");
     });
   });
 });

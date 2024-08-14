@@ -1,5 +1,6 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
+import { CurrentUserResponse } from "../generated-api";
 
 export const currentUserQueryOptions = {
   queryKey: ["currentUser"],
@@ -7,14 +8,13 @@ export const currentUserQueryOptions = {
     const response = await ApiClient.auth.authControllerCurrentUser();
     return response.data;
   },
+  select: (data: CurrentUserResponse) => data.data,
 };
 
 export function useCurrentUser() {
-  const { data, ...rest } = useQuery(currentUserQueryOptions);
-  return { data: data?.data, ...rest };
+  return useQuery(currentUserQueryOptions);
 }
 
 export function useCurrentUserSuspense() {
-  const { data, ...rest } = useSuspenseQuery(currentUserQueryOptions);
-  return { data: data.data, ...rest };
+  return useSuspenseQuery(currentUserQueryOptions);
 }

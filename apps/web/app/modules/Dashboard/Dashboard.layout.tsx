@@ -13,20 +13,19 @@ import {
 import { useAuthEffect } from "../Auth/authEffect";
 import { authGuard } from "../Auth/authGuard";
 import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
+import { DashboardNavigation } from "./DashboardNavigation/DashboardNavigation";
 
-export function clientLoader() {
-  return authGuard();
-}
+export const clientLoader = () => authGuard();
 
 export default function DashboardLayout() {
   useAuthEffect();
   const { mutate: logout } = useLogoutUser();
 
   return (
-    <div>
-      <header className="sticky top-0 z-30 flex h-14 items-center border-b bg-background px-4 py-2 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-        <ThemeToggle />
-        <div className="flex-shrink-0 ml-auto">
+    <div className="flex h-screen flex-col">
+      <header className="flex h-14 items-center bg-muted/40 px-4 py-2 sm:px-6">
+        <div className="flex-shrink-0 ml-auto items-center flex gap-4">
+          <ThemeToggle />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -35,7 +34,7 @@ export default function DashboardLayout() {
                 className="overflow-hidden rounded-full self-end"
               >
                 <Avatar>
-                  <AvatarImage src="https://ui-avatars.com/api/?name=John+Doe" />
+                  <AvatarImage src={`https://ui-avatars.com/api/?name=User`} />
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -43,10 +42,10 @@ export default function DashboardLayout() {
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
-                <Link to="/dashboard">Dashboard</Link>
+                <Link to="/">Dashboard</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>
-                <Link to="/dashboard/settings">Settings</Link>
+                <Link to="/settings">Settings</Link>
               </DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
@@ -59,7 +58,13 @@ export default function DashboardLayout() {
           </DropdownMenu>
         </div>
       </header>
-      <Outlet />
+
+      <div className="flex flex-1 overflow-hidden">
+        <DashboardNavigation />
+        <main className="flex-1 overflow-y-auto p-6">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }
