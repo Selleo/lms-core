@@ -1,8 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import {
-  useCurrentLessonItemsSuspense,
-  currentLessonItemsQueryOptions,
-} from "../queries/useCurrentLessonItem";
+import { currentLessonItemsQueryOptions } from "../queries/useCurrentLessonItem";
 import { queryClient } from "../queryClient";
 import { useToast } from "~/components/ui/use-toast";
 import { AxiosError } from "axios";
@@ -18,15 +15,14 @@ type UpdateLessonItemOptions = {
   }; //TODO: The generated API does not have a type for this
 };
 
-export function useUpdateLessonItem() {
-  const { data: currentLesson } = useCurrentLessonItemsSuspense();
+export function useUpdateLessonItem(id: string) {
   const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (options: UpdateLessonItemOptions) => {
       //TODO: Waiting for backend features
       const response = await {
-        currentLesson: currentLesson.id,
+        currentLesson: id,
         ...options.data,
       };
 

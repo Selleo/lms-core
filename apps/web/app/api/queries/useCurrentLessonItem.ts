@@ -1,17 +1,16 @@
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
-
 //TODO: ApiClient does not hav a authControllerCurrentLesson
 export const ApiClientTemporaryReturn = {
   data: {
     data: {
-      id: "xd",
-      name: "xd",
-      displayName: "xd",
-      description: "xd",
+      id: "mock-id",
+      name: "Mock Lesson Name",
+      displayName: "Mock Display Name",
+      description: "This is a mock description for the lesson.",
     },
   },
 };
-const ApiClientTemporary = {
+
+const ApiClientMock = {
   auth: {
     authControllerCurrentLesson: () => {
       return ApiClientTemporaryReturn;
@@ -22,18 +21,12 @@ const ApiClientTemporary = {
 export const currentLessonItemsQueryOptions = {
   queryKey: ["lessonItems"],
   queryFn: async () => {
-    const response =
-      await ApiClientTemporary.auth.authControllerCurrentLesson();
-    return response.data;
+    try {
+      const response = await ApiClientMock.auth.authControllerCurrentLesson();
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching lesson items:", error);
+      throw error;
+    }
   },
 };
-
-export function useCurrentLessonItems() {
-  const { data, ...rest } = useQuery(currentLessonItemsQueryOptions);
-  return { data: data?.data, ...rest };
-}
-
-export function useCurrentLessonItemsSuspense() {
-  const { data, ...rest } = useSuspenseQuery(currentLessonItemsQueryOptions);
-  return { data: data.data, ...rest };
-}
