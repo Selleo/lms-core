@@ -1,18 +1,16 @@
 import { useState } from "react";
-import { editLessonItemFormSchema } from "./LessonItemsForms/zodFormType";
+import { videoLessonItemSchema } from "./LessonItemsForms/zodFormType";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isObject } from "lodash-es";
 import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
-import { useLessonItems } from "./LessonItemsContext";
 
 const LessonItemsAddVideoLayout = () => {
-  const { setLessonItems } = useLessonItems();
   const [videoFile, setVideoFile] = useState<File | null | string>(null);
 
-  const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
-    resolver: zodResolver(editLessonItemFormSchema),
+  const form = useForm<z.infer<typeof videoLessonItemSchema>>({
+    resolver: zodResolver(videoLessonItemSchema),
     defaultValues: {
       name: "",
       displayName: "",
@@ -21,29 +19,16 @@ const LessonItemsAddVideoLayout = () => {
     },
   });
 
-  const handleFileChange = (files: FileList | null | string) => {
+  const handleFileChange = (files: FileList | string) => {
     if (isObject(files)) {
       setVideoFile(files[0]);
     } else setVideoFile(files);
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof editLessonItemFormSchema>> = (
+  const onSubmit: SubmitHandler<z.infer<typeof videoLessonItemSchema>> = (
     data
   ) => {
-    if (data.video) {
-      if (data.video instanceof FileList) {
-        setVideoFile(data.video[0]);
-      } else {
-        setVideoFile(data.video);
-      }
-    } else {
-      console.log("video is required");
-    }
-
-    setLessonItems((prevItems) => [
-      ...prevItems,
-      { id: new Date().getTime().toString(), ...data },
-    ]);
+    console.log(data);
   };
 
   return (

@@ -8,10 +8,10 @@ import {
 } from "~/components/ui/form";
 import { Control } from "react-hook-form";
 import { z } from "zod";
-import { editLessonItemFormSchema } from "./zodFormType.js";
+import { lessonItemFormSchema } from "./zodFormType.js";
 
 interface LessonItemFormTextareaInterface {
-  control: Control<z.infer<typeof editLessonItemFormSchema>>;
+  control: Control<z.infer<typeof lessonItemFormSchema>>;
   name: "name" | "displayName" | "description" | "video";
   label: string;
   placeholder: string;
@@ -30,7 +30,11 @@ export const LessonItemFormTextarea = ({
       <FormItem>
         <FormLabel>{label}</FormLabel>
         <FormControl>
-          <Textarea placeholder={placeholder} {...field} />
+          <Textarea
+            placeholder={placeholder}
+            {...field}
+            value={typeof field.value === "string" ? field.value : ""}
+          />
         </FormControl>
         <FormMessage />
       </FormItem>

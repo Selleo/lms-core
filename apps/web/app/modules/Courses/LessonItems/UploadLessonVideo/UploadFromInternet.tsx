@@ -12,7 +12,10 @@ import {
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
-import { UploadAlertDialogProps, UploadFileProps } from "../LessonItemsForms/types";
+import {
+  UploadAlertDialogProps,
+  UploadFileProps,
+} from "../LessonItemsForms/types";
 
 export const UploadFromInternetDialog = ({
   setUploadMethod,

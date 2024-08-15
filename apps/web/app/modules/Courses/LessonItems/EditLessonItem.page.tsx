@@ -4,28 +4,26 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { editLessonItemFormSchema } from "./LessonItemsForms/zodFormType";
+import { lessonItemFormSchema } from "./LessonItemsForms/zodFormType";
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { useLessonItems } from "./LessonItemsContext";
 import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
 
 export default function LessonItemsEditPage() {
-  const { lessonItems, setLessonItems } = useLessonItems();
   const [videoFile, setVideoFile] = useState<File | null | string>(null);
   const { id } = useParams<{ id: string }>();
 
-  const form = useForm<z.infer<typeof editLessonItemFormSchema>>({
-    resolver: zodResolver(editLessonItemFormSchema),
+  const form = useForm<z.infer<typeof lessonItemFormSchema>>({
+    resolver: zodResolver(lessonItemFormSchema),
     //TODO: ADD useLessonItem(id) when DB will be done
     defaultValues: {
       name: "",
       displayName: "",
       description: "",
-      video: "null",
+      video: null,
     },
   });
-  if (!id || !lessonItems.find((item) => item.id === id)) {
+  if (!id) {
     return (
       <div className="w-fit mx-auto">
         <Alert variant="destructive">
@@ -38,36 +36,18 @@ export default function LessonItemsEditPage() {
       </div>
     );
   }
-  const handleFileChange = (files: FileList | null | string) => {
+  const handleFileChange = (files: FileList | string) => {
     if (isObject(files)) {
       setVideoFile(files[0]);
     } else setVideoFile(files);
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof editLessonItemFormSchema>> = (
+  const onSubmit: SubmitHandler<z.infer<typeof lessonItemFormSchema>> = (
     data
   ) => {
-    let video: string | File | null | FileList = null;
-
-    if (data.video) {
-      if (data.video instanceof FileList) {
-        video = data.video[0];
-      } else if (typeof data.video === "string" || data.video instanceof File) {
-        video = data.video;
-      }
-    } else {
-      console.log("video is required");
-    }
-
-    setLessonItems((prevItems) => {
-      return prevItems.map((item) => {
-        if (item.id === id) {
-          return { ...item, ...data, video };
-        }
-        return item;
-      });
-    });
+    console.log(data);
   };
+
   return (
     <div>
       <LessonItemForm

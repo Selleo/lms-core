@@ -7,7 +7,7 @@ import {
 } from "~/components/ui/form";
 import { Control } from "react-hook-form";
 import { z } from "zod";
-import { editLessonItemFormSchema } from "./zodFormType.js";
+import { lessonItemFormSchema } from "./zodFormType.js";
 
 import {
   DropdownMenu,
@@ -23,10 +23,10 @@ import { UploadFile } from "../UploadLessonVideo/UploadFile";
 import { UploadFromInternet } from "../UploadLessonVideo/UploadFromInternet";
 
 interface LessonItemFormFileInterface {
-  control: Control<z.infer<typeof editLessonItemFormSchema>>;
+  control: Control<z.infer<typeof lessonItemFormSchema>>;
   name: "name" | "displayName" | "description" | "video" | "";
   videoFile: File | null | string;
-  handleFileChange: (files: FileList | null) => void;
+  handleFileChange: (files: FileList | string) => void;
 }
 
 const VideoRequired = () => {

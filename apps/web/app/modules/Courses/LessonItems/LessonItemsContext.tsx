@@ -8,14 +8,10 @@ export interface LessonItem {
   video: File | null | string | FileList;
 }
 
-interface EditLessonItem extends LessonItem {
-  description: string;
-}
-
 interface LessonItemsContextType {
   lessonItems: LessonItem[];
   setLessonItems: React.Dispatch<React.SetStateAction<LessonItem[]>>;
-  updateLessonItem: (updatedItem: EditLessonItem) => void;
+  updateLessonItem: (updatedItem: LessonItem) => void;
 }
 
 const LessonItemsContext = createContext<LessonItemsContextType | undefined>(
@@ -196,8 +192,8 @@ const LessonItemsProvider = ({ children }: { children: ReactNode }) => {
   const [lessonItems, setLessonItems] =
     useState<LessonItem[]>(initialLessonItems);
 
-  const updateLessonItem = (updatedItem: EditLessonItem) => {
-    setLessonItems((prevItems) =>
+  const updateLessonItem = (updatedItem: LessonItem) => {
+    setLessonItems((prevItems: LessonItem[]) =>
       prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
     );
   };

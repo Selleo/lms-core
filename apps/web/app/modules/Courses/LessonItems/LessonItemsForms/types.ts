@@ -17,8 +17,16 @@ export interface UploadFileProps {
 }
 
 export interface UploadAlertDialogProps extends UploadFileProps {
-  handleFileChange: (files: FileList | null) => void;
-  field: ControllerRenderProps;
+  handleFileChange: (files: FileList | string) => void;
+  field: ControllerRenderProps<
+    {
+      name: string;
+      displayName: string;
+      description: string;
+      video: string | File | File[] | null;
+    },
+    "name" | "displayName" | "description" | "video"
+  >;
 }
 
 export interface RenderDialogFormInterface extends UploadAlertDialogProps {

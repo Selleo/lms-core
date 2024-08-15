@@ -22,7 +22,9 @@ export const UploadFileDialog = ({
   field,
 }: UploadAlertDialogProps) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [selectedVideo, setSelectedVideo] = useState<FileList | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<FileList | string | null>(
+    null
+  );
   const [videoError, setVideoError] = useState<string>("");
 
   return (

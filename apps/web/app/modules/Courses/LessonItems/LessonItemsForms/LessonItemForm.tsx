@@ -5,15 +5,15 @@ import { Form } from "~/components/ui/form";
 import { LessonItemFormFile } from "./LessonItemFormFile.js";
 import { LessonItemFormTextarea } from "./LessonItemFormTextarea.js";
 import { LessonItemFormInput } from "./LessonItemFormInput.js";
-import { editLessonItemFormSchema } from "./zodFormType.js";
+import { lessonItemFormSchema } from "./zodFormType.js";
 import { useNavigate } from "@remix-run/react";
 
 interface LessonItemForm {
   isVideoRequired: boolean;
-  onSubmit: (data: z.infer<typeof editLessonItemFormSchema>) => void;
+  onSubmit: (data: z.infer<typeof lessonItemFormSchema>) => void;
   videoFile: File | null | string;
-  handleFileChange: (files: FileList | null) => void;
-  form: UseFormReturn<z.infer<typeof editLessonItemFormSchema>>;
+  handleFileChange: (files: FileList | string) => void;
+  form: UseFormReturn<z.infer<typeof lessonItemFormSchema>>;
 }
 
 export const LessonItemForm = ({
