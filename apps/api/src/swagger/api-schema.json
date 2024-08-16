@@ -319,8 +319,8 @@
         }
       }
     },
-    "/categories/archive/{id}": {
-      "post": {
+    "/categories/{id}": {
+      "delete": {
         "operationId": "CategorieController_archiveCategory",
         "parameters": [
           {

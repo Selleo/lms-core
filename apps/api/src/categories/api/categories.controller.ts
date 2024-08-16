@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, Query } from "@nestjs/common";
+import { Controller, Delete, Get, Param, Query } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -48,7 +48,7 @@ export class CategorieController {
     return new PaginatedResponse(data);
   }
 
-  @Post("/archive/:id")
+  @Delete("/:id")
   @Validate({
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
     response: baseResponse(commonCategorySchema),
@@ -62,6 +62,6 @@ export class CategorieController {
       userRole,
     );
 
-    return new BaseResponse(category) as any;
+    return new BaseResponse(category);
   }
 }
