@@ -99,5 +99,9 @@ describe("CategoriesController (e2e)", () => {
       expect(res.body.data).toHaveLength(CATEGORIES_COUNT - perPage);
       expect(res.body.pagination.totalItems).toBe(CATEGORIES_COUNT);
     });
+
+    it("should return 401 for unauthenticated request", async () => {
+      await request(app.getHttpServer()).get("/categories").expect(401);
+    });
   });
 });
