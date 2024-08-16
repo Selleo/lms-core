@@ -43,7 +43,7 @@ export class UsersService {
     const passwordToken = crypto.randomUUID();
 
     /**
-     * TODO: Add expiration of token in set-password link
+     * TODO: Add expiration of set password link
      * https://selleolabs.atlassian.net/browse/LC-136
      */
 

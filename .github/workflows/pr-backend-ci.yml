@@ -6,6 +6,7 @@ env:
   JWT_REFRESH_SECRET: "test_refresh"
   JWT_EXPIRATION_TIME: "15min"
   CORS_ORIGIN: ""
+  APP_URL: "http://app.example"
   EMAIL_ADAPTER: "mailhog"
   DATABASE_URL: ""
   SMTP_HOST: ""

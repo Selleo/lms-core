@@ -3,9 +3,12 @@ BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'role') THEN
         CREATE TYPE role AS ENUM ('admin', 'student', 'tutor');
     ELSE
-        ALTER TYPE role ADD VALUE IF NOT EXISTS 'tutor';
+        IF NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'tutor' AND enumtypid = 'role'::regtype) THEN
+            ALTER TYPE role ADD VALUE 'tutor';
+        END IF;
 
-        IF EXISTS (SELECT 1 FROM pg_enum WHERE enumtypid = 'role'::regtype AND enumlabel = 'teacher') THEN
+        IF EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'teacher' AND enumtypid = 'role'::regtype)
+           AND NOT EXISTS (SELECT 1 FROM pg_enum WHERE enumlabel = 'tutor' AND enumtypid = 'role'::regtype) THEN
             ALTER TYPE role RENAME VALUE 'teacher' TO 'tutor';
         END IF;
     END IF;
