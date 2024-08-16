@@ -93,17 +93,17 @@ export class CategoriesService {
         .from(categories)
         .where(eq(categories.id, categoryId));
 
-      if (category.archivedAt) {
-        throw new HttpException(
-          "Category already archived",
-          HttpStatus.UNPROCESSABLE_ENTITY,
-        );
-      }
-
       if (!category) {
         throw new HttpException(
           "Category does not exist",
           HttpStatus.NOT_FOUND,
+        );
+      }
+
+      if (category.archivedAt) {
+        throw new HttpException(
+          "Category already archived",
+          HttpStatus.UNPROCESSABLE_ENTITY,
         );
       }
 

@@ -1,3 +1,4 @@
+import { categories } from "src/storage/schema";
 import { createCategoryFactory } from "../../../test/factory/category.factory";
 import { createE2ETest } from "../../../test/create-e2e-test";
 import {
@@ -5,7 +6,9 @@ import {
   UserWithCredentials,
 } from "../../../test/factory/user.factory";
 import { DatabasePg } from "src/common";
+import { eq, sql } from "drizzle-orm";
 import { INestApplication } from "@nestjs/common";
+import { truncateAllTables } from "../../../test/helpers/test-helpers";
 import { UserRole } from "src/users/schemas/user-roles";
 import request from "supertest";
 
@@ -24,9 +27,16 @@ describe("CategoriesController (e2e)", () => {
     app = testApp;
     db = app.get("DB");
     userFactory = createUserFactory(db);
+  }, 30000);
+
+  beforeEach(async () => {
     categoryFactory = createCategoryFactory(db);
     Array.from({ length: CATEGORIES_COUNT }, () => categoryFactory.create());
-  }, 30000);
+  });
+
+  afterEach(async () => {
+    await truncateAllTables(db);
+  });
 
   const getCookie = async (role: UserRole) => {
     testUser = await userFactory
@@ -102,6 +112,88 @@ describe("CategoriesController (e2e)", () => {
 
     it("should return 401 for unauthenticated request", async () => {
       await request(app.getHttpServer()).get("/categories").expect(401);
+    });
+
+    it("should return archived categories only for admins", async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/categories`)
+        .set("Cookie", await getCookie("admin"))
+        .expect(200);
+
+      const categoryToArchive = response.body.data[0];
+
+      await db
+        .update(categories)
+        .set({ archivedAt: sql`CURRENT_TIMESTAMP` })
+        .where(eq(categories.id, categoryToArchive.id));
+
+      const studentResponse = await request(app.getHttpServer())
+        .get(`/categories`)
+        .set("Cookie", await getCookie("student"))
+        .expect(200);
+
+      expect(studentResponse.body.data).toHaveLength(CATEGORIES_COUNT - 1);
+
+      const adminResponse = await request(app.getHttpServer())
+        .get(`/categories`)
+        .set("Cookie", await getCookie("admin"))
+        .expect(200);
+
+      expect(adminResponse.body.data).toHaveLength(CATEGORIES_COUNT);
+    });
+  });
+
+  describe("DELETE categories", () => {
+    it("should archive a category", async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/categories`)
+        .set("Cookie", await getCookie("admin"))
+        .expect(200);
+
+      const categoryToArchive = response.body.data[0];
+
+      expect(categoryToArchive.archivedAt).toBeNull();
+
+      await request(app.getHttpServer())
+        .delete(`/categories/${categoryToArchive.id}`)
+        .set("Cookie", await getCookie("admin"))
+        .expect(200);
+
+      const [archivedCategory] = await db
+        .select()
+        .from(categories)
+        .where(eq(categories.id, categoryToArchive.id));
+
+      expect(archivedCategory.archivedAt).not.toBeNull();
+    });
+
+    it("should allow only admins to archive category", async () => {
+      const cat = await db.select().from(categories);
+
+      await request(app.getHttpServer())
+        .delete(`/categories/${cat[0].id}`)
+        .set("Cookie", await getCookie("student"))
+        .expect(401);
+    });
+
+    it("it should throw an error if a category is already archived", async () => {
+      const cat = await db.select().from(categories);
+      await db
+        .update(categories)
+        .set({ archivedAt: sql`CURRENT_TIMESTAMP` })
+        .where(eq(categories.id, cat[0].id));
+
+      await request(app.getHttpServer())
+        .delete(`/categories/${cat[0].id}`)
+        .set("Cookie", await getCookie("admin"))
+        .expect(422);
+    });
+
+    it("it should throw an 404 if a category is not exist", async () => {
+      await request(app.getHttpServer())
+        .delete(`/categories/f8070242-b0c0-45e3-86fd-04bf74adcaa1`)
+        .set("Cookie", await getCookie("admin"))
+        .expect(404);
     });
   });
 });
