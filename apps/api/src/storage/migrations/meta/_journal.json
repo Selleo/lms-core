@@ -57,6 +57,13 @@
       "when": 1723563068538,
       "tag": "0007_update_user_with_name_lastname",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1723810222125,
+      "tag": "0008_change_role_teacher_tutor",
+      "breakpoints": true
     }
   ]
 }

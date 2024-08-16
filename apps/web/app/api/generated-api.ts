@@ -13,6 +13,16 @@ export interface RegisterBody {
   /** @format email */
   email: string;
   /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  firstName: string;
+  /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  lastName: string;
+  /**
    * @minLength 8
    * @maxLength 64
    */
@@ -25,6 +35,8 @@ export interface RegisterResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -45,6 +57,8 @@ export interface LoginResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -59,7 +73,53 @@ export interface CurrentUserResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
+  };
+}
+
+export interface CreateUserBody {
+  /** @format email */
+  email: string;
+  /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  firstName: string;
+  /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  lastName: string;
+  role: "admin" | "tutor";
+}
+
+export interface CreateUserResponse {
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: "admin" | "student" | "tutor";
+  };
+}
+
+export interface SetPasswordBody {
+  /** @format uuid */
+  token: string;
+  /**
+   * @minLength 8
+   * @maxLength 64
+   */
+  newPassword: string;
+}
+
+export interface SetPasswordResponse {
+  data: {
+    message: string;
   };
 }
 
@@ -69,6 +129,8 @@ export interface GetUsersResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   }[];
 }
@@ -79,6 +141,8 @@ export interface GetUserByIdResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -94,6 +158,8 @@ export interface UpdateUserResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -114,6 +180,18 @@ export interface ChangePasswordBody {
 export type ChangePasswordResponse = null;
 
 export type DeleteUserResponse = null;
+
+export interface GetAllCategoriesResponse {
+  data: {
+    id: string;
+    title: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+}
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
@@ -336,6 +414,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name UsersControllerCreateUser
+     * @request POST:/users
+     */
+    usersControllerCreateUser: (data: CreateUserBody, params: RequestParams = {}) =>
+      this.request<CreateUserResponse, any>({
+        path: `/users`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name UsersControllerGetUsers
      * @request GET:/users
      */
@@ -343,6 +437,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<GetUsersResponse, any>({
         path: `/users`,
         method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name UsersControllerSetPassword
+     * @request POST:/users/set-password
+     */
+    usersControllerSetPassword: (data: SetPasswordBody, params: RequestParams = {}) =>
+      this.request<SetPasswordResponse, any>({
+        path: `/users/set-password`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -431,6 +541,30 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/test-config/teardown`,
         method: "POST",
+        ...params,
+      }),
+  };
+  categories = {
+    /**
+     * No description
+     *
+     * @name CategorieControllerGetAllCategories
+     * @request GET:/categories
+     */
+    categorieControllerGetAllCategories: (
+      query?: {
+        filter?: string;
+        page?: number;
+        perPage?: number;
+        sort?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetAllCategoriesResponse, any>({
+        path: `/categories`,
+        method: "GET",
+        query: query,
+        format: "json",
         ...params,
       }),
   };

@@ -10,6 +10,7 @@ import database from "./common/configuration/database";
 import jwtConfig from "./common/configuration/jwt";
 import emailConfig from "./common/configuration/email";
 import awsConfig from "./common/configuration/aws";
+import appConfig from "./common/configuration/app";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { EmailModule } from "./common/emails/emails.module";
@@ -19,7 +20,7 @@ import { StagingGuard } from "./common/guards/staging.guard";
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database, jwtConfig, emailConfig, awsConfig],
+      load: [database, jwtConfig, emailConfig, awsConfig, appConfig],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({

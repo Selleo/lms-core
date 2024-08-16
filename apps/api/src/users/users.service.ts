@@ -1,18 +1,102 @@
 import {
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
-import { credentials, users } from "../storage/schema";
 import hashPassword from "src/common/helpers/hashPassword";
+import { credentials, users } from "../storage/schema";
+import { UserRole } from "./schemas/user-roles";
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private configService: ConfigService,
+  ) {}
+
+  public async createUser({
+    email,
+    firstName,
+    lastName,
+    role,
+  }: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: UserRole;
+  }) {
+    const [existingUser] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.email, email));
+
+    if (existingUser) {
+      throw new ConflictException("User already exists");
+    }
+
+    const passwordToken = crypto.randomUUID();
+
+    /**
+     * TODO: Add expiration of token in set-password link
+     * https://selleolabs.atlassian.net/browse/LC-136
+     */
+
+    return this.db.transaction(async (trx) => {
+      const [newUser] = await trx
+        .insert(users)
+        .values({ email, firstName, lastName, role })
+        .returning();
+
+      await trx
+        .insert(credentials)
+        .values({ userId: newUser.id, password: passwordToken });
+
+      const setPasswordLink = `${this.configService.get<string>("app.APP_URL")}/set-password?token=${passwordToken}`;
+
+      console.info(setPasswordLink);
+
+      /**
+       *
+       * TODO: Send email with set password link
+       * https://selleolabs.atlassian.net/browse/LC-92
+       *
+       */
+
+      return newUser;
+    });
+  }
+
+  public async setPassword({
+    token,
+    newPassword,
+  }: {
+    token: string;
+    newPassword: string;
+  }) {
+    const [userCredentials] = await this.db
+      .select({
+        credentialId: credentials.id,
+      })
+      .from(credentials)
+      .where(eq(credentials.password, token));
+
+    if (!userCredentials) {
+      throw new NotFoundException("Invalid token");
+    }
+
+    const hashedPassword = await hashPassword(newPassword);
+
+    await this.db
+      .update(credentials)
+      .set({ password: hashedPassword })
+      .where(eq(credentials.id, userCredentials.credentialId));
+  }
 
   public async getUsers() {
     const allUsers = await this.db.select().from(users);

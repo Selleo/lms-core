@@ -5,8 +5,9 @@ import {
   ForbiddenException,
   Get,
   Patch,
+  Post,
 } from "@nestjs/common";
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 import {
   baseResponse,
@@ -16,6 +17,16 @@ import {
 } from "src/common";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import {
+  CommonUser,
+  commonUserSchema,
+} from "src/common/schemas/common-user.schema";
+import {
+  createAccountSchemaWithRole,
+  CreateAccountWithRoleBody,
+} from "src/common/schemas/create-account.schema";
+import {
+  ChangeNewAccountPasswordBody,
+  changeNewAccountPasswordSchema,
   ChangePasswordBody,
   changePasswordSchema,
 } from "../schemas/change-password.schema";

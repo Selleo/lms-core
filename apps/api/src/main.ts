@@ -10,9 +10,9 @@ patchNestJsSwagger();
 applyFormats();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-
   setupValidation();
+
+  const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
 

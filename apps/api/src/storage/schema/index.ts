@@ -1,7 +1,7 @@
 import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
-import { archivedAt, id, timestamps } from "./utils";
 import { userRoles, UserRoles } from "src/users/schemas/user-roles";
+import { archivedAt, id, timestamps } from "./utils";
 
 const roleEnum = pgEnum("role", userRoles);
 
