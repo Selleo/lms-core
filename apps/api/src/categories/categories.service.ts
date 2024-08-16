@@ -100,6 +100,13 @@ export class CategoriesService {
         );
       }
 
+      if (!category) {
+        throw new HttpException(
+          "Category does not exist",
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
       const [updatedCategory] = await tx
         .update(categories)
         .set({ archivedAt: sql`CURRENT_TIMESTAMP` })

@@ -11,6 +11,7 @@ import {
   BaseResponse,
   paginatedResponse,
   PaginatedResponse,
+  UUIDSchema,
 } from "src/common";
 import { CategoriesService } from "../categories.service";
 import { CurrentUser } from "src/common/decorators/user.decorator";
@@ -49,7 +50,7 @@ export class CategorieController {
 
   @Post("/archive/:id")
   @Validate({
-    request: [{ type: "param", name: "id", schema: Type.String() }],
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
     response: baseResponse(commonCategorySchema),
   })
   async archiveCategory(
