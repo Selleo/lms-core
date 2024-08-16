@@ -40,14 +40,40 @@ import {
   UserResponse,
 } from "../schemas/user.schema";
 import { UsersService } from "../users.service";
-import {
-  CommonUser,
-  commonUserSchema,
-} from "src/common/schemas/common-user.schema";
+import { Admin } from "src/common/decorators/admin.decorator";
+import { Public } from "src/common/decorators/public.decorator";
 
 @Controller("users")
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Post()
+  @Admin()
+  @Validate({
+    request: [{ type: "body", schema: createAccountSchemaWithRole }],
+    response: baseResponse(commonUserSchema),
+  })
+  async createUser(
+    data: CreateAccountWithRoleBody,
+  ): Promise<BaseResponse<UserResponse>> {
+    const user = await this.usersService.createUser(data);
+
+    return new BaseResponse(user);
+  }
+
+  @Public()
+  @Post("set-password")
+  @Validate({
+    request: [{ type: "body", schema: changeNewAccountPasswordSchema }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async setPassword(
+    data: ChangeNewAccountPasswordBody,
+  ): Promise<BaseResponse<Record<string, string>>> {
+    await this.usersService.setPassword(data);
+
+    return new BaseResponse({ message: "Password set successfully" });
+  }
 
   @Get()
   @Validate({
