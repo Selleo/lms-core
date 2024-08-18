@@ -103,4 +103,15 @@ describe("CategoriesService", () => {
       expect(filterCategories.data).toHaveLength(1);
     });
   });
+
+  describe("archiveCategory", () => {
+    it("admin can archive a category", async () => {
+      const cat = await db.select().from(categories);
+      const result = await categoriesServics.archiveCategory(
+        cat[0].id,
+        UserRoles.admin,
+      );
+      expect(result.archivedAt).not.toBeNull();
+    });
+  });
 });
