@@ -6,7 +6,7 @@ import {
 } from "../../../test/factory/user.factory";
 import { DatabasePg } from "src/common";
 import { INestApplication } from "@nestjs/common";
-import { UserRole } from "src/users/schemas/user-roles";
+import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 import request from "supertest";
 
 const CATEGORIES_COUNT = 10;
@@ -47,7 +47,7 @@ describe("CategoriesController (e2e)", () => {
     it("should return all categories for student role (only 'id' and 'title')", async () => {
       const response = await request(app.getHttpServer())
         .get("/categories")
-        .set("Cookie", await getCookie("student"))
+        .set("Cookie", await getCookie(UserRoles.student))
         .expect(200);
 
       const responseData = response.body.data;
@@ -61,7 +61,7 @@ describe("CategoriesController (e2e)", () => {
     it("should return all categories for admin role (all columns)", async () => {
       const response = await request(app.getHttpServer())
         .get("/categories")
-        .set("Cookie", await getCookie("admin"))
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(200);
 
       const responseData = response.body.data;
@@ -78,7 +78,7 @@ describe("CategoriesController (e2e)", () => {
 
       const response = await request(app.getHttpServer())
         .get(`/categories?perPage=${perPage}&page=${page}`)
-        .set("Cookie", await getCookie("student"))
+        .set("Cookie", await getCookie(UserRoles.student))
         .expect(200);
 
       const paginationData = response.body.pagination;
@@ -93,7 +93,7 @@ describe("CategoriesController (e2e)", () => {
 
       const res = await request(app.getHttpServer())
         .get(`/categories?perPage=${perPage}&page=${page}`)
-        .set("Cookie", await getCookie("student"))
+        .set("Cookie", await getCookie(UserRoles.student))
         .expect(200);
 
       expect(res.body.data).toHaveLength(CATEGORIES_COUNT - perPage);
