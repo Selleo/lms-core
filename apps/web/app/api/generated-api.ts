@@ -13,6 +13,16 @@ export interface RegisterBody {
   /** @format email */
   email: string;
   /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  firstName: string;
+  /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  lastName: string;
+  /**
    * @minLength 8
    * @maxLength 64
    */
@@ -25,6 +35,8 @@ export interface RegisterResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -45,6 +57,8 @@ export interface LoginResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -59,6 +73,8 @@ export interface CurrentUserResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -69,8 +85,15 @@ export interface GetUsersResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
 }
 
 export interface GetUserByIdResponse {
@@ -79,6 +102,8 @@ export interface GetUserByIdResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -94,6 +119,8 @@ export interface UpdateUserResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -114,6 +141,18 @@ export interface ChangePasswordBody {
 export type ChangePasswordResponse = null;
 
 export type DeleteUserResponse = null;
+
+export interface GetAllCategoriesResponse {
+  data: {
+    id: string;
+    title: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+}
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
@@ -339,10 +378,17 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UsersControllerGetUsers
      * @request GET:/users
      */
-    usersControllerGetUsers: (params: RequestParams = {}) =>
+    usersControllerGetUsers: (
+      query?: {
+        page?: number;
+        perPage?: number;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<GetUsersResponse, any>({
         path: `/users`,
         method: "GET",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -431,6 +477,30 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/test-config/teardown`,
         method: "POST",
+        ...params,
+      }),
+  };
+  categories = {
+    /**
+     * No description
+     *
+     * @name CategorieControllerGetAllCategories
+     * @request GET:/categories
+     */
+    categorieControllerGetAllCategories: (
+      query?: {
+        filter?: string;
+        page?: number;
+        perPage?: number;
+        sort?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetAllCategoriesResponse, any>({
+        path: `/categories`,
+        method: "GET",
+        query: query,
+        format: "json",
         ...params,
       }),
   };

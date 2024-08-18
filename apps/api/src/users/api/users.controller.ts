@@ -5,13 +5,16 @@ import {
   ForbiddenException,
   Get,
   Patch,
+  Query,
 } from "@nestjs/common";
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 import {
   baseResponse,
   BaseResponse,
   nullResponse,
+  PaginatedResponse,
+  paginatedResponse,
   UUIDSchema,
 } from "src/common";
 import { CurrentUser } from "src/common/decorators/user.decorator";
@@ -40,12 +43,20 @@ export class UsersController {
 
   @Get()
   @Validate({
-    response: baseResponse(allUsersSchema),
+    response: paginatedResponse(allUsersSchema),
+    request: [
+      { type: "query", name: "page", schema: Type.Number() },
+      { type: "query", name: "perPage", schema: Type.Number() },
+    ],
   })
-  async getUsers(): Promise<BaseResponse<AllUsersResponse>> {
-    const users = await this.usersService.getUsers();
+  async getUsers(
+    @Query("page") page?: number,
+    @Query("perPage") perPage?: number,
+  ): Promise<PaginatedResponse<AllUsersResponse>> {
+    const query = { page, perPage };
 
-    return new BaseResponse(users);
+    const data = await this.usersService.getUsers(query);
+    return new PaginatedResponse(data);
   }
 
   @Get(":id")

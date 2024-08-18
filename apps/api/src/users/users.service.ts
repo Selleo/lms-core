@@ -5,19 +5,55 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
+import { count, eq, ilike, or } from "drizzle-orm";
 import { DatabasePg } from "src/common";
-import { credentials, users } from "../storage/schema";
 import hashPassword from "src/common/helpers/hashPassword";
+import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
+import { credentials, users } from "../storage/schema";
+
+export type UsersQuery = {
+  filter?: string;
+  page?: number;
+  perPage?: number;
+  sort?: string;
+};
 
 @Injectable()
 export class UsersService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  public async getUsers() {
-    const allUsers = await this.db.select().from(users);
+  private createLikeFilter(filter: string) {
+    return or(
+      ilike(users.email, `%${filter}%`),
+      ilike(users.firstName, `%${filter}%`),
+      ilike(users.lastName, `%${filter}%`),
+    );
+  }
 
-    return allUsers;
+  public async getUsers(query: UsersQuery) {
+    const { perPage = DEFAULT_PAGE_SIZE, page = 1 } = query;
+
+    return this.db.transaction(async (tx) => {
+      const baseQuery = tx.select().from(users);
+
+      const data = await addPagination({
+        queryDB: baseQuery,
+        page,
+        perPage,
+      });
+
+      const [totalItems] = await tx.select({ count: count() }).from(users);
+
+      return {
+        data,
+        pagination: {
+          totalItems: Number(totalItems.count),
+          page,
+          perPage,
+          totalPages: Math.ceil(Number(totalItems.count) / perPage),
+        },
+      };
+    });
   }
 
   public async getUserById(id: string) {
