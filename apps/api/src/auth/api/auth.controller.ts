@@ -1,12 +1,12 @@
 import {
   Body,
   Controller,
+  Get,
   Post,
   Req,
   Res,
   UnauthorizedException,
   UseGuards,
-  Get,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { Static } from "@sinclair/typebox";
@@ -61,7 +61,12 @@ export class AuthController {
     const { accessToken, refreshToken, ...account } =
       await this.authService.login(data);
 
-    this.tokenService.setTokenCookies(response, accessToken, refreshToken);
+    this.tokenService.setTokenCookies(
+      response,
+      accessToken,
+      refreshToken,
+      data?.rememberMe,
+    );
 
     return new BaseResponse(account);
   }
