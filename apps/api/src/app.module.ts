@@ -15,6 +15,7 @@ import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { EmailModule } from "./common/emails/emails.module";
 import { TestConfigModule } from "./test-config/test-config.module";
 import { StagingGuard } from "./common/guards/staging.guard";
+import { HealthModule } from "./health/health.module";
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { StagingGuard } from "./common/guards/staging.guard";
       global: true,
     }),
     AuthModule,
+    HealthModule,
     UsersModule,
     EmailModule,
     TestConfigModule,
