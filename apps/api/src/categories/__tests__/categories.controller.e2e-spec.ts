@@ -9,7 +9,7 @@ import { DatabasePg } from "src/common";
 import { eq, sql } from "drizzle-orm";
 import { INestApplication } from "@nestjs/common";
 import { truncateAllTables } from "../../../test/helpers/test-helpers";
-import { UserRole } from "src/users/schemas/user-roles";
+import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 import request from "supertest";
 
 const CATEGORIES_COUNT = 10;
@@ -193,6 +193,57 @@ describe("CategoriesController (e2e)", () => {
       await request(app.getHttpServer())
         .delete(`/categories/f8070242-b0c0-45e3-86fd-04bf74adcaa1`)
         .set("Cookie", await getCookie("admin"))
+        .expect(404);
+    });
+  });
+
+  describe("POST categories/:id", () => {
+    it("should update a category title", async () => {
+      const response = await request(app.getHttpServer())
+        .get("/categories")
+        .set("Cookie", await getCookie(UserRoles.admin))
+        .expect(200);
+
+      const categoryToUpdate = response.body.data[1];
+      const newTitle = categoryToUpdate.title + "asdf";
+
+      const updateResponse = await request(app.getHttpServer())
+        .post(`/categories/${categoryToUpdate.id}`)
+        .send({
+          title: newTitle,
+        })
+        .set("Cookie", await getCookie(UserRoles.admin))
+        .expect(201);
+
+      expect(updateResponse.body.data.title).toBe(newTitle);
+      expect(updateResponse.body.data.id).toBe(categoryToUpdate.id);
+    });
+
+    it("should throw an error when not admin try to update a category", async () => {
+      const response = await request(app.getHttpServer())
+        .get("/categories")
+        .set("Cookie", await getCookie(UserRoles.admin))
+        .expect(200);
+
+      const categoryToUpdate = response.body.data[0];
+      const newTitle = categoryToUpdate.title + "asdf";
+
+      await request(app.getHttpServer())
+        .post(`/categories/${categoryToUpdate.id}`)
+        .send({
+          title: newTitle,
+        })
+        .set("Cookie", await getCookie(UserRoles.student))
+        .expect(401);
+    });
+
+    it("it should throw an 404 if a category is not exist", async () => {
+      await request(app.getHttpServer())
+        .post(`/categories/f8070242-b0c0-45e3-86fd-04bf74adcaa1`)
+        .send({
+          title: "Some title",
+        })
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(404);
     });
   });
