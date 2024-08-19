@@ -13,3 +13,7 @@ mailbox.lms.localhost {
 storage.articulate.localhost {
 	reverse_proxy localhost:8069
 }
+
+admin.lms.localhost {
+	reverse_proxy localhost:8888
+}
