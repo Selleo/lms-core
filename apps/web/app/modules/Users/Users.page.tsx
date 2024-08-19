@@ -6,6 +6,7 @@ import { TableUsersButtons } from "./UsersOptionButtons/TableUsersButtons";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
 import { Link } from "@remix-run/react";
+import { UserTableFilter } from "./components/UserTableFilter";
 
 const UserButton = () => (
   <Link to="create" target="_blank">
@@ -20,8 +21,10 @@ export default function UsersPage() {
     toast({
       description: "Archived",
     });
+
   return (
     <PageWrapper header="Users" PageWrapperButton={UserButton}>
+      <UserTableFilter />
       <TableData
         setToast={setToast}
         Buttons={TableUsersButtons}
