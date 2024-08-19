@@ -114,15 +114,7 @@ export class CategoriesService {
   public async updateCategory(
     categoryId: string,
     categoryData: Pick<CommonCategory, "title">,
-    userRole: UserRole,
   ) {
-    if (userRole !== UserRoles.admin) {
-      throw new HttpException(
-        "Only admins can update the category",
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-
     return this.db.transaction(async (tx) => {
       const [category] = await tx
         .select()

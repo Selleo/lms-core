@@ -121,7 +121,6 @@ describe("CategoriesService", () => {
       const result = await categoriesServics.updateCategory(
         categoryToUpdate.id,
         { title: newTitle },
-        UserRoles.admin,
       );
 
       expect(result.title).toBe(newTitle);

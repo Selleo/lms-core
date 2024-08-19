@@ -57,7 +57,7 @@ describe("CategoriesController (e2e)", () => {
     it("should return all categories for student role (only 'id' and 'title')", async () => {
       const response = await request(app.getHttpServer())
         .get("/categories")
-        .set("Cookie", await getCookie("student"))
+        .set("Cookie", await getCookie(UserRoles.student))
         .expect(200);
 
       const responseData = response.body.data;
@@ -71,7 +71,7 @@ describe("CategoriesController (e2e)", () => {
     it("should return all categories for admin role (all columns)", async () => {
       const response = await request(app.getHttpServer())
         .get("/categories")
-        .set("Cookie", await getCookie("admin"))
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(200);
 
       const responseData = response.body.data;
@@ -88,7 +88,7 @@ describe("CategoriesController (e2e)", () => {
 
       const response = await request(app.getHttpServer())
         .get(`/categories?perPage=${perPage}&page=${page}`)
-        .set("Cookie", await getCookie("student"))
+        .set("Cookie", await getCookie(UserRoles.student))
         .expect(200);
 
       const paginationData = response.body.pagination;
@@ -103,7 +103,7 @@ describe("CategoriesController (e2e)", () => {
 
       const res = await request(app.getHttpServer())
         .get(`/categories?perPage=${perPage}&page=${page}`)
-        .set("Cookie", await getCookie("student"))
+        .set("Cookie", await getCookie(UserRoles.student))
         .expect(200);
 
       expect(res.body.data).toHaveLength(CATEGORIES_COUNT - perPage);
@@ -117,7 +117,7 @@ describe("CategoriesController (e2e)", () => {
     it("should return archived categories only for admins", async () => {
       const response = await request(app.getHttpServer())
         .get(`/categories`)
-        .set("Cookie", await getCookie("admin"))
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(200);
 
       const categoryToArchive = response.body.data[0];
@@ -129,14 +129,14 @@ describe("CategoriesController (e2e)", () => {
 
       const studentResponse = await request(app.getHttpServer())
         .get(`/categories`)
-        .set("Cookie", await getCookie("student"))
+        .set("Cookie", await getCookie(UserRoles.student))
         .expect(200);
 
       expect(studentResponse.body.data).toHaveLength(CATEGORIES_COUNT - 1);
 
       const adminResponse = await request(app.getHttpServer())
         .get(`/categories`)
-        .set("Cookie", await getCookie("admin"))
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(200);
 
       expect(adminResponse.body.data).toHaveLength(CATEGORIES_COUNT);
@@ -147,7 +147,7 @@ describe("CategoriesController (e2e)", () => {
     it("should archive a category", async () => {
       const response = await request(app.getHttpServer())
         .get(`/categories`)
-        .set("Cookie", await getCookie("admin"))
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(200);
 
       const categoryToArchive = response.body.data[0];
@@ -156,7 +156,7 @@ describe("CategoriesController (e2e)", () => {
 
       await request(app.getHttpServer())
         .delete(`/categories/${categoryToArchive.id}`)
-        .set("Cookie", await getCookie("admin"))
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(200);
 
       const [archivedCategory] = await db
@@ -172,7 +172,7 @@ describe("CategoriesController (e2e)", () => {
 
       await request(app.getHttpServer())
         .delete(`/categories/${cat[0].id}`)
-        .set("Cookie", await getCookie("student"))
+        .set("Cookie", await getCookie(UserRoles.student))
         .expect(403);
     });
 
@@ -185,14 +185,14 @@ describe("CategoriesController (e2e)", () => {
 
       await request(app.getHttpServer())
         .delete(`/categories/${cat[0].id}`)
-        .set("Cookie", await getCookie("admin"))
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(422);
     });
 
     it("it should throw an 404 if a category is not exist", async () => {
       await request(app.getHttpServer())
         .delete(`/categories/f8070242-b0c0-45e3-86fd-04bf74adcaa1`)
-        .set("Cookie", await getCookie("admin"))
+        .set("Cookie", await getCookie(UserRoles.admin))
         .expect(404);
     });
   });
@@ -234,7 +234,7 @@ describe("CategoriesController (e2e)", () => {
           title: newTitle,
         })
         .set("Cookie", await getCookie(UserRoles.student))
-        .expect(401);
+        .expect(403);
     });
 
     it("it should throw an 404 if a category is not exist", async () => {

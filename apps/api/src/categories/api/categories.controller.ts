@@ -60,19 +60,18 @@ export class CategorieController {
   }
 
   @Post("/:id")
+  @Admin()
   @Validate({
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
     response: baseResponse(categorySchema),
   })
   async updateCategory(
     @Param("id") categoryId: string,
-    @CurrentUser("role") userRole: UserRole,
     @Body() categoryData: Pick<CommonCategory, "title">,
   ): Promise<BaseResponse<CategorySchema>> {
     const category = await this.categoriesService.updateCategory(
       categoryId,
       categoryData,
-      userRole,
     );
 
     return new BaseResponse(category);
