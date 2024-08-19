@@ -20,6 +20,7 @@ import {
   CommonCategory,
   commonCategorySchema,
 } from "../schemas/common-category.schema";
+import { Admin } from "src/common/decorators/admin.decorator";
 
 @Controller("categories")
 export class CategorieController {
@@ -49,18 +50,15 @@ export class CategorieController {
   }
 
   @Delete("/:id")
+  @Admin()
   @Validate({
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
     response: baseResponse(commonCategorySchema),
   })
   async archiveCategory(
     @Param("id") categoryId: string,
-    @CurrentUser("role") userRole: UserRole,
   ): Promise<BaseResponse<CommonCategory>> {
-    const category = await this.categoriesService.archiveCategory(
-      categoryId,
-      userRole,
-    );
+    const category = await this.categoriesService.archiveCategory(categoryId);
 
     return new BaseResponse(category);
   }

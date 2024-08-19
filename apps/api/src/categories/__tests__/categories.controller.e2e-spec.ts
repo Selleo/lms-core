@@ -143,7 +143,7 @@ describe("CategoriesController (e2e)", () => {
     });
   });
 
-  describe("DELETE categories", () => {
+  describe("DELETE categories/:id", () => {
     it("should archive a category", async () => {
       const response = await request(app.getHttpServer())
         .get(`/categories`)
@@ -173,7 +173,7 @@ describe("CategoriesController (e2e)", () => {
       await request(app.getHttpServer())
         .delete(`/categories/${cat[0].id}`)
         .set("Cookie", await getCookie("student"))
-        .expect(401);
+        .expect(403);
     });
 
     it("it should throw an error if a category is already archived", async () => {

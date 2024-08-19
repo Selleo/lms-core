@@ -107,10 +107,7 @@ describe("CategoriesService", () => {
   describe("archiveCategory", () => {
     it("admin can archive a category", async () => {
       const cat = await db.select().from(categories);
-      const result = await categoriesServics.archiveCategory(
-        cat[0].id,
-        UserRoles.admin,
-      );
+      const result = await categoriesServics.archiveCategory(cat[0].id);
       expect(result.archivedAt).not.toBeNull();
     });
   });

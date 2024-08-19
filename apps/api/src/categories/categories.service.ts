@@ -79,14 +79,7 @@ export class CategoriesService {
     });
   }
 
-  public async archiveCategory(categoryId: string, userRole: UserRole) {
-    if (userRole !== UserRoles.admin) {
-      throw new HttpException(
-        "Only admins can archive the category",
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-
+  public async archiveCategory(categoryId: string) {
     return this.db.transaction(async (tx) => {
       const [category] = await tx
         .select()
