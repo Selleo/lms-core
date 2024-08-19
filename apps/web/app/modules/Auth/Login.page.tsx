@@ -4,7 +4,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useLoginUser } from "~/api/mutations/useLoginUser";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { cn } from "~/lib/utils";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,12 +16,14 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
+  rememberMe: z.boolean().optional(),
 });
 
 export default function LoginPage() {
@@ -30,6 +32,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<LoginBody>({ resolver: zodResolver(loginSchema) });
 
@@ -42,7 +45,7 @@ export default function LoginPage() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle role="heading" className="text-2xl">Login</CardTitle>
         <CardDescription>
           Enter your email below to login to your account
         </CardDescription>
@@ -77,6 +80,27 @@ export default function LoginPage() {
                 {errors.password.message}
               </div>
             )}
+          </div>
+          <div className="flex items-center space-x-2">
+            <Controller
+              control={control}
+              name="rememberMe"
+              render={({ field }) => {
+                return (
+                  <Checkbox
+                    id="rememberMe"
+                    onCheckedChange={field.onChange}
+                    checked={field.value}
+                  />
+                );
+              }}
+            />
+            <label
+              htmlFor="rememberMe"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Remember me
+            </label>
           </div>
           <Button type="submit" className="w-full">
             Login
