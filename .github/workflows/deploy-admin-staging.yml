@@ -1,4 +1,4 @@
-name: STAGING - Deploy WEBAPP
+name: STAGING - Deploy ADMIN
 
 env:
   HUSKY: 0
@@ -9,11 +9,11 @@ on:
       - main
       - "deploy-staging/**"
     paths:
-      - apps/web/**
-      - .github/workflows/deploy-webapp-staging.yml
+      - apps/admin/**
+      - .github/workflows/deploy-admin-staging.yml
 
 jobs:
-  build-web:
+  build-admin:
     runs-on: ubuntu-latest
     environment:
       name: staging
@@ -34,10 +34,10 @@ jobs:
 
       - name: Build, tag, and push image to Amazon ECR
         env:
-          ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_WEB }}
+          ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_ADMIN }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -f ./web.Dockerfile --build-arg VERSION=$IMAGE_TAG -t $ECR_REGISTRY:$IMAGE_TAG .
+          docker build -f ./admin.Dockerfile --build-arg VERSION=$IMAGE_TAG -t $ECR_REGISTRY:$IMAGE_TAG .
           docker tag $ECR_REGISTRY:$IMAGE_TAG $ECR_REGISTRY:latest
           docker push $ECR_REGISTRY:$IMAGE_TAG
           docker push $ECR_REGISTRY:latest
@@ -54,6 +54,6 @@ jobs:
         env:
           AWS_REGION: ${{ vars.AWS_REGION }}
           ECS_CLUSTER: ${{ vars.AWS_ECS_CLUSTER }}
-          ECS_SERVICE: ${{ vars.AWS_ECS_SERVICE_WEB }}
-          DOCKER_IMAGE: ${{ secrets.AWS_ECR_REGISTRY_WEB }}:${{ github.sha }}
+          ECS_SERVICE: ${{ vars.AWS_ECS_SERVICE_ADMIN }}
+          DOCKER_IMAGE: ${{ secrets.AWS_ECR_REGISTRY_ADMIN }}:${{ github.sha }}
         run: selleo aws ecs deploy --region $AWS_REGION --cluster $ECS_CLUSTER --service $ECS_SERVICE --docker-image $DOCKER_IMAGE
