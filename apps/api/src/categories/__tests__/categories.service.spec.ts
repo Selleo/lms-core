@@ -111,4 +111,20 @@ describe("CategoriesService", () => {
       expect(result.archivedAt).not.toBeNull();
     });
   });
+
+  describe("updateCategory", () => {
+    it("should update a categry", async () => {
+      const allCategories = await db.select().from(categories);
+      const categoryToUpdate = allCategories[0];
+      const newTitle = categoryToUpdate.title + "asdf";
+
+      const result = await categoriesServics.updateCategory(
+        categoryToUpdate.id,
+        { title: newTitle },
+        UserRoles.admin,
+      );
+
+      expect(result.title).toBe(newTitle);
+    });
+  });
 });
