@@ -47,11 +47,15 @@ export class UsersController {
     request: [
       { type: "query", name: "page", schema: Type.Number() },
       { type: "query", name: "perPage", schema: Type.Number() },
+      { type: "query", name: "sort", schema: Type.String() },
+      { type: "query", name: "filter", schema: Type.String() },
     ],
   })
   async getUsers(
     @Query("page") page?: number,
     @Query("perPage") perPage?: number,
+    @Query("sort") sort?: string,
+    @Query("filter") filter?: string,
   ): Promise<PaginatedResponse<AllUsersResponse>> {
     const query = { page, perPage };
 
