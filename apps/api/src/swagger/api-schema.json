@@ -320,6 +320,31 @@
       }
     },
     "/categories/{id}": {
+      "post": {
+        "operationId": "CategorieController_updateCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCategoryResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "operationId": "CategorieController_archiveCategory",
         "parameters": [
@@ -768,6 +793,29 @@
         "required": [
           "data",
           "pagination"
+        ]
+      },
+      "UpdateCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "title"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "ArchiveCategoryResponse": {

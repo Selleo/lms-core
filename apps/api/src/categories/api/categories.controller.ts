@@ -1,10 +1,20 @@
-import { Controller, Delete, Get, Param, Query } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
 import {
   AllCategoriesResponse,
   allCategoriesSchema,
+  categorySchema,
+  CategorySchema,
 } from "../schemas/category.schema";
 import {
   baseResponse,
@@ -47,6 +57,25 @@ export class CategorieController {
 
     const data = await this.categoriesService.getCategories(query, userRole);
     return new PaginatedResponse(data);
+  }
+
+  @Post("/:id")
+  @Validate({
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    response: baseResponse(categorySchema),
+  })
+  async updateCategory(
+    @Param("id") categoryId: string,
+    @CurrentUser("role") userRole: UserRole,
+    @Body() categoryData: Pick<CommonCategory, "title">,
+  ): Promise<BaseResponse<CategorySchema>> {
+    const category = await this.categoriesService.updateCategory(
+      categoryId,
+      categoryData,
+      userRole,
+    );
+
+    return new BaseResponse(category);
   }
 
   @Delete("/:id")

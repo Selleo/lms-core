@@ -9,6 +9,7 @@ import {
 import { categories } from "src/storage/schema";
 import { CategoriesQuery } from "./api/types";
 import { CategoryQueries } from "./schemas/category-query";
+import { CommonCategory } from "./schemas/common-category.schema";
 import { DatabasePg } from "src/common";
 import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 
@@ -105,6 +106,41 @@ export class CategoriesService {
         .set({ archivedAt: sql`CURRENT_TIMESTAMP` })
         .where(eq(categories.id, categoryId))
         .returning();
+
+      return updatedCategory;
+    });
+  }
+
+  public async updateCategory(
+    categoryId: string,
+    categoryData: Pick<CommonCategory, "title">,
+    userRole: UserRole,
+  ) {
+    if (userRole !== UserRoles.admin) {
+      throw new HttpException(
+        "Only admins can update the category",
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    return this.db.transaction(async (tx) => {
+      const [category] = await tx
+        .select()
+        .from(categories)
+        .where(eq(categories.id, categoryId));
+
+      if (!category) {
+        throw new HttpException(
+          "Category does not exist",
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const [updatedCategory] = await tx
+        .update(categories)
+        .set({ title: categoryData.title })
+        .where(eq(categories.id, categoryId))
+        .returning({ title: categories.title, id: categories.id });
 
       return updatedCategory;
     });
