@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { toast } from "sonner";
 import { ApiClient } from "../api-client";
 import { ChangePasswordBody } from "../generated-api";
 import { useCurrentUserSuspense } from "../queries/useCurrentUser";
+import { useToast } from "~/components/ui/use-toast";
 
 type ChangePasswordOptions = {
   data: ChangePasswordBody;
@@ -11,6 +11,7 @@ type ChangePasswordOptions = {
 
 export function useChangePassword() {
   const { data: currentUser } = useCurrentUserSuspense();
+  const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (options: ChangePasswordOptions) => {
@@ -22,13 +23,22 @@ export function useChangePassword() {
       return response.data;
     },
     onSuccess: () => {
-      toast.success("Password updated successfully");
+      toast({
+        variant: "default",
+        description: "Password updated successfully",
+      });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
-        return toast.error(error.response?.data.message);
+        return toast({
+          variant: "destructive",
+          description: error.response?.data.message,
+        });
       }
-      toast.error(error.message);
+      toast({
+        variant: "destructive",
+        description: error.message,
+      });
     },
   });
 }

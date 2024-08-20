@@ -2,6 +2,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import SheetMenu from "~/components/SheetMenu/SheetMenu";
 import { useLandingStore } from "~/modules/Landing/landingStore";
+import { BrandIcon } from "../icons/icons";
 
 export const meta: MetaFunction = () => {
   return [
@@ -79,16 +80,8 @@ export default function LandingPage() {
       </SheetMenu>
 
       <div className="relative w-[300px] h-[300px] mx-auto mt-20">
-        <img
-          src="brand.svg"
-          alt="brand"
-          className="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-        />
-        <img
-          src="brand.svg"
-          alt="brand"
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-110 blur-xl z-10 opacity-40 animate-pulse"
-        />
+        <BrandIcon className="absolute z-20 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+        <BrandIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-110 blur-xl z-10 opacity-40 animate-pulse" />
       </div>
 
       <p className="fixed bottom-4 left-1/2 -translate-x-1/2">

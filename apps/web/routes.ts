@@ -17,6 +17,23 @@ export const routes: (
       route("", "modules/Dashboard/Dashboard.page.tsx", {
         index: true,
       });
+
+      route(
+        "lesson-items",
+        "modules/Courses/LessonItems/LessonItems.layout.tsx"
+      );
+      route(
+        "lesson-items/:id/edit",
+        "modules/Courses/LessonItems/EditLessonItem.page.tsx"
+      );
+      route(
+        "lesson-items/add/video",
+        "modules/Courses/LessonItems/LessonItemsAddVideo.page.tsx"
+      );
+      route(
+        "lesson-items/add/text",
+        "modules/Courses/LessonItems/LessonItemsAddText.page.tsx"
+      );
       route(
         "settings",
         "modules/Dashboard/Settings/Settings.layout.tsx",
@@ -30,7 +47,6 @@ export const routes: (
         index: true,
       });
       route("lessons", "modules/Courses/Lessons/Lessons.page.tsx");
-      route("lesson-items", "modules/Courses/LessonItems/LessonItems.page.tsx");
       route("users", "modules/Users/Users.page.tsx");
       route("categories", "modules/Courses/Categories/Categories.page.tsx");
     });
