@@ -95,6 +95,10 @@ export class AdminApp {
       createTableIfMissing: true,
     });
 
+    this.app.get("/admin/healthcheck", (_req, res) => {
+      res.send("OK").status(200);
+    });
+
     const adminRouter = AdminJSExpress.buildAuthenticatedRouter(
       admin,
       {
