@@ -14,9 +14,7 @@ export function useRegisterUser() {
   const { toast } = useToast();
   return useMutation({
     mutationFn: async (options: RegisterUserOptions) => {
-      const response = await ApiClient.auth.authControllerRegister(
-        options.data
-      );
+      const response = await ApiClient.api.authControllerRegister(options.data);
 
       return response.data;
     },

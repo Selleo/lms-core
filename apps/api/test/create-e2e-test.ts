@@ -15,7 +15,7 @@ export async function createE2ETest(customProviders: Provider[] = []) {
   }).compile();
 
   const app = moduleFixture.createNestApplication();
-
+  app.setGlobalPrefix("api");
   app.use(cookieParser());
 
   await app.init();

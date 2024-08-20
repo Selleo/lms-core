@@ -10,7 +10,7 @@ export function useLogoutUser() {
   const { setLoggedIn } = useAuthStore();
   return useMutation({
     mutationFn: async () => {
-      const response = await ApiClient.auth.authControllerLogout();
+      const response = await ApiClient.api.authControllerLogout();
 
       return response.data;
     },

@@ -36,7 +36,7 @@ describe("UsersController (e2e)", () => {
       .create();
 
     const loginResponse = await request(app.getHttpServer())
-      .post("/auth/login")
+      .post("/api/auth/login")
       .send({
         email: testUser.email,
         password: testUser.credentials?.password,
@@ -48,7 +48,7 @@ describe("UsersController (e2e)", () => {
   describe("GET /users", () => {
     it("should return all users", async () => {
       const response = await request(app.getHttpServer())
-        .get("/users")
+        .get("/api/users")
         .set("Cookie", cookies)
         .expect(200);
 
@@ -62,7 +62,7 @@ describe("UsersController (e2e)", () => {
   describe("GET /users/:id", () => {
     it("should return a user by id", async () => {
       const response = await request(app.getHttpServer())
-        .get(`/users/${testUser.id}`)
+        .get(`/api/users/${testUser.id}`)
         .set("Cookie", cookies)
         .expect(200);
 
@@ -72,7 +72,7 @@ describe("UsersController (e2e)", () => {
 
     it("should return 404 for non-existent user", async () => {
       await request(app.getHttpServer())
-        .get(`/users/${crypto.randomUUID()}`)
+        .get(`/api/users/${crypto.randomUUID()}`)
         .set("Cookie", cookies)
         .expect(404);
     });
@@ -82,7 +82,7 @@ describe("UsersController (e2e)", () => {
     it("should update user", async () => {
       const updateData = { email: "newemail@example.com" };
       const response = await request(app.getHttpServer())
-        .patch(`/users/${testUser.id}`)
+        .patch(`/api/users/${testUser.id}`)
         .set("Cookie", cookies)
         .send(updateData)
         .expect(200);
@@ -98,7 +98,7 @@ describe("UsersController (e2e)", () => {
         lastName: "User",
       });
       await request(app.getHttpServer())
-        .patch(`/users/${anotherUser.id}`)
+        .patch(`/api/users/${anotherUser.id}`)
         .set("Cookie", cookies)
         .send({ email: "newemail@example.com" })
         .expect(403);
@@ -110,13 +110,13 @@ describe("UsersController (e2e)", () => {
       const newPassword = "newPassword123";
 
       await request(app.getHttpServer())
-        .patch(`/users/${testUser.id}/change-password`)
+        .patch(`/api/users/${testUser.id}/change-password`)
         .set("Cookie", cookies)
         .send({ oldPassword: testPassword, newPassword })
         .expect(200);
 
       const loginResponse = await request(app.getHttpServer())
-        .post("/auth/login")
+        .post("/api/auth/login")
         .send({
           email: testUser.email,
           password: newPassword,
@@ -131,7 +131,7 @@ describe("UsersController (e2e)", () => {
       const newPassword = "newPassword123";
 
       await request(app.getHttpServer())
-        .patch(`/users/${testUser.id}/change-password`)
+        .patch(`/api/users/${testUser.id}/change-password`)
         .set("Cookie", cookies)
         .send({ oldPassword: incorrectOldPassword, newPassword })
         .expect(401);
@@ -145,7 +145,7 @@ describe("UsersController (e2e)", () => {
         lastName: "User",
       });
       await request(app.getHttpServer())
-        .patch(`/users/${anotherUser.id}/change-password`)
+        .patch(`/api/users/${anotherUser.id}/change-password`)
         .set("Cookie", cookies)
         .send({ oldPassword: "password123", newPassword: "newpassword" })
         .expect(403);
@@ -155,12 +155,12 @@ describe("UsersController (e2e)", () => {
   describe("DELETE /users/:id", () => {
     it("should delete user", async () => {
       await request(app.getHttpServer())
-        .delete(`/users/${testUser.id}`)
+        .delete(`/api/users/${testUser.id}`)
         .set("Cookie", cookies)
         .expect(200);
 
       await request(app.getHttpServer())
-        .get(`/users/${testUser.id}`)
+        .get(`/api/users/${testUser.id}`)
         .set("Cookie", cookies)
         .expect(404);
     });
@@ -173,7 +173,7 @@ describe("UsersController (e2e)", () => {
         lastName: "User",
       });
       await request(app.getHttpServer())
-        .delete(`/users/${anotherUser.id}`)
+        .delete(`/api/users/${anotherUser.id}`)
         .set("Cookie", cookies)
         .expect(403);
     });

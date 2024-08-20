@@ -15,7 +15,7 @@ export function useChangePassword() {
 
   return useMutation({
     mutationFn: async (options: ChangePasswordOptions) => {
-      const response = await ApiClient.users.usersControllerChangePassword(
+      const response = await ApiClient.api.usersControllerChangePassword(
         currentUser.id,
         options.data
       );

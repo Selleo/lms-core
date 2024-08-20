@@ -15,7 +15,7 @@ async function bootstrap() {
   setupValidation();
 
   app.use(cookieParser());
-
+  app.setGlobalPrefix("api");
   app.enableCors({
     origin: process.env.CORS_ORIGIN,
     credentials: true,

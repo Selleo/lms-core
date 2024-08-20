@@ -6,7 +6,7 @@ interface Credentials {
 }
 
 export const handlers = [
-  http.post("/auth/login", async ({ request }) => {
+  http.post("/api/auth/login", async ({ request }) => {
     const credentials = (await request.json()) as Credentials;
 
     if (
@@ -18,7 +18,7 @@ export const handlers = [
       return new HttpResponse(null, { status: 401 });
     }
   }),
-  http.post("/auth/register", async ({ request }) => {
+  http.post("/api/auth/register", async ({ request }) => {
     const credentials = (await request.json()) as Credentials;
 
     if (

@@ -5,7 +5,7 @@ import { CurrentUserResponse } from "../generated-api";
 export const currentUserQueryOptions = {
   queryKey: ["currentUser"],
   queryFn: async () => {
-    const response = await ApiClient.auth.authControllerCurrentUser();
+    const response = await ApiClient.api.authControllerCurrentUser();
     return response.data;
   },
   select: (data: CurrentUserResponse) => data.data,

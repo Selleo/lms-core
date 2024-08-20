@@ -12,7 +12,9 @@ describe("HealthController (e2e)", () => {
 
   describe("GET /healthcheck", () => {
     it("should return 200 for healthy server", async () => {
-      const response = await request(app.getHttpServer()).get("/healthcheck");
+      const response = await request(app.getHttpServer()).get(
+        "/api/healthcheck",
+      );
 
       expect(response.status).toBe(200);
     });

@@ -19,7 +19,7 @@ export function useUpdateUser() {
 
   return useMutation({
     mutationFn: async (options: UpdateUserOptions) => {
-      const response = await ApiClient.users.usersControllerUpdateUser(
+      const response = await ApiClient.api.usersControllerUpdateUser(
         currentUser.id,
         options.data
       );
