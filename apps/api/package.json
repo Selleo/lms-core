@@ -59,10 +59,12 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "ts-pattern": "^5.2.0",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "faker": "link:@types/@faker-js/faker",
+    "dotenv": "^16.4.5",
+    "@faker-js/faker": "^8.4.1"
   },
   "devDependencies": {
-    "@faker-js/faker": "^8.4.1",
     "@nestjs/cli": "^10.0.0",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
@@ -80,11 +82,9 @@
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "dotenv": "^16.4.5",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "faker": "link:@types/@faker-js/faker",
     "fishery": "^2.2.2",
     "jest": "^29.5.0",
     "prettier": "^3.0.0",
