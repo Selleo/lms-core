@@ -44,7 +44,7 @@ describe("CategoriesController (e2e)", () => {
   };
 
   describe("POST /categories", () => {
-    it("should return all categories for student role (only 'id' and 'title')", async () => {
+    it("should return archivedAt and createdAt equal to null for student role", async () => {
       const response = await request(app.getHttpServer())
         .get("/categories")
         .set("Cookie", await getCookie(UserRoles.student))
@@ -54,8 +54,8 @@ describe("CategoriesController (e2e)", () => {
 
       expect(responseData[0]).toHaveProperty("id");
       expect(responseData[0]).toHaveProperty("title");
-      expect(responseData[0]).not.toHaveProperty("archivedAt");
-      expect(responseData[0]).not.toHaveProperty("createdAt");
+      expect(responseData[0].archivedAt).toBe(null);
+      expect(responseData[0].createdAt).toBe(null);
     });
 
     it("should return all categories for admin role (all columns)", async () => {
@@ -70,6 +70,7 @@ describe("CategoriesController (e2e)", () => {
       expect(responseData[0]).toHaveProperty("title");
       expect(responseData[0]).toHaveProperty("archivedAt");
       expect(responseData[0]).toHaveProperty("createdAt");
+      expect(responseData[0].createdAt).not.toBe(null);
     });
 
     it("should return categories properly paginated", async () => {

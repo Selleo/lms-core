@@ -1006,15 +1006,38 @@
               "type": "object",
               "properties": {
                 "id": {
+                  "format": "uuid",
                   "type": "string"
                 },
                 "title": {
                   "type": "string"
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [
                 "id",
-                "title"
+                "title",
+                "archivedAt",
+                "createdAt"
               ]
             }
           },

@@ -38,10 +38,9 @@ export class CategoriesService {
 
     const selectedColumns = {
       id: categories.id,
+      archivedAt: categories.archivedAt,
+      createdAt: categories.createdAt,
       title: categories.title,
-      ...(isAdmin
-        ? { archivedAt: categories.archivedAt, createdAt: categories.createdAt }
-        : null),
     };
 
     return this.db.transaction(async (tx) => {
@@ -61,7 +60,7 @@ export class CategoriesService {
         .where(filterCondition);
 
       return {
-        data,
+        data: this.serializeCategories(data, isAdmin),
         pagination: { totalItems: totalItems.count, page, perPage },
       };
     });
@@ -83,4 +82,14 @@ export class CategoriesService {
         return categories.title;
     }
   }
+
+  private serializeCategories = (
+    data: AllCategoriesResponse,
+    isAdmin: boolean,
+  ) =>
+    data.map((category) => ({
+      ...category,
+      archivedAt: isAdmin ? category.archivedAt : null,
+      createdAt: isAdmin ? category.createdAt : null,
+    }));
 }

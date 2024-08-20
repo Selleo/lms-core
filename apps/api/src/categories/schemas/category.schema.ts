@@ -1,8 +1,13 @@
 import { Type, Static } from "@sinclair/typebox";
-import { commonCategorySchema } from "src/categories/schemas/common-category.schema";
+import { UUIDSchema } from "src/common";
 
 export const allCategoriesSchema = Type.Array(
-  Type.Pick(commonCategorySchema, ["id", "title"]),
+  Type.Object({
+    id: UUIDSchema,
+    title: Type.String(),
+    archivedAt: Type.Union([Type.String(), Type.Null()]),
+    createdAt: Type.Union([Type.String(), Type.Null()]),
+  }),
 );
 
 export type AllCategoriesResponse = Static<typeof allCategoriesSchema>;

@@ -15,7 +15,7 @@ export const CategorySortQueries: Record<CategorySortQuery, CategorySortQuery> =
 
 export type CategorySortQuery = (typeof categorySortQueries)[number];
 
-export const sortCategoryQuery = Type.Union([
+export const sortCategoryQueryOptions = Type.Union([
   Type.Literal("title"),
   Type.Literal("createdAt"),
   Type.Literal("archivedAt"),
@@ -24,4 +24,4 @@ export const sortCategoryQuery = Type.Union([
   Type.Literal("-archivedAt"),
 ]);
 
-export type SortCategoryQuery = Static<typeof sortCategoryQuery>;
+export type SortCategoryQueryOptions = Static<typeof sortCategoryQueryOptions>;

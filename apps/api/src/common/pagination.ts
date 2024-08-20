@@ -1,7 +1,9 @@
 import { asc, desc } from "drizzle-orm";
+
+import { AllCategoriesResponse } from "src/categories/schemas/category.schema";
 import {
   CategorySortQuery,
-  SortCategoryQuery,
+  SortCategoryQueryOptions,
 } from "src/categories/schemas/category-query";
 
 type TProps = {
@@ -16,10 +18,10 @@ export const addPagination = async ({
   queryDB,
   page,
   perPage,
-}: TProps): Promise<{ id: string; title: string }[]> =>
+}: TProps): Promise<AllCategoriesResponse> =>
   queryDB.limit(perPage).offset((page - 1) * perPage);
 
-export const getSortOptions = (sort: SortCategoryQuery) => ({
+export const getSortOptions = (sort: SortCategoryQueryOptions) => ({
   sortOrder: sort.startsWith("-") ? desc : asc,
   sortedField: sort.replace(/^-/, "") as CategorySortQuery,
 });
