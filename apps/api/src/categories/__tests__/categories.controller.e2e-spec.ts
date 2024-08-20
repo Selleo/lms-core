@@ -72,7 +72,7 @@ describe("CategoriesController (e2e)", () => {
       expect(responseData[0]).toHaveProperty("createdAt");
     });
 
-    it("should pagination work", async () => {
+    it("should return categories properly paginated", async () => {
       let perPage = 5;
       let page = 1;
 

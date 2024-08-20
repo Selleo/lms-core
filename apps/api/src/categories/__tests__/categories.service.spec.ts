@@ -3,7 +3,7 @@ import { CategoriesService } from "../categories.service";
 import { DatabasePg } from "src/common";
 import { truncateAllTables } from "test/helpers/test-helpers";
 import { createCategoryFactory } from "test/factory/category.factory";
-import { CategoriesQuery } from "../api/types";
+import { CategoriesQuery } from "../api/categoires.types";
 import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";

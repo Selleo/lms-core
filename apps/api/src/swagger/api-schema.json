@@ -473,6 +473,7 @@
             "required": false,
             "in": "query",
             "schema": {
+              "minimum": 1,
               "type": "number"
             }
           },
@@ -489,7 +490,32 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "const": "title",
+                  "type": "string"
+                },
+                {
+                  "const": "createdAt",
+                  "type": "string"
+                },
+                {
+                  "const": "archivedAt",
+                  "type": "string"
+                },
+                {
+                  "const": "-title",
+                  "type": "string"
+                },
+                {
+                  "const": "-createdAt",
+                  "type": "string"
+                },
+                {
+                  "const": "-archivedAt",
+                  "type": "string"
+                }
+              ]
             }
           }
         ],

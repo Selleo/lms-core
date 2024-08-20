@@ -6,36 +6,26 @@ import {
   DEFAULT_PAGE_SIZE,
   getSortOptions,
 } from "src/common/pagination";
+import { AllCategoriesResponse } from "./schemas/category.schema";
 import { categories } from "src/storage/schema";
-import { CategoriesQuery } from "./api/types";
-import { CategoryQueries } from "./schemas/category-query";
-import { DatabasePg } from "src/common";
+import { CategoriesQuery } from "./api/categoires.types";
+import {
+  CategorySortQueries,
+  CategorySortQuery,
+} from "./schemas/category-query";
+import { DatabasePg, Pagination } from "src/common";
 import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 
 @Injectable()
 export class CategoriesService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  private createLikeFilter(filter: string) {
-    return like(categories.title, `%${filter.toLowerCase()}%`);
-  }
-
-  private getColumnToSortBy(sort: string, isAdmin: boolean) {
-    if (!isAdmin) return categories.title;
-
-    switch (sort) {
-      case CategoryQueries.archivedAt:
-        return categories.archivedAt;
-      case CategoryQueries.createdAt:
-        return categories.createdAt;
-      default:
-        return categories.title;
-    }
-  }
-
-  public async getCategories(query: CategoriesQuery, userRole: UserRole) {
+  public async getCategories(
+    query: CategoriesQuery,
+    userRole: UserRole,
+  ): Promise<{ data: AllCategoriesResponse; pagination: Pagination }> {
     const {
-      sort = "",
+      sort = CategorySortQueries.title,
       perPage = DEFAULT_PAGE_SIZE,
       page = 1,
       filter = "",
@@ -51,7 +41,7 @@ export class CategoriesService {
       title: categories.title,
       ...(isAdmin
         ? { archivedAt: categories.archivedAt, createdAt: categories.createdAt }
-        : {}),
+        : null),
     };
 
     return this.db.transaction(async (tx) => {
@@ -75,5 +65,22 @@ export class CategoriesService {
         pagination: { totalItems: totalItems.count, page, perPage },
       };
     });
+  }
+
+  private createLikeFilter(filter: string) {
+    return like(categories.title, `%${filter.toLowerCase()}%`);
+  }
+
+  private getColumnToSortBy(sort: CategorySortQuery, isAdmin: boolean) {
+    if (!isAdmin) return categories.title;
+
+    switch (sort) {
+      case CategorySortQueries.archivedAt:
+        return categories.archivedAt;
+      case CategorySortQueries.createdAt:
+        return categories.createdAt;
+      default:
+        return categories.title;
+    }
   }
 }
