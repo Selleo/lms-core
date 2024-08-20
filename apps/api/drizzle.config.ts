@@ -5,7 +5,7 @@ export default defineConfig({
   out: "./src/storage/migrations",
   dialect: "postgresql",
   dbCredentials: {
-    url: "postgres://postgres:guidebook@localhost:5432/guidebook",
+    url: process.env.DATABASE_URL as string,
   },
   verbose: true,
   strict: true,
