@@ -39,6 +39,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^7.4.0",
+    "@nestjs/terminus": "^10.2.3",
     "@repo/email-templates": "workspace:*",
     "@sinclair/typebox": "^0.32.34",
     "add": "^2.0.6",
