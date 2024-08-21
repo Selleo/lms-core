@@ -10,6 +10,7 @@ import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
 import { componentLoader } from "../components/index.js";
+import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
 
 const authenticate = async (
   email: string,
@@ -79,7 +80,7 @@ export class AdminApp {
         },
         {
           resource: this.db.getResource("categories"),
-          options: {},
+          ...categoriesConfigOptions,
         },
         {
           resource: this.db.getResource("credentials"),
