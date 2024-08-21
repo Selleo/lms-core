@@ -1,4 +1,4 @@
-import { boolean, pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 
 import { archivedAt, id, timestamps } from "./utils";
 import { userRoles, UserRoles } from "src/users/schemas/user-roles";
@@ -29,4 +29,17 @@ export const categories = pgTable("categories", {
   title: text("title").notNull(),
   ...timestamps,
   archivedAt,
+});
+
+export const resetTokens = pgTable("reset_tokens", {
+  ...id,
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  resetToken: text("reset_token").notNull(),
+  expiryDate: timestamp("expiry_date", {
+    precision: 3,
+    withTimezone: true,
+  }).notNull(),
+  ...timestamps,
 });

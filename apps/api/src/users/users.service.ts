@@ -30,6 +30,19 @@ export class UsersService {
     return user;
   }
 
+  public async getUserByEmail(email: string) {
+    const [user] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.email, email));
+
+    if (!user) {
+      throw new NotFoundException("User not found");
+    }
+
+    return user;
+  }
+
   public async updateUser(
     id: string,
     data: { email?: string; firstName?: string; lastName?: string },
@@ -77,6 +90,32 @@ export class UsersService {
     );
     if (!isOldPasswordValid) {
       throw new UnauthorizedException("Invalid old password");
+    }
+
+    const hashedNewPassword = await hashPassword(newPassword);
+    await this.db
+      .update(credentials)
+      .set({ password: hashedNewPassword })
+      .where(eq(credentials.userId, id));
+  }
+
+  async resetPassword(id: string, newPassword: string) {
+    const [existingUser] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.id, id));
+
+    if (!existingUser) {
+      throw new NotFoundException("User not found");
+    }
+
+    const [userCredentials] = await this.db
+      .select()
+      .from(credentials)
+      .where(eq(credentials.userId, id));
+
+    if (!userCredentials) {
+      throw new NotFoundException("User credentials not found");
     }
 
     const hashedNewPassword = await hashPassword(newPassword);

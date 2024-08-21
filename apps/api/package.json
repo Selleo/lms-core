@@ -50,6 +50,7 @@
     "drizzle-orm": "^0.31.2",
     "drizzle-typebox": "^0.1.1",
     "lodash": "^4.17.21",
+    "nanoid": "3.3.7",
     "nestjs-typebox": "3.0.0-next.8",
     "nodemailer": "^6.9.14",
     "passport": "^0.7.0",

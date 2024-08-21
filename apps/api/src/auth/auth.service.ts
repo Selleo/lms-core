@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -9,11 +10,13 @@ import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { DatabasePg, UUIDType } from "src/common";
-import { credentials, users } from "../storage/schema";
+import { credentials, resetTokens, users } from "../storage/schema";
 import { UsersService } from "../users/users.service";
 import hashPassword from "src/common/helpers/hashPassword";
 import { EmailService } from "src/common/emails/emails.service";
-import { WelcomeEmail } from "@repo/email-templates";
+import { PasswordRecoveryEmail, WelcomeEmail } from "@repo/email-templates";
+import { nanoid } from "nanoid";
+import { ResetPasswordService } from "./reset-password.service";
 
 @Injectable()
 export class AuthService {
@@ -23,6 +26,7 @@ export class AuthService {
     private usersService: UsersService,
     private configService: ConfigService,
     private emailService: EmailService,
+    private resetPasswordService: ResetPasswordService,
   ) {}
 
   public async register({
@@ -168,5 +172,42 @@ export class AuthService {
     ]);
 
     return { accessToken, refreshToken };
+  }
+
+  public async forgotPassword(email: string) {
+    const user = await this.usersService.getUserByEmail(email);
+
+    if (!user) throw new BadRequestException("Email not found");
+
+    const resetToken = nanoid(64);
+    const expiryDate = new Date();
+    expiryDate.setHours(expiryDate.getHours() + 1);
+
+    await this.db.insert(resetTokens).values({
+      userId: user.id,
+      resetToken,
+      expiryDate,
+    });
+
+    const emailTemplate = new PasswordRecoveryEmail({
+      email,
+      name: email,
+      resetLink: `${process.env.CORS_ORIGIN}/auth/create-new-password?token=${resetToken}`,
+    });
+
+    await this.emailService.sendEmail({
+      to: email,
+      subject: "Password recovery",
+      text: emailTemplate.text,
+      html: emailTemplate.html,
+      from: "godfather@selleo.com",
+    });
+  }
+
+  public async resetPassword(token: string, newPassword: string) {
+    const resetToken = await this.resetPasswordService.getOneByToken(token);
+
+    await this.usersService.resetPassword(resetToken.userId, newPassword);
+    await this.resetPasswordService.deleteToken(token);
   }
 }
