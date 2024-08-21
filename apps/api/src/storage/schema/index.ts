@@ -33,7 +33,7 @@ export const credentials = pgTable("credentials", {
 
 export const categories = pgTable("categories", {
   ...id,
-  title: text("title").notNull(),
+  title: text("title").notNull().unique(),
   ...timestamps,
   archivedAt,
 });

@@ -78,6 +78,13 @@
       "when": 1724408292823,
       "tag": "0010_create_reset_tokens",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1724220690359,
+      "tag": "0011_update_category_title_to_be_unique",
+      "breakpoints": true
     }
   ]
 }
