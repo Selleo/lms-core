@@ -22,6 +22,7 @@
     "express": "^4.18.2",
     "express-formidable": "^1.2.0",
     "express-session": "^1.18.0",
+    "dotenv": "^16.4.5",
     "tslib": "^2.6.3"
   },
   "devDependencies": {
@@ -34,7 +35,6 @@
     "typescript": "5.4.5",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "dotenv": "^16.4.5",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0"
