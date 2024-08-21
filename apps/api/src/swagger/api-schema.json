@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/auth/register": {
+    "/api/auth/register": {
       "post": {
         "operationId": "AuthController_register",
         "parameters": [],
@@ -28,7 +28,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/api/auth/login": {
       "post": {
         "operationId": "AuthController_login",
         "parameters": [],
@@ -55,7 +55,7 @@
         }
       }
     },
-    "/auth/logout": {
+    "/api/auth/logout": {
       "post": {
         "operationId": "AuthController_logout",
         "parameters": [],
@@ -72,7 +72,7 @@
         }
       }
     },
-    "/auth/refresh": {
+    "/api/auth/refresh": {
       "post": {
         "operationId": "AuthController_refreshTokens",
         "parameters": [],
@@ -89,7 +89,7 @@
         }
       }
     },
-    "/auth/current-user": {
+    "/api/auth/current-user": {
       "get": {
         "operationId": "AuthController_currentUser",
         "parameters": [],
@@ -106,7 +106,7 @@
         }
       }
     },
-    "/healthcheck": {
+    "/api/healthcheck": {
       "get": {
         "operationId": "HealthController_check",
         "parameters": [],
@@ -271,7 +271,7 @@
         }
       }
     },
-    "/users": {
+    "/api/users": {
       "get": {
         "operationId": "UsersController_getUsers",
         "parameters": [],
@@ -288,7 +288,7 @@
         }
       }
     },
-    "/users/{id}": {
+    "/api/users/{id}": {
       "get": {
         "operationId": "UsersController_getUserById",
         "parameters": [
@@ -375,7 +375,7 @@
         }
       }
     },
-    "/users/{id}/change-password": {
+    "/api/users/{id}/change-password": {
       "patch": {
         "operationId": "UsersController_changePassword",
         "parameters": [
@@ -412,7 +412,7 @@
         }
       }
     },
-    "/test-config/setup": {
+    "/api/test-config/setup": {
       "post": {
         "operationId": "TestConfigController_setup",
         "parameters": [],
@@ -423,7 +423,7 @@
         }
       }
     },
-    "/test-config/teardown": {
+    "/api/test-config/teardown": {
       "post": {
         "operationId": "TestConfigController_teardown",
         "parameters": [],
@@ -434,7 +434,7 @@
         }
       }
     },
-    "/categories": {
+    "/api/categories": {
       "get": {
         "operationId": "CategorieController_getAllCategories",
         "parameters": [

@@ -13,6 +13,16 @@ export interface RegisterBody {
   /** @format email */
   email: string;
   /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  firstName: string;
+  /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  lastName: string;
+  /**
    * @minLength 8
    * @maxLength 64
    */
@@ -25,6 +35,8 @@ export interface RegisterResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -45,6 +57,8 @@ export interface LoginResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -59,6 +73,8 @@ export interface CurrentUserResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -69,6 +85,8 @@ export interface GetUsersResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   }[];
 }
@@ -79,6 +97,8 @@ export interface GetUserByIdResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -94,6 +114,8 @@ export interface UpdateUserResponse {
     createdAt: string;
     updatedAt: string;
     email: string;
+    firstName: string;
+    lastName: string;
     role: "admin" | "student" | "tutor";
   };
 }
@@ -114,6 +136,18 @@ export interface ChangePasswordBody {
 export type ChangePasswordResponse = null;
 
 export type DeleteUserResponse = null;
+
+export interface GetAllCategoriesResponse {
+  data: {
+    id: string;
+    title: string;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+}
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
@@ -257,16 +291,16 @@ export class HttpClient<SecurityDataType = unknown> {
  * Example usage of Swagger with Typebox
  */
 export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-  auth = {
+  api = {
     /**
      * No description
      *
      * @name AuthControllerRegister
-     * @request POST:/auth/register
+     * @request POST:/api/auth/register
      */
     authControllerRegister: (data: RegisterBody, params: RequestParams = {}) =>
       this.request<RegisterResponse, any>({
-        path: `/auth/register`,
+        path: `/api/auth/register`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -278,11 +312,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name AuthControllerLogin
-     * @request POST:/auth/login
+     * @request POST:/api/auth/login
      */
     authControllerLogin: (data: LoginBody, params: RequestParams = {}) =>
       this.request<LoginResponse, any>({
-        path: `/auth/login`,
+        path: `/api/auth/login`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -294,11 +328,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name AuthControllerLogout
-     * @request POST:/auth/logout
+     * @request POST:/api/auth/logout
      */
     authControllerLogout: (params: RequestParams = {}) =>
       this.request<LogoutResponse, any>({
-        path: `/auth/logout`,
+        path: `/api/auth/logout`,
         method: "POST",
         format: "json",
         ...params,
@@ -308,11 +342,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name AuthControllerRefreshTokens
-     * @request POST:/auth/refresh
+     * @request POST:/api/auth/refresh
      */
     authControllerRefreshTokens: (params: RequestParams = {}) =>
       this.request<RefreshTokensResponse, any>({
-        path: `/auth/refresh`,
+        path: `/api/auth/refresh`,
         method: "POST",
         format: "json",
         ...params,
@@ -322,26 +356,96 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name AuthControllerCurrentUser
-     * @request GET:/auth/current-user
+     * @request GET:/api/auth/current-user
      */
     authControllerCurrentUser: (params: RequestParams = {}) =>
       this.request<CurrentUserResponse, any>({
-        path: `/auth/current-user`,
+        path: `/api/auth/current-user`,
         method: "GET",
         format: "json",
         ...params,
       }),
-  };
-  users = {
+
+    /**
+     * No description
+     *
+     * @name HealthControllerCheck
+     * @request GET:/api/healthcheck
+     */
+    healthControllerCheck: (params: RequestParams = {}) =>
+      this.request<
+        {
+          /** @example "ok" */
+          status?: string;
+          /** @example {"database":{"status":"up"}} */
+          info?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+          /** @example {} */
+          error?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+          /** @example {"database":{"status":"up"}} */
+          details?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+        },
+        {
+          /** @example "error" */
+          status?: string;
+          /** @example {"database":{"status":"up"}} */
+          info?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+          /** @example {"redis":{"status":"down","message":"Could not connect"}} */
+          error?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+          /** @example {"database":{"status":"up"},"redis":{"status":"down","message":"Could not connect"}} */
+          details?: Record<
+            string,
+            {
+              status: string;
+              [key: string]: any;
+            }
+          >;
+        }
+      >({
+        path: `/api/healthcheck`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
     /**
      * No description
      *
      * @name UsersControllerGetUsers
-     * @request GET:/users
+     * @request GET:/api/users
      */
     usersControllerGetUsers: (params: RequestParams = {}) =>
       this.request<GetUsersResponse, any>({
-        path: `/users`,
+        path: `/api/users`,
         method: "GET",
         format: "json",
         ...params,
@@ -351,11 +455,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name UsersControllerGetUserById
-     * @request GET:/users/{id}
+     * @request GET:/api/users/{id}
      */
     usersControllerGetUserById: (id: string, params: RequestParams = {}) =>
       this.request<GetUserByIdResponse, any>({
-        path: `/users/${id}`,
+        path: `/api/users/${id}`,
         method: "GET",
         format: "json",
         ...params,
@@ -365,11 +469,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name UsersControllerUpdateUser
-     * @request PATCH:/users/{id}
+     * @request PATCH:/api/users/{id}
      */
     usersControllerUpdateUser: (id: string, data: UpdateUserBody, params: RequestParams = {}) =>
       this.request<UpdateUserResponse, any>({
-        path: `/users/${id}`,
+        path: `/api/users/${id}`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,
@@ -381,11 +485,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name UsersControllerDeleteUser
-     * @request DELETE:/users/{id}
+     * @request DELETE:/api/users/{id}
      */
     usersControllerDeleteUser: (id: string, params: RequestParams = {}) =>
       this.request<DeleteUserResponse, any>({
-        path: `/users/${id}`,
+        path: `/api/users/${id}`,
         method: "DELETE",
         format: "json",
         ...params,
@@ -395,28 +499,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name UsersControllerChangePassword
-     * @request PATCH:/users/{id}/change-password
+     * @request PATCH:/api/users/{id}/change-password
      */
     usersControllerChangePassword: (id: string, data: ChangePasswordBody, params: RequestParams = {}) =>
       this.request<ChangePasswordResponse, any>({
-        path: `/users/${id}/change-password`,
+        path: `/api/users/${id}/change-password`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,
         format: "json",
         ...params,
       }),
-  };
-  testConfig = {
+
     /**
      * No description
      *
      * @name TestConfigControllerSetup
-     * @request POST:/test-config/setup
+     * @request POST:/api/test-config/setup
      */
     testConfigControllerSetup: (params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/test-config/setup`,
+        path: `/api/test-config/setup`,
         method: "POST",
         ...params,
       }),
@@ -425,12 +528,35 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name TestConfigControllerTeardown
-     * @request POST:/test-config/teardown
+     * @request POST:/api/test-config/teardown
      */
     testConfigControllerTeardown: (params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/test-config/teardown`,
+        path: `/api/test-config/teardown`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CategorieControllerGetAllCategories
+     * @request GET:/api/categories
+     */
+    categorieControllerGetAllCategories: (
+      query?: {
+        filter?: string;
+        page?: number;
+        perPage?: number;
+        sort?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetAllCategoriesResponse, any>({
+        path: `/api/categories`,
+        method: "GET",
+        query: query,
+        format: "json",
         ...params,
       }),
   };

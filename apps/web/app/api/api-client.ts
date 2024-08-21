@@ -19,7 +19,7 @@ ApiClient.instance.interceptors.response.use(
 
       if (!isLoginRequest && useAuthStore.getState().isLoggedIn) {
         try {
-          await ApiClient.auth.authControllerRefreshTokens();
+          await ApiClient.api.authControllerRefreshTokens();
           return ApiClient.instance(originalRequest);
         } catch (refreshError) {
           useAuthStore.getState().setLoggedIn(false);

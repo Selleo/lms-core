@@ -28,7 +28,7 @@ describe("AuthController (e2e)", () => {
         .build();
 
       const response = await request(app.getHttpServer())
-        .post("/auth/register")
+        .post("/api/auth/register")
         .set("Accept", "application/json")
         .set("Content-Type", "application/json")
         .send({
@@ -54,7 +54,7 @@ describe("AuthController (e2e)", () => {
       await authService.register(existingUser);
 
       await request(app.getHttpServer())
-        .post("/auth/register")
+        .post("/api/auth/register")
         .send(existingUser)
         .expect(409);
     });
@@ -71,7 +71,7 @@ describe("AuthController (e2e)", () => {
         });
 
       const response = await request(app.getHttpServer())
-        .post("/auth/login")
+        .post("/api/auth/login")
         .send({
           email: user.email,
           password: user.credentials?.password,
@@ -86,7 +86,7 @@ describe("AuthController (e2e)", () => {
 
     it("should return 401 for invalid credentials", async () => {
       await request(app.getHttpServer())
-        .post("/auth/login")
+        .post("/api/auth/login")
         .send({
           email: "wrong@example.com",
           password: "wrongpassword",
@@ -109,7 +109,7 @@ describe("AuthController (e2e)", () => {
       });
 
       const loginResponse = await request(app.getHttpServer())
-        .post("/auth/login")
+        .post("/api/auth/login")
         .send({
           email: user.email,
           password: password,
@@ -127,7 +127,7 @@ describe("AuthController (e2e)", () => {
       }
 
       const logoutResponse = await request(app.getHttpServer())
-        .post("/auth/logout")
+        .post("/api/auth/logout")
         .set("Cookie", `access_token=${accessToken};`);
 
       const logoutCookies = logoutResponse.headers["set-cookie"];
@@ -154,7 +154,7 @@ describe("AuthController (e2e)", () => {
       let refreshToken = "";
 
       const loginResponse = await request(app.getHttpServer())
-        .post("/auth/login")
+        .post("/api/auth/login")
         .send({
           email: user.email,
           password: password,
@@ -172,7 +172,7 @@ describe("AuthController (e2e)", () => {
       }
 
       const response = await request(app.getHttpServer())
-        .post("/auth/refresh")
+        .post("/api/auth/refresh")
         .set("Cookie", [refreshToken])
         .expect(201);
 
@@ -182,7 +182,7 @@ describe("AuthController (e2e)", () => {
 
     it("should return 401 for invalid refresh token", async () => {
       await request(app.getHttpServer())
-        .post("/auth/refresh")
+        .post("/api/auth/refresh")
         .set("Cookie", ["refreshToken=invalid_token"])
         .expect(401);
     });
@@ -197,7 +197,7 @@ describe("AuthController (e2e)", () => {
         .create();
 
       const loginResponse = await request(app.getHttpServer())
-        .post("/auth/login")
+        .post("/api/auth/login")
         .send({
           email: user.email,
           password: "password123",
@@ -215,7 +215,7 @@ describe("AuthController (e2e)", () => {
       }
 
       const response = await request(app.getHttpServer())
-        .get("/auth/current-user")
+        .get("/api/auth/current-user")
         .set("Cookie", `access_token=${accessToken};`)
         .expect(200);
 
@@ -223,7 +223,9 @@ describe("AuthController (e2e)", () => {
     });
 
     it("should return 401 for unauthenticated request", async () => {
-      await request(app.getHttpServer()).get("/auth/current-user").expect(401);
+      await request(app.getHttpServer())
+        .get("/api/auth/current-user")
+        .expect(401);
     });
   });
 });

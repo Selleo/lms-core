@@ -5,7 +5,7 @@ import { GetUsersResponse } from "../generated-api";
 export const usersQueryOptions = {
   queryKey: ["users"],
   queryFn: async () => {
-    const response = await ApiClient.users.usersControllerGetUsers();
+    const response = await ApiClient.api.usersControllerGetUsers();
     return response.data;
   },
   select: (data: GetUsersResponse) => data.data,
