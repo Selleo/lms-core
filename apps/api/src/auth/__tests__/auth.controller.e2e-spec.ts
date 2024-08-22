@@ -228,4 +228,76 @@ describe("AuthController (e2e)", () => {
         .expect(401);
     });
   });
+
+  describe("POST /api/auth/forgot-password", () => {
+    it("should send a password reset link if email exists", async () => {
+      const user = await userFactory
+        .withCredentials({
+          password: "password123",
+        })
+        .create({
+          email: "test_2@example.com",
+        });
+
+      const response = await request(app.getHttpServer())
+        .post("/api/auth/forgot-password")
+        .send({ email: user.email })
+        .expect(201);
+
+      expect(response.body.data).toEqual({
+        message: "Password reset link sent",
+      });
+    });
+
+    it("should return 404 if email is empty", async () => {
+      await userFactory
+        .withCredentials({
+          password: "password123",
+        })
+        .create({
+          email: "test_3@example.com",
+        });
+      const response = await request(app.getHttpServer())
+        .post("/api/auth/forgot-password")
+        .send({ email: "" })
+        .expect(400);
+
+      expect(response.body.message).toEqual("Validation failed (body)");
+    });
+  });
+
+  describe("POST /api/auth/reset-password", () => {
+    it("should reset the password successfully", async () => {
+      jest
+        .spyOn(authService, "resetPassword")
+        .mockImplementation(async () => {});
+
+      const response = await request(app.getHttpServer())
+        .post("/api/auth/reset-password")
+        .send({ resetToken: "valid-token", newPassword: "newpassword123" })
+        .expect(201);
+
+      expect(response.body.data).toEqual({
+        message: "Password reset successfully",
+      });
+    });
+
+    it("should return 404 if reset token is missing", async () => {
+      const response = await request(app.getHttpServer())
+        .post("/api/auth/reset-password")
+        .send({ resetToken: "", newPassword: "newpassword123" })
+        .expect(400);
+
+      expect(response.body.message).toEqual("Validation failed (body)");
+    });
+
+    it("should return 400 if password is too short", async () => {
+      const response = await request(app.getHttpServer())
+        .post("/api/auth/reset-password")
+        .send({ resetToken: "valid-token", newPassword: "short" })
+        .expect(400);
+
+      expect(response.body.message).toEqual("Validation failed (body)");
+    });
+  });
 });

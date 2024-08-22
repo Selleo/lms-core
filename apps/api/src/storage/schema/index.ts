@@ -1,4 +1,11 @@
-import { boolean, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  pgEnum,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 import { archivedAt, id, timestamps } from "./utils";
 import { userRoles, UserRoles } from "src/users/schemas/user-roles";

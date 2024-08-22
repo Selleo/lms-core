@@ -192,7 +192,7 @@ export class AuthService {
     const emailTemplate = new PasswordRecoveryEmail({
       email,
       name: email,
-      resetLink: `${process.env.CORS_ORIGIN}/auth/create-new-password?token=${resetToken}`,
+      resetLink: `${process.env.CORS_ORIGIN}/auth/create-new-password?token=${resetToken}&email=${email}`,
     });
 
     await this.emailService.sendEmail({
