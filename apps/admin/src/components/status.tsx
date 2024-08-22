@@ -29,7 +29,7 @@ const Status = (props: BasePropertyProps) => {
   return (
     <Box>
       <Badge size="default" variant={isArchived ? "danger" : "success"} outline>
-        {isArchived ? "not active" : "active"}
+        {isArchived ? "Archived" : "Active"}
       </Badge>
     </Box>
   );

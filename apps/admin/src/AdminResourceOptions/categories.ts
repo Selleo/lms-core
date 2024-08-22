@@ -3,13 +3,15 @@ import { Components } from "../components/components.bundler.js";
 
 const excludeNotActiveCategories: Before = async (request) => {
   const { query = {} } = request;
-  const newQuery = {
+
+  const isStatusActive = query["filters.status"];
+
+  const newQuery: { [key: string]: "true" | "false" } = {
     ...query,
-    filters: {
-      archived: false,
-    },
+    "filters.archived": isStatusActive === "true" ? "true" : "false",
   };
 
+  delete newQuery["filters.status"];
   request.query = newQuery;
 
   return request;
@@ -47,7 +49,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
           edit: false,
           list: false,
           show: true,
-          filter: true,
+          filter: false,
         },
       },
       id: {
@@ -64,12 +66,13 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         components: {
           list: Components.Status,
           show: Components.Status,
+          filter: Components.StatusFilter,
         },
         isVisible: {
           edit: false,
           list: true,
           show: true,
-          filter: false,
+          filter: true,
         },
       },
     },
