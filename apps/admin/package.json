@@ -27,16 +27,18 @@
     "express-session": "^1.18.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "tslib": "^2.6.3"
+    "react-router-dom": "^6.25.1",
+    "tslib": "^2.6.3",
+    "@repo/ui": "workspace:*"
   },
   "devDependencies": {
     "@types/connect-pg-simple": "^7.0.3",
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.0",
+    "@types/react": "^18.3.4",
+    "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
-    "@types/react": "^18.2.20",
-    "@types/react-dom": "^18.2.7",
     "concurrently": "^8.2.2",
     "eslint": "^8.42.0",
     "eslint-config-prettier": "^9.0.0",

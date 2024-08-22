@@ -15,9 +15,9 @@ import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
 import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
 import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
-import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
+import { componentLoader } from "../components/index.js";
 
 const authenticate = async (
   email: string,
@@ -77,7 +77,6 @@ export class AdminApp {
     AdminJS.registerAdapter({ Database, Resource });
 
     const admin = new AdminJS({
-      componentLoader,
       resources: [
         {
           resource: this.db.getResource("users"),
@@ -136,7 +135,14 @@ export class AdminApp {
           },
         },
       ],
+      dashboard: {
+        component: Components.Dashboard,
+      },
+      rootPath: "/",
+      componentLoader,
     });
+
+    admin.watch();
 
     const ConnectSession = Connect(session);
     const sessionStore = new ConnectSession({
@@ -174,11 +180,12 @@ export class AdminApp {
         name: "adminjs",
       },
     );
-
     admin.watch();
 
     this.app.use(admin.options.rootPath, adminRouter);
-
+    this.app.get(admin.options.rootPath, (req, res) => {
+      res.redirect(`/resources/users`);
+    });
     this.app.listen(8888, () => {
       console.log(
         `AdminJS started on https://admin.lms.localhost${admin.options.rootPath} or http://localhost:8888${admin.options.rootPath}`,
