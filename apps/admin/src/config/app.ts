@@ -9,6 +9,7 @@ import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
+import { componentLoader } from "../components/index.js";
 
 const authenticate = async (
   email: string,
@@ -22,6 +23,7 @@ const authenticate = async (
   const user = await usersResource.knex
     .select("*")
     .from(usersResource.tableName)
+    .whereIn("role", ["admin", "tutor"])
     .where({ email: email })
     .first();
 
@@ -36,20 +38,18 @@ const authenticate = async (
       userCredentials &&
       (await bcrypt.compare(password, userCredentials.password))
     ) {
-      if (user.role === "admin" || user.role === "tutor") {
-        return {
-          email: user.email,
-          id: user.id,
-          role: user.role,
-          firstName: user.first_name,
-          lastName: user.last_name,
-        };
-      } else {
-        console.log(
-          `User ${user.email} tried to log in but doesn't have the required role.`,
-        );
-        return null;
-      }
+      return {
+        email: user.email,
+        id: user.id,
+        role: user.role,
+        firstName: user.first_name,
+        lastName: user.last_name,
+      };
+    } else {
+      console.log(
+        `User ${user.email} tried to log in but doesn't have the required role.`,
+      );
+      return null;
     }
   }
   return null;
@@ -69,10 +69,13 @@ export class AdminApp {
     AdminJS.registerAdapter({ Database, Resource });
 
     const admin = new AdminJS({
+      componentLoader,
       resources: [
         {
           resource: this.db.getResource("users"),
-          ...usersConfigOptions,
+          options: {
+            ...usersConfigOptions,
+          },
         },
         {
           resource: this.db.getResource("categories"),
@@ -113,13 +116,13 @@ export class AdminApp {
         saveUninitialized: true,
         secret: env.SESSION_SECRET,
         cookie: {
-          httpOnly: process.env.NODE_ENV === "production",
-          secure: process.env.NODE_ENV === "production",
+          httpOnly: true,
+          secure: true,
         },
         name: "adminjs",
       },
     );
-
+    admin.watch();
     this.app.use(admin.options.rootPath, adminRouter);
 
     this.app.listen(8888, () => {

@@ -1,4 +1,4 @@
-import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
+import { boolean, pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
 
 import { archivedAt, id, timestamps } from "./utils";
 import { userRoles, UserRoles } from "src/users/schemas/user-roles";
@@ -12,6 +12,7 @@ export const users = pgTable("users", {
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   role: roleEnum("role").notNull().default(UserRoles.student),
+  archived: boolean("archived").notNull().default(false),
 });
 
 export const credentials = pgTable("credentials", {

@@ -129,6 +129,7 @@ export class AuthService {
         createdAt: users.createdAt,
         updatedAt: users.updatedAt,
         role: users.role,
+        archived: users.archived,
       })
       .from(users)
       .leftJoin(credentials, eq(users.id, credentials.userId))
