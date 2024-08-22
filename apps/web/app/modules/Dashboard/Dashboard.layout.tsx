@@ -15,25 +15,29 @@ import { authGuard } from "../Auth/authGuard";
 import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
 import { DashboardNavigation } from "./DashboardNavigation/DashboardNavigation";
 import { LessonItemsProvider } from "../Courses/LessonItems/LessonItemsContext";
-import { useCurrentUser } from "~/api/queries/useCurrentUser";
+import {
+  currentUserQueryOptions,
+  useCurrentUserSuspense,
+} from "~/api/queries/useCurrentUser";
 import { upperFirstLetter } from "./hooks/useUpperFirstLetter";
 import { useMemo } from "react";
+import { queryClient } from "~/api/queryClient";
 
-export const clientLoader = () => authGuard();
+export const clientLoader = async () => {
+  await queryClient.prefetchQuery(currentUserQueryOptions);
+  return authGuard();
+};
 
 export default function DashboardLayout() {
   useAuthEffect();
   const { mutate: logout } = useLogoutUser();
-  const { data: currentUser, isLoading } = useCurrentUser();
+  const {
+    data: { firstName, lastName },
+  } = useCurrentUserSuspense();
 
   const userFullName = useMemo(
-    () =>
-      !isLoading &&
-      upperFirstLetter([
-        currentUser?.firstName || "",
-        currentUser?.lastName || "",
-      ]),
-    [currentUser?.firstName, currentUser?.lastName, isLoading]
+    () => upperFirstLetter([firstName, lastName]),
+    [firstName, lastName]
   );
 
   return (
