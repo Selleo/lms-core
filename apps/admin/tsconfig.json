@@ -2,7 +2,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "src/*": ["src/*"]
+      "src/*": ["src/*"],
+      "@packages/shadcn/*": ["../../packages/ui/src/components/ui/*"]
     },
     "strictNullChecks": true,
     "noImplicitAny": true,

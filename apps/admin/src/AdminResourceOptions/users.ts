@@ -63,7 +63,8 @@ export const usersConfigOptions: ResourceOptions = {
     role: {
       availableValues: [
         { value: "admin", label: "Admin" },
-        { value: "tutor", label: "Tutor" },
+        { value: "student", label: "Student" },
+        //TODO: Tutor doesnt work
       ],
       components: {
         edit: Components.Select,
@@ -98,3 +99,16 @@ export const usersConfigOptions: ResourceOptions = {
     },
   },
 };
+
+//TODO: This is just the setup; components will be supplemented in a different branch.
+// actions: {
+//   list: {
+//     component: Components.CustomTable,
+//   },
+//   show: {
+//     component: Components.CustomShowPage,
+//   },
+//   edit: {
+//     component: Components.CustomEditPage,
+//   },
+// },
