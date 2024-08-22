@@ -11,6 +11,7 @@ import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
 import { componentLoader } from "../components/index.js";
 import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
+import { componentLoader } from "../components/components.bundler.js";
 
 const authenticate = async (
   email: string,
@@ -87,6 +88,7 @@ export class AdminApp {
           ...credentialsConfigOptions,
         },
       ],
+      componentLoader,
     });
 
     const ConnectSession = Connect(session);
@@ -123,7 +125,9 @@ export class AdminApp {
         name: "adminjs",
       },
     );
+
     admin.watch();
+
     this.app.use(admin.options.rootPath, adminRouter);
 
     this.app.listen(8888, () => {

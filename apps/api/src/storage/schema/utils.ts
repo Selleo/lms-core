@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { timestamp, uuid } from "drizzle-orm/pg-core";
+import { boolean, timestamp, uuid } from "drizzle-orm/pg-core";
 
 export const id = {
   id: uuid("id")
@@ -26,8 +26,4 @@ export const timestamps = {
     .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
 };
 
-export const archivedAt = timestamp("archived_at", {
-  mode: "string",
-  withTimezone: true,
-  precision: 3,
-});
+export const archivedAt = boolean("archived").notNull().default(false);
