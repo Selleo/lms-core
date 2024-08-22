@@ -85,6 +85,13 @@
       "when": 1724220690359,
       "tag": "0011_update_category_title_to_be_unique",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1724315182612,
+      "tag": "0009_update_name_and_type_of_archive_in_categories",
+      "breakpoints": true
     }
   ]
 }
