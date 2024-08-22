@@ -1,11 +1,11 @@
 import { defineConfig } from "tsup";
-import type { Plugin } from "esbuild";
+import type { Plugin as EsbuildPlugin } from "esbuild";
 import * as path from "path";
 
-const tailwindPlugin: Plugin = {
+const tailwindPlugin: EsbuildPlugin = {
   name: "tailwind",
   setup(build) {
-    build.onResolve({ filter: /^tailwindcss$/ }, (args) => {
+    build.onResolve({ filter: /^tailwindcss$/ }, () => {
       return { path: path.resolve("./node_modules/tailwindcss") };
     });
   },
