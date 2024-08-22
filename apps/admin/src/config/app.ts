@@ -9,6 +9,7 @@ import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
+import { Components, componentLoader } from "../componetns/components.js";
 
 const authenticate = async (
   email: string,
@@ -83,7 +84,14 @@ export class AdminApp {
           ...credentialsConfigOptions,
         },
       ],
+      dashboard: {
+        component: Components.Dashboard,
+      },
+      rootPath: "/",
+      componentLoader,
     });
+
+    admin.watch();
 
     const ConnectSession = Connect(session);
     const sessionStore = new ConnectSession({
@@ -119,6 +127,10 @@ export class AdminApp {
         name: "adminjs",
       },
     );
+
+    this.app.get(admin.options.rootPath, (req, res) => {
+      res.redirect(`/resources/users`);
+    });
 
     this.app.use(admin.options.rootPath, adminRouter);
 

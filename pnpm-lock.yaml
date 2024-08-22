@@ -28,13 +28,16 @@ importers:
     dependencies:
       '@adminjs/express':
         specifier: ^6.1.0
-        version: 6.1.0(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61))(express-formidable@1.2.0)(express-session@1.18.0)(express@4.18.2)(tslib@2.6.3)
+        version: 6.1.0(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.3.0)(@types/react@18.3.4))(express-formidable@1.2.0)(express-session@1.18.0)(express@4.18.2)(tslib@2.6.3)
       '@adminjs/sql':
         specifier: ^2.2.6
-        version: 2.2.6(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61))
+        version: 2.2.6(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.3.0)(@types/react@18.3.4))
       '@babel/plugin-syntax-import-assertions':
         specifier: ^7.24.7
         version: 7.24.7(@babel/core@7.25.2)
+      '@repo/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       '@sinclair/typebox':
         specifier: ^0.32.34
         version: 0.32.34
@@ -43,7 +46,7 @@ importers:
         version: 5.0.2
       adminjs:
         specifier: ^7.8.11
-        version: 7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61)
+        version: 7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.3.0)(@types/react@18.3.4)
       bcrypt:
         specifier: ^5.1.1
         version: 5.1.1
@@ -62,6 +65,15 @@ importers:
       express-session:
         specifier: ^1.18.0
         version: 1.18.0
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      react-router-dom:
+        specifier: ^6.25.1
+        version: 6.25.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tslib:
         specifier: ^2.6.3
         version: 2.6.3
@@ -75,6 +87,12 @@ importers:
       '@types/express-session':
         specifier: ^1.18.0
         version: 1.18.0
+      '@types/react':
+        specifier: ^18.3.4
+        version: 18.3.4
+      '@types/react-dom':
+        specifier: ^18.3.0
+        version: 18.3.0
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.0.0
         version: 6.7.4(@typescript-eslint/parser@6.7.4(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)
@@ -98,7 +116,7 @@ importers:
         version: 3.1.4
       ts-node:
         specifier: ^10.9.1
-        version: 10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@22.1.0)(typescript@5.4.5)
+        version: 10.9.2(@swc/core@1.3.101)(@types/node@22.1.0)(typescript@5.4.5)
       typescript:
         specifier: 5.4.5
         version: 5.4.5
@@ -113,7 +131,7 @@ importers:
         version: 8.4.1
       '@knaadh/nestjs-drizzle-postgres':
         specifier: ^1.0.0
-        version: 1.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.2.61)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1))(postgres@3.4.4)
+        version: 1.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1))(postgres@3.4.4)
       '@nestjs/common':
         specifier: ^10.0.0
         version: 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
@@ -167,10 +185,10 @@ importers:
         version: 0.22.8
       drizzle-orm:
         specifier: ^0.31.2
-        version: 0.31.2(@types/pg@8.11.6)(@types/react@18.2.61)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1)
+        version: 0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1)
       drizzle-typebox:
         specifier: ^0.1.1
-        version: 0.1.1(@sinclair/typebox@0.32.34)(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.2.61)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1))
+        version: 0.1.1(@sinclair/typebox@0.32.34)(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1))
       faker:
         specifier: link:@types/@faker-js/faker
         version: link:@types/@faker-js/faker
@@ -210,7 +228,7 @@ importers:
     devDependencies:
       '@nestjs/cli':
         specifier: ^10.0.0
-        version: 10.0.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)
+        version: 10.0.0(@swc/core@1.3.101)(esbuild@0.19.12)
       '@nestjs/schematics':
         specifier: ^10.0.0
         version: 10.0.0(chokidar@3.5.3)(typescript@5.5.4)
@@ -273,7 +291,7 @@ importers:
         version: 2.2.2
       jest:
         specifier: ^29.5.0
-        version: 29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+        version: 29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       prettier:
         specifier: ^3.0.0
         version: 3.2.5
@@ -288,13 +306,13 @@ importers:
         version: 10.10.3
       ts-jest:
         specifier: ^29.1.0
-        version: 29.1.0(@babel/core@7.25.2)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.25.2))(esbuild@0.19.12)(jest@29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)))(typescript@5.5.4)
+        version: 29.1.0(@babel/core@7.25.2)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.25.2))(esbuild@0.19.12)(jest@29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)))(typescript@5.5.4)
       ts-loader:
         specifier: ^9.4.3
-        version: 9.4.3(typescript@5.5.4)(webpack@5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12))
+        version: 9.4.3(typescript@5.5.4)(webpack@5.87.0(@swc/core@1.3.101)(esbuild@0.19.12))
       ts-node:
         specifier: ^10.9.1
-        version: 10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)
+        version: 10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)
       tsconfig-paths:
         specifier: ^4.2.0
         version: 4.2.0
@@ -401,7 +419,7 @@ importers:
         version: 2.4.0
       tailwindcss-animate:
         specifier: ^1.0.7
-        version: 1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4)))
+        version: 1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4)))
       ts-pattern:
         specifier: ^5.2.0
         version: 5.2.0
@@ -420,7 +438,7 @@ importers:
         version: 1.45.3
       '@remix-run/dev':
         specifier: ^2.9.2
-        version: 2.9.2(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@20.14.14)(babel-plugin-macros@3.1.0)(terser@5.31.4)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))(typescript@5.5.4)(vite@5.1.0(@types/node@20.14.14)(terser@5.31.4))
+        version: 2.9.2(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@20.14.14)(babel-plugin-macros@3.1.0)(terser@5.31.4)(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))(typescript@5.5.4)(vite@5.1.0(@types/node@20.14.14)(terser@5.31.4))
       '@remix-run/testing':
         specifier: ^2.10.3
         version: 2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)
@@ -516,7 +534,7 @@ importers:
         version: 13.0.12
       tailwindcss:
         specifier: ^3.4.4
-        version: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))
+        version: 3.4.4(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))
       typescript:
         specifier: ^5.4.5
         version: 5.5.4
@@ -600,6 +618,25 @@ importers:
   packages/typescript-config: {}
 
   packages/ui:
+    dependencies:
+      class-variance-authority:
+        specifier: ^0.7.0
+        version: 0.7.0
+      clsx:
+        specifier: ^2.1.1
+        version: 2.1.1
+      lucide-react:
+        specifier: ^0.408.0
+        version: 0.408.0(react@18.3.1)
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
+      tailwind-merge:
+        specifier: ^2.4.0
+        version: 2.4.0
+      tailwindcss-animate:
+        specifier: ^1.0.7
+        version: 1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)))
     devDependencies:
       '@repo/eslint-config':
         specifier: workspace:*
@@ -609,7 +646,7 @@ importers:
         version: link:../typescript-config
       '@turbo/gen':
         specifier: ^1.12.4
-        version: 1.12.4(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)
+        version: 1.12.4(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)
       '@types/eslint':
         specifier: ^8.56.5
         version: 8.56.5
@@ -622,14 +659,23 @@ importers:
       '@types/react-dom':
         specifier: ^18.2.19
         version: 18.2.19
+      autoprefixer:
+        specifier: ^10.4.19
+        version: 10.4.19(postcss@8.4.38)
       eslint:
         specifier: ^8.57.0
         version: 8.57.0
+      postcss:
+        specifier: ^8.4.38
+        version: 8.4.38
       react:
-        specifier: ^18.2.0
+        specifier: ^18.3.1
         version: 18.3.1
+      tailwindcss:
+        specifier: ^3.4.4
+        version: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       typescript:
-        specifier: ^5.4.5
+        specifier: ^5.5.4
         version: 5.5.4
 
 packages:
@@ -4702,11 +4748,17 @@ packages:
   '@types/react-dom@18.2.19':
     resolution: {integrity: sha512-aZvQL6uUbIJpjZk4U8JZGbau9KDeAwMfmhyWorxgBkqDIEf6ROjRozcmPIicqsUwPUjbkDfHKgGee1Lq65APcA==}
 
+  '@types/react-dom@18.3.0':
+    resolution: {integrity: sha512-EhwApuTmMBmXuFOikhQLIBUn6uFg81SwLMOAUgodJF14SOBOCMdU04gDoYi0WOJJHD144TL32z4yDqCW3dnkQg==}
+
   '@types/react-transition-group@4.4.11':
     resolution: {integrity: sha512-RM05tAniPZ5DZPzzNFP+DmrcOdD0efDUxMy3145oljWSl3x9ZV5vhme98gTxFrj2lhXvmGNnUiuDyJgY9IKkNA==}
 
   '@types/react@18.2.61':
     resolution: {integrity: sha512-NURTN0qNnJa7O/k4XUkEW2yfygA+NxS0V5h1+kp9jPwhzZy95q3ADoGMP0+JypMhrZBTTgjKAUlTctde1zzeQA==}
+
+  '@types/react@18.3.4':
+    resolution: {integrity: sha512-J7W30FTdfCxDDjmfRM+/JqLHBIyl7xUIp9kwK637FGmY7+mkSFSe6L4jpZzhj5QMfLssSDP4/i75AKkrdC7/Jw==}
 
   '@types/resolve@1.20.2':
     resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
@@ -11424,7 +11476,7 @@ packages:
 
 snapshots:
 
-  '@adminjs/design-system@4.1.1(@babel/core@7.25.2)(@types/react@18.2.61)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
+  '@adminjs/design-system@4.1.1(@babel/core@7.25.2)(@types/react@18.3.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)':
     dependencies:
       '@hypnosphi/create-react-context': 0.3.1(prop-types@15.8.1)(react@18.3.1)
       '@tinymce/tinymce-react': 4.3.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -11459,7 +11511,7 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
       react-feather: 2.0.10(react@18.3.1)
       react-phone-input-2: 2.15.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      react-select: 5.8.0(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      react-select: 5.8.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-text-mask: 5.5.0(react@18.3.1)
       styled-components: 5.3.9(@babel/core@7.25.2)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
       styled-system: 5.1.5
@@ -11471,17 +11523,17 @@ snapshots:
       - react-is
       - supports-color
 
-  '@adminjs/express@6.1.0(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61))(express-formidable@1.2.0)(express-session@1.18.0)(express@4.18.2)(tslib@2.6.3)':
+  '@adminjs/express@6.1.0(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.3.0)(@types/react@18.3.4))(express-formidable@1.2.0)(express-session@1.18.0)(express@4.18.2)(tslib@2.6.3)':
     dependencies:
-      adminjs: 7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61)
+      adminjs: 7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.3.0)(@types/react@18.3.4)
       express: 4.18.2
       express-formidable: 1.2.0
       express-session: 1.18.0
       tslib: 2.6.3
 
-  '@adminjs/sql@2.2.6(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61))':
+  '@adminjs/sql@2.2.6(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.3.0)(@types/react@18.3.4))':
     dependencies:
-      adminjs: 7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61)
+      adminjs: 7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.3.0)(@types/react@18.3.4)
       knex: 2.5.1(mysql2@3.11.0)(pg@8.12.0)
       mysql2: 3.11.0
       pg: 8.12.0
@@ -12890,7 +12942,7 @@ snapshots:
 
   '@emotion/memoize@0.9.0': {}
 
-  '@emotion/react@11.13.0(@types/react@18.2.61)(react@18.3.1)':
+  '@emotion/react@11.13.0(@types/react@18.3.4)(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.25.0
       '@emotion/babel-plugin': 11.12.0
@@ -12902,7 +12954,7 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       react: 18.3.1
     optionalDependencies:
-      '@types/react': 18.2.61
+      '@types/react': 18.3.4
     transitivePeerDependencies:
       - supports-color
 
@@ -13326,7 +13378,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.7': {}
 
-  '@hello-pangea/dnd@16.6.0(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@hello-pangea/dnd@16.6.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@babel/runtime': 7.25.0
       css-box-model: 1.2.1
@@ -13334,7 +13386,7 @@ snapshots:
       raf-schd: 4.0.3
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-redux: 8.1.3(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.2.1)
+      react-redux: 8.1.3(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.2.1)
       redux: 4.2.1
       use-memo-one: 1.1.3(react@18.3.1)
     transitivePeerDependencies:
@@ -13420,7 +13472,7 @@ snapshots:
       jest-util: 29.7.0
       slash: 3.0.0
 
-  '@jest/core@29.7.0(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))':
+  '@jest/core@29.7.0(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))':
     dependencies:
       '@jest/console': 29.7.0
       '@jest/reporters': 29.7.0
@@ -13434,7 +13486,7 @@ snapshots:
       exit: 0.1.2
       graceful-fs: 4.2.11
       jest-changed-files: 29.7.0
-      jest-config: 29.7.0(@types/node@20.14.14)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+      jest-config: 29.7.0(@types/node@20.14.14)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       jest-haste-map: 29.7.0
       jest-message-util: 29.7.0
       jest-regex-util: 29.6.3
@@ -13602,10 +13654,10 @@ snapshots:
 
   '@jspm/core@2.0.1': {}
 
-  '@knaadh/nestjs-drizzle-postgres@1.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.2.61)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1))(postgres@3.4.4)':
+  '@knaadh/nestjs-drizzle-postgres@1.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1))(postgres@3.4.4)':
     dependencies:
       '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
-      drizzle-orm: 0.31.2(@types/pg@8.11.6)(@types/react@18.2.61)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1)
+      drizzle-orm: 0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1)
       postgres: 3.4.4
       tslib: 2.6.3
 
@@ -13659,7 +13711,7 @@ snapshots:
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
 
-  '@nestjs/cli@10.0.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)':
+  '@nestjs/cli@10.0.0(@swc/core@1.3.101)(esbuild@0.19.12)':
     dependencies:
       '@angular-devkit/core': 16.1.0(chokidar@3.5.3)
       '@angular-devkit/schematics': 16.1.0(chokidar@3.5.3)
@@ -13669,7 +13721,7 @@ snapshots:
       chokidar: 3.5.3
       cli-table3: 0.6.3
       commander: 4.1.1
-      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.1.3)(webpack@5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12))
+      fork-ts-checker-webpack-plugin: 8.0.0(typescript@5.1.3)(webpack@5.87.0(@swc/core@1.3.101)(esbuild@0.19.12))
       inquirer: 8.2.5
       node-emoji: 1.11.0
       ora: 5.4.1
@@ -13681,7 +13733,7 @@ snapshots:
       tsconfig-paths: 4.2.0
       tsconfig-paths-webpack-plugin: 4.0.1
       typescript: 5.1.3
-      webpack: 5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)
+      webpack: 5.87.0(@swc/core@1.3.101)(esbuild@0.19.12)
       webpack-node-externals: 3.0.0
     optionalDependencies:
       '@swc/core': 1.3.101(@swc/helpers@0.5.2)
@@ -14739,7 +14791,7 @@ snapshots:
 
   '@remirror/core-constants@2.0.2': {}
 
-  '@remix-run/dev@2.9.2(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@20.14.14)(babel-plugin-macros@3.1.0)(terser@5.31.4)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))(typescript@5.5.4)(vite@5.1.0(@types/node@20.14.14)(terser@5.31.4))':
+  '@remix-run/dev@2.9.2(@remix-run/react@2.9.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4))(@types/node@20.14.14)(babel-plugin-macros@3.1.0)(terser@5.31.4)(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))(typescript@5.5.4)(vite@5.1.0(@types/node@20.14.14)(terser@5.31.4))':
     dependencies:
       '@babel/core': 7.25.2
       '@babel/generator': 7.25.0
@@ -14783,7 +14835,7 @@ snapshots:
       pidtree: 0.6.0
       postcss: 8.4.38
       postcss-discard-duplicates: 5.1.0(postcss@8.4.38)
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))
       postcss-modules: 6.0.0(postcss@8.4.38)
       prettier: 2.8.8
       pretty-ms: 7.0.1
@@ -15785,7 +15837,7 @@ snapshots:
 
   '@tsconfig/node16@1.0.4': {}
 
-  '@turbo/gen@1.12.4(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)':
+  '@turbo/gen@1.12.4(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)':
     dependencies:
       '@turbo/workspaces': 1.12.4
       chalk: 2.4.2
@@ -15795,7 +15847,7 @@ snapshots:
       minimatch: 9.0.5
       node-plop: 0.26.3
       proxy-agent: 6.4.0
-      ts-node: 10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)
+      ts-node: 10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)
       update-check: 1.5.4
       validate-npm-package-name: 5.0.1
     transitivePeerDependencies:
@@ -15960,7 +16012,7 @@ snapshots:
 
   '@types/hoist-non-react-statics@3.3.5':
     dependencies:
-      '@types/react': 18.2.61
+      '@types/react': 18.3.4
       hoist-non-react-statics: 3.3.2
 
   '@types/http-cache-semantics@4.0.4': {}
@@ -16089,14 +16141,23 @@ snapshots:
     dependencies:
       '@types/react': 18.2.61
 
+  '@types/react-dom@18.3.0':
+    dependencies:
+      '@types/react': 18.3.4
+
   '@types/react-transition-group@4.4.11':
     dependencies:
-      '@types/react': 18.2.61
+      '@types/react': 18.3.4
 
   '@types/react@18.2.61':
     dependencies:
       '@types/prop-types': 15.7.12
       '@types/scheduler': 0.23.0
+      csstype: 3.1.3
+
+  '@types/react@18.3.4':
+    dependencies:
+      '@types/prop-types': 15.7.12
       csstype: 3.1.3
 
   '@types/resolve@1.20.2': {}
@@ -16732,9 +16793,9 @@ snapshots:
 
   add@2.0.6: {}
 
-  adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61):
+  adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.3.0)(@types/react@18.3.4):
     dependencies:
-      '@adminjs/design-system': 4.1.1(@babel/core@7.25.2)(@types/react@18.2.61)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
+      '@adminjs/design-system': 4.1.1(@babel/core@7.25.2)(@types/react@18.3.4)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
       '@babel/core': 7.25.2
       '@babel/parser': 7.25.3
       '@babel/plugin-syntax-import-assertions': 7.24.7(@babel/core@7.25.2)
@@ -16743,7 +16804,7 @@ snapshots:
       '@babel/preset-react': 7.24.7(@babel/core@7.25.2)
       '@babel/preset-typescript': 7.24.7(@babel/core@7.25.2)
       '@babel/register': 7.24.6(@babel/core@7.25.2)
-      '@hello-pangea/dnd': 16.6.0(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@hello-pangea/dnd': 16.6.0(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@redux-devtools/extension': 3.3.0(redux@4.2.1)
       '@rollup/plugin-babel': 6.0.4(@babel/core@7.25.2)(@types/babel__core@7.20.5)(rollup@4.20.0)
       '@rollup/plugin-commonjs': 25.0.8(rollup@4.20.0)
@@ -16766,7 +16827,7 @@ snapshots:
       react-feather: 2.0.10(react@18.3.1)
       react-i18next: 12.3.1(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-is: 18.3.1
-      react-redux: 8.1.3(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.2.1)
+      react-redux: 8.1.3(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.2.1)
       react-router: 6.25.1(react@18.3.1)
       react-router-dom: 6.25.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       redux: 4.2.1
@@ -17761,13 +17822,13 @@ snapshots:
       crc-32: 1.2.2
       readable-stream: 4.5.2
 
-  create-jest@29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)):
+  create-jest@29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)):
     dependencies:
       '@jest/types': 29.6.3
       chalk: 4.1.2
       exit: 0.1.2
       graceful-fs: 4.2.11
-      jest-config: 29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+      jest-config: 29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       jest-util: 29.7.0
       prompts: 2.4.2
     transitivePeerDependencies:
@@ -18066,20 +18127,20 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.2.61)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1):
+  drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1):
     optionalDependencies:
       '@types/pg': 8.11.6
-      '@types/react': 18.2.61
+      '@types/react': 18.3.4
       knex: 2.5.1(mysql2@3.11.0)(pg@8.12.0)
       mysql2: 3.11.0
       pg: 8.12.0
       postgres: 3.4.4
       react: 18.3.1
 
-  drizzle-typebox@0.1.1(@sinclair/typebox@0.32.34)(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.2.61)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1)):
+  drizzle-typebox@0.1.1(@sinclair/typebox@0.32.34)(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1)):
     dependencies:
       '@sinclair/typebox': 0.32.34
-      drizzle-orm: 0.31.2(@types/pg@8.11.6)(@types/react@18.2.61)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1)
+      drizzle-orm: 0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1)
 
   duplexify@3.7.1:
     dependencies:
@@ -18960,7 +19021,7 @@ snapshots:
       cross-spawn: 7.0.3
       signal-exit: 4.1.0
 
-  fork-ts-checker-webpack-plugin@8.0.0(typescript@5.1.3)(webpack@5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)):
+  fork-ts-checker-webpack-plugin@8.0.0(typescript@5.1.3)(webpack@5.87.0(@swc/core@1.3.101)(esbuild@0.19.12)):
     dependencies:
       '@babel/code-frame': 7.24.7
       chalk: 4.1.2
@@ -18975,7 +19036,7 @@ snapshots:
       semver: 7.6.3
       tapable: 2.2.1
       typescript: 5.1.3
-      webpack: 5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)
+      webpack: 5.87.0(@swc/core@1.3.101)(esbuild@0.19.12)
 
   form-data-encoder@2.1.4: {}
 
@@ -19853,16 +19914,16 @@ snapshots:
       - babel-plugin-macros
       - supports-color
 
-  jest-cli@29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)):
+  jest-cli@29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)):
     dependencies:
-      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       '@jest/test-result': 29.7.0
       '@jest/types': 29.6.3
       chalk: 4.1.2
-      create-jest: 29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+      create-jest: 29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       exit: 0.1.2
       import-local: 3.2.0
-      jest-config: 29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+      jest-config: 29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       jest-util: 29.7.0
       jest-validate: 29.7.0
       yargs: 17.7.2
@@ -19872,7 +19933,7 @@ snapshots:
       - supports-color
       - ts-node
 
-  jest-config@29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)):
+  jest-config@29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)):
     dependencies:
       '@babel/core': 7.25.2
       '@jest/test-sequencer': 29.7.0
@@ -19898,12 +19959,12 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 20.11.24
-      ts-node: 10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)
+      ts-node: 10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
 
-  jest-config@29.7.0(@types/node@20.14.14)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)):
+  jest-config@29.7.0(@types/node@20.14.14)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)):
     dependencies:
       '@babel/core': 7.25.2
       '@jest/test-sequencer': 29.7.0
@@ -19929,7 +19990,7 @@ snapshots:
       strip-json-comments: 3.1.1
     optionalDependencies:
       '@types/node': 20.14.14
-      ts-node: 10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)
+      ts-node: 10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)
     transitivePeerDependencies:
       - babel-plugin-macros
       - supports-color
@@ -20155,12 +20216,12 @@ snapshots:
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
-  jest@29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)):
+  jest@29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)):
     dependencies:
-      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+      '@jest/core': 29.7.0(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       '@jest/types': 29.6.3
       import-local: 3.2.0
-      jest-cli: 29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+      jest-cli: 29.7.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
     transitivePeerDependencies:
       - '@types/node'
       - babel-plugin-macros
@@ -21685,7 +21746,15 @@ snapshots:
       camelcase-css: 2.0.1
       postcss: 8.4.38
 
-  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4)):
+  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)):
+    dependencies:
+      lilconfig: 3.1.2
+      yaml: 2.5.0
+    optionalDependencies:
+      postcss: 8.4.38
+      ts-node: 10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)
+
+  postcss-load-config@4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4)):
     dependencies:
       lilconfig: 3.1.2
       yaml: 2.5.0
@@ -22225,7 +22294,7 @@ snapshots:
       react-fast-compare: 3.2.2
       warning: 4.0.3
 
-  react-redux@8.1.3(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.2.1):
+  react-redux@8.1.3(@types/react-dom@18.3.0)(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(redux@4.2.1):
     dependencies:
       '@babel/runtime': 7.25.0
       '@types/hoist-non-react-statics': 3.3.5
@@ -22235,8 +22304,8 @@ snapshots:
       react-is: 18.3.1
       use-sync-external-store: 1.2.0(react@18.3.1)
     optionalDependencies:
-      '@types/react': 18.2.61
-      '@types/react-dom': 18.2.19
+      '@types/react': 18.3.4
+      '@types/react-dom': 18.3.0
       react-dom: 18.3.1(react@18.3.1)
       redux: 4.2.1
 
@@ -22308,11 +22377,11 @@ snapshots:
       '@remix-run/router': 1.18.0
       react: 18.3.1
 
-  react-select@5.8.0(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-select@5.8.0(@types/react@18.3.4)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.25.0
       '@emotion/cache': 11.13.1
-      '@emotion/react': 11.13.0(@types/react@18.2.61)(react@18.3.1)
+      '@emotion/react': 11.13.0(@types/react@18.3.4)(react@18.3.1)
       '@floating-ui/dom': 1.6.10
       '@types/react-transition-group': 4.4.11
       memoize-one: 6.0.0
@@ -22320,7 +22389,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
       react-transition-group: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-      use-isomorphic-layout-effect: 1.1.2(@types/react@18.2.61)(react@18.3.1)
+      use-isomorphic-layout-effect: 1.1.2(@types/react@18.3.4)(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
       - supports-color
@@ -23229,9 +23298,13 @@ snapshots:
 
   tailwind-merge@2.4.0: {}
 
-  tailwindcss-animate@1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))):
+  tailwindcss-animate@1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))):
     dependencies:
-      tailwindcss: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))
+      tailwindcss: 3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
+
+  tailwindcss-animate@1.0.7(tailwindcss@3.4.4(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))):
+    dependencies:
+      tailwindcss: 3.4.4(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))
 
   tailwindcss@3.4.0(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4)):
     dependencies:
@@ -23252,7 +23325,7 @@ snapshots:
       postcss: 8.4.38
       postcss-import: 15.1.0(postcss@8.4.38)
       postcss-js: 4.0.1(postcss@8.4.38)
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))
       postcss-nested: 6.2.0(postcss@8.4.38)
       postcss-selector-parser: 6.1.1
       resolve: 1.22.8
@@ -23260,7 +23333,7 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4)):
+  tailwindcss@3.4.4(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)):
     dependencies:
       '@alloc/quick-lru': 5.2.0
       arg: 5.0.2
@@ -23279,7 +23352,34 @@ snapshots:
       postcss: 8.4.38
       postcss-import: 15.1.0(postcss@8.4.38)
       postcss-js: 4.0.1(postcss@8.4.38)
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
+      postcss-nested: 6.2.0(postcss@8.4.38)
+      postcss-selector-parser: 6.1.1
+      resolve: 1.22.8
+      sucrase: 3.35.0
+    transitivePeerDependencies:
+      - ts-node
+
+  tailwindcss@3.4.4(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4)):
+    dependencies:
+      '@alloc/quick-lru': 5.2.0
+      arg: 5.0.2
+      chokidar: 3.6.0
+      didyoumean: 1.2.2
+      dlv: 1.1.3
+      fast-glob: 3.3.2
+      glob-parent: 6.0.2
+      is-glob: 4.0.3
+      jiti: 1.21.6
+      lilconfig: 2.1.0
+      micromatch: 4.0.7
+      normalize-path: 3.0.0
+      object-hash: 3.0.0
+      picocolors: 1.0.1
+      postcss: 8.4.38
+      postcss-import: 15.1.0(postcss@8.4.38)
+      postcss-js: 4.0.1(postcss@8.4.38)
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))
       postcss-nested: 6.2.0(postcss@8.4.38)
       postcss-selector-parser: 6.1.1
       resolve: 1.22.8
@@ -23354,14 +23454,14 @@ snapshots:
       '@swc/core': 1.3.101(@swc/helpers@0.5.2)
       esbuild: 0.19.11
 
-  terser-webpack-plugin@5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)(webpack@5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)):
+  terser-webpack-plugin@5.3.10(@swc/core@1.3.101)(esbuild@0.19.12)(webpack@5.87.0(@swc/core@1.3.101)(esbuild@0.19.12)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
       schema-utils: 3.3.0
       serialize-javascript: 6.0.2
       terser: 5.31.4
-      webpack: 5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)
+      webpack: 5.87.0(@swc/core@1.3.101)(esbuild@0.19.12)
     optionalDependencies:
       '@swc/core': 1.3.101(@swc/helpers@0.5.2)
       esbuild: 0.19.12
@@ -23508,11 +23608,11 @@ snapshots:
 
   ts-interface-checker@0.1.13: {}
 
-  ts-jest@29.1.0(@babel/core@7.25.2)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.25.2))(esbuild@0.19.12)(jest@29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4)))(typescript@5.5.4):
+  ts-jest@29.1.0(@babel/core@7.25.2)(@jest/types@29.6.3)(babel-jest@29.7.0(@babel/core@7.25.2))(esbuild@0.19.12)(jest@29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4)))(typescript@5.5.4):
     dependencies:
       bs-logger: 0.2.6
       fast-json-stable-stringify: 2.1.0
-      jest: 29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4))
+      jest: 29.5.0(@types/node@20.11.24)(babel-plugin-macros@3.1.0)(ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4))
       jest-util: 29.7.0
       json5: 2.2.3
       lodash.memoize: 4.1.2
@@ -23526,36 +23626,16 @@ snapshots:
       babel-jest: 29.7.0(@babel/core@7.25.2)
       esbuild: 0.19.12
 
-  ts-loader@9.4.3(typescript@5.5.4)(webpack@5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)):
+  ts-loader@9.4.3(typescript@5.5.4)(webpack@5.87.0(@swc/core@1.3.101)(esbuild@0.19.12)):
     dependencies:
       chalk: 4.1.2
       enhanced-resolve: 5.17.1
       micromatch: 4.0.7
       semver: 7.6.3
       typescript: 5.5.4
-      webpack: 5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)
+      webpack: 5.87.0(@swc/core@1.3.101)(esbuild@0.19.12)
 
-  ts-node@10.9.1(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4):
-    dependencies:
-      '@cspotcode/source-map-support': 0.8.1
-      '@tsconfig/node10': 1.0.11
-      '@tsconfig/node12': 1.0.11
-      '@tsconfig/node14': 1.0.3
-      '@tsconfig/node16': 1.0.4
-      '@types/node': 20.11.24
-      acorn: 8.12.1
-      acorn-walk: 8.3.3
-      arg: 4.1.3
-      create-require: 1.1.1
-      diff: 4.0.2
-      make-error: 1.3.6
-      typescript: 5.5.4
-      v8-compile-cache-lib: 3.0.1
-      yn: 3.1.1
-    optionalDependencies:
-      '@swc/core': 1.3.101(@swc/helpers@0.5.2)
-
-  ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.11.24)(typescript@5.5.4):
+  ts-node@10.9.1(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -23596,7 +23676,27 @@ snapshots:
       '@swc/core': 1.3.101(@swc/helpers@0.5.2)
     optional: true
 
-  ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@22.1.0)(typescript@5.4.5):
+  ts-node@10.9.2(@swc/core@1.3.101)(@types/node@20.11.24)(typescript@5.5.4):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.11.24
+      acorn: 8.12.1
+      acorn-walk: 8.3.3
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.5.4
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
+    optionalDependencies:
+      '@swc/core': 1.3.101(@swc/helpers@0.5.2)
+
+  ts-node@10.9.2(@swc/core@1.3.101)(@types/node@22.1.0)(typescript@5.4.5):
     dependencies:
       '@cspotcode/source-map-support': 0.8.1
       '@tsconfig/node10': 1.0.11
@@ -23657,7 +23757,7 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@swc/core@1.3.101(@swc/helpers@0.5.2))(@types/node@20.14.14)(typescript@5.5.4))
+      postcss-load-config: 4.0.2(postcss@8.4.38)(ts-node@10.9.2(@types/node@20.14.14)(typescript@5.5.4))
       resolve-from: 5.0.0
       rollup: 4.20.0
       source-map: 0.8.0-beta.0
@@ -23906,11 +24006,11 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.2.61
 
-  use-isomorphic-layout-effect@1.1.2(@types/react@18.2.61)(react@18.3.1):
+  use-isomorphic-layout-effect@1.1.2(@types/react@18.3.4)(react@18.3.1):
     dependencies:
       react: 18.3.1
     optionalDependencies:
-      '@types/react': 18.2.61
+      '@types/react': 18.3.4
 
   use-memo-one@1.1.3(react@18.3.1):
     dependencies:
@@ -24186,7 +24286,7 @@ snapshots:
 
   webpack-sources@3.2.3: {}
 
-  webpack@5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12):
+  webpack@5.87.0(@swc/core@1.3.101)(esbuild@0.19.12):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.5
@@ -24209,7 +24309,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 3.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.10(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12)(webpack@5.87.0(@swc/core@1.3.101(@swc/helpers@0.5.2))(esbuild@0.19.12))
+      terser-webpack-plugin: 5.3.10(@swc/core@1.3.101)(esbuild@0.19.12)(webpack@5.87.0(@swc/core@1.3.101)(esbuild@0.19.12))
       watchpack: 2.4.1
       webpack-sources: 3.2.3
     transitivePeerDependencies:
