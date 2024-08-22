@@ -15,18 +15,33 @@ import { authGuard } from "../Auth/authGuard";
 import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
 import { DashboardNavigation } from "./DashboardNavigation/DashboardNavigation";
 import { LessonItemsProvider } from "../Courses/LessonItems/LessonItemsContext";
+import { useCurrentUser } from "~/api/queries/useCurrentUser";
+import { upperFirstLetter } from "./hooks/useUpperFirstLetter";
+import { useMemo } from "react";
 
 export const clientLoader = () => authGuard();
 
 export default function DashboardLayout() {
   useAuthEffect();
   const { mutate: logout } = useLogoutUser();
+  const { data: currentUser, isLoading } = useCurrentUser();
+
+  const userFullName = useMemo(
+    () =>
+      !isLoading &&
+      upperFirstLetter([
+        currentUser?.firstName || "",
+        currentUser?.lastName || "",
+      ]),
+    [currentUser?.firstName, currentUser?.lastName, isLoading]
+  );
 
   return (
     <div className="flex h-screen flex-col">
       <header className="flex h-14 items-center bg-muted/40 px-4 py-2 sm:px-6">
         <div className="flex-shrink-0 ml-auto items-center flex gap-4">
           <ThemeToggle />
+          {userFullName}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
