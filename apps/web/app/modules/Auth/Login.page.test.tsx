@@ -3,8 +3,8 @@ import { screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import {
-  mockRemixReact,
   mockedUseNavigate,
+  mockRemixReact,
 } from "~/utils/mocks/remix-run-mock";
 import { renderWith } from "~/utils/testUtils";
 import LoginPage from "./Login.page";
