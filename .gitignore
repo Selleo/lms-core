@@ -37,6 +37,9 @@ yarn-error.log*
 .DS_Store
 *.pem
 
+# Code
+.vscode
+
 # WebStorm local settings
 .idea
 
