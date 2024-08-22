@@ -49,6 +49,7 @@ export interface LoginBody {
    * @maxLength 64
    */
   password: string;
+  rememberMe?: boolean;
 }
 
 export interface LoginResponse {
@@ -554,6 +555,30 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<GetAllCategoriesResponse, any>({
         path: `/api/categories`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+  };
+  categories = {
+    /**
+     * No description
+     *
+     * @name CategorieControllerGetAllCategories
+     * @request GET:/categories
+     */
+    categorieControllerGetAllCategories: (
+      query?: {
+        filter?: string;
+        page?: number;
+        perPage?: number;
+        sort?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetAllCategoriesResponse, any>({
+        path: `/categories`,
         method: "GET",
         query: query,
         format: "json",

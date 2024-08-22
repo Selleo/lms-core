@@ -16,12 +16,14 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { FormCheckbox } from "~/components/Form/FormCheckbox";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters" }),
+  rememberMe: z.boolean().optional(),
 });
 
 export default function LoginPage() {
@@ -30,6 +32,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
   } = useForm<LoginBody>({ resolver: zodResolver(loginSchema) });
 
@@ -42,7 +45,9 @@ export default function LoginPage() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Login</CardTitle>
+        <CardTitle role="heading" className="text-2xl">
+          Login
+        </CardTitle>
         <CardDescription>
           Enter your email below to login to your account
         </CardDescription>
@@ -78,6 +83,11 @@ export default function LoginPage() {
               </div>
             )}
           </div>
+          <FormCheckbox
+            control={control}
+            name="rememberMe"
+            label="Remember me"
+          />
           <Button type="submit" className="w-full">
             Login
           </Button>
