@@ -7,6 +7,7 @@ import { LocalStrategy } from "./strategy/local.strategy";
 import { TokenService } from "./token.service";
 import { UsersService } from "src/users/users.service";
 import { EmailModule } from "src/common/emails/emails.module";
+import { ResetPasswordService } from "./reset-password.service";
 
 @Module({
   imports: [PassportModule, EmailModule],
@@ -17,6 +18,7 @@ import { EmailModule } from "src/common/emails/emails.module";
     TokenService,
     JwtStrategy,
     LocalStrategy,
+    ResetPasswordService,
   ],
   exports: [],
 })

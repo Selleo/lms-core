@@ -71,6 +71,13 @@
       "when": 1724272237915,
       "tag": "0009_change_role_teacher_tutor",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1724408292823,
+      "tag": "0010_create_reset_tokens",
+      "breakpoints": true
     }
   ]
 }

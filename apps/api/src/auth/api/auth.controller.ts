@@ -25,6 +25,12 @@ import {
 import { LoginBody, loginSchema } from "../schemas/login.schema";
 import { TokenService } from "../token.service";
 import { CurrentUser } from "src/common/decorators/user.decorator";
+import {
+  ForgotPasswordBody,
+  forgotPasswordSchema,
+  ResetPasswordBody,
+  resetPasswordSchema,
+} from "../schemas/reset-password.schema";
 
 @Controller("auth")
 export class AuthController {
@@ -115,5 +121,29 @@ export class AuthController {
     const account = await this.authService.currentUser(currentUser.userId);
 
     return new BaseResponse(account);
+  }
+
+  @Public()
+  @Post("forgot-password")
+  @Validate({
+    request: [{ type: "body", schema: forgotPasswordSchema }],
+  })
+  async forgotPassword(
+    @Body() data: ForgotPasswordBody,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.authService.forgotPassword(data.email);
+    return new BaseResponse({ message: "Password reset link sent" });
+  }
+
+  @Public()
+  @Post("reset-password")
+  @Validate({
+    request: [{ type: "body", schema: resetPasswordSchema }],
+  })
+  async resetPassword(
+    @Body() data: ResetPasswordBody,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.authService.resetPassword(data.resetToken, data.newPassword);
+    return new BaseResponse({ message: "Password reset successfully" });
   }
 }
