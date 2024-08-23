@@ -1,3 +1,5 @@
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
 import AdminJSExpress, { AuthenticationContext } from "@adminjs/express";
 import { Database, Resource } from "@adminjs/sql";
 import AdminJS from "adminjs";
@@ -18,6 +20,9 @@ import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
 import { componentLoader } from "../components/index.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const authenticate = async (
   email: string,
@@ -75,6 +80,8 @@ export class AdminApp {
 
   async init() {
     AdminJS.registerAdapter({ Database, Resource });
+
+    this.app.use(express.static("public"));
 
     const admin = new AdminJS({
       resources: [
@@ -140,6 +147,11 @@ export class AdminApp {
       },
       rootPath: "/",
       componentLoader,
+      assets: {
+        styles: [
+          join(__dirname, "../../node_modules/@repo/ui/dist/global.css"),
+        ],
+      },
     });
 
     admin.watch();
