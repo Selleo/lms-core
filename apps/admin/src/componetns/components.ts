@@ -13,14 +13,14 @@ const singleComponents = {
   ),
   CustomSelectComponent: componentLoader.add(
     "CustomSelectComponent",
-    "./CustomSelect",
+    "./helpers/CustomSelect",
   ),
 };
 
 const pagesComponents = {
-  CustomTable: componentLoader.add("CustomTable", "./CustomTable"),
-  CustomShowPage: componentLoader.add("CustomShowPage", "./CustomShowPage"),
-  CustomEditPage: componentLoader.add("CustomEditPage", "./CustomEditPage"),
+  // CustomTable: componentLoader.add("CustomTable", "./CustomTable"),
+  // CustomShowPage: componentLoader.add("CustomShowPage", "./CustomShowPage"),
+  // CustomEditPage: componentLoader.add("CustomEditPage", "./CustomEditPage"),
 };
 
 // componentLoader.override(adminJS Component Name, path to custom component)
@@ -29,7 +29,7 @@ componentLoaderOverride(componentsList, componentLoader);
 const Components = {
   ...singleComponents,
   ...pagesComponents,
-  Dashboard: componentLoader.add("Dashboard", "./Dashboard"),
+  Dashboard: componentLoader.add("Dashboard", "./custom/Dashboard"),
 };
 
 export { componentLoader, Components };
