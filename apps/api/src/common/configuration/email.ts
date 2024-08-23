@@ -21,7 +21,7 @@ const valdateEmailConfig = configValidator(schema);
 export default registerAs("email", (): EmailConfigSchema => {
   const values = {
     SMTP_HOST: process.env.SMTP_HOST,
-    SMTP_PORT: parseInt(process.env.SMTP_PORT || "465", 10),
+    SMTP_PORT: parseInt(process.env.SMTP_PORT || "1025", 10),
     SMTP_USER: process.env.SMTP_USER,
     SMTP_PASSWORD: process.env.SMTP_PASSWORD,
     EMAIL_ADAPTER: process.env.EMAIL_ADAPTER,
