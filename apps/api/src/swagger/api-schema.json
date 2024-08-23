@@ -564,6 +564,9 @@
                     "type": "string"
                   }
                 ]
+              },
+              "archived": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -573,7 +576,8 @@
               "email",
               "firstName",
               "lastName",
-              "role"
+              "role",
+              "archived"
             ]
           }
         },
@@ -641,6 +645,9 @@
                     "type": "string"
                   }
                 ]
+              },
+              "archived": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -650,7 +657,8 @@
               "email",
               "firstName",
               "lastName",
-              "role"
+              "role",
+              "archived"
             ]
           }
         },
@@ -703,6 +711,9 @@
                     "type": "string"
                   }
                 ]
+              },
+              "archived": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -712,7 +723,8 @@
               "email",
               "firstName",
               "lastName",
-              "role"
+              "role",
+              "archived"
             ]
           }
         },
@@ -761,6 +773,9 @@
                       "type": "string"
                     }
                   ]
+                },
+                "archived": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -770,7 +785,8 @@
                 "email",
                 "firstName",
                 "lastName",
-                "role"
+                "role",
+                "archived"
               ]
             }
           }
@@ -818,6 +834,9 @@
                     "type": "string"
                   }
                 ]
+              },
+              "archived": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -827,7 +846,8 @@
               "email",
               "firstName",
               "lastName",
-              "role"
+              "role",
+              "archived"
             ]
           }
         },
@@ -883,6 +903,9 @@
                     "type": "string"
                   }
                 ]
+              },
+              "archived": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -892,7 +915,8 @@
               "email",
               "firstName",
               "lastName",
-              "role"
+              "role",
+              "archived"
             ]
           }
         },

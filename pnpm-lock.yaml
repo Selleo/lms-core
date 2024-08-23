@@ -26,6 +26,9 @@ importers:
 
   apps/admin:
     dependencies:
+      '@adminjs/design-system':
+        specifier: ^4.1.1
+        version: 4.1.1(@babel/core@7.25.2)(@types/react@18.2.61)(prop-types@15.8.1)(react-dom@18.3.1(react@18.3.1))(react-is@18.3.1)(react@18.3.1)
       '@adminjs/express':
         specifier: ^6.1.0
         version: 6.1.0(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.2.61))(express-formidable@1.2.0)(express-session@1.18.0)(express@4.18.2)(tslib@2.6.3)
@@ -62,6 +65,12 @@ importers:
       express-session:
         specifier: ^1.18.0
         version: 1.18.0
+      react:
+        specifier: ^18.3.1
+        version: 18.3.1
+      react-dom:
+        specifier: ^18.3.1
+        version: 18.3.1(react@18.3.1)
       tslib:
         specifier: ^2.6.3
         version: 2.6.3
@@ -75,6 +84,12 @@ importers:
       '@types/express-session':
         specifier: ^1.18.0
         version: 1.18.0
+      '@types/react':
+        specifier: ^18.2.20
+        version: 18.2.61
+      '@types/react-dom':
+        specifier: ^18.2.7
+        version: 18.2.19
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.0.0
         version: 6.7.4(@typescript-eslint/parser@6.7.4(eslint@8.57.0)(typescript@5.4.5))(eslint@8.57.0)(typescript@5.4.5)

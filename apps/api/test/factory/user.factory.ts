@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { Factory } from "fishery";
-import { credentials, users } from "../../src/storage/schema";
 import { DatabasePg } from "src/common";
 import hashPassword from "../../src/common/helpers/hashPassword";
+import { credentials, users } from "../../src/storage/schema";
 
 type User = InferSelectModel<typeof users>;
 export type UserWithCredentials = User & { credentials?: Credential };
@@ -18,6 +18,7 @@ export const credentialFactory = Factory.define<Credential>(() => ({
   role: "student" as const,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
+  archived: faker.datatype.boolean(0.75),
 }));
 
 class UserFactory extends Factory<UserWithCredentials> {
@@ -63,6 +64,7 @@ export const createUserFactory = (db: DatabasePg) => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       role: "student" as const,
+      archived: faker.datatype.boolean(0.75),
     };
   });
 };
