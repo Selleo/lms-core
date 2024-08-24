@@ -23,6 +23,10 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
       list: {
         before: [excludeNotActiveCategories],
       },
+      delete: {
+        isAccessible: false,
+        isVisible: false,
+      },
     },
     properties: {
       created_at: {
