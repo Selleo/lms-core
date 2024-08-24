@@ -30,7 +30,6 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
     },
     properties: {
       created_at: {
-        type: "datetime",
         isVisible: {
           edit: false,
           list: true,
@@ -39,7 +38,6 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         },
       },
       updated_at: {
-        type: "datetime",
         isVisible: {
           edit: false,
           list: false,
@@ -48,7 +46,6 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         },
       },
       archived: {
-        type: "boolean",
         isVisible: {
           edit: true,
           list: false,
@@ -57,7 +54,6 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         },
       },
       id: {
-        type: "uuid",
         isVisible: {
           edit: false,
           list: false,
@@ -66,7 +62,6 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         },
       },
       status: {
-        type: "string",
         components: {
           list: Components.CategoriesListShow,
           show: Components.CategoriesListShow,
