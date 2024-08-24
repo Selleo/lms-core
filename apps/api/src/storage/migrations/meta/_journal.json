@@ -80,17 +80,10 @@
       "breakpoints": true
     },
     {
-      "idx": 8,
+      "idx": 11,
       "version": "7",
-      "when": 1724220690359,
-      "tag": "0011_update_category_title_to_be_unique",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1724315182612,
-      "tag": "0009_update_name_and_type_of_archive_in_categories",
+      "when": 1724485909181,
+      "tag": "0011_categories_title_unique_archived_boolean",
       "breakpoints": true
     }
   ]
