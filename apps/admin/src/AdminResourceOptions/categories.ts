@@ -1,5 +1,5 @@
 import { Before, ResourceWithOptions } from "adminjs";
-import { Components } from "../components/components.bundler.js";
+import { Components } from "../components/index.js";
 
 const excludeNotActiveCategories: Before = async (request) => {
   const { query = {} } = request;
@@ -46,7 +46,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
       archived: {
         type: "boolean",
         isVisible: {
-          edit: false,
+          edit: true,
           list: false,
           show: true,
           filter: false,
@@ -64,8 +64,8 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
       status: {
         type: "string",
         components: {
-          list: Components.Status,
-          show: Components.Status,
+          list: Components.CategoriesListShow,
+          show: Components.CategoriesListShow,
           filter: Components.StatusFilter,
         },
         isVisible: {

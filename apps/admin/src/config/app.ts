@@ -11,7 +11,7 @@ import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
 import { componentLoader } from "../components/index.js";
 import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
-import { componentLoader } from "../components/components.bundler.js";
+import { componentLoader } from "../components/index.js";
 
 const authenticate = async (
   email: string,
