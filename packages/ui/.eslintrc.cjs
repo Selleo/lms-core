@@ -9,7 +9,7 @@ module.exports = {
   },
   ignorePatterns: [
     ".eslintrc.cjs",
-    ".babel-plugin-macros.config.cjs",
+    "babel-plugin-macros.config.cjs",
     "postcss.config.cjs",
     "tailwind.config.js",
     "**/*.d.ts",

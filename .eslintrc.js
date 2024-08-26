@@ -9,10 +9,10 @@ module.exports = {
   },
   settings: {
     "import/resolver": {
-      alias: {
-        map: [["@ui", "./packages/ui/src/components/ui"]],
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
-      },
+      // alias: {
+      //   map: [["@ui", "./packages/ui/src/components/ui"]],
+      //   extensions: [".js", ".jsx", ".ts", ".tsx"],
+      // },
     },
   },
 };

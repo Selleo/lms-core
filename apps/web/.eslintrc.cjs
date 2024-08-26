@@ -6,10 +6,10 @@
 
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
-  alias: {
-    map: [["@packages/shadcn", "../../packages/ui/src/components/ui"]],
-    extensions: [".ts", ".tsx", ".js", ".jsx"],
-  },
+  // alias: {
+  //   map: [["../../packages/ui/src/components/ui"]],
+  //   extensions: [".ts", ".tsx", ".js", ".jsx"],
+  // },
   root: true,
   parserOptions: {
     ecmaVersion: "latest",
