@@ -12,6 +12,11 @@ const Components = {
     "StatusListValue",
     "./custom/StatusListValue",
   ),
+  CategoriesListShow: componentLoader.add(
+    "CategoriesShow",
+    "./show/CategoriesListShow",
+  ),
+  StatusFilter: componentLoader.add("StatusFilter", "./filters/ArchiveFilter"),
 };
 
 export { componentLoader, Components };
