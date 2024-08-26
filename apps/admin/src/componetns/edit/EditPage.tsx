@@ -1,7 +1,7 @@
 import React from "react";
 
-const CustomEditPage = () => {
-  return <div>CustomEditPage</div>;
+const EditPage = () => {
+  return <div>EditPage</div>;
 };
 
-export default CustomEditPage;
+export default EditPage;

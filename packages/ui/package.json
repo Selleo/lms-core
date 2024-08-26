@@ -22,7 +22,7 @@
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "build": "tsup",
-    "dev": "tsup --watch",
+    "dev": "npx tailwindcss -i ./src/index.css -o ../../apps/admin/public/global.css --watch && tsup --watch",
     "clean": "rm -rf dist"
   },
   "devDependencies": {

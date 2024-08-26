@@ -103,12 +103,12 @@ export const usersConfigOptions: ResourceOptions = {
 //TODO: This is just the setup; components will be supplemented in a different branch.
 // actions: {
 //   list: {
-//     component: Components.CustomTable,
+//     component: Components.Table,
 //   },
 //   show: {
-//     component: Components.CustomShowPage,
+//     component: Components.ShowPage,
 //   },
 //   edit: {
-//     component: Components.CustomEditPage,
+//     component: Components.EditPage,
 //   },
 // },
