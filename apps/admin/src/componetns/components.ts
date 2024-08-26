@@ -7,20 +7,14 @@ import {
 const componentLoader = new ComponentLoader();
 
 const singleComponents = {
-  CustomInputComponent: componentLoader.add(
-    "CustomInputComponent",
-    "./helpers/CustomInput",
-  ),
-  CustomSelectComponent: componentLoader.add(
-    "CustomSelectComponent",
-    "./helpers/CustomSelect",
-  ),
+  MyInput: componentLoader.add("MyInput", "./helpers/MyInput"),
+  Select: componentLoader.add("Select", "./helpers/Select"),
 };
 
 const pagesComponents = {
-  // CustomTable: componentLoader.add("CustomTable", "./CustomTable"),
-  // CustomShowPage: componentLoader.add("CustomShowPage", "./CustomShowPage"),
-  // CustomEditPage: componentLoader.add("CustomEditPage", "./CustomEditPage"),
+  // Table: componentLoader.add("Table", "./Table"),
+  // ShowPage: componentLoader.add("ShowPage", "./ShowPage"),
+  // EditPage: componentLoader.add("EditPage", "./EditPage"),
 };
 
 // componentLoader.override(adminJS Component Name, path to custom component)
