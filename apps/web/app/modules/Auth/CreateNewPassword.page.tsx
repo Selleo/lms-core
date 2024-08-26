@@ -12,75 +12,95 @@ import { useForm } from "react-hook-form";
 import { cn } from "~/lib/utils";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { LoginBody } from "~/api/generated-api";
+import type { ResetPasswordBody } from "~/api/generated-api";
+import { useCreateNewPassword } from "~/api/mutations/useCreateNewPassword";
+import { useNavigate, useSearchParams } from "@remix-run/react";
+import { useToast } from "~/components/ui/use-toast";
 
 const createNewPasswordSchema = z
   .object({
-    password: z
+    newPassword: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" }),
-    passwordConfirmation: z
+    newPasswordConfirmation: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" }),
   })
   .refine(
-    ({ password, passwordConfirmation }) => password === passwordConfirmation,
+    ({ newPassword, newPasswordConfirmation }) =>
+      newPassword === newPasswordConfirmation,
     {
       message: "Passwords don't match",
-      path: ["passwordConfirmation"],
+      path: ["newPasswordConfirmation"],
     },
   );
 
 export default function CreateNewPasswordPage() {
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const { mutateAsync: createNewPassword } = useCreateNewPassword();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginBody & { passwordConfirmation: string }>({
+  } = useForm<ResetPasswordBody & { newPasswordConfirmation: string }>({
     resolver: zodResolver(createNewPasswordSchema),
+    mode: "onChange",
   });
 
-  const onSubmit = (data: LoginBody) => {
-    console.log(data);
+  const onSubmit = (data: ResetPasswordBody) => {
+    if (token) {
+      createNewPassword({
+        data: { newPassword: data.newPassword, resetToken: token },
+      }).then(() => {
+        toast({
+          description: "Password changed successfully",
+        });
+        navigate("/auth/login");
+      });
+    }
   };
 
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Create new password</CardTitle>
-        <CardDescription>
-          Enter a new password for user@example.com
-        </CardDescription>
+        <CardDescription>Enter a new password for {email}</CardDescription>
       </CardHeader>
       <CardContent>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="newPassword">Password</Label>
             <Input
-              id="password"
+              id="newPassword"
               type="password"
-              className={cn({ "border-red-500": errors.password })}
-              {...register("password")}
+              className={cn({ "border-red-500": errors.newPassword })}
+              {...register("newPassword")}
             />
-            {errors.password && (
+            {errors.newPassword && (
               <div className="text-red-500 text-sm">
-                {errors.password.message}
+                {errors.newPassword.message}
               </div>
             )}
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="passwordConfirmation">Confirm Password</Label>
+              <Label htmlFor="newPasswordConfirmation">Confirm Password</Label>
             </div>
             <Input
-              id="passwordConfirmation"
+              id="newPasswordConfirmation"
               type="password"
-              className={cn({ "border-red-500": errors.passwordConfirmation })}
-              {...register("passwordConfirmation")}
+              className={cn({
+                "border-red-500": errors.newPasswordConfirmation,
+              })}
+              {...register("newPasswordConfirmation")}
             />
-            {errors.passwordConfirmation && (
+            {errors.newPasswordConfirmation && (
               <div className="text-red-500 text-sm">
-                {errors.passwordConfirmation.message}
+                {errors.newPasswordConfirmation.message}
               </div>
             )}
           </div>
