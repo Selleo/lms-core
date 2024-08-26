@@ -80,6 +80,24 @@ export interface CurrentUserResponse {
   };
 }
 
+export interface ForgotPasswordBody {
+  /**
+   * @format email
+   * @minLength 1
+   */
+  email: string;
+}
+
+export interface ResetPasswordBody {
+  /**
+   * @minLength 8
+   * @maxLength 64
+   */
+  newPassword: string;
+  /** @minLength 1 */
+  resetToken: string;
+}
+
 export interface GetUsersResponse {
   data: {
     id: string;
@@ -364,6 +382,36 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/auth/current-user`,
         method: "GET",
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AuthControllerForgotPassword
+     * @request POST:/api/auth/forgot-password
+     */
+    authControllerForgotPassword: (data: ForgotPasswordBody, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/forgot-password`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name AuthControllerResetPassword
+     * @request POST:/api/auth/reset-password
+     */
+    authControllerResetPassword: (data: ResetPasswordBody, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/reset-password`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         ...params,
       }),
 
