@@ -110,6 +110,16 @@
       "post": {
         "operationId": "AuthController_forgotPassword",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordBody"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -121,6 +131,16 @@
       "post": {
         "operationId": "AuthController_resetPassword",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordBody"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
             "description": ""
@@ -572,20 +592,7 @@
                 "type": "string"
               },
               "role": {
-                "anyOf": [
-                  {
-                    "const": "admin",
-                    "type": "string"
-                  },
-                  {
-                    "const": "student",
-                    "type": "string"
-                  },
-                  {
-                    "const": "tutor",
-                    "type": "string"
-                  }
-                ]
+                "type": "string"
               },
               "archived": {
                 "type": "boolean"
@@ -653,20 +660,7 @@
                 "type": "string"
               },
               "role": {
-                "anyOf": [
-                  {
-                    "const": "admin",
-                    "type": "string"
-                  },
-                  {
-                    "const": "student",
-                    "type": "string"
-                  },
-                  {
-                    "const": "tutor",
-                    "type": "string"
-                  }
-                ]
+                "type": "string"
               },
               "archived": {
                 "type": "boolean"
@@ -719,20 +713,7 @@
                 "type": "string"
               },
               "role": {
-                "anyOf": [
-                  {
-                    "const": "admin",
-                    "type": "string"
-                  },
-                  {
-                    "const": "student",
-                    "type": "string"
-                  },
-                  {
-                    "const": "tutor",
-                    "type": "string"
-                  }
-                ]
+                "type": "string"
               },
               "archived": {
                 "type": "boolean"
@@ -752,6 +733,37 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "ForgotPasswordBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "format": "email",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "ResetPasswordBody": {
+        "type": "object",
+        "properties": {
+          "newPassword": {
+            "minLength": 8,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "resetToken": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "newPassword",
+          "resetToken"
         ]
       },
       "GetUsersResponse": {
@@ -781,20 +793,7 @@
                   "type": "string"
                 },
                 "role": {
-                  "anyOf": [
-                    {
-                      "const": "admin",
-                      "type": "string"
-                    },
-                    {
-                      "const": "student",
-                      "type": "string"
-                    },
-                    {
-                      "const": "tutor",
-                      "type": "string"
-                    }
-                  ]
+                  "type": "string"
                 },
                 "archived": {
                   "type": "boolean"
@@ -842,20 +841,7 @@
                 "type": "string"
               },
               "role": {
-                "anyOf": [
-                  {
-                    "const": "admin",
-                    "type": "string"
-                  },
-                  {
-                    "const": "student",
-                    "type": "string"
-                  },
-                  {
-                    "const": "tutor",
-                    "type": "string"
-                  }
-                ]
+                "type": "string"
               },
               "archived": {
                 "type": "boolean"
@@ -911,20 +897,7 @@
                 "type": "string"
               },
               "role": {
-                "anyOf": [
-                  {
-                    "const": "admin",
-                    "type": "string"
-                  },
-                  {
-                    "const": "student",
-                    "type": "string"
-                  },
-                  {
-                    "const": "tutor",
-                    "type": "string"
-                  }
-                ]
+                "type": "string"
               },
               "archived": {
                 "type": "boolean"

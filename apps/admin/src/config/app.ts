@@ -11,6 +11,7 @@ import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
 import { componentLoader } from "../components/index.js";
 import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
+import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
 
 const authenticate = async (
   email: string,
@@ -86,6 +87,12 @@ export class AdminApp {
           resource: this.db.getResource("credentials"),
           ...credentialsConfigOptions,
         },
+        {
+          resource: this.db.getResource("courses"),
+          options: {
+            ...coursesConfigOptions,
+          },
+        },
       ],
     });
 
@@ -118,7 +125,7 @@ export class AdminApp {
         secret: env.SESSION_SECRET,
         cookie: {
           httpOnly: true,
-          secure: true,
+          secure: process.env.NODE_ENV === "production",
         },
         name: "adminjs",
       },
