@@ -6,6 +6,7 @@ import {
   text,
   timestamp,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 import { UserRoles } from "src/users/schemas/user-roles";
@@ -47,6 +48,23 @@ export const resetTokens = pgTable("reset_tokens", {
     precision: 3,
     withTimezone: true,
   }).notNull(),
+  ...timestamps,
+});
+
+export const courses = pgTable("courses", {
+  ...id,
+  title: varchar("title", { length: 100 }).notNull(),
+  description: varchar("description", { length: 1000 }),
+  imageUrl: varchar("image_url"),
+  status: varchar("status").notNull().default("draft"),
+  priceInCents: integer("price_in_cents").notNull().default(0),
+  authorId: uuid("author_id")
+    .references(() => users.id)
+    .notNull(),
+  categoryId: uuid("category_id")
+    .references(() => categories.id)
+    .notNull(),
+  archived: boolean("archived").notNull().default(false),
   ...timestamps,
 });
 

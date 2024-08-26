@@ -141,6 +141,13 @@
       "when": 1724671005137,
       "tag": "0019_notifications_table",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1724762327936,
+      "tag": "0020_create_courses",
+      "breakpoints": true
     }
   ]
 }

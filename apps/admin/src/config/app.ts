@@ -13,6 +13,7 @@ import { DatabaseService } from "./database.js";
 import { Components, componentLoader } from "../components/components.js";
 import * as url from "url";
 import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
+import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
 
 const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
@@ -91,6 +92,12 @@ export class AdminApp {
           resource: this.db.getResource("credentials"),
           ...credentialsConfigOptions,
         },
+        {
+          resource: this.db.getResource("courses"),
+          options: {
+            ...coursesConfigOptions,
+          },
+        },
       ],
       dashboard: {
         component: Components.Dashboard,
@@ -133,7 +140,7 @@ export class AdminApp {
         secret: env.SESSION_SECRET,
         cookie: {
           httpOnly: true,
-          secure: true,
+          secure: process.env.NODE_ENV === "production",
         },
         name: "adminjs",
       },
