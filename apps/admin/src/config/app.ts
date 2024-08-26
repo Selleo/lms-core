@@ -1,5 +1,4 @@
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import path from "path";
 import AdminJSExpress, { AuthenticationContext } from "@adminjs/express";
 import { Database, Resource } from "@adminjs/sql";
 import AdminJS from "adminjs";
@@ -7,7 +6,6 @@ import bcrypt from "bcrypt";
 import Connect from "connect-pg-simple";
 import express from "express";
 import session from "express-session";
-import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
 import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
 import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
 import { filesConfigOptions } from "../AdminResourceOptions/files.js";
@@ -19,10 +17,11 @@ import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js"
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
-import { componentLoader } from "../components/index.js";
+import { Components, componentLoader } from "../componetns/components.js";
+import * as url from "url";
+import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
 
 const authenticate = async (
   email: string,
@@ -81,7 +80,7 @@ export class AdminApp {
   async init() {
     AdminJS.registerAdapter({ Database, Resource });
 
-    this.app.use(express.static("public"));
+    this.app.use(express.static(path.join(__dirname, "../../public")));
 
     const admin = new AdminJS({
       resources: [
@@ -148,9 +147,7 @@ export class AdminApp {
       rootPath: "/",
       componentLoader,
       assets: {
-        styles: [
-          join(__dirname, "../../node_modules/@repo/ui/dist/global.css"),
-        ],
+        styles: ["/global.css"],
       },
     });
 

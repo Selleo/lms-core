@@ -1,7 +1,7 @@
 import React from "react";
 
-const CustomTable = () => {
-  return <div>CustomTable</div>;
+const Table = () => {
+  return <div>Table</div>;
 };
 
-export default CustomTable;
+export default Table;

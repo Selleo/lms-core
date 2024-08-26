@@ -23,17 +23,17 @@ export const usersConfigOptions: ResourceOptions = {
   properties: {
     first_name: {
       components: {
-        edit: Components.CustomInputComponent,
+        edit: Components.MyInput,
       },
     },
     last_name: {
       components: {
-        edit: Components.CustomInputComponent,
+        edit: Components.MyInput,
       },
     },
     email: {
       components: {
-        edit: Components.CustomInputComponent,
+        edit: Components.MyInput,
       },
     },
     created_at: {
@@ -67,7 +67,7 @@ export const usersConfigOptions: ResourceOptions = {
         //TODO: Tutor doesnt work
       ],
       components: {
-        edit: Components.CustomSelectComponent,
+        edit: Components.Select,
       },
     },
     status: {
@@ -103,12 +103,12 @@ export const usersConfigOptions: ResourceOptions = {
 //TODO: This is just the setup; components will be supplemented in a different branch.
 // actions: {
 //   list: {
-//     component: Components.CustomTable,
+//     component: Components.Table,
 //   },
 //   show: {
-//     component: Components.CustomShowPage,
+//     component: Components.ShowPage,
 //   },
 //   edit: {
-//     component: Components.CustomEditPage,
+//     component: Components.EditPage,
 //   },
 // },

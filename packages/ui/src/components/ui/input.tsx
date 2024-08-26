@@ -17,7 +17,6 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-        <p>lalala</p>
       </div>
     );
   }
