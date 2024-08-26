@@ -1,20 +1,62 @@
-import { Before, ResourceWithOptions } from "adminjs";
+import {
+  Before,
+  ResourceWithOptions,
+  ActionRequest,
+  ActionResponse,
+  ActionContext,
+} from "adminjs";
 import { Components } from "../components/index.js";
 
 const excludeNotActiveCategories: Before = async (request) => {
   const { query = {} } = request;
 
-  const isStatusActive = query["filters.status"];
+  const mappedStatusFilter =
+    query["filters.status"] === "true" ? "true" : "false";
 
   const newQuery: { [key: string]: "true" | "false" } = {
     ...query,
-    "filters.archived": isStatusActive === "true" ? "true" : "false",
+    "filters.archived": mappedStatusFilter,
   };
 
   delete newQuery["filters.status"];
   request.query = newQuery;
 
   return request;
+};
+
+const customDeleteAction = async (
+  request: ActionRequest,
+  response: ActionResponse,
+  context: ActionContext,
+) => {
+  const { currentAdmin, record, resource } = context;
+  try {
+    if (record) {
+      if (record.params.archived) {
+        throw new Error("Record is already archived");
+      }
+
+      await resource.update(record.id(), { archived: true });
+    }
+    return {
+      record: record?.toJSON(currentAdmin),
+      notice: {
+        message: "Record has been archived successfully",
+        type: "success",
+      },
+      redirectUrl: context.h.resourceUrl({
+        resourceId: resource._decorated?.id() || resource.id(),
+      }),
+    };
+  } catch (error) {
+    return {
+      record: record?.toJSON(currentAdmin),
+      notice: {
+        message: `There was an error archiving the record:\n\n ${error.message}`,
+        type: "error",
+      },
+    };
+  }
 };
 
 export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
@@ -26,6 +68,15 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
       delete: {
         isAccessible: false,
         isVisible: false,
+      },
+      archive: {
+        actionType: "record",
+        component: false,
+        guard: "Do you really want to archive this record?",
+        handler: customDeleteAction,
+        icon: "Archive",
+        isAccessible: true,
+        isVisible: true,
       },
     },
     properties: {
