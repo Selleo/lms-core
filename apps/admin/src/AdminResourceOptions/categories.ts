@@ -24,7 +24,7 @@ const excludeNotActiveCategories: Before = async (request) => {
   return request;
 };
 
-const customDeleteAction = async (
+const archiveAction = async (
   request: ActionRequest,
   response: ActionResponse,
   context: ActionContext,
@@ -32,9 +32,7 @@ const customDeleteAction = async (
   const { currentAdmin, record, resource } = context;
   try {
     if (record) {
-      if (record.params.archived) {
-        throw new Error("Record is already archived");
-      }
+      if (record.params.archived) throw new Error("Record is already archived");
 
       await resource.update(record.id(), { archived: true });
     }
@@ -73,7 +71,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         actionType: "record",
         component: false,
         guard: "Do you really want to archive this record?",
-        handler: customDeleteAction,
+        handler: archiveAction,
         icon: "Archive",
         isAccessible: true,
         isVisible: true,
