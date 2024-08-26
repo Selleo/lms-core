@@ -4,26 +4,34 @@ import { Button } from "~/components/ui/button";
 import { Link } from "@remix-run/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import type { LoginBody } from "~/api/generated-api";
+import type { ForgotPasswordBody } from "~/api/generated-api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { cn } from "~/lib/utils";
+import { usePasswordRecovery } from "~/api/mutations/useRecoverPassword";
+import { useToast } from "~/components/ui/use-toast";
 
 const passwordRecoverySchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
 });
 
 export default function PasswordRecoveryPage() {
+  const { mutateAsync: recoverPassword } = usePasswordRecovery();
+  const { toast } = useToast();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginBody>({ resolver: zodResolver(passwordRecoverySchema) });
+  } = useForm<ForgotPasswordBody>({
+    resolver: zodResolver(passwordRecoverySchema),
+  });
 
-  const onSubmit = (data: LoginBody) => {
-    // loginUser({ data }).then(() => {
-    //   navigate("/dashboard");
-    // });
-    console.log(data);
+  const onSubmit = (data: ForgotPasswordBody) => {
+    recoverPassword({ data }).then(() => {
+      toast({
+        description:
+          "A link to reset your password has been sent to your email.",
+      });
+    });
   };
 
   return (
