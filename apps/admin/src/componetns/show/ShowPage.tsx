@@ -1,7 +1,7 @@
 import React from "react";
 
-const CustomShowPage = () => {
-  return <div>CustomShowPage</div>;
+const ShowPage = () => {
+  return <div>ShowPage</div>;
 };
 
-export default CustomShowPage;
+export default ShowPage;

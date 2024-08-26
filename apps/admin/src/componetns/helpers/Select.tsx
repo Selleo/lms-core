@@ -1,15 +1,11 @@
 import React, { FC } from "react";
 import { BasePropertyProps } from "adminjs";
 
-interface CustomSelectComponentProps extends BasePropertyProps {
+interface SelectComponentProps extends BasePropertyProps {
   onChange: (propertyName: string, value: string) => void;
 }
 
-const CustomSelectComponent: FC<CustomSelectComponentProps> = ({
-  onChange,
-  property,
-  record,
-}) => {
+const Select: FC<SelectComponentProps> = ({ onChange, property, record }) => {
   const { name, availableValues } = property;
   const value = record?.params[name] || "";
 
@@ -24,4 +20,4 @@ const CustomSelectComponent: FC<CustomSelectComponentProps> = ({
   );
 };
 
-export default CustomSelectComponent;
+export default Select;
