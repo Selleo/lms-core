@@ -1,9 +1,11 @@
 import {
-  Before,
-  ResourceWithOptions,
+  ActionContext,
   ActionRequest,
   ActionResponse,
-  ActionContext,
+  Before,
+  Filter,
+  ResourceWithOptions,
+  ValidationError,
 } from "adminjs";
 import { Components } from "../components/index.js";
 
@@ -57,6 +59,27 @@ const archiveAction = async (
   }
 };
 
+const beforeCreateHook: Before = async (
+  request: ActionRequest,
+  context: ActionContext,
+) => {
+  const { resource } = context;
+  const title = request?.payload?.title;
+  const filter = new Filter({ title }, resource);
+  const categories = await resource.find(filter, {});
+  const isTitleExist = categories.some(
+    (category) => category.params.title.toLowerCase() === title.toLowerCase(),
+  );
+
+  if (isTitleExist) {
+    throw new ValidationError({
+      title: { message: `Title: ${title} already exists` },
+    });
+  }
+
+  return request;
+};
+
 export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
   options: {
     actions: {
@@ -75,6 +98,9 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         icon: "Archive",
         isAccessible: true,
         isVisible: true,
+      },
+      new: {
+        before: [beforeCreateHook],
       },
     },
     properties: {
