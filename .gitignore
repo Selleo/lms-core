@@ -42,9 +42,3 @@ yarn-error.log*
 
 # Code
 .vscode
-
-# WebStorm local settings
-.idea
-
-# Code
-.vscode
