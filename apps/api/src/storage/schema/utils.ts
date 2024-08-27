@@ -26,4 +26,9 @@ export const timestamps = {
     .$onUpdate(() => sql`CURRENT_TIMESTAMP`),
 };
 
-export const archivedAt = boolean("archived").notNull().default(false);
+export const archived = boolean("archived").default(false).notNull();
+
+export const Status = {
+  draft: "draft",
+  published: "published",
+} as const;
