@@ -86,6 +86,34 @@ export class AdminApp {
           resource: this.db.getResource("credentials"),
           ...credentialsConfigOptions,
         },
+        {
+          resource: this.db.getResource("conversation_messages"),
+          options: {},
+        },
+        {
+          resource: this.db.getResource("files"),
+          options: {},
+        },
+        {
+          resource: this.db.getResource("lesson_files"),
+          options: {},
+        },
+        {
+          resource: this.db.getResource("lessons"),
+          options: {},
+        },
+        {
+          resource: this.db.getResource("questions"),
+          options: {},
+        },
+        {
+          resource: this.db.getResource("lesson_questions"),
+          options: {},
+        },
+        {
+          resource: this.db.getResource("files"),
+          options: {},
+        },
       ],
     });
 
@@ -118,7 +146,6 @@ export class AdminApp {
         secret: env.SESSION_SECRET,
         cookie: {
           httpOnly: true,
-          secure: true,
         },
         name: "adminjs",
       },
