@@ -5,6 +5,7 @@ import {
   pgTable,
   text,
   timestamp,
+  unique,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -71,10 +72,10 @@ export const courses = pgTable("courses", {
 export const lessons = pgTable("lessons", {
   ...id,
   ...timestamps,
-  title: text("title").notNull(),
-  description: text("description"),
-  image_url: text("image_url"),
-  author_id: uuid("author_id")
+  title: varchar("title", { length: 100 }).notNull(),
+  description: varchar("description", { length: 1000 }),
+  imageUrl: text("image_url"),
+  authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
   status: text("status").notNull().default(Status.draft),
@@ -84,10 +85,10 @@ export const lessons = pgTable("lessons", {
 export const conversations = pgTable("conversations", {
   ...id,
   ...timestamps,
-  participant1_id: uuid("participant1_id")
+  participant1Id: uuid("participant1_id")
     .references(() => users.id)
     .notNull(),
-  participant2_id: uuid("participant2_id")
+  participant2Id: uuid("participant2_id")
     .references(() => users.id)
     .notNull(),
 });
@@ -96,13 +97,13 @@ export const conversationMessages = pgTable("conversation_messages", {
   ...id,
   ...timestamps,
   message: text("message").notNull(),
-  conversation_id: uuid("conversation_id")
+  conversationId: uuid("conversation_id")
     .references(() => conversations.id)
     .notNull(),
-  author_id: uuid("author_id")
+  authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
-  read_at: timestamp("read_at", {
+  readAt: timestamp("read_at", {
     mode: "string",
     withTimezone: true,
     precision: 3,
@@ -112,11 +113,11 @@ export const conversationMessages = pgTable("conversation_messages", {
 export const questions = pgTable("questions", {
   ...id,
   ...timestamps,
-  question_type: text("question_type").notNull(),
-  question_text: text("question_text").notNull(),
-  answer_explanation: text("answer_explanation").notNull(),
+  questionType: text("question_type").notNull(),
+  questionBody: text("question_body").notNull(),
+  solutionExplanation: text("solution_explanation").notNull(),
   status: text("status").notNull().default(Status.draft),
-  author_id: uuid("author_id")
+  authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
 });
@@ -124,34 +125,34 @@ export const questions = pgTable("questions", {
 export const questionAnswerOptions = pgTable("question_answer_options", {
   ...id,
   ...timestamps,
-  question_id: uuid("question_id")
+  questionId: uuid("question_id")
     .references(() => questions.id)
     .notNull(),
-  option_text: text("option_text").notNull(),
-  is_correct: boolean("is_correct").notNull(),
+  optionText: text("option_text").notNull(),
+  isCorrect: boolean("is_correct").notNull(),
   position: integer("position"),
 });
 
 export const studentQuestionAnswers = pgTable("student_question_answers", {
   ...id,
   ...timestamps,
-  question_id: uuid("question_id")
+  questionId: uuid("question_id")
     .references(() => questions.id)
     .notNull(),
-  student_id: uuid("student_id")
+  studentId: uuid("student_id")
     .references(() => users.id)
     .notNull(),
   answer: jsonb("answer").default({}),
-  is_correct: boolean("is_correct"),
+  isCorrect: boolean("is_correct"),
 });
 
 export const lessonQuestions = pgTable("lesson_questions", {
   ...id,
   ...timestamps,
-  lesson_id: uuid("lesson_id")
+  lessonId: uuid("lesson_id")
     .references(() => lessons.id)
     .notNull(),
-  question_id: uuid("question_id")
+  questionId: uuid("question_id")
     .references(() => questions.id)
     .notNull(),
 });
@@ -162,7 +163,7 @@ export const files = pgTable("files", {
   type: text("type").notNull(),
   url: text("url").notNull(),
   status: text("status").notNull().default(Status.draft),
-  author_id: uuid("author_id")
+  authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
 });
@@ -170,10 +171,10 @@ export const files = pgTable("files", {
 export const lessonFiles = pgTable("lesson_files", {
   ...id,
   ...timestamps,
-  lesson_id: uuid("lesson_id")
+  lessonId: uuid("lesson_id")
     .references(() => lessons.id)
     .notNull(),
-  file_id: uuid("file_id")
+  fileId: uuid("file_id")
     .references(() => files.id)
     .notNull(),
 });
@@ -183,7 +184,7 @@ export const textBlocks = pgTable("text_blocks", {
   ...timestamps,
   body: text("body"),
   status: text("status").notNull().default(Status.draft),
-  author_id: uuid("author_id")
+  authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
 });
@@ -191,32 +192,38 @@ export const textBlocks = pgTable("text_blocks", {
 export const lessonTextBlocks = pgTable("lesson_text_blocks", {
   ...id,
   ...timestamps,
-  lesson_id: uuid("lesson_id")
+  lessonId: uuid("lesson_id")
     .references(() => lessons.id)
     .notNull(),
-  text_block_id: uuid("text_block_id")
+  textBlockId: uuid("text_block_id")
     .references(() => textBlocks.id)
     .notNull(),
 });
 
-export const lessonItemsOrder = pgTable("lesson_items_order", {
-  ...id,
-  lesson_id: uuid("lesson_id")
-    .references(() => lessons.id)
-    .notNull(),
-  item_id: uuid("item_id").notNull(),
-  item_type: text("item_type").notNull(),
-  order: integer("order"),
-});
+export const lessonItems = pgTable(
+  "lesson_items",
+  {
+    ...id,
+    lessonId: uuid("lesson_id")
+      .references(() => lessons.id)
+      .notNull(),
+    lessonItem_id: uuid("lesson_item_id").notNull(),
+    lessonItem_type: text("lesson_item_type").notNull(),
+    displayOrder: integer("display_order"),
+  },
+  (table) => ({
+    unq: unique().on(table.lessonId, table.displayOrder),
+  }),
+);
 
 export const notifications = pgTable("notifications", {
   ...id,
   ...timestamps,
-  student_id: uuid("student_id")
+  studentId: uuid("student_id")
     .references(() => users.id)
     .notNull(),
   text: text("text").notNull(),
-  read_at: timestamp("read_at", {
+  readAt: timestamp("read_at", {
     mode: "string",
     withTimezone: true,
     precision: 3,
