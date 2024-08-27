@@ -23,6 +23,20 @@ componentLoaderOverride(componentsList, componentLoader);
 const Components = {
   ...singleComponents,
   ...pagesComponents,
+  ArchiveFilter: componentLoader.add(
+    "ArchiveFilter",
+    "./filters/ArchiveFilter",
+  ),
+  ArchiveShow: componentLoader.add("ArchiveShow", "./show/ArchiveShow"),
+  StatusListValue: componentLoader.add(
+    "StatusListValue",
+    "./custom/StatusListValue",
+  ),
+  CategoriesListShow: componentLoader.add(
+    "CategoriesShow",
+    "./show/CategoriesListShow",
+  ),
+  StatusFilter: componentLoader.add("StatusFilter", "./filters/ArchiveFilter"),
   Dashboard: componentLoader.add("Dashboard", "./custom/Dashboard"),
 };
 
