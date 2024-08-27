@@ -18,7 +18,7 @@ export const users = pgTable("users", {
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   role: text("role").notNull().default(UserRoles.student),
-  archived: boolean("archived").notNull().default(false),
+  archived,
 });
 
 export const credentials = pgTable("credentials", {

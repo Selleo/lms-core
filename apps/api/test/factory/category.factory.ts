@@ -16,12 +16,14 @@ export const createCategoryFactory = (db: DatabasePg) => {
       return inserted;
     });
 
+    const randomHex = Math.floor(Math.random() * 1000000).toString(16);
+
     return {
       id: faker.string.uuid(),
-      title: faker.commerce.department(),
+      title: faker.commerce.department() + randomHex,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      archivedAt: null,
+      archived: false,
     };
   });
 };

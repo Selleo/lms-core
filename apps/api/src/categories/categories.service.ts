@@ -1,20 +1,17 @@
 import { count, like } from "drizzle-orm";
 import { Inject, Injectable } from "@nestjs/common";
 
-import {
-  addPagination,
-  DEFAULT_PAGE_SIZE,
-  getSortOptions,
-} from "src/common/pagination";
+import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { AllCategoriesResponse } from "./schemas/category.schema";
 import { categories } from "src/storage/schema";
 import { CategoriesQuery } from "./api/categoires.types";
 import {
-  CategorySortQueries,
-  CategorySortQuery,
+  CategorySortFields,
+  CategorySortField,
 } from "./schemas/category-query";
 import { DatabasePg, Pagination } from "src/common";
 import { UserRole, UserRoles } from "src/users/schemas/user-roles";
+import { getSortOptions } from "./helpers";
 
 @Injectable()
 export class CategoriesService {
@@ -25,7 +22,7 @@ export class CategoriesService {
     userRole: UserRole,
   ): Promise<{ data: AllCategoriesResponse; pagination: Pagination }> {
     const {
-      sort = CategorySortQueries.title,
+      sort = CategorySortFields.title,
       perPage = DEFAULT_PAGE_SIZE,
       page = 1,
       filter = "",
@@ -38,7 +35,7 @@ export class CategoriesService {
 
     const selectedColumns = {
       id: categories.id,
-      archivedAt: categories.archivedAt,
+      archived: categories.archived,
       createdAt: categories.createdAt,
       title: categories.title,
     };
@@ -70,13 +67,13 @@ export class CategoriesService {
     return like(categories.title, `%${filter.toLowerCase()}%`);
   }
 
-  private getColumnToSortBy(sort: CategorySortQuery, isAdmin: boolean) {
+  private getColumnToSortBy(sort: CategorySortField, isAdmin: boolean) {
     if (!isAdmin) return categories.title;
 
     switch (sort) {
-      case CategorySortQueries.archivedAt:
-        return categories.archivedAt;
-      case CategorySortQueries.createdAt:
+      case CategorySortFields.archived:
+        return categories.archived;
+      case CategorySortFields.createdAt:
         return categories.createdAt;
       default:
         return categories.title;
@@ -89,7 +86,7 @@ export class CategoriesService {
   ) =>
     data.map((category) => ({
       ...category,
-      archivedAt: isAdmin ? category.archivedAt : null,
+      archived: isAdmin ? category.archived : null,
       createdAt: isAdmin ? category.createdAt : null,
     }));
 }

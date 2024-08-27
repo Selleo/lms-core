@@ -23,10 +23,7 @@ describe("CategoriesService", () => {
     categoriesServics = testContext.module.get(CategoriesService);
     db = testContext.db;
     categoryFactory = createCategoryFactory(db);
-    const newCategories = Array.from({ length: CATEGORIES_COUNT }, () =>
-      categoryFactory.build(),
-    );
-    await db.insert(categories).values(newCategories);
+    categoryFactory.createList(CATEGORIES_COUNT);
   }, 30000);
 
   afterAll(async () => {

@@ -1,6 +1,10 @@
+import { createUserFactory } from "test/factory/user.factory";
 import { DatabasePg } from "../../src/common";
+import { INestApplication } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { sql } from "drizzle-orm";
+import { UserRole } from "src/users/schemas/user-roles";
+import request from "supertest";
 
 type CamelToSnake<T extends string, P extends string = ""> = string extends T
   ? string
@@ -47,4 +51,25 @@ export async function truncateTables(
   for (const table of tables) {
     await connection.execute(sql.raw(`TRUNCATE TABLE "${table}" CASCADE;`));
   }
+}
+
+export async function authAs(
+  role: UserRole,
+  userFactory: ReturnType<typeof createUserFactory>,
+  app: INestApplication<any>,
+) {
+  const testPassword = "password";
+
+  const testUser = await userFactory
+    .withCredentials({ password: testPassword })
+    .create({ role });
+
+  const loginResponse = await request(app.getHttpServer())
+    .post("/api/auth/login")
+    .send({
+      email: testUser.email,
+      password: testUser.credentials?.password,
+    });
+
+  return loginResponse.headers["set-cookie"];
 }

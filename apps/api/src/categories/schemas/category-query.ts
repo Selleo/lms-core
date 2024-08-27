@@ -1,27 +1,25 @@
 import { Type, Static } from "@sinclair/typebox";
 
-export const categorySortQueries = [
-  "title",
-  "createdAt",
-  "archivedAt",
-] as const;
+export const categorySortFields = ["title", "createdAt", "archived"] as const;
 
-export const CategorySortQueries: Record<CategorySortQuery, CategorySortQuery> =
+export const CategorySortFields: Record<CategorySortField, CategorySortField> =
   {
     title: "title",
     createdAt: "createdAt",
-    archivedAt: "archivedAt",
+    archived: "archived",
   };
 
-export type CategorySortQuery = (typeof categorySortQueries)[number];
+export type CategorySortField = (typeof categorySortFields)[number];
 
-export const sortCategoryQueryOptions = Type.Union([
+export const sortCategoryFieldsOptions = Type.Union([
   Type.Literal("title"),
   Type.Literal("createdAt"),
-  Type.Literal("archivedAt"),
+  Type.Literal("archived"),
   Type.Literal("-title"),
   Type.Literal("-createdAt"),
-  Type.Literal("-archivedAt"),
+  Type.Literal("-archived"),
 ]);
 
-export type SortCategoryQueryOptions = Static<typeof sortCategoryQueryOptions>;
+export type SortCategoryFieldsOptions = Static<
+  typeof sortCategoryFieldsOptions
+>;

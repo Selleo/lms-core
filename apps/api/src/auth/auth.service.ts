@@ -17,6 +17,7 @@ import { EmailService } from "src/common/emails/emails.service";
 import { PasswordRecoveryEmail, WelcomeEmail } from "@repo/email-templates";
 import { nanoid } from "nanoid";
 import { ResetPasswordService } from "./reset-password.service";
+import { CommonUser } from "src/common/schemas/common-user.schema";
 
 @Injectable()
 export class AuthService {
@@ -81,11 +82,7 @@ export class AuthService {
       throw new UnauthorizedException("Invalid email or password");
     }
 
-    const { accessToken, refreshToken } = await this.getTokens(
-      user.id,
-      user.email,
-      user.role,
-    );
+    const { accessToken, refreshToken } = await this.getTokens(user);
 
     return {
       ...user,
@@ -116,7 +113,7 @@ export class AuthService {
         throw new UnauthorizedException("User not found");
       }
 
-      const tokens = await this.getTokens(user.id, user.email, user.role);
+      const tokens = await this.getTokens(user);
       return tokens;
     } catch (error) {
       throw new UnauthorizedException("Invalid refresh token");
@@ -154,7 +151,8 @@ export class AuthService {
     return user;
   }
 
-  private async getTokens(userId: string, email: string, role: UserRole) {
+  private async getTokens(user: CommonUser) {
+    const { id: userId, email, role } = user;
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         { userId, email, role },

@@ -5,7 +5,7 @@ export const allCategoriesSchema = Type.Array(
   Type.Object({
     id: UUIDSchema,
     title: Type.String(),
-    archivedAt: Type.Union([Type.String(), Type.Null()]),
+    archived: Type.Union([Type.Boolean(), Type.Null()]),
     createdAt: Type.Union([Type.String(), Type.Null()]),
   }),
 );
