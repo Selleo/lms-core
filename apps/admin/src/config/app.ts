@@ -87,10 +87,6 @@ export class AdminApp {
           ...credentialsConfigOptions,
         },
         {
-          resource: this.db.getResource("conversation_messages"),
-          options: {},
-        },
-        {
           resource: this.db.getResource("files"),
           options: {},
         },
@@ -100,7 +96,16 @@ export class AdminApp {
         },
         {
           resource: this.db.getResource("lessons"),
-          options: {},
+          options: {
+            properties: {
+              description: {
+                type: "richtext",
+                props: {
+                  rows: 30,
+                },
+              },
+            },
+          },
         },
         {
           resource: this.db.getResource("questions"),
@@ -111,8 +116,17 @@ export class AdminApp {
           options: {},
         },
         {
-          resource: this.db.getResource("files"),
-          options: {},
+          resource: this.db.getResource("text_blocks"),
+          options: {
+            properties: {
+              body: {
+                type: "richtext",
+                props: {
+                  rows: 30,
+                },
+              },
+            },
+          },
         },
       ],
     });

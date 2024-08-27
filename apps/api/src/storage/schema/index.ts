@@ -6,6 +6,7 @@ import {
   text,
   timestamp,
   uuid,
+  varchar,
 } from "drizzle-orm/pg-core";
 
 import { UserRoles } from "src/users/schemas/user-roles";
@@ -53,8 +54,8 @@ export const resetTokens = pgTable("reset_tokens", {
 export const lessons = pgTable("lessons", {
   ...id,
   ...timestamps,
-  title: text("title").notNull(),
-  description: text("description"),
+  title: varchar("title", { length: 100 }).notNull(),
+  description: varchar("description", { length: 1000 }),
   image_url: text("image_url"),
   author_id: uuid("author_id")
     .references(() => users.id)
@@ -95,8 +96,8 @@ export const questions = pgTable("questions", {
   ...id,
   ...timestamps,
   question_type: text("question_type").notNull(),
-  question_text: text("question_text").notNull(),
-  answer_explanation: text("answer_explanation").notNull(),
+  question_body: text("question_text").notNull(),
+  solution_explanation: text("answer_explanation").notNull(),
   status: text("status").notNull().default(Status.draft),
   author_id: uuid("author_id")
     .references(() => users.id)
@@ -181,14 +182,14 @@ export const lessonTextBlocks = pgTable("lesson_text_blocks", {
     .notNull(),
 });
 
-export const lessonItemsOrder = pgTable("lesson_items_order", {
+export const lessonItems = pgTable("lesson_items", {
   ...id,
   lesson_id: uuid("lesson_id")
     .references(() => lessons.id)
     .notNull(),
-  item_id: uuid("item_id").notNull(),
-  item_type: text("item_type").notNull(),
-  order: integer("order"),
+  lesson_item_id: uuid("item_id").notNull(),
+  lesson_item_type: text("item_type").notNull(),
+  display_order: integer("display_order").unique(),
 });
 
 export const notifications = pgTable("notifications", {
