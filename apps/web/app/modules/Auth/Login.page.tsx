@@ -1,7 +1,5 @@
 import { Link, useNavigate } from "@remix-run/react";
 import { Button } from "~/components/ui/button";
-
-import { Input } from "@repo/ui";
 import { Label } from "~/components/ui/label";
 import { useLoginUser } from "~/api/mutations/useLoginUser";
 import { useForm } from "react-hook-form";
@@ -17,6 +15,7 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
+import { Input } from "~/components/ui/input";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),

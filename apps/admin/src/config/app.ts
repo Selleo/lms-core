@@ -10,7 +10,7 @@ import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
-import { Components, componentLoader } from "../componetns/components.js";
+import { Components, componentLoader } from "../components/components.js";
 import * as url from "url";
 import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
 

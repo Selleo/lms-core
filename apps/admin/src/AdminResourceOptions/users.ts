@@ -1,5 +1,5 @@
 import { Before, ResourceOptions } from "adminjs";
-import { Components } from "../componetns/components.js";
+import { Components } from "../components/components.js";
 
 const customBefore: Before = (request) => {
   const { query = {} } = request;

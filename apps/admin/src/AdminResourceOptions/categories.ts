@@ -5,7 +5,7 @@ import {
   ActionResponse,
   ActionContext,
 } from "adminjs";
-import { Components } from "../components/index.js";
+import { Components } from "../components/components.js";
 
 const excludeNotActiveCategories: Before = async (request) => {
   const { query = {} } = request;
