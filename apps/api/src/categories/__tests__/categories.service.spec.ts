@@ -32,72 +32,100 @@ describe("CategoriesService", () => {
   });
 
   describe("getCategories", () => {
-    it("should return correct data format when the request don't provide any query params", async () => {
-      userRole = UserRoles.student;
-      query = {};
-      const categories = await categoriesServics.getCategories(query, userRole);
+    describe("when the request specifies the pagination params", () => {
+      it("returns correct pagination data", async () => {
+        userRole = UserRoles.student;
+        const perPage = 5;
+        const page = 2,
+          query = { page, perPage };
+        const categories = await categoriesServics.getCategories(
+          query,
+          userRole,
+        );
 
-      expect(categories.data).toBeDefined();
-      expect(categories.pagination).toBeDefined();
-      expect(categories.pagination.page).toBeDefined();
-      expect(categories.pagination.perPage).toBeDefined();
-      expect(categories.pagination.totalItems).toBeDefined();
+        expect(categories.data).toHaveLength(perPage);
+        expect(categories.pagination.page).toBe(page);
+        expect(categories.pagination.perPage).toBe(perPage);
+        expect(categories.pagination.totalItems).toBe(CATEGORIES_COUNT);
+      });
     });
 
-    it("should get all categories with default pagination data when the request don't provide any query params", async () => {
-      query = {};
-      const categories = await categoriesServics.getCategories(query, userRole);
+    describe("when request don't provide any query params", () => {
+      it("returns correct data format", async () => {
+        query = {};
+        const categories = await categoriesServics.getCategories(
+          query,
+          userRole,
+        );
 
-      expect(categories.data).toHaveLength(DEFAULT_PAGE_SIZE);
-      expect(categories.pagination.page).toBe(1);
-      expect(categories.pagination.perPage).toBe(DEFAULT_PAGE_SIZE);
-      expect(categories.pagination.totalItems).toBe(CATEGORIES_COUNT);
+        expect(categories.data).toBeDefined();
+        expect(categories.pagination).toBeDefined();
+        expect(categories.pagination.page).toBeDefined();
+        expect(categories.pagination.perPage).toBeDefined();
+        expect(categories.pagination.totalItems).toBeDefined();
+      });
+
+      it("returns all categories with default pagination data", async () => {
+        query = {};
+        const categories = await categoriesServics.getCategories(
+          query,
+          userRole,
+        );
+
+        expect(categories.data).toHaveLength(DEFAULT_PAGE_SIZE);
+        expect(categories.pagination.page).toBe(1);
+        expect(categories.pagination.perPage).toBe(DEFAULT_PAGE_SIZE);
+        expect(categories.pagination.totalItems).toBe(CATEGORIES_COUNT);
+      });
+
+      it("returns sorted data by default", async () => {
+        query = {};
+        await truncateAllTables(db);
+        const historyCategory = categoryFactory.build({ title: "history" });
+        const biologyCategory = categoryFactory.build({ title: "biology" });
+        const mathCategory = categoryFactory.build({ title: "math" });
+        await db
+          .insert(categories)
+          .values([historyCategory, biologyCategory, mathCategory]);
+        const sortedCategories = await categoriesServics.getCategories(
+          query,
+          userRole,
+        );
+
+        expect(sortedCategories.data[0].title).toBe(biologyCategory.title);
+      });
     });
 
-    it("should get correct pagination data when the request specifies it in the query params", async () => {
-      const perPage = 5;
-      const page = 2,
-        query = { page, perPage };
-      const categories = await categoriesServics.getCategories(query, userRole);
-
-      expect(categories.data).toHaveLength(perPage);
-      expect(categories.pagination.page).toBe(page);
-      expect(categories.pagination.perPage).toBe(perPage);
-      expect(categories.pagination.totalItems).toBe(CATEGORIES_COUNT);
+    describe("when the request includes filters", () => {
+      it("returns filterd data", async () => {
+        await truncateAllTables(db);
+        const historyCategory = categoryFactory.build({ title: "history" });
+        const biologyCategory = categoryFactory.build({ title: "biology" });
+        const mathCategory = categoryFactory.build({ title: "math" });
+        await db
+          .insert(categories)
+          .values([historyCategory, biologyCategory, mathCategory]);
+        query = { filter: "ath" };
+        const filterCategories = await categoriesServics.getCategories(
+          query,
+          userRole,
+        );
+        expect(filterCategories.data[0].title).toBe("math");
+        expect(filterCategories.data).toHaveLength(1);
+      });
     });
 
-    it("should return empty array when there is no data", async () => {
-      await truncateAllTables(db);
-      const categories = await categoriesServics.getCategories(query, userRole);
+    describe("when there is no data", () => {
+      it("returns empty array", async () => {
+        await truncateAllTables(db);
+        const categories = await categoriesServics.getCategories(
+          query,
+          userRole,
+        );
 
-      expect(categories.data).toHaveLength(0);
-      expect(categories.data).toBeDefined();
-    });
-
-    it("should sort data by default when no query params are provided", async () => {
-      query = {};
-      const historyCategory = categoryFactory.build({ title: "history" });
-      const biologyCategory = categoryFactory.build({ title: "biology" });
-      const mathCategory = categoryFactory.build({ title: "math" });
-      await db
-        .insert(categories)
-        .values([historyCategory, biologyCategory, mathCategory]);
-      const sortedCategories = await categoriesServics.getCategories(
-        query,
-        userRole,
-      );
-
-      expect(sortedCategories.data[0].title).toBe(biologyCategory.title);
-    });
-
-    it("should apply filters when the request provides one", async () => {
-      query = { filter: "ath" };
-      const filterCategories = await categoriesServics.getCategories(
-        query,
-        userRole,
-      );
-      expect(filterCategories.data[0].title).toBe("math");
-      expect(filterCategories.data).toHaveLength(1);
+        expect(categories.data).toHaveLength(0);
+        expect(categories.data).toBeDefined();
+      });
     });
   });
 });

@@ -1,12 +1,8 @@
-import {
-  createUserFactory,
-  UserWithCredentials,
-} from "test/factory/user.factory";
 import { DatabasePg } from "../../src/common";
 import { INestApplication } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { sql } from "drizzle-orm";
-import { UserRole } from "src/users/schemas/user-roles";
+import { UserWithCredentials } from "test/factory/user.factory";
 import request from "supertest";
 
 type CamelToSnake<T extends string, P extends string = ""> = string extends T
@@ -56,18 +52,7 @@ export async function truncateTables(
   }
 }
 
-export async function createUserByRole(
-  role: UserRole,
-  userFactory: ReturnType<typeof createUserFactory>,
-) {
-  const testPassword = "password";
-
-  return await userFactory
-    .withCredentials({ password: testPassword })
-    .create({ role });
-}
-
-export async function authAsAndSetCookie(
+export async function cookieFor(
   user: UserWithCredentials,
   app: INestApplication<any>,
 ) {

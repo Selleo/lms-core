@@ -49,11 +49,7 @@ export class CategoriesService {
 
       const dynamicQuery = queryDB.$dynamic();
 
-      const paginatedQuery = addPagination({
-        dynamicQuery,
-        page,
-        perPage,
-      });
+      const paginatedQuery = addPagination(dynamicQuery, page, perPage);
 
       const data = await paginatedQuery;
 
