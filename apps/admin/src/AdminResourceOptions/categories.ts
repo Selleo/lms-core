@@ -172,6 +172,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         icon: "Archive",
         isAccessible: ({ record }) => !record?.params.archived,
         isVisible: true,
+        variant: "danger",
       },
       unarchive: {
         actionType: "record",
@@ -181,6 +182,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         icon: "Archive",
         isAccessible: ({ record }) => record?.params.archived,
         isVisible: true,
+        variant: "info",
       },
       new: {
         before: [beforeCreate],
