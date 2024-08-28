@@ -1,5 +1,3 @@
-import { AllCategoriesResponse } from "src/categories/schemas/category.schema";
-
 type TProps = {
   page: number;
   perPage: number;
@@ -8,9 +6,5 @@ type TProps = {
 
 export const DEFAULT_PAGE_SIZE = 20;
 
-export const addPagination = async ({
-  queryDB,
-  page,
-  perPage,
-}: TProps): Promise<AllCategoriesResponse> =>
+export const addPagination = <T>({ queryDB, page, perPage }: TProps): T =>
   queryDB.limit(perPage).offset((page - 1) * perPage);

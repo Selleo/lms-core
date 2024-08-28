@@ -1,4 +1,7 @@
-import { createUserFactory } from "test/factory/user.factory";
+import {
+  createUserFactory,
+  UserWithCredentials,
+} from "test/factory/user.factory";
 import { DatabasePg } from "../../src/common";
 import { INestApplication } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
@@ -53,22 +56,26 @@ export async function truncateTables(
   }
 }
 
-export async function authAs(
+export async function createUserByRole(
   role: UserRole,
   userFactory: ReturnType<typeof createUserFactory>,
-  app: INestApplication<any>,
 ) {
   const testPassword = "password";
 
-  const testUser = await userFactory
+  return await userFactory
     .withCredentials({ password: testPassword })
     .create({ role });
+}
 
+export async function authAsAndSetCookie(
+  user: UserWithCredentials,
+  app: INestApplication<any>,
+) {
   const loginResponse = await request(app.getHttpServer())
     .post("/api/auth/login")
     .send({
-      email: testUser.email,
-      password: testUser.credentials?.password,
+      email: user.email,
+      password: user.credentials?.password,
     });
 
   return loginResponse.headers["set-cookie"];

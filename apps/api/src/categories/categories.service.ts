@@ -47,7 +47,11 @@ export class CategoriesService {
         .where(filterCondition)
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField, isAdmin)));
 
-      const paginatedQuery = addPagination({ queryDB, page, perPage });
+      const paginatedQuery = addPagination<AllCategoriesResponse>({
+        queryDB,
+        page,
+        perPage,
+      });
 
       const data = await paginatedQuery;
 

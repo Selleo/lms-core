@@ -32,7 +32,7 @@ describe("CategoriesService", () => {
   });
 
   describe("getCategories", () => {
-    it("should return correct data format", async () => {
+    it("should return correct data format when the request don't provide any query params", async () => {
       userRole = UserRoles.student;
       query = {};
       const categories = await categoriesServics.getCategories(query, userRole);
@@ -44,8 +44,7 @@ describe("CategoriesService", () => {
       expect(categories.pagination.totalItems).toBeDefined();
     });
 
-    it("should get all categories with default pagination data", async () => {
-      userRole = UserRoles.student;
+    it("should get all categories with default pagination data when the request don't provide any query params", async () => {
       query = {};
       const categories = await categoriesServics.getCategories(query, userRole);
 
@@ -55,7 +54,7 @@ describe("CategoriesService", () => {
       expect(categories.pagination.totalItems).toBe(CATEGORIES_COUNT);
     });
 
-    it("should get all categories with specifed pagination data", async () => {
+    it("should get correct pagination data when the request specifies it in the query params", async () => {
       const perPage = 5;
       const page = 2,
         query = { page, perPage };
@@ -67,7 +66,7 @@ describe("CategoriesService", () => {
       expect(categories.pagination.totalItems).toBe(CATEGORIES_COUNT);
     });
 
-    it("should return empty array if no data", async () => {
+    it("should return empty array when there is no data", async () => {
       await truncateAllTables(db);
       const categories = await categoriesServics.getCategories(query, userRole);
 
@@ -75,7 +74,8 @@ describe("CategoriesService", () => {
       expect(categories.data).toBeDefined();
     });
 
-    it("should sort data by default", async () => {
+    it("should sort data by default when no query params are provided", async () => {
+      query = {};
       const historyCategory = categoryFactory.build({ title: "history" });
       const biologyCategory = categoryFactory.build({ title: "biology" });
       const mathCategory = categoryFactory.build({ title: "math" });
@@ -90,7 +90,7 @@ describe("CategoriesService", () => {
       expect(sortedCategories.data[0].title).toBe(biologyCategory.title);
     });
 
-    it("should filter works", async () => {
+    it("should apply filters when the request provides one", async () => {
       query = { filter: "ath" };
       const filterCategories = await categoriesServics.getCategories(
         query,
