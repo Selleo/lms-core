@@ -122,11 +122,11 @@ const { name } = property;
 const value = record?.params[name] || "";
 
 return (
-		<Input
-			onChange={(e) => onChange(name, e.target.value)}
-			value={value}
-		/>;
-	)
+  <Input
+   onChange={(e) => onChange(name, e.target.value)}
+   value={value}
+  />;
+ )
 };
 
 export default CustomComponent;
