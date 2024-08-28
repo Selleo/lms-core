@@ -59,6 +59,40 @@ const archiveAction = async (
   }
 };
 
+const unarchiveAction = async (
+  request: ActionRequest,
+  response: ActionResponse,
+  context: ActionContext,
+) => {
+  const { currentAdmin, record, resource } = context;
+  try {
+    if (record) {
+      if (!record.params.archived)
+        throw new Error("Record is already archived");
+
+      await resource.update(record.id(), { archived: false });
+    }
+    return {
+      record: record?.toJSON(currentAdmin),
+      notice: {
+        message: "Record has been unarchived successfully",
+        type: "success",
+      },
+      redirectUrl: context.h.resourceUrl({
+        resourceId: resource._decorated?.id() || resource.id(),
+      }),
+    };
+  } catch (error) {
+    return {
+      record: record?.toJSON(currentAdmin),
+      notice: {
+        message: `There was an error unarchiving the record:\n\n ${error.message}`,
+        type: "error",
+      },
+    };
+  }
+};
+
 const beforeCreate: Before = async (
   request: ActionRequest,
   context: ActionContext,
@@ -136,8 +170,19 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         guard: "Do you really want to archive this record?",
         handler: archiveAction,
         icon: "Archive",
-        isAccessible: true,
+        isAccessible: ({ record }) => !record?.params.archived,
         isVisible: true,
+        variant: "danger",
+      },
+      unarchive: {
+        actionType: "record",
+        component: false,
+        guard: "Do you really want to unarchive this record?",
+        handler: unarchiveAction,
+        icon: "Archive",
+        isAccessible: ({ record }) => record?.params.archived,
+        isVisible: true,
+        variant: "info",
       },
       new: {
         before: [beforeCreate],
