@@ -65,6 +65,13 @@ const beforeCreate: Before = async (
 ) => {
   const { resource } = context;
   const title = request?.payload?.title;
+
+  if (!title || title?.length < 1) {
+    throw new ValidationError({
+      title: { message: "Title is required" },
+    });
+  }
+
   const filter = new Filter({ title }, resource);
   const categories = await resource.find(filter, {});
 
@@ -88,6 +95,13 @@ const beforeUpdate: Before = async (
   const { resource } = context;
   const editingRecordId = request.params.recordId;
   const title = request?.payload?.title;
+
+  if (title?.length < 1) {
+    throw new ValidationError({
+      title: { message: "Title is required" },
+    });
+  }
+
   const filter = new Filter({ title }, resource);
   const categories = await resource.find(filter, {});
 
@@ -133,6 +147,9 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
       },
     },
     properties: {
+      title: {
+        isRequired: false,
+      },
       created_at: {
         isVisible: {
           edit: false,
@@ -150,6 +167,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         },
       },
       archived: {
+        isRequired: false,
         isVisible: {
           edit: true,
           list: false,
