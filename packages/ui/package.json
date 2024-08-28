@@ -22,7 +22,7 @@
   "scripts": {
     "lint": "eslint . --max-warnings 0",
     "build": "tsup",
-    "dev": "npx tailwindcss -i ./src/index.css -o ../../apps/admin/public/global.css --watch && tsup --watch",
+    "dev": "tsup --watch",
     "clean": "rm -rf dist"
   },
   "devDependencies": {
@@ -30,23 +30,24 @@
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "@turbo/gen": "^1.12.4",
-    "@types/babel-plugin-macros": "^3.1.3",
-    "@types/babel__core": "^7.20.5",
     "@types/eslint": "^8.56.5",
     "@types/node": "20.5.0",
     "@types/react": "^18.2.61",
     "@types/react-dom": "^18.2.19",
     "autoprefixer": "^10.4.19",
     "esbuild": "^0.23.1",
+    "esbuild-plugin-polyfill-node": "^0.3.0",
     "eslint": "^8.57.0",
     "postcss": "^8.4.38",
     "react": "^18.3.1",
+    "rollup-plugin-polyfill-node": "^0.13.0",
     "tailwindcss": "^3.4.4",
     "tailwindcss-classnames": "^3.1.0",
     "tsup": "^8.2.4",
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.408.0",

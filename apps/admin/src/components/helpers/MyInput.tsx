@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { BasePropertyProps } from "adminjs";
 import { Input } from "@repo/ui";
 
@@ -11,12 +11,12 @@ const MyInput = ({ property, record, onChange }: SelectComponentProps) => {
   const value = record?.params[name] || "";
 
   return (
-    <>
-      <Input
-        onChange={(e: any) => onChange(name, e.target.value)}
-        value={value}
-      />
-    </>
+    <Input
+      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+        onChange(name, e.target.value)
+      }
+      value={value}
+    />
   );
 };
 
