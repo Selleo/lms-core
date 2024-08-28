@@ -59,7 +59,7 @@ const archiveAction = async (
   }
 };
 
-const beforeCreateHook: Before = async (
+const beforeCreate: Before = async (
   request: ActionRequest,
   context: ActionContext,
 ) => {
@@ -67,11 +67,37 @@ const beforeCreateHook: Before = async (
   const title = request?.payload?.title;
   const filter = new Filter({ title }, resource);
   const categories = await resource.find(filter, {});
+
   const isTitleExist = categories.some(
     (category) => category.params.title.toLowerCase() === title.toLowerCase(),
   );
 
   if (isTitleExist) {
+    throw new ValidationError({
+      title: { message: `Title: ${title} already exists` },
+    });
+  }
+
+  return request;
+};
+
+const beforeUpdate: Before = async (
+  request: ActionRequest,
+  context: ActionContext,
+) => {
+  const { resource } = context;
+  const editingRecordId = request.params.recordId;
+  const title = request?.payload?.title;
+  const filter = new Filter({ title }, resource);
+  const categories = await resource.find(filter, {});
+
+  const isTitleExistInDB = categories.some(
+    (category) =>
+      category.params.title.toLowerCase() === title.toLowerCase() &&
+      category.id() !== editingRecordId,
+  );
+
+  if (isTitleExistInDB) {
     throw new ValidationError({
       title: { message: `Title: ${title} already exists` },
     });
@@ -100,7 +126,10 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         isVisible: true,
       },
       new: {
-        before: [beforeCreateHook],
+        before: [beforeCreate],
+      },
+      edit: {
+        before: [beforeUpdate],
       },
     },
     properties: {
