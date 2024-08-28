@@ -15,13 +15,13 @@ export default defineConfig({
   entry: ["src/index.ts"],
   format: ["cjs", "esm"],
   dts: true,
-  splitting: false,
-  sourcemap: true,
   clean: true,
   treeshake: true,
   minify: true,
-  external: ["react"],
   esbuildPlugins: [tailwindPlugin],
+  outDir: "dist",
+  external: ["react"],
+  noExternal: ["fs", "path", "url"],
   onSuccess:
-    "postcss src/index.css -o dist/global.css --config postcss.config.cjs",
+    "postcss src/global.css -o dist/global.css --config postcss.config.cjs",
 });
