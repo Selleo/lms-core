@@ -3,7 +3,11 @@ import { ComponentLoader } from "adminjs";
 interface ComponentsList {
   [adminComponent: string]: string;
 }
+/*
 
+ * This is a list of our own components that will be completed on other branches, and it is used to replace the default components in AdminJS.
+
+ */
 export const componentsList: ComponentsList = {
   // LoggedIn: "custom/LoggedIn",
   // Sidebar: "custom/Sidebar",
