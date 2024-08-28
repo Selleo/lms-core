@@ -1,22 +1,26 @@
-import React from "react";
+import React, { ChangeEvent, InputHTMLAttributes } from "react";
 import { BasePropertyProps } from "adminjs";
-import { Input } from "@repo/ui";
+import { Input as RepoInput } from "@repo/ui";
 
 interface SelectComponentProps extends BasePropertyProps {
   onChange: (propertyOrRecord: string, value: string) => void;
 }
 
+const Input: React.FC<InputHTMLAttributes<HTMLInputElement>> = (props) => {
+  return <RepoInput {...props} />;
+};
+
 const MyInput = ({ property, record, onChange }: SelectComponentProps) => {
-  const { name } = property;
-  const value = record?.params[name] || "";
+  const { name }: { name: string } = property;
+  const value: string = record?.params[name] || "";
 
   return (
-    <>
-      <Input
-        onChange={(e: any) => onChange(name, e.target.value)}
-        value={value}
-      />
-    </>
+    <Input
+      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+        onChange(name, e.target.value)
+      }
+      value={value}
+    />
   );
 };
 
