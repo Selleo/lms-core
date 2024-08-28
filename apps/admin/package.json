@@ -15,7 +15,7 @@
     "@adminjs/design-system": "^4.1.1",
     "@adminjs/express": "^6.1.0",
     "@adminjs/sql": "^2.2.6",
-    "@babel/plugin-syntax-import-assertions": "^7.24.7",
+    "@repo/ui": "workspace:*",
     "@sinclair/typebox": "^0.32.34",
     "@types/bcrypt": "^5.0.2",
     "adminjs": "^7.8.11",
@@ -28,8 +28,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",
-    "tslib": "^2.6.3",
-    "@repo/ui": "workspace:*"
+    "tslib": "^2.6.3"
   },
   "devDependencies": {
     "@types/connect-pg-simple": "^7.0.3",

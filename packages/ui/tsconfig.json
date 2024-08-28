@@ -18,7 +18,11 @@
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "types": ["node", "react"]
+    "types": ["node", "react"],
+    "declarationMap": true,
+    "outDir": "dist",
+    "rootDir": "src",
+    "sourceMap": true
   },
   "exclude": ["node_modules", "dist"]
 }

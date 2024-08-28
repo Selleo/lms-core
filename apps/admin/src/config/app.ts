@@ -18,10 +18,13 @@ import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
 import { Components, componentLoader } from "../components/components.js";
-import * as url from "url";
 import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
+import { getGlobalCSS } from "@repo/ui";
+import { writeFile } from "fs/promises";
+import { fileURLToPath } from "url";
 
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const authenticate = async (
   email: string,
@@ -81,6 +84,12 @@ export class AdminApp {
     AdminJS.registerAdapter({ Database, Resource });
 
     this.app.use(express.static(path.join(__dirname, "../../public")));
+
+    const globalCSS = getGlobalCSS();
+
+    const targetCssPath = path.join(process.cwd(), "public/global.css");
+
+    writeFile(targetCssPath, globalCSS);
 
     const admin = new AdminJS({
       resources: [
@@ -184,12 +193,10 @@ export class AdminApp {
         secret: env.SESSION_SECRET,
         cookie: {
           httpOnly: true,
-          secure: true,
         },
         name: "adminjs",
       },
     );
-    admin.watch();
 
     this.app.use(admin.options.rootPath, adminRouter);
     this.app.get(admin.options.rootPath, (req, res) => {
