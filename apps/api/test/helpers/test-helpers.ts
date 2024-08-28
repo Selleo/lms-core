@@ -1,6 +1,9 @@
 import { DatabasePg } from "../../src/common";
+import { INestApplication } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { sql } from "drizzle-orm";
+import { UserWithCredentials } from "test/factory/user.factory";
+import request from "supertest";
 
 type CamelToSnake<T extends string, P extends string = ""> = string extends T
   ? string
@@ -47,4 +50,18 @@ export async function truncateTables(
   for (const table of tables) {
     await connection.execute(sql.raw(`TRUNCATE TABLE "${table}" CASCADE;`));
   }
+}
+
+export async function cookieFor(
+  user: UserWithCredentials,
+  app: INestApplication<any>,
+) {
+  const loginResponse = await request(app.getHttpServer())
+    .post("/api/auth/login")
+    .send({
+      email: user.email,
+      password: user.credentials?.password,
+    });
+
+  return loginResponse.headers["set-cookie"];
 }
