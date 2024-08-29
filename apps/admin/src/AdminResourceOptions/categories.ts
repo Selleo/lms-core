@@ -7,7 +7,7 @@ import {
   ValidationError,
 } from "adminjs";
 import { Components } from "../components/index.js";
-import { archiveActions } from "./common/archiveActions.js";
+import { archiveActions } from "./common/archivingActions.js";
 
 const excludeNotActiveCategories: Before = async (request) => {
   const { query = {} } = request;

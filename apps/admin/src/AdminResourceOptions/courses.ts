@@ -1,5 +1,5 @@
 import { Before, ResourceOptions } from "adminjs";
-import { archiveActions } from "./common/archiveActions.js";
+import { archiveActions } from "./common/archivingActions.js";
 
 const excludeNotActiveCourses: Before = async (request) => {
   const { query = {} } = request;
