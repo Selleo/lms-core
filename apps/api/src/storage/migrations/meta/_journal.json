@@ -150,6 +150,13 @@
       "breakpoints": true
     },
     {
+      "idx": 21,
+      "version": "7",
+      "when": 1724880779842,
+      "tag": "0021_change_tables_semantics",
+      "breakpoints": true
+    },
+    {
       "idx": 22,
       "version": "7",
       "when": 1724924728037,
