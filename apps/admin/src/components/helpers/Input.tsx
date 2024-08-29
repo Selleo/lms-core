@@ -1,17 +1,17 @@
 import React, { ChangeEvent } from "react";
 import { BasePropertyProps } from "adminjs";
-import { Input } from "@repo/ui";
+import { Input as BaseInput } from "@repo/ui";
 
 interface SelectComponentProps extends BasePropertyProps {
   onChange: (propertyOrRecord: string, value: string) => void;
 }
 
-const MyInput = ({ property, record, onChange }: SelectComponentProps) => {
+const Input = ({ property, record, onChange }: SelectComponentProps) => {
   const { name } = property;
   const value = record?.params[name] || "";
 
   return (
-    <Input
+    <BaseInput
       onChange={(e: ChangeEvent<HTMLInputElement>) =>
         onChange(name, e.target.value)
       }
@@ -20,4 +20,4 @@ const MyInput = ({ property, record, onChange }: SelectComponentProps) => {
   );
 };
 
-export default MyInput;
+export default Input;

@@ -18,7 +18,6 @@ import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
 import { Components, componentLoader } from "../components/components.js";
-import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
 import { getGlobalCSS } from "@repo/ui";
 import { writeFile } from "fs/promises";
 import { fileURLToPath } from "url";

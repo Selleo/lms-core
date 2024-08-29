@@ -520,7 +520,7 @@
                   "type": "string"
                 },
                 {
-                  "const": "archivedAt",
+                  "const": "archived",
                   "type": "string"
                 },
                 {
@@ -532,7 +532,7 @@
                   "type": "string"
                 },
                 {
-                  "const": "-archivedAt",
+                  "const": "-archived",
                   "type": "string"
                 }
               ]
@@ -985,10 +985,10 @@
                 "title": {
                   "type": "string"
                 },
-                "archivedAt": {
+                "archived": {
                   "anyOf": [
                     {
-                      "type": "string"
+                      "type": "boolean"
                     },
                     {
                       "type": "null"
@@ -1009,7 +1009,7 @@
               "required": [
                 "id",
                 "title",
-                "archivedAt",
+                "archived",
                 "createdAt"
               ]
             }
