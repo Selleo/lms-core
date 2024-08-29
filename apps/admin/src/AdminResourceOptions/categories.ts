@@ -1,9 +1,11 @@
 import {
-  Before,
-  ResourceWithOptions,
+  ActionContext,
   ActionRequest,
   ActionResponse,
-  ActionContext,
+  Before,
+  Filter,
+  ResourceWithOptions,
+  ValidationError,
 } from "adminjs";
 import { Components } from "../components/components.js";
 
@@ -57,6 +59,101 @@ const archiveAction = async (
   }
 };
 
+const unarchiveAction = async (
+  request: ActionRequest,
+  response: ActionResponse,
+  context: ActionContext,
+) => {
+  const { currentAdmin, record, resource } = context;
+  try {
+    if (record) {
+      if (!record.params.archived)
+        throw new Error("Record is already archived");
+
+      await resource.update(record.id(), { archived: false });
+    }
+    return {
+      record: record?.toJSON(currentAdmin),
+      notice: {
+        message: "Record has been unarchived successfully",
+        type: "success",
+      },
+      redirectUrl: context.h.resourceUrl({
+        resourceId: resource._decorated?.id() || resource.id(),
+      }),
+    };
+  } catch (error) {
+    return {
+      record: record?.toJSON(currentAdmin),
+      notice: {
+        message: `There was an error unarchiving the record:\n\n ${error.message}`,
+        type: "error",
+      },
+    };
+  }
+};
+
+const beforeCreate: Before = async (
+  request: ActionRequest,
+  context: ActionContext,
+) => {
+  const { resource } = context;
+  const title = request?.payload?.title;
+
+  if (!title || title?.length < 1) {
+    throw new ValidationError({
+      title: { message: "Title is required" },
+    });
+  }
+
+  const filter = new Filter({ title }, resource);
+  const categories = await resource.find(filter, {});
+
+  const isTitleExist = categories.some(
+    (category) => category.params.title.toLowerCase() === title.toLowerCase(),
+  );
+
+  if (isTitleExist) {
+    throw new ValidationError({
+      title: { message: `Title: ${title} already exists` },
+    });
+  }
+
+  return request;
+};
+
+const beforeUpdate: Before = async (
+  request: ActionRequest,
+  context: ActionContext,
+) => {
+  const { resource } = context;
+  const editingRecordId = request.params.recordId;
+  const title = request?.payload?.title;
+
+  if (title?.length < 1) {
+    throw new ValidationError({
+      title: { message: "Title is required" },
+    });
+  }
+
+  const filter = new Filter({ title }, resource);
+  const categories = await resource.find(filter, {});
+
+  const isTitleExistInDB = categories.some(
+    (category) =>
+      category.params.title.toLowerCase() === title.toLowerCase() &&
+      category.id() !== editingRecordId,
+  );
+
+  if (isTitleExistInDB) {
+    throw new ValidationError({
+      title: { message: `Title: ${title} already exists` },
+    });
+  }
+
+  return request;
+};
+
 export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
   options: {
     actions: {
@@ -73,11 +170,31 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         guard: "Do you really want to archive this record?",
         handler: archiveAction,
         icon: "Archive",
-        isAccessible: true,
+        isAccessible: ({ record }) => !record?.params.archived,
         isVisible: true,
+        variant: "danger",
+      },
+      unarchive: {
+        actionType: "record",
+        component: false,
+        guard: "Do you really want to unarchive this record?",
+        handler: unarchiveAction,
+        icon: "Archive",
+        isAccessible: ({ record }) => record?.params.archived,
+        isVisible: true,
+        variant: "info",
+      },
+      new: {
+        before: [beforeCreate],
+      },
+      edit: {
+        before: [beforeUpdate],
       },
     },
     properties: {
+      title: {
+        isRequired: false,
+      },
       created_at: {
         isVisible: {
           edit: false,
@@ -95,6 +212,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         },
       },
       archived: {
+        isRequired: false,
         isVisible: {
           edit: true,
           list: false,

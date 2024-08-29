@@ -6,8 +6,17 @@ import bcrypt from "bcrypt";
 import Connect from "connect-pg-simple";
 import express from "express";
 import session from "express-session";
+import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
+import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
 import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
+import { filesConfigOptions } from "../AdminResourceOptions/files.js";
+import { lessonFilesConfigOptions } from "../AdminResourceOptions/lesson-files.js";
+import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lesson-questions.js";
+import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
+import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
+import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
+import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
 import { Components, componentLoader } from "../components/components.js";
@@ -99,6 +108,48 @@ export class AdminApp {
         {
           resource: this.db.getResource("credentials"),
           ...credentialsConfigOptions,
+        },
+        {
+          resource: this.db.getResource("courses"),
+          options: {
+            ...coursesConfigOptions,
+          },
+        },
+        {
+          resource: this.db.getResource("files"),
+          options: {
+            ...filesConfigOptions,
+          },
+        },
+        {
+          resource: this.db.getResource("lesson_files"),
+          options: {
+            ...lessonFilesConfigOptions,
+          },
+        },
+        {
+          resource: this.db.getResource("lessons"),
+          options: {
+            ...lessonsConfigOptions,
+          },
+        },
+        {
+          resource: this.db.getResource("questions"),
+          options: {
+            ...questionsConfigOptions,
+          },
+        },
+        {
+          resource: this.db.getResource("lesson_questions"),
+          options: {
+            ...lessonQuestionsConfigOptions,
+          },
+        },
+        {
+          resource: this.db.getResource("text_blocks"),
+          options: {
+            ...textBlocksConfigOptions,
+          },
         },
       ],
       dashboard: {

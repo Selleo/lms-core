@@ -90,56 +90,70 @@
       "idx": 12,
       "version": "7",
       "when": 1724669576591,
-      "tag": "0012_add_lessons_table",
+      "tag": "0012_create_lessons_table",
       "breakpoints": true
     },
     {
       "idx": 13,
       "version": "7",
       "when": 1724669732030,
-      "tag": "0013_add_conversations",
+      "tag": "0013_create_conversation_tables",
       "breakpoints": true
     },
     {
       "idx": 14,
       "version": "7",
       "when": 1724669864706,
-      "tag": "0014_add_questions_table",
+      "tag": "0014_create_questions_table",
       "breakpoints": true
     },
     {
       "idx": 15,
       "version": "7",
       "when": 1724670061241,
-      "tag": "0015_add_answer_tables",
+      "tag": "0015_create_answer_tables",
       "breakpoints": true
     },
     {
       "idx": 16,
       "version": "7",
       "when": 1724670570371,
-      "tag": "0016_add_files_tables",
+      "tag": "0016_create_files_tables",
       "breakpoints": true
     },
     {
       "idx": 17,
       "version": "7",
       "when": 1724670631054,
-      "tag": "0017_add_text_block_tables",
+      "tag": "0017_create_text_block_tables",
       "breakpoints": true
     },
     {
       "idx": 18,
       "version": "7",
       "when": 1724670950596,
-      "tag": "0018_lesson_items_order_table",
+      "tag": "0018_create_lesson_items_table",
       "breakpoints": true
     },
     {
       "idx": 19,
       "version": "7",
       "when": 1724671005137,
-      "tag": "0019_notifications_table",
+      "tag": "0019_create_notifications_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1724762327936,
+      "tag": "0020_create_courses",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1724880779842,
+      "tag": "0021_change_tables_semantics",
       "breakpoints": true
     }
   ]
