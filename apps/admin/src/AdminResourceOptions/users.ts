@@ -20,7 +20,9 @@ const customBefore: Before = (request) => {
 };
 
 export const usersConfigOptions: ResourceOptions = {
-  filterProperties: ["first_name", "last_name", "email", "status"],
+  filterProperties: ["first_name", "last_name", "email", "status", "role"],
+  showProperties: ["first_name", "last_name", "email", "role", "status"],
+  listProperties: ["first_name", "last_name", "email", "role", "status"],
   properties: {
     ...setColumnsPosition(["first_name", "last_name", "email"]),
     created_at: {
@@ -52,6 +54,15 @@ export const usersConfigOptions: ResourceOptions = {
         { value: "admin", label: "Admin" },
         { value: "tutor", label: "Tutor" },
       ],
+      components: {
+        edit: Components.Select,
+      },
+      props: {
+        availableValues: [
+          { value: "true", label: "Active" },
+          { value: "false", label: "Inactive" },
+        ],
+      },
     },
     status: {
       type: "boolean",
