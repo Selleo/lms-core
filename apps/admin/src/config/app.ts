@@ -153,7 +153,7 @@ export class AdminApp {
       dashboard: {
         component: Components.Dashboard,
       },
-      rootPath: "/",
+      rootPath: "",
       componentLoader,
       assets: {
         styles: ["/global.css"],

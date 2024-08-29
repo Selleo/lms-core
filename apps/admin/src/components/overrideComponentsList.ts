@@ -10,12 +10,8 @@ interface ComponentsList {
  */
 export const componentsList: ComponentsList = {
   // LoggedIn: "custom/LoggedIn",
-  // Sidebar: "custom/Sidebar",
-  // SidebarResourceSection: "custom/SidebarResourceSection",
-  // SidebarFooter: "custom/SidebarFooter",
-  // SidebarBranding: "custom/SidebarBranding",
+  Sidebar: "custom/Sidebar",
   // TopBar: "custom/TopBar",
-  // StyledBackButton: "custom/StyledBackButton",
   // ActionHeader: "custom/ActionHeader",
   // Login: "custom/Login",
   // AuthenticationBackgroundComponent: "custom/AuthenticationBackgroundComponent",

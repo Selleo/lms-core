@@ -12,6 +12,7 @@
     "lint-tsc": "tsc --noEmit && eslint \"{src,apps,libs,test}/**/*.ts\""
   },
   "dependencies": {
+    "@repo/ui": "workspace:*",
     "@adminjs/design-system": "^4.1.1",
     "@adminjs/express": "^6.1.0",
     "@adminjs/sql": "^2.2.6",
@@ -25,6 +26,7 @@
     "express": "^4.18.2",
     "express-formidable": "^1.2.0",
     "express-session": "^1.18.0",
+    "lucide-react": "^0.408.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.25.1",
