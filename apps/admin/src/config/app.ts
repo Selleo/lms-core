@@ -149,7 +149,7 @@ export class AdminApp {
 
     // allows express to parse X-Forwarded-Proto header (if set by the reverse proxy: Caddy, ALB etc.),
     // this is needed for the secure cookies to work
-    this.app.set('trust proxy', true); 
+    this.app.set("trust proxy", true);
     this.app.get("/admin/healthcheck", (_req, res) => {
       res.send("OK").status(200);
     });
