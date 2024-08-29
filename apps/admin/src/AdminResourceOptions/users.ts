@@ -23,17 +23,17 @@ export const usersConfigOptions: ResourceOptions = {
   properties: {
     first_name: {
       components: {
-        edit: Components.MyInput,
+        edit: Components.Input,
       },
     },
     last_name: {
       components: {
-        edit: Components.MyInput,
+        edit: Components.Input,
       },
     },
     email: {
       components: {
-        edit: Components.MyInput,
+        edit: Components.Input,
       },
     },
     created_at: {

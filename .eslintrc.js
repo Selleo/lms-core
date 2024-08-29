@@ -7,13 +7,4 @@ module.exports = {
   parserOptions: {
     project: true,
   },
-
-  settings: {
-    "import/resolver": {
-      // alias: {
-      //   map: [["@ui", "./packages/ui/src/components/ui"]],
-      //   extensions: [".js", ".jsx", ".ts", ".tsx"],
-      // },
-    },
-  },
 };

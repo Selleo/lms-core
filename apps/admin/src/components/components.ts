@@ -7,14 +7,8 @@ import {
 const componentLoader = new ComponentLoader();
 
 const singleComponents = {
-  MyInput: componentLoader.add("MyInput", "./helpers/MyInput"),
+  Input: componentLoader.add("Input", "./helpers/Input"),
   Select: componentLoader.add("Select", "./helpers/Select"),
-};
-
-const pagesComponents = {
-  // Table: componentLoader.add("Table", "./Table"),
-  // ShowPage: componentLoader.add("ShowPage", "./ShowPage"),
-  // EditPage: componentLoader.add("EditPage", "./EditPage"),
 };
 
 // componentLoader.override(adminJS Component Name, path to custom component)
@@ -22,7 +16,6 @@ componentLoaderOverride(componentsList, componentLoader);
 
 const Components = {
   ...singleComponents,
-  ...pagesComponents,
   ArchiveFilter: componentLoader.add(
     "ArchiveFilter",
     "./filters/ArchiveFilter",
