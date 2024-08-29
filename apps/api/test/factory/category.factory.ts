@@ -16,7 +16,7 @@ export const createCategoryFactory = (db: DatabasePg) => {
       return inserted;
     });
 
-    const randomHex = Math.floor(Math.random() * 1000000).toString(16);
+    const randomHex = Math.floor(Math.random() * 100000000).toString(16);
 
     return {
       id: faker.string.uuid(),

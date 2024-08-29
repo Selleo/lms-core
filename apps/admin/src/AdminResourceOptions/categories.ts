@@ -39,6 +39,12 @@ const beforeCreate: Before = async (
     });
   }
 
+  if (title?.length >= 100) {
+    throw new ValidationError({
+      title: { message: "Title must be no more than 100 characters" },
+    });
+  }
+
   const filter = new Filter({ title }, resource);
   const categories = await resource.find(filter, {});
 
@@ -66,6 +72,12 @@ const beforeUpdate: Before = async (
   if (title?.length < 1) {
     throw new ValidationError({
       title: { message: "Title is required" },
+    });
+  }
+
+  if (title?.length >= 100) {
+    throw new ValidationError({
+      title: { message: "Title must be no more than 100 characters" },
     });
   }
 
