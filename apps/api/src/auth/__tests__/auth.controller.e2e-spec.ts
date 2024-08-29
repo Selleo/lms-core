@@ -21,7 +21,7 @@ describe("AuthController (e2e)", () => {
     userFactory = createUserFactory(db);
   });
 
-  describe("POST /auth/register", () => {
+  describe("POST /api/auth/register", () => {
     it("should register a new user", async () => {
       const user = await userFactory
         .withCredentials({ password: "password123" })
@@ -60,7 +60,7 @@ describe("AuthController (e2e)", () => {
     });
   });
 
-  describe("POST /auth/login", () => {
+  describe("POST /api/auth/login", () => {
     it("should login and return user data with cookies", async () => {
       const user = await userFactory
         .withCredentials({
@@ -95,7 +95,7 @@ describe("AuthController (e2e)", () => {
     });
   });
 
-  describe("POST /auth/logout", () => {
+  describe("POST /api/auth/logout", () => {
     it("should clear token cookies for a logged-in user", async () => {
       let accessToken = "";
 
@@ -141,7 +141,7 @@ describe("AuthController (e2e)", () => {
     });
   });
 
-  describe("POST /auth/refresh", () => {
+  describe("POST /api/auth/refresh", () => {
     it("should refresh tokens", async () => {
       const user = await userFactory.build();
       const password = "password123";
@@ -188,7 +188,7 @@ describe("AuthController (e2e)", () => {
     });
   });
 
-  describe("GET /auth/current-user", () => {
+  describe("GET /api/auth/current-user", () => {
     it("should return current user data for authenticated user", async () => {
       let accessToken = "";
 

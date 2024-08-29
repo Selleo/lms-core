@@ -2,6 +2,7 @@ name: Backend Pull Request Check
 
 env:
   HUSKY: 0
+  # environment variables for testing
   JWT_SECRET: "test_secret"
   JWT_REFRESH_SECRET: "test_refresh"
   JWT_EXPIRATION_TIME: "15min"
@@ -9,7 +10,7 @@ env:
   EMAIL_ADAPTER: "mailhog"
   DATABASE_URL: ""
   SMTP_HOST: ""
-  SMTP_PORT: ""
+  SMTP_PORT: "1025"
   SMTP_USER: ""
   SMTP_PASSWORD: ""
   AWS_REGION: ""

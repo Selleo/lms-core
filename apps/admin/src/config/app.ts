@@ -142,12 +142,14 @@ export class AdminApp {
     const sessionStore = new ConnectSession({
       conObject: {
         connectionString: env.DATABASE_URL,
-        ssl: process.env.NODE_ENV === "production",
       },
       tableName: "session",
       createTableIfMissing: true,
     });
 
+    // allows express to parse X-Forwarded-Proto header (if set by the reverse proxy: Caddy, ALB etc.),
+    // this is needed for the secure cookies to work
+    this.app.set("trust proxy", true);
     this.app.get("/admin/healthcheck", (_req, res) => {
       res.send("OK").status(200);
     });
@@ -167,6 +169,7 @@ export class AdminApp {
         secret: env.SESSION_SECRET,
         cookie: {
           httpOnly: true,
+          secure: true,
         },
         name: "adminjs",
       },
