@@ -11,7 +11,10 @@ const singleComponents = {
   Select: componentLoader.add("Select", "./helpers/Select"),
 };
 
-// componentLoader.override(adminJS Component Name, path to custom component)
+/**
+    @description componentLoader.override(adminJS Component Name, path to custom component)
+*/
+
 componentLoaderOverride(componentsList, componentLoader);
 
 const Components = {

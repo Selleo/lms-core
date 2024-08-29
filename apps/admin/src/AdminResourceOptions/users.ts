@@ -20,6 +20,8 @@ const customBefore: Before = (request) => {
 
 export const usersConfigOptions: ResourceOptions = {
   filterProperties: ["first_name", "last_name", "email", "status"],
+  showProperties: ["first_name", "last_name", "email", "role", "status"],
+  listProperties: ["first_name", "last_name", "email", "role", "status"],
   properties: {
     first_name: {
       components: {

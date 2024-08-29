@@ -21,6 +21,7 @@ import { Components, componentLoader } from "../components/components.js";
 import { getGlobalCSS } from "@repo/ui";
 import { writeFile } from "fs/promises";
 import { fileURLToPath } from "url";
+import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
