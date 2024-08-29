@@ -29,6 +29,6 @@ export const timestamps = {
 export const archived = boolean("archived").default(false).notNull();
 
 export const Status = {
-  draft: "draft",
-  published: "published",
+  draft: "Draft",
+  published: "Published",
 } as const;
