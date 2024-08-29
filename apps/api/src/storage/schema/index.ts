@@ -57,7 +57,7 @@ export const courses = pgTable("courses", {
   title: varchar("title", { length: 100 }).notNull(),
   description: varchar("description", { length: 1000 }),
   imageUrl: varchar("image_url"),
-  status: varchar("status").notNull().default("draft"),
+  state: varchar("state").notNull().default("draft"),
   priceInCents: integer("price_in_cents").notNull().default(0),
   authorId: uuid("author_id")
     .references(() => users.id)
