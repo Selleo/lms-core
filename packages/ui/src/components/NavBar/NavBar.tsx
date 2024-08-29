@@ -1,5 +1,5 @@
 import { LucideProps } from "lucide-react";
-import { cn } from "../../../lib/utils.js";
+import { cn } from "../../lib/utils.js";
 import { MenuItem } from "./MenuItem.js";
 
 interface MenuItemChildren {
@@ -26,20 +26,21 @@ export function NavBar({ menuItems, isVisible, isNarrowWindow }: NavBarProps) {
     return null;
   }
 
-  const containerClasses = isNarrowWindow
-    ? `absolute transform transition-transform duration-300 ${
-        isVisible ? "translate-x-0 z-50" : "-translate-x-full"
-      }`
-    : "relative";
-
   return (
     <div
-      className={`${containerClasses} top-0 left-0 w-fit h-full bg-white shadow-md`}
+      className={cn(
+        `top-0 left-0 w-fit h-full bg-white shadow-md`,
+        isNarrowWindow
+          ? `absolute transform transition-transform duration-300 ${
+              isVisible ? "translate-x-0 z-50" : "-translate-x-full"
+            }`
+          : "relative"
+      )}
     >
       <div
-        className={cn(
+        className={
           "w-52 h-full bg-muted/40 overflow-y-auto overflow-x-hidden flex flex-col"
-        )}
+        }
       >
         <nav className="flex-grow mt-20 text-base">
           <span className="block py-2 font-medium text-gray-600 capitalize pl-5">
