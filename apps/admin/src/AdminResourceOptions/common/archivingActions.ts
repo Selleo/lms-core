@@ -1,4 +1,4 @@
-import { ActionContext, ActionRequest, ActionResponse } from "adminjs";
+import { Action, ActionContext, ActionRequest, ActionResponse } from "adminjs";
 
 const archiveAction = async (
   request: ActionRequest,
@@ -66,7 +66,9 @@ const unarchiveAction = async (
   }
 };
 
-export const archiveActions = {
+export const archivingActions: {
+  [key: string]: Partial<Action<ActionResponse>>;
+} = {
   archive: {
     actionType: "record",
     component: false,

@@ -1,12 +1,19 @@
 import { Before, ResourceOptions } from "adminjs";
-import { archiveActions } from "./common/archivingActions.js";
+import { archivingActions } from "./common/archivingActions.js";
+import { Components } from "../components/index.js";
 
 const excludeNotActiveCourses: Before = async (request) => {
   const { query = {} } = request;
+
+  const mappedStatusFilter =
+    query["filters.status"] === "true" ? "true" : "false";
+
   const newQuery: { [key: string]: "true" | "false" } = {
     ...query,
-    "filters.archived": query["filters.archived"] === "true" ? "true" : "false",
+    "filters.archived": mappedStatusFilter,
   };
+
+  delete newQuery["filters.status"];
   request.query = newQuery;
 
   return request;
@@ -21,7 +28,7 @@ export const coursesConfigOptions: ResourceOptions = {
       isAccessible: false,
       isVisible: false,
     },
-    ...archiveActions,
+    ...archivingActions,
   },
   filterProperties: ["status", "category_id", "archived"],
   properties: {
@@ -69,13 +76,13 @@ export const coursesConfigOptions: ResourceOptions = {
       },
       isSortable: true,
     },
-    status: {
+    state: {
       position: 5,
       isVisible: {
         list: true,
         filter: true,
         show: true,
-        edit: false,
+        edit: true,
       },
       isSortable: true,
       availableValues: [
@@ -83,19 +90,27 @@ export const coursesConfigOptions: ResourceOptions = {
         { value: "published", label: "Published" },
       ],
     },
+    status: {
+      components: {
+        list: Components.CategoriesListShow,
+        show: Components.CategoriesListShow,
+        filter: Components.StatusFilter,
+      },
+      isVisible: {
+        edit: false,
+        list: true,
+        show: true,
+        filter: true,
+      },
+    },
     archived: {
-      position: 6,
+      isRequired: false,
       isVisible: {
         edit: true,
         list: false,
         show: true,
-        filter: true,
+        filter: false,
       },
-      isDisabled: true,
-      availableValues: [
-        { value: "true", label: "Yes" },
-        { value: "false", label: "No" },
-      ],
       isSortable: false,
     },
     image_url: {
@@ -110,6 +125,9 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     author_id: {
       position: 10,
+      components: {
+        list: Components.AuthorId,
+      },
       isVisible: {
         edit: true,
         list: true,

@@ -1,6 +1,6 @@
 {
-  "id": "b307165b-bef9-41d6-bef5-631966140e23",
-  "prevId": "48398d29-682f-4621-990f-ad7254fece9d",
+  "id": "53967d3a-b3da-439f-8e1d-0fc76b711819",
+  "prevId": "b307165b-bef9-41d6-bef5-631966140e23",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -219,8 +219,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "status": {
-          "name": "status",
+        "state": {
+          "name": "state",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true,
