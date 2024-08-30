@@ -1,28 +1,8 @@
 {
-  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts"],
   "extends": "@repo/typescript-config/react-library.json",
   "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"]
-    },
-    "esModuleInterop": true,
-    "declaration": true,
-    "moduleResolution": "NodeNext",
-    "module": "NodeNext",
-    "target": "ES2020",
-    "lib": ["ES2020", "DOM"],
-    "jsx": "react-jsx",
-    "strict": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "types": ["node", "react"],
-    "declarationMap": true,
-    "outDir": "dist",
-    "rootDir": "src",
-    "sourceMap": true
+    "outDir": "dist"
   },
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

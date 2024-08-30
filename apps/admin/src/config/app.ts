@@ -1,4 +1,3 @@
-import path from "path";
 import AdminJSExpress, { AuthenticationContext } from "@adminjs/express";
 import { Database, Resource } from "@adminjs/sql";
 import AdminJS from "adminjs";
@@ -6,6 +5,7 @@ import bcrypt from "bcrypt";
 import Connect from "connect-pg-simple";
 import express from "express";
 import session from "express-session";
+import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
 import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
 import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
 import { filesConfigOptions } from "../AdminResourceOptions/files.js";
@@ -15,16 +15,9 @@ import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
 import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
 import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
+import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
-import { Components, componentLoader } from "../components/components.js";
-import { getGlobalCSS } from "@repo/ui";
-import { writeFile } from "fs/promises";
-import { fileURLToPath } from "url";
-import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const authenticate = async (
   email: string,
@@ -82,14 +75,6 @@ export class AdminApp {
 
   async init() {
     AdminJS.registerAdapter({ Database, Resource });
-
-    this.app.use(express.static(path.join(__dirname, "../../public")));
-
-    const globalCSS = getGlobalCSS();
-
-    const targetCssPath = path.join(process.cwd(), "public/global.css");
-
-    writeFile(targetCssPath, globalCSS);
 
     const admin = new AdminJS({
       resources: [
@@ -150,17 +135,9 @@ export class AdminApp {
           },
         },
       ],
-      dashboard: {
-        component: Components.Dashboard,
-      },
-      rootPath: "/admin",
       componentLoader,
-      assets: {
-        styles: ["/global.css"],
-      },
+      rootPath: "/admin",
     });
-
-    admin.watch();
 
     const ConnectSession = Connect(session);
     const sessionStore = new ConnectSession({
@@ -199,10 +176,13 @@ export class AdminApp {
       },
     );
 
+    admin.watch();
+
     this.app.use(admin.options.rootPath, adminRouter);
     this.app.get(admin.options.rootPath, (req, res) => {
       res.redirect(`/resources/users`);
     });
+
     this.app.listen(8888, () => {
       console.log(
         `AdminJS started on https://admin.lms.localhost${admin.options.rootPath} or http://localhost:8888${admin.options.rootPath}`,
