@@ -6,7 +6,7 @@ import {
   ResourceWithOptions,
   ValidationError,
 } from "adminjs";
-import { Components } from "../components/index.js";
+import { Components } from "../components/components.js";
 import { archiveActions } from "./common/archivingActions.js";
 
 const excludeNotActiveCategories: Before = async (request) => {
