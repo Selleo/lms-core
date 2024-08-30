@@ -1,5 +1,6 @@
 import { Before, ResourceOptions } from "adminjs";
-import { Components } from "../components/components.js";
+import { Components } from "../components/index.js";
+import { setColumnsPosition } from "../utils/getColumnsPosition.js";
 
 const customBefore: Before = (request) => {
   const { query = {} } = request;
@@ -20,24 +21,8 @@ const customBefore: Before = (request) => {
 
 export const usersConfigOptions: ResourceOptions = {
   filterProperties: ["first_name", "last_name", "email", "status"],
-  showProperties: ["first_name", "last_name", "email", "role", "status"],
-  listProperties: ["first_name", "last_name", "email", "role", "status"],
   properties: {
-    first_name: {
-      components: {
-        edit: Components.Input,
-      },
-    },
-    last_name: {
-      components: {
-        edit: Components.Input,
-      },
-    },
-    email: {
-      components: {
-        edit: Components.Input,
-      },
-    },
+    ...setColumnsPosition(["first_name", "last_name", "email"]),
     created_at: {
       isVisible: {
         edit: false,
@@ -67,9 +52,6 @@ export const usersConfigOptions: ResourceOptions = {
         { value: "admin", label: "Admin" },
         { value: "tutor", label: "Tutor" },
       ],
-      components: {
-        edit: Components.Select,
-      },
     },
     status: {
       type: "boolean",

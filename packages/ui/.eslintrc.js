@@ -1,4 +1,4 @@
-/** @type {import('eslint').Linter.Config} */
+/** @type {import("eslint").Linter.Config} */
 module.exports = {
   root: true,
   extends: ["@repo/eslint-config/react-internal.js"],
@@ -7,10 +7,4 @@ module.exports = {
     project: "./tsconfig.lint.json",
     tsconfigRootDir: __dirname,
   },
-  ignorePatterns: [
-    ".eslintrc.cjs",
-    "postcss.config.cjs",
-    "tailwind.config.js",
-    "**/*.d.ts",
-  ],
 };
