@@ -66,7 +66,7 @@ const unarchiveAction = async (
   }
 };
 
-export const archiveActions: {
+export const archivingActions: {
   [key: string]: Partial<Action<ActionResponse>>;
 } = {
   archive: {

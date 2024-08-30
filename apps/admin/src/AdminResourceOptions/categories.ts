@@ -7,7 +7,7 @@ import {
   ValidationError,
 } from "adminjs";
 import { Components } from "../components/index.js";
-import { archiveActions } from "./common/archivingActions.js";
+import { archivingActions } from "./common/archivingActions.js";
 
 const excludeNotActiveCategories: Before = async (request) => {
   const { query = {} } = request;
@@ -109,7 +109,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         isAccessible: false,
         isVisible: false,
       },
-      ...archiveActions,
+      ...archivingActions,
       new: {
         before: [beforeCreate],
       },
