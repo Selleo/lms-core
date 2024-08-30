@@ -125,6 +125,9 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     author_id: {
       position: 10,
+      components: {
+        list: Components.AuthorId,
+      },
       isVisible: {
         edit: true,
         list: true,

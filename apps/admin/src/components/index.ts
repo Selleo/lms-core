@@ -17,6 +17,7 @@ const Components = {
     "./show/CategoriesListShow",
   ),
   StatusFilter: componentLoader.add("StatusFilter", "./filters/ArchiveFilter"),
+  AuthorId: componentLoader.add("AuthorId", "./custom/AuthorId"),
 };
 
 export { componentLoader, Components };
