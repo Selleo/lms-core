@@ -1,6 +1,6 @@
 import { Before, ResourceOptions } from "adminjs";
 import { archiveActions } from "./common/archivingActions.js";
-import { Components } from "../components/index.js";
+import { Components } from "../components/components.js";
 
 const excludeNotActiveCourses: Before = async (request) => {
   const { query = {} } = request;
