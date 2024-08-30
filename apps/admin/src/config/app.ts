@@ -153,7 +153,7 @@ export class AdminApp {
       dashboard: {
         component: Components.Dashboard,
       },
-      rootPath: "/",
+      rootPath: "/admin",
       componentLoader,
       assets: {
         styles: ["/global.css"],
@@ -193,6 +193,7 @@ export class AdminApp {
         secret: env.SESSION_SECRET,
         cookie: {
           httpOnly: true,
+          secure: true,
         },
         name: "adminjs",
       },
