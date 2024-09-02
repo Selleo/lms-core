@@ -1,10 +1,14 @@
 import { ResourceOptions } from "adminjs";
+import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 
 export const textBlocksConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   properties: {
     body: {
       type: "richtext",
+    },
+    status: {
+      availableValues: [...stateOptions],
     },
     created_at: {
       position: 7,

@@ -1,11 +1,15 @@
 import { ResourceOptions } from "adminjs";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
+import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
   ...noParentNavigation,
   properties: {
     description: {
       type: "richtext",
+    },
+    status: {
+      availableValues: [...stateOptions],
     },
     created_at: {
       position: 7,
