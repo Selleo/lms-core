@@ -134,6 +134,9 @@ export class AdminApp {
             ...textBlocksConfigOptions,
           },
         },
+        {
+          resource: this.db.getResource("lesson_items_order"),
+        },
       ],
       componentLoader,
       rootPath: "/admin",
