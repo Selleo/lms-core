@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.624.0",
+    "@faker-js/faker": "^8.4.1",
     "@knaadh/nestjs-drizzle-postgres": "^1.0.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.3",
@@ -38,6 +39,7 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/schedule": "^4.1.0",
     "@nestjs/swagger": "^7.4.0",
     "@nestjs/terminus": "^10.2.3",
     "@repo/email-templates": "workspace:*",
@@ -46,9 +48,11 @@
     "bcrypt": "^5.1.1",
     "cookie": "^0.6.0",
     "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.5",
     "drizzle-kit": "^0.22.8",
     "drizzle-orm": "^0.31.2",
     "drizzle-typebox": "^0.1.1",
+    "faker": "link:@types/@faker-js/faker",
     "lodash": "^4.17.21",
     "nanoid": "3.3.7",
     "nestjs-typebox": "3.0.0-next.8",
@@ -60,10 +64,7 @@
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
     "ts-pattern": "^5.2.0",
-    "uuid": "^10.0.0",
-    "faker": "link:@types/@faker-js/faker",
-    "dotenv": "^16.4.5",
-    "@faker-js/faker": "^8.4.1"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
