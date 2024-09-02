@@ -13,6 +13,7 @@ import { lessonFilesConfigOptions } from "../AdminResourceOptions/lesson-files.j
 import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lesson-questions.js";
 import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
 import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
+import { studentsConfigOptions } from "../AdminResourceOptions/students.js";
 import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { componentLoader } from "../components/index.js";
@@ -82,6 +83,12 @@ export class AdminApp {
           resource: this.db.getResource("users"),
           options: {
             ...usersConfigOptions,
+          },
+        },
+        {
+          resource: this.db.getResource("users"),
+          options: {
+            ...studentsConfigOptions,
           },
         },
         {

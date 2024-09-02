@@ -2,36 +2,22 @@ import { Before, ResourceOptions } from "adminjs";
 import { Components } from "../components/index.js";
 import { setColumnsPosition } from "../utils/getColumnsPosition.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
-import { adminLikeRoles } from "./common/consts/selectOptions/adminLikeRoles.js";
+import { nonAdminRoles } from "./common/consts/selectOptions/nonAdminRoles.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 
-export const filterNonStudentUsers: Before = async (request) => {
+export const filterStudentUsers: Before = async (request) => {
   const { query = {} } = request;
   const newQuery = { ...query };
 
-  if (newQuery["filters.role"]) {
-    const roleFilter = newQuery["filters.role"].split(",");
-    const uniqueRoleFilter = [...new Set(roleFilter)];
-
-    const nonStudentRoles = uniqueRoleFilter.filter(
-      (role) => role !== "student",
-    );
-
-    if (nonStudentRoles.length > 0) {
-      newQuery["filters.role"] = nonStudentRoles.join(",");
-    } else {
-      newQuery["filters.role"] = "admin,tutor";
-    }
-  } else {
-    newQuery["filters.role"] = "admin";
-  }
+  newQuery["filters.role"] = "student";
 
   request.query = newQuery;
   return request;
 };
 
-export const usersConfigOptions: ResourceOptions = {
-  filterProperties: ["first_name", "last_name", "email", "status", "role"],
+export const studentsConfigOptions: ResourceOptions = {
+  id: "students",
+  filterProperties: ["first_name", "last_name", "email", "status"],
   showProperties: ["first_name", "last_name", "email", "role", "status"],
   listProperties: ["first_name", "last_name", "email", "role", "status"],
   properties: {
@@ -61,7 +47,7 @@ export const usersConfigOptions: ResourceOptions = {
       },
     },
     role: {
-      availableValues: [...adminLikeRoles],
+      availableValues: [...nonAdminRoles],
     },
     status: {
       type: "boolean",
@@ -91,7 +77,7 @@ export const usersConfigOptions: ResourceOptions = {
   },
   actions: {
     list: {
-      before: [statusFilterBeforeAction, filterNonStudentUsers],
+      before: [statusFilterBeforeAction, filterStudentUsers],
     },
   },
 };
