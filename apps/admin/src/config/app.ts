@@ -141,6 +141,10 @@ export class AdminApp {
             ...lessonItemsOptions,
           },
         },
+        {
+          resource: this.db.getResource("create_tokens"),
+          options: {},
+        },
       ],
       componentLoader,
       rootPath: "/admin",
