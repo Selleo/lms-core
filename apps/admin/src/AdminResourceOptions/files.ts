@@ -1,3 +1,5 @@
 import { ResourceOptions } from "adminjs";
 
-export const filesConfigOptions: ResourceOptions = {};
+export const filesConfigOptions: ResourceOptions = {
+  parent: "lesson-items",
+};

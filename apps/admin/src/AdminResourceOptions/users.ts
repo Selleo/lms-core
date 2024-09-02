@@ -4,8 +4,10 @@ import { setColumnsPosition } from "../utils/getColumnsPosition.js";
 import { adminLikeRoles } from "./common/consts/selectOptions/adminLikeRoles.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
+import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 
 export const usersConfigOptions: ResourceOptions = {
+  ...noParentNavigation,
   filterProperties: ["first_name", "last_name", "email", "status", "role"],
   showProperties: ["first_name", "last_name", "email", "role", "status"],
   listProperties: ["first_name", "last_name", "email", "role", "status"],

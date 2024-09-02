@@ -99,6 +99,12 @@ export class AdminApp {
           },
         },
         {
+          resource: this.db.getResource("lessons"),
+          options: {
+            ...lessonsConfigOptions,
+          },
+        },
+        {
           resource: this.db.getResource("files"),
           options: {
             ...filesConfigOptions,
@@ -108,12 +114,6 @@ export class AdminApp {
           resource: this.db.getResource("lesson_files"),
           options: {
             ...lessonFilesConfigOptions,
-          },
-        },
-        {
-          resource: this.db.getResource("lessons"),
-          options: {
-            ...lessonsConfigOptions,
           },
         },
         {

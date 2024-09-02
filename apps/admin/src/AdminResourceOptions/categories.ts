@@ -10,6 +10,7 @@ import { Components } from "../components/index.js";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 
 const beforeCreate: Before = async (
   request: ActionRequest,
@@ -86,6 +87,7 @@ const beforeUpdate: Before = async (
 
 export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
   options: {
+    ...noParentNavigation,
     actions: {
       list: {
         before: [statusFilterBeforeAction],
