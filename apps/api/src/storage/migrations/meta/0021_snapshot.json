@@ -1,5 +1,5 @@
 {
-  "id": "b307165b-bef9-41d6-bef5-631966140e23",
+  "id": "fdccb738-47f6-4442-90f4-9a98e3a1d6b3",
   "prevId": "48398d29-682f-4621-990f-ad7254fece9d",
   "version": "7",
   "dialect": "postgresql",
@@ -291,6 +291,69 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
+    "public.create_tokens": {
+      "name": "create_tokens",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "create_token": {
+          "name": "create_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expiry_date": {
+          "name": "expiry_date",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "create_tokens_user_id_users_id_fk": {
+          "name": "create_tokens_user_id_users_id_fk",
+          "tableFrom": "create_tokens",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "public.credentials": {
       "name": "credentials",
       "schema": "",
@@ -386,7 +449,7 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "default": "'Draft'"
+          "default": "'draft'"
         },
         "author_id": {
           "name": "author_id",

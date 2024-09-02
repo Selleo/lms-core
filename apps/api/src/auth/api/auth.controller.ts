@@ -12,10 +12,14 @@ import { AuthGuard } from "@nestjs/passport";
 import { Static } from "@sinclair/typebox";
 import { Request, Response } from "express";
 import { Validate } from "nestjs-typebox";
-import { baseResponse, BaseResponse, nullResponse } from "src/common";
+import {
+  baseResponse,
+  BaseResponse,
+  nullResponse,
+  type UUIDType,
+} from "src/common";
 import { Public } from "src/common/decorators/public.decorator";
 import { RefreshTokenGuard } from "src/common/guards/refresh-token.guard";
-import { UUIDType } from "src/common/index";
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
 import { AuthService } from "../auth.service";
 import {
@@ -31,6 +35,10 @@ import {
   ResetPasswordBody,
   resetPasswordSchema,
 } from "../schemas/reset-password.schema";
+import {
+  type CreatePasswordBody,
+  createPasswordSchema,
+} from "../schemas/create-password.schema";
 
 @Controller("auth")
 export class AuthController {
@@ -133,6 +141,18 @@ export class AuthController {
   ): Promise<BaseResponse<{ message: string }>> {
     await this.authService.forgotPassword(data.email);
     return new BaseResponse({ message: "Password reset link sent" });
+  }
+
+  @Public()
+  @Post("create-password")
+  @Validate({
+    request: [{ type: "body", schema: createPasswordSchema }],
+  })
+  async createPassword(
+    @Body() data: CreatePasswordBody,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.authService.createPassword(data.createToken, data.password);
+    return new BaseResponse({ message: "Password created successfully" });
   }
 
   @Public()

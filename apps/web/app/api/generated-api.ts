@@ -37,7 +37,8 @@ export interface RegisterResponse {
     email: string;
     firstName: string;
     lastName: string;
-    role: "admin" | "student" | "tutor";
+    role: string;
+    archived: boolean;
   };
 }
 
@@ -60,7 +61,8 @@ export interface LoginResponse {
     email: string;
     firstName: string;
     lastName: string;
-    role: "admin" | "student" | "tutor";
+    role: string;
+    archived: boolean;
   };
 }
 
@@ -76,7 +78,8 @@ export interface CurrentUserResponse {
     email: string;
     firstName: string;
     lastName: string;
-    role: "admin" | "student" | "tutor";
+    role: string;
+    archived: boolean;
   };
 }
 
@@ -86,6 +89,16 @@ export interface ForgotPasswordBody {
    * @minLength 1
    */
   email: string;
+}
+
+export interface CreatePasswordBody {
+  /**
+   * @minLength 8
+   * @maxLength 64
+   */
+  password: string;
+  /** @minLength 1 */
+  createToken: string;
 }
 
 export interface ResetPasswordBody {
@@ -106,7 +119,8 @@ export interface GetUsersResponse {
     email: string;
     firstName: string;
     lastName: string;
-    role: "admin" | "student" | "tutor";
+    role: string;
+    archived: boolean;
   }[];
 }
 
@@ -118,7 +132,8 @@ export interface GetUserByIdResponse {
     email: string;
     firstName: string;
     lastName: string;
-    role: "admin" | "student" | "tutor";
+    role: string;
+    archived: boolean;
   };
 }
 
@@ -135,7 +150,8 @@ export interface UpdateUserResponse {
     email: string;
     firstName: string;
     lastName: string;
-    role: "admin" | "student" | "tutor";
+    role: string;
+    archived: boolean;
   };
 }
 
@@ -158,8 +174,11 @@ export type DeleteUserResponse = null;
 
 export interface GetAllCategoriesResponse {
   data: {
+    /** @format uuid */
     id: string;
     title: string;
+    archived: boolean | null;
+    createdAt: string | null;
   }[];
   pagination: {
     totalItems: number;
@@ -403,6 +422,21 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name AuthControllerCreatePassword
+     * @request POST:/api/auth/create-password
+     */
+    authControllerCreatePassword: (data: CreatePasswordBody, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/auth/create-password`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name AuthControllerResetPassword
      * @request POST:/api/auth/reset-password
      */
@@ -595,38 +629,15 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     categorieControllerGetAllCategories: (
       query?: {
         filter?: string;
+        /** @min 1 */
         page?: number;
         perPage?: number;
-        sort?: string;
+        sort?: "title" | "createdAt" | "archived" | "-title" | "-createdAt" | "-archived";
       },
       params: RequestParams = {},
     ) =>
       this.request<GetAllCategoriesResponse, any>({
         path: `/api/categories`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-  };
-  categories = {
-    /**
-     * No description
-     *
-     * @name CategorieControllerGetAllCategories
-     * @request GET:/categories
-     */
-    categorieControllerGetAllCategories: (
-      query?: {
-        filter?: string;
-        page?: number;
-        perPage?: number;
-        sort?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAllCategoriesResponse, any>({
-        path: `/categories`,
         method: "GET",
         query: query,
         format: "json",

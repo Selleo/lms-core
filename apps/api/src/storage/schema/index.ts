@@ -39,6 +39,19 @@ export const categories = pgTable("categories", {
   archived,
 });
 
+export const createTokens = pgTable("create_tokens", {
+  ...id,
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  createToken: text("create_token").notNull(),
+  expiryDate: timestamp("expiry_date", {
+    precision: 3,
+    withTimezone: true,
+  }).notNull(),
+  ...timestamps,
+});
+
 export const resetTokens = pgTable("reset_tokens", {
   ...id,
   userId: uuid("user_id")
