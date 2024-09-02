@@ -1,28 +1,14 @@
-import { Before, ResourceOptions } from "adminjs";
-import { archivingActions } from "./common/archivingActions.js";
+import { ResourceOptions } from "adminjs";
+import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { Components } from "../components/index.js";
-
-const excludeNotActiveCourses: Before = async (request) => {
-  const { query = {} } = request;
-
-  const mappedStatusFilter =
-    query["filters.status"] === "true" ? "true" : "false";
-
-  const newQuery: { [key: string]: "true" | "false" } = {
-    ...query,
-    "filters.archived": mappedStatusFilter,
-  };
-
-  delete newQuery["filters.status"];
-  request.query = newQuery;
-
-  return request;
-};
+import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
+import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 
 export const coursesConfigOptions: ResourceOptions = {
   actions: {
     list: {
-      before: [excludeNotActiveCourses],
+      before: [statusFilterBeforeAction],
     },
     delete: {
       isAccessible: false,
@@ -85,16 +71,16 @@ export const coursesConfigOptions: ResourceOptions = {
         edit: true,
       },
       isSortable: true,
-      availableValues: [
-        { value: "draft", label: "Draft" },
-        { value: "published", label: "Published" },
-      ],
+      availableValues: [...stateOptions],
     },
     status: {
       components: {
         list: Components.CategoriesListShow,
         show: Components.CategoriesListShow,
-        filter: Components.StatusFilter,
+        filter: Components.FilterSelect,
+      },
+      props: {
+        availableValues: [...statusOptions],
       },
       isVisible: {
         edit: false,
