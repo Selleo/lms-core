@@ -4,8 +4,10 @@ import { Components } from "../components/index.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
+import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 
 export const coursesConfigOptions: ResourceOptions = {
+  ...noParentNavigation,
   actions: {
     list: {
       before: [statusFilterBeforeAction],
