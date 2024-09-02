@@ -1,26 +1,14 @@
-import { Before, ResourceOptions } from "adminjs";
+import { ResourceOptions } from "adminjs";
 import { Components } from "../components/index.js";
 import { setColumnsPosition } from "../utils/getColumnsPosition.js";
-
-const customBefore: Before = (request) => {
-  const { query = {} } = request;
-
-  const mappedStatusFilter =
-    query["filters.status"] === "true" ? "true" : "false";
-
-  const newQuery: { [key: string]: "true" | "false" } = {
-    ...query,
-    "filters.archived": mappedStatusFilter,
-  };
-
-  delete newQuery["filters.status"];
-  request.query = newQuery;
-
-  return request;
-};
+import { adminLikeRoles } from "./common/consts/selectOptions/adminLikeRoles.js";
+import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 
 export const usersConfigOptions: ResourceOptions = {
-  filterProperties: ["first_name", "last_name", "email", "status"],
+  filterProperties: ["first_name", "last_name", "email", "status", "role"],
+  showProperties: ["first_name", "last_name", "email", "role", "status"],
+  listProperties: ["first_name", "last_name", "email", "role", "status"],
   properties: {
     ...setColumnsPosition(["first_name", "last_name", "email"]),
     created_at: {
@@ -48,10 +36,7 @@ export const usersConfigOptions: ResourceOptions = {
       },
     },
     role: {
-      availableValues: [
-        { value: "admin", label: "Admin" },
-        { value: "tutor", label: "Tutor" },
-      ],
+      availableValues: [...adminLikeRoles],
     },
     status: {
       type: "boolean",
@@ -64,7 +49,10 @@ export const usersConfigOptions: ResourceOptions = {
       components: {
         list: Components.StatusListValue,
         show: Components.ArchiveShow,
-        filter: Components.ArchiveFilter,
+        filter: Components.FilterSelect,
+      },
+      props: {
+        availableValues: [...statusOptions],
       },
     },
     archived: {
@@ -78,7 +66,7 @@ export const usersConfigOptions: ResourceOptions = {
   },
   actions: {
     list: {
-      before: [customBefore],
+      before: [statusFilterBeforeAction],
     },
   },
 };

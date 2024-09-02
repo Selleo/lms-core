@@ -7,24 +7,9 @@ import {
   ValidationError,
 } from "adminjs";
 import { Components } from "../components/index.js";
-import { archivingActions } from "./common/archivingActions.js";
-
-const excludeNotActiveCategories: Before = async (request) => {
-  const { query = {} } = request;
-
-  const mappedStatusFilter =
-    query["filters.status"] === "true" ? "true" : "false";
-
-  const newQuery: { [key: string]: "true" | "false" } = {
-    ...query,
-    "filters.archived": mappedStatusFilter,
-  };
-
-  delete newQuery["filters.status"];
-  request.query = newQuery;
-
-  return request;
-};
+import { archivingActions } from "./common/actions/custom/archivingActions.js";
+import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
+import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 
 const beforeCreate: Before = async (
   request: ActionRequest,
@@ -103,7 +88,7 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
   options: {
     actions: {
       list: {
-        before: [excludeNotActiveCategories],
+        before: [statusFilterBeforeAction],
       },
       delete: {
         isAccessible: false,
@@ -158,7 +143,10 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
         components: {
           list: Components.CategoriesListShow,
           show: Components.CategoriesListShow,
-          filter: Components.StatusFilter,
+          filter: Components.FilterSelect,
+        },
+        props: {
+          availableValues: [...statusOptions],
         },
         isVisible: {
           edit: false,
