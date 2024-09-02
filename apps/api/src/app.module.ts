@@ -16,6 +16,7 @@ import { EmailModule } from "./common/emails/emails.module";
 import { TestConfigModule } from "./test-config/test-config.module";
 import { StagingGuard } from "./common/guards/staging.guard";
 import { HealthModule } from "./health/health.module";
+import { ScheduleModule } from "@nestjs/schedule";
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { HealthModule } from "./health/health.module";
     EmailModule,
     TestConfigModule,
     CategoriesModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
   providers: [
