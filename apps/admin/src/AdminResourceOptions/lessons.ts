@@ -1,12 +1,16 @@
-import { archivingActions } from "./common/archivingActions.js";
+import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { Components } from "../components/index.js";
-import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
+import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
+import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
   ...noParentNavigation,
   actions: {
+    list: {
+      before: [statusFilterBeforeAction],
+    },
     delete: {
       isAccessible: false,
       isVisible: false,
@@ -29,16 +33,13 @@ export const lessonsConfigOptions: ResourceOptions = {
         edit: true,
       },
       isSortable: true,
-      availableValues: [
-        { value: "draft", label: "Draft" },
-        { value: "published", label: "Published" },
-      ],
+      availableValues: [...stateOptions],
     },
     status: {
       components: {
         list: Components.CategoriesListShow,
         show: Components.CategoriesListShow,
-        filter: Components.StatusFilter,
+        filter: Components.FilterSelect,
       },
       isVisible: {
         edit: false,
