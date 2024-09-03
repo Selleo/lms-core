@@ -8,10 +8,7 @@ const Components = {
     "StatusListValue",
     "./custom/StatusListValue",
   ),
-  CategoriesListShow: componentLoader.add(
-    "CategoriesShow",
-    "./show/CategoriesListShow",
-  ),
+  ArchiveList: componentLoader.add("ArchiveList", "./list/ArchiveList"),
   FilterSelect: componentLoader.add("FilterSelect", "./filters/FilterSelect"),
   AuthorId: componentLoader.add("AuthorId", "./custom/AuthorId"),
   LessonItems: componentLoader.add("LessonItems", "./custom/LessonItems"),

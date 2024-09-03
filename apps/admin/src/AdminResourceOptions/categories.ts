@@ -143,8 +143,8 @@ export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
       },
       status: {
         components: {
-          list: Components.CategoriesListShow,
-          show: Components.CategoriesListShow,
+          list: Components.ArchiveList,
+          show: Components.ArchiveShow,
           filter: Components.FilterSelect,
         },
         props: {
