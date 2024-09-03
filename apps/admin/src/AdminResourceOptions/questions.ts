@@ -4,9 +4,6 @@ import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 export const questionsConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   properties: {
-    question_body: {
-      type: "richtext",
-    },
     solution_explanation: {
       type: "richtext",
     },
