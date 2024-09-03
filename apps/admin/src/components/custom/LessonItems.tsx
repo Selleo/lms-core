@@ -3,35 +3,35 @@ import { ApiClient, RecordActionResponse, ShowPropertyProps } from "adminjs";
 import React, { useEffect, useState } from "react";
 
 const LessonItems: React.FC<ShowPropertyProps> = ({ record }) => {
-  const [lessonItemsOrder, setLessonItemsOrder] = useState([]);
+  const [lessonItems, setlessonItems] = useState([]);
 
   const recordId = record.id;
   const api = new ApiClient();
 
   useEffect(() => {
-    const fetchLessonItemsOrder = async () => {
+    const fetchlessonItems = async () => {
       try {
         const response = await api.resourceAction({
-          resourceId: "lesson_items_order",
+          resourceId: "lesson_items",
           actionName: "list",
         });
         const relatedLessonItems = response.data.records.filter(
           (record: RecordActionResponse) =>
             record.params.lesson_id === recordId,
         );
-        setLessonItemsOrder(relatedLessonItems);
+        setlessonItems(relatedLessonItems);
       } catch (error) {
         console.error("Error fetching lesson items order:", error);
       }
     };
 
-    fetchLessonItemsOrder();
+    fetchlessonItems();
   }, []);
 
   return (
     <Box>
       <Label style={{ textTransform: "capitalize" }}>
-        {lessonItemsOrder?.length || 0}
+        {lessonItems?.length || 0}
       </Label>
     </Box>
   );

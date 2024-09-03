@@ -1,24 +1,24 @@
-import AdminJSExpress, { AuthenticationContext } from "@adminjs/express";
-import { Database, Resource } from "@adminjs/sql";
-import AdminJS from "adminjs";
-import bcrypt from "bcrypt";
-import Connect from "connect-pg-simple";
-import express from "express";
-import session from "express-session";
 import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
+import { componentLoader } from "../components/index.js";
 import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
 import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
+import { Database, Resource } from "@adminjs/sql";
+import { DatabaseService } from "./database.js";
+import { env } from "../env.js";
 import { filesConfigOptions } from "../AdminResourceOptions/files.js";
 import { lessonFilesConfigOptions } from "../AdminResourceOptions/lesson-files.js";
+import { lessonItemsOptions } from "../AdminResourceOptions/lessonItemsOptions.js";
 import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lesson-questions.js";
 import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
 import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
 import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
 import { usersConfigOptions } from "../AdminResourceOptions/users.js";
-import { componentLoader } from "../components/index.js";
-import { env } from "../env.js";
-import { DatabaseService } from "./database.js";
-import { lessonItemsOrderOptions } from "../AdminResourceOptions/lessonItemsOrderOptions.js";
+import AdminJS from "adminjs";
+import AdminJSExpress, { AuthenticationContext } from "@adminjs/express";
+import bcrypt from "bcrypt";
+import Connect from "connect-pg-simple";
+import express from "express";
+import session from "express-session";
 
 const authenticate = async (
   email: string,
@@ -136,9 +136,9 @@ export class AdminApp {
           },
         },
         {
-          resource: this.db.getResource("lesson_items_order"),
+          resource: this.db.getResource("lesson_items"),
           options: {
-            ...lessonItemsOrderOptions,
+            ...lessonItemsOptions,
           },
         },
       ],
