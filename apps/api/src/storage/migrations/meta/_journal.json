@@ -176,6 +176,13 @@
       "when": 1725357497347,
       "tag": "0024_add_archived_and_rename_status_in_files_questions_text_blocks",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1725370840259,
+      "tag": "0025_create_create_tokens_table",
+      "breakpoints": true
     }
   ]
 }

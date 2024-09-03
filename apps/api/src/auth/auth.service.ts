@@ -3,20 +3,32 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull, lte, sql } from "drizzle-orm";
 import { DatabasePg, UUIDType } from "src/common";
-import { credentials, resetTokens, users } from "../storage/schema";
+import {
+  createTokens,
+  credentials,
+  resetTokens,
+  users,
+} from "../storage/schema";
 import { UsersService } from "../users/users.service";
 import hashPassword from "src/common/helpers/hashPassword";
 import { EmailService } from "src/common/emails/emails.service";
-import { PasswordRecoveryEmail, WelcomeEmail } from "@repo/email-templates";
+import {
+  CreatePasswordReminderEmail,
+  PasswordRecoveryEmail,
+  WelcomeEmail,
+} from "@repo/email-templates";
 import { nanoid } from "nanoid";
 import { ResetPasswordService } from "./reset-password.service";
+import { CreatePasswordService } from "./create-password.service";
+import { CORS_ORIGIN } from "src/auth/consts";
 import { CommonUser } from "src/common/schemas/common-user.schema";
 
 @Injectable()
@@ -27,6 +39,7 @@ export class AuthService {
     private usersService: UsersService,
     private configService: ConfigService,
     private emailService: EmailService,
+    private createPasswordService: CreatePasswordService,
     private resetPasswordService: ResetPasswordService,
   ) {}
 
@@ -191,7 +204,7 @@ export class AuthService {
     const emailTemplate = new PasswordRecoveryEmail({
       email,
       name: email,
-      resetLink: `${process.env.CORS_ORIGIN}/auth/create-new-password?token=${resetToken}&email=${email}`,
+      resetLink: `${CORS_ORIGIN}/auth/create-new-password?resetToken=${resetToken}&email=${email}`,
     });
 
     await this.emailService.sendEmail({
@@ -203,10 +216,112 @@ export class AuthService {
     });
   }
 
+  public async createPassword(token: string, password: string) {
+    const createToken = await this.createPasswordService.getOneByToken(token);
+
+    const [existingUser] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.id, createToken.userId));
+
+    if (!existingUser) throw new NotFoundException("User not found");
+
+    const hashedPassword = await hashPassword(password);
+
+    await this.db
+      .insert(credentials)
+      .values({ userId: createToken.userId, password: hashedPassword });
+    await this.createPasswordService.deleteToken(token);
+  }
+
   public async resetPassword(token: string, newPassword: string) {
     const resetToken = await this.resetPasswordService.getOneByToken(token);
 
     await this.usersService.resetPassword(resetToken.userId, newPassword);
     await this.resetPasswordService.deleteToken(token);
+  }
+
+  private async fetchExpiredTokens() {
+    return this.db
+      .select({
+        userId: createTokens.userId,
+        email: users.email,
+        oldCreateToken: createTokens.createToken,
+        tokenExpiryDate: createTokens.expiryDate,
+      })
+      .from(createTokens)
+      .leftJoin(credentials, eq(createTokens.userId, credentials.userId))
+      .innerJoin(users, eq(createTokens.userId, users.id))
+      .where(
+        and(
+          isNull(credentials.userId),
+          lte(sql`DATE(${createTokens.expiryDate})`, sql`CURRENT_DATE`),
+        ),
+      );
+  }
+
+  private generateNewTokenAndEmail(email: string) {
+    const createToken = nanoid(64);
+    const emailTemplate = new CreatePasswordReminderEmail({
+      createPasswordLink: `${CORS_ORIGIN}/auth/create-new-password?createToken=${createToken}&email=${email}`,
+    });
+
+    return { createToken, emailTemplate };
+  }
+
+  private async sendEmailAndUpdateDatabase(
+    userId: string,
+    email: string,
+    oldCreateToken: string,
+    createToken: string,
+    emailTemplate: { text: string; html: string },
+    expiryDate: Date,
+  ) {
+    await this.db.transaction(async (transaction) => {
+      try {
+        await transaction.insert(createTokens).values({
+          userId,
+          createToken,
+          expiryDate,
+        });
+
+        await this.emailService.sendEmail({
+          to: email,
+          subject: "Account creation reminder",
+          text: emailTemplate.text,
+          html: emailTemplate.html,
+          from: "godfather@selleo.com",
+        });
+
+        await transaction
+          .delete(createTokens)
+          .where(eq(createTokens.createToken, oldCreateToken));
+      } catch (error) {
+        transaction.rollback();
+
+        throw error;
+      }
+    });
+  }
+
+  public async checkTokenExpiryAndSendEmail() {
+    const expiryTokens = await this.fetchExpiredTokens();
+
+    const expiryDate = new Date();
+    expiryDate.setHours(expiryDate.getHours() + 24);
+
+    expiryTokens.map(async ({ userId, email, oldCreateToken }) => {
+      const { createToken, emailTemplate } =
+        this.generateNewTokenAndEmail(email);
+
+      await this.sendEmailAndUpdateDatabase(
+        userId,
+        email,
+        oldCreateToken,
+        createToken,
+        emailTemplate,
+        expiryDate,
+      );
+    });
   }
 }

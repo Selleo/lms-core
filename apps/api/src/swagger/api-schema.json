@@ -127,6 +127,27 @@
         }
       }
     },
+    "/api/auth/create-password": {
+      "post": {
+        "operationId": "AuthController_createPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePasswordBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/auth/reset-password": {
       "post": {
         "operationId": "AuthController_resetPassword",
@@ -772,6 +793,24 @@
         },
         "required": [
           "email"
+        ]
+      },
+      "CreatePasswordBody": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "minLength": 8,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "createToken": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "password",
+          "createToken"
         ]
       },
       "ResetPasswordBody": {

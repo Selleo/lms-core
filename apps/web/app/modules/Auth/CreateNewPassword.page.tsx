@@ -37,11 +37,15 @@ const createNewPasswordSchema = z
 
 export default function CreateNewPasswordPage() {
   const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
-  const email = searchParams.get("email");
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { mutateAsync: createNewPassword } = useCreateNewPassword();
+  const resetToken = searchParams.get("resetToken");
+  const createToken = searchParams.get("createToken");
+  const email = searchParams.get("email");
+  const { mutateAsync: createNewPassword } = useCreateNewPassword({
+    isCreate: !resetToken,
+  });
+
   const {
     register,
     handleSubmit,
@@ -52,12 +56,23 @@ export default function CreateNewPasswordPage() {
   });
 
   const onSubmit = (data: ResetPasswordBody) => {
-    if (token) {
+    if (resetToken) {
       createNewPassword({
-        data: { newPassword: data.newPassword, resetToken: token },
+        data: { newPassword: data.newPassword, resetToken: resetToken },
       }).then(() => {
         toast({
           description: "Password changed successfully",
+        });
+        navigate("/auth/login");
+      });
+    }
+
+    if (createToken) {
+      createNewPassword({
+        data: { password: data.newPassword, createToken: createToken },
+      }).then(() => {
+        toast({
+          description: "Password created successfully",
         });
         navigate("/auth/login");
       });

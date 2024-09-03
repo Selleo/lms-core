@@ -8,6 +8,8 @@ import { TokenService } from "./token.service";
 import { UsersService } from "src/users/users.service";
 import { EmailModule } from "src/common/emails/emails.module";
 import { ResetPasswordService } from "./reset-password.service";
+import { CreatePasswordService } from "./create-password.service";
+import { ResendVerificationMailCron } from "src/auth/resend-verification-mail-cron";
 
 @Module({
   imports: [PassportModule, EmailModule],
@@ -18,7 +20,9 @@ import { ResetPasswordService } from "./reset-password.service";
     TokenService,
     JwtStrategy,
     LocalStrategy,
+    CreatePasswordService,
     ResetPasswordService,
+    ResendVerificationMailCron,
   ],
   exports: [],
 })
