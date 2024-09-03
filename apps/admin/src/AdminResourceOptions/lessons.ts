@@ -1,19 +1,11 @@
 import { Components } from "../components/index.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
-import {
-  ActionContext,
-  ActionRequest,
-  Before,
-  ResourceOptions,
-  ValidationError,
-} from "adminjs";
-import { StateTypes } from "./common/stateTypes.js";
-import { Components } from "../components/index.js";
-import { archivingActions } from "./common/archivingActions.js";
-import { ValidationErrors } from "./common/validationErrorsType.js";
+import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
-import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { archivingActions } from "./common/actions/custom/archivingActions.js";
+import { beforeCreateLesson } from "./common/actions/before/createLesson.js";
+import { beforeUpdateLesson } from "./common/actions/before/udpateLesson.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -26,10 +18,10 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: false,
     },
     new: {
-      before: [beforeCreate],
+      before: [beforeCreateLesson],
     },
     edit: {
-      before: [beforeUpdate],
+      before: [beforeUpdateLesson],
     },
     ...archivingActions,
   },
@@ -54,9 +46,18 @@ export const lessonsConfigOptions: ResourceOptions = {
     "status",
   ],
   properties: {
-    author_id: {
+    state: {
+      isSortable: true,
+      availableValues: [...stateOptions],
+    },
+    status: {
       components: {
-        list: Components.AuthorId,
+        list: Components.ArchiveList,
+        show: Components.ArchiveShow,
+        filter: Components.FilterSelect,
+      },
+      props: {
+        availableValues: [...statusOptions],
       },
     },
     archived: {
@@ -73,19 +74,13 @@ export const lessonsConfigOptions: ResourceOptions = {
       components: {
         list: Components.LessonItems,
       },
+      isSortable: false,
     },
-    state: {
-      availableValues: [...stateOptions],
+    created_at: {},
+    updated_at: {},
+    image_url: {
+      isSortable: false,
     },
-    status: {
-      components: {
-        list: Components.ArchiveList,
-        show: Components.ArchiveShow,
-        filter: Components.FilterSelect,
-      },
-      props: {
-        availableValues: [...statusOptions],
-      },
-    },
+    author_id: {},
   },
 };
