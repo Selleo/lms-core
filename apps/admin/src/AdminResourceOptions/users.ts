@@ -5,6 +5,7 @@ import { adminLikeRoles } from "./common/consts/selectOptions/adminLikeRoles.js"
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
+import { nonAdminRoles } from "./common/consts/selectOptions/nonAdminRoles.js";
 
 export const usersConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -38,7 +39,7 @@ export const usersConfigOptions: ResourceOptions = {
       },
     },
     role: {
-      availableValues: [...adminLikeRoles],
+      availableValues: [...adminLikeRoles, ...nonAdminRoles],
     },
     status: {
       type: "boolean",
