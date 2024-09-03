@@ -116,7 +116,7 @@ export const questions = pgTable("questions", {
   questionType: text("question_type").notNull(),
   questionBody: text("question_body").notNull(),
   solutionExplanation: text("solution_explanation").notNull(),
-  status: text("status").notNull().default(Status.draft),
+  state: text("state").notNull().default(Status.draft),
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
@@ -162,7 +162,7 @@ export const files = pgTable("files", {
   ...timestamps,
   type: text("type").notNull(),
   url: text("url").notNull(),
-  status: text("status").notNull().default(Status.draft),
+  state: text("state").notNull().default(Status.draft),
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
@@ -183,7 +183,7 @@ export const textBlocks = pgTable("text_blocks", {
   ...id,
   ...timestamps,
   body: text("body"),
-  status: text("status").notNull().default(Status.draft),
+  state: text("state").notNull().default(Status.draft),
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
