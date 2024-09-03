@@ -78,7 +78,7 @@ export const lessons = pgTable("lessons", {
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
-  status: text("status").notNull().default(Status.draft),
+  state: text("state").notNull().default(Status.draft),
   archived,
 });
 

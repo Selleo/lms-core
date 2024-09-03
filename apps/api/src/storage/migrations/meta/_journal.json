@@ -162,6 +162,13 @@
       "when": 1724924728037,
       "tag": "0022_rename_status_to_state_in_courses",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1725270694400,
+      "tag": "0023_rename_status_to_state_in_lessons",
+      "breakpoints": true
     }
   ]
 }
