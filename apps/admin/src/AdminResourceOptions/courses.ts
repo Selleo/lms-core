@@ -18,7 +18,7 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  filterProperties: ["status", "category_id", "archived"],
+  filterProperties: ["status", "category_id", "status"],
   properties: {
     id: {
       position: 1,

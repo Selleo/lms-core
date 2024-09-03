@@ -1,6 +1,7 @@
 import React from "react";
 import { FormGroup, Label, Select } from "@adminjs/design-system";
 import { FilterPropertyProps } from "adminjs";
+import { statusOptions } from "../../AdminResourceOptions/common/consts/selectOptions/statusOptions.js";
 
 interface Option {
   value: string;
@@ -15,6 +16,7 @@ const FilterSelect = ({
 }: FilterPropertyProps) => {
   const propertyName = property.name;
   const customProps = resource.properties[propertyName].props;
+  const isStatusSelect = propertyName === "status";
 
   const handleChange = (selectedOptions: Option[]) => {
     const values = selectedOptions.map((option) => option.value).join(",");
@@ -26,7 +28,7 @@ const FilterSelect = ({
         (option: (typeof customProps.availableValues)[number]) =>
           filter[propertyName].split(",").includes(option.value),
       )
-    : [];
+    : [isStatusSelect ? statusOptions[0] : null];
 
   return (
     <FormGroup>

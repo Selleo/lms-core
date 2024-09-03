@@ -4,6 +4,7 @@ import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
+import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -25,10 +26,10 @@ export const lessonsConfigOptions: ResourceOptions = {
     "status",
     "lesson_items",
   ],
+  filterProperties: ["title", "status", "state"],
   properties: {
     state: {
       isVisible: {
-        filter: true,
         show: true,
         edit: true,
       },
@@ -41,10 +42,12 @@ export const lessonsConfigOptions: ResourceOptions = {
         show: Components.ArchiveShow,
         filter: Components.FilterSelect,
       },
+      props: {
+        availableValues: [...statusOptions],
+      },
       isVisible: {
         edit: false,
         show: true,
-        filter: true,
       },
     },
     description: {
@@ -55,7 +58,6 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: {
         edit: true,
         show: true,
-        filter: false,
       },
       isSortable: false,
     },
@@ -63,7 +65,6 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: {
         edit: false,
         show: true,
-        filter: false,
       },
       isSortable: true,
     },
@@ -74,7 +75,6 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: {
         edit: true,
         show: true,
-        filter: true,
       },
       isSortable: true,
     },
@@ -82,7 +82,6 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: {
         edit: false,
         show: true,
-        filter: false,
       },
       isSortable: false,
     },
@@ -93,7 +92,6 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: {
         edit: false,
         show: true,
-        filter: false,
       },
       isSortable: false,
     },
