@@ -1,7 +1,16 @@
-import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { Components } from "../components/index.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
-import { ResourceOptions } from "adminjs";
+import {
+  ActionContext,
+  ActionRequest,
+  Before,
+  ResourceOptions,
+  ValidationError,
+} from "adminjs";
+import { StateTypes } from "./common/stateTypes.js";
+import { Components } from "../components/index.js";
+import { archivingActions } from "./common/archivingActions.js";
+import { ValidationErrors } from "./common/validationErrorsType.js";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
@@ -15,6 +24,12 @@ export const lessonsConfigOptions: ResourceOptions = {
     delete: {
       isAccessible: false,
       isVisible: false,
+    },
+    new: {
+      before: [beforeCreate],
+    },
+    edit: {
+      before: [beforeUpdate],
     },
     ...archivingActions,
   },
