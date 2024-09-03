@@ -7,7 +7,9 @@ const ArchiveShow: React.FC<ShowPropertyProps> = ({ record, property }) => {
 
   return (
     <Box style={{ marginBottom: "24px" }}>
-      <Label style={{ textTransform: "capitalize" }}>{property.label}</Label>
+      <Label style={{ fontWeight: 300, textTransform: "capitalize" }}>
+        {property.label}
+      </Label>
       <Badge outline variant={isArchived ? "danger" : "success"}>
         {isArchived ? "Archived" : "Active"}
       </Badge>

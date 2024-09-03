@@ -77,8 +77,8 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     status: {
       components: {
-        list: Components.CategoriesListShow,
-        show: Components.CategoriesListShow,
+        list: Components.ArchiveList,
+        show: Components.ArchiveShow,
         filter: Components.FilterSelect,
       },
       props: {
