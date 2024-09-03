@@ -1,5 +1,5 @@
 {
-  "id": "48876118-c480-4666-8b90-c71d36fe8b62",
+  "id": "8ace4798-d890-46c8-ae39-a9523a92292b",
   "prevId": "655853e3-d666-4e46-a86c-b7ec54d35b23",
   "version": "7",
   "dialect": "postgresql",
@@ -423,6 +423,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "archived": {
+          "name": "archived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},
@@ -988,6 +995,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "archived": {
+          "name": "archived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},
@@ -1198,6 +1212,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
+        },
+        "archived": {
+          "name": "archived",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

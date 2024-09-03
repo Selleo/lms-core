@@ -120,6 +120,7 @@ export const questions = pgTable("questions", {
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
+  archived,
 });
 
 export const questionAnswerOptions = pgTable("question_answer_options", {
@@ -166,6 +167,7 @@ export const files = pgTable("files", {
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
+  archived,
 });
 
 export const lessonFiles = pgTable("lesson_files", {
@@ -187,6 +189,7 @@ export const textBlocks = pgTable("text_blocks", {
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
+  archived,
 });
 
 export const lessonTextBlocks = pgTable("lesson_text_blocks", {
