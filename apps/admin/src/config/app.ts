@@ -143,7 +143,13 @@ export class AdminApp {
         },
         {
           resource: this.db.getResource("create_tokens"),
-          options: {},
+          options: {
+            actions: {
+              list: {
+                isVisible: false,
+              },
+            },
+          },
         },
       ],
       componentLoader,

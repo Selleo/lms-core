@@ -10,7 +10,7 @@ import {
   ValidationError,
 } from "adminjs";
 import { nanoid } from "nanoid";
-import { sendEmail } from "src/services/email/emailService.js";
+import { sendEmail } from "../services/email/emailService.js";
 import { CreatePasswordEmail } from "@repo/email-templates";
 import { adminLikeRoles } from "./common/consts/selectOptions/adminLikeRoles.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
@@ -19,112 +19,112 @@ import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { nonAdminRoles } from "./common/consts/selectOptions/nonAdminRoles.js";
 
 const beforeUserCreate: Before = async (
-    request: ActionRequest,
-    context: ActionContext,
+  request: ActionRequest,
+  context: ActionContext,
 ) => {
-    const { resource } = context;
-    const { first_name, last_name, role, email } = request?.payload || {};
+  const { resource } = context;
+  const { first_name, last_name, role, email } = request?.payload || {};
 
-    if (!first_name) {
-        throw new ValidationError({
-            first_name: { message: "Please provide your name" },
-        });
-    }
+  if (!first_name) {
+    throw new ValidationError({
+      first_name: { message: "Please provide your name" },
+    });
+  }
 
-    if (!last_name) {
-        throw new ValidationError({
-            last_name: { message: "Please provide your last name" },
-        });
-    }
+  if (!last_name) {
+    throw new ValidationError({
+      last_name: { message: "Please provide your last name" },
+    });
+  }
 
-    if (!email) {
-        throw new ValidationError({
-            email: { message: "Please provide your email address" },
-        });
-    }
+  if (!email) {
+    throw new ValidationError({
+      email: { message: "Please provide your email address" },
+    });
+  }
 
-    if (!role) {
-        throw new ValidationError({
-            role: { message: "Please select a role" },
-        });
-    }
+  if (!role) {
+    throw new ValidationError({
+      role: { message: "Please select a role" },
+    });
+  }
 
-    const users = await resource.find(new Filter({ email }, resource), {});
-    const isUserExist = users.some(
-        ({ params: { email } }) => email.toLowerCase() === email.toLowerCase(),
-    );
+  const users = await resource.find(new Filter({ email }, resource), {});
+  const isUserExist = users.some(
+    ({ params: { email } }) => email.toLowerCase() === email.toLowerCase(),
+  );
 
-    if (isUserExist) {
-        throw new ValidationError({
-            email: { message: `User with this email address already exists` },
-        });
-    }
+  if (isUserExist) {
+    throw new ValidationError({
+      email: { message: `User with this email address already exists` },
+    });
+  }
 
-    return request;
+  return request;
 };
 
 const afterUserCreate: After<ActionResponse> = async (
-    response,
-    request: ActionRequest,
-    context: ActionContext,
+  response,
+  request: ActionRequest,
+  context: ActionContext,
 ) => {
-    const { record, _admin } = context;
+  const { record, _admin } = context;
 
-    if (record?.isValid()) {
-        const { first_name, email, role } = record.params;
+  if (record?.isValid()) {
+    const { first_name, email, role } = record.params;
 
-        try {
-            const token = nanoid(64);
-            const expiryDate = new Date();
-            expiryDate.setHours(expiryDate.getHours() + 24);
+    try {
+      const token = nanoid(64);
+      const expiryDate = new Date();
+      expiryDate.setHours(expiryDate.getHours() + 24);
 
-            const usersResource = _admin.findResource("users");
-            const user = await usersResource.find(
-                new Filter({ email }, usersResource),
-                {},
-            );
+      const usersResource = _admin.findResource("users");
+      const user = await usersResource.find(
+        new Filter({ email }, usersResource),
+        {},
+      );
 
-            const createTokensResource = _admin.findResource("create_tokens");
+      const createTokensResource = _admin.findResource("create_tokens");
 
-            await createTokensResource.create(
-                {
-                    user_id: user[0].id(),
-                    create_token: token,
-                    expiry_date: expiryDate,
-                },
-                context,
-            );
+      await createTokensResource.create(
+        {
+          user_id: user[0].id(),
+          create_token: token,
+          expiry_date: expiryDate,
+        },
+        context,
+      );
 
-            const url = `${process.env.CORS_ORIGIN}/auth/create-new-password?createToken=${token}&email=${email}`;
+      const url = `${process.env.CORS_ORIGIN}/auth/create-new-password?createToken=${token}&email=${email}`;
 
-            const { text, html } = new CreatePasswordEmail({
-                name: first_name,
-                role,
-                createPasswordLink: url,
-            });
+      const { text, html } = new CreatePasswordEmail({
+        name: first_name,
+        role,
+        createPasswordLink: url,
+      });
 
-            await sendEmail({
-                to: email,
-                subject: "Welcome to the Platform!",
-                text,
-                html,
-            });
-        } catch (error) {
-            throw new ValidationError({
-                email: { message: "Failed to send welcome email" },
-            });
-        }
+      await sendEmail({
+        to: email,
+        subject: "Welcome to the Platform!",
+        text,
+        html,
+      });
+    } catch (error) {
+      throw new ValidationError({
+        email: { message: "Failed to send welcome email" },
+      });
     }
+  }
 
-    return response;
+  return response;
 };
-
 
 export const usersConfigOptions: ResourceOptions = {
   ...noParentNavigation,
   filterProperties: ["first_name", "last_name", "email", "status", "role"],
   showProperties: ["first_name", "last_name", "email", "role", "status"],
   listProperties: ["first_name", "last_name", "email", "role", "status"],
+  editProperties: ["first_name", "last_name", "email", "role", "status"],
   properties: {
     created_at: {
       isVisible: {
@@ -149,6 +149,15 @@ export const usersConfigOptions: ResourceOptions = {
         show: true,
         filter: false,
       },
+    },
+    first_name: {
+      isRequired: false,
+    },
+    last_name: {
+      isRequired: false,
+    },
+    email: {
+      isRequired: false,
     },
     role: {
       availableValues: [...adminLikeRoles, ...nonAdminRoles],

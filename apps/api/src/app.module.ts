@@ -1,6 +1,6 @@
 import { AuthModule } from "./auth/auth.module";
 import { CategoriesModule } from "./categories/categories.module";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConditionalModule, ConfigModule, ConfigService } from "@nestjs/config";
 import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
 import { JwtModule } from "@nestjs/jwt";
 import { Module } from "@nestjs/common";
@@ -56,7 +56,10 @@ import { ScheduleModule } from "@nestjs/schedule";
     EmailModule,
     TestConfigModule,
     CategoriesModule,
-    ScheduleModule.forRoot(),
+    ConditionalModule.registerWhen(
+      ScheduleModule.forRoot(),
+      (env) => env.NODE_ENV !== "test",
+    ),
   ],
   controllers: [],
   providers: [
