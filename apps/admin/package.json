@@ -12,11 +12,12 @@
     "lint-tsc": "tsc --noEmit && eslint \"{src,apps,libs,test}/**/*.ts\""
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
     "@adminjs/design-system": "^4.1.1",
     "@adminjs/express": "^6.1.0",
+    "@adminjs/relations": "^1.1.2",
     "@adminjs/sql": "^2.2.6",
     "@babel/plugin-syntax-import-assertions": "^7.24.7",
+    "@repo/ui": "workspace:*",
     "@repo/email-templates": "workspace:*",
     "@sinclair/typebox": "^0.32.34",
     "@types/bcrypt": "^5.0.2",

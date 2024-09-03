@@ -1,24 +1,30 @@
-import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
-import { componentLoader } from "../components/index.js";
-import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
-import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
-import { Database, Resource } from "@adminjs/sql";
-import { DatabaseService } from "./database.js";
-import { env } from "../env.js";
-import { filesConfigOptions } from "../AdminResourceOptions/files.js";
-import { lessonFilesConfigOptions } from "../AdminResourceOptions/lesson-files.js";
-import { lessonItemsOptions } from "../AdminResourceOptions/lessonItemsOptions.js";
-import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lesson-questions.js";
-import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
-import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
-import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
-import { usersConfigOptions } from "../AdminResourceOptions/users.js";
-import AdminJS from "adminjs";
 import AdminJSExpress, { AuthenticationContext } from "@adminjs/express";
+import {
+  owningRelationSettingsFeature,
+  RelationType,
+} from "@adminjs/relations";
+import { Database, Resource } from "@adminjs/sql";
+import AdminJS from "adminjs";
 import bcrypt from "bcrypt";
 import Connect from "connect-pg-simple";
 import express from "express";
 import session from "express-session";
+import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
+import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
+import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
+import { filesConfigOptions } from "../AdminResourceOptions/files.js";
+import { lessonFilesConfigOptions } from "../AdminResourceOptions/lesson-files.js";
+import { lessonItemsConfigOptions } from "../AdminResourceOptions/lesson-items.js";
+import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lesson-questions.js";
+import { lessonItemsOptions } from "../AdminResourceOptions/lessonItemsOptions.js";
+import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
+import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
+import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
+import { usersConfigOptions } from "../AdminResourceOptions/users.js";
+import { componentLoader } from "../components/index.js";
+import { env } from "../env.js";
+import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
+import { DatabaseService } from "./database.js";
 
 const authenticate = async (
   email: string,
@@ -104,6 +110,12 @@ export class AdminApp {
           options: {
             ...lessonsConfigOptions,
           },
+          features: [
+            setOneToManyRelation({
+              resourceId: "lesson_items",
+              joinKey: "lesson_id",
+            }),
+          ],
         },
         {
           resource: this.db.getResource("files"),
@@ -116,6 +128,10 @@ export class AdminApp {
           options: {
             ...lessonFilesConfigOptions,
           },
+        },
+        {
+          resource: this.db.getResource("lesson_items"),
+          options: { ...lessonItemsConfigOptions },
         },
         {
           resource: this.db.getResource("questions"),
