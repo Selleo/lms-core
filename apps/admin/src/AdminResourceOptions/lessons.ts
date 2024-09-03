@@ -1,9 +1,9 @@
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { Components } from "../components/index.js";
+import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
-import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
   ...noParentNavigation,

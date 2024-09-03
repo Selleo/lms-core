@@ -18,6 +18,7 @@ import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { DatabaseService } from "./database.js";
+import { lessonItemsOrderOptions } from "../AdminResourceOptions/lessonItemsOrderOptions.js";
 
 const authenticate = async (
   email: string,
@@ -136,6 +137,9 @@ export class AdminApp {
         },
         {
           resource: this.db.getResource("lesson_items_order"),
+          options: {
+            ...lessonItemsOrderOptions,
+          },
         },
       ],
       componentLoader,
