@@ -84,6 +84,10 @@ export class AdminApp {
     AdminJS.registerAdapter({ Database, Resource });
 
     const admin = new AdminJS({
+      locale: {
+        language: "en",
+        debug: false,
+      },
       resources: [
         {
           resource: this.db.getResource("users"),
