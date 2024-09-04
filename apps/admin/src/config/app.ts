@@ -87,7 +87,9 @@ export class AdminApp {
         },
         {
           resource: this.db.getResource("categories"),
-          ...categoriesConfigOptions,
+          options: {
+            ...categoriesConfigOptions,
+          },
         },
         {
           resource: this.db.getResource("credentials"),
