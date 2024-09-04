@@ -108,9 +108,6 @@ export const categoriesConfigOptions: ResourceOptions = {
   listProperties: ["title", "created_at", "status"],
   showProperties: ["title", "created_at", "updated_at", "status"],
   properties: {
-    title: {
-      isRequired: false,
-    },
     archived: {
       isRequired: false,
     },
@@ -123,6 +120,9 @@ export const categoriesConfigOptions: ResourceOptions = {
       props: {
         availableValues: [...statusOptions],
       },
+    },
+    title: {
+      isRequired: false,
     },
   },
 };

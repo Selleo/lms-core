@@ -42,11 +42,18 @@ export const coursesConfigOptions: ResourceOptions = {
     "author_id",
     "price_in_cents",
     "created_at",
-    "created_at",
     "updated_at",
     "status",
   ],
   properties: {
+    archived: {
+      isRequired: false,
+    },
+    author_id: {
+      components: {
+        list: Components.AuthorId,
+      },
+    },
     description: {
       type: "richtext",
       props: {
@@ -65,14 +72,6 @@ export const coursesConfigOptions: ResourceOptions = {
       },
       props: {
         availableValues: [...statusOptions],
-      },
-    },
-    archived: {
-      isRequired: false,
-    },
-    author_id: {
-      components: {
-        list: Components.AuthorId,
       },
     },
   },

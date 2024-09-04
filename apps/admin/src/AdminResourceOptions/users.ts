@@ -143,13 +143,16 @@ export const usersConfigOptions: ResourceOptions = {
     "status",
   ],
   properties: {
+    archived: {
+      isRequired: false,
+    },
+    email: {
+      isRequired: false,
+    },
     first_name: {
       isRequired: false,
     },
     last_name: {
-      isRequired: false,
-    },
-    email: {
       isRequired: false,
     },
     role: {
@@ -165,9 +168,6 @@ export const usersConfigOptions: ResourceOptions = {
       props: {
         availableValues: [...statusOptions],
       },
-    },
-    archived: {
-      isRequired: false,
     },
   },
 };

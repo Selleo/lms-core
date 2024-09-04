@@ -18,22 +18,48 @@ export const lessonsConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
+  editProperties: ["title", "description", "state", "archived"],
+  filterProperties: ["title", "state", "status"],
   listProperties: [
     "title",
-    "state",
-    "created_at",
     "author_id",
-    "status",
     "lesson_items",
+    "created_at",
+    "state",
+    "status",
   ],
-  filterProperties: ["title", "status", "state"],
+  showProperties: [
+    "title",
+    "description",
+    "lesson_items",
+    "author_id",
+    "created_at",
+    "updated_at",
+    "state",
+    "status",
+  ],
   properties: {
-    state: {
-      isVisible: {
-        show: true,
-        edit: true,
+    author_id: {
+      components: {
+        list: Components.AuthorId,
       },
-      isSortable: true,
+    },
+    archived: {
+      isRequired: false,
+    },
+    description: {
+      type: "richtext",
+      props: {
+        rows: 30,
+      },
+      isSortable: false,
+    },
+    lesson_items: {
+      components: {
+        list: Components.LessonItems,
+      },
+    },
+    state: {
       availableValues: [...stateOptions],
     },
     status: {
@@ -45,55 +71,6 @@ export const lessonsConfigOptions: ResourceOptions = {
       props: {
         availableValues: [...statusOptions],
       },
-      isVisible: {
-        edit: false,
-        show: true,
-      },
-    },
-    description: {
-      type: "richtext",
-      props: {
-        rows: 30,
-      },
-      isVisible: {
-        edit: true,
-        show: true,
-      },
-      isSortable: false,
-    },
-    created_at: {
-      isVisible: {
-        edit: false,
-        show: true,
-      },
-      isSortable: true,
-    },
-    author_id: {
-      components: {
-        list: Components.AuthorId,
-      },
-      isVisible: {
-        edit: true,
-        show: true,
-      },
-      isSortable: true,
-    },
-    updated_at: {
-      isVisible: {
-        edit: false,
-        show: true,
-      },
-      isSortable: false,
-    },
-    lesson_items: {
-      components: {
-        list: Components.LessonItems,
-      },
-      isVisible: {
-        edit: false,
-        show: true,
-      },
-      isSortable: false,
     },
   },
 };
