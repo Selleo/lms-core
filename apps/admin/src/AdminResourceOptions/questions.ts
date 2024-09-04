@@ -18,13 +18,36 @@ export const questionsConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
+  editProperties: [
+    "question_type",
+    "question_body",
+    "solution_explanation",
+    "state",
+    "archived",
+  ],
+  filterProperties: ["question_type", "state", "status"],
   listProperties: ["created_at", "question_type", "state", "status"],
+  showProperties: [
+    "question_type",
+    "question_body",
+    "solution_explanation",
+    "author_id",
+    "created_at",
+    "updated_at",
+    "state",
+    "status",
+  ],
   properties: {
+    author_id: {
+      components: {
+        list: Components.AuthorId,
+      },
+    },
+    archived: {
+      isRequired: false,
+    },
     solution_explanation: {
       type: "richtext",
-    },
-    question_type: {
-      availableValues: [...questionValueOptions],
     },
     status: {
       components: {
@@ -35,29 +58,12 @@ export const questionsConfigOptions: ResourceOptions = {
       props: {
         availableValues: [...statusOptions],
       },
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: true,
-      },
     },
     state: {
       availableValues: [...stateOptions],
     },
-    created_at: {
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
-    },
-    updated_at: {
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: false,
-      },
+    question_type: {
+      availableValues: [...questionValueOptions],
     },
   },
 };
