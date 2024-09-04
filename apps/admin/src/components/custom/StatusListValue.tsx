@@ -1,10 +1,7 @@
 import React from "react";
 import { Badge } from "@adminjs/design-system";
 
-const StatusListValue = (props: any) => {
-  const { record } = props;
-  const value = record.params.archived;
-
+const StatusListValue = ({ value }: { value: string }) => {
   return (
     <Badge outline variant={value ? "danger" : "success"}>
       {value ? "Archived" : "Active"}

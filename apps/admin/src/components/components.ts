@@ -24,13 +24,13 @@ const Components = {
     "./filters/ArchiveFilter",
   ),
   ArchiveShow: componentLoader.add("ArchiveShow", "./show/ArchiveShow"),
-  StatusListValue: componentLoader.add(
-    "StatusListValue",
-    "./custom/StatusListValue",
-  ),
   CategoriesListShow: componentLoader.add(
     "CategoriesShow",
     "./show/CategoriesListShow",
+  ),
+  StatusListValue: componentLoader.add(
+    "StatusListValue",
+    "./custom/StatusListValue",
   ),
   StatusFilter: componentLoader.add("StatusFilter", "./filters/ArchiveFilter"),
   Dashboard: componentLoader.add("Dashboard", "./custom/Dashboard"),

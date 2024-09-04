@@ -1,27 +1,10 @@
-import { Before, ResourceOptions } from "adminjs";
+import { ResourceOptions } from "adminjs";
 import { Components } from "../components/components.js";
 
-const customBefore: Before = (request) => {
-  const { query = {} } = request;
-
-  const mappedStatusFilter =
-    query["filters.status"] === "true" ? "true" : "false";
-
-  const newQuery: { [key: string]: "true" | "false" } = {
-    ...query,
-    "filters.archived": mappedStatusFilter,
-  };
-
-  delete newQuery["filters.status"];
-  request.query = newQuery;
-
-  return request;
-};
-
 export const usersConfigOptions: ResourceOptions = {
-  filterProperties: ["first_name", "last_name", "email", "status"],
-  showProperties: ["first_name", "last_name", "email", "role", "status"],
-  listProperties: ["first_name", "last_name", "email", "role", "status"],
+  filterProperties: ["first_name", "last_name", "email", "archived"],
+  showProperties: ["first_name", "last_name", "email", "role", "archived"],
+  listProperties: ["first_name", "last_name", "email", "role", "archived"],
   properties: {
     first_name: {
       components: {
@@ -71,32 +54,22 @@ export const usersConfigOptions: ResourceOptions = {
         edit: Components.Select,
       },
     },
-    status: {
-      type: "boolean",
-      isVisible: {
-        list: true,
-        filter: true,
-        show: true,
-        edit: false,
+    archived: {
+      custom: {
+        label: "Status",
+        name: "archived",
+        originalValue: "archived",
       },
       components: {
         list: Components.StatusListValue,
-        show: Components.ArchiveShow,
         filter: Components.ArchiveFilter,
       },
-    },
-    archived: {
       isVisible: {
-        list: false,
+        list: true,
         filter: false,
-        show: false,
+        show: true,
         edit: true,
       },
-    },
-  },
-  actions: {
-    list: {
-      before: [customBefore],
     },
   },
 };

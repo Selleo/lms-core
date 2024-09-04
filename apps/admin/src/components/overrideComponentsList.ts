@@ -22,7 +22,7 @@ export const componentsList: ComponentsList = {
   // Footer: "custom/Footer",
   // RecordInList: "list/RecordInList",
   // RecordsTableHeader: "list/RecordsTableHeader",
-  // RecordsTable: "list/RecordsTable",
+  RecordsTable: "list/RecordsTable",
   // SelectedRecords: "list/SelectedRecords",
   // DefaultShowAction: "show/DefaultShowAction",
 };

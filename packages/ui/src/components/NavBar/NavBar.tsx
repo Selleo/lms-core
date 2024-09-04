@@ -1,6 +1,6 @@
 import { LucideProps } from "lucide-react";
-import { cn } from "../../lib/utils.js";
 import { MenuItem } from "./MenuItem.js";
+import { cn } from "@/src/lib/utils.js";
 
 interface MenuItemChildren {
   id: string | number;

@@ -1,9 +1,10 @@
 import { memo, useState } from "react";
 import type { MenuItems } from "./NavBar.js";
 import { NavLink } from "react-router-dom";
-import { cn } from "../../lib/utils.js";
+
 import { SubMenu } from "./SubMenu.js";
 import { DropdownToggle } from "./DropdownToggle.js";
+import { cn } from "@/src/lib/utils.js";
 
 export const MenuItem = memo(({ name, href, Icon, children }: MenuItems) => {
   const [isOpen, setIsOpen] = useState(false);

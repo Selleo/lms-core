@@ -153,10 +153,10 @@ export class AdminApp {
       dashboard: {
         component: Components.Dashboard,
       },
-      rootPath: "/admin",
+      rootPath: "/",
       componentLoader,
       assets: {
-        styles: ["/global.css"],
+        styles: ["/global.css", "/reset.css"],
       },
     });
 

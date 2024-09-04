@@ -1,6 +1,6 @@
 import { ActionContext, ActionRequest, ActionResponse } from "adminjs";
 
-const archiveAction = async (
+export const archiveAction = async (
   request: ActionRequest,
   response: ActionResponse,
   context: ActionContext,

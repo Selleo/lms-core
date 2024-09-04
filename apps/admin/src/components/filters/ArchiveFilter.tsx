@@ -11,17 +11,23 @@ const StatusFilter: React.FC<FilterPropertyProps> = (props) => {
   const { onChange, property, filter } = props;
 
   const options: Option[] = [
-    { value: "false", label: "Active" },
-    { value: "true", label: "Archived" },
+    { value: "false", label: "No" },
+    { value: "true", label: "Yes" },
+    { value: "", label: "All" },
   ];
 
   const handleChange = (selectedOption: any) => {
-    onChange(property.path, selectedOption.value === "true");
+    if (selectedOption.value === "") {
+      onChange(property.path, undefined);
+    } else {
+      onChange(property.path, selectedOption.value === "true");
+    }
   };
 
-  const value = filter.status
-    ? options.find((option) => option.value === String(filter.status))
-    : options[0];
+  const value =
+    filter.archived !== undefined
+      ? options.find((option) => option.value === String(filter.archived))
+      : options[2];
 
   return (
     <FormGroup>

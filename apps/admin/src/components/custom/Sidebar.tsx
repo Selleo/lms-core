@@ -4,7 +4,7 @@ import { Tag, Users, BookOpen, Book, FileText } from "lucide-react";
 
 const menuItems = [
   {
-    href: "/resources/users",
+    href: "/resources/users?page=1&filters.archived=false",
     id: "users",
     name: "users",
     Icon: Users,
