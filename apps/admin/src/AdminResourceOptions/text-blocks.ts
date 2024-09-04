@@ -17,8 +17,23 @@ export const textBlocksConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  listProperties: ["created_at", "author_id", "state", "status"],
+  editProperties: ["body", "state", "archived"],
+  filterProperties: ["state", "status"],
+  listProperties: ["author_id", "created_at", "state", "status"],
+  showProperties: [
+    "body",
+    "author_id",
+    "created_at",
+    "updated_at",
+    "state",
+    "status",
+  ],
   properties: {
+    author_id: {
+      components: {
+        list: Components.AuthorId,
+      },
+    },
     body: {
       type: "richtext",
     },
@@ -31,41 +46,9 @@ export const textBlocksConfigOptions: ResourceOptions = {
       props: {
         availableValues: [...statusOptions],
       },
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: true,
-      },
     },
     state: {
       availableValues: [...stateOptions],
-    },
-    author_id: {
-      components: {
-        list: Components.AuthorId,
-      },
-      isVisible: {
-        edit: true,
-        show: true,
-        filter: true,
-      },
-      isSortable: true,
-    },
-    created_at: {
-      position: 7,
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
-    },
-    updated_at: {
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: false,
-      },
     },
   },
 };
