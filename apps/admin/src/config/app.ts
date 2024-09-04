@@ -1,8 +1,4 @@
 import AdminJSExpress, { AuthenticationContext } from "@adminjs/express";
-import {
-  owningRelationSettingsFeature,
-  RelationType,
-} from "@adminjs/relations";
 import { Database, Resource } from "@adminjs/sql";
 import AdminJS from "adminjs";
 import bcrypt from "bcrypt";
