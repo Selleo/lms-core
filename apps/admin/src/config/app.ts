@@ -1,8 +1,4 @@
 import AdminJSExpress, { AuthenticationContext } from "@adminjs/express";
-import {
-  owningRelationSettingsFeature,
-  RelationType,
-} from "@adminjs/relations";
 import { Database, Resource } from "@adminjs/sql";
 import AdminJS from "adminjs";
 import bcrypt from "bcrypt";
@@ -84,6 +80,10 @@ export class AdminApp {
     AdminJS.registerAdapter({ Database, Resource });
 
     const admin = new AdminJS({
+      locale: {
+        language: "en",
+        debug: false,
+      },
       resources: [
         {
           resource: this.db.getResource("users"),

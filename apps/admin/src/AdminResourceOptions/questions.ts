@@ -25,7 +25,7 @@ export const questionsConfigOptions: ResourceOptions = {
     "state",
     "archived",
   ],
-  filterProperties: ["question_type", "state", "status"],
+  filterProperties: ["created_at", "question_type", "state", "status"],
   listProperties: ["created_at", "question_type", "state", "status"],
   showProperties: [
     "question_type",
