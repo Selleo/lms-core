@@ -4,72 +4,19 @@ import {
   type ActionRequest,
   type ActionResponse,
   type After,
-  type Before,
   Filter,
   type ResourceOptions,
   ValidationError,
 } from "adminjs";
-import { nanoid } from "nanoid";
-import { sendEmail } from "../services/email/emailService.js";
-import { CreatePasswordEmail } from "@repo/email-templates";
 import { adminLikeRoles } from "./common/consts/selectOptions/adminLikeRoles.js";
-import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
-import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
-import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
+import { beforeUserCreateOrUpdate } from "./common/actions/before/beforeUserCreateOrUpdate.js";
+import { CreatePasswordEmail } from "@repo/email-templates";
+import { nanoid } from "nanoid";
 import { nonAdminRoles } from "./common/consts/selectOptions/nonAdminRoles.js";
-
-const beforeUserCreateOrUpdate: Before = async (
-  request: ActionRequest,
-  context: ActionContext,
-) => {
-  const { resource } = context;
-  const { payload = {}, method } = request;
-
-  if (method !== "post") return request;
-
-  const errors: { [key: string]: { message: string } } = {};
-  const { first_name, last_name, email, role } = payload;
-
-  if (!first_name) {
-    errors.first_name = { message: "Please provide your name" };
-  }
-
-  if (!last_name) {
-    errors.last_name = { message: "Please provide your last name" };
-  }
-
-  if (!email) {
-    errors.email = { message: "Please provide your email address" };
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  if (!emailRegex.test(email)) {
-    errors.email = { message: "Please provide a valid email address" };
-  }
-
-  if (!role) {
-    errors.role = { message: "Please select a role" };
-  }
-
-  const users = await resource.find(new Filter({ email }, resource), {});
-
-  const isUserExist = users.some(
-    ({ params }) =>
-      params?.email?.toLowerCase() === email?.toLowerCase() &&
-      params?.id !== payload?.id,
-  );
-
-  if (isUserExist) {
-    errors.email = { message: `User with this email address already exists` };
-  }
-
-  if (Object.keys(errors).length) {
-    throw new ValidationError(errors);
-  }
-
-  return request;
-};
+import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
+import { sendEmail } from "../services/email/emailService.js";
+import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
+import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 
 const afterUserCreate: After<ActionResponse> = async (
   response,
