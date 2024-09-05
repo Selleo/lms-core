@@ -32,6 +32,9 @@ importers:
       '@adminjs/express':
         specifier: ^6.1.0
         version: 6.1.0(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.3.4))(express-formidable@1.2.0)(express-session@1.18.0)(express@4.18.2)(tslib@2.6.3)
+      '@adminjs/relations':
+        specifier: ^1.1.2
+        version: 1.1.2(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.3.4))
       '@adminjs/sql':
         specifier: ^2.2.6
         version: 2.2.6(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.3.4))
@@ -687,6 +690,14 @@ packages:
       express-formidable: ^1.2.0
       express-session: '>=1.17.3'
       tslib: ^2.5.0
+
+  '@adminjs/license@1.0.1':
+    resolution: {integrity: sha512-I1z1jgXlv9Ouk/FPRqm3W7cPjhKBYRuO8sv6vtRudu7foLdhweWNNGMUN+ccWhl+5nqjMi7c9dhBQVLo3/5CFw==}
+
+  '@adminjs/relations@1.1.2':
+    resolution: {integrity: sha512-uA7ekwCNUqvNgabipoZ0ShOEBK2aW3fzdqejriM+iunkAFqc08S05L7IrfPOOTYrgINSgzVHiLzstKyBam1DOg==}
+    peerDependencies:
+      adminjs: ^7.3.0
 
   '@adminjs/sql@2.2.6':
     resolution: {integrity: sha512-KBZV5bfh29mjNjmZRJvvrwB9aqJKOfnoXWGG+WXCu0d2E8z9lgsoAx9BQojKLZTsNE9XQjsGvxRYqCifSp7NqQ==}
@@ -5659,6 +5670,9 @@ packages:
   chardet@0.7.0:
     resolution: {integrity: sha512-mT8iDcrh03qDGRRmoA2hmBJnxpllMR+0/0qlzjqZES6NdiWDcZkCNAk4rPFZ9Q85r27unkiNNg8ZOiwZXBHwcA==}
 
+  charenc@0.0.2:
+    resolution: {integrity: sha512-yrLQ/yVUFXkzg7EDQsPieE/53+0RlaWTs+wBrvW36cyilJ2SaDWfl4Yj7MtLTXleV9uEKefbAGUPv2/iWSooRA==}
+
   check-disk-space@3.4.0:
     resolution: {integrity: sha512-drVkSqfwA+TvuEhFipiR1OC9boEGZL5RrWvVsOthdcvQNXyCCuKkEiTOTXZ7qxSf/GLwq4GvzfrQD/Wz325hgw==}
     engines: {node: '>=16'}
@@ -6001,6 +6015,9 @@ packages:
   cross-spawn@7.0.3:
     resolution: {integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==}
     engines: {node: '>= 8'}
+
+  crypt@0.0.2:
+    resolution: {integrity: sha512-mCxBlsHFYh9C+HVpiEacem8FEBnMXgU9gy4zmNC+SXAZNB/1idgp/aulFJ4FgCi7GPEVbfyng092GqL2k2rmow==}
 
   css-box-model@1.2.1:
     resolution: {integrity: sha512-a7Vr4Q/kd/aw96bnJG332W9V9LkJO69JRcaCYDUqjp6/z0w6VcZjgAcTbgFxEPfBgdnAwlh3iwu+hLopa+flJw==}
@@ -7472,6 +7489,9 @@ packages:
     resolution: {integrity: sha512-gDYaKHJmnj4aWxyj6YHyXVpdQawtVLHU5cb+eztPGczf6cjuTdwve5ZIEfgXqH4e57An1D1AKf8CZ3kYrQRqYA==}
     engines: {node: '>= 0.4'}
 
+  is-buffer@1.1.6:
+    resolution: {integrity: sha512-NcdALwpXkTm5Zvvbk7owOUSvVvBKDgKP5/ewfXEznmQFfs4ZRmanOeKBTjRVjka3QFoN6XJ+9F3USqfHqTaU5w==}
+
   is-buffer@2.0.5:
     resolution: {integrity: sha512-i2R6zNFDwgEHJyQUtJEk0XFi1i0dPFn/oqjK3/vPCcDeJvW5NQ83V8QbicfF1SupOaB0h8ntgBC2YiE7dfyctQ==}
     engines: {node: '>=4'}
@@ -7857,6 +7877,9 @@ packages:
   joycon@3.1.1:
     resolution: {integrity: sha512-34wB/Y7MW7bzjKRjUKTa46I2Z7eV62Rkhva+KkopW7Qvv/OSWBqvkSY7vusOPrNuZcUG3tApvdVgNB8POj3SPw==}
     engines: {node: '>=10'}
+
+  js-base64@3.7.7:
+    resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
 
   js-beautify@1.15.1:
     resolution: {integrity: sha512-ESjNzSlt/sWE8sciZH8kBF8BPlwXPwhR6pWKAw8bw4Bwj+iZcnKW6ONWUutJ7eObuBZQpiIb8S7OYspWrKt7rA==}
@@ -8270,6 +8293,9 @@ packages:
     resolution: {integrity: sha512-x6kkpdzIzUhecda/yahltfEl53mH26QdWu4abUF9+S0Jgam8P//Ciro8cdhyMHnT5MQUJYrIbO6ORM2UxPiNNA==}
     peerDependencies:
       react: 18.x
+
+  md5@2.3.0:
+    resolution: {integrity: sha512-T1GITYmFaKuO91vxyoQMFETst+O71VUPEU3ze5GNzDm0OWdP8v1ziTaAEPUr/3kLsY3Sftgz242A1SetQiDL7g==}
 
   mdast-util-definitions@5.1.2:
     resolution: {integrity: sha512-8SVPMuHqlPME/z3gqVwWY4zVXn8lqKv/pAhC57FuJ40ImXyBpmO5ukh98zB2v7Blql2FiHjHv9LVztSIqjY+MA==}
@@ -11533,6 +11559,22 @@ snapshots:
       express-formidable: 1.2.0
       express-session: 1.18.0
       tslib: 2.6.3
+
+  '@adminjs/license@1.0.1':
+    dependencies:
+      axios: 1.7.2
+      js-base64: 3.7.7
+      md5: 2.3.0
+    transitivePeerDependencies:
+      - debug
+
+  '@adminjs/relations@1.1.2(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.3.4))':
+    dependencies:
+      '@adminjs/license': 1.0.1
+      adminjs: 7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.3.4)
+      lodash: 4.17.21
+    transitivePeerDependencies:
+      - debug
 
   '@adminjs/sql@2.2.6(adminjs@7.8.11(@types/babel__core@7.20.5)(@types/react-dom@18.2.19)(@types/react@18.3.4))':
     dependencies:
@@ -17471,6 +17513,8 @@ snapshots:
 
   chardet@0.7.0: {}
 
+  charenc@0.0.2: {}
+
   check-disk-space@3.4.0: {}
 
   check-error@2.1.1: {}
@@ -17817,6 +17861,8 @@ snapshots:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  crypt@0.0.2: {}
 
   css-box-model@1.2.1:
     dependencies:
@@ -19626,6 +19672,8 @@ snapshots:
       call-bind: 1.0.7
       has-tostringtag: 1.0.2
 
+  is-buffer@1.1.6: {}
+
   is-buffer@2.0.5: {}
 
   is-builtin-module@3.2.1:
@@ -20193,6 +20241,8 @@ snapshots:
 
   joycon@3.1.1: {}
 
+  js-base64@3.7.7: {}
+
   js-beautify@1.15.1:
     dependencies:
       config-chain: 1.1.13
@@ -20571,6 +20621,12 @@ snapshots:
     dependencies:
       marked: 7.0.4
       react: 18.3.1
+
+  md5@2.3.0:
+    dependencies:
+      charenc: 0.0.2
+      crypt: 0.0.2
+      is-buffer: 1.1.6
 
   mdast-util-definitions@5.1.2:
     dependencies:
