@@ -18,10 +18,25 @@ export const filesConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  listProperties: ["created_at", "type", "state", "status"],
+  editProperties: ["type", "state", "archived"],
+  filterProperties: ["type", "state", "status"],
+  listProperties: ["author_id", "created_at", "type", "state", "status"],
+  showProperties: [
+    "author_id",
+    "created_at",
+    "updated_at",
+    "type",
+    "state",
+    "status",
+  ],
   properties: {
-    type: {
-      availableValues: [...fileTypeOptions],
+    archived: {
+      isRequired: false,
+    },
+    author_id: {
+      components: {
+        list: Components.AuthorId,
+      },
     },
     status: {
       components: {
@@ -32,37 +47,12 @@ export const filesConfigOptions: ResourceOptions = {
       props: {
         availableValues: [...statusOptions],
       },
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: true,
-      },
     },
     state: {
       availableValues: [...stateOptions],
     },
-    archived: {
-      isRequired: false,
-      isVisible: {
-        edit: true,
-        show: true,
-        filter: false,
-      },
-    },
-    created_at: {
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
-    },
-    updated_at: {
-      isVisible: {
-        edit: false,
-        show: true,
-        filter: false,
-      },
+    type: {
+      availableValues: [...fileTypeOptions],
     },
   },
 };

@@ -121,34 +121,33 @@ const afterUserCreate: After<ActionResponse> = async (
 
 export const usersConfigOptions: ResourceOptions = {
   ...noParentNavigation,
+  actions: {
+    new: {
+      before: [beforeUserCreate],
+      after: afterUserCreate,
+    },
+    list: {
+      before: [statusFilterBeforeAction],
+    },
+  },
+  editProperties: ["first_name", "last_name", "email", "role", "archived"],
   filterProperties: ["first_name", "last_name", "email", "status", "role"],
-  showProperties: ["first_name", "last_name", "email", "role", "status"],
   listProperties: ["first_name", "last_name", "email", "role", "status"],
-  editProperties: ["first_name", "last_name", "email", "role", "status"],
+  showProperties: [
+    "first_name",
+    "last_name",
+    "email",
+    "role",
+    "created_at",
+    "updated_at",
+    "status",
+  ],
   properties: {
-    created_at: {
-      isVisible: {
-        edit: false,
-        list: false,
-        show: true,
-        filter: false,
-      },
+    archived: {
+      isRequired: false,
     },
-    updated_at: {
-      isVisible: {
-        edit: false,
-        list: false,
-        show: true,
-        filter: false,
-      },
-    },
-    id: {
-      isVisible: {
-        edit: false,
-        list: false,
-        show: true,
-        filter: false,
-      },
+    email: {
+      isRequired: false,
     },
     first_name: {
       isRequired: false,
@@ -156,20 +155,11 @@ export const usersConfigOptions: ResourceOptions = {
     last_name: {
       isRequired: false,
     },
-    email: {
-      isRequired: false,
-    },
     role: {
       availableValues: [...adminLikeRoles, ...nonAdminRoles],
     },
     status: {
       type: "boolean",
-      isVisible: {
-        list: true,
-        filter: true,
-        show: true,
-        edit: false,
-      },
       components: {
         list: Components.StatusListValue,
         show: Components.ArchiveShow,
@@ -178,23 +168,6 @@ export const usersConfigOptions: ResourceOptions = {
       props: {
         availableValues: [...statusOptions],
       },
-    },
-    archived: {
-      isVisible: {
-        list: false,
-        filter: false,
-        show: false,
-        edit: true,
-      },
-    },
-  },
-  actions: {
-    new: {
-      before: [beforeUserCreate],
-      after: afterUserCreate,
-    },
-    list: {
-      before: [statusFilterBeforeAction],
     },
   },
 };

@@ -18,61 +18,50 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  filterProperties: ["status", "category_id", "status"],
+  editProperties: [
+    "title",
+    "description",
+    "category_id",
+    "state",
+    "price_in_cents",
+    "archived",
+  ],
+  filterProperties: ["category_id", "state", "status"],
+  listProperties: [
+    "title",
+    "category_id",
+    "author_id",
+    "created_at",
+    "state",
+    "status",
+  ],
+  showProperties: [
+    "title",
+    "description",
+    "category_id",
+    "author_id",
+    "price_in_cents",
+    "created_at",
+    "updated_at",
+    "status",
+  ],
   properties: {
-    id: {
-      position: 1,
-      isVisible: {
-        edit: false,
-        list: false,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
+    archived: {
+      isRequired: false,
     },
-    title: {
-      position: 2,
-      isVisible: {
-        edit: true,
-        list: true,
-        show: true,
-        filter: true,
+    author_id: {
+      components: {
+        list: Components.AuthorId,
       },
-      isSortable: true,
     },
     description: {
       type: "richtext",
       props: {
         rows: 30,
       },
-      position: 3,
-      isVisible: {
-        edit: true,
-        list: false,
-        show: true,
-        filter: false,
-      },
       isSortable: false,
     },
-    category_id: {
-      position: 4,
-      isVisible: {
-        edit: true,
-        list: true,
-        show: true,
-        filter: true,
-      },
-      isSortable: true,
-    },
     state: {
-      position: 5,
-      isVisible: {
-        list: true,
-        filter: true,
-        show: true,
-        edit: true,
-      },
-      isSortable: true,
       availableValues: [...stateOptions],
     },
     status: {
@@ -84,75 +73,6 @@ export const coursesConfigOptions: ResourceOptions = {
       props: {
         availableValues: [...statusOptions],
       },
-      isVisible: {
-        edit: false,
-        list: true,
-        show: true,
-        filter: true,
-      },
-    },
-    archived: {
-      isRequired: false,
-      isVisible: {
-        edit: true,
-        list: false,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
-    },
-    image_url: {
-      position: 11,
-      isVisible: {
-        edit: true,
-        list: false,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
-    },
-    author_id: {
-      position: 10,
-      components: {
-        list: Components.AuthorId,
-      },
-      isVisible: {
-        edit: true,
-        list: true,
-        show: true,
-        filter: true,
-      },
-      isSortable: true,
-    },
-    price_in_cents: {
-      position: 9,
-      isVisible: {
-        edit: true,
-        list: false,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
-    },
-    created_at: {
-      position: 7,
-      isVisible: {
-        edit: false,
-        list: true,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
-    },
-    updated_at: {
-      position: 8,
-      isVisible: {
-        edit: false,
-        list: false,
-        show: true,
-        filter: false,
-      },
-      isSortable: false,
     },
   },
 };

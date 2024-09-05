@@ -3,7 +3,7 @@ import {
   ActionRequest,
   Before,
   Filter,
-  ResourceWithOptions,
+  ResourceOptions,
   ValidationError,
 } from "adminjs";
 import { Components } from "../components/index.js";
@@ -85,78 +85,44 @@ const beforeUpdate: Before = async (
   return request;
 };
 
-export const categoriesConfigOptions: Pick<ResourceWithOptions, "options"> = {
-  options: {
-    ...noParentNavigation,
-    actions: {
-      list: {
-        before: [statusFilterBeforeAction],
+export const categoriesConfigOptions: ResourceOptions = {
+  ...noParentNavigation,
+  actions: {
+    list: {
+      before: [statusFilterBeforeAction],
+    },
+    delete: {
+      isAccessible: false,
+      isVisible: false,
+    },
+    ...archivingActions,
+    new: {
+      before: [beforeCreate],
+    },
+    edit: {
+      before: [beforeUpdate],
+    },
+  },
+  editProperties: ["title", "archived"],
+  filterProperties: ["title", "status"],
+  listProperties: ["title", "created_at", "status"],
+  showProperties: ["title", "created_at", "updated_at", "status"],
+  properties: {
+    archived: {
+      isRequired: false,
+    },
+    status: {
+      components: {
+        list: Components.ArchiveList,
+        show: Components.ArchiveShow,
+        filter: Components.FilterSelect,
       },
-      delete: {
-        isAccessible: false,
-        isVisible: false,
-      },
-      ...archivingActions,
-      new: {
-        before: [beforeCreate],
-      },
-      edit: {
-        before: [beforeUpdate],
+      props: {
+        availableValues: [...statusOptions],
       },
     },
-    properties: {
-      title: {
-        isRequired: false,
-      },
-      created_at: {
-        isVisible: {
-          edit: false,
-          list: true,
-          show: true,
-          filter: false,
-        },
-      },
-      updated_at: {
-        isVisible: {
-          edit: false,
-          list: false,
-          show: true,
-          filter: false,
-        },
-      },
-      archived: {
-        isRequired: false,
-        isVisible: {
-          edit: true,
-          list: false,
-          show: true,
-          filter: false,
-        },
-      },
-      id: {
-        isVisible: {
-          edit: false,
-          list: false,
-          show: true,
-          filter: false,
-        },
-      },
-      status: {
-        components: {
-          list: Components.ArchiveList,
-          show: Components.ArchiveShow,
-          filter: Components.FilterSelect,
-        },
-        props: {
-          availableValues: [...statusOptions],
-        },
-        isVisible: {
-          edit: false,
-          list: true,
-          show: true,
-          filter: true,
-        },
-      },
+    title: {
+      isRequired: false,
     },
   },
 };
