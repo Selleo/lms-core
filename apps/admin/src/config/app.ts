@@ -21,6 +21,14 @@ import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
 import { DatabaseService } from "./database.js";
+import path from "path";
+import uploadFeature from "@adminjs/upload";
+import { fileURLToPath } from "url";
+import fs from "fs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const dirPath = path.join(__dirname, "uploads");
 
 const authenticate = async (
   email: string,
@@ -66,6 +74,10 @@ const authenticate = async (
   return null;
 };
 
+if (!fs.existsSync(dirPath)) {
+  fs.mkdirSync(dirPath, { recursive: true });
+}
+
 export class AdminApp {
   private app: express.Application;
   private db: DatabaseService;
@@ -78,7 +90,6 @@ export class AdminApp {
 
   async init() {
     AdminJS.registerAdapter({ Database, Resource });
-
     const admin = new AdminJS({
       locale: {
         language: "en",
@@ -116,6 +127,36 @@ export class AdminApp {
             setOneToManyRelation({
               resourceId: "lesson_items",
               joinKey: "lesson_id",
+            }),
+            uploadFeature({
+              componentLoader: componentLoader,
+              provider: {
+                local: {
+                  bucket: dirPath,
+                  opts: {},
+                },
+              },
+              properties: {
+                key: "image_url",
+              },
+              validation: {
+                mimeTypes: [
+                  "image/jpeg",
+                  "image/png",
+                  "image/svg+xml",
+                  "image/gif",
+                ],
+                maxSize: 2 * 1024 * 1024,
+              },
+              uploadPath: (record, filename) => {
+                console.log("i'm here");
+                console.log(record);
+                const id = record.id();
+                if (!id) {
+                  throw new Error("Record ID is required for file upload.");
+                }
+                return `lessons/${id}/${filename}`;
+              },
             }),
           ],
         },
@@ -213,6 +254,7 @@ export class AdminApp {
 
     admin.watch();
 
+    this.app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //only for dev test
     this.app.use(admin.options.rootPath, adminRouter);
     this.app.get(admin.options.rootPath, (req, res) => {
       res.redirect(`/resources/users`);

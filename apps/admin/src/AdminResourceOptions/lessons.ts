@@ -79,7 +79,12 @@ export const lessonsConfigOptions: ResourceOptions = {
     created_at: {},
     updated_at: {},
     image_url: {
+      components: {
+        edit: Components.PhotoUpload,
+        show: Components.PhotoPreview,
+      },
       isSortable: false,
+      isRequired: false,
     },
     author_id: {},
   },
