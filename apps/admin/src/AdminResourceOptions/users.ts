@@ -18,46 +18,54 @@ import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.j
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { nonAdminRoles } from "./common/consts/selectOptions/nonAdminRoles.js";
 
-const beforeUserCreate: Before = async (
+const beforeUserCreateOrUpdate: Before = async (
   request: ActionRequest,
   context: ActionContext,
 ) => {
   const { resource } = context;
-  const { first_name, last_name, role, email } = request?.payload || {};
+  const { payload = {}, method } = request;
+
+  if (method !== "post") return request;
+
+  const errors: { [key: string]: { message: string } } = {};
+  const { first_name, last_name, email, role } = payload;
 
   if (!first_name) {
-    throw new ValidationError({
-      first_name: { message: "Please provide your name" },
-    });
+    errors.first_name = { message: "Please provide your name" };
   }
 
   if (!last_name) {
-    throw new ValidationError({
-      last_name: { message: "Please provide your last name" },
-    });
+    errors.last_name = { message: "Please provide your last name" };
   }
 
   if (!email) {
-    throw new ValidationError({
-      email: { message: "Please provide your email address" },
-    });
+    errors.email = { message: "Please provide your email address" };
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!emailRegex.test(email)) {
+    errors.email = { message: "Please provide a valid email address" };
   }
 
   if (!role) {
-    throw new ValidationError({
-      role: { message: "Please select a role" },
-    });
+    errors.role = { message: "Please select a role" };
   }
 
   const users = await resource.find(new Filter({ email }, resource), {});
+
   const isUserExist = users.some(
-    ({ params: { email } }) => email.toLowerCase() === email.toLowerCase(),
+    ({ params }) =>
+      params?.email?.toLowerCase() === email?.toLowerCase() &&
+      params?.id !== payload?.id,
   );
 
   if (isUserExist) {
-    throw new ValidationError({
-      email: { message: `User with this email address already exists` },
-    });
+    errors.email = { message: `User with this email address already exists` };
+  }
+
+  if (Object.keys(errors).length) {
+    throw new ValidationError(errors);
   }
 
   return request;
@@ -122,8 +130,11 @@ const afterUserCreate: After<ActionResponse> = async (
 export const usersConfigOptions: ResourceOptions = {
   ...noParentNavigation,
   actions: {
+    edit: {
+      before: [beforeUserCreateOrUpdate],
+    },
     new: {
-      before: [beforeUserCreate],
+      before: [beforeUserCreateOrUpdate],
       after: afterUserCreate,
     },
     list: {
