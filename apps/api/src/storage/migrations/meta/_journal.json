@@ -183,6 +183,13 @@
       "when": 1725370840259,
       "tag": "0025_create_create_tokens_table",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1725576090338,
+      "tag": "0026_update_default_value_of_state_columns",
+      "breakpoints": true
     }
   ]
 }

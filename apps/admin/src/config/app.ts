@@ -21,6 +21,13 @@ import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
 import { DatabaseService } from "./database.js";
+import path from "path";
+import uploadFeature from "@adminjs/upload";
+import { providerConfig } from "./uploadProviderConfig.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const authenticate = async (
   email: string,
@@ -78,11 +85,14 @@ export class AdminApp {
 
   async init() {
     AdminJS.registerAdapter({ Database, Resource });
-
     const admin = new AdminJS({
       locale: {
         language: "en",
         debug: false,
+      },
+      branding: {
+        companyName: "LMS Core Admin",
+        favicon: "/favicon.ico",
       },
       resources: [
         {
@@ -116,6 +126,29 @@ export class AdminApp {
             setOneToManyRelation({
               resourceId: "lesson_items",
               joinKey: "lesson_id",
+            }),
+            uploadFeature({
+              componentLoader: componentLoader,
+              provider: providerConfig,
+              properties: {
+                key: "image_url",
+              },
+              validation: {
+                mimeTypes: [
+                  "image/jpeg",
+                  "image/png",
+                  "image/svg+xml",
+                  "image/gif",
+                ],
+                maxSize: 25 * 1024 * 1024,
+              },
+              uploadPath: (record, filename) => {
+                const id = record.id();
+                if (!id) {
+                  throw new Error("Record ID is required for file upload.");
+                }
+                return `lessons/${id}/${filename}`;
+              },
             }),
           ],
         },
@@ -213,6 +246,8 @@ export class AdminApp {
 
     admin.watch();
 
+    this.app.use(express.static("assets"));
+    this.app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //only for dev test
     this.app.use(admin.options.rootPath, adminRouter);
     this.app.get(admin.options.rootPath, (req, res) => {
       res.redirect(`/resources/users`);
