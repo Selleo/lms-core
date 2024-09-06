@@ -11,7 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { UserRoles } from "src/users/schemas/user-roles";
-import { archived, id, Status, timestamps } from "./utils";
+import { archived, id, timestamps } from "./utils";
 
 export const users = pgTable("users", {
   ...id,
@@ -91,7 +91,7 @@ export const lessons = pgTable("lessons", {
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
-  state: text("state").notNull().default(Status.draft),
+  state: text("state").notNull().default("draft"),
   archived,
 });
 
@@ -129,7 +129,7 @@ export const questions = pgTable("questions", {
   questionType: text("question_type").notNull(),
   questionBody: text("question_body").notNull(),
   solutionExplanation: text("solution_explanation").notNull(),
-  state: text("state").notNull().default(Status.draft),
+  state: text("state").notNull().default("draft"),
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
@@ -176,7 +176,7 @@ export const files = pgTable("files", {
   ...timestamps,
   type: text("type").notNull(),
   url: text("url").notNull(),
-  state: text("state").notNull().default(Status.draft),
+  state: text("state").notNull().default("draft"),
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
@@ -198,7 +198,7 @@ export const textBlocks = pgTable("text_blocks", {
   ...id,
   ...timestamps,
   body: text("body"),
-  state: text("state").notNull().default(Status.draft),
+  state: text("state").notNull().default("draft"),
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),

@@ -3,17 +3,22 @@ import React from "react";
 
 const PhotoPreview: React.FC<BasePropertyProps> = (props) => {
   const { record } = props;
-  const imageUrl = record?.params?.image_url;
 
-  if (!imageUrl) {
-    return <p>No image available</p>;
+  const filePath =
+    process.env.NODE_ENV === "production"
+      ? record?.params?.filePath
+      : `/uploads/${record?.params?.image_url}`;
+
+  if (!filePath) {
+    return <p>No thumbnail available</p>;
   }
 
   return (
     <div>
+      <p>Current Thumbnail:</p>
       <img
-        src={`/uploads/${imageUrl}`}
-        alt="Image Preview"
+        src={filePath}
+        alt="Thumbnail Preview"
         style={{ maxWidth: "100%", height: "auto" }}
       />
     </div>

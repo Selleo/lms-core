@@ -6,6 +6,8 @@ import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.j
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { beforeCreateLesson } from "./common/actions/before/createLesson.js";
 import { beforeUpdateLesson } from "./common/actions/before/udpateLesson.js";
+import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { afterUpdateLesson } from "./common/actions/after/updateLesson.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -22,10 +24,11 @@ export const lessonsConfigOptions: ResourceOptions = {
     },
     edit: {
       before: [beforeUpdateLesson],
+      after: [afterUpdateLesson],
     },
     ...archivingActions,
   },
-  editProperties: ["title", "description", "state", "archived"],
+  editProperties: ["title", "description", "state", "file"],
   filterProperties: ["title", "state", "status"],
   listProperties: [
     "title",
@@ -44,6 +47,7 @@ export const lessonsConfigOptions: ResourceOptions = {
     "updated_at",
     "state",
     "status",
+    "file",
   ],
   properties: {
     state: {
@@ -78,14 +82,11 @@ export const lessonsConfigOptions: ResourceOptions = {
     },
     created_at: {},
     updated_at: {},
-    image_url: {
+    author_id: {},
+    file: {
       components: {
-        edit: Components.PhotoUpload,
         show: Components.PhotoPreview,
       },
-      isSortable: false,
-      isRequired: false,
     },
-    author_id: {},
   },
 };

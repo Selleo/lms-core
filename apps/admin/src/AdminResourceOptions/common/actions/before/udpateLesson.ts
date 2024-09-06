@@ -24,7 +24,7 @@ export const beforeUpdateLesson: Before = async (request: ActionRequest) => {
   }
 
   if (payload?.state === "published") {
-    const requiredFieldsForPublished = ["image_url", "description"];
+    const requiredFieldsForPublished = ["description"];
 
     if (payload.archived) {
       errors["archived"] = {

@@ -23,12 +23,11 @@ import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
 import { DatabaseService } from "./database.js";
 import path from "path";
 import uploadFeature from "@adminjs/upload";
+import { providerConfig } from "./uploadProviderConfig.js";
 import { fileURLToPath } from "url";
-import fs from "fs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const dirPath = path.join(__dirname, "uploads");
 
 const authenticate = async (
   email: string,
@@ -74,10 +73,6 @@ const authenticate = async (
   return null;
 };
 
-if (!fs.existsSync(dirPath)) {
-  fs.mkdirSync(dirPath, { recursive: true });
-}
-
 export class AdminApp {
   private app: express.Application;
   private db: DatabaseService;
@@ -94,6 +89,10 @@ export class AdminApp {
       locale: {
         language: "en",
         debug: false,
+      },
+      branding: {
+        companyName: "LMS Core Admin",
+        favicon: "/favicon.ico",
       },
       resources: [
         {
@@ -130,12 +129,7 @@ export class AdminApp {
             }),
             uploadFeature({
               componentLoader: componentLoader,
-              provider: {
-                local: {
-                  bucket: dirPath,
-                  opts: {},
-                },
-              },
+              provider: providerConfig,
               properties: {
                 key: "image_url",
               },
@@ -146,11 +140,9 @@ export class AdminApp {
                   "image/svg+xml",
                   "image/gif",
                 ],
-                maxSize: 2 * 1024 * 1024,
+                maxSize: 25 * 1024 * 1024,
               },
               uploadPath: (record, filename) => {
-                console.log("i'm here");
-                console.log(record);
                 const id = record.id();
                 if (!id) {
                   throw new Error("Record ID is required for file upload.");
@@ -254,6 +246,7 @@ export class AdminApp {
 
     admin.watch();
 
+    this.app.use(express.static("assets"));
     this.app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //only for dev test
     this.app.use(admin.options.rootPath, adminRouter);
     this.app.get(admin.options.rootPath, (req, res) => {
