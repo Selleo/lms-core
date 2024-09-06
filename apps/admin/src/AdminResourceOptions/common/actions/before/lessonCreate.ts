@@ -14,21 +14,31 @@ export const beforeCreateLesson: Before = async (
     };
   }
 
+  if (payload?.title?.length < 5) {
+    errors["title"] = {
+      message: `Title must be more than 5 characters. ${payload?.title?.length}`,
+    };
+  }
+
   if (payload?.title?.length > 100) {
     errors["title"] = {
       message: `Title must be no more than 100 characters. ${payload?.title?.length}/100 characters`,
     };
   }
 
+  if (payload?.description?.length > 1000) {
+    errors["description"] = {
+      message: `Description must be no more than 100 characters. ${payload?.description?.length}/100 characters`,
+    };
+  }
+
   if (payload?.state === "published") {
-    const requiredFieldsForPublished = ["image_url", "description"];
-    requiredFieldsForPublished.forEach((field) => {
-      if (!payload[field] || payload[field].length < 1) {
-        errors[field] = {
-          message: `${field} is required when the lesson is in 'published' state.`,
-        };
-      }
-    });
+    if (!payload?.description || payload?.description < 30) {
+      errors["description"] = {
+        message:
+          "Description is required when the lesson is in 'published' state and be more than 30 characters`",
+      };
+    }
   }
 
   if (Object.keys(errors).length > 0) {

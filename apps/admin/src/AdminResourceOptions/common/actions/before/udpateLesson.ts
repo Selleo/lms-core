@@ -5,7 +5,7 @@ export const beforeUpdateLesson: Before = async (request: ActionRequest) => {
   const { payload } = request;
   const errors: ValidationErrors = {};
 
-  if (payload?.title?.length < 1) {
+  if (payload?.title?.length < 3) {
     errors["title"] = {
       message: "Title is required",
     };
@@ -24,21 +24,18 @@ export const beforeUpdateLesson: Before = async (request: ActionRequest) => {
   }
 
   if (payload?.state === "published") {
-    const requiredFieldsForPublished = ["description"];
-
     if (payload.archived) {
       errors["archived"] = {
         message: "You can't publish an archived lesson",
       };
     }
 
-    requiredFieldsForPublished.forEach((field) => {
-      if (!payload[field] || payload[field].length < 1) {
-        errors[field] = {
-          message: `When you want to publish Published, ${field} is required.`,
-        };
-      }
-    });
+    if (!payload?.description || payload?.description < 30) {
+      errors["description"] = {
+        message:
+          "Description is required when the lesson is in 'published' state and be more than 30 characters`",
+      };
+    }
   }
 
   if (Object.keys(errors).length > 0) {
