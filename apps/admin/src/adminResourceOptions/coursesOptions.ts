@@ -1,16 +1,20 @@
-import { ResourceOptions } from "adminjs";
+import type { ResourceOptions } from "adminjs";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { Components } from "../components/index.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
+import { courseValidateBeforeAction } from "../AdminResourceOptions/common/actions/before/courseValidate.js";
 
 export const coursesConfigOptions: ResourceOptions = {
   ...noParentNavigation,
   actions: {
     list: {
       before: [statusFilterBeforeAction],
+    },
+    new: {
+      before: courseValidateBeforeAction,
     },
     delete: {
       isAccessible: false,
@@ -22,9 +26,10 @@ export const coursesConfigOptions: ResourceOptions = {
     "title",
     "description",
     "category_id",
+    "lessons",
     "state",
+    "file",
     "price_in_cents",
-    "archived",
   ],
   filterProperties: ["category_id", "state", "status"],
   listProperties: [
@@ -39,20 +44,24 @@ export const coursesConfigOptions: ResourceOptions = {
     "title",
     "description",
     "category_id",
+    "file",
     "author_id",
     "price_in_cents",
     "created_at",
     "updated_at",
     "status",
+    "state",
   ],
   properties: {
-    archived: {
-      isRequired: false,
-    },
     author_id: {
       components: {
         list: Components.AuthorId,
       },
+      isSortable: true,
+    },
+    title: {
+      isRequired: false,
+      isSortable: true,
     },
     description: {
       type: "richtext",
@@ -60,6 +69,15 @@ export const coursesConfigOptions: ResourceOptions = {
         rows: 30,
       },
       isSortable: false,
+      isRequired: false,
+    },
+    category_id: {
+      isSortable: true,
+      isRequired: false,
+    },
+    lessons: {
+      type: "reference",
+      reference: "lessons",
     },
     state: {
       availableValues: stateOptions,
@@ -73,6 +91,30 @@ export const coursesConfigOptions: ResourceOptions = {
       props: {
         availableValues: statusOptions,
       },
+    },
+    archived: {
+      isDisabled: true,
+      availableValues: [
+        { value: "true", label: "Yes" },
+        { value: "false", label: "No" },
+      ],
+      isSortable: false,
+    },
+    file: {
+      components: {
+        show: Components.PhotoPreview,
+      },
+    },
+    price_in_cents: {
+      type: "float",
+      isSortable: false,
+      isRequired: false,
+    },
+    created_at: {
+      isSortable: false,
+    },
+    updated_at: {
+      isSortable: false,
     },
   },
 };
