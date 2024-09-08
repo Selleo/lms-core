@@ -136,10 +136,10 @@
 
 @layer base {
   * {
-  @apply border-border;
+    @apply border-border;
   }
   body {
-  @apply bg-background text-foreground;
+    @apply bg-background text-foreground;
   }
 }
 
@@ -187,6 +187,6 @@
     @apply text-xs leading-relaxed font-medium;
   }
   .subtle {
-    @apply text-sm leading-5;
+    @apply text-sm leading-[1.7rem];
   }
 }
