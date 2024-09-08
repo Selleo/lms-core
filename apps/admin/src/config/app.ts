@@ -5,16 +5,16 @@ import bcrypt from "bcrypt";
 import Connect from "connect-pg-simple";
 import express from "express";
 import session from "express-session";
-import { categoriesConfigOptions } from "../adminResourceOptions/categoriesOptions.js";
-import { coursesConfigOptions } from "../adminResourceOptions/coursesOptions.js";
-import { credentialsConfigOptions } from "../adminResourceOptions/credentialsOptions.js";
-import { filesConfigOptions } from "../adminResourceOptions/filesOptions.js";
-import { lessonFilesConfigOptions } from "../adminResourceOptions/lessonFilesOptions.js";
-import { lessonQuestionsConfigOptions } from "../adminResourceOptions/lessonQuestionsOptions.js";
-import { lessonsConfigOptions } from "../adminResourceOptions/lessonsOptions.js";
-import { questionsConfigOptions } from "../adminResourceOptions/questionsOptions.js";
-import { textBlocksConfigOptions } from "../adminResourceOptions/textBlocksOptions.js";
-import { usersConfigOptions } from "../adminResourceOptions/usersOptions.js";
+import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
+import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
+import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
+import { filesConfigOptions } from "../AdminResourceOptions/files.js";
+import { lessonFilesConfigOptions } from "../AdminResourceOptions/lesson-files.js";
+import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lesson-questions.js";
+import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
+import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
+import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
+import { usersConfigOptions } from "../AdminResourceOptions/users.js";
 import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
@@ -23,6 +23,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { lessonItemsConfigOptions } from "../adminResourceOptions/lessonItemsOptions.js";
 import { uploadFile } from "../features/uploadFeature.js";
+import {owningRelationSettingsFeature, RelationType} from "@adminjs/relations";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -116,6 +117,42 @@ export class AdminApp {
           options: {
             ...coursesConfigOptions,
           },
+          features: [
+            setOneToManyRelation({
+              resourceId: "lesson_items",
+              joinKey: "lesson_id",
+            }),
+            setOneToManyRelation({
+              resourceId: "lessons",
+              joinKey: "lesson_id",
+            }),
+            owningRelationSettingsFeature({
+              componentLoader,
+              licenseKey: process.env.LICENSE_KEY ?? "",
+              relations: {
+                persons: {
+                  type: RelationType.OneToMany,
+                  target: {
+                    resourceId: "lesson",
+                    joinKey: "lesson_id",
+                  },
+                },
+                offices: {
+                  type: RelationType.OneToMany,
+                  target: {
+                    joinKey: "organizationId",
+                    resourceId: "Office",
+                  },
+                },
+              },
+            }),
+            uploadFile("courses", "image_url", 2, [
+              "image/jpeg",
+              "image/png",
+              "image/svg+xml",
+              "image/gif",
+            ]),
+          ],
         },
         {
           resource: this.db.getResource("lessons"),
@@ -239,8 +276,11 @@ export class AdminApp {
       },
     );
 
-    admin.watch();
+    await admin.watch();
 
+    if (process.env.NODE_ENV === "development") {
+      this.app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+    }
     this.app.use(express.static("assets"));
     this.app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //only for dev test
     this.app.use(admin.options.rootPath, adminRouter);

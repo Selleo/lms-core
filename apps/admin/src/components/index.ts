@@ -13,6 +13,12 @@ const Components = {
   AuthorId: componentLoader.add("AuthorId", "./custom/AuthorId"),
   LessonItems: componentLoader.add("LessonItems", "./custom/LessonItems"),
   PhotoPreview: componentLoader.add("PhotoPreview", "./photo/PhotoPreview"),
+  CategoriesListShow: componentLoader.add(
+    "CategoriesShow",
+    "./show/CategoriesListShow",
+  ),
+  StatusFilter: componentLoader.add("StatusFilter", "./filters/ArchiveFilter"),
+  Dashboard: componentLoader.add("Dashboard", "./custom/Dashboard"),
 };
 
 export { componentLoader, Components };
