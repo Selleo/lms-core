@@ -18,9 +18,9 @@ export const filesConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["type", "state", "archived"],
+  editProperties: ["type", "state", "file", "archived"],
   filterProperties: ["type", "created_at", "state", "status"],
-  listProperties: ["author_id", "created_at", "type", "state", "status"],
+  listProperties: ["author_id", "file", "type", "state", "status"],
   showProperties: [
     "author_id",
     "created_at",
@@ -28,6 +28,7 @@ export const filesConfigOptions: ResourceOptions = {
     "type",
     "state",
     "status",
+    "file",
   ],
   properties: {
     archived: {
@@ -36,6 +37,12 @@ export const filesConfigOptions: ResourceOptions = {
     author_id: {
       components: {
         list: Components.AuthorId,
+      },
+    },
+    file: {
+      components: {
+        list: Components.PhotoPreview,
+        show: Components.PhotoPreview,
       },
     },
     status: {
