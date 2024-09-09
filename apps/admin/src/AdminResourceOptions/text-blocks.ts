@@ -4,6 +4,7 @@ import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
 export const textBlocksConfigOptions: ResourceOptions = {
   parent: "lesson-items",
@@ -15,11 +16,14 @@ export const textBlocksConfigOptions: ResourceOptions = {
       isAccessible: false,
       isVisible: false,
     },
+    new: {
+      before: [addAuthorId],
+    },
     ...archivingActions,
   },
   editProperties: ["body", "state", "archived"],
   filterProperties: ["created_at", "state", "status"],
-  listProperties: ["author_id", "created_at", "state", "status"],
+  listProperties: ["body", "state", "status"],
   showProperties: [
     "body",
     "author_id",
@@ -29,11 +33,6 @@ export const textBlocksConfigOptions: ResourceOptions = {
     "status",
   ],
   properties: {
-    author_id: {
-      components: {
-        list: Components.AuthorId,
-      },
-    },
     body: {
       type: "richtext",
     },
