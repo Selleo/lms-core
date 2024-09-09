@@ -5,13 +5,13 @@ import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { fileTypeOptions } from "./common/consts/selectOptions/fileTypeOptions.js";
-import { beforeCreateFile } from "./common/actions/before/createFile.js";
+import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
 export const filesConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   actions: {
     new: {
-      before: [beforeCreateFile],
+      before: [addAuthorId],
     },
     list: {
       before: [statusFilterBeforeAction],

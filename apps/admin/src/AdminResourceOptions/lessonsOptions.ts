@@ -8,6 +8,7 @@ import { beforeCreateLesson } from "./common/actions/before/lessonCreate.js";
 import { beforeUpdateLesson } from "./common/actions/before/udpateLesson.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { afterUpdateLesson } from "./common/actions/after/updateLesson.js";
+import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -20,7 +21,7 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: false,
     },
     new: {
-      before: [beforeCreateLesson],
+      before: [beforeCreateLesson, addAuthorId],
     },
     edit: {
       before: [beforeUpdateLesson],

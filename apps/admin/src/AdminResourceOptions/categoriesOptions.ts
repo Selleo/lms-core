@@ -6,6 +6,7 @@ import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { beforeCreateCategory } from "./common/actions/before/createCategory.js";
 import { beforeUpdateCategory } from "./common/actions/before/updateCategory.js";
+import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
 export const categoriesConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -19,7 +20,7 @@ export const categoriesConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
     new: {
-      before: [beforeCreateCategory],
+      before: [beforeCreateCategory, addAuthorId],
     },
     edit: {
       before: [beforeUpdateCategory],

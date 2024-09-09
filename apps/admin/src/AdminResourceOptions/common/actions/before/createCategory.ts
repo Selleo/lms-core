@@ -44,10 +44,5 @@ export const beforeCreateCategory: Before = async (
     throw new ValidationError(errors);
   }
 
-  request.payload = {
-    ...request.payload,
-    author_id: context.currentAdmin?.id,
-  };
-
   return request;
 };

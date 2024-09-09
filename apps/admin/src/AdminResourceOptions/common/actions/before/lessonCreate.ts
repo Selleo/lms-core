@@ -1,10 +1,7 @@
-import { Before, ActionRequest, ActionContext, ValidationError } from "adminjs";
+import { Before, ActionRequest, ValidationError } from "adminjs";
 import { ValidationErrors } from "../../validationErrorsType.js";
 
-export const beforeCreateLesson: Before = async (
-  request: ActionRequest,
-  context: ActionContext,
-) => {
+export const beforeCreateLesson: Before = async (request: ActionRequest) => {
   const { payload } = request;
   const errors: ValidationErrors = {};
 
@@ -44,11 +41,6 @@ export const beforeCreateLesson: Before = async (
   if (Object.keys(errors).length > 0) {
     throw new ValidationError(errors);
   }
-
-  request.payload = {
-    ...request.payload,
-    author_id: context.currentAdmin?.id,
-  };
 
   return request;
 };
