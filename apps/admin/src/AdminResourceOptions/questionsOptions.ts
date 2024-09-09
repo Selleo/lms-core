@@ -21,6 +21,9 @@ export const questionsConfigOptions: ResourceOptions = {
     new: {
       before: [beforeCreateOrUpdateQuestions, addAuthorId],
     },
+    edit: {
+      before: [beforeCreateOrUpdateQuestions],
+    },
     ...archivingActions,
   },
   editProperties: [

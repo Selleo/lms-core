@@ -24,7 +24,7 @@ export const beforeCreateOrUpdateQuestions: Before = async (
     };
   }
 
-  if (!solution_explanation) {
+  if (!solution_explanation || solution_explanation === "<p></p>") {
     errors.solution_explanation = {
       message: "Please provide solution explanation",
     };

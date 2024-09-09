@@ -21,6 +21,9 @@ export const filesConfigOptions: ResourceOptions = {
       isAccessible: false,
       isVisible: false,
     },
+    edit: {
+      before: [beforeCreateOrUpdateFiles],
+    },
     ...archivingActions,
   },
   editProperties: ["type", "state", "file", "archived"],
