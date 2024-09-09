@@ -1,6 +1,6 @@
 import uploadFeature from "@adminjs/upload";
-import { componentLoader } from "../../components/index.js";
-import { providerConfig } from "../uploadProviderConfig.js";
+import { componentLoader } from "../components/index.js";
+import { providerConfig } from "../config/uploadProviderConfig.js";
 
 export const uploadFile = (
   resourceName: string,

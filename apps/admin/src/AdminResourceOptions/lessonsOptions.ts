@@ -52,7 +52,7 @@ export const lessonsConfigOptions: ResourceOptions = {
   properties: {
     state: {
       isSortable: true,
-      availableValues: [...stateOptions],
+      availableValues: stateOptions,
     },
     status: {
       components: {
@@ -61,7 +61,7 @@ export const lessonsConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
     archived: {

@@ -55,14 +55,14 @@ export const questionsConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
     state: {
-      availableValues: [...stateOptions],
+      availableValues: stateOptions,
     },
     question_type: {
-      availableValues: [...questionValueOptions],
+      availableValues: questionValueOptions,
     },
   },
 };

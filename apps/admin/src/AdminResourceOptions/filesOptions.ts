@@ -49,14 +49,14 @@ export const filesConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
     state: {
-      availableValues: [...stateOptions],
+      availableValues: stateOptions,
     },
     type: {
-      availableValues: [...fileTypeOptions],
+      availableValues: fileTypeOptions,
     },
     url: {
       type: "string",

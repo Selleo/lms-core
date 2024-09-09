@@ -5,24 +5,24 @@ import bcrypt from "bcrypt";
 import Connect from "connect-pg-simple";
 import express from "express";
 import session from "express-session";
-import { categoriesConfigOptions } from "../AdminResourceOptions/categoriesOptions.js";
-import { coursesConfigOptions } from "../AdminResourceOptions/coursesOptions.js";
-import { credentialsConfigOptions } from "../AdminResourceOptions/credentialsOptions.js";
-import { filesConfigOptions } from "../AdminResourceOptions/filesOptions.js";
-import { lessonFilesConfigOptions } from "../AdminResourceOptions/lessonFilesOptions.js";
-import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lessonQuestionsOptions.js";
-import { lessonsConfigOptions } from "../AdminResourceOptions/lessonsOptions.js";
-import { questionsConfigOptions } from "../AdminResourceOptions/questionsOptions.js";
-import { textBlocksConfigOptions } from "../AdminResourceOptions/textBlocksOptions.js";
-import { usersConfigOptions } from "../AdminResourceOptions/usersOptions.js";
+import { categoriesConfigOptions } from "../adminResourceOptions/categoriesOptions.js";
+import { coursesConfigOptions } from "../adminResourceOptions/coursesOptions.js";
+import { credentialsConfigOptions } from "../adminResourceOptions/credentialsOptions.js";
+import { filesConfigOptions } from "../adminResourceOptions/filesOptions.js";
+import { lessonFilesConfigOptions } from "../adminResourceOptions/lessonFilesOptions.js";
+import { lessonQuestionsConfigOptions } from "../adminResourceOptions/lessonQuestionsOptions.js";
+import { lessonsConfigOptions } from "../adminResourceOptions/lessonsOptions.js";
+import { questionsConfigOptions } from "../adminResourceOptions/questionsOptions.js";
+import { textBlocksConfigOptions } from "../adminResourceOptions/textBlocksOptions.js";
+import { usersConfigOptions } from "../adminResourceOptions/usersOptions.js";
 import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
 import { DatabaseService } from "./database.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import { lessonItemsConfigOptions } from "../AdminResourceOptions/lessonItemsOptions.js";
-import { uploadFile } from "./features/uploadFeature.js";
+import { lessonItemsConfigOptions } from "../adminResourceOptions/lessonItemsOptions.js";
+import { uploadFile } from "../features/uploadFeature.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -141,33 +141,16 @@ export class AdminApp {
             ...filesConfigOptions,
           },
           features: [
-            uploadFeature({
-              componentLoader: componentLoader,
-              provider: providerConfig,
-              properties: {
-                key: "url",
-              },
-              validation: {
-                mimeTypes: [
-                  "image/jpeg",
-                  "image/png",
-                  "image/svg+xml",
-                  "image/gif",
-                  "application/pdf",
-                  "video/webm",
-                  "application/vnd.ms-powerpoint",
-                  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                ],
-                maxSize: 25 * 1024 * 1024,
-              },
-              uploadPath: (record, filename) => {
-                const id = record.id();
-                if (!id) {
-                  throw new Error("Record ID is required for file upload.");
-                }
-                return `files/${id}/${filename}`;
-              },
-            }),
+            uploadFile("files", "url", 25, [
+              "image/jpeg",
+              "image/png",
+              "image/svg+xml",
+              "image/gif",
+              "application/pdf",
+              "video/webm",
+              "application/vnd.ms-powerpoint",
+              "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            ]),
           ],
         },
         {

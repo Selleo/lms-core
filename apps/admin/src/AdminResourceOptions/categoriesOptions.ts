@@ -40,7 +40,7 @@ export const categoriesConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
     title: {

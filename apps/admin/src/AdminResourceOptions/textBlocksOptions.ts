@@ -43,11 +43,11 @@ export const textBlocksConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
     state: {
-      availableValues: [...stateOptions],
+      availableValues: stateOptions,
     },
   },
 };
