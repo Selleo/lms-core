@@ -1,4 +1,5 @@
 import { type ActionRequest, type Before, ValidationError } from "adminjs";
+import { ValidationErrors } from "../../validationErrorsType.js";
 
 export const beforeCreateOrUpdateTextBlocks: Before = async (
   request: ActionRequest,
@@ -7,7 +8,7 @@ export const beforeCreateOrUpdateTextBlocks: Before = async (
 
   if (method !== "post") return request;
 
-  const errors: { [key: string]: { message: string } } = {};
+  const errors: ValidationErrors = {};
   const { body, state } = payload;
 
   if (!body || body === "<p></p>") {
