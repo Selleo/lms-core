@@ -5,6 +5,7 @@ import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { fileTypeOptions } from "./common/consts/selectOptions/fileTypeOptions.js";
+import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
 export const filesConfigOptions: ResourceOptions = {
   parent: "lesson-items",
@@ -15,6 +16,9 @@ export const filesConfigOptions: ResourceOptions = {
     delete: {
       isAccessible: false,
       isVisible: false,
+    },
+    new: {
+      before: [addAuthorId],
     },
     ...archivingActions,
   },
