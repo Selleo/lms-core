@@ -5,6 +5,7 @@ import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
 export const questionsConfigOptions: ResourceOptions = {
   parent: "lesson-items",
@@ -16,6 +17,9 @@ export const questionsConfigOptions: ResourceOptions = {
       isAccessible: false,
       isVisible: false,
     },
+    new: {
+      before: [addAuthorId],
+    },
     ...archivingActions,
   },
   editProperties: [
@@ -26,7 +30,7 @@ export const questionsConfigOptions: ResourceOptions = {
     "archived",
   ],
   filterProperties: ["created_at", "question_type", "state", "status"],
-  listProperties: ["created_at", "question_type", "state", "status"],
+  listProperties: ["question_body", "question_type", "state", "status"],
   showProperties: [
     "question_type",
     "question_body",
@@ -38,11 +42,6 @@ export const questionsConfigOptions: ResourceOptions = {
     "status",
   ],
   properties: {
-    author_id: {
-      components: {
-        list: Components.AuthorId,
-      },
-    },
     archived: {
       isRequired: false,
     },

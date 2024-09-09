@@ -157,6 +157,35 @@ export class AdminApp {
           options: {
             ...filesConfigOptions,
           },
+          features: [
+            uploadFeature({
+              componentLoader: componentLoader,
+              provider: providerConfig,
+              properties: {
+                key: "url",
+              },
+              validation: {
+                mimeTypes: [
+                  "image/jpeg",
+                  "image/png",
+                  "image/svg+xml",
+                  "image/gif",
+                  "application/pdf",
+                  "video/webm",
+                  "application/vnd.ms-powerpoint",
+                  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                ],
+                maxSize: 25 * 1024 * 1024,
+              },
+              uploadPath: (record, filename) => {
+                const id = record.id();
+                if (!id) {
+                  throw new Error("Record ID is required for file upload.");
+                }
+                return `files/${id}/${filename}`;
+              },
+            }),
+          ],
         },
         {
           resource: this.db.getResource("lesson_files"),
