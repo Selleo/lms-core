@@ -6,7 +6,7 @@ import {
   ValidationError,
 } from "adminjs";
 
-export const beforeUserCreateOrUpdate: Before = async (
+export const beforeCreateOrUpdateUser: Before = async (
   request: ActionRequest,
   context: ActionContext,
 ) => {

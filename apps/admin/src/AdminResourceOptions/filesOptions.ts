@@ -4,11 +4,15 @@ import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { fileTypeOptions } from "./common/consts/selectOptions/fileTypeOptions.js";
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
-export const textBlocksConfigOptions: ResourceOptions = {
+export const filesConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   actions: {
+    new: {
+      before: [addAuthorId],
+    },
     list: {
       before: [statusFilterBeforeAction],
     },
@@ -16,25 +20,27 @@ export const textBlocksConfigOptions: ResourceOptions = {
       isAccessible: false,
       isVisible: false,
     },
-    new: {
-      before: [addAuthorId],
-    },
     ...archivingActions,
   },
-  editProperties: ["body", "state", "archived"],
-  filterProperties: ["created_at", "state", "status"],
-  listProperties: ["body", "state", "status"],
+  editProperties: ["type", "state", "archived", "url"],
+  filterProperties: ["type", "created_at", "state", "status"],
+  listProperties: ["author_id", "created_at", "type", "state", "status"],
   showProperties: [
-    "body",
     "author_id",
     "created_at",
     "updated_at",
+    "type",
     "state",
     "status",
   ],
   properties: {
-    body: {
-      type: "richtext",
+    archived: {
+      isRequired: false,
+    },
+    author_id: {
+      components: {
+        list: Components.AuthorId,
+      },
     },
     status: {
       components: {
@@ -43,11 +49,17 @@ export const textBlocksConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
     state: {
-      availableValues: [...stateOptions],
+      availableValues: stateOptions,
+    },
+    type: {
+      availableValues: fileTypeOptions,
+    },
+    url: {
+      type: "string",
     },
   },
 };

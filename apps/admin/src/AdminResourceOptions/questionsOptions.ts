@@ -1,13 +1,13 @@
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { Components } from "../components/index.js";
+import { questionValueOptions } from "./common/consts/selectOptions/questionValueOptions.js";
 import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
-import { fileTypeOptions } from "./common/consts/selectOptions/fileTypeOptions.js";
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
-export const filesConfigOptions: ResourceOptions = {
+export const questionsConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   actions: {
     list: {
@@ -22,32 +22,31 @@ export const filesConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["type", "state", "file", "archived"],
-  filterProperties: ["type", "created_at", "state", "status"],
-  listProperties: ["author_id", "file", "type", "state", "status"],
+  editProperties: [
+    "question_type",
+    "question_body",
+    "solution_explanation",
+    "state",
+    "archived",
+  ],
+  filterProperties: ["created_at", "question_type", "state", "status"],
+  listProperties: ["question_body", "question_type", "state", "status"],
   showProperties: [
+    "question_type",
+    "question_body",
+    "solution_explanation",
     "author_id",
     "created_at",
     "updated_at",
-    "type",
     "state",
     "status",
-    "file",
   ],
   properties: {
     archived: {
       isRequired: false,
     },
-    author_id: {
-      components: {
-        list: Components.AuthorId,
-      },
-    },
-    file: {
-      components: {
-        list: Components.PhotoPreview,
-        show: Components.PhotoPreview,
-      },
+    solution_explanation: {
+      type: "richtext",
     },
     status: {
       components: {
@@ -56,14 +55,14 @@ export const filesConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
     state: {
-      availableValues: [...stateOptions],
+      availableValues: stateOptions,
     },
-    type: {
-      availableValues: [...fileTypeOptions],
+    question_type: {
+      availableValues: questionValueOptions,
     },
   },
 };

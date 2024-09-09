@@ -1,13 +1,12 @@
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { Components } from "../components/index.js";
-import { questionValueOptions } from "./common/consts/selectOptions/questionValueOptions.js";
 import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
-export const questionsConfigOptions: ResourceOptions = {
+export const textBlocksConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   actions: {
     list: {
@@ -22,19 +21,11 @@ export const questionsConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: [
-    "question_type",
-    "question_body",
-    "solution_explanation",
-    "state",
-    "archived",
-  ],
-  filterProperties: ["created_at", "question_type", "state", "status"],
-  listProperties: ["question_body", "question_type", "state", "status"],
+  editProperties: ["body", "state", "archived"],
+  filterProperties: ["created_at", "state", "status"],
+  listProperties: ["body", "state", "status"],
   showProperties: [
-    "question_type",
-    "question_body",
-    "solution_explanation",
+    "body",
     "author_id",
     "created_at",
     "updated_at",
@@ -42,10 +33,7 @@ export const questionsConfigOptions: ResourceOptions = {
     "status",
   ],
   properties: {
-    archived: {
-      isRequired: false,
-    },
-    solution_explanation: {
+    body: {
       type: "richtext",
     },
     status: {
@@ -55,14 +43,11 @@ export const questionsConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
     state: {
-      availableValues: [...stateOptions],
-    },
-    question_type: {
-      availableValues: [...questionValueOptions],
+      availableValues: stateOptions,
     },
   },
 };

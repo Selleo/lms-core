@@ -1,13 +1,19 @@
 import { Before, ActionRequest, ValidationError } from "adminjs";
 import { ValidationErrors } from "../../validationErrorsType.js";
 
-export const beforeUpdateLesson: Before = async (request: ActionRequest) => {
+export const beforeCreateLesson: Before = async (request: ActionRequest) => {
   const { payload } = request;
   const errors: ValidationErrors = {};
 
-  if (payload?.title?.length < 3) {
+  if (!payload?.title?.length) {
     errors["title"] = {
       message: "Title is required",
+    };
+  }
+
+  if (payload?.title?.length < 5) {
+    errors["title"] = {
+      message: `Title must be more than 5 characters. ${payload?.title?.length}`,
     };
   }
 
@@ -19,17 +25,11 @@ export const beforeUpdateLesson: Before = async (request: ActionRequest) => {
 
   if (payload?.description?.length > 1000) {
     errors["description"] = {
-      message: `Description must be no more than 1000 characters. ${payload?.description?.length}/1000 characters`,
+      message: `Description must be no more than 100 characters. ${payload?.description?.length}/100 characters`,
     };
   }
 
   if (payload?.state === "published") {
-    if (payload.archived) {
-      errors["archived"] = {
-        message: "You can't publish an archived lesson",
-      };
-    }
-
     if (!payload?.description || payload?.description < 30) {
       errors["description"] = {
         message:
@@ -41,5 +41,6 @@ export const beforeUpdateLesson: Before = async (request: ActionRequest) => {
   if (Object.keys(errors).length > 0) {
     throw new ValidationError(errors);
   }
+
   return request;
 };

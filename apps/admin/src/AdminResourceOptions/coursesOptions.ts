@@ -62,7 +62,7 @@ export const coursesConfigOptions: ResourceOptions = {
       isSortable: false,
     },
     state: {
-      availableValues: [...stateOptions],
+      availableValues: stateOptions,
     },
     status: {
       components: {
@@ -71,7 +71,7 @@ export const coursesConfigOptions: ResourceOptions = {
         filter: Components.FilterSelect,
       },
       props: {
-        availableValues: [...statusOptions],
+        availableValues: statusOptions,
       },
     },
   },

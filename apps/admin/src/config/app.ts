@@ -5,26 +5,24 @@ import bcrypt from "bcrypt";
 import Connect from "connect-pg-simple";
 import express from "express";
 import session from "express-session";
-import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
-import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
-import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
-import { filesConfigOptions } from "../AdminResourceOptions/files.js";
-import { lessonFilesConfigOptions } from "../AdminResourceOptions/lesson-files.js";
-import { lessonItemsConfigOptions } from "../AdminResourceOptions/lesson-items.js";
-import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lesson-questions.js";
-import { lessonItemsOptions } from "../AdminResourceOptions/lessonItemsOptions.js";
-import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
-import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
-import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
-import { usersConfigOptions } from "../AdminResourceOptions/users.js";
+import { categoriesConfigOptions } from "../adminResourceOptions/categoriesOptions.js";
+import { coursesConfigOptions } from "../adminResourceOptions/coursesOptions.js";
+import { credentialsConfigOptions } from "../adminResourceOptions/credentialsOptions.js";
+import { filesConfigOptions } from "../adminResourceOptions/filesOptions.js";
+import { lessonFilesConfigOptions } from "../adminResourceOptions/lessonFilesOptions.js";
+import { lessonQuestionsConfigOptions } from "../adminResourceOptions/lessonQuestionsOptions.js";
+import { lessonsConfigOptions } from "../adminResourceOptions/lessonsOptions.js";
+import { questionsConfigOptions } from "../adminResourceOptions/questionsOptions.js";
+import { textBlocksConfigOptions } from "../adminResourceOptions/textBlocksOptions.js";
+import { usersConfigOptions } from "../adminResourceOptions/usersOptions.js";
 import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
 import { DatabaseService } from "./database.js";
 import path from "path";
-import uploadFeature from "@adminjs/upload";
-import { providerConfig } from "./uploadProviderConfig.js";
 import { fileURLToPath } from "url";
+import { lessonItemsConfigOptions } from "../adminResourceOptions/lessonItemsOptions.js";
+import { uploadFile } from "../features/uploadFeature.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -109,7 +107,9 @@ export class AdminApp {
         },
         {
           resource: this.db.getResource("credentials"),
-          ...credentialsConfigOptions,
+          options: {
+            ...credentialsConfigOptions,
+          },
         },
         {
           resource: this.db.getResource("courses"),
@@ -127,29 +127,12 @@ export class AdminApp {
               resourceId: "lesson_items",
               joinKey: "lesson_id",
             }),
-            uploadFeature({
-              componentLoader: componentLoader,
-              provider: providerConfig,
-              properties: {
-                key: "image_url",
-              },
-              validation: {
-                mimeTypes: [
-                  "image/jpeg",
-                  "image/png",
-                  "image/svg+xml",
-                  "image/gif",
-                ],
-                maxSize: 25 * 1024 * 1024,
-              },
-              uploadPath: (record, filename) => {
-                const id = record.id();
-                if (!id) {
-                  throw new Error("Record ID is required for file upload.");
-                }
-                return `lessons/${id}/${filename}`;
-              },
-            }),
+            uploadFile("lessons", "image_url", 25, [
+              "image/jpeg",
+              "image/png",
+              "image/svg+xml",
+              "image/gif",
+            ]),
           ],
         },
         {
@@ -158,33 +141,16 @@ export class AdminApp {
             ...filesConfigOptions,
           },
           features: [
-            uploadFeature({
-              componentLoader: componentLoader,
-              provider: providerConfig,
-              properties: {
-                key: "url",
-              },
-              validation: {
-                mimeTypes: [
-                  "image/jpeg",
-                  "image/png",
-                  "image/svg+xml",
-                  "image/gif",
-                  "application/pdf",
-                  "video/webm",
-                  "application/vnd.ms-powerpoint",
-                  "application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                ],
-                maxSize: 25 * 1024 * 1024,
-              },
-              uploadPath: (record, filename) => {
-                const id = record.id();
-                if (!id) {
-                  throw new Error("Record ID is required for file upload.");
-                }
-                return `files/${id}/${filename}`;
-              },
-            }),
+            uploadFile("files", "url", 25, [
+              "image/jpeg",
+              "image/png",
+              "image/svg+xml",
+              "image/gif",
+              "application/pdf",
+              "video/webm",
+              "application/vnd.ms-powerpoint",
+              "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+            ]),
           ],
         },
         {
@@ -218,7 +184,7 @@ export class AdminApp {
         {
           resource: this.db.getResource("lesson_items"),
           options: {
-            ...lessonItemsOptions,
+            ...lessonItemsConfigOptions,
           },
         },
         {
