@@ -20,10 +20,9 @@ import { env } from "../env.js";
 import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
 import { DatabaseService } from "./database.js";
 import path from "path";
-import uploadFeature from "@adminjs/upload";
-import { providerConfig } from "./uploadProviderConfig.js";
 import { fileURLToPath } from "url";
 import { lessonItemsConfigOptions } from "../AdminResourceOptions/lessonItemsOptions.js";
+import { uploadFile } from "./features/uploadFeature.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -128,29 +127,12 @@ export class AdminApp {
               resourceId: "lesson_items",
               joinKey: "lesson_id",
             }),
-            uploadFeature({
-              componentLoader: componentLoader,
-              provider: providerConfig,
-              properties: {
-                key: "image_url",
-              },
-              validation: {
-                mimeTypes: [
-                  "image/jpeg",
-                  "image/png",
-                  "image/svg+xml",
-                  "image/gif",
-                ],
-                maxSize: 25 * 1024 * 1024,
-              },
-              uploadPath: (record, filename) => {
-                const id = record.id();
-                if (!id) {
-                  throw new Error("Record ID is required for file upload.");
-                }
-                return `lessons/${id}/${filename}`;
-              },
-            }),
+            uploadFile("lessons", "image_url", 25, [
+              "image/jpeg",
+              "image/png",
+              "image/svg+xml",
+              "image/gif",
+            ]),
           ],
         },
         {
