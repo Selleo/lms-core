@@ -2,11 +2,15 @@ import { memo } from "react";
 import { MenuItemLink } from "./MenuItemLink";
 import type { MenuItemType } from "./DashboardNavigation";
 
-export const MenuItem = memo(({ item }: { item: MenuItemType }) => {
+type MenuItemProps = {
+  item: MenuItemType;
+};
+
+export const MenuItem = memo(({ item }: MenuItemProps) => {
   if ("children" in item) {
     return (
-      <li className="w-full mt-4">
-        <span className="block px-5 py-2 font-medium text-gray-600 capitalize">
+      <li className="w-full mt-4 max-w-[268px]">
+        <span className="block font-medium text-gray-600 capitalize">
           {item.label}
         </span>
         <ul>
@@ -19,7 +23,7 @@ export const MenuItem = memo(({ item }: { item: MenuItemType }) => {
   }
 
   return (
-    <li className="h-14 w-full">
+    <li className="h-8 w-full">
       <MenuItemLink {...item} />
     </li>
   );

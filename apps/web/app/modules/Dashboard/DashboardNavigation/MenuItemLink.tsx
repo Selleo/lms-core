@@ -2,33 +2,26 @@ import { NavLink } from "@remix-run/react";
 import { cn } from "~/lib/utils";
 import { memo } from "react";
 import type { LeafMenuItem } from "./DashboardNavigation";
+import { Icon } from "~/components/Icon";
 
-export const MenuItemLink = memo(({ label, link, Icon }: LeafMenuItem) => (
+export const MenuItemLink = memo(({ label, link, iconName }: LeafMenuItem) => (
   <NavLink
     to={link}
     className={({ isActive }) =>
       cn(
-        "w-full h-full flex items-center p-5 relative transition-colors duration-300",
+        "w-full h-full p-2 mt-3 flex items-center relative rounded-md transition-colors duration-300",
         {
-          "bg-primary text-primary-foreground font-medium": isActive,
-          "text-muted-foreground hover:bg-link-hover": !isActive,
-        }
+          "bg-primary-50": isActive,
+        },
       )
     }
     end={link === "/"}
   >
-    {({ isActive }) => (
-      <>
-        <Icon
-          className={cn("w-5 h-5 mr-2", {
-            "text-primary-foreground": isActive,
-          })}
-        />
-        <span className="capitalize">{label}</span>
-        {isActive && (
-          <span className="absolute inset-y-0 left-0 w-1 bg-secondary" />
-        )}
-      </>
-    )}
+    <>
+      <Icon name={iconName} className="w-4 h-4 mr-2 text-neutral-900" />
+      <span className="capitalize subtle text-md text-neutral-900">
+        {label}
+      </span>
+    </>
   </NavLink>
 ));
