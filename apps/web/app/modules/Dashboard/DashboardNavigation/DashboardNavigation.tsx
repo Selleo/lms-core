@@ -8,6 +8,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { CaretDown, Dashboard, Directory, SelleoLogo } from "~/assets/svgs";
 import { MenuItem } from "~/modules/Dashboard/DashboardNavigation/MenuItem";
 import { IconName } from "~/types/shared";
+import { useLogoutUser } from "~/api/mutations/useLogoutUser";
+import { Icon } from "~/components/Icon";
 
 export type Role = GetUsersResponse["data"][number]["role"];
 
@@ -43,6 +45,7 @@ const menuItems: MenuItemType[] = [
 ];
 
 export function DashboardNavigation() {
+  const { mutate: logout } = useLogoutUser();
   const {
     data: { role, firstName, lastName, email },
   } = useCurrentUserSuspense();
@@ -89,6 +92,13 @@ export function DashboardNavigation() {
           ))}
         </ul>
       </nav>
+      <button
+        onClick={() => logout()}
+        className="self-end rounded-md hover:bg-primary-50 subtle font-md flex gap-x-2 items-center max-w-[268px] mx-auto"
+      >
+        <Icon name="Logout" className="w-4 h-4" />
+        <span>Logout</span>
+      </button>
     </aside>
   );
 }
