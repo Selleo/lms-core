@@ -190,6 +190,13 @@
       "when": 1725576090338,
       "tag": "0026_update_default_value_of_state_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1725955284133,
+      "tag": "0027_add_title_to_files_table",
+      "breakpoints": true
     }
   ]
 }
