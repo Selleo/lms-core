@@ -1,10 +1,11 @@
+import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
+import { beforeCreateOrUpdateTextBlocks } from "./common/actions/before/createOrUpdateTextBlocks.js";
 import { Components } from "../components/index.js";
 import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
-import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
 export const textBlocksConfigOptions: ResourceOptions = {
   parent: "lesson-items",
@@ -17,7 +18,10 @@ export const textBlocksConfigOptions: ResourceOptions = {
       isVisible: false,
     },
     new: {
-      before: [addAuthorId],
+      before: [beforeCreateOrUpdateTextBlocks, addAuthorId],
+    },
+    edit: {
+      before: [beforeCreateOrUpdateTextBlocks],
     },
     ...archivingActions,
   },
@@ -35,6 +39,7 @@ export const textBlocksConfigOptions: ResourceOptions = {
   properties: {
     body: {
       type: "richtext",
+      isRequired: false,
     },
     status: {
       components: {
@@ -48,6 +53,7 @@ export const textBlocksConfigOptions: ResourceOptions = {
     },
     state: {
       availableValues: stateOptions,
+      isRequired: false,
     },
   },
 };

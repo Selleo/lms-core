@@ -1,11 +1,12 @@
+import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
+import { beforeCreateOrUpdateQuestions } from "./common/actions/before/createOrUpdateQuestions.js";
 import { Components } from "../components/index.js";
 import { questionValueOptions } from "./common/consts/selectOptions/questionValueOptions.js";
 import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
-import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 
 export const questionsConfigOptions: ResourceOptions = {
   parent: "lesson-items",
@@ -18,7 +19,10 @@ export const questionsConfigOptions: ResourceOptions = {
       isVisible: false,
     },
     new: {
-      before: [addAuthorId],
+      before: [beforeCreateOrUpdateQuestions, addAuthorId],
+    },
+    edit: {
+      before: [beforeCreateOrUpdateQuestions],
     },
     ...archivingActions,
   },
@@ -47,6 +51,7 @@ export const questionsConfigOptions: ResourceOptions = {
     },
     solution_explanation: {
       type: "richtext",
+      isRequired: false,
     },
     status: {
       components: {
@@ -60,9 +65,14 @@ export const questionsConfigOptions: ResourceOptions = {
     },
     state: {
       availableValues: stateOptions,
+      isRequired: false,
+    },
+    question_body: {
+      isRequired: false,
     },
     question_type: {
       availableValues: questionValueOptions,
+      isRequired: false,
     },
   },
 };

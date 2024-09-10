@@ -6,12 +6,13 @@ import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.j
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { fileTypeOptions } from "./common/consts/selectOptions/fileTypeOptions.js";
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
+import { beforeCreateOrUpdateFiles } from "./common/actions/before/createOrUpdateFiles.js";
 
 export const filesConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   actions: {
     new: {
-      before: [addAuthorId],
+      before: [beforeCreateOrUpdateFiles, addAuthorId],
     },
     list: {
       before: [statusFilterBeforeAction],
@@ -20,11 +21,14 @@ export const filesConfigOptions: ResourceOptions = {
       isAccessible: false,
       isVisible: false,
     },
+    edit: {
+      before: [beforeCreateOrUpdateFiles],
+    },
     ...archivingActions,
   },
-  editProperties: ["type", "state", "archived", "url"],
+  editProperties: ["type", "state", "file", "archived"],
   filterProperties: ["type", "created_at", "state", "status"],
-  listProperties: ["author_id", "created_at", "type", "state", "status"],
+  listProperties: ["author_id", "file", "type", "state", "status"],
   showProperties: [
     "author_id",
     "created_at",
@@ -32,6 +36,7 @@ export const filesConfigOptions: ResourceOptions = {
     "type",
     "state",
     "status",
+    "file",
   ],
   properties: {
     archived: {
@@ -41,6 +46,13 @@ export const filesConfigOptions: ResourceOptions = {
       components: {
         list: Components.AuthorId,
       },
+    },
+    file: {
+      components: {
+        list: Components.PhotoPreview,
+        show: Components.PhotoPreview,
+      },
+      isRequired: true,
     },
     status: {
       components: {
@@ -54,12 +66,11 @@ export const filesConfigOptions: ResourceOptions = {
     },
     state: {
       availableValues: stateOptions,
+      isRequired: false,
     },
     type: {
       availableValues: fileTypeOptions,
-    },
-    url: {
-      type: "string",
+      isRequired: false,
     },
   },
 };
