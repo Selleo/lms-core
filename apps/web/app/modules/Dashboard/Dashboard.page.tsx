@@ -1,4 +1,5 @@
 import type { MetaFunction } from "@remix-run/node";
+import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [
@@ -7,6 +8,36 @@ export const meta: MetaFunction = () => {
   ];
 };
 
+//TODO: Once the backend is ready, the values will come from the query
+
 export default function DashboardPage() {
-  return <div></div>;
+  return (
+    <div className="flex flex-1 flex-col gap-4 lg:gap-6 h-full">
+      <div className="flex flex-col">
+        <h1 className="h3 text-neutral-950">Available Courses</h1>
+        <p className="text-body-lg text-neutral-700">Available Courses</p>
+      </div>
+      <div className="grid p-6 gap-y-12 grid-cols-[repeat(auto-fit,minmax(360px,1fr))]">
+        {Array.from({ length: 12 }).map((_, index) => (
+          <div key={index} className="flex flex-col gap-y-2.5 max-w-[360px]">
+            <img
+              src="https://foundr.com/wp-content/uploads/2023/04/How-to-create-an-online-course.jpg.webp"
+              alt=""
+              className="rounded-md"
+            />
+            <h3 className="h6 text-neutral-950">
+              Graduate Teaching Assistants
+            </h3>
+            <div className="flex justify-between">
+              <div className="flex flex-col text-details justify-end text-neutral-500">
+                <span>CONTENT</span>
+                <span>15 lessons</span>
+              </div>
+              <Button>Enroll</Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
