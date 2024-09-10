@@ -1,7 +1,7 @@
 import React from "react";
 import { FormGroup, Label, Select } from "@adminjs/design-system";
 import { FilterPropertyProps } from "adminjs";
-import { statusOptions } from "../../adminResourceOptions/common/consts/selectOptions/statusOptions.js";
+import { statusOptions } from "../../AdminResourceOptions/common/consts/selectOptions/statusOptions.js";
 
 interface Option {
   value: string;

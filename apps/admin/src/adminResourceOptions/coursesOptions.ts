@@ -81,6 +81,7 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     state: {
       availableValues: stateOptions,
+      isRequired: false,
     },
     status: {
       components: {
@@ -92,14 +93,6 @@ export const coursesConfigOptions: ResourceOptions = {
         availableValues: statusOptions,
       },
     },
-    archived: {
-      isDisabled: true,
-      availableValues: [
-        { value: "true", label: "Yes" },
-        { value: "false", label: "No" },
-      ],
-      isSortable: false,
-    },
     file: {
       components: {
         show: Components.PhotoPreview,
@@ -109,12 +102,6 @@ export const coursesConfigOptions: ResourceOptions = {
       type: "float",
       isSortable: false,
       isRequired: false,
-    },
-    created_at: {
-      isSortable: false,
-    },
-    updated_at: {
-      isSortable: false,
     },
   },
 };

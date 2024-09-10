@@ -5,25 +5,28 @@ import bcrypt from "bcrypt";
 import Connect from "connect-pg-simple";
 import express from "express";
 import session from "express-session";
-import { categoriesConfigOptions } from "../AdminResourceOptions/categories.js";
-import { coursesConfigOptions } from "../AdminResourceOptions/courses.js";
-import { credentialsConfigOptions } from "../AdminResourceOptions/credentials.js";
-import { filesConfigOptions } from "../AdminResourceOptions/files.js";
-import { lessonFilesConfigOptions } from "../AdminResourceOptions/lesson-files.js";
-import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lesson-questions.js";
-import { lessonsConfigOptions } from "../AdminResourceOptions/lessons.js";
-import { questionsConfigOptions } from "../AdminResourceOptions/questions.js";
-import { textBlocksConfigOptions } from "../AdminResourceOptions/text-blocks.js";
-import { usersConfigOptions } from "../AdminResourceOptions/users.js";
+import { categoriesConfigOptions } from "../AdminResourceOptions/categoriesOptions.js";
+import { coursesConfigOptions } from "../AdminResourceOptions/coursesOptions.js";
+import { credentialsConfigOptions } from "../AdminResourceOptions/credentialsOptions.js";
+import { filesConfigOptions } from "../AdminResourceOptions/filesOptions.js";
+import { lessonFilesConfigOptions } from "../AdminResourceOptions/lessonFilesOptions.js";
+import { lessonQuestionsConfigOptions } from "../AdminResourceOptions/lessonQuestionsOptions.js";
+import { lessonsConfigOptions } from "../AdminResourceOptions/lessonsOptions.js";
+import { questionsConfigOptions } from "../AdminResourceOptions/questionsOptions.js";
+import { textBlocksConfigOptions } from "../AdminResourceOptions/textBlocksOptions.js";
+import { usersConfigOptions } from "../AdminResourceOptions/usersOptions.js";
 import { componentLoader } from "../components/index.js";
 import { env } from "../env.js";
 import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
 import { DatabaseService } from "./database.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import { lessonItemsConfigOptions } from "../adminResourceOptions/lessonItemsOptions.js";
+import { lessonItemsConfigOptions } from "../AdminResourceOptions/lessonItemsOptions.js";
 import { uploadFile } from "../features/uploadFeature.js";
-import {owningRelationSettingsFeature, RelationType} from "@adminjs/relations";
+import {
+  owningRelationSettingsFeature,
+  RelationType,
+} from "@adminjs/relations";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
