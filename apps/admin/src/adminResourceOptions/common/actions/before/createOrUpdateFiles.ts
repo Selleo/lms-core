@@ -9,7 +9,17 @@ export const beforeCreateOrUpdateFiles: Before = async (
   if (method !== "post") return request;
 
   const errors: ValidationErrors = {};
-  const { type, state } = payload;
+  const { title, type, state } = payload;
+
+  if (!title) {
+    errors.title = { message: "Please provide title of the file" };
+  }
+
+  if (title.length > 100) {
+    errors.title = {
+      message: `Title must be no more than 100 characters.`,
+    };
+  }
 
   if (!type) {
     errors.type = { message: "Please provide type of the file" };
