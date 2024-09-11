@@ -29,18 +29,33 @@ export interface ParentMenuItem extends BaseMenuItem {
 
 export type MenuItemType = LeafMenuItem | ParentMenuItem;
 
+//tests routes - to be adjusted
 const menuItems: MenuItemType[] = [
   {
     label: "dashboard",
     link: "/",
-    roles: ["student"],
+    roles: ["admin", "student"],
     iconName: "Dashboard",
   },
   {
     label: "courses",
-    link: "/",
-    roles: ["student, admin, tutor"],
+    link: "/courses",
+    roles: ["student", "admin", "tutor"],
     iconName: "Directory",
+    children: [
+      {
+        label: "my courses",
+        link: "/my-courses",
+        roles: ["admin", "student"],
+        iconName: "Directory",
+      },
+      {
+        label: "browse courses",
+        link: "/browse-courses",
+        roles: ["admin", "student"],
+        iconName: "Directory",
+      },
+    ],
   },
 ];
 
@@ -67,38 +82,47 @@ export function DashboardNavigation() {
       <div className="py-9 w-full flex justify-center border-b-primary-200 border-b">
         <SelleoLogo />
       </div>
-      <div className="p-[18px] mt-9 mx-auto max-w-[268px] bg-primary-50 rounded-md w-full flex items-center justify-between">
-        <div className="flex gap-x-2">
-          <Avatar>
-            <AvatarImage src="https://ui-avatars.com/api/?name=User" />
-            <AvatarFallback>
-              {firstName[0]}
-              {lastName[0]}
-            </AvatarFallback>
-          </Avatar>
-          <hgroup className="flex flex-col *:subtle">
-            <h2 className="text-neutral-900">
-              {firstName} {lastName}
-            </h2>
-            <p className="text-neutral-500">{email}</p>
-          </hgroup>
+
+      <div className="flex flex-col mx-5">
+        <div className="my-9 p-[18px] max-w-[268px] bg-primary-50 rounded-md w-full flex items-center justify-between">
+          <div className="flex gap-x-2">
+            <Avatar>
+              <AvatarImage src="https://ui-avatars.com/api/?name=User" />
+              <AvatarFallback>
+                {firstName[0]}
+                {lastName[0]}
+              </AvatarFallback>
+            </Avatar>
+            <hgroup className="flex flex-col *:subtle">
+              <h2 className="text-neutral-900">
+                {firstName} {lastName}
+              </h2>
+              <p className="text-neutral-500">{email}</p>
+            </hgroup>
+          </div>
+          <CaretDown className="h-6 w-6" />
         </div>
-        <CaretDown className="h-6 w-6" />
+
+        <p className="subtle text-neutral-200 mb-4">OVERVIEW</p>
+
+        <nav>
+          <ul className="flex flex-col items-center">
+            {authorizedMenuItems.map((item) => (
+              <MenuItem key={item.label} item={item} />
+            ))}
+          </ul>
+        </nav>
       </div>
-      <nav className="flex flex-col">
-        <ul className="flex flex-col items-center">
-          {authorizedMenuItems.map((item) => (
-            <MenuItem key={item.label} item={item} />
-          ))}
-        </ul>
-      </nav>
-      <button
-        onClick={() => logout()}
-        className="self-end rounded-md hover:bg-primary-50 subtle font-md flex gap-x-2 items-center max-w-[268px] mx-auto"
-      >
-        <Icon name="Logout" className="w-4 h-4" />
-        <span>Logout</span>
-      </button>
+
+      <div className="absolute left-0 bottom-0 flex items-center border-t border-t-primary-200 w-[19.375rem] h-32">
+        <button
+          onClick={() => logout()}
+          className="flex items-center rounded-md hover:bg-primary-50 subtle font-md gap-x-2 w-full mx-5 p-2"
+        >
+          <Icon name="Logout" className="w-4 h-4" />
+          <span className="subtle text-neutral-900">Log Out</span>
+        </button>
+      </div>
     </aside>
   );
 }
