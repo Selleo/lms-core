@@ -13,10 +13,10 @@ import { UserRole } from "src/users/schemas/user-roles";
 import {
   SortCategoryFieldsOptions,
   sortCategoryFieldsOptions,
-} from "../schemas/category-query";
+} from "../schemas/categoryQuery";
 
 @Controller("categories")
-export class CategorieController {
+export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()

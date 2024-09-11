@@ -17,6 +17,7 @@ import { TestConfigModule } from "./test-config/test-config.module";
 import { StagingGuard } from "./common/guards/staging.guard";
 import { HealthModule } from "./health/health.module";
 import { ScheduleModule } from "@nestjs/schedule";
+import { CoursesModule } from "./courses/courses.module";
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { ScheduleModule } from "@nestjs/schedule";
       ScheduleModule.forRoot(),
       (env) => env.NODE_ENV !== "test",
     ),
+    CoursesModule,
   ],
   controllers: [],
   providers: [

@@ -3,7 +3,7 @@ import { CategoriesService } from "../categories.service";
 import { DatabasePg } from "src/common";
 import { truncateAllTables } from "test/helpers/test-helpers";
 import { createCategoryFactory } from "test/factory/category.factory";
-import { CategoriesQuery } from "../api/categoires.types";
+import { CategoriesQuery } from "../api/categories.types";
 import { UserRole, UserRoles } from "src/users/schemas/user-roles";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";
@@ -12,7 +12,7 @@ const CATEGORIES_COUNT = 20;
 
 describe("CategoriesService", () => {
   let testContext: TestContext;
-  let categoriesServics: CategoriesService;
+  let categoriesServices: CategoriesService;
   let db: DatabasePg;
   let categoryFactory: ReturnType<typeof createCategoryFactory>;
   let query: CategoriesQuery;
@@ -20,7 +20,7 @@ describe("CategoriesService", () => {
 
   beforeAll(async () => {
     testContext = await createUnitTest();
-    categoriesServics = testContext.module.get(CategoriesService);
+    categoriesServices = testContext.module.get(CategoriesService);
     db = testContext.db;
     categoryFactory = createCategoryFactory(db);
     categoryFactory.createList(CATEGORIES_COUNT);
@@ -38,7 +38,7 @@ describe("CategoriesService", () => {
         const perPage = 5;
         const page = 2,
           query = { page, perPage };
-        const categories = await categoriesServics.getCategories(
+        const categories = await categoriesServices.getCategories(
           query,
           userRole,
         );
@@ -53,7 +53,7 @@ describe("CategoriesService", () => {
     describe("when request don't provide any query params", () => {
       it("returns correct data format", async () => {
         query = {};
-        const categories = await categoriesServics.getCategories(
+        const categories = await categoriesServices.getCategories(
           query,
           userRole,
         );
@@ -67,7 +67,7 @@ describe("CategoriesService", () => {
 
       it("returns all categories with default pagination data", async () => {
         query = {};
-        const categories = await categoriesServics.getCategories(
+        const categories = await categoriesServices.getCategories(
           query,
           userRole,
         );
@@ -87,7 +87,7 @@ describe("CategoriesService", () => {
         await db
           .insert(categories)
           .values([historyCategory, biologyCategory, mathCategory]);
-        const sortedCategories = await categoriesServics.getCategories(
+        const sortedCategories = await categoriesServices.getCategories(
           query,
           userRole,
         );
@@ -106,7 +106,7 @@ describe("CategoriesService", () => {
           .insert(categories)
           .values([historyCategory, biologyCategory, mathCategory]);
         query = { filter: "ath" };
-        const filterCategories = await categoriesServics.getCategories(
+        const filterCategories = await categoriesServices.getCategories(
           query,
           userRole,
         );
@@ -118,7 +118,7 @@ describe("CategoriesService", () => {
     describe("when there is no data", () => {
       it("returns empty array", async () => {
         await truncateAllTables(db);
-        const categories = await categoriesServics.getCategories(
+        const categories = await categoriesServices.getCategories(
           query,
           userRole,
         );
