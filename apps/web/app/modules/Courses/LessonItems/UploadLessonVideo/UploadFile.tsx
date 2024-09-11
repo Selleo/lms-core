@@ -11,7 +11,7 @@ import {
 } from "~/components/ui/alert-dialog";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import {
+import type {
   UploadAlertDialogProps,
   UploadFileProps,
 } from "../LessonItemsForms/types";
@@ -23,9 +23,9 @@ export const UploadFileDialog = ({
 }: UploadAlertDialogProps) => {
   const [isOpen, setIsOpen] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<FileList | string | null>(
-    null
+    null,
   );
-  const [videoError, setVideoError] = useState<string>("");
+  const [videoError, setVideoError] = useState("");
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -46,7 +46,7 @@ export const UploadFileDialog = ({
                 }}
               />
               {videoError !== "" && (
-                <span className="text-red-600	">{videoError}</span>
+                <span className="text-red-600">{videoError}</span>
               )}
             </div>
           </AlertDialogDescription>
