@@ -281,9 +281,6 @@ export class AdminApp {
 
     await admin.watch();
 
-    if (process.env.NODE_ENV === "development") {
-      this.app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-    }
     this.app.use(express.static("assets"));
     this.app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //only for dev test
     this.app.use(admin.options.rootPath, adminRouter);
