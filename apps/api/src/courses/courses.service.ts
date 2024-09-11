@@ -17,6 +17,7 @@ import {
   users,
 } from "../storage/schema";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
+import { Status } from "src/storage/schema/utils";
 
 @Injectable()
 export class CoursesService {
@@ -170,7 +171,7 @@ export class CoursesService {
   }
 
   private getFiltersConditions(filters: CoursesFilterSchema) {
-    const conditions = [eq(courses.state, "published")];
+    const conditions = [eq(courses.state, Status.published.key)];
     if (filters.title) {
       conditions.push(
         like(categories.title, `%${filters.title.toLowerCase()}%`),

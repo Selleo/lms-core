@@ -836,6 +836,52 @@
           }
         }
       }
+    },
+    "/api/studentFavouritedCourses": {
+      "post": {
+        "operationId": "StudentFavouritedCoursesController_createFavouritedCourse",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFavouritedCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "StudentFavouritedCoursesController_deleteFavouritedCourseForUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteFavouritedCourseForUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "info": {
@@ -1288,7 +1334,17 @@
                 "title": {
                   "type": "string"
                 },
-                "imageUrl": {
+                "archived": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
                   "anyOf": [
                     {
                       "type": "string"
@@ -1297,28 +1353,13 @@
                       "type": "null"
                     }
                   ]
-                },
-                "author": {
-                  "type": "string"
-                },
-                "category": {
-                  "type": "string"
-                },
-                "courseLessonCount": {
-                  "type": "number"
-                },
-                "enrolledParticipantCount": {
-                  "type": "number"
                 }
               },
               "required": [
                 "id",
                 "title",
-                "imageUrl",
-                "author",
-                "category",
-                "courseLessonCount",
-                "enrolledParticipantCount"
+                "archived",
+                "createdAt"
               ]
             }
           },
@@ -1494,6 +1535,21 @@
           "data",
           "pagination"
         ]
+      },
+      "CreateFavouritedCourseBody": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "courseId"
+        ]
+      },
+      "DeleteFavouritedCourseForUserResponse": {
+        "type": "null"
       }
     }
   }
