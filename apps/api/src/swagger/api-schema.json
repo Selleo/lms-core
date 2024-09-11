@@ -1334,17 +1334,7 @@
                 "title": {
                   "type": "string"
                 },
-                "archived": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "createdAt": {
+                "imageUrl": {
                   "anyOf": [
                     {
                       "type": "string"
@@ -1353,13 +1343,28 @@
                       "type": "null"
                     }
                   ]
+                },
+                "author": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "courseLessonCount": {
+                  "type": "number"
+                },
+                "enrolledParticipantCount": {
+                  "type": "number"
                 }
               },
               "required": [
                 "id",
                 "title",
-                "archived",
-                "createdAt"
+                "imageUrl",
+                "author",
+                "category",
+                "courseLessonCount",
+                "enrolledParticipantCount"
               ]
             }
           },
