@@ -882,6 +882,52 @@
           }
         }
       }
+    },
+    "/api/studentFavouriteCourses": {
+      "post": {
+        "operationId": "StudentFavouriteCoursesController_createFavouriteCourse",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFavouriteCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      },
+      "delete": {
+        "operationId": "StudentFavouriteCoursesController_deleteFavouriteCourseForUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteFavouriteCourseForUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "info": {
