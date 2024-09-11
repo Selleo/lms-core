@@ -142,11 +142,7 @@ export class AdminApp {
           },
           features: [
             uploadFile("files", "url", 25, [
-              "image/jpeg",
-              "image/png",
-              "image/svg+xml",
-              "image/gif",
-              "application/pdf",
+              "video/x-quicktime",
               "video/webm",
               "application/vnd.ms-powerpoint",
               "application/vnd.openxmlformats-officedocument.presentationml.presentation",
