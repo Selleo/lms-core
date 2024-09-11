@@ -1,19 +1,15 @@
 import { isEmpty } from "lodash-es";
-import {
-  Book,
-  BookOpen,
-  FileText,
-  LayoutDashboard,
-  Tag,
-  Users,
-  LucideProps,
-} from "lucide-react";
 import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
 import { cn } from "~/lib/utils";
 import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
-import { MenuItem } from "./MenuItem";
 
-import { GetUsersResponse } from "~/api/generated-api";
+import type { GetUsersResponse } from "~/api/generated-api";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { CaretDown, SelleoLogo } from "~/assets/svgs";
+import { MenuItem } from "~/modules/Dashboard/DashboardNavigation/MenuItem";
+import { IconName } from "~/types/shared";
+import { useLogoutUser } from "~/api/mutations/useLogoutUser";
+import { Icon } from "~/components/Icon";
 
 export type Role = GetUsersResponse["data"][number]["role"];
 
@@ -24,7 +20,7 @@ export interface BaseMenuItem {
 
 export interface LeafMenuItem extends BaseMenuItem {
   link: string;
-  Icon: React.FC<LucideProps>;
+  iconName: IconName;
 }
 
 export interface ParentMenuItem extends BaseMenuItem {
@@ -38,49 +34,20 @@ const menuItems: MenuItemType[] = [
     label: "dashboard",
     link: "/",
     roles: ["student"],
-    Icon: LayoutDashboard,
+    iconName: "Dashboard",
   },
   {
-    label: "Management",
-    roles: ["tutor", "admin", "student"],
-    children: [
-      {
-        label: "categories",
-        link: "/categories",
-        roles: ["tutor", "admin"],
-        Icon: Tag,
-      },
-      {
-        label: "courses",
-        link: "/courses",
-        roles: ["tutor", "admin", "student"],
-        Icon: BookOpen,
-      },
-      {
-        label: "lessons",
-        link: "/lessons",
-        roles: ["tutor", "admin", "student"],
-        Icon: Book,
-      },
-      {
-        label: "lesson items",
-        link: "/lesson-items",
-        roles: ["tutor", "admin"],
-        Icon: FileText,
-      },
-      {
-        label: "users",
-        link: "/users",
-        roles: ["admin"],
-        Icon: Users,
-      },
-    ],
+    label: "courses",
+    link: "/",
+    roles: ["student, admin, tutor"],
+    iconName: "Directory",
   },
 ];
 
 export function DashboardNavigation() {
+  const { mutate: logout } = useLogoutUser();
   const {
-    data: { role },
+    data: { role, firstName, lastName, email },
   } = useCurrentUserSuspense();
   const authorizedMenuItems = useAuthorizedMenuItems({
     menuItems,
@@ -92,14 +59,46 @@ export function DashboardNavigation() {
   }
 
   return (
-    <div className={cn("w-52 bg-muted/40 overflow-y-auto flex flex-col")}>
-      <nav className="flex-grow pt-3">
+    <aside
+      className={cn(
+        "w-[19.375rem] bg-muted/40 flex flex-col bg-white border-r border-r-primary-200"
+      )}
+    >
+      <div className="py-9 w-full flex justify-center border-b-primary-200 border-b">
+        <SelleoLogo />
+      </div>
+      <div className="p-[18px] mt-9 mx-auto max-w-[268px] bg-primary-50 rounded-md w-full flex items-center justify-between">
+        <div className="flex gap-x-2">
+          <Avatar>
+            <AvatarImage src="https://ui-avatars.com/api/?name=User" />
+            <AvatarFallback>
+              {firstName[0]}
+              {lastName[0]}
+            </AvatarFallback>
+          </Avatar>
+          <hgroup className="flex flex-col *:subtle">
+            <h2 className="text-neutral-900">
+              {firstName} {lastName}
+            </h2>
+            <p className="text-neutral-500">{email}</p>
+          </hgroup>
+        </div>
+        <CaretDown className="h-6 w-6" />
+      </div>
+      <nav className="flex flex-col">
         <ul className="flex flex-col items-center">
           {authorizedMenuItems.map((item) => (
             <MenuItem key={item.label} item={item} />
           ))}
         </ul>
       </nav>
-    </div>
+      <button
+        onClick={() => logout()}
+        className="self-end rounded-md hover:bg-primary-50 subtle font-md flex gap-x-2 items-center max-w-[268px] mx-auto"
+      >
+        <Icon name="Logout" className="w-4 h-4" />
+        <span>Logout</span>
+      </button>
+    </aside>
   );
 }
