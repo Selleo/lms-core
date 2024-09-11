@@ -5,7 +5,7 @@ import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
 
 import type { GetUsersResponse } from "~/api/generated-api";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { CaretDown, Dashboard, Directory, SelleoLogo } from "~/assets/svgs";
+import { CaretDown, SelleoLogo } from "~/assets/svgs";
 import { MenuItem } from "~/modules/Dashboard/DashboardNavigation/MenuItem";
 import { IconName } from "~/types/shared";
 import { useLogoutUser } from "~/api/mutations/useLogoutUser";
@@ -61,7 +61,7 @@ export function DashboardNavigation() {
   return (
     <aside
       className={cn(
-        "w-[19.375rem] bg-muted/40 flex flex-col bg-white border-r border-r-primary-200",
+        "w-[19.375rem] bg-muted/40 flex flex-col bg-white border-r border-r-primary-200"
       )}
     >
       <div className="py-9 w-full flex justify-center border-b-primary-200 border-b">
