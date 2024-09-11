@@ -6,6 +6,7 @@ import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { courseValidateBeforeAction } from "./common/actions/before/courseValidate.js";
+import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
 
 export const coursesConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -14,7 +15,7 @@ export const coursesConfigOptions: ResourceOptions = {
       before: [statusFilterBeforeAction],
     },
     new: {
-      before: courseValidateBeforeAction,
+      before: [courseValidateBeforeAction, tempAddUrl],
     },
     delete: {
       isAccessible: false,
