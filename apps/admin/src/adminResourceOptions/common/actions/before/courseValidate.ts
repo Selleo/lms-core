@@ -4,7 +4,7 @@ import {
   type Before,
   ValidationError,
 } from "adminjs";
-import type { ValidationErrors } from "src/AdminResourceOptions/common/validationErrorsType.js";
+import type { ValidationErrors } from "src/adminResourceOptions/common/validationErrorsType.js";
 
 const addError = (errors: ValidationErrors, field: string, message: string) => {
   errors[field] = { message };

@@ -5,7 +5,7 @@ import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.j
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
-import { courseValidateBeforeAction } from "../AdminResourceOptions/common/actions/before/courseValidate.js";
+import { courseValidateBeforeAction } from "./common/actions/before/courseValidate.js";
 
 export const coursesConfigOptions: ResourceOptions = {
   ...noParentNavigation,
