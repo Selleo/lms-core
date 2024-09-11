@@ -26,10 +26,11 @@ export const filesConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["type", "state", "file", "archived"],
+  editProperties: ["title", "type", "state", "file", "archived"],
   filterProperties: ["type", "created_at", "state", "status"],
-  listProperties: ["author_id", "file", "type", "state", "status"],
+  listProperties: ["title", "author_id", "type", "state", "status"],
   showProperties: [
+    "title",
     "author_id",
     "created_at",
     "updated_at",
@@ -49,7 +50,6 @@ export const filesConfigOptions: ResourceOptions = {
     },
     file: {
       components: {
-        list: Components.PhotoPreview,
         show: Components.PhotoPreview,
       },
       isRequired: true,
@@ -66,6 +66,9 @@ export const filesConfigOptions: ResourceOptions = {
     },
     state: {
       availableValues: stateOptions,
+      isRequired: false,
+    },
+    title: {
       isRequired: false,
     },
     type: {

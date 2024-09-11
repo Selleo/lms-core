@@ -174,6 +174,7 @@ export const lessonQuestions = pgTable("lesson_questions", {
 export const files = pgTable("files", {
   ...id,
   ...timestamps,
+  title: varchar("title", { length: 100 }).notNull(),
   type: text("type").notNull(),
   url: text("url").notNull(),
   state: text("state").notNull().default("draft"),
