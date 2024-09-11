@@ -7,12 +7,13 @@ import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { fileTypeOptions } from "./common/consts/selectOptions/fileTypeOptions.js";
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 import { beforeCreateOrUpdateFiles } from "./common/actions/before/createOrUpdateFiles.js";
+import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
 
 export const filesConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   actions: {
     new: {
-      before: [beforeCreateOrUpdateFiles, addAuthorId],
+      before: [beforeCreateOrUpdateFiles, addAuthorId, tempAddUrl],
     },
     list: {
       before: [statusFilterBeforeAction],
