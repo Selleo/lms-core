@@ -857,6 +857,96 @@
           }
         }
       },
+      "get": {
+        "operationId": "StudentFavouritedCoursesController_getAllCategories",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "title",
+                  "type": "string"
+                },
+                {
+                  "const": "category",
+                  "type": "string"
+                },
+                {
+                  "const": "creationDate",
+                  "type": "string"
+                },
+                {
+                  "const": "author",
+                  "type": "string"
+                },
+                {
+                  "const": "lessonsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "enrolledParticipantsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "-title",
+                  "type": "string"
+                },
+                {
+                  "const": "-category",
+                  "type": "string"
+                },
+                {
+                  "const": "-creationDate",
+                  "type": "string"
+                },
+                {
+                  "const": "-author",
+                  "type": "string"
+                },
+                {
+                  "const": "-lessonsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "-enrolledParticipantsCount",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllCategoriesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "operationId": "StudentFavouritedCoursesController_deleteFavouritedCourseForUser",
         "parameters": [
@@ -1334,17 +1424,7 @@
                 "title": {
                   "type": "string"
                 },
-                "archived": {
-                  "anyOf": [
-                    {
-                      "type": "boolean"
-                    },
-                    {
-                      "type": "null"
-                    }
-                  ]
-                },
-                "createdAt": {
+                "imageUrl": {
                   "anyOf": [
                     {
                       "type": "string"
@@ -1353,13 +1433,28 @@
                       "type": "null"
                     }
                   ]
+                },
+                "author": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "courseLessonCount": {
+                  "type": "number"
+                },
+                "enrolledParticipantCount": {
+                  "type": "number"
                 }
               },
               "required": [
                 "id",
                 "title",
-                "archived",
-                "createdAt"
+                "imageUrl",
+                "author",
+                "category",
+                "courseLessonCount",
+                "enrolledParticipantCount"
               ]
             }
           },
