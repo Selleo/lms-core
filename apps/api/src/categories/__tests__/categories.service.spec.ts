@@ -23,7 +23,7 @@ describe("CategoriesService", () => {
     categoriesServics = testContext.module.get(CategoriesService);
     db = testContext.db;
     categoryFactory = createCategoryFactory(db);
-    categoryFactory.createList(CATEGORIES_COUNT);
+    await categoryFactory.createList(CATEGORIES_COUNT);
   }, 30000);
 
   afterAll(async () => {
