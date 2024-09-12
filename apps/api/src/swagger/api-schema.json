@@ -705,7 +705,7 @@
         }
       }
     },
-    "/api/courses/getStudentCourses": {
+    "/api/courses/get-student-courses": {
       "get": {
         "operationId": "CoursesController_getStudentCourses",
         "parameters": [

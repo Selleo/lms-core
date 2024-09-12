@@ -55,7 +55,7 @@ export class CoursesController {
     return new PaginatedResponse(data);
   }
 
-  @Get("getStudentCourses")
+  @Get("get-student-courses")
   @Validate({
     response: paginatedResponse(allCoursesSchema),
     request: [
@@ -78,7 +78,7 @@ export class CoursesController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
-    @CurrentUser() currentUser: { userId: string },
+    @CurrentUser("userId") currentUserId: string,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
@@ -93,7 +93,7 @@ export class CoursesController {
 
     const data = await this.coursesService.getCoursesForUser(
       query,
-      currentUser.userId,
+      currentUserId,
     );
 
     return new PaginatedResponse(data);

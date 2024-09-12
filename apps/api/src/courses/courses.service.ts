@@ -4,8 +4,11 @@ import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { CoursesQuery } from "./api/courses.types";
 import { DatabasePg, Pagination } from "src/common";
 import { AllCoursesResponse } from "./schemas/course.schema";
-import { CourseSortField, CourseSortFields } from "./schemas/courseQuery";
-import { getSortOptions } from "./helpers";
+import {
+  CoursesFilterSchema,
+  CourseSortField,
+  CourseSortFields,
+} from "./schemas/courseQuery";
 import {
   categories,
   courseLessons,
@@ -13,6 +16,7 @@ import {
   studentCourses,
   users,
 } from "../storage/schema";
+import { getSortOptions } from "src/common/helpers/getSortOptions";
 
 @Injectable()
 export class CoursesService {
@@ -29,43 +33,11 @@ export class CoursesService {
     } = query;
 
     const { sortOrder, sortedField } = getSortOptions(sort);
-
-    const selectedColumns = {
-      id: courses.id,
-      creationDate: courses.createdAt,
-      title: courses.title,
-      imageUrl: courses.imageUrl,
-      author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
-      category: categories.title,
-      courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,
-      enrolledParticipantCount: count(studentCourses.courseId),
-    };
+    const conditions = this.getFiltersConditions(filters);
 
     return this.db.transaction(async (tx) => {
-      const conditions = [eq(courses.state, "published")];
-
-      if (filters.title) {
-        conditions.push(
-          like(categories.title, `%${filters.title.toLowerCase()}%`),
-        );
-      }
-      if (filters.category) {
-        conditions.push(like(categories.title, `%${filters.category}%`));
-      }
-      if (filters.author) {
-        const authorNameConcat = `${users.firstName} || ' ' || ${users.lastName}`;
-        conditions.push(sql`${authorNameConcat} LIKE ${`%${filters.author}%`}`);
-      }
-      if (filters.creationDateRange) {
-        const [startDate, endDate] = filters.creationDateRange;
-        const start = new Date(startDate).toISOString();
-        const end = new Date(endDate).toISOString();
-
-        conditions.push(between(courses.createdAt, start, end));
-      }
-
       const queryDB = tx
-        .select(selectedColumns)
+        .select(this.getSelectFiled())
         .from(courses)
         .leftJoin(users, eq(courses.authorId, users.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
@@ -80,10 +52,14 @@ export class CoursesService {
           users.lastName,
           categories.title,
         )
-        .orderBy(sortOrder(this.getColumnToSortBy(sortedField)));
+        .orderBy(
+          sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)),
+        );
+
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
+
       const [totalItems] = await tx
         .select({ count: count() })
         .from(courses)
@@ -125,45 +101,12 @@ export class CoursesService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    const selectedColumns = {
-      id: courses.id,
-      creationDate: courses.createdAt,
-      title: courses.title,
-      imageUrl: courses.imageUrl,
-      author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
-      category: categories.title,
-      courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,
-      enrolledParticipantCount: count(studentCourses.courseId),
-    };
-
     return this.db.transaction(async (tx) => {
-      const conditions = [
-        eq(courses.state, "published"),
-        eq(studentCourses.studentId, userId),
-      ];
-
-      if (filters.title) {
-        conditions.push(
-          like(categories.title, `%${filters.title.toLowerCase()}%`),
-        );
-      }
-      if (filters.category) {
-        conditions.push(like(categories.title, `%${filters.category}%`));
-      }
-      if (filters.author) {
-        const authorNameConcat = `${users.firstName} || ' ' || ${users.lastName}`;
-        conditions.push(sql`${authorNameConcat} LIKE ${`%${filters.author}%`}`);
-      }
-      if (filters.creationDateRange) {
-        const [startDate, endDate] = filters.creationDateRange;
-        const start = new Date(startDate).toISOString();
-        const end = new Date(endDate).toISOString();
-
-        conditions.push(between(courses.createdAt, start, end));
-      }
+      const conditions = [eq(studentCourses.studentId, userId)];
+      conditions.push(...this.getFiltersConditions(filters));
 
       const queryDB = tx
-        .select(selectedColumns)
+        .select(this.getSelectFiled())
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
@@ -178,7 +121,10 @@ export class CoursesService {
           users.lastName,
           categories.title,
         )
-        .orderBy(sortOrder(this.getColumnToSortBy(sortedField)));
+        .orderBy(
+          sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)),
+        );
+
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
@@ -208,6 +154,43 @@ export class CoursesService {
         },
       };
     });
+  }
+
+  private getSelectFiled() {
+    return {
+      id: courses.id,
+      creationDate: courses.createdAt,
+      title: courses.title,
+      imageUrl: courses.imageUrl,
+      author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+      category: categories.title,
+      courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,
+      enrolledParticipantCount: count(studentCourses.courseId),
+    };
+  }
+
+  private getFiltersConditions(filters: CoursesFilterSchema) {
+    const conditions = [eq(courses.state, "published")];
+    if (filters.title) {
+      conditions.push(
+        like(categories.title, `%${filters.title.toLowerCase()}%`),
+      );
+    }
+    if (filters.category) {
+      conditions.push(like(categories.title, `%${filters.category}%`));
+    }
+    if (filters.author) {
+      const authorNameConcat = `${users.firstName} || ' ' || ${users.lastName}`;
+      conditions.push(sql`${authorNameConcat} LIKE ${`%${filters.author}%`}`);
+    }
+    if (filters.creationDateRange) {
+      const [startDate, endDate] = filters.creationDateRange;
+      const start = new Date(startDate).toISOString();
+      const end = new Date(endDate).toISOString();
+
+      conditions.push(between(courses.createdAt, start, end));
+    }
+    return conditions;
   }
 
   private getColumnToSortBy(sort: CourseSortField) {
