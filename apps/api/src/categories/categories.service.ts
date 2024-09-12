@@ -4,14 +4,11 @@ import { Inject, Injectable } from "@nestjs/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { AllCategoriesResponse } from "./schemas/category.schema";
 import { categories } from "src/storage/schema";
-import { CategoriesQuery } from "./api/categoires.types";
-import {
-  CategorySortFields,
-  CategorySortField,
-} from "./schemas/category-query";
+import { CategoriesQuery } from "./api/categories.types";
+import { CategorySortFields, CategorySortField } from "./schemas/categoryQuery";
 import { DatabasePg, Pagination } from "src/common";
 import { UserRole, UserRoles } from "src/users/schemas/user-roles";
-import { getSortOptions } from "./helpers";
+import { getSortOptions } from "src/common/helpers/getSortOptions";
 
 @Injectable()
 export class CategoriesService {
@@ -45,7 +42,11 @@ export class CategoriesService {
         .select(selectedColumns)
         .from(categories)
         .where(filterCondition)
-        .orderBy(sortOrder(this.getColumnToSortBy(sortedField, isAdmin)));
+        .orderBy(
+          sortOrder(
+            this.getColumnToSortBy(sortedField as CategorySortField, isAdmin),
+          ),
+        );
 
       const dynamicQuery = queryDB.$dynamic();
 

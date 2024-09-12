@@ -197,6 +197,20 @@
       "when": 1725955284133,
       "tag": "0027_add_title_to_files_table",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1725914641664,
+      "tag": "0028_create_student_courses_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1726055080840,
+      "tag": "0029_create_course_lessons_table",
+      "breakpoints": true
     }
   ]
 }

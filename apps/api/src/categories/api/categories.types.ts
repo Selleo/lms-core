@@ -1,4 +1,4 @@
-import { SortCategoryFieldsOptions } from "../schemas/category-query";
+import { SortCategoryFieldsOptions } from "../schemas/categoryQuery";
 
 export type CategoriesQuery = {
   filter?: string;

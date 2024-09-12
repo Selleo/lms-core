@@ -246,3 +246,58 @@ export const notifications = pgTable("notifications", {
     precision: 3,
   }),
 });
+
+export const courseLessons = pgTable(
+  "course_lessons",
+  {
+    ...id,
+    ...timestamps,
+    courseId: uuid("course_id")
+      .references(() => courses.id)
+      .notNull(),
+    lessonId: uuid("lesson_id")
+      .references(() => lessons.id)
+      .notNull(),
+  },
+  (table) => ({
+    unq: unique().on(table.courseId, table.lessonId),
+  }),
+);
+
+export const studentCourses = pgTable(
+  "student_courses",
+  {
+    ...id,
+    ...timestamps,
+    studentId: uuid("student_id")
+      .references(() => users.id)
+      .notNull(),
+    courseId: uuid("course_id")
+      .references(() => courses.id)
+      .notNull(),
+    numberOfAssignments: integer("number_of_assignments"),
+    numberOFfinished_assignments: integer("number_of_finished_assignments"),
+    state: text("state").notNull().default("not_started"),
+    archived,
+  },
+  (table) => ({
+    unq: unique().on(table.studentId, table.courseId),
+  }),
+);
+
+export const studentFavouritedCourses = pgTable(
+  "student_favourited_courses",
+  {
+    ...id,
+    ...timestamps,
+    studentId: uuid("student_id")
+      .references(() => users.id)
+      .notNull(),
+    courseId: uuid("course_id")
+      .references(() => courses.id)
+      .notNull(),
+  },
+  (table) => ({
+    unq: unique().on(table.studentId, table.courseId),
+  }),
+);
