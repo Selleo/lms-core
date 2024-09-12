@@ -12,7 +12,7 @@ export const beforeCreateOrUpdateTextBlocks: Before = async (
   const { body, state } = payload;
 
   if (!body || body === "<p></p>") {
-    errors.body = { message: "Please provide type of the file" };
+    errors.body = { message: "Please provide body of the text block" };
   }
 
   if (body?.length > 2000) {
