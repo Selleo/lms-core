@@ -25,7 +25,7 @@ export const textBlocksConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["body", "state", "archived"],
+  editProperties: ["body", "counter", "state", "archived"],
   filterProperties: ["created_at", "state", "status"],
   listProperties: ["body", "state", "status"],
   showProperties: [
@@ -40,6 +40,11 @@ export const textBlocksConfigOptions: ResourceOptions = {
     body: {
       type: "richtext",
       isRequired: false,
+    },
+    counter: {
+      components: {
+        edit: Components.BodyTextCounter,
+      },
     },
     status: {
       components: {

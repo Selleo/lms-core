@@ -13,6 +13,10 @@ const Components = {
   AuthorId: componentLoader.add("AuthorId", "./custom/AuthorId"),
   LessonItems: componentLoader.add("LessonItems", "./custom/LessonItems"),
   PhotoPreview: componentLoader.add("PhotoPreview", "./photo/PhotoPreview"),
+  BodyTextCounter: componentLoader.add(
+    "BodyTextCounter",
+    "./custom/BodyTextCounter",
+  ),
 };
 
 export { componentLoader, Components };
