@@ -1,8 +1,14 @@
-import { type ActionRequest, type Before, ValidationError } from "adminjs";
+import {
+  ActionContext,
+  type ActionRequest,
+  type Before,
+  ValidationError,
+} from "adminjs";
 import { ValidationErrors } from "../../validationErrorsType.js";
 
 export const beforeCreateOrUpdateFiles: Before = async (
   request: ActionRequest,
+  context: ActionContext,
 ) => {
   const { payload = {}, method } = request;
 
@@ -10,12 +16,14 @@ export const beforeCreateOrUpdateFiles: Before = async (
 
   const errors: ValidationErrors = {};
   const { title, type, state } = payload;
+  const isEditing = !!request.params.recordId;
+  const isFile = context?.["adminjs-upload"]?.file?.length;
 
   if (!title) {
     errors.title = { message: "Please provide title of the file" };
   }
 
-  if (title.length > 100) {
+  if (title?.length > 100) {
     errors.title = {
       message: `Title must be no more than 100 characters.`,
     };
@@ -27,6 +35,10 @@ export const beforeCreateOrUpdateFiles: Before = async (
 
   if (!state) {
     errors.state = { message: "Please provide a state" };
+  }
+
+  if (isEditing && !isFile) {
+    errors.type = { message: "Please upload a file below!" };
   }
 
   if (Object.keys(errors).length) {
