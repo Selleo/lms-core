@@ -857,6 +857,96 @@
           }
         }
       },
+      "get": {
+        "operationId": "StudentFavouritedCoursesController_getAllCategories",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "title",
+                  "type": "string"
+                },
+                {
+                  "const": "category",
+                  "type": "string"
+                },
+                {
+                  "const": "creationDate",
+                  "type": "string"
+                },
+                {
+                  "const": "author",
+                  "type": "string"
+                },
+                {
+                  "const": "lessonsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "enrolledParticipantsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "-title",
+                  "type": "string"
+                },
+                {
+                  "const": "-category",
+                  "type": "string"
+                },
+                {
+                  "const": "-creationDate",
+                  "type": "string"
+                },
+                {
+                  "const": "-author",
+                  "type": "string"
+                },
+                {
+                  "const": "-lessonsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "-enrolledParticipantsCount",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllCategoriesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "operationId": "StudentFavouritedCoursesController_deleteFavouritedCourseForUser",
         "parameters": [
@@ -876,52 +966,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteFavouritedCourseForUserResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/studentFavouriteCourses": {
-      "post": {
-        "operationId": "StudentFavouriteCoursesController_createFavouriteCourse",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateFavouriteCourseBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        }
-      },
-      "delete": {
-        "operationId": "StudentFavouriteCoursesController_deleteFavouriteCourseForUser",
-        "parameters": [
-          {
-            "name": "id",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteFavouriteCourseForUserResponse"
                 }
               }
             }
