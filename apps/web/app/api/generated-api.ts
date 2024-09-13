@@ -187,6 +187,42 @@ export interface GetAllCategoriesResponse {
   };
 }
 
+export interface GetAllCoursesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string | null;
+    author: string;
+    category: string;
+    courseLessonCount: number;
+    enrolledParticipantCount: number;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+}
+
+export interface GetStudentCoursesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string | null;
+    author: string;
+    category: string;
+    courseLessonCount: number;
+    enrolledParticipantCount: number;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
@@ -623,10 +659,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategorieControllerGetAllCategories
+     * @name CategoriesControllerGetAllCategories
      * @request GET:/api/categories
      */
-    categorieControllerGetAllCategories: (
+    categoriesControllerGetAllCategories: (
       query?: {
         filter?: string;
         /** @min 1 */
@@ -638,6 +674,86 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<GetAllCategoriesResponse, any>({
         path: `/api/categories`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerGetAllCourses
+     * @request GET:/api/courses
+     */
+    coursesControllerGetAllCourses: (
+      query?: {
+        title?: string;
+        category?: string;
+        author?: string;
+        "creationDateRange[0]"?: string;
+        "creationDateRange[1]"?: string;
+        /** @min 1 */
+        page?: number;
+        perPage?: number;
+        sort?:
+          | "title"
+          | "category"
+          | "creationDate"
+          | "author"
+          | "lessonsCount"
+          | "enrolledParticipantsCount"
+          | "-title"
+          | "-category"
+          | "-creationDate"
+          | "-author"
+          | "-lessonsCount"
+          | "-enrolledParticipantsCount";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetAllCoursesResponse, any>({
+        path: `/api/courses`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerGetStudentCourses
+     * @request GET:/api/courses/get-student-courses
+     */
+    coursesControllerGetStudentCourses: (
+      query?: {
+        title?: string;
+        category?: string;
+        author?: string;
+        "creationDateRange[0]"?: string;
+        "creationDateRange[1]"?: string;
+        /** @min 1 */
+        page?: number;
+        perPage?: number;
+        sort?:
+          | "title"
+          | "category"
+          | "creationDate"
+          | "author"
+          | "lessonsCount"
+          | "enrolledParticipantsCount"
+          | "-title"
+          | "-category"
+          | "-creationDate"
+          | "-author"
+          | "-lessonsCount"
+          | "-enrolledParticipantsCount";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetStudentCoursesResponse, any>({
+        path: `/api/courses/get-student-courses`,
         method: "GET",
         query: query,
         format: "json",
