@@ -6,6 +6,9 @@ import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
+import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
+import { beforeCreateCourse } from "./common/actions/before/createCourse.js";
+import { beforeUpdateCourse } from "./common/actions/before/updateCourse.js";
 
 export const coursesConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -18,7 +21,10 @@ export const coursesConfigOptions: ResourceOptions = {
       isVisible: false,
     },
     new: {
-      before: [addAuthorId],
+      before: [beforeCreateCourse, addAuthorId, tempAddUrl("image_url")],
+    },
+    edit: {
+      before: [beforeUpdateCourse],
     },
     ...archivingActions,
   },
@@ -27,6 +33,8 @@ export const coursesConfigOptions: ResourceOptions = {
     "description",
     "category_id",
     "state",
+    "file",
+    "info",
     "price_in_cents",
     "archived",
   ],
@@ -48,6 +56,7 @@ export const coursesConfigOptions: ResourceOptions = {
     "created_at",
     "updated_at",
     "status",
+    "relations",
   ],
   properties: {
     archived: {
@@ -76,6 +85,14 @@ export const coursesConfigOptions: ResourceOptions = {
       },
       props: {
         availableValues: statusOptions,
+      },
+    },
+    price_in_cents: {
+      isRequired: false,
+    },
+    info: {
+      components: {
+        edit: Components.NewFileInfo,
       },
     },
   },

@@ -13,7 +13,7 @@ export const filesConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   actions: {
     new: {
-      before: [beforeCreateOrUpdateFiles, addAuthorId, tempAddUrl],
+      before: [beforeCreateOrUpdateFiles, addAuthorId, tempAddUrl("url")],
     },
     list: {
       before: [statusFilterBeforeAction],

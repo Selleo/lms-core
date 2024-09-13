@@ -4,8 +4,8 @@ import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
-import { beforeCreateLesson } from "./common/actions/before/lessonCreate.js";
-import { beforeUpdateLesson } from "./common/actions/before/udpateLesson.js";
+import { beforeCreateLesson } from "./common/actions/before/createLesson.js";
+import { beforeUpdateLesson } from "./common/actions/before/updateLesson.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { afterUpdateLesson } from "./common/actions/after/updateLesson.js";
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
@@ -22,7 +22,7 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: false,
     },
     new: {
-      before: [beforeCreateLesson, addAuthorId, tempAddUrl],
+      before: [beforeCreateLesson, addAuthorId, tempAddUrl("image_url")],
     },
     edit: {
       before: [beforeUpdateLesson],
@@ -30,7 +30,7 @@ export const lessonsConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["title", "description", "state", "file", "lesson_items"],
+  editProperties: ["title", "description", "state", "file", "info"],
   filterProperties: ["title", "state", "status"],
   listProperties: [
     "title",
@@ -49,7 +49,7 @@ export const lessonsConfigOptions: ResourceOptions = {
     "state",
     "status",
     "file",
-    "lesson_items",
+    "relations",
   ],
   properties: {
     state: {
@@ -90,6 +90,11 @@ export const lessonsConfigOptions: ResourceOptions = {
     file: {
       components: {
         show: Components.PhotoPreview,
+      },
+    },
+    info: {
+      components: {
+        edit: Components.NewFileInfo,
       },
     },
   },
