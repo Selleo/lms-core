@@ -1,4 +1,9 @@
 import type { MetaFunction } from "@remix-run/node";
+import {
+  coursesQueryOptions,
+  useCoursesSuspense,
+} from "~/api/queries/useCourses";
+import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
@@ -8,9 +13,14 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-//TODO: Once the backend is ready, the values will come from the query
+export const clientLoader = async () => {
+  await queryClient.prefetchQuery(coursesQueryOptions);
+  return null;
+};
 
 export default function DashboardPage() {
+  const { data: courses } = useCoursesSuspense();
+
   return (
     <div className="flex flex-1 flex-col gap-4 lg:gap-6 h-full">
       <div className="flex flex-col">
@@ -18,20 +28,18 @@ export default function DashboardPage() {
         <p className="text-body-lg text-neutral-700">Available Courses</p>
       </div>
       <div className="grid p-6 gap-y-12 grid-cols-[repeat(auto-fit,minmax(360px,1fr))]">
-        {Array.from({ length: 12 }).map((_, index) => (
+        {courses.map(({ title, category, courseLessonCount }, index) => (
           <div key={index} className="flex flex-col gap-y-2.5 max-w-[360px]">
             <img
               src="https://foundr.com/wp-content/uploads/2023/04/How-to-create-an-online-course.jpg.webp"
               alt=""
               className="rounded-md"
             />
-            <h3 className="h6 text-neutral-950">
-              Graduate Teaching Assistants
-            </h3>
+            <h3 className="h6 text-neutral-950 truncate">{title}</h3>
             <div className="flex justify-between">
               <div className="flex flex-col text-details justify-end text-neutral-500">
-                <span>CONTENT</span>
-                <span>15 lessons</span>
+                <span>{category}</span>
+                <span>{courseLessonCount} lessons</span>
               </div>
               <Button>Enroll</Button>
             </div>
