@@ -19,6 +19,7 @@ const Components = {
     "BodyTextCounter",
     "./custom/BodyTextCounter",
   ),
+  QuestionId: componentLoader.add("QuestionId", "./custom/QuestionId"),
 };
 
 export { componentLoader, Components };
