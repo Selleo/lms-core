@@ -211,6 +211,13 @@
       "when": 1726055080840,
       "tag": "0029_create_course_lessons_table",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1726474642589,
+      "tag": "0030_drop_not_null_from_solution_explanation",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,1 @@
+ALTER TABLE "questions" ALTER COLUMN "solution_explanation" DROP NOT NULL;--> statement-breakpoint
