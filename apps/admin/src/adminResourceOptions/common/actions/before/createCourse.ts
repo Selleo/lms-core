@@ -1,21 +1,12 @@
-import {
-  type ActionContext,
-  type ActionRequest,
-  type Before,
-  ValidationError,
-} from "adminjs";
-import type { ValidationErrors } from "src/adminResourceOptions/common/validationErrorsType.js";
+import { type ActionRequest, type Before, ValidationError } from "adminjs";
+import { ValidationErrors } from "../../validationErrorsType.js";
 
 const addError = (errors: ValidationErrors, field: string, message: string) => {
   errors[field] = { message };
 };
 
-export const courseValidateBeforeAction: Before = async (
-  request: ActionRequest,
-  context: ActionContext,
-) => {
-  const { title, description, category_id, state, price_in_cents } =
-    request?.payload ?? {};
+export const beforeCreateCourse: Before = async (request: ActionRequest) => {
+  const { title, description, category_id, state } = request?.payload ?? {};
   const errors: ValidationErrors = {};
 
   const isDraft = state === "draft";
@@ -54,25 +45,9 @@ export const courseValidateBeforeAction: Before = async (
     addError(errors, "state", "Please provide the state");
   }
 
-  if (!price_in_cents) {
-    addError(errors, "price_in_cents", "Please provide the price");
-  }
-
-  if (
-    typeof Number(price_in_cents) !== "number" ||
-    isNaN(Number(price_in_cents))
-  ) {
-    addError(errors, "price_in_cents", "Price must be a number");
-  }
-
   if (Object.keys(errors).length) {
     throw new ValidationError(errors);
   }
-
-  request.payload = {
-    ...request.payload,
-    author_id: context.currentAdmin?.id,
-  };
 
   return request;
 };

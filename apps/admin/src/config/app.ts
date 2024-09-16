@@ -23,10 +23,9 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { lessonItemsConfigOptions } from "../adminResourceOptions/lessonItemsOptions.js";
 import { uploadFile } from "../features/uploadFeature.js";
-import {
-  owningRelationSettingsFeature,
-  RelationType,
-} from "@adminjs/relations";
+import { targetRelationSettingsFeature } from "@adminjs/relations";
+import { courseLessonsConfigOptions } from "../adminResourceOptions/courseLessonsOptions.js";
+import { setManyToManyRelation } from "../utils/setManyToManyRelation.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -116,38 +115,28 @@ export class AdminApp {
           },
         },
         {
+          resource: this.db.getResource("course_lessons"),
+          options: {
+            ...courseLessonsConfigOptions,
+          },
+        },
+        {
           resource: this.db.getResource("courses"),
           options: {
             ...coursesConfigOptions,
           },
           features: [
-            setOneToManyRelation({
-              resourceId: "lesson_items",
-              joinKey: "lesson_id",
-            }),
-            setOneToManyRelation({
+            // setOneToManyRelation({
+            //   resourceId: "course_lessons",
+            //   joinKey: "course_id",
+            // }),
+            setManyToManyRelation({
               resourceId: "lessons",
-              joinKey: "lesson_id",
-            }),
-            owningRelationSettingsFeature({
-              componentLoader,
-              licenseKey: process.env.LICENSE_KEY ?? "",
-              relations: {
-                persons: {
-                  type: RelationType.OneToMany,
-                  target: {
-                    resourceId: "lesson",
-                    joinKey: "lesson_id",
-                  },
-                },
-                offices: {
-                  type: RelationType.OneToMany,
-                  target: {
-                    joinKey: "organizationId",
-                    resourceId: "Office",
-                  },
-                },
-              },
+              joinKey: "course_id",
+              inverseJoinKey: "lesson_id",
+              throughResourceId: "course_lessons",
+              enableDeleteRelation: true,
+              enableDeleteRelatedRecord: false,
             }),
             uploadFile("courses", "image_url", 2, [
               "image/jpeg",
@@ -167,6 +156,7 @@ export class AdminApp {
               resourceId: "lesson_items",
               joinKey: "lesson_id",
             }),
+            targetRelationSettingsFeature(),
             uploadFile("lessons", "image_url", 25, [
               "image/jpeg",
               "image/png",

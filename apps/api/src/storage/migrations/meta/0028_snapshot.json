@@ -1337,8 +1337,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.student_favourite_courses": {
-      "name": "student_favourite_courses",
+    "public.student_favourited_courses": {
+      "name": "student_favourited_courses",
       "schema": "",
       "columns": {
         "id": {
@@ -1377,9 +1377,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "student_favourite_courses_student_id_users_id_fk": {
-          "name": "student_favourite_courses_student_id_users_id_fk",
-          "tableFrom": "student_favourite_courses",
+        "student_favourited_courses_student_id_users_id_fk": {
+          "name": "student_favourited_courses_student_id_users_id_fk",
+          "tableFrom": "student_favourited_courses",
           "tableTo": "users",
           "columnsFrom": [
             "student_id"
@@ -1390,9 +1390,9 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "student_favourite_courses_course_id_courses_id_fk": {
-          "name": "student_favourite_courses_course_id_courses_id_fk",
-          "tableFrom": "student_favourite_courses",
+        "student_favourited_courses_course_id_courses_id_fk": {
+          "name": "student_favourited_courses_course_id_courses_id_fk",
+          "tableFrom": "student_favourited_courses",
           "tableTo": "courses",
           "columnsFrom": [
             "course_id"
@@ -1406,8 +1406,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "student_favourite_courses_student_id_course_id_unique": {
-          "name": "student_favourite_courses_student_id_course_id_unique",
+        "student_favourited_courses_student_id_course_id_unique": {
+          "name": "student_favourited_courses_student_id_course_id_unique",
           "nullsNotDistinct": false,
           "columns": [
             "student_id",
