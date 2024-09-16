@@ -56,6 +56,7 @@ export const coursesConfigOptions: ResourceOptions = {
     "created_at",
     "updated_at",
     "status",
+    "file",
     "relations",
   ],
   properties: {
@@ -93,6 +94,11 @@ export const coursesConfigOptions: ResourceOptions = {
     info: {
       components: {
         edit: Components.NewFileInfo,
+      },
+    },
+    file: {
+      components: {
+        show: Components.PhotoPreview,
       },
     },
   },
