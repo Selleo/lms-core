@@ -26,31 +26,21 @@ export const questionsConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: [
-    "question_type",
-    "question_body",
-    "solution_explanation",
-    "state",
-    "archived",
-  ],
+  editProperties: ["question_type", "question_body", "state", "archived"],
   filterProperties: ["created_at", "question_type", "state", "status"],
   listProperties: ["question_body", "question_type", "state", "status"],
   showProperties: [
     "question_type",
     "question_body",
-    "solution_explanation",
     "author_id",
     "created_at",
     "updated_at",
     "state",
     "status",
+    "relations",
   ],
   properties: {
     archived: {
-      isRequired: false,
-    },
-    solution_explanation: {
-      type: "richtext",
       isRequired: false,
     },
     status: {
@@ -68,6 +58,7 @@ export const questionsConfigOptions: ResourceOptions = {
       isRequired: false,
     },
     question_body: {
+      type: "richtext",
       isRequired: false,
     },
     question_type: {

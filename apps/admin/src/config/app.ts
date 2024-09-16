@@ -13,6 +13,7 @@ import { lessonFilesConfigOptions } from "../adminResourceOptions/lessonFilesOpt
 import { lessonQuestionsConfigOptions } from "../adminResourceOptions/lessonQuestionsOptions.js";
 import { lessonsConfigOptions } from "../adminResourceOptions/lessonsOptions.js";
 import { questionsConfigOptions } from "../adminResourceOptions/questionsOptions.js";
+import { questionAnswerConfigOptions } from "../adminResourceOptions/questionAnswerOptions.js";
 import { textBlocksConfigOptions } from "../adminResourceOptions/textBlocksOptions.js";
 import { usersConfigOptions } from "../adminResourceOptions/usersOptions.js";
 import { componentLoader } from "../components/index.js";
@@ -204,6 +205,12 @@ export class AdminApp {
           options: {
             ...questionsConfigOptions,
           },
+          features: [
+            setOneToManyRelation({
+              resourceId: "question_answer_options",
+              joinKey: "question_id",
+            }),
+          ],
         },
         {
           resource: this.db.getResource("lesson_questions"),
@@ -231,6 +238,12 @@ export class AdminApp {
                 isVisible: false,
               },
             },
+          },
+        },
+        {
+          resource: this.db.getResource("question_answer_options"),
+          options: {
+            ...questionAnswerConfigOptions,
           },
         },
       ],
