@@ -182,7 +182,9 @@ export class AdminApp {
           },
           features: [
             uploadFile("files", "url", 25, [
-              "video/x-quicktime",
+              "video/quicktime",
+              "video/mp4",
+              "video/mpeg",
               "video/webm",
               "application/vnd.ms-powerpoint",
               "application/vnd.openxmlformats-officedocument.presentationml.presentation",
