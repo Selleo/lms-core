@@ -4,33 +4,147 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { DatabasePg } from "./common";
 import hashPassword from "./common/helpers/hashPassword";
-import { credentials, users } from "./storage/schema";
+import {
+  categories,
+  courseLessons,
+  courses,
+  credentials,
+  files,
+  lessonItems,
+  lessons,
+  questionAnswerOptions,
+  questions,
+  studentCourses,
+  textBlocks,
+  users,
+} from "./storage/schema";
+import { eq } from "drizzle-orm";
 
 dotenv.config({ path: "./.env" });
 
-if (!("DATABASE_URL" in process.env))
+if (!("DATABASE_URL" in process.env)) {
   throw new Error("DATABASE_URL not found on .env");
+}
+
+const connectionString = process.env.DATABASE_URL!;
+const sql = postgres(connectionString);
+const db = drizzle(sql) as DatabasePg;
+
+async function createOrFindUser(
+  email: string,
+  password: string,
+  userData: any,
+) {
+  const [existingUser] = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email));
+  if (existingUser) return existingUser;
+
+  const [newUser] = await db.insert(users).values(userData).returning();
+  await insertCredential(newUser.id, password);
+  return newUser;
+}
+
+async function insertCredential(userId: string, password: string) {
+  const credentialData = {
+    id: faker.string.uuid(),
+    userId,
+    password: await hashPassword(password),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  };
+  return (await db.insert(credentials).values(credentialData).returning())[0];
+}
+
+async function createUsers(count: number) {
+  return Promise.all(
+    Array.from({ length: count }, async () => {
+      const userData = {
+        id: faker.string.uuid(),
+        email: faker.internet.email(),
+        firstName: faker.person.firstName(),
+        lastName: faker.person.lastName(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      const [user] = await db.insert(users).values(userData).returning();
+      const password = faker.internet.password();
+      const credential = await insertCredential(user.id, password);
+      return { ...user, credentials: { ...credential, password } };
+    }),
+  );
+}
+
+async function createEntities(
+  table: any,
+  count: number,
+  dataGenerator: () => any,
+) {
+  const entities = Array.from({ length: count }, dataGenerator);
+  return db.insert(table).values(entities).returning();
+}
+
+async function createLessonItems(
+  lessons: any[],
+  files: any[],
+  textBlocks: any[],
+  questions: any[],
+) {
+  const createdLessonItems = lessons.flatMap((lesson, index) => [
+    {
+      id: faker.string.uuid(),
+      lessonId: lesson.id,
+      lessonItemId: files[index % files.length].id,
+      lessonItemType: "file",
+      displayOrder: 1,
+    },
+    {
+      id: faker.string.uuid(),
+      lessonId: lesson.id,
+      lessonItemId: textBlocks[index % textBlocks.length].id,
+      lessonItemType: "text_block",
+      displayOrder: 2,
+    },
+    {
+      id: faker.string.uuid(),
+      lessonId: lesson.id,
+      lessonItemId: questions[index % questions.length].id,
+      lessonItemType: "presentation",
+      displayOrder: 3,
+    },
+  ]);
+  return db.insert(lessonItems).values(createdLessonItems).returning();
+}
+
+async function createCourseLessons(courses: any[], lessons: any[]) {
+  const courseLessonsList = courses.flatMap((course) =>
+    lessons.slice(0, 3).map((lesson) => ({
+      id: faker.string.uuid(),
+      courseId: course.id,
+      lessonId: lesson.id,
+    })),
+  );
+  return db.insert(courseLessons).values(courseLessonsList).returning();
+}
+
+async function createStudentCourses(courses: any[], studentId: string) {
+  const studentCoursesList = courses.map((course) => ({
+    id: faker.string.uuid(),
+    studentId: studentId,
+    courseId: course.id,
+    numberOfAssignments: faker.number.int({ min: 0, max: 10 }),
+    numberOfFinishedAssignments: faker.number.int({ min: 0, max: 10 }),
+    state: "not_started",
+    archived: false,
+  }));
+
+  return db.insert(studentCourses).values(studentCoursesList).returning();
+}
 
 async function seed() {
-  const connectionString = process.env.DATABASE_URL!;
-  const testUserEmail = "user@example.com";
-  const adminPassword = "password";
-
-  const sql = postgres(connectionString);
-  const db = drizzle(sql) as DatabasePg;
-
   try {
-    const studentUserData = {
-      id: faker.string.uuid(),
-      email: testUserEmail,
-      firstName: "Student",
-      lastName: "User",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      role: "student",
-    } as const;
-
-    const adminUserData = {
+    const adminUser = await createOrFindUser("admin@example.com", "password", {
       id: faker.string.uuid(),
       email: "admin@example.com",
       firstName: "Admin",
@@ -38,106 +152,141 @@ async function seed() {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       role: "admin",
-    } as const;
-
-    const [insertedStudentUser] = await db
-      .insert(users)
-      .values(studentUserData)
-      .returning();
-
-    const [insertedAdminUser] = await db
-      .insert(users)
-      .values(adminUserData)
-      .returning();
-
-    const adminCredentialData = {
-      id: faker.string.uuid(),
-      userId: insertedAdminUser.id,
-      password: await hashPassword(adminPassword),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    const studentCredentialData = {
-      id: faker.string.uuid(),
-      userId: insertedStudentUser.id,
-      password: await hashPassword("studentpassword"),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    const [insertedAdminCredential] = await db
-      .insert(credentials)
-      .values(adminCredentialData)
-      .returning();
-
-    const [insertedStudentCredential] = await db
-      .insert(credentials)
-      .values(studentCredentialData)
-      .returning();
-
-    console.log("Created admin user:", {
-      ...insertedStudentUser,
-      credentials: {
-        ...insertedStudentCredential,
-        password: adminPassword,
-      },
     });
 
-    console.log("Created student user:", {
-      ...insertedAdminUser,
-      credentials: {
-        ...insertedAdminCredential,
-        password: adminPassword,
+    const studentUser = await createOrFindUser(
+      "user@example.com",
+      "studentpassword",
+      {
+        id: faker.string.uuid(),
+        email: "user@example.com",
+        firstName: "Student",
+        lastName: "User",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        role: "student",
       },
-    });
-
-    const usersWithCredentials = await Promise.all(
-      Array.from({ length: 5 }, async () => {
-        const userData = {
-          id: faker.string.uuid(),
-          email: faker.internet.email(),
-          firstName: faker.person.firstName(),
-          lastName: faker.person.lastName(),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-
-        const [insertedUser] = await db
-          .insert(users)
-          .values(userData)
-          .returning();
-
-        const password = faker.internet.password();
-        const credentialData = {
-          id: faker.string.uuid(),
-          userId: insertedUser.id,
-          password: await hashPassword(password),
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
-
-        const [insertedCredential] = await db
-          .insert(credentials)
-          .values(credentialData)
-          .returning();
-
-        return {
-          ...insertedUser,
-          credentials: {
-            ...insertedCredential,
-            password: password,
-          },
-        };
-      }),
     );
 
-    console.log("Created users with credentials:", usersWithCredentials);
+    console.log("Created or found admin user:", adminUser);
+    console.log("Created or found student user:", studentUser);
+
+    await createUsers(5);
+    console.log("Created users with credentials");
+
+    const createdCategories = await createEntities(categories, 6, () => ({
+      id: faker.string.uuid(),
+      title: faker.lorem.sentence(3),
+      archived: faker.datatype.boolean(),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+    console.log("Created categories");
+
+    const createdTextBlocks = await createEntities(textBlocks, 6, () => ({
+      id: faker.string.uuid(),
+      body: faker.lorem.paragraph(3),
+      archived: faker.datatype.boolean(),
+      state: faker.helpers.arrayElement(["draft", "published"]),
+      authorId: adminUser.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+    console.log("Created text blocks");
+
+    const createdQuestions = await createEntities(questions, 5, () => ({
+      id: faker.string.uuid(),
+      questionType: faker.helpers.arrayElement([
+        "single_choice",
+        "multiple_choice",
+      ]),
+      questionBody: faker.lorem.paragraph(3),
+      solutionExplanation: faker.lorem.paragraph(3),
+      state: faker.helpers.arrayElement(["draft", "published"]),
+      authorId: adminUser.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+    console.log("Created questions");
+
+    for (const question of createdQuestions) {
+      await createEntities(questionAnswerOptions, 4, () => ({
+        id: faker.string.uuid(),
+        questionId: question.id,
+        optionText: faker.lorem.sentence(3),
+        isCorrect: faker.datatype.boolean(),
+        position: faker.number.int({ min: 1, max: 4 }),
+      }));
+    }
+    console.log("Created question answer options");
+
+    const createdFiles = await createEntities(files, 6, () => ({
+      id: faker.string.uuid(),
+      title: faker.lorem.sentence(3),
+      type: faker.helpers.arrayElement([
+        "presentation",
+        "external_presentation",
+        "video",
+      ]),
+      url: faker.internet.url(),
+      state: faker.helpers.arrayElement(["draft", "published"]),
+      authorId: adminUser.id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+    console.log("Created files");
+
+    const createdLessons = await createEntities(lessons, 16, () => ({
+      id: faker.string.uuid(),
+      title: faker.lorem.sentence(3),
+      description: faker.lorem.paragraph(3),
+      imageUrl: faker.internet.url(),
+      authorId: adminUser.id,
+      state: faker.helpers.arrayElement(["draft", "published"]),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+    console.log("Created lessons");
+
+    await createLessonItems(
+      createdLessons,
+      createdFiles,
+      createdTextBlocks,
+      createdQuestions,
+    );
+    console.log("Created lesson items");
+
+    const createdCourses = await createEntities(courses, 5, () => ({
+      id: faker.string.uuid(),
+      title: faker.lorem.sentence(3),
+      description: faker.lorem.paragraph(3),
+      imageUrl: faker.internet.url(),
+      state: faker.helpers.arrayElement(["draft", "published"]),
+      priceInCents: faker.number.int({ min: 0, max: 1000 }),
+      authorId: adminUser.id,
+      categoryId: faker.helpers.arrayElement(createdCategories).id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }));
+    console.log("Created courses");
+
+    await createCourseLessons(createdCourses, createdLessons);
+    console.log("Created course lessons");
+
+    await createStudentCourses(createdCourses, studentUser.id);
+    console.log("Created student courses");
+
     console.log("Seeding completed successfully");
   } catch (error) {
     console.error("Seeding failed:", error);
   } finally {
-    await sql.end();
+    console.log("Closing database connection");
+    try {
+      await sql.end();
+      console.log("Database connection closed successfully.");
+    } catch (error) {
+      console.error("Error closing the database connection:", error);
+    }
   }
 }
 

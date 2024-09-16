@@ -224,8 +224,8 @@ export const lessonItems = pgTable(
     lessonId: uuid("lesson_id")
       .references(() => lessons.id)
       .notNull(),
-    lessonItem_id: uuid("lesson_item_id").notNull(),
-    lessonItem_type: text("lesson_item_type").notNull(),
+    lessonItemId: uuid("lesson_item_id").notNull(),
+    lessonItemType: text("lesson_item_type").notNull(),
     displayOrder: integer("display_order"),
   },
   (table) => ({
