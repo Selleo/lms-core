@@ -26,7 +26,13 @@ export const questionsConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["question_type", "question_body", "state", "archived"],
+  editProperties: [
+    "question_type",
+    "blankInfo",
+    "question_body",
+    "state",
+    "archived",
+  ],
   filterProperties: ["created_at", "question_type", "state", "status"],
   listProperties: ["question_body", "question_type", "state", "status"],
   showProperties: [
@@ -42,6 +48,11 @@ export const questionsConfigOptions: ResourceOptions = {
   properties: {
     archived: {
       isRequired: false,
+    },
+    blankInfo: {
+      components: {
+        edit: Components.BlankInfo,
+      },
     },
     status: {
       components: {

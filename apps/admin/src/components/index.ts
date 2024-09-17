@@ -19,6 +19,8 @@ const Components = {
     "BodyTextCounter",
     "./custom/BodyTextCounter",
   ),
+  QuestionId: componentLoader.add("QuestionId", "./custom/QuestionId"),
+  BlankInfo: componentLoader.add("BlankInfo", "./edit/BlankInfo"),
 };
 
 export { componentLoader, Components };
