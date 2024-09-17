@@ -7,10 +7,15 @@ import { nonAdminRoles } from "./common/consts/selectOptions/nonAdminRoles.js";
 import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
+import { archivingActions } from "./common/actions/custom/archivingActions.js";
 
 export const usersConfigOptions: ResourceOptions = {
   ...noParentNavigation,
   actions: {
+    delete: {
+      isAccessible: false,
+      isVisible: false,
+    },
     edit: {
       before: [beforeCreateOrUpdateUser],
       isAccessible: (context) => context?.currentAdmin?.role === "admin",
@@ -23,9 +28,7 @@ export const usersConfigOptions: ResourceOptions = {
     list: {
       before: [statusFilterBeforeAction],
     },
-    delete: {
-      isAccessible: (context) => context?.currentAdmin?.role === "admin",
-    },
+    ...archivingActions,
   },
   editProperties: ["first_name", "last_name", "email", "role", "archived"],
   filterProperties: ["first_name", "last_name", "email", "status", "role"],
