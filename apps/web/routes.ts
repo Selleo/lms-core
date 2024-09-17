@@ -5,8 +5,8 @@ import {
 
 export const routes: (
   defineRoutes: (
-    callback: (defineRoute: DefineRouteFunction) => void,
-  ) => RouteManifest,
+    callback: (defineRoute: DefineRouteFunction) => void
+  ) => RouteManifest
 ) => RouteManifest | Promise<RouteManifest> = (defineRoutes) => {
   return defineRoutes((route) => {
     route("auth", "modules/Auth/Auth.layout.tsx", () => {
@@ -21,19 +21,20 @@ export const routes: (
       });
       route(
         "lesson-items",
-        "modules/Courses/LessonItems/LessonItems.layout.tsx",
+        "modules/Courses/LessonItems/LessonItems.layout.tsx"
       );
+      route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
       route(
         "lesson-items/:id/edit",
-        "modules/Courses/LessonItems/EditLessonItem.page.tsx",
+        "modules/Courses/LessonItems/EditLessonItem.page.tsx"
       );
       route(
         "lesson-items/add/video",
-        "modules/Courses/LessonItems/LessonItemsAddVideo.page.tsx",
+        "modules/Courses/LessonItems/LessonItemsAddVideo.page.tsx"
       );
       route(
         "lesson-items/add/text",
-        "modules/Courses/LessonItems/LessonItemsAddText.page.tsx",
+        "modules/Courses/LessonItems/LessonItemsAddText.page.tsx"
       );
       route(
         "settings",
@@ -42,7 +43,7 @@ export const routes: (
           route("", "modules/Dashboard/Settings/Settings.page.tsx", {
             index: true,
           });
-        },
+        }
       );
       route("courses", "modules/Courses/Courses.page.tsx", {
         index: true,
