@@ -28,8 +28,8 @@ export const questionsConfigOptions: ResourceOptions = {
   },
   editProperties: [
     "question_type",
+    "blankInfo",
     "question_body",
-    "solution_explanation",
     "state",
     "archived",
   ],
@@ -38,20 +38,21 @@ export const questionsConfigOptions: ResourceOptions = {
   showProperties: [
     "question_type",
     "question_body",
-    "solution_explanation",
     "author_id",
     "created_at",
     "updated_at",
     "state",
     "status",
+    "relations",
   ],
   properties: {
     archived: {
       isRequired: false,
     },
-    solution_explanation: {
-      type: "richtext",
-      isRequired: false,
+    blankInfo: {
+      components: {
+        edit: Components.BlankInfo,
+      },
     },
     status: {
       components: {
@@ -68,6 +69,7 @@ export const questionsConfigOptions: ResourceOptions = {
       isRequired: false,
     },
     question_body: {
+      type: "richtext",
       isRequired: false,
     },
     question_type: {

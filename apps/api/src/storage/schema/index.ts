@@ -128,7 +128,7 @@ export const questions = pgTable("questions", {
   ...timestamps,
   questionType: text("question_type").notNull(),
   questionBody: text("question_body").notNull(),
-  solutionExplanation: text("solution_explanation").notNull(),
+  solutionExplanation: text("solution_explanation"),
   state: text("state").notNull().default("draft"),
   authorId: uuid("author_id")
     .references(() => users.id)
