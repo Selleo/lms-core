@@ -1,5 +1,10 @@
-import { and, between, count, eq, like, sql } from "drizzle-orm";
-import { Inject, Injectable } from "@nestjs/common";
+import { and, between, count, eq, isNotNull, like, sql } from "drizzle-orm";
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { CoursesQuery } from "./api/courses.types";
 import { DatabasePg, Pagination } from "src/common";
@@ -13,10 +18,12 @@ import {
   categories,
   courseLessons,
   courses,
+  lessons,
   studentCourses,
   users,
 } from "../storage/schema";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
+import { AllLessonsResponse } from "src/lessons/schemas/lesson.schema";
 
 @Injectable()
 export class CoursesService {
@@ -154,6 +161,69 @@ export class CoursesService {
         },
       };
     });
+  }
+
+  async getCourse(id: string, userId: string) {
+    console.log("test test test");
+    const [course] = await this.db
+      .select({
+        id: courses.id,
+        title: courses.title,
+        imageUrl: courses.imageUrl,
+        category: categories.title,
+        courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+        state: studentCourses.state,
+      })
+      .from(courses)
+      .innerJoin(categories, eq(courses.categoryId, categories.id))
+      .innerJoin(users, eq(courses.authorId, users.id))
+      .leftJoin(
+        studentCourses,
+        and(
+          eq(courses.id, studentCourses.courseId),
+          eq(studentCourses.studentId, userId),
+        ),
+      )
+      .where(and(eq(courses.id, id), eq(courses.archived, false)));
+
+    if (!course) throw new NotFoundException("Course not found");
+    if (!course.imageUrl) throw new ConflictException("Course has no image");
+
+    if (!course.enrolled)
+      return {
+        ...course,
+        lessons: null,
+      };
+
+    const courseLessonList: AllLessonsResponse = (await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: lessons.description,
+        imageUrl: lessons.imageUrl,
+      })
+      .from(courseLessons)
+      .leftJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+      .where(
+        and(
+          eq(courseLessons.courseId, id),
+          eq(lessons.archived, false),
+          isNotNull(lessons.id),
+          isNotNull(lessons.title),
+          isNotNull(lessons.description),
+          isNotNull(lessons.imageUrl),
+        ),
+      )) as AllLessonsResponse;
+
+    console.log(courseLessonList);
+
+    if (!courseLessonList) throw new NotFoundException("Lessons not found");
+
+    return {
+      ...course,
+      lessons: courseLessonList,
+    };
   }
 
   private getSelectFiled() {

@@ -836,6 +836,26 @@
           }
         }
       }
+    },
+    "/api/courses/course": {
+      "get": {
+        "operationId": "CoursesController_getCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "info": {

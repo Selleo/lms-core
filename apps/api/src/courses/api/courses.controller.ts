@@ -1,7 +1,6 @@
 import { Controller, Get, Query } from "@nestjs/common";
-import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
-import { paginatedResponse, PaginatedResponse } from "src/common";
+import { BaseResponse, paginatedResponse, PaginatedResponse } from "src/common";
 import { CoursesService } from "../courses.service";
 import { AllCoursesResponse, allCoursesSchema } from "../schemas/course.schema";
 import {
@@ -10,6 +9,8 @@ import {
   sortCourseFieldsOptions,
 } from "../schemas/courseQuery";
 import { CurrentUser } from "src/common/decorators/user.decorator";
+import { CommonShowCourse } from "../schemas/showCourseCommon.schema";
+import { Type } from "@sinclair/typebox";
 
 @Controller("courses")
 export class CoursesController {
@@ -97,5 +98,15 @@ export class CoursesController {
     );
 
     return new PaginatedResponse(data);
+  }
+
+  @Get("course")
+  async getCourse(
+    @Query("id") id: string,
+    @CurrentUser("userId") currentUserId: string,
+  ): Promise<BaseResponse<CommonShowCourse>> {
+    const data = await this.coursesService.getCourse(id, currentUserId);
+    console.log(currentUserId);
+    return new BaseResponse(data);
   }
 }
