@@ -105,8 +105,8 @@ export class CoursesController {
     @Query("id") id: string,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<CommonShowCourse>> {
-    const data = await this.coursesService.getCourse(id, currentUserId);
-    console.log(currentUserId);
-    return new BaseResponse(data);
+    return new BaseResponse(
+      await this.coursesService.getCourse(id, currentUserId),
+    );
   }
 }

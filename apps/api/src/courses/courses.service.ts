@@ -22,8 +22,7 @@ import {
   studentCourses,
   users,
 } from "../storage/schema";
-import { getSortOptions } from "src/common/helpers/getSortOptions";
-import { AllLessonsResponse } from "src/lessons/schemas/lesson.schema";
+import { getSortOptions } from "../common/helpers/getSortOptions";
 
 @Injectable()
 export class CoursesService {
@@ -164,13 +163,13 @@ export class CoursesService {
   }
 
   async getCourse(id: string, userId: string) {
-    console.log("test test test");
     const [course] = await this.db
       .select({
         id: courses.id,
         title: courses.title,
         imageUrl: courses.imageUrl,
         category: categories.title,
+        description: sql<string>`${courses.description}`,
         courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         state: studentCourses.state,
@@ -193,18 +192,18 @@ export class CoursesService {
     if (!course.enrolled)
       return {
         ...course,
-        lessons: null,
+        lessons: [],
       };
 
-    const courseLessonList: AllLessonsResponse = (await this.db
+    const courseLessonList = await this.db
       .select({
         id: lessons.id,
         title: lessons.title,
-        description: lessons.description,
-        imageUrl: lessons.imageUrl,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
       })
       .from(courseLessons)
-      .leftJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+      .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
       .where(
         and(
           eq(courseLessons.courseId, id),
@@ -214,9 +213,7 @@ export class CoursesService {
           isNotNull(lessons.description),
           isNotNull(lessons.imageUrl),
         ),
-      )) as AllLessonsResponse;
-
-    console.log(courseLessonList);
+      );
 
     if (!courseLessonList) throw new NotFoundException("Lessons not found");
 
