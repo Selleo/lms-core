@@ -42,8 +42,8 @@ const BlankInfo: React.FC<BasePropertyProps> = ({ record, property }) => {
     <Box style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
       <Icon color="blue" icon="info" size={24} style={{ marginRight: "8px" }} />
       <Label style={{ marginBottom: "0px" }}>
-        Place all blanks between hashes, e.g., #question# is the biggest city in
-        the UK.
+        Place all blanks between hashes, e.g., #name# is the biggest city in the
+        UK.
       </Label>
     </Box>
   );
