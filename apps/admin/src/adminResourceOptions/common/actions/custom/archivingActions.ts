@@ -75,7 +75,9 @@ export const archivingActions: {
     guard: "Do you really want to archive this record?",
     handler: archiveAction,
     icon: "Archive",
-    isAccessible: true,
+    isAccessible: (context) =>
+      context?.currentAdmin?.role === "admin" &&
+      context?.record?.params?.id !== context?.currentAdmin?.id,
     isVisible: (context: ActionContext) => {
       return !context.record?.params?.archived;
     },
@@ -87,7 +89,7 @@ export const archivingActions: {
     guard: "Do you really want to unarchive this record?",
     handler: unarchiveAction,
     icon: "Unlock",
-    isAccessible: true,
+    isAccessible: (context) => context?.currentAdmin?.role === "admin",
     isVisible: (context: ActionContext) => {
       return context.record?.params?.archived;
     },
