@@ -11,9 +11,12 @@ export const beforeUpdateCategory: Before = async (
   request: ActionRequest,
   context: ActionContext,
 ) => {
+  const { payload = {}, method } = request;
+  if (method !== "post") return request;
+
   const { resource } = context;
   const editingRecordId = request.params.recordId;
-  const title = request?.payload?.title;
+  const title = payload?.title;
   const errors: ValidationErrors = {};
 
   if (!title || title?.length < 1) {
@@ -49,7 +52,6 @@ export const beforeUpdateCategory: Before = async (
 
   request.payload = {
     ...request.payload,
-    author_id: context.currentAdmin?.id,
   };
 
   return request;
