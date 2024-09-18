@@ -11,9 +11,12 @@ export const beforeCreateCategory: Before = async (
   request: ActionRequest,
   context: ActionContext,
 ) => {
+  const { payload = {}, method } = request;
+  if (method !== "post") return request;
+
   const { resource } = context;
   const errors: ValidationErrors = {};
-  const title = request?.payload?.title;
+  const title = payload?.title;
 
   if (!title || title?.length < 1) {
     errors["title"] = {
