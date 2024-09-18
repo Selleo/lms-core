@@ -1,15 +1,32 @@
-import { ClientLoaderFunctionArgs, useLoaderData } from "@remix-run/react";
-
-export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
-  console.log({ params });
-
-  const data = "test";
-  return { data };
-};
+import { useParams } from "@remix-run/react";
+import { useCourseSuspense } from "~/api/queries/useCourse";
+import {
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "~/components/ui/breadcrumb";
 
 export default function Breadcrumb() {
-  const data = useLoaderData<typeof clientLoader>();
-  console.log({ data });
+  const { courseId } = useParams();
+  const { data } = useCourseSuspense(courseId!);
 
-  return <div>Breadcrumb</div>;
+  const courseTitle = data?.title || "Course";
+  //TODO - add lesson name to breadcrumb in similar way as course
+
+  return (
+    <BreadcrumbList>
+      <BreadcrumbItem>
+        <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator />
+      <BreadcrumbItem>
+        <BreadcrumbLink href={`/course/${courseId}`}>
+          {courseTitle}
+        </BreadcrumbLink>
+      </BreadcrumbItem>
+      <BreadcrumbSeparator />
+      <BreadcrumbItem>Lesson Name</BreadcrumbItem>
+    </BreadcrumbList>
+  );
 }

@@ -25,7 +25,7 @@ export const routes: (
       );
       route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
       route(
-        "course/:id/lesson/:lessonId",
+        "course/:courseId/lesson/:lessonId",
         "modules/Courses/Lesson/Lesson.layout.tsx",
         () => {
           route("", "modules/Courses/Lesson/Lesson.page.tsx", {
