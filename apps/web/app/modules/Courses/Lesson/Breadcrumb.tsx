@@ -15,7 +15,7 @@ export default function Breadcrumb() {
   //TODO - add lesson name to breadcrumb in similar way as course
 
   return (
-    <BreadcrumbList>
+    <BreadcrumbList className="mt-6">
       <BreadcrumbItem>
         <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
       </BreadcrumbItem>
