@@ -13,13 +13,18 @@ export const usersConfigOptions: ResourceOptions = {
   actions: {
     edit: {
       before: [beforeCreateOrUpdateUser],
+      isAccessible: (context) => context?.currentAdmin?.role === "admin",
     },
     new: {
       before: [beforeCreateOrUpdateUser],
       after: [afterCreateUser],
+      isAccessible: (context) => context?.currentAdmin?.role === "admin",
     },
     list: {
       before: [statusFilterBeforeAction],
+    },
+    delete: {
+      isAccessible: (context) => context?.currentAdmin?.role === "admin",
     },
   },
   editProperties: ["first_name", "last_name", "email", "role", "archived"],
