@@ -276,7 +276,7 @@ export const studentCourses = pgTable(
       .references(() => courses.id)
       .notNull(),
     numberOfAssignments: integer("number_of_assignments"),
-    numberOFfinished_assignments: integer("number_of_finished_assignments"),
+    numberOfFinishedAssignments: integer("number_of_finished_assignments"),
     state: text("state").notNull().default("not_started"),
     archived,
   },

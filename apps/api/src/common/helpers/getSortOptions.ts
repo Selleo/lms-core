@@ -1,7 +1,18 @@
 import { asc, desc } from "drizzle-orm";
-export function getSortOptions<T extends string, K extends string>(sort: T) {
+
+type SortOrder = typeof asc | typeof desc;
+type RemoveDescSign<T extends string> = T extends `-${infer U}` ? U : T;
+
+export function getSortOptions<T extends string>(
+  sort: T,
+): {
+  sortOrder: SortOrder;
+  sortedField: RemoveDescSign<T>;
+} {
   return {
     sortOrder: sort.startsWith("-") ? desc : asc,
-    sortedField: sort.replace(/^-/, "") as K,
+    sortedField: (sort.startsWith("-")
+      ? sort.slice(1)
+      : sort) as RemoveDescSign<T>,
   };
 }
