@@ -25,6 +25,15 @@ export const routes: (
       );
       route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
       route(
+        "course/:id/lesson/:lessonId",
+        "modules/Courses/Lesson/Lesson.layout.tsx",
+        () => {
+          route("", "modules/Courses/Lesson/Lesson.page.tsx", {
+            index: true,
+          });
+        }
+      );
+      route(
         "lesson-items/:id/edit",
         "modules/Courses/LessonItems/EditLessonItem.page.tsx"
       );
