@@ -223,6 +223,27 @@ export interface GetStudentCoursesResponse {
   };
 }
 
+export interface GetCourseResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string | null;
+    description: string;
+    category: string;
+    courseLessonCount: number;
+    enrolled: boolean;
+    state: string | null;
+    lessons: {
+      /** @format uuid */
+      id: string;
+      title: string;
+      imageUrl: string;
+      description: string;
+    }[];
+  };
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
@@ -754,6 +775,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<GetStudentCoursesResponse, any>({
         path: `/api/courses/get-student-courses`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerGetCourse
+     * @request GET:/api/courses/course
+     */
+    coursesControllerGetCourse: (
+      query?: {
+        /** @format uuid */
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetCourseResponse, any>({
+        path: `/api/courses/course`,
         method: "GET",
         query: query,
         format: "json",

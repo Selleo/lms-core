@@ -108,6 +108,10 @@ export class CoursesController {
   }
 
   @Get("course")
+  @Validate({
+    response: baseResponse(commonShowCourseSchema),
+    request: [{ type: "query", name: "id", schema: UUIDSchema }],
+  })
   async getCourse(
     @Query("id") id: string,
     @CurrentUser("userId") currentUserId: string,

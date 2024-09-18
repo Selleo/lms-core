@@ -194,9 +194,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -211,9 +209,7 @@
                       "example": {},
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -232,9 +228,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -268,9 +262,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -290,9 +282,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -315,9 +305,7 @@
                       },
                       "additionalProperties": {
                         "type": "object",
-                        "required": [
-                          "status"
-                        ],
+                        "required": ["status"],
                         "properties": {
                           "status": {
                             "type": "string"
@@ -843,9 +831,10 @@
         "parameters": [
           {
             "name": "id",
-            "required": true,
+            "required": false,
             "in": "query",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
@@ -972,12 +961,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "email",
-          "firstName",
-          "lastName",
-          "password"
-        ]
+        "required": ["email", "firstName", "lastName", "password"]
       },
       "RegisterResponse": {
         "type": "object",
@@ -1022,9 +1006,7 @@
             ]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "LoginBody": {
         "type": "object",
@@ -1042,10 +1024,7 @@
             "type": "boolean"
           }
         },
-        "required": [
-          "email",
-          "password"
-        ]
+        "required": ["email", "password"]
       },
       "LoginResponse": {
         "type": "object",
@@ -1090,9 +1069,7 @@
             ]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "LogoutResponse": {
         "type": "null"
@@ -1143,9 +1120,7 @@
             ]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "ForgotPasswordBody": {
         "type": "object",
@@ -1156,9 +1131,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "email"
-        ]
+        "required": ["email"]
       },
       "CreatePasswordBody": {
         "type": "object",
@@ -1173,10 +1146,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "password",
-          "createToken"
-        ]
+        "required": ["password", "createToken"]
       },
       "ResetPasswordBody": {
         "type": "object",
@@ -1191,10 +1161,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "newPassword",
-          "resetToken"
-        ]
+        "required": ["newPassword", "resetToken"]
       },
       "GetUsersResponse": {
         "type": "object",
@@ -1242,9 +1209,7 @@
             }
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "GetUserByIdResponse": {
         "type": "object",
@@ -1289,9 +1254,7 @@
             ]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "UpdateUserBody": {
         "type": "object",
@@ -1345,9 +1308,7 @@
             ]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "ChangePasswordBody": {
         "type": "object",
@@ -1363,10 +1324,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "newPassword",
-          "oldPassword"
-        ]
+        "required": ["newPassword", "oldPassword"]
       },
       "ChangePasswordResponse": {
         "type": "null"
@@ -1410,12 +1368,7 @@
                   ]
                 }
               },
-              "required": [
-                "id",
-                "title",
-                "archived",
-                "createdAt"
-              ]
+              "required": ["id", "title", "archived", "createdAt"]
             }
           },
           "pagination": {
@@ -1431,17 +1384,10 @@
                 "type": "number"
               }
             },
-            "required": [
-              "totalItems",
-              "page",
-              "perPage"
-            ]
+            "required": ["totalItems", "page", "perPage"]
           }
         },
-        "required": [
-          "data",
-          "pagination"
-        ]
+        "required": ["data", "pagination"]
       },
       "GetAllCoursesResponse": {
         "type": "object",
@@ -1505,17 +1451,10 @@
                 "type": "number"
               }
             },
-            "required": [
-              "totalItems",
-              "page",
-              "perPage"
-            ]
+            "required": ["totalItems", "page", "perPage"]
           }
         },
-        "required": [
-          "data",
-          "pagination"
-        ]
+        "required": ["data", "pagination"]
       },
       "GetStudentCoursesResponse": {
         "type": "object",
@@ -1579,17 +1518,10 @@
                 "type": "number"
               }
             },
-            "required": [
-              "totalItems",
-              "page",
-              "perPage"
-            ]
+            "required": ["totalItems", "page", "perPage"]
           }
         },
-        "required": [
-          "data",
-          "pagination"
-        ]
+        "required": ["data", "pagination"]
       },
       "CreateFavouritedCourseResponse": {
         "type": "object",
@@ -1601,14 +1533,10 @@
                 "type": "string"
               }
             },
-            "required": [
-              "message"
-            ]
+            "required": ["message"]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
       },
       "DeleteFavouritedCourseForUserResponse": {
         "type": "null"
@@ -1688,11 +1616,7 @@
                                     ]
                                   }
                                 },
-                                "required": [
-                                  "id",
-                                  "optionText",
-                                  "position"
-                                ]
+                                "required": ["id", "optionText", "position"]
                               }
                             }
                           },
@@ -1717,11 +1641,7 @@
                               "type": "string"
                             }
                           },
-                          "required": [
-                            "id",
-                            "body",
-                            "state"
-                          ]
+                          "required": ["id", "body", "state"]
                         },
                         {
                           "type": "object",
@@ -1740,21 +1660,12 @@
                               "type": "string"
                             }
                           },
-                          "required": [
-                            "id",
-                            "title",
-                            "type",
-                            "url"
-                          ]
+                          "required": ["id", "title", "type", "url"]
                         }
                       ]
                     }
                   },
-                  "required": [
-                    "lessonItemType",
-                    "displayOrder",
-                    "content"
-                  ]
+                  "required": ["lessonItemType", "displayOrder", "content"]
                 }
               }
             },
@@ -1767,9 +1678,90 @@
             ]
           }
         },
-        "required": [
-          "data"
-        ]
+        "required": ["data"]
+      },
+      "GetCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "courseLessonCount": {
+                "type": "number"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["id", "title", "imageUrl", "description"]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "imageUrl",
+              "description",
+              "category",
+              "courseLessonCount",
+              "enrolled",
+              "state",
+              "lessons"
+            ]
+          }
+        },
+        "required": ["data"]
       }
     }
   }
