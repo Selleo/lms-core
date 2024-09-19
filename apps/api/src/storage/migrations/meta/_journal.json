@@ -218,6 +218,13 @@
       "when": 1726474642589,
       "tag": "0030_drop_not_null_from_solution_explanation",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1726738671653,
+      "tag": "0031_add_title_to_text_blocks",
+      "breakpoints": true
     }
   ]
 }
