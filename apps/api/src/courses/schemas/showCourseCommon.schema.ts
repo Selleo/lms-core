@@ -10,7 +10,7 @@ export const commonShowCourseSchema = Type.Object({
   courseLessonCount: Type.Number(),
   enrolled: Type.Boolean(),
   state: Type.Union([Type.String(), Type.Null()]),
-  lessons: Type.Union([Type.Array(lessonSchema)]),
+  lessons: Type.Array(lessonSchema),
 });
 
 export type CommonShowCourse = Static<typeof commonShowCourseSchema>;
