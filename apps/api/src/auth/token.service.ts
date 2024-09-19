@@ -34,7 +34,7 @@ export class TokenService {
       secure: true,
       sameSite: "strict",
       maxAge: refreshTokenMaxAge,
-      path: "/auth/refresh",
+      path: "/api/auth/refresh",
     });
   }
 

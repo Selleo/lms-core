@@ -11,12 +11,11 @@ export function useLogoutUser() {
   return useMutation({
     mutationFn: async () => {
       const response = await ApiClient.api.authControllerLogout();
-
+      setLoggedIn(false);
       return response.data;
     },
     onSuccess: () => {
       queryClient.clear();
-      setLoggedIn(false);
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
