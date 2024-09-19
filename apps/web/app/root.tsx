@@ -1,12 +1,15 @@
 import {
+  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  useRouteError,
 } from "@remix-run/react";
 import { Toaster } from "~/components/ui/toaster";
 import "./index.css";
+import CustomErrorBoundary from "./modules/common/ErrorBoundary/ErrorBoundary";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -33,4 +36,17 @@ export default function App() {
 
 export function HydrateFallback() {
   return <div />;
+}
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return (
+      <CustomErrorBoundary stack={error.data} message={error.statusText} />
+    );
+  } else if (error instanceof Error) {
+    return <CustomErrorBoundary stack={error.stack} message={error.message} />;
+  } else {
+    return <CustomErrorBoundary />;
+  }
 }

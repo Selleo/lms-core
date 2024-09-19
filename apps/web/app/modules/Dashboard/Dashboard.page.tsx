@@ -29,25 +29,30 @@ export default function DashboardPage() {
         <p className="text-body-lg text-neutral-700">Available Courses</p>
       </div>
       <div className="grid p-6 gap-y-12 grid-cols-[repeat(auto-fit,minmax(360px,1fr))] bg-white">
-        {courses.map(({ title, category, courseLessonCount, id }, index) => (
-          <Link key={index} to={`/course/${id}`}>
-            <div className="flex flex-col gap-y-2.5 max-w-[360px] border border-primary-200 rounded-lg">
-              <img
-                src="https://foundr.com/wp-content/uploads/2023/04/How-to-create-an-online-course.jpg.webp"
-                alt=""
-                className="rounded-md"
-              />
-              <h3 className="h6 text-neutral-950 truncate px-4">{title}</h3>
-              <div className="flex justify-between p-4">
-                <div className="flex flex-col text-details justify-end text-neutral-500">
-                  <span>{category}</span>
-                  <span>{courseLessonCount} lessons</span>
+        {courses.map(
+          ({ title, category, courseLessonCount, id, imageUrl }, index) => (
+            <Link key={index} to={`/course/${id}`}>
+              <div className="flex flex-col gap-y-2.5 max-w-[360px] border border-primary-200 rounded-lg">
+                <img
+                  src={
+                    imageUrl ??
+                    "https://foundr.com/wp-content/uploads/2023/04/How-to-create-an-online-course.jpg.webp"
+                  }
+                  alt="Course"
+                  className="rounded-md"
+                />
+                <h3 className="h6 text-neutral-950 truncate px-4">{title}</h3>
+                <div className="flex justify-between p-4">
+                  <div className="flex flex-col text-details justify-end text-neutral-500">
+                    <span>{category}</span>
+                    <span>{courseLessonCount} lessons</span>
+                  </div>
+                  <Button>Enroll</Button>
                 </div>
-                <Button>Enroll</Button>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          )
+        )}
       </div>
     </div>
   );
