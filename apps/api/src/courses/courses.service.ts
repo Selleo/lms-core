@@ -223,6 +223,72 @@ export class CoursesService {
     };
   }
 
+  async enrollCourse(id: string, userId: string) {
+    const [course] = await this.db
+      .select({
+        id: courses.id,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+      })
+      .from(courses)
+      .leftJoin(
+        studentCourses,
+        and(
+          eq(courses.id, studentCourses.courseId),
+          eq(studentCourses.studentId, userId),
+        ),
+      )
+      .where(and(eq(courses.id, id), eq(courses.archived, false)));
+
+    if (!course) throw new NotFoundException("Course not found");
+
+    if (course.enrolled)
+      throw new ConflictException("Course is already enrolled");
+
+    await this.db.transaction(async (trx) => {
+      const [enrolledCourse] = await trx
+        .insert(studentCourses)
+        .values({ studentId: userId, courseId: id })
+        .returning();
+
+      if (!enrolledCourse) throw new ConflictException("Course not enrolled");
+    });
+  }
+
+  async unenrollCourse(id: string, userId: string) {
+    const [course] = await this.db
+      .select({
+        id: courses.id,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+      })
+      .from(courses)
+      .leftJoin(
+        studentCourses,
+        and(
+          eq(courses.id, studentCourses.courseId),
+          eq(studentCourses.studentId, userId),
+        ),
+      )
+      .where(and(eq(courses.id, id), eq(courses.archived, false)));
+
+    if (!course) throw new NotFoundException("Course not found");
+
+    if (!course.enrolled) throw new ConflictException("Course is not enrolled");
+
+    await this.db.transaction(async (trx) => {
+      const [deletedCourse] = await trx
+        .delete(studentCourses)
+        .where(
+          and(
+            eq(studentCourses.courseId, id),
+            eq(studentCourses.studentId, userId),
+          ),
+        )
+        .returning();
+
+      if (!deletedCourse) throw new ConflictException("Course not unenrolled");
+    });
+  }
+
   private getSelectFiled() {
     return {
       id: courses.id,

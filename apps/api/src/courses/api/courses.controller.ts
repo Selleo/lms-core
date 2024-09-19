@@ -1,10 +1,13 @@
-import { Controller, Get, Query } from "@nestjs/common";
+import { Controller, Delete, Get, Post, Query } from "@nestjs/common";
 import { Validate } from "nestjs-typebox";
 import {
+  baseResponse,
   BaseResponse,
+  nullResponse,
   paginatedResponse,
   PaginatedResponse,
-} from "../../common";
+  UUIDSchema,
+} from "src/common";
 import { CoursesService } from "../courses.service";
 import { AllCoursesResponse, allCoursesSchema } from "../schemas/course.schema";
 import {
@@ -112,5 +115,33 @@ export class CoursesController {
     return new BaseResponse(
       await this.coursesService.getCourse(id, currentUserId),
     );
+  }
+
+  @Post("enroll-course")
+  @Validate({
+    request: [{ type: "query", name: "id", schema: UUIDSchema }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async createFavouritedCourse(
+    @Query("id") id: string,
+    @CurrentUser() currentUser: { userId: string },
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.coursesService.enrollCourse(id, currentUser.userId);
+
+    return new BaseResponse({ message: "Course enrolled successfully" });
+  }
+
+  @Delete("unenroll-course")
+  @Validate({
+    response: nullResponse(),
+    request: [{ type: "query", name: "id", schema: UUIDSchema }],
+  })
+  async deleteFavouritedCourseForUser(
+    @Query("id") id: string,
+    @CurrentUser() currentUser: { userId: string },
+  ): Promise<null> {
+    await this.coursesService.unenrollCourse(id, currentUser.userId);
+
+    return null;
   }
 }
