@@ -5,14 +5,19 @@ export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
 
   return lessonItems
     .map((lessonItem) => {
-      const isQuestionTpe = lessonItem.lessonItemType === "question";
-      return {
-        title: isQuestionTpe
-          ? lessonItem.content.questionBody
-          : lessonItem.content.title,
-        displayOrder: lessonItem.displayOrder,
-        id: lessonItem.content.id,
-      };
+      if ("title" in lessonItem.content) {
+        return {
+          title: lessonItem.content.title,
+          displayOrder: lessonItem.displayOrder,
+          id: lessonItem.content.id,
+        };
+      } else {
+        return {
+          title: lessonItem.content.questionBody,
+          displayOrder: lessonItem.displayOrder,
+          id: lessonItem.content.id,
+        };
+      }
     })
-    .sort((a, b) => a.displayOrder || 0 - b.displayOrder || 0);
+    .sort((a, b) => a.displayOrder || 0 - (b.displayOrder || 0));
 };

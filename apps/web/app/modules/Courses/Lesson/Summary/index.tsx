@@ -1,38 +1,14 @@
 import { Card, CardContent } from "~/components/ui/card";
-import SingleLessonSummary from "./SingleLessonSummary";
+import { getSummaryItems } from "./utils";
 import { useLessonSuspense } from "~/api/queries/useLesson";
 import { useParams } from "@remix-run/react";
-import { getSummaryItems } from "./utils";
+import SingleLessonSummary from "./SingleLessonSummary";
 
 export default function Summary() {
   const { lessonId } = useParams();
   const { data } = useLessonSuspense(lessonId!);
-  console.log({ data });
 
   const lessonItemsSummary = getSummaryItems(data);
-  console.log({ lessonItemsSummary });
-  const LESSONS = [
-    {
-      title: "How to calculate everything?",
-      isCompleted: true,
-      id: "1",
-    },
-    {
-      title: "How to cheat yourself?",
-      isCompleted: false,
-      id: "2",
-    },
-    {
-      title: "Running and jumping?",
-      isCompleted: true,
-      id: "3",
-    },
-    {
-      title: "What is the meaning of life?",
-      isCompleted: true,
-      id: "4",
-    },
-  ];
 
   return (
     <Card className="self-start w-full rounded-none max-w-[410px] mr-[-24px] mt-[-24px] lg:block hidden pb-32">
@@ -56,11 +32,11 @@ export default function Summary() {
               />
             ))}
           </div>
-          {LESSONS.map((lesson, index) => (
+          {lessonItemsSummary.map((lesson, index) => (
             <SingleLessonSummary
               key={lesson.id}
               lesson={lesson}
-              isLast={index === LESSONS.length - 1}
+              isLast={index === lessonItemsSummary.length - 1}
             />
           ))}
         </div>

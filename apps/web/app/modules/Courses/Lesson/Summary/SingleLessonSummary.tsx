@@ -2,9 +2,9 @@ import { cn } from "~/lib/utils";
 
 type TProps = {
   lesson: {
-    title: string;
-    isCompleted: boolean;
+    displayOrder: number | null;
     id: string;
+    title: string;
   };
   isLast: boolean;
 };
@@ -16,12 +16,7 @@ export default function SingleLessonSummary({ lesson, isLast }: TProps) {
         "border-b border-b-primary-200": !isLast,
       })}
     >
-      <input
-        checked={lesson.isCompleted}
-        className="w-6 h-6"
-        readOnly
-        type="radio"
-      />
+      <input checked={true} className="min-w-6 min-h-6" readOnly type="radio" />
       <p className="body-base-md">{lesson.title}</p>
     </div>
   );

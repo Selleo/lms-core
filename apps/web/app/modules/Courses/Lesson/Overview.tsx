@@ -1,11 +1,14 @@
+import { useParams } from "@remix-run/react";
+import { useLessonSuspense } from "~/api/queries/useLesson";
 import { Card, CardContent } from "~/components/ui/card";
 
 export default function Overview() {
-  //fetch lesson data from api
+  const { lessonId } = useParams();
+  const { data } = useLessonSuspense(lessonId!);
+
   const imageUrl = "https://placehold.co/320x180";
-  const title = "How to calculate everything";
-  const description =
-    "Explore the foundational concepts of cloud computing, including its definition, key features, and how it differs from traditional computing models. And more text to check how it behaves in different screen sizes. It can be too short so we need to add more text to make it longer. And we can add more text to make it even longer.";
+  const title = data.title;
+  const description = data.description;
   const lessonNumber = 1;
 
   return (
