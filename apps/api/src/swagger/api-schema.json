@@ -857,6 +857,60 @@
         }
       }
     },
+    "/api/courses/enroll-course": {
+      "post": {
+        "operationId": "CoursesController_createFavouritedCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFavouritedCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/unenroll-course": {
+      "delete": {
+        "operationId": "CoursesController_deleteFavouritedCourseForUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteFavouritedCourseForUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/courses/lesson": {
       "get": {
         "operationId": "LessonsController_getLesson",
@@ -1536,6 +1590,28 @@
           "data",
           "pagination"
         ]
+      },
+      "CreateFavouritedCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "DeleteFavouritedCourseForUserResponse": {
+        "type": "null"
       },
       "GetLessonResponse": {
         "type": "object",
