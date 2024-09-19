@@ -278,6 +278,7 @@ export interface GetLessonResponse {
         | {
             /** @format uuid */
             id: string;
+            title: string;
             body: string;
             state: string;
           }

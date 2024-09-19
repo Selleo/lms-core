@@ -16,6 +16,7 @@ export const questionSchema = Type.Object({
 
 export const textBlockSchema = Type.Object({
   id: UUIDSchema,
+  title: Type.String(),
   body: Type.String(),
   state: Type.String(),
 });

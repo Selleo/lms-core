@@ -1807,6 +1807,9 @@
                               "format": "uuid",
                               "type": "string"
                             },
+                            "title": {
+                              "type": "string"
+                            },
                             "body": {
                               "type": "string"
                             },
@@ -1816,6 +1819,7 @@
                           },
                           "required": [
                             "id",
+                            "title",
                             "body",
                             "state"
                           ]
