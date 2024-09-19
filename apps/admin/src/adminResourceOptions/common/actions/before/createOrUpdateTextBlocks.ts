@@ -9,7 +9,17 @@ export const beforeCreateOrUpdateTextBlocks: Before = async (
   if (method !== "post") return request;
 
   const errors: ValidationErrors = {};
-  const { body, state } = payload;
+  const { body, state, title } = payload;
+
+  if (!title) {
+    errors.title = { message: "Please provide title of the text block" };
+  }
+
+  if (title?.length > 100) {
+    errors.title = {
+      message: `Title must be no more than 100 characters.`,
+    };
+  }
 
   if (!body || body === "<p></p>") {
     errors.body = { message: "Please provide body of the text block" };
