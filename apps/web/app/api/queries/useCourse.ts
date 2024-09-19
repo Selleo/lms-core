@@ -11,7 +11,7 @@ export const courseQueryOptions = (id: string) =>
     queryKey: ["course", id],
     queryFn: async () => {
       const response = await ApiClient.api.coursesControllerGetCourse({ id });
-      return response?.data;
+      return response.data;
     },
     select: (data: GetCourseResponse) => data.data,
   });

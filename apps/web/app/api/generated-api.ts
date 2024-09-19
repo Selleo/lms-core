@@ -244,6 +244,54 @@ export interface GetCourseResponse {
   };
 }
 
+export interface CreateFavouritedCourseResponse {
+  data: {
+    message: string;
+  };
+}
+
+export type DeleteFavouritedCourseForUserResponse = null;
+
+export interface GetLessonResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string;
+    description: string;
+    lessonItems: {
+      lessonItemType: string;
+      displayOrder: number | null;
+      content:
+        | {
+            /** @format uuid */
+            id: string;
+            questionType: string;
+            questionBody: string;
+            questionAnswers: {
+              /** @format uuid */
+              id: string;
+              optionText: string;
+              position: number | null;
+            }[];
+          }
+        | {
+            /** @format uuid */
+            id: string;
+            body: string;
+            state: string;
+          }
+        | {
+            /** @format uuid */
+            id: string;
+            title: string;
+            type: string;
+            url: string;
+          };
+    }[];
+  };
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
@@ -796,6 +844,69 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<GetCourseResponse, any>({
         path: `/api/courses/course`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerCreateFavouritedCourse
+     * @request POST:/api/courses/enroll-course
+     */
+    coursesControllerCreateFavouritedCourse: (
+      query?: {
+        /** @format uuid */
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateFavouritedCourseResponse, any>({
+        path: `/api/courses/enroll-course`,
+        method: "POST",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerDeleteFavouritedCourseForUser
+     * @request DELETE:/api/courses/unenroll-course
+     */
+    coursesControllerDeleteFavouritedCourseForUser: (
+      query?: {
+        /** @format uuid */
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<DeleteFavouritedCourseForUserResponse, any>({
+        path: `/api/courses/unenroll-course`,
+        method: "DELETE",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerGetLesson
+     * @request GET:/api/courses/lesson
+     */
+    lessonsControllerGetLesson: (
+      query?: {
+        /** @format uuid */
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetLessonResponse, any>({
+        path: `/api/courses/lesson`,
         method: "GET",
         query: query,
         format: "json",

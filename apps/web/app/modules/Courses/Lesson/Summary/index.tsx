@@ -1,8 +1,16 @@
 import { Card, CardContent } from "~/components/ui/card";
 import SingleLessonSummary from "./SingleLessonSummary";
+import { useLessonSuspense } from "~/api/queries/useLesson";
+import { useParams } from "@remix-run/react";
+import { getSummaryItems } from "./utils";
 
 export default function Summary() {
-  //TODO fetch all lessons fron the course
+  const { lessonId } = useParams();
+  const { data } = useLessonSuspense(lessonId!);
+  console.log({ data });
+
+  const lessonItemsSummary = getSummaryItems(data);
+  console.log({ lessonItemsSummary });
   const LESSONS = [
     {
       title: "How to calculate everything?",

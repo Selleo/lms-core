@@ -16,7 +16,12 @@ export default function SingleLessonSummary({ lesson, isLast }: TProps) {
         "border-b border-b-primary-200": !isLast,
       })}
     >
-      <input type="radio" className="w-6 h-6" checked={lesson.isCompleted} />
+      <input
+        checked={lesson.isCompleted}
+        className="w-6 h-6"
+        readOnly
+        type="radio"
+      />
       <p className="body-base-md">{lesson.title}</p>
     </div>
   );

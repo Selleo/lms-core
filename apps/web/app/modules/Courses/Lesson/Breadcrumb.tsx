@@ -1,5 +1,6 @@
 import { useParams } from "@remix-run/react";
 import { useCourseSuspense } from "~/api/queries/useCourse";
+import { useLessonSuspense } from "~/api/queries/useLesson";
 import {
   BreadcrumbItem,
   BreadcrumbLink,
@@ -8,11 +9,12 @@ import {
 } from "~/components/ui/breadcrumb";
 
 export default function Breadcrumb() {
-  const { courseId } = useParams();
-  const { data } = useCourseSuspense(courseId!);
+  const { courseId, lessonId } = useParams();
+  const { data: courseData } = useCourseSuspense(courseId!);
+  const { data: lessonData } = useLessonSuspense(lessonId!);
 
-  const courseTitle = data?.title || "Course";
-  //TODO - add lesson name to breadcrumb in similar way as course
+  const courseTitle = courseData?.title || "Course";
+  const lessonTitle = lessonData?.title || "Lesson";
 
   return (
     <BreadcrumbList className="mt-6">
@@ -26,7 +28,7 @@ export default function Breadcrumb() {
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
-      <BreadcrumbItem>Lesson Name</BreadcrumbItem>
+      <BreadcrumbItem>{lessonTitle}</BreadcrumbItem>
     </BreadcrumbList>
   );
 }

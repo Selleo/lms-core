@@ -16,7 +16,10 @@ import {
   sortCourseFieldsOptions,
 } from "../schemas/courseQuery";
 import { CurrentUser } from "../../common/decorators/user.decorator";
-import { CommonShowCourse } from "../schemas/showCourseCommon.schema";
+import {
+  CommonShowCourse,
+  commonShowCourseSchema,
+} from "../schemas/showCourseCommon.schema";
 import { Type } from "@sinclair/typebox";
 
 @Controller("courses")
