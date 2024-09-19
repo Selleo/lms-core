@@ -110,7 +110,7 @@ async function createLessonItems(
       id: faker.string.uuid(),
       lessonId: lesson.id,
       lessonItemId: questions[index % questions.length].id,
-      lessonItemType: "presentation",
+      lessonItemType: "question",
       displayOrder: 3,
     },
   ]);

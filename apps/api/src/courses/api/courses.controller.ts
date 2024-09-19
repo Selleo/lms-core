@@ -1,6 +1,10 @@
 import { Controller, Get, Query } from "@nestjs/common";
 import { Validate } from "nestjs-typebox";
-import { BaseResponse, paginatedResponse, PaginatedResponse } from "src/common";
+import {
+  BaseResponse,
+  paginatedResponse,
+  PaginatedResponse,
+} from "../../common";
 import { CoursesService } from "../courses.service";
 import { AllCoursesResponse, allCoursesSchema } from "../schemas/course.schema";
 import {
@@ -8,7 +12,7 @@ import {
   SortCourseFieldsOptions,
   sortCourseFieldsOptions,
 } from "../schemas/courseQuery";
-import { CurrentUser } from "src/common/decorators/user.decorator";
+import { CurrentUser } from "../../common/decorators/user.decorator";
 import { CommonShowCourse } from "../schemas/showCourseCommon.schema";
 import { Type } from "@sinclair/typebox";
 

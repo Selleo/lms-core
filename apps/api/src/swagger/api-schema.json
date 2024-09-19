@@ -856,6 +856,33 @@
           }
         }
       }
+    },
+    "/api/courses/lesson": {
+      "get": {
+        "operationId": "LessonsController_getLesson",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "info": {
@@ -1508,6 +1535,164 @@
         "required": [
           "data",
           "pagination"
+        ]
+      },
+      "GetLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "lessonItems": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "lessonItemType": {
+                      "type": "string"
+                    },
+                    "displayOrder": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "content": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "questionType": {
+                              "type": "string"
+                            },
+                            "questionBody": {
+                              "type": "string"
+                            },
+                            "questionAnswers": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "format": "uuid",
+                                    "type": "string"
+                                  },
+                                  "optionText": {
+                                    "type": "string"
+                                  },
+                                  "position": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "optionText",
+                                  "position"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "questionType",
+                            "questionBody",
+                            "questionAnswers"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "body": {
+                              "type": "string"
+                            },
+                            "state": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "body",
+                            "state"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "format": "uuid",
+                              "type": "string"
+                            },
+                            "title": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "url": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "title",
+                            "type",
+                            "url"
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "lessonItemType",
+                    "displayOrder",
+                    "content"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "imageUrl",
+              "description",
+              "lessonItems"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       }
     }

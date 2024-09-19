@@ -1,5 +1,5 @@
 import { Static, Type } from "@sinclair/typebox";
-import { lessonsSchema } from "src/lessons/schemas/lesson.schema";
+import { lessonSchema } from "../../lessons/schemas/lesson.schema";
 
 export const commonShowCourseSchema = Type.Object({
   id: Type.String({ format: "uuid" }),
@@ -10,7 +10,7 @@ export const commonShowCourseSchema = Type.Object({
   courseLessonCount: Type.Number(),
   enrolled: Type.Boolean(),
   state: Type.Union([Type.String(), Type.Null()]),
-  lessons: Type.Union([Type.Array(lessonsSchema)]),
+  lessons: Type.Union([Type.Array(lessonSchema)]),
 });
 
 export type CommonShowCourse = Static<typeof commonShowCourseSchema>;
