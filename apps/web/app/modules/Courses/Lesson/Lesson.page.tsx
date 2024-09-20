@@ -1,9 +1,11 @@
 import { Card } from "~/components/ui/card";
-import { ClientLoaderFunctionArgs } from "@remix-run/react";
+import { ClientLoaderFunctionArgs, useParams } from "@remix-run/react";
 import { courseQueryOptions } from "~/api/queries/useCourse";
-import { lessonQueryOptions } from "~/api/queries/useLesson";
+import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
 import { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
+import { getOrderedLessons } from "./Summary/utils";
+import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Lesson" }, { name: "description", content: "lesson" }];
@@ -18,9 +20,23 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 };
 
 export default function LessonPage() {
+  const { lessonId } = useParams();
+  const { data } = useLessonSuspense(lessonId ?? "");
+
+  if (!data) {
+    throw new Error(`Lesson with id: ${lessonId} not found`);
+  }
+
+  const orderedLessonsItems = getOrderedLessons(data);
+
   return (
     <Card className="w-full p-8">
-      <div className="text-2xl font-bold h-[400px]">Lesson page</div>
+      {orderedLessonsItems.map((lessonItem) => (
+        <LessonItemsSwitch
+          key={lessonItem.content.id}
+          lessonItem={lessonItem}
+        />
+      ))}
     </Card>
   );
 }
