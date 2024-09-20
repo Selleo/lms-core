@@ -22,7 +22,25 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "~/*": path.resolve(__dirname, "./app"),
+      "~/": path.resolve(__dirname, "./app"),
     },
+  },
+  build: {
+    rollupOptions: {
+      external: [],
+      output: {
+        manualChunks: (id) => {
+          if (id.includes("@remix-run")) {
+            return "remix";
+          }
+        },
+      },
+    },
+    commonjsOptions: {
+      transformMixedEsModules: true,
+    },
+  },
+  optimizeDeps: {
+    include: ["@remix-run/react", "@remix-run/router"],
   },
 });

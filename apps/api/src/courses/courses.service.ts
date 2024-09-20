@@ -1,4 +1,13 @@
-import { and, between, count, eq, isNotNull, like, sql } from "drizzle-orm";
+import {
+  and,
+  between,
+  count,
+  eq,
+  ilike,
+  isNotNull,
+  like,
+  sql,
+} from "drizzle-orm";
 import {
   ConflictException,
   Inject,
@@ -305,9 +314,7 @@ export class CoursesService {
   private getFiltersConditions(filters: CoursesFilterSchema) {
     const conditions = [eq(courses.state, "published")];
     if (filters.title) {
-      conditions.push(
-        like(categories.title, `%${filters.title.toLowerCase()}%`),
-      );
+      conditions.push(ilike(courses.title, `%${filters.title.toLowerCase()}%`));
     }
     if (filters.category) {
       conditions.push(like(categories.title, `%${filters.category}%`));

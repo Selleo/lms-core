@@ -837,9 +837,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/courses/course
      */
     coursesControllerGetCourse: (
-      query?: {
+      query: {
         /** @format uuid */
-        id?: string;
+        id: string;
       },
       params: RequestParams = {},
     ) =>
