@@ -4,9 +4,9 @@ import { Card, CardContent } from "~/components/ui/card";
 
 export default function Overview() {
   const { lessonId } = useParams();
-  const { data } = useLessonSuspense(lessonId!);
+  const { data } = useLessonSuspense(lessonId ?? "");
 
-  const imageUrl = "https://placehold.co/320x180";
+  const imageUrl = data.imageUrl ?? "https://placehold.co/320x180";
   const title = data.title;
   const description = data.description;
   const lessonNumber = 1;
@@ -14,11 +14,11 @@ export default function Overview() {
   return (
     <Card className="w-full">
       <CardContent className="p-8 flex align-center gap-6">
-        <div className="relative self-center">
+        <div className="relative self-center w-[320px] aspect-video shrink-0">
           <img
             src={imageUrl}
             alt={title}
-            className="w-full h-32 object-cover rounded-lg drop-shadow-sm"
+            className="w-full h-full object-cover rounded-lg drop-shadow-sm"
           />
           <span className="absolute bottom-0 right-0 -translate-x-1/2 translate-y-1/2 bg-white rounded-full w-8 h-8 flex justify-center items-center text-primary-700">
             {lessonNumber}

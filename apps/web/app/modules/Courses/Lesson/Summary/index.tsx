@@ -6,12 +6,12 @@ import SingleLessonSummary from "./SingleLessonSummary";
 
 export default function Summary() {
   const { lessonId } = useParams();
-  const { data } = useLessonSuspense(lessonId!);
+  const { data } = useLessonSuspense(lessonId ?? "");
 
   const lessonItemsSummary = getSummaryItems(data);
 
   return (
-    <Card className="self-start w-full rounded-none max-w-[410px] mr-[-24px] mt-[-24px] lg:block hidden pb-32">
+    <Card className="self-start w-full rounded-none w-[410px] lg:block hidden pb-32 fixed right-0 top-0 h-screen">
       <CardContent className="p-8 flex flex-col">
         <div className="h6">Lesson Summary</div>
         <div className="gap-2 flex flex-col mt-4 mb-8">
