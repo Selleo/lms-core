@@ -1,3 +1,5 @@
+import { Card } from "~/components/ui/card";
+
 type TProps = {
   content: {
     id: string;
@@ -9,9 +11,9 @@ type TProps = {
 
 export default function Files({ content }: TProps) {
   return (
-    <div className="flex">
+    <Card className="flex p-8">
       <p>FILES TYPE:</p>
       <div>{content.title}</div>;
-    </div>
+    </Card>
   );
 }

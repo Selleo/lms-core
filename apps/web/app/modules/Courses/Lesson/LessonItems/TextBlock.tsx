@@ -1,3 +1,5 @@
+import { Card } from "~/components/ui/card";
+
 type TProps = {
   content: {
     id: string;
@@ -9,12 +11,12 @@ type TProps = {
 
 export default function TextBlock({ content }: TProps) {
   return (
-    <div className="flex flex-col gap-4 mb-8">
+    <Card className="flex flex-col gap-4 p-8">
       <div className="h6 text-neutral-950">{content.title}</div>
       <div
         className="text-neutral-900 body-base"
         dangerouslySetInnerHTML={{ __html: content.body }}
       />
-    </div>
+    </Card>
   );
 }
