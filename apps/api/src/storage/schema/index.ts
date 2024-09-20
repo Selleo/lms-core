@@ -198,6 +198,7 @@ export const lessonFiles = pgTable("lesson_files", {
 export const textBlocks = pgTable("text_blocks", {
   ...id,
   ...timestamps,
+  title: varchar("title", { length: 100 }).notNull(),
   body: text("body"),
   state: text("state").notNull().default("draft"),
   authorId: uuid("author_id")

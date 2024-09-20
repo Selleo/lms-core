@@ -16,7 +16,10 @@ import {
   sortCourseFieldsOptions,
 } from "../schemas/courseQuery";
 import { CurrentUser } from "../../common/decorators/user.decorator";
-import { CommonShowCourse } from "../schemas/showCourseCommon.schema";
+import {
+  CommonShowCourse,
+  commonShowCourseSchema,
+} from "../schemas/showCourseCommon.schema";
 import { Type } from "@sinclair/typebox";
 
 @Controller("courses")
@@ -108,6 +111,10 @@ export class CoursesController {
   }
 
   @Get("course")
+  @Validate({
+    response: baseResponse(commonShowCourseSchema),
+    request: [{ type: "query", name: "id", schema: UUIDSchema }],
+  })
   async getCourse(
     @Query("id") id: string,
     @CurrentUser("userId") currentUserId: string,

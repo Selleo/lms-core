@@ -843,16 +843,23 @@
         "parameters": [
           {
             "name": "id",
-            "required": true,
+            "required": false,
             "in": "query",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -1591,6 +1598,96 @@
           "pagination"
         ]
       },
+      "GetCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "courseLessonCount": {
+                "type": "number"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "imageUrl",
+                    "description"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "imageUrl",
+              "description",
+              "category",
+              "courseLessonCount",
+              "enrolled",
+              "state",
+              "lessons"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "CreateFavouritedCourseResponse": {
         "type": "object",
         "properties": {
@@ -1710,6 +1807,9 @@
                               "format": "uuid",
                               "type": "string"
                             },
+                            "title": {
+                              "type": "string"
+                            },
                             "body": {
                               "type": "string"
                             },
@@ -1719,6 +1819,7 @@
                           },
                           "required": [
                             "id",
+                            "title",
                             "body",
                             "state"
                           ]

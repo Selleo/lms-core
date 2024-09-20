@@ -185,6 +185,7 @@ async function seed() {
 
     const createdTextBlocks = await createEntities(textBlocks, 6, () => ({
       id: faker.string.uuid(),
+      title: faker.lorem.words(4),
       body: faker.lorem.paragraph(3),
       archived: faker.datatype.boolean(),
       state: faker.helpers.arrayElement(["draft", "published"]),

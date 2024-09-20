@@ -136,6 +136,7 @@ export class LessonsService {
               id: item.textBlockData.id,
               body: item.textBlockData.body || "",
               state: item.textBlockData.state,
+              title: item.textBlockData.title,
             }),
           )
           .with(

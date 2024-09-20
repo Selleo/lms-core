@@ -25,10 +25,11 @@ export const textBlocksConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["body", "counter", "state", "archived"],
+  editProperties: ["title", "body", "counter", "state", "archived"],
   filterProperties: ["created_at", "state", "status"],
-  listProperties: ["body", "state", "status"],
+  listProperties: ["title", "body", "state", "status"],
   showProperties: [
+    "title",
     "body",
     "author_id",
     "created_at",
@@ -58,6 +59,9 @@ export const textBlocksConfigOptions: ResourceOptions = {
     },
     state: {
       availableValues: stateOptions,
+      isRequired: false,
+    },
+    title: {
       isRequired: false,
     },
   },
