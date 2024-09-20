@@ -9,9 +9,12 @@ type TProps = {
 
 export default function TextBlock({ content }: TProps) {
   return (
-    <div className="flex">
-      <p>TEXT BLOCK TYPE:</p>
-      <div>{content.title}</div>
+    <div className="flex flex-col gap-4 mb-8">
+      <div className="h6 text-neutral-950">{content.title}</div>
+      <div
+        className="text-neutral-900 body-base"
+        dangerouslySetInnerHTML={{ __html: content.body }}
+      />
     </div>
   );
 }
