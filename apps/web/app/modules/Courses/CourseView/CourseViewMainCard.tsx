@@ -122,3 +122,15 @@ export const CourseViewMainCard = ({
     </div>
   );
 };
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return <CustomErrorBoundary stack={error.data} />;
+  } else if (error instanceof Error) {
+    return <CustomErrorBoundary stack={error.stack} />;
+  } else {
+    return <CustomErrorBoundary />;
+  }
+}
