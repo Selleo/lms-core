@@ -21,3 +21,8 @@ export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
     })
     .sort((a, b) => a.displayOrder || 0 - (b.displayOrder || 0));
 };
+
+export const getOrderedLessons = (lesson: GetLessonResponse["data"]) =>
+  lesson.lessonItems.sort(
+    (a, b) => a.displayOrder || 0 - (b.displayOrder || 0)
+  );
