@@ -1,4 +1,3 @@
-import { Card } from "~/components/ui/card";
 import { ClientLoaderFunctionArgs, useParams } from "@remix-run/react";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
@@ -30,13 +29,13 @@ export default function LessonPage() {
   const orderedLessonsItems = getOrderedLessons(data);
 
   return (
-    <Card className="w-full p-8">
+    <>
       {orderedLessonsItems.map((lessonItem) => (
         <LessonItemsSwitch
           key={lessonItem.content.id}
           lessonItem={lessonItem}
         />
       ))}
-    </Card>
+    </>
   );
 }

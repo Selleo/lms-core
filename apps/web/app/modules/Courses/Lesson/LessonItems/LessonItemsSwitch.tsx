@@ -8,7 +8,6 @@ type LessonItemType = GetLessonResponse["data"]["lessonItems"][number];
 type TProps = {
   lessonItem: LessonItemType;
 };
-
 export default function LessonItemsSwitch({ lessonItem }: TProps) {
   if ("body" in lessonItem.content)
     return <TextBlock content={lessonItem.content} />;
