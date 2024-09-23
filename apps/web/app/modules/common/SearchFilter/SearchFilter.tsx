@@ -43,7 +43,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
   };
 
   const handleCategoryChange = (value: string) => {
-    onCategoryChange(value);
+    onCategoryChange(value === "all" ? undefined : value);
   };
 
   const handleSortChange = (value: string) => {
@@ -75,7 +75,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
       </div>
 
       <Select
-        value={categoryValue}
+        value={categoryValue ?? "all"}
         onValueChange={handleCategoryChange}
         disabled={isLoading}
       >
