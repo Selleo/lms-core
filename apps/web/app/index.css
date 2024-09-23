@@ -190,3 +190,11 @@
     @apply text-sm leading-5;
   }
 }
+
+/* css for lesson-item question type presentation -> Presentation.tsx  */
+/* ------- start ------- */
+#msdoc-iframe {
+  width: 100%;
+  height: 40vw;
+}
+/* ------- end --------- */
