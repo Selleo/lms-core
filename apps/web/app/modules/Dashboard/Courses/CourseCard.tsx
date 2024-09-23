@@ -5,7 +5,7 @@ import { Button } from "~/components/ui/button";
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
   CourseType,
-  "title" | "category" | "courseLessonCount"
+  "title" | "category" | "courseLessonCount" | "imageUrl"
 > & {
   href: string;
 };
@@ -14,6 +14,7 @@ const CourseCard = ({
   href,
   title,
   category,
+  imageUrl,
   courseLessonCount,
 }: CourseCardProps) => {
   return (
@@ -22,16 +23,16 @@ const CourseCard = ({
       className="flex flex-col gap-y-2.5 max-w-[360px] border border-primary-200 rounded-lg justify-between h-min"
     >
       <img
-        src="https://foundr.com/wp-content/uploads/2023/04/How-to-create-an-online-course.jpg.webp"
+        src={imageUrl || "https://placehold.co/600x400"}
         alt="Course"
-        className="rounded-md"
+        className="rounded-md aspect-auto"
       />
       <h3 className="font-bold text-xl text-neutral-950 truncate px-4">
         {title}
       </h3>
       <div className="flex justify-between p-4">
-        <div className="flex flex-col text-details justify-end text-neutral-500">
-          <span>{category}</span>
+        <div className="flex flex-col text-details justify-end text-neutral-500 w-2/3">
+          <span className="truncate">{category}</span>
           <span>{courseLessonCount} lessons</span>
         </div>
         <Button>Enroll</Button>
