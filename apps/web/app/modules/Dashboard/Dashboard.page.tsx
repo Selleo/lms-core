@@ -115,10 +115,11 @@ export default function DashboardPage() {
           </div>
         )}
         {courses &&
-          courses.map(({ title, category, courseLessonCount, id }) => (
+          courses.map(({ title, category, courseLessonCount, id, imageUrl }) => (
             <CourseCard
               key={id}
               title={title}
+              imageUrl={imageUrl}
               href={`/course/${id}`}
               category={category}
               courseLessonCount={courseLessonCount}
