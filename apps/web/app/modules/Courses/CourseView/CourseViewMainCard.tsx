@@ -1,7 +1,18 @@
 import { Dot } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { GetCourseResponse } from "~/api/generated-api";
-import { noop } from "lodash-es";
+import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
+import {
+  isRouteErrorResponse,
+  Link,
+  useParams,
+  useRouteError,
+} from "@remix-run/react";
+import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
+import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
+import { queryClient } from "~/api/queryClient";
+import { courseQueryOptions } from "~/api/queries/useCourse";
+import { toast } from "~/components/ui/use-toast";
 
 export const CourseViewMainCard = ({
   course,
@@ -16,8 +27,31 @@ export const CourseViewMainCard = ({
     enrolled: isEnrolled,
     courseLessonCount,
   } = course;
+  const { mutateAsync: enrollCourse } = useEnrollCourse();
+  const { mutateAsync: unenrollCourse } = useUnenrollCourse();
+  const { id: courseId } = useParams<{ id: string }>();
+
+  if (!courseId) {
+    toast({
+      description: "Course ID not found",
+      variant: "destructive",
+    });
+    throw new Error("Course ID not found");
+  }
 
   const COMPLETED_LESSONS_COUNT = 2; // TODO: Replace with actual count when available
+
+  const handleEnroll = () => {
+    enrollCourse({ id: courseId }).then(() => {
+      queryClient.invalidateQueries(courseQueryOptions(courseId));
+    });
+  };
+
+  const handleUnenroll = () => {
+    unenrollCourse({ id: courseId }).then(() => {
+      queryClient.invalidateQueries(courseQueryOptions(courseId));
+    });
+  };
 
   return (
     <div className="md:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-xl relative">
@@ -60,16 +94,25 @@ export const CourseViewMainCard = ({
           <p className="mt-4 text-gray-600">{description}</p>
         </div>
         <div className="mt-auto">
-          <Button
-            onClick={noop} // TODO: Add enrollment logic
-            className="mt-4 w-full bg-secondary-500 text-white py-2 rounded-lg"
-          >
-            {isEnrolled ? "Continue" : "Enroll"}
-          </Button>
+          {isEnrolled && (
+            <Link to="#">
+              <Button className="mt-4 w-full bg-secondary-500 text-white py-2 rounded-lg">
+                Continue
+              </Button>
+            </Link>
+          )}
+          {!isEnrolled && (
+            <Button
+              onClick={handleEnroll}
+              className="mt-4 w-full bg-secondary-500 text-white py-2 rounded-lg"
+            >
+              Enroll
+            </Button>
+          )}
           {isEnrolled && (
             <Button
               className="bg-white border border-neutral-500 text-neutral-900 w-full mt-2"
-              onClick={noop} // TODO: Add unenrollment logic
+              onClick={handleUnenroll}
             >
               Unenroll
             </Button>
@@ -79,3 +122,15 @@ export const CourseViewMainCard = ({
     </div>
   );
 };
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return <CustomErrorBoundary stack={error.data} />;
+  } else if (error instanceof Error) {
+    return <CustomErrorBoundary stack={error.stack} />;
+  } else {
+    return <CustomErrorBoundary />;
+  }
+}
