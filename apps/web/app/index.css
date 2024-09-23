@@ -196,5 +196,6 @@
 #msdoc-iframe {
   width: 100%;
   height: 40vw;
+  border-radius: 8px;
 }
 /* ------- end --------- */
