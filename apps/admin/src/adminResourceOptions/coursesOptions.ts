@@ -60,6 +60,12 @@ export const coursesConfigOptions: ResourceOptions = {
     "relations",
   ],
   properties: {
+    title: {
+      isRequired: false,
+    },
+    category_id: {
+      isRequired: false,
+    },
     archived: {
       isRequired: false,
     },
@@ -76,6 +82,7 @@ export const coursesConfigOptions: ResourceOptions = {
       isSortable: false,
     },
     state: {
+      isRequired: false,
       availableValues: stateOptions,
     },
     status: {

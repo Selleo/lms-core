@@ -1,12 +1,13 @@
 import { type ActionRequest, type Before, ValidationError } from "adminjs";
-import { ValidationErrors } from "../../validationErrorsType.js";
+import type { ValidationErrors } from "../../validationErrorsType.js";
 
 const addError = (errors: ValidationErrors, field: string, message: string) => {
   errors[field] = { message };
 };
 
 export const beforeCreateCourse: Before = async (request: ActionRequest) => {
-  const { title, description, category_id, state } = request?.payload ?? {};
+  const { title, description, category_id, state, price_in_cents } =
+    request?.payload ?? {};
   const errors: ValidationErrors = {};
 
   const isDraft = state === "draft";
@@ -24,9 +25,13 @@ export const beforeCreateCourse: Before = async (request: ActionRequest) => {
       );
     }
 
-    if (!category_id) {
-      addError(errors, "category_id", "Please select a category");
+    if (!price_in_cents) {
+      addError(errors, "price_in_cents", "Please provide the price in cents");
     }
+  }
+
+  if (!category_id) {
+    addError(errors, "category_id", "Please select a category");
   }
 
   if (!title) {
