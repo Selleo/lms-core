@@ -35,27 +35,12 @@ const menuItems: MenuItemType[] = [
     link: "/",
     roles: ["admin", "student"],
     iconName: "Dashboard",
-  },
-  {
-    label: "courses",
-    link: "/courses",
-    roles: ["student", "admin", "tutor"],
-    iconName: "Directory",
-    children: [
-      {
-        label: "my courses",
-        link: "/my-courses",
-        roles: ["admin", "student"],
-        iconName: "Directory",
-      },
-      {
-        label: "browse courses",
-        link: "/browse-courses",
-        roles: ["admin", "student"],
-        iconName: "Directory",
-      },
-    ],
-  },
+  },{
+    label: "settings",
+    link: "/settings",
+    roles: ["admin", "student"],
+    iconName: "Dashboard",
+  }
 ];
 
 export function DashboardNavigation() {
