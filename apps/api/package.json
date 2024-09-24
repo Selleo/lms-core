@@ -25,7 +25,7 @@
     "test:e2e:watch": "jest --config ./test/jest-e2e.json --watch",
     "db:migrate": "drizzle-kit migrate",
     "db:generate": "drizzle-kit generate",
-    "db:seed": "ts-node -r tsconfig-paths/register ./src/seed/seed.ts",
+    "db:seed": "ts-node -r tsconfig-paths/register ./src/seed.ts",
     "db:seed-prod": "node dist/src/seed.js"
   },
   "dependencies": {

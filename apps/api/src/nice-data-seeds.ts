@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { Status } from "../storage/schema/utils";
+import { Status } from "./storage/schema/utils";
 
 export const LessonFileType = {
   presentation: "Presentation",
