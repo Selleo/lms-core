@@ -1,9 +1,10 @@
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { DatabasePg } from "./common";
-import hashPassword from "./common/helpers/hashPassword";
+import { DatabasePg } from "../common";
+import hashPassword from "../common/helpers/hashPassword";
 import {
   categories,
   courseLessons,
@@ -17,8 +18,8 @@ import {
   studentCourses,
   textBlocks,
   users,
-} from "./storage/schema";
-import { eq } from "drizzle-orm";
+} from "../storage/schema";
+import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 
 dotenv.config({ path: "./.env" });
 
@@ -143,6 +144,8 @@ async function createStudentCourses(courses: any[], studentId: string) {
 }
 
 async function seed() {
+  await seedTruncateAllTables(db);
+
   try {
     const adminUser = await createOrFindUser("admin@example.com", "password", {
       id: faker.string.uuid(),
@@ -173,6 +176,9 @@ async function seed() {
 
     await createUsers(5);
     console.log("Created users with credentials");
+
+    await createNiceCourses(adminUser.id, db);
+    console.log("✨✨✨Created created nice courses✨✨✨");
 
     const createdCategories = await createEntities(categories, 6, () => ({
       id: faker.string.uuid(),

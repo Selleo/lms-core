@@ -12,7 +12,8 @@ type TProps = {
 };
 
 export default function Files({ content }: TProps) {
-  const isPresentation = content.type === "presentation";
+  const isPresentation =
+    content.type === "presentation" || content.type === "external_presentation";
 
   return (
     <Card className="flex flex-col gap-4 p-8">
