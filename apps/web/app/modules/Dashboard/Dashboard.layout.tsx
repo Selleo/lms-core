@@ -1,7 +1,23 @@
-import { Outlet } from "@remix-run/react";
+import { Outlet, redirect } from "@remix-run/react";
 import { useAuthEffect } from "../Auth/authEffect";
 import { DashboardNavigation } from "./DashboardNavigation/DashboardNavigation";
 import { LessonItemsProvider } from "../Courses/LessonItems/LessonItemsContext";
+import { queryClient } from "~/api/queryClient";
+import { currentUserQueryOptions } from "~/api/queries/useCurrentUser";
+
+export const clientLoader = async () => {
+  try {
+    const user = await queryClient.ensureQueryData(currentUserQueryOptions);
+
+    if (!user) {
+      throw redirect("/auth/login");
+    }
+  } catch (error) {
+    throw redirect("/auth/login");
+  }
+
+  return null;
+};
 
 export default function DashboardLayout() {
   useAuthEffect();
