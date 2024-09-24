@@ -571,6 +571,9 @@ importers:
       vite:
         specifier: ^5.1.0
         version: 5.1.0(@types/node@20.14.14)(terser@5.31.4)
+      vite-plugin-static-copy:
+        specifier: ^1.0.6
+        version: 1.0.6(vite@5.1.0(@types/node@20.14.14)(terser@5.31.4))
       vite-tsconfig-paths:
         specifier: 5.0.0
         version: 5.0.0(typescript@5.4.5)(vite@5.1.0(@types/node@20.14.14)(terser@5.31.4))
@@ -11413,6 +11416,12 @@ packages:
     resolution: {integrity: sha512-ZpJVkxcakYtig5iakNeL7N3trufe3M6vGuzYAr4GsbCTwobDeyPJpE4cjDhhPluv8OvQCFzu2LWp6GkoKRITXA==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
+
+  vite-plugin-static-copy@1.0.6:
+    resolution: {integrity: sha512-3uSvsMwDVFZRitqoWHj0t4137Kz7UynnJeq1EZlRW7e25h2068fyIZX4ORCCOAkfp1FklGxJNVJBkBOD+PZIew==}
+    engines: {node: ^18.0.0 || >=20.0.0}
+    peerDependencies:
+      vite: ^5.0.0
 
   vite-plugin-svgr@4.2.0:
     resolution: {integrity: sha512-SC7+FfVtNQk7So0XMjrrtLAbEC8qjFPifyD7+fs/E6aaNdVde6umlVVh0QuwDLdOMu7vp5RiGFsB70nj5yo0XA==}
@@ -25225,6 +25234,14 @@ snapshots:
       - sugarss
       - supports-color
       - terser
+
+  vite-plugin-static-copy@1.0.6(vite@5.1.0(@types/node@20.14.14)(terser@5.31.4)):
+    dependencies:
+      chokidar: 3.6.0
+      fast-glob: 3.3.2
+      fs-extra: 11.2.0
+      picocolors: 1.0.1
+      vite: 5.1.0(@types/node@20.14.14)(terser@5.31.4)
 
   vite-plugin-svgr@4.2.0(rollup@4.20.0)(typescript@5.4.5)(vite@5.1.0(@types/node@20.14.14)(terser@5.31.4)):
     dependencies:
