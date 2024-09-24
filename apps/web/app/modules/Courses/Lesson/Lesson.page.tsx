@@ -5,6 +5,7 @@ import { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
 import { getOrderedLessons } from "./Summary/utils";
 import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
+import { Button } from "~/components/ui/button";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Lesson" }, { name: "description", content: "lesson" }];
@@ -36,6 +37,16 @@ export default function LessonPage() {
           lessonItem={lessonItem}
         />
       ))}
+      <div className="w-full flex gap-4 justify-end">
+        <Button className="bg-neutral-200">
+          <div className="body-sm-md text-primary-800 px-4">
+            Previous lesson
+          </div>
+        </Button>
+        <Button>
+          <div className="body-sm-md text-white px-4">Next lesson</div>
+        </Button>
+      </div>
     </>
   );
 }
