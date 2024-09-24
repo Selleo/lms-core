@@ -13,11 +13,16 @@ ApiClient.instance.interceptors.response.use(
     const originalRequest = error.config;
 
     const isLoginRequest = originalRequest.url.includes("/login");
+    const isRefreshRequest = originalRequest.url.includes("/refresh");
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      if (!isLoginRequest && useAuthStore.getState().isLoggedIn) {
+      if (
+        !isLoginRequest &&
+        !isRefreshRequest &&
+        useAuthStore.getState().isLoggedIn
+      ) {
         try {
           await ApiClient.api.authControllerRefreshTokens();
           return ApiClient.instance(originalRequest);
