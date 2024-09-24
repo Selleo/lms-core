@@ -1,4 +1,3 @@
-import { Dot } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { GetCourseResponse } from "~/api/generated-api";
 import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
@@ -13,6 +12,7 @@ import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { queryClient } from "~/api/queryClient";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { toast } from "~/components/ui/use-toast";
+import {CategoryChip} from "~/components/ui/CategoryChip";
 
 export const CourseViewMainCard = ({
   course,
@@ -55,9 +55,8 @@ export const CourseViewMainCard = ({
 
   return (
     <div className="md:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-xl relative">
-      <div className="absolute top-0 left-0 bg-white px-2 py-1 rounded-lg translate-x-4 translate-y-4 flex">
-        <Dot className="fill-blue-700" />
-        <span>{category}</span>
+      <div className="absolute top-4 left-4 right-4">
+      <CategoryChip category={category} />
       </div>
       <img
         src={

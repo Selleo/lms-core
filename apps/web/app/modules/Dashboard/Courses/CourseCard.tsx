@@ -1,6 +1,7 @@
 import { Link } from "@remix-run/react";
 import { GetAllCoursesResponse } from "~/api/generated-api";
 import { Button } from "~/components/ui/button";
+import {CategoryChip} from "~/components/ui/CategoryChip";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
@@ -19,8 +20,11 @@ const CourseCard = ({
   return (
     <Link
       to={href}
-      className="grid grid-rows-subgrid row-span-3 border border-primary-200 rounded-lg"
+      className="relative border border-primary-200 rounded-lg"
     >
+      <div className="absolute top-4 left-4 right-4">
+        <CategoryChip category={category} />
+      </div>
       <img
         src={imageUrl || "https://placehold.co/600x400/png"}
         alt="Course"
@@ -29,12 +33,17 @@ const CourseCard = ({
           (e.target as HTMLImageElement).src = "https://picsum.photos/500/300";
         }}
       />
-      <div className="flex flex-col gap-2 p-4">
-        <h3 className="font-bold text-xl text-neutral-950 line-clamp-2">
+      <div className="flex flex-col gap-3 p-4 pt-5 w-full aspect-[291/212]">
+        <h3 className="font-bold leading-5 text-lg text-neutral-950 line-clamp-2">
           {title}
         </h3>
-        <div className="text-details justify-end text-neutral-500 pb-4">
-          <span className="line-clamp-2">{category}</span>
+        <div className="justify-end text-neutral-500 text-sm">
+          {/*TODO: Replace from backend description*/}
+          <span className="line-clamp-3">
+            lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          </span>
         </div>
         <Button className="w-full mt-auto">Enroll</Button>
       </div>
