@@ -2,6 +2,8 @@ import { Link } from "@remix-run/react";
 import { GetCourseResponse } from "~/api/generated-api";
 import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
+import { CaretRight } from "~/assets/svgs";
+
 
 type LessonsListProps = {
   lessons: GetCourseResponse["data"]["lessons"];
@@ -73,7 +75,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                   to={`lesson/${id}`}
                   className="text-primary-700 text-xs mt-auto self-start font-medium"
                 >
-                  Read more {">"}
+                  Read more <CaretRight className="w-3 h-3 inline-block text-primary-700" />
                 </Link>
               </div>
             </CardContent>
