@@ -10,12 +10,19 @@ const PhotoPreview: React.FC<BasePropertyProps> = ({
 }) => {
   const isShow = where === "show";
   const urlKey = getUrlKey(resource.name);
+  const isExternal = record?.params?.[urlKey]?.includes("https://");
 
-  const filePath =
-    process.env.NODE_ENV === "production"
-      ? record?.params?.filePath
-      : `/uploads/${record?.params?.[urlKey]}`;
+  const getFilePath = () => {
+    if (process.env.NODE_ENV === "production") {
+      return record?.params?.filePath;
+    }
+    if (isExternal) {
+      return record?.params?.[urlKey];
+    }
+    return `/uploads/${record?.params?.[urlKey]}`;
+  };
 
+  const filePath = getFilePath();
   const isEmpty = !filePath || filePath.includes("null");
 
   return (
