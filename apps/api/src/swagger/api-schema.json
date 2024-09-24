@@ -1475,6 +1475,9 @@
                     }
                   ]
                 },
+                "description": {
+                  "type": "string"
+                },
                 "author": {
                   "type": "string"
                 },
@@ -1492,6 +1495,7 @@
                 "id",
                 "title",
                 "imageUrl",
+                "description",
                 "author",
                 "category",
                 "courseLessonCount",
@@ -1549,6 +1553,9 @@
                     }
                   ]
                 },
+                "description": {
+                  "type": "string"
+                },
                 "author": {
                   "type": "string"
                 },
@@ -1566,6 +1573,7 @@
                 "id",
                 "title",
                 "imageUrl",
+                "description",
                 "author",
                 "category",
                 "courseLessonCount",

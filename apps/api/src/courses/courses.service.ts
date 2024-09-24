@@ -54,8 +54,8 @@ export class CoursesService {
       const queryDB = tx
         .select(this.getSelectFiled())
         .from(courses)
-        .leftJoin(users, eq(courses.authorId, users.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
+        .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
         .where(and(...conditions))
@@ -63,6 +63,7 @@ export class CoursesService {
           courses.id,
           courses.title,
           courses.imageUrl,
+          courses.description,
           users.firstName,
           users.lastName,
           categories.title,
@@ -75,11 +76,13 @@ export class CoursesService {
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
 
-      const [totalItems] = await tx
-        .select({ count: count() })
+      const totalItems = await tx
+        .select({
+          count: sql<number>`${courses.id}`,
+        })
         .from(courses)
-        .leftJoin(users, eq(courses.authorId, users.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
+        .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
         .where(and(...conditions))
@@ -87,6 +90,7 @@ export class CoursesService {
           courses.id,
           courses.title,
           courses.imageUrl,
+          courses.description,
           users.firstName,
           users.lastName,
           categories.title,
@@ -95,7 +99,7 @@ export class CoursesService {
       return {
         data: data,
         pagination: {
-          totalItems: totalItems?.count || 0,
+          totalItems: totalItems?.length || 0,
           page,
           perPage,
         },
@@ -132,6 +136,7 @@ export class CoursesService {
           courses.id,
           courses.title,
           courses.imageUrl,
+          courses.description,
           users.firstName,
           users.lastName,
           categories.title,
@@ -145,16 +150,17 @@ export class CoursesService {
       const data = await paginatedQuery;
       const [totalItems] = await tx
         .select({ count: count() })
-        .from(courses)
+        .from(studentCourses)
+        .innerJoin(courses, eq(studentCourses.courseId, courses.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
-        .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
         .where(and(...conditions))
         .groupBy(
           courses.id,
           courses.title,
           courses.imageUrl,
+          courses.description,
           users.firstName,
           users.lastName,
           categories.title,
@@ -217,6 +223,7 @@ export class CoursesService {
         and(
           eq(courseLessons.courseId, id),
           eq(lessons.archived, false),
+          eq(lessons.state, "published"),
           isNotNull(lessons.id),
           isNotNull(lessons.title),
           isNotNull(lessons.description),
@@ -304,6 +311,7 @@ export class CoursesService {
       creationDate: courses.createdAt,
       title: courses.title,
       imageUrl: courses.imageUrl,
+      description: sql<string>`${courses.description}`,
       author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
       category: categories.title,
       courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,
