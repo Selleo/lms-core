@@ -16,7 +16,7 @@ export default function Presentation({ url }: { url: string }) {
   ];
 
   return (
-    <div className="w-full h-full flex justify-center items-center presentation">
+    <div className="w-full h-full flex justify-center items-center">
       <DocViewer
         documents={docs}
         pluginRenderers={DocViewerRenderers}

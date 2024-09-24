@@ -1,5 +1,6 @@
 import { Card } from "~/components/ui/card";
 import Presentation from "./Presentation";
+import Video from "./Video";
 
 type TProps = {
   content: {
@@ -16,7 +17,11 @@ export default function Files({ content }: TProps) {
   return (
     <Card className="flex flex-col gap-4 p-8">
       <div className="h6 text-neutral-950">{content.title}</div>
-      {isPresentation ? <Presentation url={content.url} /> : <div>VIDEO</div>}
+      {isPresentation ? (
+        <Presentation url={content.url} />
+      ) : (
+        <Video url={content.url} />
+      )}
     </Card>
   );
 }
