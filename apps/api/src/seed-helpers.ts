@@ -9,7 +9,7 @@ import {
   questions,
   textBlocks,
 } from "src/storage/schema";
-import { DatabasePg } from "../common";
+import { DatabasePg } from "./common";
 import { niceCourses } from "./nice-data-seeds";
 import { sql } from "drizzle-orm/sql";
 

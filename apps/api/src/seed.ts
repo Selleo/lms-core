@@ -3,8 +3,6 @@ import * as dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { DatabasePg } from "../common";
-import hashPassword from "../common/helpers/hashPassword";
 import {
   categories,
   courseLessons,
@@ -18,8 +16,10 @@ import {
   studentCourses,
   textBlocks,
   users,
-} from "../storage/schema";
+} from "./storage/schema";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
+import { DatabasePg } from "./common";
+import hashPassword from "./common/helpers/hashPassword";
 
 dotenv.config({ path: "./.env" });
 
