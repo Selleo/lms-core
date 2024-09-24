@@ -15,27 +15,28 @@ const CourseCard = ({
   title,
   category,
   imageUrl,
-  courseLessonCount,
 }: CourseCardProps) => {
   return (
     <Link
       to={href}
-      className="flex flex-col gap-y-2.5 max-w-[360px] border border-primary-200 rounded-lg justify-between h-min"
+      className="grid grid-rows-subgrid row-span-3 border border-primary-200 rounded-lg"
     >
       <img
-        src={imageUrl || "https://placehold.co/600x400"}
+        src={imageUrl || "https://placehold.co/600x400/png"}
         alt="Course"
-        className="rounded-md aspect-auto"
+        className="rounded-md aspect-video object-cover w-full"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = "https://picsum.photos/500/300";
+        }}
       />
-      <h3 className="font-bold text-xl text-neutral-950 truncate px-4">
-        {title}
-      </h3>
-      <div className="flex justify-between p-4">
-        <div className="flex flex-col text-details justify-end text-neutral-500 w-2/3">
-          <span className="truncate">{category}</span>
-          <span>{courseLessonCount} lessons</span>
+      <div className="flex flex-col gap-2 p-4">
+        <h3 className="font-bold text-xl text-neutral-950 line-clamp-2">
+          {title}
+        </h3>
+        <div className="text-details justify-end text-neutral-500 pb-4">
+          <span className="line-clamp-2">{category}</span>
         </div>
-        <Button>Enroll</Button>
+        <Button className="w-full mt-auto">Enroll</Button>
       </div>
     </Link>
   );

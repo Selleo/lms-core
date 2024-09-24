@@ -100,7 +100,7 @@ export default function DashboardPage() {
           isLoading={isCategoriesLoading}
         />
       </div>
-      <div className="grid p-6 gap-6 grid-cols-[repeat(auto-fit,minmax(360px,1fr))] bg-white grow">
+      <div className="grid p-6 gap-1 gap-x-6 grid-cols-[repeat(auto-fit,minmax(360px,1fr))] bg-white">
         {!courses ||
           (isEmpty(courses) && (
             <div className="flex justify-center items-center h-full">
