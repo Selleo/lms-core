@@ -19,6 +19,7 @@ import { HealthModule } from "./health/health.module";
 import { ScheduleModule } from "@nestjs/schedule";
 import { CoursesModule } from "./courses/courses.module";
 import { LessonsModule } from "./lessons/lessons.module";
+import { QuestionsModule } from "./questions/questions.module";
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { LessonsModule } from "./lessons/lessons.module";
     ),
     CoursesModule,
     LessonsModule,
+    QuestionsModule,
   ],
   controllers: [],
   providers: [

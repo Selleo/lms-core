@@ -944,6 +944,33 @@
           }
         }
       }
+    },
+    "/api/questions/answer": {
+      "post": {
+        "operationId": "QuestionsController_answerQuestion",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnswerQuestionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnswerQuestionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "info": {
@@ -1865,6 +1892,57 @@
               "imageUrl",
               "description",
               "lessonItems"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AnswerQuestionBody": {
+        "type": "object",
+        "properties": {
+          "lessonId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "questionId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "answer": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "lessonId",
+          "questionId",
+          "answer"
+        ]
+      },
+      "AnswerQuestionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
             ]
           }
         },

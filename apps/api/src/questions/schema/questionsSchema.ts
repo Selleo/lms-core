@@ -1,6 +1,9 @@
 export const QuestionType = {
-  open_answer: "Open Answer",
-  single_choice: "Single Choice",
-  multiple_choice: "Multiple Choice",
-  fill_in_the_blanks: "Fill in the blanks",
+  open_answer: { key: "open_answer", value: "Open Answer" },
+  single_choice: { key: "single_choice", value: "Single Choice" },
+  multiple_choice: { key: "multiple_choice", value: "Multiple Choice" },
+  fill_in_the_blanks: {
+    key: "fill_in_the_blanks",
+    value: "Fill in the blanks",
+  },
 } as const;
