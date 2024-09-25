@@ -8,12 +8,18 @@ import { fileTypeOptions } from "./common/consts/selectOptions/fileTypeOptions.j
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 import { beforeCreateOrUpdateFiles } from "./common/actions/before/createOrUpdateFiles.js";
 import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
+import { addResourceId } from "./common/actions/before/addResourceId.js";
 
 export const filesConfigOptions: ResourceOptions = {
   parent: "lesson-items",
   actions: {
     new: {
-      before: [beforeCreateOrUpdateFiles, addAuthorId, tempAddUrl("url")],
+      before: [
+        beforeCreateOrUpdateFiles,
+        addAuthorId,
+        tempAddUrl("url"),
+        addResourceId,
+      ],
     },
     list: {
       before: [statusFilterBeforeAction],
@@ -54,11 +60,6 @@ export const filesConfigOptions: ResourceOptions = {
         show: Components.FilesPreview,
       },
       isRequired: true,
-    },
-    info: {
-      components: {
-        edit: Components.NewFileInfo,
-      },
     },
     status: {
       components: {

@@ -25,7 +25,7 @@ export const categoriesConfigOptions: ResourceOptions = {
       before: [beforeUpdateCategory],
     },
   },
-  editProperties: ["title", "archived"],
+  editProperties: ["title"],
   filterProperties: ["title", "status"],
   listProperties: ["title", "created_at", "status"],
   showProperties: ["title", "created_at", "updated_at", "status"],

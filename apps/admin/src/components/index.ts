@@ -14,7 +14,6 @@ const Components = {
   LessonItems: componentLoader.add("LessonItems", "./custom/LessonItems"),
   PhotoPreview: componentLoader.add("PhotoPreview", "./photo/PhotoPreview"),
   FilesPreview: componentLoader.add("FilesPreview", "./custom/FilesPreview"),
-  NewFileInfo: componentLoader.add("NewFileInfo", "./custom/NewFileInfo"),
   BodyTextCounter: componentLoader.add(
     "BodyTextCounter",
     "./custom/BodyTextCounter",

@@ -16,7 +16,6 @@ export const beforeCreateOrUpdateFiles: Before = async (
 
   const errors: ValidationErrors = {};
   const { title, type, state } = payload;
-  const isEditing = !!request.params.recordId;
   const isFile = context?.["adminjs-upload"]?.file?.length;
 
   if (!title) {
@@ -37,7 +36,7 @@ export const beforeCreateOrUpdateFiles: Before = async (
     errors.state = { message: "Please provide a state" };
   }
 
-  if (isEditing && !isFile) {
+  if (!isFile) {
     errors.type = { message: "Please upload a file below!" };
   }
 
