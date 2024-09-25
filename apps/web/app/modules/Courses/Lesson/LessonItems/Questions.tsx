@@ -3,9 +3,13 @@ import { cn } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { useState } from "react";
-import type { UseFormRegister } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { useQuestionAnswer } from "~/api/mutations/useQuestion";
+import { useParams } from "@remix-run/react";
+import { useIsMount } from "~/hooks/useIsMount";
+
 import type { TQuestionsForm } from "../types";
+import type { UseFormRegister } from "react-hook-form";
 
 type TProps = {
   content: {
@@ -22,11 +26,21 @@ type TProps = {
 };
 
 export default function Questions({ content, register }: TProps) {
+  const { lessonId } = useParams();
+
+  if (!lessonId) throw new Error("Lesson ID not found");
+
   const [seletedOption, setSeletedOption] = useState<string[]>([]);
+  const [openQuestion, setOpenQuestion] = useState("");
   const isSingleQuestion = content.questionType === "single_choice";
   const isOpenAnswer = content.questionType === "open_answer";
+  const questionId = content.id;
+  const isMount = useIsMount();
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const handleClcik = (id: string) => {
+  const { mutateAsync: answerQuestion } = useQuestionAnswer();
+
+  const handleClcik = async (id: string) => {
     if (isSingleQuestion) {
       setSeletedOption([id]);
     } else {
@@ -37,6 +51,49 @@ export default function Questions({ content, register }: TProps) {
       }
     }
   };
+
+  useEffect(() => {
+    const sendOpenAnswer = async () => {
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+      debounceTimeout.current = setTimeout(async () => {
+        await answerQuestion({
+          lessonId,
+          questionId,
+          answer: openQuestion,
+        });
+      }, 1000);
+    };
+
+    const sendAnswer = async () => {
+      await answerQuestion({
+        lessonId,
+        questionId,
+        answer: seletedOption,
+      });
+    };
+
+    if (isMount) {
+      if (isOpenAnswer) {
+        sendOpenAnswer();
+      } else {
+        sendAnswer();
+      }
+    }
+
+    return () => {
+      debounceTimeout.current && clearTimeout(debounceTimeout.current);
+    };
+  }, [
+    answerQuestion,
+    isMount,
+    isOpenAnswer,
+    lessonId,
+    openQuestion,
+    questionId,
+    seletedOption,
+  ]);
 
   return (
     <Card className="flex flex-col gap-2 p-8">
@@ -52,7 +109,10 @@ export default function Questions({ content, register }: TProps) {
       </div>
       <div className="flex flex-col gap-4 mt-4">
         {isOpenAnswer ? (
-          <Textarea {...register(`openQuestions.${content.id}`)} />
+          <Textarea
+            {...register(`openQuestions.${questionId}`)}
+            onChange={(e) => setOpenQuestion(e.target.value)}
+          />
         ) : (
           content.questionAnswers.map((answer) => (
             <button
@@ -70,7 +130,7 @@ export default function Questions({ content, register }: TProps) {
                 type="radio"
                 value={answer.id}
                 {...register(
-                  `${isSingleQuestion ? "singleAnswerQuestions" : "multiAnswerQuestions"}.${content.id}.${answer.id}`
+                  `${isSingleQuestion ? "singleAnswerQuestions" : "multiAnswerQuestions"}.${questionId}.${answer.id}`
                 )}
               />
               <Label

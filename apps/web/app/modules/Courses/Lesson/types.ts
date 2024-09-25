@@ -20,5 +20,4 @@ export type TAnswerObject =
   | {
       [key: string]: string | null;
     }
-  | string
-  | null;
+  | string;

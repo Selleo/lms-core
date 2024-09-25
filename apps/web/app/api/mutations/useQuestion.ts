@@ -4,18 +4,13 @@ import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../api-client";
 import { AnswerQuestionBody } from "../generated-api";
 
-type AnswerData = {
-  data: AnswerQuestionBody;
-};
-
 export function useQuestionAnswer() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (answer: AnswerData) => {
-      const response = await ApiClient.api.questionsControllerAnswerQuestion(
-        answer.data
-      );
+    mutationFn: async (answer: AnswerQuestionBody) => {
+      const response =
+        await ApiClient.api.questionsControllerAnswerQuestion(answer);
 
       return response.data;
     },
