@@ -2,18 +2,21 @@ import { GetLessonResponse } from "~/api/generated-api";
 import Questions from "./Questions";
 import TextBlock from "./TextBlock";
 import Files from "./Files";
+import type { UseFormRegister } from "react-hook-form";
+import type { TQuestionsForm } from "../types";
 
 type LessonItemType = GetLessonResponse["data"]["lessonItems"][number];
 
 type TProps = {
   lessonItem: LessonItemType;
+  register: UseFormRegister<TQuestionsForm>;
 };
-export default function LessonItemsSwitch({ lessonItem }: TProps) {
+export default function LessonItemsSwitch({ lessonItem, register }: TProps) {
   if ("body" in lessonItem.content)
     return <TextBlock content={lessonItem.content} />;
 
   if ("questionBody" in lessonItem.content)
-    return <Questions content={lessonItem.content} />;
+    return <Questions content={lessonItem.content} register={register} />;
 
   if ("url" in lessonItem.content)
     return <Files content={lessonItem.content} />;

@@ -22,7 +22,10 @@ export default function SingleLessonSummary({ lesson, isLast }: TProps) {
         readOnly
         type="radio"
       />
-      <p className="body-base-md">{lesson.title}</p>
+      <div
+        className="body-base-md"
+        dangerouslySetInnerHTML={{ __html: lesson.title }}
+      />
     </div>
   );
 }

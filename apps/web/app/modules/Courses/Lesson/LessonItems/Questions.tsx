@@ -4,6 +4,8 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { useState } from "react";
+import type { UseFormRegister } from "react-hook-form";
+import type { TQuestionsForm } from "../types";
 
 type TProps = {
   content: {
@@ -16,11 +18,11 @@ type TProps = {
       position: number | null;
     }[];
   };
+  register: UseFormRegister<TQuestionsForm>;
 };
 
-export default function Questions({ content }: TProps) {
+export default function Questions({ content, register }: TProps) {
   const [seletedOption, setSeletedOption] = useState<string[]>([]);
-  const [openQuestion, setOpenQuestion] = useState("");
   const isSingleQuestion = content.questionType === "single_choice";
   const isOpenAnswer = content.questionType === "open_answer";
 
@@ -50,10 +52,7 @@ export default function Questions({ content }: TProps) {
       </div>
       <div className="flex flex-col gap-4 mt-4">
         {isOpenAnswer ? (
-          <Textarea
-            value={openQuestion}
-            onChange={(e) => setOpenQuestion(e.target.value)}
-          />
+          <Textarea {...register(`openQuestions.${content.id}`)} />
         ) : (
           content.questionAnswers.map((answer) => (
             <button
@@ -70,6 +69,9 @@ export default function Questions({ content }: TProps) {
                 readOnly
                 type="radio"
                 value={answer.id}
+                {...register(
+                  `${isSingleQuestion ? "singleAnswerQuestions" : "multiAnswerQuestions"}.${content.id}.${answer.id}`
+                )}
               />
               <Label
                 className="body-base text-neutral-950"
