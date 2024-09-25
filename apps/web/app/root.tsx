@@ -10,6 +10,12 @@ import {
 import { Toaster } from "~/components/ui/toaster";
 import "./index.css";
 import CustomErrorBoundary from "./modules/common/ErrorBoundary/ErrorBoundary";
+import type { LinksFunction } from "@remix-run/node";
+import faviconHref from "~/assets/favicon.ico";
+
+export const links: LinksFunction = () => {
+  return [{ rel: "icon", href: faviconHref, type: "image/x-icon" }];
+};
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (

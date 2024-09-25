@@ -4,6 +4,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { routes } from "./routes";
 import path from "path";
 import svgr from "vite-plugin-svgr";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
   plugins: [
@@ -17,6 +18,14 @@ export default defineConfig({
       },
       ssr: false, // SPA MODE - Might migrate to React Router 7
       routes,
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: "app/assets/favicon.ico",
+          dest: "",
+        },
+      ],
     }),
     tsconfigPaths(),
   ],
