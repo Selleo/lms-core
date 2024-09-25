@@ -8,6 +8,7 @@ type MenuItemProps = {
 };
 
 export const MenuItem = memo(({ item }: MenuItemProps) => {
+
   if ("children" in item) {
     return (
       <li className="w-full my-2 h-8 p-2 mt-3">
