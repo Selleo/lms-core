@@ -38,9 +38,10 @@ export default function LessonPage() {
 
   return (
     <>
-      {orderedLessonsItems.map((lessonItem) => (
+      {orderedLessonsItems.map((lessonItem, index) => (
         <LessonItemsSwitch
           key={lessonItem.content.id}
+          lessonIndex={index}
           lessonItem={lessonItem}
           questionsArray={questionsArray}
           register={register}

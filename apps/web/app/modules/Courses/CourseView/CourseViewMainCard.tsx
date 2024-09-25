@@ -54,7 +54,7 @@ export const CourseViewMainCard = ({
   };
 
   return (
-    <div className="md:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-xl relative">
+    <div className="md:w-[380px] lg:w-[380px] xl:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-xl relative">
       <div className="absolute top-4 left-4 right-4">
       <CategoryChip category={category} />
       </div>

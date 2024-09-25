@@ -18,7 +18,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
         <span className="text-primary-700"> ({lessons.length})</span>
       </h3>
 
-      <div className="grid grid-cols-4 gap-4 overflow-auto min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4 overflow-auto min-h-0">
         {lessons.map(({ description, imageUrl, title, id }, index) => (
           <Card
             key={index}
@@ -26,7 +26,8 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
               "opacity-60 cursor-not-allowed": !isEnrolled,
             })}
           >
-            <CardContent className="p-4 flex flex-col h-full gap-4">
+            <CardContent className="p-4">
+              <Link to={`lesson/${id}`} className="flex flex-col h-full gap-4">
               <div className="relative">
                 <img
                   src={imageUrl ?? "https://placehold.co/600x400"}
@@ -78,6 +79,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                   Read more <CaretRight className="w-3 h-3 inline-block text-primary-700" />
                 </Link>
               </div>
+              </Link>
             </CardContent>
           </Card>
         ))}
