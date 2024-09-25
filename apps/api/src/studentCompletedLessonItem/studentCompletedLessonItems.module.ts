@@ -6,6 +6,6 @@ import { StudentCompletedLessonItemsController } from "./api/studentCompletedLes
   imports: [],
   controllers: [StudentCompletedLessonItemsController],
   providers: [StudentCompletedLessonItemsService],
-  exports: [],
+  exports: [StudentCompletedLessonItemsService],
 })
 export class StudentCompletedLessonItemsModule {}
