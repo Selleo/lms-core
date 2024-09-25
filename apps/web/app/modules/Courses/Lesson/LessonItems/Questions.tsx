@@ -3,13 +3,12 @@ import { cn } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { useEffect, useRef, useState } from "react";
-import { useQuestionAnswer } from "~/api/mutations/useQuestion";
+import { useState } from "react";
 import { useParams } from "@remix-run/react";
-import { useIsMount } from "~/hooks/useIsMount";
 
 import type { TQuestionsForm } from "../types";
 import type { UseFormRegister } from "react-hook-form";
+import { useQuestionQuery } from "./useQuestionQuery";
 
 type TProps = {
   content: {
@@ -35,10 +34,14 @@ export default function Questions({ content, register }: TProps) {
   const isSingleQuestion = content.questionType === "single_choice";
   const isOpenAnswer = content.questionType === "open_answer";
   const questionId = content.id;
-  const isMount = useIsMount();
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  const { mutateAsync: answerQuestion } = useQuestionAnswer();
+  useQuestionQuery({
+    lessonId,
+    questionId,
+    openQuestion,
+    seletedOption,
+    isOpenAnswer,
+  });
 
   const handleClcik = async (id: string) => {
     if (isSingleQuestion) {
@@ -51,49 +54,6 @@ export default function Questions({ content, register }: TProps) {
       }
     }
   };
-
-  useEffect(() => {
-    const sendOpenAnswer = async () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-      debounceTimeout.current = setTimeout(async () => {
-        await answerQuestion({
-          lessonId,
-          questionId,
-          answer: openQuestion,
-        });
-      }, 1000);
-    };
-
-    const sendAnswer = async () => {
-      await answerQuestion({
-        lessonId,
-        questionId,
-        answer: seletedOption,
-      });
-    };
-
-    if (isMount) {
-      if (isOpenAnswer) {
-        sendOpenAnswer();
-      } else {
-        sendAnswer();
-      }
-    }
-
-    return () => {
-      debounceTimeout.current && clearTimeout(debounceTimeout.current);
-    };
-  }, [
-    answerQuestion,
-    isMount,
-    isOpenAnswer,
-    lessonId,
-    openQuestion,
-    questionId,
-    seletedOption,
-  ]);
 
   return (
     <Card className="flex flex-col gap-2 p-8">
