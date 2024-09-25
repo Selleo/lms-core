@@ -225,6 +225,13 @@
       "when": 1726738671653,
       "tag": "0031_add_title_to_text_blocks",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1727261683161,
+      "tag": "0032_create_student_completed_lesson_items",
+      "breakpoints": true
     }
   ]
 }

@@ -20,6 +20,7 @@ import { ScheduleModule } from "@nestjs/schedule";
 import { CoursesModule } from "./courses/courses.module";
 import { LessonsModule } from "./lessons/lessons.module";
 import { QuestionsModule } from "./questions/questions.module";
+import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/studentCompletedLessonItems.module";
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { QuestionsModule } from "./questions/questions.module";
     CoursesModule,
     LessonsModule,
     QuestionsModule,
+    StudentCompletedLessonItemsModule,
   ],
   controllers: [],
   providers: [

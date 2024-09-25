@@ -302,3 +302,20 @@ export const studentFavouritedCourses = pgTable(
     unq: unique().on(table.studentId, table.courseId),
   }),
 );
+
+export const studentCompletedLessonItems = pgTable(
+  "student_completed_lesson_items",
+  {
+    ...id,
+    ...timestamps,
+    studentId: uuid("student_id")
+      .references(() => users.id)
+      .notNull(),
+    lessonItemId: uuid("lesson_item_id")
+      .references(() => lessonItems.id)
+      .notNull(),
+  },
+  (table) => ({
+    unq: unique().on(table.studentId, table.lessonItemId),
+  }),
+);

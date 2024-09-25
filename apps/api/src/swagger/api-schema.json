@@ -971,6 +971,33 @@
           }
         }
       }
+    },
+    "/api/studentCompletedLessonItems": {
+      "post": {
+        "operationId": "StudentCompletedLessonItemsController_markLessonItemAsCompleted",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MarkLessonItemAsCompletedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "info": {
@@ -1932,6 +1959,25 @@
         ]
       },
       "AnswerQuestionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "MarkLessonItemAsCompletedResponse": {
         "type": "object",
         "properties": {
           "data": {
