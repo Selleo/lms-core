@@ -75,9 +75,9 @@ export default function Questions({
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
-            onChange={(e) => setOpenQuestion(e.target.value)}
-            rows={5}
+            onBlur={(e) => setOpenQuestion(e.target.value)}
             placeholder="Type your answer here"
+            rows={5}
           />
         ) : (
           content.questionAnswers.map((answer) => (

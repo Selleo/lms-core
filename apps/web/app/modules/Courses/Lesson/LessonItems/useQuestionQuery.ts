@@ -24,16 +24,11 @@ export const useQuestionQuery = ({
 
   useEffect(() => {
     const sendOpenAnswer = async () => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-      debounceTimeout.current = setTimeout(async () => {
-        await answerQuestion({
-          lessonId,
-          questionId,
-          answer: openQuestion,
-        });
-      }, 1000);
+      await answerQuestion({
+        lessonId,
+        questionId,
+        answer: openQuestion,
+      });
     };
 
     const sendAnswer = async () => {
