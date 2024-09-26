@@ -293,6 +293,20 @@ export interface GetLessonResponse {
   };
 }
 
+export interface AnswerQuestionBody {
+  /** @format uuid */
+  lessonId: string;
+  /** @format uuid */
+  questionId: string;
+  answer: string[] | string;
+}
+
+export interface AnswerQuestionResponse {
+  data: {
+    message: string;
+  };
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
 import axios from "axios";
 
@@ -910,6 +924,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/courses/lesson`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name QuestionsControllerAnswerQuestion
+     * @request POST:/api/questions/answer
+     */
+    questionsControllerAnswerQuestion: (data: AnswerQuestionBody, params: RequestParams = {}) =>
+      this.request<AnswerQuestionResponse, any>({
+        path: `/api/questions/answer`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
