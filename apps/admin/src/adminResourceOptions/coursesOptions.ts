@@ -9,6 +9,7 @@ import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
 import { beforeCreateCourse } from "./common/actions/before/createCourse.js";
 import { beforeUpdateCourse } from "./common/actions/before/updateCourse.js";
+import { addResourceId } from "./common/actions/before/addResourceId.js";
 
 export const coursesConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -21,7 +22,12 @@ export const coursesConfigOptions: ResourceOptions = {
       isVisible: false,
     },
     new: {
-      before: [beforeCreateCourse, addAuthorId, tempAddUrl("image_url")],
+      before: [
+        beforeCreateCourse,
+        addAuthorId,
+        tempAddUrl("image_url"),
+        addResourceId,
+      ],
     },
     edit: {
       before: [beforeUpdateCourse],
@@ -34,9 +40,7 @@ export const coursesConfigOptions: ResourceOptions = {
     "category_id",
     "state",
     "file",
-    "info",
     "price_in_cents",
-    "archived",
   ],
   filterProperties: ["category_id", "state", "status"],
   listProperties: [
@@ -97,11 +101,6 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     price_in_cents: {
       isRequired: false,
-    },
-    info: {
-      components: {
-        edit: Components.NewFileInfo,
-      },
     },
     file: {
       components: {

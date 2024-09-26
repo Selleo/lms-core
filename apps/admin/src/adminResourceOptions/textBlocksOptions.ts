@@ -25,7 +25,7 @@ export const textBlocksConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["title", "body", "counter", "state", "archived"],
+  editProperties: ["title", "body", "counter", "state"],
   filterProperties: ["created_at", "state", "status"],
   listProperties: ["title", "body", "state", "status"],
   showProperties: [

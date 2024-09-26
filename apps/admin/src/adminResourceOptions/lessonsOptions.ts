@@ -10,6 +10,7 @@ import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { afterUpdateLesson } from "./common/actions/after/updateLesson.js";
 import { addAuthorId } from "./common/actions/before/addAuthorId.js";
 import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
+import { addResourceId } from "./common/actions/before/addResourceId.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -22,7 +23,12 @@ export const lessonsConfigOptions: ResourceOptions = {
       isVisible: false,
     },
     new: {
-      before: [beforeCreateLesson, addAuthorId, tempAddUrl("image_url")],
+      before: [
+        beforeCreateLesson,
+        addAuthorId,
+        tempAddUrl("image_url"),
+        addResourceId,
+      ],
     },
     edit: {
       before: [beforeUpdateLesson],
@@ -30,7 +36,7 @@ export const lessonsConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["title", "description", "state", "file", "info"],
+  editProperties: ["title", "description", "state", "file"],
   filterProperties: ["title", "state", "status"],
   listProperties: [
     "title",
@@ -90,11 +96,6 @@ export const lessonsConfigOptions: ResourceOptions = {
     file: {
       components: {
         show: Components.PhotoPreview,
-      },
-    },
-    info: {
-      components: {
-        edit: Components.NewFileInfo,
       },
     },
   },

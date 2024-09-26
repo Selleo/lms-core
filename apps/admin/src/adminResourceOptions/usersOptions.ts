@@ -30,7 +30,7 @@ export const usersConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["first_name", "last_name", "email", "role", "archived"],
+  editProperties: ["first_name", "last_name", "email", "role"],
   filterProperties: ["first_name", "last_name", "email", "status", "role"],
   listProperties: ["first_name", "last_name", "email", "role", "status"],
   showProperties: [
