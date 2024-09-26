@@ -7,6 +7,7 @@ import SingleLessonSummary from "./SingleLessonSummary";
 export default function Summary() {
   const { lessonId } = useParams();
   const { data } = useLessonSuspense(lessonId ?? "");
+  const lessonItemsCount = data.lessonItems.length;
 
   const lessonItemsSummary = getSummaryItems(data);
 
@@ -15,7 +16,7 @@ export default function Summary() {
       <CardContent className="p-8 flex flex-col">
         <div className="h6">Lesson Summary</div>
         <div className="gap-2 flex flex-col mt-4 mb-8">
-          <p className="text-neutral-600 text-xs">Lesson progress: 2/10</p>
+          <p className="text-neutral-600 text-xs">{`Lesson progress: 2/${lessonItemsCount}`}</p>
           <div className="flex justify-between items-center gap-px">
             {Array.from({ length: 2 }).map((_, index) => (
               <span
@@ -24,7 +25,7 @@ export default function Summary() {
               />
             ))}
             {Array.from({
-              length: 8,
+              length: lessonItemsCount,
             }).map((_, idx) => (
               <span
                 key={idx}
