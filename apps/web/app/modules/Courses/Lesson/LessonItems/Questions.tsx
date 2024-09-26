@@ -1,5 +1,4 @@
 import { Card } from "~/components/ui/card";
-import { cn } from "~/lib/utils";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
@@ -85,19 +84,30 @@ export default function Questions({
               key={answer.id}
               className="flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4"
             >
-              <Input
-                className={cn("w-4 h-4 border-red-500", {
-                  "radio-square": !isSingleQuestion,
-                })}
-                checked={seletedOption.includes(answer.id)}
-                id={answer.id}
-                readOnly
-                type="radio"
-                value={answer.id}
-                {...register(
-                  `${isSingleQuestion ? "singleAnswerQuestions" : "multiAnswerQuestions"}.${questionId}.${answer.id}`
-                )}
-              />
+              {isSingleQuestion ? (
+                <Input
+                  className="w-4 h-4"
+                  checked={seletedOption.includes(answer.id)}
+                  id={answer.id}
+                  readOnly
+                  type="radio"
+                  value={answer.id}
+                  {...register(
+                    `singleAnswerQuestions.${questionId}.${answer.id}`
+                  )}
+                />
+              ) : (
+                <Input
+                  className="w-4 h-4"
+                  checked={seletedOption.includes(answer.id)}
+                  id={answer.id}
+                  type="checkbox"
+                  value={answer.id}
+                  {...register(
+                    `multiAnswerQuestions.${questionId}.${answer.id}`
+                  )}
+                />
+              )}
               <Label
                 className="body-base text-neutral-950"
                 htmlFor={answer.id}
