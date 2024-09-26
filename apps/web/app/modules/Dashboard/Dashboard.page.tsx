@@ -12,6 +12,8 @@ import { SortOption } from "~/types/sorting";
 import Loader from "../common/Loader/Loader";
 import SearchFilter from "../common/SearchFilter/SearchFilter";
 import CourseCard from "./Courses/CourseCard";
+import {Icon} from "~/components/Icon";
+
 
 type State = {
   searchTitle: string | undefined;
@@ -100,13 +102,21 @@ export default function DashboardPage() {
           isLoading={isCategoriesLoading}
         />
       </div>
-      <div className="grid p-6 gap-6 grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5 bg-white">
+      <div className="grid p-8 gap-6 grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5 bg-white rounded-lg">
         {!courses ||
           (isEmpty(courses) && (
-            <div className="flex justify-center items-center h-full">
-              <h2 className="text-center text-2xl font-bold text-neutral-950">
-                No courses found
-              </h2>
+            <div className="col-span-3 flex gap-8 ">
+              <div>
+                <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
+              </div>
+              <div className="flex flex-col justify-center gap-2">
+              <p className="text-lg font-bold leading-5 text-neutral-950">
+               We could not find any courses
+              </p>
+              <p className="text-neutral-800 text-base leading-6 font-normal">
+                Please change the search criteria or try again later
+              </p>
+              </div>
             </div>
           ))}
         {isCoursesLoading && (

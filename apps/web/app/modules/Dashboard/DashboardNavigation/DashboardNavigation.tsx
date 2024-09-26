@@ -39,7 +39,7 @@ const menuItems: MenuItemType[] = [
     label: "settings",
     link: "/settings",
     roles: ["admin", "student"],
-    iconName: "Dashboard",
+    iconName: "Settings",
   }
 ];
 
@@ -86,8 +86,10 @@ export function DashboardNavigation() {
           <ul className="flex flex-col items-center">
             {authorizedMenuItems.map((item) => (
               <MenuItem key={item.label} item={item} />
+
             ))}
           </ul>
+
         </nav>
       </div>
 

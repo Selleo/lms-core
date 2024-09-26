@@ -9,17 +9,17 @@ export const MenuItemLink = memo(({ label, link, iconName }: LeafMenuItem) => (
     to={link}
     className={({ isActive }) =>
       cn(
-        "w-full h-full p-2 mt-3 flex items-center relative rounded-md transition-colors duration-300",
+        "w-full h-full p-2 mt-3 flex items-center relative rounded-md transition-colors duration-300 text-neutral-900",
         {
-          "bg-primary-50": isActive,
+          "bg-primary-700 text-white": isActive,
         },
       )
     }
     end={link === "/"}
   >
     <>
-      <Icon name={iconName} className="w-4 h-4 mr-2 text-neutral-900" />
-      <span className="capitalize subtle text-md text-neutral-900">
+      <Icon name={iconName} className="w-4 h-4 mr-2" />
+      <span className="capitalize subtle text-md">
         {label}
       </span>
     </>
