@@ -9,14 +9,25 @@ type LessonItemType = GetLessonResponse["data"]["lessonItems"][number];
 
 type TProps = {
   lessonItem: LessonItemType;
+  questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
 };
-export default function LessonItemsSwitch({ lessonItem, register }: TProps) {
+export default function LessonItemsSwitch({
+  lessonItem,
+  questionsArray,
+  register,
+}: TProps) {
   if ("body" in lessonItem.content)
     return <TextBlock content={lessonItem.content} />;
 
   if ("questionBody" in lessonItem.content)
-    return <Questions content={lessonItem.content} register={register} />;
+    return (
+      <Questions
+        content={lessonItem.content}
+        questionsArray={questionsArray}
+        register={register}
+      />
+    );
 
   if ("url" in lessonItem.content)
     return <Files content={lessonItem.content} />;

@@ -1,5 +1,5 @@
 import { Card, CardContent } from "~/components/ui/card";
-import { getSummaryItems } from "./utils";
+import { getSummaryItems } from "../utils";
 import { useLessonSuspense } from "~/api/queries/useLesson";
 import { useParams } from "@remix-run/react";
 import SingleLessonSummary from "./SingleLessonSummary";

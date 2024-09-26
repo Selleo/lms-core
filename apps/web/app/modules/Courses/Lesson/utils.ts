@@ -26,3 +26,10 @@ export const getOrderedLessons = (lesson: GetLessonResponse["data"]) =>
   lesson.lessonItems.sort(
     (a, b) => a.displayOrder || 0 - (b.displayOrder || 0)
   );
+
+export const getQuestionsArray = (
+  lesson: GetLessonResponse["data"]["lessonItems"]
+) =>
+  lesson
+    .filter((lesson) => lesson.lessonItemType === "question")
+    .map((item) => item.content.id);

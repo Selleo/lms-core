@@ -3,7 +3,7 @@ import { courseQueryOptions } from "~/api/queries/useCourse";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
 import { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
-import { getOrderedLessons } from "./Summary/utils";
+import { getOrderedLessons, getQuestionsArray } from "./utils";
 import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 import { Button } from "~/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -34,6 +34,7 @@ export default function LessonPage() {
   });
 
   const orderedLessonsItems = getOrderedLessons(data);
+  const questionsArray = getQuestionsArray(orderedLessonsItems);
 
   return (
     <>
@@ -41,6 +42,7 @@ export default function LessonPage() {
         <LessonItemsSwitch
           key={lessonItem.content.id}
           lessonItem={lessonItem}
+          questionsArray={questionsArray}
           register={register}
         />
       ))}

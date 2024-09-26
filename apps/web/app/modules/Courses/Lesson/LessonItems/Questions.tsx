@@ -5,10 +5,10 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { useState } from "react";
 import { useParams } from "@remix-run/react";
+import { useQuestionQuery } from "./useQuestionQuery";
 
 import type { TQuestionsForm } from "../types";
 import type { UseFormRegister } from "react-hook-form";
-import { useQuestionQuery } from "./useQuestionQuery";
 
 type TProps = {
   content: {
@@ -21,10 +21,15 @@ type TProps = {
       position: number | null;
     }[];
   };
+  questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
 };
 
-export default function Questions({ content, register }: TProps) {
+export default function Questions({
+  content,
+  questionsArray,
+  register,
+}: TProps) {
   const { lessonId } = useParams();
 
   if (!lessonId) throw new Error("Lesson ID not found");
@@ -57,7 +62,7 @@ export default function Questions({ content, register }: TProps) {
 
   return (
     <Card className="flex flex-col gap-2 p-8">
-      <div className="details text-primary-700 uppercase">{`question`}</div>
+      <div className="details text-primary-700 uppercase">{`question ${questionsArray.indexOf(questionId) + 1}`}</div>
       <div
         className="h6 text-neutral-950"
         dangerouslySetInnerHTML={{ __html: content.questionBody }}
