@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useIsMount } from "~/hooks/useIsMount";
 import { useQuestionAnswer } from "~/api/mutations/useQuestion";
 
@@ -6,7 +6,7 @@ type TProps = {
   lessonId: string;
   questionId: string;
   openQuestion: string;
-  seletedOption: string[];
+  selectedOption: string[];
   isOpenAnswer: boolean;
 };
 
@@ -14,11 +14,10 @@ export const useQuestionQuery = ({
   lessonId,
   questionId,
   openQuestion,
-  seletedOption,
+  selectedOption,
   isOpenAnswer,
 }: TProps) => {
   const isMount = useIsMount();
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   const { mutateAsync: answerQuestion } = useQuestionAnswer();
 
@@ -35,7 +34,7 @@ export const useQuestionQuery = ({
       await answerQuestion({
         lessonId,
         questionId,
-        answer: seletedOption,
+        answer: selectedOption,
       });
     };
 
@@ -46,10 +45,6 @@ export const useQuestionQuery = ({
         sendAnswer();
       }
     }
-
-    return () => {
-      debounceTimeout.current && clearTimeout(debounceTimeout.current);
-    };
   }, [
     answerQuestion,
     isMount,
@@ -57,6 +52,6 @@ export const useQuestionQuery = ({
     lessonId,
     openQuestion,
     questionId,
-    seletedOption,
+    selectedOption,
   ]);
 };

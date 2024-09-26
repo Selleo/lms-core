@@ -33,7 +33,7 @@ export default function Questions({
 
   if (!lessonId) throw new Error("Lesson ID not found");
 
-  const [seletedOption, setSeletedOption] = useState<string[]>([]);
+  const [selectedOption, setSelectedOption] = useState<string[]>([]);
   const [openQuestion, setOpenQuestion] = useState("");
   const isSingleQuestion = content.questionType === "single_choice";
   const isOpenAnswer = content.questionType === "open_answer";
@@ -43,18 +43,18 @@ export default function Questions({
     lessonId,
     questionId,
     openQuestion,
-    seletedOption,
+    selectedOption,
     isOpenAnswer,
   });
 
-  const handleClcik = async (id: string) => {
+  const handleClick = async (id: string) => {
     if (isSingleQuestion) {
-      setSeletedOption([id]);
+      setSelectedOption([id]);
     } else {
-      if (seletedOption.includes(id)) {
-        setSeletedOption(seletedOption.filter((option) => option !== id));
+      if (selectedOption.includes(id)) {
+        setSelectedOption(selectedOption.filter((option) => option !== id));
       } else {
-        setSeletedOption([...seletedOption, id]);
+        setSelectedOption([...selectedOption, id]);
       }
     }
   };
@@ -82,14 +82,14 @@ export default function Questions({
         ) : (
           content.questionAnswers.map((answer) => (
             <button
-              onClick={() => handleClcik(answer.id)}
+              onClick={() => handleClick(answer.id)}
               key={answer.id}
               className="flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4"
             >
               {isSingleQuestion ? (
                 <Input
                   className="w-4 h-4"
-                  checked={seletedOption.includes(answer.id)}
+                  checked={selectedOption.includes(answer.id)}
                   id={answer.id}
                   readOnly
                   type="radio"
@@ -101,7 +101,7 @@ export default function Questions({
               ) : (
                 <Input
                   className="w-4 h-4"
-                  checked={seletedOption.includes(answer.id)}
+                  checked={selectedOption.includes(answer.id)}
                   id={answer.id}
                   type="checkbox"
                   value={answer.id}
