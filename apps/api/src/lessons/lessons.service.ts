@@ -117,6 +117,7 @@ export class LessonsService {
                   id: questionAnswerOptions.id,
                   optionText: questionAnswerOptions.optionText,
                   position: questionAnswerOptions.position,
+                  isStudentAnswer: sql<boolean>`${false}`,
                 })
                 .from(questionAnswerOptions)
                 .where(
