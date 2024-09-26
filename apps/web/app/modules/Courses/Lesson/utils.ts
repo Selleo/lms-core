@@ -1,9 +1,7 @@
 import type { GetLessonResponse } from "~/api/generated-api";
 import type { TQuestionContent, TQuestionsForm } from "./types";
-
 export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
   const lessonItems = lesson.lessonItems;
-
   return lessonItems
     .map((lessonItem) => {
       if ("title" in lessonItem.content) {
@@ -35,12 +33,12 @@ export const getQuestionsArray = (
     .filter((lesson) => lesson.lessonItemType === "question")
     .map((item) => item.content.id);
 
-export const getUserAnswears = (
+export const getUserAnswers = (
   lesson: GetLessonResponse["data"]
 ): TQuestionsForm => {
   const allQuestions = lesson.lessonItems
     .filter((lesson) => lesson.lessonItemType === "question")
-    .map((item) => item.content) as TQuestionContent[];
+    .map((item) => item.content as TQuestionContent);
 
   const singleQuestionsFromApi = allQuestions.filter(
     (question) => question.questionType === "single_choice"
@@ -65,18 +63,29 @@ export const getUserAnswears = (
   };
 };
 
-//TODO: fix types
-const prepareQuestions = (questions: TQuestionContent[]) =>
-  questions.reduce((acc, question) => {
-    acc[question.id] = question.questionAnswers.reduce((innerAcc, item) => {
-      innerAcc[item.id] = item.isStudentAnswer ? `${item.id}` : null;
-      return innerAcc;
-    }, {});
-    return acc;
-  }, {});
+const prepareQuestions = (
+  questions: TQuestionContent[]
+): { [key: string]: string | null } =>
+  questions.reduce(
+    (acc, question) => {
+      acc[question.id] =
+        question.questionAnswers.find((answer) => answer.isStudentAnswer)?.id ||
+        null;
+      return acc;
+    },
+    {} as { [key: string]: string | null }
+  );
 
-const prepareOpenQuestions = (questions: TQuestionContent[]) =>
-  questions.reduce((acc, question) => {
-    acc[question.id] = question.questionAnswers;
-    return acc;
-  }, {});
+const prepareOpenQuestions = (
+  questions: TQuestionContent[]
+): { [key: string]: string } =>
+  questions.reduce(
+    (acc, question) => {
+      const studentAnswer = question.questionAnswers.find(
+        (answer) => answer.isStudentAnswer
+      );
+      acc[question.id] = studentAnswer ? studentAnswer.optionText : "";
+      return acc;
+    },
+    {} as { [key: string]: string }
+  );

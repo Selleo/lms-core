@@ -3,7 +3,7 @@ import { courseQueryOptions } from "~/api/queries/useCourse";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
 import { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
-import { getOrderedLessons, getQuestionsArray, getUserAnswears } from "./utils";
+import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
 import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 import { Button } from "~/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -30,7 +30,7 @@ export default function LessonPage() {
   }
   const { register } = useForm<TQuestionsForm>({
     mode: "onChange",
-    defaultValues: getUserAnswears(data),
+    defaultValues: getUserAnswers(data),
   });
 
   const orderedLessonsItems = getOrderedLessons(data);
