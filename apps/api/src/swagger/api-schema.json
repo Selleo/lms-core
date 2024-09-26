@@ -1837,12 +1837,16 @@
                                         "type": "null"
                                       }
                                     ]
+                                  },
+                                  "isStudentAnswer": {
+                                    "type": "boolean"
                                   }
                                 },
                                 "required": [
                                   "id",
                                   "optionText",
-                                  "position"
+                                  "position",
+                                  "isStudentAnswer"
                                 ]
                               }
                             }

@@ -43,9 +43,8 @@ export class QuestionsService {
       );
 
       const questionTypeHandlers = {
-        [QuestionType.single_choice.key]: this.handleSingleChoice.bind(this),
-        [QuestionType.multiple_choice.key]:
-          this.handleMultipleChoice.bind(this),
+        [QuestionType.single_choice.key]: this.handleChoiceAnswer.bind(this),
+        [QuestionType.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
         [QuestionType.open_answer.key]: this.handleOpenAnswer.bind(this),
       } as const;
 
@@ -125,57 +124,25 @@ export class QuestionsService {
     return existingAnswer?.id;
   }
 
-  private async handleSingleChoice(
-    trx: any,
-    questionData: any,
-    answerQuestion: AnswerQuestionSchema,
-    lastAnswerId: string | null,
-    userId: string,
-  ): Promise<void> {
-    if (!(answerQuestion.answer.length === 1)) {
-      throw new NotAcceptableException("Answer must be one option");
-    }
-
-    const [answer] = await trx
-      .select({
-        id: questionAnswerOptions.id,
-        questionsId: questionAnswerOptions.questionId,
-        answer: questionAnswerOptions.optionText,
-      })
-      .from(questionAnswerOptions)
-      .where(
-        and(
-          eq(questionAnswerOptions.questionId, questionData.questionId),
-          eq(questionAnswerOptions.id, answerQuestion.answer[0]),
-        ),
-      );
-
-    if (!answer) throw new NotFoundException("Answer not found");
-
-    const studentAnswer = { answer_1: answer.answer };
-
-    await this.upsertAnswer(
-      trx,
-      questionData.questionId,
-      studentAnswer,
-      userId,
-      lastAnswerId,
-    );
-  }
-
-  private async handleMultipleChoice(
+  private async handleChoiceAnswer(
     trx: any,
     questionData: QuestionSchema,
     answerQuestion: AnswerQuestionSchema,
     lastAnswerId: string | null,
     userId: string,
   ): Promise<void> {
-    if (
-      !Array.isArray(answerQuestion.answer) ||
-      answerQuestion.answer.length <= 1
-    ) {
+    if (!Array.isArray(answerQuestion.answer)) {
       throw new BadRequestException("Answer must be more than one option");
     }
+
+    if (answerQuestion.answer.length < 1)
+      return await this.upsertAnswer(
+        trx,
+        questionData.questionId,
+        {},
+        userId,
+        lastAnswerId,
+      );
 
     const answers: { answer: string }[] = await trx
       .select({
@@ -216,7 +183,7 @@ export class QuestionsService {
     lastAnswerId: string | null,
     userId: string,
   ): Promise<void> {
-    if (!answerQuestion.answer || Array.isArray(answerQuestion.answer))
+    if (Array.isArray(answerQuestion.answer))
       throw new NotAcceptableException(
         "Answer is required for open answer question and must be a string",
       );

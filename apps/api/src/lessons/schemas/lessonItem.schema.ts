@@ -5,6 +5,7 @@ export const questionAnswerOptionsSchema = Type.Object({
   id: UUIDSchema,
   optionText: Type.String(),
   position: Type.Union([Type.Number(), Type.Null()]),
+  isStudentAnswer: Type.Boolean(),
 });
 
 export const questionSchema = Type.Object({
