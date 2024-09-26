@@ -35,9 +35,7 @@ export default function LessonPage() {
         <Button variant="outline" className="w-[180px]">
           Previous lesson
         </Button>
-        <Button className="w-[180px]">
-          Next lesson
-        </Button>
+        <Button className="w-[180px]">Next lesson</Button>
       </div>
     </FormProvider>
   );

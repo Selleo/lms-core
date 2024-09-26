@@ -963,6 +963,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query: {
         /** @format uuid */
         id: string;
+        /** @format uuid */
+        lessonId: string;
       },
       params: RequestParams = {},
     ) =>

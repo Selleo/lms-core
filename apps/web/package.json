@@ -50,9 +50,11 @@
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.1",
     "react-player": "^2.16.0",
+    "react-use": "^17.5.1",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "ts-pattern": "^5.2.0",
+    "vite-plugin-cjs-interop": "^2.1.4",
     "vite-plugin-svgr": "^4.2.0",
     "zod": "^3.23.8",
     "zustand": "^4.5.4"

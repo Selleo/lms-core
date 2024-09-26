@@ -5,10 +5,14 @@ import { routes } from "./routes";
 import path from "path";
 import svgr from "vite-plugin-svgr";
 import { viteStaticCopy } from "vite-plugin-static-copy";
+import { cjsInterop } from "vite-plugin-cjs-interop";
 
 export default defineConfig({
   plugins: [
     svgr(),
+    cjsInterop({
+      dependencies: ["react-use"],
+    }),
     remix({
       future: {
         v3_fetcherPersist: true,
