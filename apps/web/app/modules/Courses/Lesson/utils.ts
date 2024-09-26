@@ -1,4 +1,5 @@
-import { GetLessonResponse } from "~/api/generated-api";
+import type { GetLessonResponse } from "~/api/generated-api";
+import type { TQuestionContent, TQuestionsForm } from "./types";
 
 export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
   const lessonItems = lesson.lessonItems;
@@ -33,3 +34,49 @@ export const getQuestionsArray = (
   lesson
     .filter((lesson) => lesson.lessonItemType === "question")
     .map((item) => item.content.id);
+
+export const getUserAnswears = (
+  lesson: GetLessonResponse["data"]
+): TQuestionsForm => {
+  const allQuestions = lesson.lessonItems
+    .filter((lesson) => lesson.lessonItemType === "question")
+    .map((item) => item.content) as TQuestionContent[];
+
+  const singleQuestionsFromApi = allQuestions.filter(
+    (question) => question.questionType === "single_choice"
+  );
+
+  const multiQuestionsFromApi = allQuestions.filter(
+    (question) => question.questionType === "multiple_choice"
+  );
+
+  const openQuestionsFromApi = allQuestions.filter(
+    (question) => question.questionType === "open_answer"
+  );
+
+  const singleAnswerQuestions = prepareQuestions(singleQuestionsFromApi);
+  const multiAnswerQuestions = prepareQuestions(multiQuestionsFromApi);
+  const openQuestions = prepareOpenQuestions(openQuestionsFromApi);
+
+  return {
+    openQuestions,
+    singleAnswerQuestions,
+    multiAnswerQuestions,
+  };
+};
+
+//TODO: fix types
+const prepareQuestions = (questions: TQuestionContent[]) =>
+  questions.reduce((acc, question) => {
+    acc[question.id] = question.questionAnswers.reduce((innerAcc, item) => {
+      innerAcc[item.id] = item.isStudentAnswer ? `${item.id}` : null;
+      return innerAcc;
+    }, {});
+    return acc;
+  }, {});
+
+const prepareOpenQuestions = (questions: TQuestionContent[]) =>
+  questions.reduce((acc, question) => {
+    acc[question.id] = question.questionAnswers;
+    return acc;
+  }, {});

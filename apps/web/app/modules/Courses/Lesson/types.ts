@@ -21,3 +21,16 @@ export type TAnswerObject =
       [key: string]: string | null;
     }
   | string;
+
+export type TQuestionContent = {
+  id: string;
+  questionType: string;
+  questionBody: string;
+  questionAnswers: {
+    /** @format uuid */
+    id: string;
+    optionText: string;
+    position: number | null;
+    isStudentAnswer: boolean;
+  }[];
+};

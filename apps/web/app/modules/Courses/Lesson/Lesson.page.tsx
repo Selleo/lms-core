@@ -3,7 +3,7 @@ import { courseQueryOptions } from "~/api/queries/useCourse";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
 import { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
-import { getOrderedLessons, getQuestionsArray } from "./utils";
+import { getOrderedLessons, getQuestionsArray, getUserAnswears } from "./utils";
 import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 import { Button } from "~/components/ui/button";
 import { useForm } from "react-hook-form";
@@ -28,9 +28,9 @@ export default function LessonPage() {
   if (!data || !lessonId) {
     throw new Error(`Lesson with id: ${lessonId} not found`);
   }
-
   const { register } = useForm<TQuestionsForm>({
     mode: "onChange",
+    defaultValues: getUserAnswears(data),
   });
 
   const orderedLessonsItems = getOrderedLessons(data);
