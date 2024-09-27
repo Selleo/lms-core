@@ -14,6 +14,7 @@ import {
   questionAnswerOptions,
   questions,
   studentCourses,
+  studentQuestionAnswers,
   textBlocks,
 } from "src/storage/schema";
 import { LessonItemResponse } from "./schemas/lessonItem.schema";
@@ -117,12 +118,41 @@ export class LessonsService {
                   id: questionAnswerOptions.id,
                   optionText: questionAnswerOptions.optionText,
                   position: questionAnswerOptions.position,
-                  isStudentAnswer: sql<boolean>`${false}`,
+                  isStudentAnswer: sql<boolean>`
+                    CASE
+                      WHEN ${studentQuestionAnswers.id} IS NOT NULL AND
+                        EXISTS (
+                          SELECT 1
+                          FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                          WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(${questionAnswerOptions.optionText})
+                        )
+                      THEN true
+                      ELSE false
+                    END
+                `,
                 })
                 .from(questionAnswerOptions)
+                .leftJoin(
+                  studentQuestionAnswers,
+                  and(
+                    eq(
+                      studentQuestionAnswers.questionId,
+                      questionAnswerOptions.questionId,
+                    ),
+                    eq(studentQuestionAnswers.studentId, userId),
+                  ),
+                )
                 .where(
                   eq(questionAnswerOptions.questionId, item.questionData.id),
+                )
+                .groupBy(
+                  questionAnswerOptions.id,
+                  questionAnswerOptions.optionText,
+                  questionAnswerOptions.position,
+                  studentQuestionAnswers.id,
+                  studentQuestionAnswers.answer,
                 );
+
               return {
                 id: item.questionData.id,
                 questionType: item.questionData.questionType,
