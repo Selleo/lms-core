@@ -57,7 +57,9 @@ export default function UserForm() {
             id="email"
             placeholder="user@email.com"
             defaultValue={currentUser?.email}
-            className={cn({ "border-red-500 focus:!ring-red-500": errors.email })}
+            className={cn({
+              "border-red-500 focus:!ring-red-500": errors.email,
+            })}
             {...register("email", { required: "Email is required" })}
           />
           {errors.email && (

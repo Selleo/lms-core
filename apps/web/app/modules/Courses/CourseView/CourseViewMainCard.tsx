@@ -12,7 +12,7 @@ import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { queryClient } from "~/api/queryClient";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { toast } from "~/components/ui/use-toast";
-import {CategoryChip} from "~/components/ui/CategoryChip";
+import { CategoryChip } from "~/components/ui/CategoryChip";
 import { cn } from "~/lib/utils";
 
 export const CourseViewMainCard = ({
@@ -57,7 +57,7 @@ export const CourseViewMainCard = ({
   return (
     <div className="md:w-[380px]  xl:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-xl relative">
       <div className="absolute top-4 left-4 right-4">
-      <CategoryChip category={category} />
+        <CategoryChip category={category} />
       </div>
       <img
         src={
@@ -89,9 +89,13 @@ export const CourseViewMainCard = ({
             ))}
           </div>
         </div>
-        <h4 className="text-2xl font-bold mt-6 leading-10 text-neutral-950">{title}</h4>
+        <h4 className="text-2xl font-bold mt-6 leading-10 text-neutral-950">
+          {title}
+        </h4>
         <div className="min-h-0 overflow-auto">
-          <p className="mt-4 text-neutral-900 leading-7 font-normal">{description}</p>
+          <p className="mt-4 text-neutral-900 leading-7 font-normal">
+            {description}
+          </p>
         </div>
         <div className="mt-auto">
           {isEnrolled && (
@@ -101,14 +105,18 @@ export const CourseViewMainCard = ({
               </Button>
             </Link>
           )}
-            <Button
-              className={cn("w-full bg-secondary-500 text-white py-2 rounded-lg",{
-              'bg-white border border-neutral-500 text-neutral-900 w-full mt-3':   isEnrolled
-              })}
-              onClick={!isEnrolled ? handleEnroll: handleUnenroll}
-            >
-              {isEnrolled ? "Unenroll" : "Enroll"}
-            </Button>
+          <Button
+            className={cn(
+              "w-full bg-secondary-500 text-white py-2 rounded-lg",
+              {
+                "bg-white border border-neutral-500 text-neutral-900 w-full mt-3":
+                  isEnrolled,
+              }
+            )}
+            onClick={!isEnrolled ? handleEnroll : handleUnenroll}
+          >
+            {isEnrolled ? "Unenroll" : "Enroll"}
+          </Button>
         </div>
       </div>
     </div>

@@ -44,7 +44,9 @@ export default function ChangePasswordForm() {
           <Label htmlFor="oldPassword">Old Password</Label>
           <Input
             id="oldPassword"
-            className={cn({ "border-red-500 focus:!ring-red-500": errors.oldPassword })}
+            className={cn({
+              "border-red-500 focus:!ring-red-500": errors.oldPassword,
+            })}
             {...register("oldPassword", {
               required: "Old password is required",
             })}
@@ -57,7 +59,9 @@ export default function ChangePasswordForm() {
           <Label htmlFor="newPassword">New Password</Label>
           <Input
             id="newPassword"
-            className={cn({ "border-red-500 focus:!ring-red-500": errors.newPassword })}
+            className={cn({
+              "border-red-500 focus:!ring-red-500": errors.newPassword,
+            })}
             {...register("newPassword", {
               required: "New password is required",
             })}

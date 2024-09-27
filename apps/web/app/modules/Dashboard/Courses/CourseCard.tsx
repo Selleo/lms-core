@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 import { GetAllCoursesResponse } from "~/api/generated-api";
 import { Button } from "~/components/ui/button";
-import {CategoryChip} from "~/components/ui/CategoryChip";
+import { CategoryChip } from "~/components/ui/CategoryChip";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
@@ -11,17 +11,9 @@ type CourseCardProps = Pick<
   href: string;
 };
 
-const CourseCard = ({
-  href,
-  title,
-  category,
-  imageUrl,
-}: CourseCardProps) => {
+const CourseCard = ({ href, title, category, imageUrl }: CourseCardProps) => {
   return (
-    <Link
-      to={href}
-      className="relative border border-primary-200 rounded-lg"
-    >
+    <Link to={href} className="relative border border-primary-200 rounded-lg">
       <div className="absolute top-4 left-4 right-4 flex">
         <CategoryChip category={category} />
       </div>
