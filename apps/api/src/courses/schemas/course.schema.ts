@@ -6,6 +6,7 @@ export const allCoursesSchema = Type.Array(
     id: UUIDSchema,
     title: Type.String(),
     imageUrl: Type.Union([Type.String(), Type.Null()]),
+    description: Type.String(),
     author: Type.String(),
     category: Type.String(),
     courseLessonCount: Type.Number(),
