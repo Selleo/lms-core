@@ -12,7 +12,8 @@ import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { queryClient } from "~/api/queryClient";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { toast } from "~/components/ui/use-toast";
-import {CategoryChip} from "~/components/ui/CategoryChip";
+import { CategoryChip } from "~/components/ui/CategoryChip";
+import { cn } from "~/lib/utils";
 
 export const CourseViewMainCard = ({
   course,
@@ -56,7 +57,7 @@ export const CourseViewMainCard = ({
   return (
     <div className="md:w-[380px]  xl:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-xl relative">
       <div className="absolute top-4 left-4 right-4">
-      <CategoryChip category={category} />
+        <CategoryChip category={category} />
       </div>
       <img
         src={
@@ -66,9 +67,9 @@ export const CourseViewMainCard = ({
         alt="Course"
         className="w-full object-cover aspect-video object-center rounded-2xl"
       />
-      <div className="flex flex-col h-full bg-white p-8 rounded-b-2xl min-h-0">
+      <div className="flex flex-col h-full bg-white p-8 pt-6 rounded-b-2xl min-h-0">
         <div className="gap-2 flex flex-col">
-          <p className="text-neutral-600 text-xs">
+          <p className="text-neutral-600 text-xs leading-5">
             Course progress: 2/{courseLessonCount}
           </p>
           <div className="flex grow items-center gap-px">
@@ -88,9 +89,13 @@ export const CourseViewMainCard = ({
             ))}
           </div>
         </div>
-        <h2 className="text-2xl font-bold mt-6">{title}</h2>
+        <h4 className="text-2xl font-bold mt-6 leading-10 text-neutral-950">
+          {title}
+        </h4>
         <div className="min-h-0 overflow-auto">
-          <p className="mt-4 text-gray-600">{description}</p>
+          <p className="mt-4 text-neutral-900 leading-7 font-normal">
+            {description}
+          </p>
         </div>
         <div className="mt-auto">
           {isEnrolled && (
@@ -100,22 +105,18 @@ export const CourseViewMainCard = ({
               </Button>
             </Link>
           )}
-          {!isEnrolled && (
-            <Button
-              onClick={handleEnroll}
-              className="mt-4 w-full bg-secondary-500 text-white py-2 rounded-lg"
-            >
-              Enroll
-            </Button>
-          )}
-          {isEnrolled && (
-            <Button
-              className="bg-white border border-neutral-500 text-neutral-900 w-full mt-2"
-              onClick={handleUnenroll}
-            >
-              Unenroll
-            </Button>
-          )}
+          <Button
+            className={cn(
+              "w-full bg-secondary-500 text-white py-2 rounded-lg",
+              {
+                "bg-white border border-neutral-500 text-neutral-900 w-full mt-3":
+                  isEnrolled,
+              }
+            )}
+            onClick={!isEnrolled ? handleEnroll : handleUnenroll}
+          >
+            {isEnrolled ? "Unenroll" : "Enroll"}
+          </Button>
         </div>
       </div>
     </div>

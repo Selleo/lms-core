@@ -57,11 +57,13 @@ export default function UserForm() {
             id="email"
             placeholder="user@email.com"
             defaultValue={currentUser?.email}
-            className={cn({ "border-red-500": errors.email })}
+            className={cn({
+              "border-red-500 focus:!ring-red-500": errors.email,
+            })}
             {...register("email", { required: "Email is required" })}
           />
           {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
           )}
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
