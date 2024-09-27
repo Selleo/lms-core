@@ -44,26 +44,26 @@ export default function ChangePasswordForm() {
           <Label htmlFor="oldPassword">Old Password</Label>
           <Input
             id="oldPassword"
-            className={cn({ "border-red-500": errors.oldPassword })}
+            className={cn({ "border-red-500 focus:!ring-red-500": errors.oldPassword })}
             {...register("oldPassword", {
               required: "Old password is required",
             })}
           />
           {errors.oldPassword && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-500 text-xs mt-1">
               {errors.oldPassword.message}
             </p>
           )}
           <Label htmlFor="newPassword">New Password</Label>
           <Input
             id="newPassword"
-            className={cn({ "border-red-500": errors.newPassword })}
+            className={cn({ "border-red-500 focus:!ring-red-500": errors.newPassword })}
             {...register("newPassword", {
               required: "New password is required",
             })}
           />
           {errors.newPassword && (
-            <p className="text-red-500 text-sm mt-1">
+            <p className="text-red-500 text-xs mt-1">
               {errors.newPassword.message}
             </p>
           )}

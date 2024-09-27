@@ -87,8 +87,8 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-1 flex-col h-full">
       <div className="flex flex-col">
-        <h1 className="h3 text-neutral-950">Available Courses</h1>
-        <p className="text-body-lg text-neutral-700">
+        <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Available Courses</h4>
+        <p className="text-lg leading-7 text-neutral-800">
           All available career courses available to enroll
         </p>
         <SearchFilter

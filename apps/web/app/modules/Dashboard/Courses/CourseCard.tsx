@@ -22,7 +22,7 @@ const CourseCard = ({
       to={href}
       className="relative border border-primary-200 rounded-lg"
     >
-      <div className="absolute top-4 left-4 right-4">
+      <div className="absolute top-4 left-4 right-4 flex">
         <CategoryChip category={category} />
       </div>
       <img
