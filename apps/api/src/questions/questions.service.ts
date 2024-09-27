@@ -14,7 +14,7 @@ import {
   questions,
   studentQuestionAnswers,
 } from "src/storage/schema";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { QuestionType } from "./schema/questionsSchema";
 import { StudentCompletedLessonItemsService } from "src/studentCompletedLessonItem/studentCompletedLessonItems.service";
 
@@ -139,7 +139,7 @@ export class QuestionsService {
       return await this.upsertAnswer(
         trx,
         questionData.questionId,
-        {},
+        [],
         userId,
         lastAnswerId,
       );
@@ -159,13 +159,10 @@ export class QuestionsService {
     if (!answers || answers.length !== answerQuestion.answer.length)
       throw new NotFoundException("Answers not found");
 
-    const studentAnswer = answers.reduce(
-      (acc, answer, index) => {
-        acc[`answer_${index + 1}`] = answer.answer;
-        return acc;
-      },
-      {} as Record<string, string>,
-    );
+    const studentAnswer = answers.reduce((acc, answer, index) => {
+      acc.push(`'answer_${index + 1}'`, `'${answer.answer}'`);
+      return acc;
+    }, [] as string[]);
 
     await this.upsertAnswer(
       trx,
@@ -188,7 +185,15 @@ export class QuestionsService {
         "Answer is required for open answer question and must be a string",
       );
 
-    const studentAnswer = { answer_1: answerQuestion.answer };
+    if (answerQuestion.answer.length < 1) {
+      if (!lastAnswerId) return;
+
+      return await trx
+        .delete(studentQuestionAnswers)
+        .where(eq(studentQuestionAnswers.id, lastAnswerId));
+    }
+
+    const studentAnswer = [`'answer_1'`, `'${answerQuestion.answer}'`];
 
     await this.upsertAnswer(
       trx,
@@ -202,14 +207,18 @@ export class QuestionsService {
   private async upsertAnswer(
     trx: any,
     questionId: string,
-    answer: Record<string, string>,
+    answer: string[],
     userId: string,
     answerId: string | null,
   ): Promise<void> {
+    const jsonBuildObjectArgs = answer.join(",");
+
     if (answerId) {
       await trx
         .update(studentQuestionAnswers)
-        .set({ answer })
+        .set({
+          answer: sql`json_build_object(${sql.raw(jsonBuildObjectArgs)})`,
+        })
         .where(eq(studentQuestionAnswers.id, answerId));
       return;
     }
