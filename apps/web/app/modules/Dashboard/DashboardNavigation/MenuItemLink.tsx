@@ -9,9 +9,10 @@ export const MenuItemLink = memo(({ label, link, iconName }: LeafMenuItem) => (
     to={link}
     className={({ isActive }) =>
       cn(
-        "w-full h-full p-2 mt-3 flex items-center relative rounded-md transition-colors duration-300 text-neutral-900",
+        "w-full h-full p-2 [&:not(:first-child)]:mt-3 flex items-center relative rounded-md transition-colors duration-300 text-neutral-900",
         {
           "bg-primary-700 text-white": isActive,
+          "hover:bg-primary-50": !isActive,
         },
       )
     }

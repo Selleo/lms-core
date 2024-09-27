@@ -8,13 +8,12 @@ type MenuItemProps = {
 };
 
 export const MenuItem = memo(({ item }: MenuItemProps) => {
-
   if ("children" in item) {
     return (
       <li className="w-full my-2 h-8 p-2 mt-3">
         <div className="flex items-center border-b border-b-primary-200">
-          <Icon name={"Directory"} className="w-4 h-4 mr-2 text-neutral-900" />
-          <span className="block subtle text-neutral-900 capitalize  p-2">
+          <Icon name="Directory" className="w-4 h-4 mr-2 text-neutral-900" />
+          <span className="block subtle text-neutral-900 capitalize p-2">
             {item.label}
           </span>
         </div>

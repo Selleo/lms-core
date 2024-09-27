@@ -13,14 +13,14 @@ type CourseCardProps = Pick<
 
 const CourseCard = ({ href, title, category, imageUrl }: CourseCardProps) => {
   return (
-    <Link to={href} className="relative border border-primary-200 rounded-lg">
+    <Link to={href} className="relative border border-primary-200 hover:border-primary-500 transition rounded-lg">
       <div className="absolute top-4 left-4 right-4 flex">
         <CategoryChip category={category} />
       </div>
       <img
         src={imageUrl || "https://placehold.co/600x400/png"}
         alt="Course"
-        className="rounded-md aspect-video object-cover w-full"
+        className="rounded-t-lg aspect-video object-cover min-w-[calc(100%+2px)] mt-[-1px] mx-[-1px]"
         onError={(e) => {
           (e.target as HTMLImageElement).src = "https://picsum.photos/500/300";
         }}

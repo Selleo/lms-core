@@ -59,7 +59,7 @@ export default function Questions({
     }
   };
   return (
-    <Card className="flex flex-col gap-2 p-8">
+    <Card className="flex flex-col gap-2 p-8 border-none drop-shadow-primary">
       <div className="details text-primary-700 uppercase">{`question ${questionsArray.indexOf(questionId) + 1}`}</div>
       <div
         className="h6 text-neutral-950"

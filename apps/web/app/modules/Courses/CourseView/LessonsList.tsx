@@ -12,7 +12,7 @@ type LessonsListProps = {
 
 export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
   return (
-    <div className="grow flex flex-col rounded-2xl bg-white drop-shadow-xl relative p-8">
+    <div className="grow flex flex-col rounded-2xl bg-white drop-shadow-primary relative p-8">
       <h3 className="text-xl font-semibold mb-4">
         Lessons
         <span className="text-primary-700"> ({lessons.length})</span>
@@ -22,11 +22,12 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
         {lessons.map(({ description, imageUrl, title, id }, index) => (
           <Card
             key={index}
-            className={cn("w-full transition-opacity duration-500", {
+            className={cn("w-full transition border-primary-200", {
+              "hover:border-primary-500": isEnrolled,
               "opacity-60 cursor-not-allowed": !isEnrolled,
             })}
           >
-            <CardContent className="p-4">
+            <CardContent className="p-4 h-full">
               <Link to={`lesson/${id}`} className="flex flex-col h-full gap-4">
               <div className="relative">
                 <img

@@ -47,13 +47,11 @@ export default function LessonPage() {
         />
       ))}
       <div className="w-full flex gap-4 justify-end">
-        <Button className="bg-neutral-200">
-          <div className="body-sm-md text-primary-800 px-4">
-            Previous lesson
-          </div>
+        <Button variant="outline" className="w-[180px]">
+          Previous lesson
         </Button>
-        <Button>
-          <div className="body-sm-md text-white px-4">Next lesson</div>
+        <Button className="w-[180px]">
+          Next lesson
         </Button>
       </div>
     </>

@@ -102,7 +102,7 @@ export default function DashboardPage() {
           isLoading={isCategoriesLoading}
         />
       </div>
-      <div className="grid p-8 gap-6 grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5 bg-white rounded-lg">
+      <div className="grid p-8 gap-6 grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5 bg-white rounded-lg drop-shadow-primary">
         {!courses ||
           (isEmpty(courses) && (
             <div className="col-span-3 flex gap-8 ">

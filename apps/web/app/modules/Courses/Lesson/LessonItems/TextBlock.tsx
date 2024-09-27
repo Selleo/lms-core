@@ -11,7 +11,7 @@ type TProps = {
 
 export default function TextBlock({ content }: TProps) {
   return (
-    <Card className="flex flex-col gap-4 p-8">
+    <Card className="flex flex-col gap-4 p-8 border-none drop-shadow-primary">
       <div className="h6 text-neutral-950">{content.title}</div>
       <div
         className="text-neutral-900 body-base"

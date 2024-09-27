@@ -32,5 +32,9 @@ export default function LessonItemsSwitch({
   if ("url" in lessonItem.content)
     return <Files content={lessonItem.content} />;
 
-  return <div className="h4 text-center py-8">Unknown lesson item type</div>;
+  return (
+    <div className="h4 text-center py-8 border-none drop-shadow-primary">
+      Unknown lesson item type
+    </div>
+  );
 }
