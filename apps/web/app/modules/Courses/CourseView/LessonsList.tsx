@@ -1,9 +1,9 @@
 import { Link } from "@remix-run/react";
-import { GetCourseResponse } from "~/api/generated-api";
+import type { GetCourseResponse } from "~/api/generated-api";
 import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { CaretRight } from "~/assets/svgs";
-
+import { useUserRole } from "~/hooks/useUserRole";
 
 type LessonsListProps = {
   lessons: GetCourseResponse["data"]["lessons"];
@@ -11,6 +11,8 @@ type LessonsListProps = {
 };
 
 export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
+  const { isAdmin } = useUserRole();
+
   return (
     <div className="grow flex flex-col rounded-2xl bg-white drop-shadow-primary relative p-8">
       <h3 className="text-xl font-semibold mb-4">
@@ -77,7 +79,14 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                   to={`lesson/${id}`}
                   className="text-primary-700 text-xs mt-auto self-start font-medium"
                 >
-                  Read more <CaretRight className="w-3 h-3 inline-block text-primary-700" />
+                  {isAdmin ? (
+                    "Lesson preview"
+                  ) : isEnrolled ? (
+                    <>
+                      Read more{" "}
+                      <CaretRight className="w-3 h-3 inline-block text-primary-700" />
+                    </>
+                  ) : null}
                 </Link>
               </div>
               </Link>

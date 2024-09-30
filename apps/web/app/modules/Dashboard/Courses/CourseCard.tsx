@@ -1,12 +1,13 @@
 import { Link } from "@remix-run/react";
-import { GetAllCoursesResponse } from "~/api/generated-api";
+import type { GetAllCoursesResponse } from "~/api/generated-api";
 import { Button } from "~/components/ui/button";
 import { CategoryChip } from "~/components/ui/CategoryChip";
+import { useUserRole } from "~/hooks/useUserRole";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
   CourseType,
-  "title" | "category" | "courseLessonCount" | "imageUrl" | "description"
+  "title" | "category" | "courseLessonCount" | "imageUrl" | "description" | "enrolled"
 > & {
   href: string;
 };
@@ -17,7 +18,10 @@ const CourseCard = ({
   description,
   category,
   imageUrl,
+  enrolled,
 }: CourseCardProps) => {
+  const { isAdmin } = useUserRole();
+
   return (
     <Link
       to={href}
@@ -43,7 +47,9 @@ const CourseCard = ({
             <div dangerouslySetInnerHTML={{ __html: description }} />
           </span>
         </div>
-        <Button className="w-full mt-auto">Enroll</Button>
+        <Button className="w-full mt-auto">
+          {isAdmin || enrolled ? "View" : "Enroll"}
+        </Button>
       </div>
     </Link>
   );

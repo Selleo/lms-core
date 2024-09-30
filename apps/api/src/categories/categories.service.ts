@@ -2,12 +2,15 @@ import { count, like } from "drizzle-orm";
 import { Inject, Injectable } from "@nestjs/common";
 
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import { AllCategoriesResponse } from "./schemas/category.schema";
+import type { AllCategoriesResponse } from "./schemas/category.schema";
 import { categories } from "src/storage/schema";
-import { CategoriesQuery } from "./api/categories.types";
-import { CategorySortFields, CategorySortField } from "./schemas/categoryQuery";
-import { DatabasePg, Pagination } from "src/common";
-import { UserRole, UserRoles } from "src/users/schemas/user-roles";
+import type { CategoriesQuery } from "./api/categories.types";
+import {
+  type CategorySortField,
+  CategorySortFields,
+} from "./schemas/categoryQuery";
+import type { DatabasePg, Pagination } from "src/common";
+import { type UserRole, UserRoles } from "src/users/schemas/user-roles";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 
 @Injectable()

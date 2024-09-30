@@ -8,11 +8,12 @@ import {
 } from "~/api/queries/useCategories";
 import { coursesQueryOptions, useCourses } from "~/api/queries/useCourses";
 import { queryClient } from "~/api/queryClient";
-import { SortOption } from "~/types/sorting";
+import type { SortOption } from "~/types/sorting";
 import Loader from "../common/Loader/Loader";
 import SearchFilter from "../common/SearchFilter/SearchFilter";
 import CourseCard from "./Courses/CourseCard";
 import { Icon } from "~/components/Icon";
+import { useCurrentUser } from "~/api/queries/useCurrentUser";
 
 type State = {
   searchTitle: string | undefined;
@@ -56,6 +57,7 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function DashboardPage() {
+  const { data } = useCurrentUser();
   const [state, dispatch] = useReducer(reducer, {
     searchTitle: undefined,
     sort: undefined,
@@ -66,6 +68,7 @@ export default function DashboardPage() {
     title: state.searchTitle,
     category: state.category,
     sort: state.sort,
+    userId: data?.id,
   });
 
   const { data: categories, isLoading: isCategoriesLoading } =
@@ -134,17 +137,19 @@ export default function DashboardPage() {
               courseLessonCount,
               id,
               imageUrl,
+              enrolled,
             }) => (
               <CourseCard
-                category={category}
-                courseLessonCount={courseLessonCount}
-                description={description}
-                href={`/course/${id}`}
-                imageUrl={imageUrl}
                 key={id}
                 title={title}
+                imageUrl={imageUrl}
+                description={description}
+                href={`/course/${id}`}
+                category={category}
+                courseLessonCount={courseLessonCount}
+                enrolled={enrolled}
               />
-            )
+            ),
           )}
       </div>
     </div>

@@ -1,12 +1,13 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
-import { GetAllCoursesResponse } from "../generated-api";
-import { SortOption } from "~/types/sorting";
+import type { GetAllCoursesResponse } from "../generated-api";
+import type { SortOption } from "~/types/sorting";
 
 type CourseParams = {
   title?: string;
   category?: string;
   sort?: SortOption;
+  userId?: string;
 };
 
 export const coursesQueryOptions = (searchParams?: CourseParams) => ({
@@ -18,8 +19,8 @@ export const coursesQueryOptions = (searchParams?: CourseParams) => ({
       ...(searchParams?.title && { title: searchParams.title }),
       ...(searchParams?.category && { category: searchParams.category }),
       ...(searchParams?.sort && { sort: searchParams.sort }),
+      ...(searchParams?.userId && { userId: searchParams.userId }),
     });
-
     return response.data;
   },
   select: (data: GetAllCoursesResponse) => data.data,

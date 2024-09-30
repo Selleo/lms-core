@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { and, eq, sql } from "drizzle-orm";
-import { DatabasePg } from "src/common";
+import type { DatabasePg } from "src/common";
 import {
   courseLessons,
   files,
@@ -17,14 +17,14 @@ import {
   studentQuestionAnswers,
   textBlocks,
 } from "src/storage/schema";
-import { LessonItemResponse } from "./schemas/lessonItem.schema";
+import type { LessonItemResponse } from "./schemas/lessonItem.schema";
 import { match, P } from "ts-pattern";
 
 @Injectable()
 export class LessonsService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  async getLesson(id: string, userId: string) {
+  async getLesson(id: string, userId: string, isAdmin?: boolean) {
     const [accessCourseLessons] = await this.db
       .select({
         id: lessons.id,
@@ -47,8 +47,10 @@ export class LessonsService {
         ),
       );
 
-    if (!accessCourseLessons)
-      throw new UnauthorizedException("You don't have access to this lesson");
+    if (!isAdmin) {
+      if (!accessCourseLessons)
+        throw new UnauthorizedException("You don't have access to this lesson");
+    }
 
     const [lesson] = await this.db
       .select({

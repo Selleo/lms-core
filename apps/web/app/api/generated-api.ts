@@ -197,6 +197,7 @@ export interface GetAllCoursesResponse {
     author: string;
     category: string;
     courseLessonCount: number;
+    enrolled: boolean;
     enrolledParticipantCount: number;
   }[];
   pagination: {
@@ -216,6 +217,7 @@ export interface GetStudentCoursesResponse {
     author: string;
     category: string;
     courseLessonCount: number;
+    enrolled: boolean;
     enrolledParticipantCount: number;
   }[];
   pagination: {

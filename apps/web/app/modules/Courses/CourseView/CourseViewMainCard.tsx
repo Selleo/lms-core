@@ -1,5 +1,5 @@
 import { Button } from "~/components/ui/button";
-import { GetCourseResponse } from "~/api/generated-api";
+import type { GetCourseResponse } from "~/api/generated-api";
 import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
 import {
   isRouteErrorResponse,
@@ -14,6 +14,7 @@ import { courseQueryOptions } from "~/api/queries/useCourse";
 import { toast } from "~/components/ui/use-toast";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { cn } from "~/lib/utils";
+import { useUserRole } from "~/hooks/useUserRole";
 
 export const CourseViewMainCard = ({
   course,
@@ -31,6 +32,7 @@ export const CourseViewMainCard = ({
   const { mutateAsync: enrollCourse } = useEnrollCourse();
   const { mutateAsync: unenrollCourse } = useUnenrollCourse();
   const { id: courseId } = useParams<{ id: string }>();
+  const { isAdmin } = useUserRole();
 
   if (!courseId) {
     toast({
@@ -98,25 +100,27 @@ export const CourseViewMainCard = ({
           </p>
         </div>
         <div className="mt-auto">
-          {isEnrolled && (
+          {!isAdmin && isEnrolled && (
             <Link to="#">
               <Button className="mt-4 w-full bg-secondary-500 text-white py-2 rounded-lg">
                 Continue
               </Button>
             </Link>
           )}
-          <Button
-            className={cn(
-              "w-full bg-secondary-500 text-white py-2 rounded-lg",
-              {
-                "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
-                  isEnrolled,
-              }
-            )}
-            onClick={!isEnrolled ? handleEnroll : handleUnenroll}
-          >
-            {isEnrolled ? "Unenroll" : "Enroll"}
-          </Button>
+          {!isAdmin && (
+              <Button
+                  className={cn(
+                      "w-full bg-secondary-500 text-white py-2 rounded-lg",
+                      {
+                          "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
+                          isEnrolled,
+                      }
+                  )}
+                  onClick={!isEnrolled && !isAdmin ? handleEnroll : handleUnenroll}
+              >
+                  {isEnrolled && !isAdmin ? "Unenroll" : "Enroll"}
+              </Button>
+          )}
         </div>
       </div>
     </div>
