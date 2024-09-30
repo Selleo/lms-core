@@ -1,7 +1,11 @@
 import { GetLessonResponse } from "~/api/generated-api";
-import Files from "./Files";
 import Questions from "./Questions";
 import TextBlock from "./TextBlock";
+import Files from "./Files";
+import type { UseFormRegister } from "react-hook-form";
+import type { TQuestionsForm } from "../types";
+import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 
 type LessonItemType = GetLessonResponse["data"]["lessonItems"][number];
 
@@ -30,4 +34,16 @@ export default function LessonItemsSwitch({
       Unknown lesson item type
     </div>
   );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  if (isRouteErrorResponse(error)) {
+    return <CustomErrorBoundary stack={error.data} />;
+  } else if (error instanceof Error) {
+    return <CustomErrorBoundary stack={error.stack} />;
+  } else {
+    return <CustomErrorBoundary />;
+  }
 }

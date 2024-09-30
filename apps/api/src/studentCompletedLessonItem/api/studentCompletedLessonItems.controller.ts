@@ -15,15 +15,23 @@ export class StudentCompletedLessonItemsController {
   @Validate({
     request: [
       { type: "query", name: "id", schema: UUIDSchema, required: true },
+      {
+        type: "query",
+        name: "lessonId",
+        schema: UUIDSchema,
+        required: true,
+      },
     ],
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async markLessonItemAsCompleted(
     @Query("id") id: string,
+    @Query("lessonId") lessonId: string,
     @CurrentUser() currentUser: { userId: string },
   ): Promise<BaseResponse<{ message: string }>> {
     await this.studentCompletedLessonItemsService.markLessonItemAsCompleted(
       id,
+      lessonId,
       currentUser.userId,
     );
 

@@ -984,6 +984,15 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
           }
         ],
         "responses": {

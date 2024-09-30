@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useIsMount } from "~/hooks/useIsMount";
+import { useEffect, useCallback } from "react";
 import { useQuestionAnswer } from "~/api/mutations/useQuestion";
 
 type TProps = {
@@ -17,41 +16,32 @@ export const useQuestionQuery = ({
   selectedOption,
   isOpenAnswer,
 }: TProps) => {
-  const isMount = useIsMount();
-
   const { mutateAsync: answerQuestion } = useQuestionAnswer();
 
-  useEffect(() => {
-    const sendOpenAnswer = async () => {
+  console.log({ questionId, lessonId });
+
+  const sendAnswer = useCallback(async () => {
+    const answer = isOpenAnswer ? openQuestion : selectedOption;
+    if (
+      (isOpenAnswer && openQuestion !== "") ||
+      (!isOpenAnswer && selectedOption.length > 0)
+    ) {
       await answerQuestion({
         lessonId,
         questionId,
-        answer: openQuestion,
+        answer,
       });
-    };
-
-    const sendAnswer = async () => {
-      await answerQuestion({
-        lessonId,
-        questionId,
-        answer: selectedOption,
-      });
-    };
-
-    if (isMount) {
-      if (isOpenAnswer) {
-        sendOpenAnswer();
-      } else {
-        sendAnswer();
-      }
     }
   }, [
     answerQuestion,
-    isMount,
     isOpenAnswer,
     lessonId,
     openQuestion,
     questionId,
     selectedOption,
   ]);
+
+  useEffect(() => {
+    sendAnswer();
+  }, [sendAnswer]);
 };
