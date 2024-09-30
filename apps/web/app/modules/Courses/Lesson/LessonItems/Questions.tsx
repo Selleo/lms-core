@@ -125,9 +125,7 @@ export default function Questions({ content, questionsArray }: TProps) {
                   readOnly
                   type="radio"
                   value={answer.id}
-                  {...register(
-                    `singleAnswerQuestions.${questionId}.${answer.id}`
-                  )}
+                  {...register(`singleAnswerQuestions.${questionId}`)}
                 />
               ) : (
                 <Input

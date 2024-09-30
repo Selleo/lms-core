@@ -1,5 +1,6 @@
 import type { GetLessonResponse } from "~/api/generated-api";
-import type { TQuestionContent, TQuestionsForm } from "./types";
+import type { Content, QuestionContent, TQuestionsForm } from "./types";
+
 export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
   const lessonItems = lesson.lessonItems;
   return lessonItems
@@ -38,7 +39,7 @@ export const getUserAnswers = (
 ): TQuestionsForm => {
   const allQuestions = lesson.lessonItems
     .filter((lesson) => lesson.lessonItemType === "question")
-    .map((item) => item.content as TQuestionContent);
+    .map((item) => item.content as QuestionContent);
 
   const singleQuestionsFromApi = allQuestions.filter(
     (question) => question.questionType === "single_choice"
@@ -52,8 +53,8 @@ export const getUserAnswers = (
     (question) => question.questionType === "open_answer"
   );
 
-  const singleAnswerQuestions = prepareQuestions(singleQuestionsFromApi);
-  const multiAnswerQuestions = prepareQuestions(multiQuestionsFromApi);
+  const singleAnswerQuestions = prepareSingleQuestions(singleQuestionsFromApi);
+  const multiAnswerQuestions = prepareMultiQuestions(multiQuestionsFromApi);
   const openQuestions = prepareOpenQuestions(openQuestionsFromApi);
 
   return {
@@ -63,21 +64,36 @@ export const getUserAnswers = (
   };
 };
 
-const prepareQuestions = (
-  questions: TQuestionContent[]
-): { [key: string]: string | null } =>
+const prepareSingleQuestions = (
+  questions: QuestionContent[]
+): { [key: string]: string } =>
   questions.reduce(
     (acc, question) => {
-      acc[question.id] =
-        question.questionAnswers.find((answer) => answer.isStudentAnswer)?.id ||
-        null;
+      const selectedAnswer = question.questionAnswers.find(
+        (answer) => answer.isStudentAnswer
+      );
+      acc[question.id] = selectedAnswer ? selectedAnswer.id : "";
       return acc;
     },
-    {} as { [key: string]: string | null }
+    {} as { [key: string]: string }
+  );
+
+const prepareMultiQuestions = (
+  questions: QuestionContent[]
+): { [key: string]: { [key: string]: boolean } } =>
+  questions.reduce(
+    (acc, question) => {
+      acc[question.id] = {};
+      question.questionAnswers.forEach((answer) => {
+        acc[question.id][answer.id] = answer.isStudentAnswer || false;
+      });
+      return acc;
+    },
+    {} as { [key: string]: { [key: string]: boolean } }
   );
 
 const prepareOpenQuestions = (
-  questions: TQuestionContent[]
+  questions: QuestionContent[]
 ): { [key: string]: string } =>
   questions.reduce(
     (acc, question) => {
