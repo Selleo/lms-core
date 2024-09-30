@@ -1,10 +1,10 @@
 import { useParams } from "@remix-run/react";
-import { useForm, FormProvider } from "react-hook-form";
-import { Button } from "~/components/ui/button";
+import { FormProvider, useForm } from "react-hook-form";
 import { useLessonSuspense } from "~/api/queries/useLesson";
-import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
+import { Button } from "~/components/ui/button";
 import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 import type { TQuestionsForm } from "./types";
+import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
 
 export default function LessonPage() {
   const { lessonId } = useParams();

@@ -1,5 +1,5 @@
 import type { GetLessonResponse } from "~/api/generated-api";
-import type { Content, QuestionContent, TQuestionsForm } from "./types";
+import type { QuestionContent, TQuestionsForm } from "./types";
 
 export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
   const lessonItems = lesson.lessonItems;
