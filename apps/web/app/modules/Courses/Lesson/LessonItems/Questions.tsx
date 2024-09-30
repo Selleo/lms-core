@@ -1,13 +1,13 @@
+import { useParams } from "@remix-run/react";
+import { useState, useEffect } from "react";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { useState } from "react";
-import { useParams } from "@remix-run/react";
 import { useQuestionQuery } from "./useQuestionQuery";
 
+import { useFormContext } from "react-hook-form";
 import type { TQuestionsForm } from "../types";
-import type { UseFormRegister } from "react-hook-form";
 
 type TProps = {
   content: {
@@ -21,15 +21,11 @@ type TProps = {
     }[];
   };
   questionsArray: string[];
-  register: UseFormRegister<TQuestionsForm>;
 };
 
-export default function Questions({
-  content,
-  questionsArray,
-  register,
-}: TProps) {
+export default function Questions({ content, questionsArray }: TProps) {
   const { lessonId } = useParams();
+  const { register, watch, setValue } = useFormContext<TQuestionsForm>();
 
   if (!lessonId) throw new Error("Lesson ID not found");
 
@@ -47,17 +43,48 @@ export default function Questions({
     isOpenAnswer,
   });
 
+  useEffect(() => {
+    if (isOpenAnswer) {
+      const savedOpenAnswer = watch(`openQuestions.${questionId}`);
+      if (savedOpenAnswer) {
+        setOpenQuestion(savedOpenAnswer);
+      }
+    } else if (isSingleQuestion) {
+      const savedSingleAnswer = watch(`singleAnswerQuestions.${questionId}`);
+      if (savedSingleAnswer) {
+        setSelectedOption([savedSingleAnswer]);
+      }
+    } else {
+      const savedMultiAnswer = watch(`multiAnswerQuestions.${questionId}`);
+      if (savedMultiAnswer) {
+        const selectedAnswers = Object.entries(savedMultiAnswer)
+          .filter(([_, value]) => value === true)
+          .map(([key]) => key);
+        setSelectedOption(selectedAnswers);
+      }
+    }
+  }, [isOpenAnswer, isSingleQuestion, questionId, watch]);
+
   const handleClick = async (id: string) => {
     if (isSingleQuestion) {
       setSelectedOption([id]);
+      setValue(`singleAnswerQuestions.${questionId}`, id);
     } else {
+      let newSelectedOptions: string[];
       if (selectedOption.includes(id)) {
-        setSelectedOption(selectedOption.filter((option) => option !== id));
+        newSelectedOptions = selectedOption.filter((option) => option !== id);
       } else {
-        setSelectedOption([...selectedOption, id]);
+        newSelectedOptions = [...selectedOption, id];
       }
+      setSelectedOption(newSelectedOptions);
+      const updatedMultiAnswer = {
+        ...watch(`multiAnswerQuestions.${questionId}`),
+      };
+      updatedMultiAnswer[id] = !updatedMultiAnswer[id];
+      setValue(`multiAnswerQuestions.${questionId}`, updatedMultiAnswer);
     }
   };
+
   return (
     <Card className="flex flex-col gap-2 p-8">
       <div className="details text-primary-700 uppercase">{`question ${questionsArray.indexOf(questionId) + 1}`}</div>
@@ -74,6 +101,11 @@ export default function Questions({
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
+            value={openQuestion}
+            onChange={(e) => {
+              setOpenQuestion(e.target.value);
+              setValue(`openQuestions.${questionId}`, e.target.value);
+            }}
             onBlur={(e) => setOpenQuestion(e.target.value)}
             placeholder="Type your answer here"
             rows={5}
