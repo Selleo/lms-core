@@ -16,7 +16,7 @@ import { questionsConfigOptions } from "../adminResourceOptions/questionsOptions
 import { questionAnswerConfigOptions } from "../adminResourceOptions/questionAnswerOptions.js";
 import { textBlocksConfigOptions } from "../adminResourceOptions/textBlocksOptions.js";
 import { usersConfigOptions } from "../adminResourceOptions/usersOptions.js";
-import { componentLoader } from "../components/index.js";
+import { componentLoader, Components } from "../components/index.js";
 import { env } from "../env.js";
 import { setOneToManyRelation } from "../utils/setOneToManyRelation.js";
 import { DatabaseService } from "./database.js";
@@ -127,10 +127,6 @@ export class AdminApp {
             ...coursesConfigOptions,
           },
           features: [
-            // setOneToManyRelation({
-            //   resourceId: "course_lessons",
-            //   joinKey: "course_id",
-            // }),
             setManyToManyRelation({
               resourceId: "lessons",
               joinKey: "course_id",
@@ -239,6 +235,9 @@ export class AdminApp {
           },
         },
       ],
+      dashboard: {
+        component: Components.Dashboard,
+      },
       componentLoader,
       rootPath: "/admin",
     });
@@ -285,9 +284,6 @@ export class AdminApp {
     this.app.use(express.static("assets"));
     this.app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //only for dev test
     this.app.use(admin.options.rootPath, adminRouter);
-    this.app.get(admin.options.rootPath, (req, res) => {
-      res.redirect(`/resources/users`);
-    });
 
     this.app.listen(8888, () => {
       console.log(
