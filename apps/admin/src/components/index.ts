@@ -3,23 +3,24 @@ import { ComponentLoader } from "adminjs";
 const componentLoader = new ComponentLoader();
 
 const Components = {
-  ArchiveShow: componentLoader.add("ArchiveShow", "./show/ArchiveShow"),
-  StatusListValue: componentLoader.add(
-    "StatusListValue",
-    "./custom/StatusListValue",
-  ),
   ArchiveList: componentLoader.add("ArchiveList", "./list/ArchiveList"),
-  FilterSelect: componentLoader.add("FilterSelect", "./filters/FilterSelect"),
+  ArchiveShow: componentLoader.add("ArchiveShow", "./show/ArchiveShow"),
   AuthorId: componentLoader.add("AuthorId", "./custom/AuthorId"),
-  LessonItems: componentLoader.add("LessonItems", "./custom/LessonItems"),
-  PhotoPreview: componentLoader.add("PhotoPreview", "./photo/PhotoPreview"),
-  FilesPreview: componentLoader.add("FilesPreview", "./custom/FilesPreview"),
+  BlankInfo: componentLoader.add("BlankInfo", "./edit/BlankInfo"),
   BodyTextCounter: componentLoader.add(
     "BodyTextCounter",
     "./custom/BodyTextCounter",
   ),
+  Dashboard: componentLoader.add("Dashboard", "./custom/Dashboard"),
+  FilesPreview: componentLoader.add("FilesPreview", "./custom/FilesPreview"),
+  FilterSelect: componentLoader.add("FilterSelect", "./filters/FilterSelect"),
+  LessonItems: componentLoader.add("LessonItems", "./custom/LessonItems"),
+  PhotoPreview: componentLoader.add("PhotoPreview", "./photo/PhotoPreview"),
   QuestionId: componentLoader.add("QuestionId", "./custom/QuestionId"),
-  BlankInfo: componentLoader.add("BlankInfo", "./edit/BlankInfo"),
+  StatusListValue: componentLoader.add(
+    "StatusListValue",
+    "./custom/StatusListValue",
+  ),
 };
 
 export { componentLoader, Components };

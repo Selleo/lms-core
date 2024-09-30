@@ -20,7 +20,6 @@
     "@babel/plugin-syntax-import-assertions": "^7.24.7",
     "@repo/ui": "workspace:*",
     "@repo/email-templates": "workspace:*",
-    "@repo/ui": "workspace:*",
     "@sinclair/typebox": "^0.32.34",
     "@types/bcrypt": "^5.0.2",
     "adminjs": "^7.8.11",
