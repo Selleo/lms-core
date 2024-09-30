@@ -1,23 +1,24 @@
+import { GetLessonResponse } from "~/api/generated-api";
+
 export type TQuestionsForm = {
-  openQuestions?: {
+  openQuestions: {
     [key: string]: string;
   };
-  singleAnswerQuestions?: {
-    [key: string]: string | null;
+  singleAnswerQuestions: {
+    [key: string]: string;
   };
-  multiAnswerQuestions?: {
-    [key: string]: string | null;
+  multiAnswerQuestions: {
+    [key: string]: {
+      [key: string]: boolean;
+    };
   };
 };
 
-export type TQuestionData = {
-  lessonId: string;
-  questionId: string;
-  answer: string[] | string;
-};
+export type LessonItem = GetLessonResponse["data"]["lessonItems"][number];
+export type Content = LessonItem["content"];
 
-export type TAnswerObject =
-  | {
-      [key: string]: string | null;
-    }
-  | string;
+type ExtractQuestionContent<T> = T extends { questionAnswers: infer QA }
+  ? T & { questionAnswers: QA }
+  : never;
+
+export type QuestionContent = ExtractQuestionContent<Content>;

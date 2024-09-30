@@ -1,25 +1,10 @@
-import { ClientLoaderFunctionArgs, useParams } from "@remix-run/react";
-import { courseQueryOptions } from "~/api/queries/useCourse";
-import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
-import { MetaFunction } from "@remix-run/node";
-import { queryClient } from "~/api/queryClient";
-import { getOrderedLessons, getQuestionsArray } from "./utils";
-import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
+import { useParams } from "@remix-run/react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useLessonSuspense } from "~/api/queries/useLesson";
 import { Button } from "~/components/ui/button";
-import { useForm } from "react-hook-form";
+import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 import type { TQuestionsForm } from "./types";
-
-export const meta: MetaFunction = () => {
-  return [{ title: "Lesson" }, { name: "description", content: "lesson" }];
-};
-
-export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
-  const courseId = params.courseId;
-  const lessonId = params.lessonId;
-  courseId && (await queryClient.prefetchQuery(courseQueryOptions(courseId)));
-  lessonId && (await queryClient.prefetchQuery(lessonQueryOptions(lessonId)));
-  return null;
-};
+import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
 
 export default function LessonPage() {
   const { lessonId } = useParams();
@@ -29,21 +14,21 @@ export default function LessonPage() {
     throw new Error(`Lesson with id: ${lessonId} not found`);
   }
 
-  const { register } = useForm<TQuestionsForm>({
+  const methods = useForm<TQuestionsForm>({
     mode: "onChange",
+    defaultValues: getUserAnswers(data),
   });
 
   const orderedLessonsItems = getOrderedLessons(data);
   const questionsArray = getQuestionsArray(orderedLessonsItems);
 
   return (
-    <>
+    <FormProvider {...methods}>
       {orderedLessonsItems.map((lessonItem) => (
         <LessonItemsSwitch
           key={lessonItem.content.id}
           lessonItem={lessonItem}
           questionsArray={questionsArray}
-          register={register}
         />
       ))}
       <div className="w-full flex gap-4 justify-end">
@@ -54,6 +39,6 @@ export default function LessonPage() {
           Next lesson
         </Button>
       </div>
-    </>
+    </FormProvider>
   );
 }

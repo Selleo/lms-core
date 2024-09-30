@@ -193,6 +193,7 @@ export interface GetAllCoursesResponse {
     id: string;
     title: string;
     imageUrl: string | null;
+    description: string;
     author: string;
     category: string;
     courseLessonCount: number;
@@ -211,6 +212,7 @@ export interface GetStudentCoursesResponse {
     id: string;
     title: string;
     imageUrl: string | null;
+    description: string;
     author: string;
     category: string;
     courseLessonCount: number;
@@ -273,6 +275,7 @@ export interface GetLessonResponse {
               id: string;
               optionText: string;
               position: number | null;
+              isStudentAnswer: boolean;
             }[];
           }
         | {
@@ -302,6 +305,12 @@ export interface AnswerQuestionBody {
 }
 
 export interface AnswerQuestionResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface MarkLessonItemAsCompletedResponse {
   data: {
     message: string;
   };
@@ -940,6 +949,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StudentCompletedLessonItemsControllerMarkLessonItemAsCompleted
+     * @request POST:/api/studentCompletedLessonItems
+     */
+    studentCompletedLessonItemsControllerMarkLessonItemAsCompleted: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<MarkLessonItemAsCompletedResponse, any>({
+        path: `/api/studentCompletedLessonItems`,
+        method: "POST",
+        query: query,
         format: "json",
         ...params,
       }),
