@@ -55,7 +55,7 @@ export const CourseViewMainCard = ({
   };
 
   return (
-    <div className="md:w-[380px]  xl:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-xl relative">
+    <div className="md:w-[380px] xl:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-primary relative">
       <div className="absolute top-4 left-4 right-4">
         <CategoryChip category={category} />
       </div>
@@ -109,7 +109,7 @@ export const CourseViewMainCard = ({
             className={cn(
               "w-full bg-secondary-500 text-white py-2 rounded-lg",
               {
-                "bg-white border border-neutral-500 text-neutral-900 w-full mt-3":
+                "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
                   isEnrolled,
               }
             )}

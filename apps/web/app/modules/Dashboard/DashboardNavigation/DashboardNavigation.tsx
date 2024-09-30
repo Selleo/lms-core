@@ -35,7 +35,8 @@ const menuItems: MenuItemType[] = [
     link: "/",
     roles: ["admin", "student"],
     iconName: "Dashboard",
-  },{
+  },
+  {
     label: "settings",
     link: "/settings",
     roles: ["admin", "student"],
@@ -58,45 +59,43 @@ export function DashboardNavigation() {
   }
 
   return (
-    <aside className="w-[240px] bg-muted/40 flex flex-col bg-white border-r border-r-primary-200">
-      <div className="py-9 w-full flex justify-center border-b-primary-200 border-b">
+    <aside className="w-[240px] bg-muted/40 flex flex-col gap-4 bg-white p-4 drop-shadow-primary">
+      <div className="py-8 w-full flex justify-center border-b-primary-200 border-b">
         <SelleoLogo />
       </div>
 
-      <div className="flex flex-col mx-5">
-        <div className="my-9 p-[18px] max-w-[268px] bg-primary-50 rounded-md w-full flex items-center justify-between">
-          <div className="flex gap-x-2 min-w-0">
-            <Avatar>
-              <AvatarImage src="https://ui-avatars.com/api/?name=User" />
-              <AvatarFallback>
-                {firstName[0]}
-                {lastName[0]}
-              </AvatarFallback>
-            </Avatar>
-            <hgroup className="flex flex-col subtle min-w-0">
-              <h2 className="text-neutral-900">
-                {firstName} {lastName}
-              </h2>
-              <p className="text-neutral-500 truncate min-w-0">{email}</p>
-            </hgroup>
-          </div>
-        </div>
-
+      <div className="flex flex-col h-full">
         <nav>
           <ul className="flex flex-col items-center">
             {authorizedMenuItems.map((item) => (
               <MenuItem key={item.label} item={item} />
-
             ))}
           </ul>
-
         </nav>
       </div>
 
-      <div className="flex items-center border-t border-t-primary-200 w-full mt-auto">
+      <div className="p-[18px] max-w-[268px] bg-primary-50 rounded-md w-full flex items-center justify-between mt-auto">
+        <div className="flex gap-x-2 min-w-0">
+          <Avatar>
+            <AvatarImage src="https://ui-avatars.com/api/?name=User" />
+            <AvatarFallback>
+              {firstName[0]}
+              {lastName[0]}
+            </AvatarFallback>
+          </Avatar>
+          <hgroup className="flex flex-col subtle min-w-0">
+            <h2 className="text-neutral-900">
+              {firstName} {lastName}
+            </h2>
+            <p className="text-neutral-500 truncate min-w-0">{email}</p>
+          </hgroup>
+        </div>
+      </div>
+
+      <div className="flex items-center border-t border-t-primary-200 w-full pt-4">
         <button
           onClick={() => logout()}
-          className="flex items-center rounded-md hover:bg-primary-50 subtle font-md gap-x-2 w-full mx-5 px-2 py-4"
+          className="flex items-center rounded-md hover:bg-primary-50 subtle font-md gap-x-2 w-full p-2"
         >
           <Icon name="Logout" className="w-4 h-4" />
           <span className="subtle text-neutral-900">Log Out</span>
