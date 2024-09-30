@@ -1932,6 +1932,12 @@
                     "content"
                   ]
                 }
+              },
+              "itemsCount": {
+                "type": "number"
+              },
+              "itemsCompletedCount": {
+                "type": "number"
               }
             },
             "required": [
@@ -1939,7 +1945,9 @@
               "title",
               "imageUrl",
               "description",
-              "lessonItems"
+              "lessonItems",
+              "itemsCount",
+              "itemsCompletedCount"
             ]
           }
         },

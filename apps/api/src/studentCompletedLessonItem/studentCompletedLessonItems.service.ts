@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import { lessonItems, studentCompletedLessonItems } from "src/storage/schema";
@@ -15,15 +20,14 @@ export class StudentCompletedLessonItemsService {
     const [lessonItem] = await this.db
       .select()
       .from(lessonItems)
-      .where(
-        and(
-          eq(lessonItems.lessonItemId, id),
-          eq(lessonItems.lessonId, lessonId),
-        ),
-      );
+      .where(and(eq(lessonItems.id, id), eq(lessonItems.lessonId, lessonId)));
 
     if (!lessonItem) {
       throw new NotFoundException(`Lesson item with id ${id} not found`);
+    }
+
+    if (lessonItem.lessonItemType === "text_block") {
+      throw new ConflictException("Text block is not completable");
     }
 
     const [existingRecord] = await this.db
@@ -33,12 +37,13 @@ export class StudentCompletedLessonItemsService {
         and(
           eq(studentCompletedLessonItems.lessonItemId, lessonItem.id),
           eq(studentCompletedLessonItems.studentId, studentId),
+          eq(studentCompletedLessonItems.lessonId, lessonId),
         ),
       );
     if (existingRecord) return;
 
     await this.db
       .insert(studentCompletedLessonItems)
-      .values({ studentId, lessonItemId: lessonItem.id });
+      .values({ studentId, lessonItemId: lessonItem.id, lessonId });
   }
 }

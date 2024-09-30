@@ -14,6 +14,8 @@ export const allLessonsSchema = Type.Array(lessonSchema);
 export const showLessonSchema = Type.Object({
   ...lessonSchema.properties,
   lessonItems: Type.Array(lessonItemSchema),
+  itemsCount: Type.Number(),
+  itemsCompletedCount: Type.Number(),
 });
 
 export type LessonResponse = Static<typeof lessonSchema>;

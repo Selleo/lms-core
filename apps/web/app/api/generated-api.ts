@@ -293,6 +293,8 @@ export interface GetLessonResponse {
             url: string;
           };
     }[];
+    itemsCount: number;
+    itemsCompletedCount: number;
   };
 }
 

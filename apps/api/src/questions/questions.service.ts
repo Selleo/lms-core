@@ -60,7 +60,7 @@ export class QuestionsService {
       await handler(trx, questionData, answerQuestion, lastAnswerId, userId);
 
       await this.studentCompletedLessonItemsService.markLessonItemAsCompleted(
-        questionData.questionId,
+        questionData.lessonItemAssociationId,
         questionData.lessonId,
         userId,
       );

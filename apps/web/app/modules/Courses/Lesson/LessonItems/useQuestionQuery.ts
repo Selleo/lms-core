@@ -18,8 +18,6 @@ export const useQuestionQuery = ({
 }: TProps) => {
   const { mutateAsync: answerQuestion } = useQuestionAnswer();
 
-  console.log({ questionId, lessonId });
-
   const sendAnswer = useCallback(async () => {
     const answer = isOpenAnswer ? openQuestion : selectedOption;
     if (

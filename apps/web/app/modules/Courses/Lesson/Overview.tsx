@@ -9,7 +9,8 @@ export default function Overview() {
   const imageUrl = data.imageUrl ?? "https://placehold.co/320x180";
   const title = data.title;
   const description = data.description;
-  const lessonItemsCount = data.lessonItems.length;
+  const lessonItemsCount = data.itemsCount;
+  const lessonItemsCompletedCount = data.itemsCompletedCount;
 
   return (
     <Card className="w-full border-none drop-shadow-primary">
@@ -24,20 +25,22 @@ export default function Overview() {
         <div className="flex flex-col w-full">
           <div className="gap-2 flex flex-col">
             <p className="text-neutral-600 text-xs">
-              {`Lesson progress: 2/${lessonItemsCount}`}
+              {`Lesson progress: ${lessonItemsCompletedCount}/${lessonItemsCount}`}
             </p>
             <div className="flex justify-between items-center gap-px">
-              {Array.from({ length: 2 }).map((_, index) => (
+              {Array.from({
+                length: lessonItemsCompletedCount,
+              }).map((_, index) => (
                 <span
                   key={index}
                   className="h-[5px] flex-grow bg-secondary-500 rounded-[40px]"
                 />
               ))}
               {Array.from({
-                length: lessonItemsCount,
-              }).map((_, idx) => (
+                length: lessonItemsCount - lessonItemsCompletedCount,
+              }).map((_, index) => (
                 <span
-                  key={idx}
+                  key={index}
                   className="h-[5px] flex-grow bg-primary-50 rounded-[40px]"
                 />
               ))}
