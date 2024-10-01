@@ -1,6 +1,6 @@
 import { useParams } from "@remix-run/react";
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
-import { useCompletedPresentationsStore } from "./LessonItemStore";
+import { useCompletedLessonItemsStore } from "./LessonItemStore";
 
 type VideoProps = {
   url: string;
@@ -13,7 +13,7 @@ export default function Video({ url, videoId }: VideoProps) {
   const {
     isLessonItemCompleted: isVideoCompleted,
     markLessonItemAsCompleted: markVideoAsCompleted,
-  } = useCompletedPresentationsStore();
+  } = useCompletedLessonItemsStore();
 
   if (!lessonId) throw new Error("Lesson ID not found");
 
