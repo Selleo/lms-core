@@ -9,15 +9,18 @@ import {
   UUIDSchema,
 } from "src/common";
 import { CoursesService } from "../courses.service";
-import { AllCoursesResponse, allCoursesSchema } from "../schemas/course.schema";
 import {
-  CoursesFilterSchema,
-  SortCourseFieldsOptions,
+  type AllCoursesResponse,
+  allCoursesSchema,
+} from "../schemas/course.schema";
+import {
+  type CoursesFilterSchema,
+  type SortCourseFieldsOptions,
   sortCourseFieldsOptions,
 } from "../schemas/courseQuery";
-import { CurrentUser } from "../../common/decorators/user.decorator";
+import { CurrentUser } from "src/common/decorators/user.decorator";
 import {
-  CommonShowCourse,
+  type CommonShowCourse,
   commonShowCourseSchema,
 } from "../schemas/showCourseCommon.schema";
 import { Type } from "@sinclair/typebox";
@@ -49,6 +52,7 @@ export class CoursesController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
+    @CurrentUser("userId") currentUserId: string,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
@@ -59,9 +63,9 @@ export class CoursesController {
           ? [creationDateRangeStart, creationDateRangeEnd]
           : undefined,
     };
-    const query = { filters, page, perPage, sort };
+    const query = { filters, page, perPage, sort, currentUserId };
 
-    const data = await this.coursesService.getAllCourses(query);
+    const data = await this.coursesService.getAllCourses(query, currentUserId);
 
     return new PaginatedResponse(data);
   }

@@ -4,13 +4,15 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
-import { GetLessonResponse } from "../generated-api";
+import type { GetLessonResponse } from "../generated-api";
 
 export const lessonQueryOptions = (id: string) =>
   queryOptions({
     queryKey: ["lesson", id],
     queryFn: async () => {
-      const response = await ApiClient.api.lessonsControllerGetLesson({ id });
+      const response = await ApiClient.api.lessonsControllerGetLesson({
+        id,
+      });
       return response.data;
     },
     select: (data: GetLessonResponse) => data.data,

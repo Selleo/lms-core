@@ -15,12 +15,12 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import { CoursesQuery } from "./api/courses.types";
-import { DatabasePg, Pagination } from "src/common";
-import { AllCoursesResponse } from "./schemas/course.schema";
+import type { CoursesQuery } from "./api/courses.types";
+import type { DatabasePg, Pagination } from "src/common";
+import type { AllCoursesResponse } from "./schemas/course.schema";
 import {
-  CoursesFilterSchema,
-  CourseSortField,
+  type CoursesFilterSchema,
+  type CourseSortField,
   CourseSortFields,
 } from "./schemas/courseQuery";
 import {
@@ -39,7 +39,11 @@ export class CoursesService {
 
   async getAllCourses(
     query: CoursesQuery,
-  ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
+    userId: string,
+  ): Promise<{
+    data: AllCoursesResponse;
+    pagination: Pagination;
+  }> {
     const {
       sort = CourseSortFields.title,
       perPage = DEFAULT_PAGE_SIZE,
@@ -52,20 +56,29 @@ export class CoursesService {
 
     return this.db.transaction(async (tx) => {
       const queryDB = tx
-        .select(this.getSelectFiled())
+        .select({
+          ...this.getSelectFiled(),
+          enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+        })
         .from(courses)
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
-        .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
+        .leftJoin(
+          studentCourses,
+          and(
+            eq(courses.id, studentCourses.courseId),
+            eq(studentCourses.studentId, userId),
+          ),
+        )
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
         .where(and(...conditions))
         .groupBy(
           courses.id,
           courses.title,
           courses.imageUrl,
-          courses.description,
           users.firstName,
           users.lastName,
+          studentCourses.studentId,
           categories.title,
         )
         .orderBy(
@@ -125,7 +138,11 @@ export class CoursesService {
       conditions.push(...this.getFiltersConditions(filters));
 
       const queryDB = tx
-        .select(this.getSelectFiled())
+        .select({
+          ...this.getSelectFiled(),
+          enrolled: sql<boolean>`true`,
+          // enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+        })
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
@@ -139,6 +156,7 @@ export class CoursesService {
           courses.description,
           users.firstName,
           users.lastName,
+          studentCourses.studentId,
           categories.title,
         )
         .orderBy(
@@ -163,6 +181,7 @@ export class CoursesService {
           courses.description,
           users.firstName,
           users.lastName,
+          studentCourses.studentId,
           categories.title,
         );
 
@@ -204,12 +223,6 @@ export class CoursesService {
     if (!course) throw new NotFoundException("Course not found");
     if (!course.imageUrl) throw new ConflictException("Course has no image");
 
-    if (!course.enrolled)
-      return {
-        ...course,
-        lessons: [],
-      };
-
     const courseLessonList = await this.db
       .select({
         id: lessons.id,
@@ -223,7 +236,6 @@ export class CoursesService {
         and(
           eq(courseLessons.courseId, id),
           eq(lessons.archived, false),
-          eq(lessons.state, "published"),
           isNotNull(lessons.id),
           isNotNull(lessons.title),
           isNotNull(lessons.description),
@@ -308,10 +320,9 @@ export class CoursesService {
   private getSelectFiled() {
     return {
       id: courses.id,
-      creationDate: courses.createdAt,
+      description: sql<string>`${courses.description}`,
       title: courses.title,
       imageUrl: courses.imageUrl,
-      description: sql<string>`${courses.description}`,
       author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
       category: categories.title,
       courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,

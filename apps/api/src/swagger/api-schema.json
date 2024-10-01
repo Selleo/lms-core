@@ -1550,6 +1550,9 @@
                 "courseLessonCount": {
                   "type": "number"
                 },
+                "enrolled": {
+                  "type": "boolean"
+                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 }
@@ -1562,6 +1565,7 @@
                 "author",
                 "category",
                 "courseLessonCount",
+                "enrolled",
                 "enrolledParticipantCount"
               ]
             }
@@ -1628,6 +1632,9 @@
                 "courseLessonCount": {
                   "type": "number"
                 },
+                "enrolled": {
+                  "type": "boolean"
+                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 }
@@ -1640,6 +1647,7 @@
                 "author",
                 "category",
                 "courseLessonCount",
+                "enrolled",
                 "enrolledParticipantCount"
               ]
             }

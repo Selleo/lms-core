@@ -1,4 +1,4 @@
-import { Type, Static } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
 import { UUIDSchema } from "src/common";
 
 export const allCoursesSchema = Type.Array(
@@ -10,6 +10,7 @@ export const allCoursesSchema = Type.Array(
     author: Type.String(),
     category: Type.String(),
     courseLessonCount: Type.Number(),
+    enrolled: Type.Boolean(),
     enrolledParticipantCount: Type.Number(),
   }),
 );
