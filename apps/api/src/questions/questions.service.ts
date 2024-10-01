@@ -226,7 +226,7 @@ export class QuestionsService {
 
     await trx.insert(studentQuestionAnswers).values({
       questionId,
-      answer,
+      answer: sql`json_build_object(${sql.raw(jsonBuildObjectArgs)})`,
       studentId: userId,
     });
   }

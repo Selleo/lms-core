@@ -20,10 +20,14 @@ import {
 } from "src/storage/schema";
 import type { LessonItemResponse } from "./schemas/lessonItem.schema";
 import { match, P } from "ts-pattern";
+import { S3Service } from "src/file/s3.service";
 
 @Injectable()
 export class LessonsService {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private readonly s3Service: S3Service,
+  ) {}
 
   async getLesson(id: string, userId: string, isAdmin?: boolean) {
     const [accessCourseLessons] = await this.db
@@ -180,7 +184,9 @@ export class LessonsService {
               id: item.fileData.id,
               title: item.fileData.title,
               type: item.fileData.type,
-              url: item.fileData.url,
+              url: (item.fileData.url as string).startsWith("https://")
+                ? item.fileData.url
+                : await this.s3Service.getSignedUrl(item.fileData.url),
             }),
           )
           .otherwise(() => {
@@ -196,6 +202,10 @@ export class LessonsService {
       }),
     );
 
+    const imageUrl = (lesson.imageUrl as string).startsWith("https://")
+      ? lesson.imageUrl
+      : await this.s3Service.getSignedUrl(lesson.imageUrl);
+
     const completedLessonItems = await this.db
       .select({ lessonItemId: studentCompletedLessonItems.lessonItemId })
       .from(studentCompletedLessonItems)
@@ -207,6 +217,7 @@ export class LessonsService {
 
     return {
       ...lesson,
+      imageUrl,
       lessonItems: items,
       itemsCount: completableLessonItems.length,
       itemsCompletedCount: completedLessonItems.length,
