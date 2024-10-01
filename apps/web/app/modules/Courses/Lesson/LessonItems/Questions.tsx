@@ -6,6 +6,7 @@ import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { useQuestionQuery } from "./useQuestionQuery";
 import type { TQuestionsForm } from "../types";
+import { useCompletedLessonItemsStore } from "./LessonItemStore";
 import type { UseFormRegister } from "react-hook-form";
 
 type TProps = {
@@ -28,6 +29,7 @@ export default function Questions({
   questionsArray,
   register,
 }: TProps) {
+  const { markLessonItemAsCompleted } = useCompletedLessonItemsStore();
   const { lessonId } = useParams();
 
   if (!lessonId) throw new Error("Lesson ID not found");
@@ -47,6 +49,8 @@ export default function Questions({
   });
 
   const handleClick = async (id: string) => {
+    markLessonItemAsCompleted(questionId);
+
     if (isSingleQuestion) {
       setSelectedOption([id]);
     } else {
@@ -76,7 +80,10 @@ export default function Questions({
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
-            onBlur={(e) => setOpenQuestion(e.target.value)}
+            onBlur={(e) => {
+              markLessonItemAsCompleted(questionId);
+              setOpenQuestion(e.target.value);
+            }}
             placeholder="Type your answer here"
             rows={5}
           />

@@ -1,28 +1,25 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type CompletedPresentationsStore = {
+type TCompletedLessonItemsStore = {
   completedLessonItems: string[];
-  markLessonItemAsCompleted: (presentationId: string) => void;
-  isLessonItemCompleted: (presentationId: string) => boolean;
+  markLessonItemAsCompleted: (lessonItemId: string) => void;
+  isLessonItemCompleted: (lessonItemId: string) => boolean;
 };
 
-export const useCompletedPresentationsStore =
-  create<CompletedPresentationsStore>()(
+export const useCompletedLessonItemsStore =
+  create<TCompletedLessonItemsStore>()(
     persist(
       (set, get) => ({
         completedLessonItems: [],
-        markLessonItemAsCompleted: (presentationId: string) =>
+        markLessonItemAsCompleted: (lessonItemId: string) =>
           set((state) => ({
-            completedLessonItems: [
-              ...state.completedLessonItems,
-              presentationId,
-            ],
+            completedLessonItems: [...state.completedLessonItems, lessonItemId],
           })),
-        isLessonItemCompleted: (presentationId: string) => {
+        isLessonItemCompleted: (lessonItemId: string) => {
           return (
             Array.isArray(get().completedLessonItems) &&
-            get().completedLessonItems.includes(presentationId)
+            get().completedLessonItems.includes(lessonItemId)
           );
         },
       }),
@@ -38,7 +35,7 @@ export const useCompletedPresentationsStore =
             } else if (rehydratedState) {
               if (!Array.isArray(rehydratedState.completedLessonItems)) {
                 console.warn(
-                  "Rehydrated completedPresentations is not an array, resetting to empty array"
+                  "Rehydrated completedLessonItems is not an array, resetting to empty array"
                 );
                 rehydratedState.completedLessonItems = [];
               }

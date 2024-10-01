@@ -3,13 +3,15 @@ import type { QuestionContent, TQuestionsForm } from "./types";
 
 export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
   const lessonItems = lesson.lessonItems;
+
   return lessonItems
+    .filter((item) => item.lessonItemType !== "text_block")
     .map((lessonItem) => {
       if ("title" in lessonItem.content) {
         return {
           title: lessonItem.content.title,
           displayOrder: lessonItem.displayOrder,
-          id: lessonItem.content.id,
+          id: lessonItem.id,
         };
       } else {
         return {
