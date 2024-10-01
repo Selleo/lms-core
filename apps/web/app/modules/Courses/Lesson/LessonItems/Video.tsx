@@ -19,7 +19,7 @@ export default function Video({ url, videoId }: VideoProps) {
 
   const handleMarkLessonItemAsCompleted = () => {
     if (isVideoCompleted(videoId)) return;
-    markVideoAsCompleted(videoId);
+    markVideoAsCompleted({ lessonItemId: videoId, lessonId });
     markLessonItemAsCompleted({ id: videoId, lessonId });
   };
 
