@@ -1,4 +1,5 @@
 import { cn } from "~/lib/utils";
+import { useCompletedLessonItemsStore } from "../LessonItems/LessonItemStore";
 
 type TProps = {
   lesson: {

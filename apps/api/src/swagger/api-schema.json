@@ -1813,6 +1813,10 @@
                 "items": {
                   "type": "object",
                   "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
                     "lessonItemType": {
                       "type": "string"
                     },
@@ -1935,6 +1939,7 @@
                     }
                   },
                   "required": [
+                    "id",
                     "lessonItemType",
                     "displayOrder",
                     "content"

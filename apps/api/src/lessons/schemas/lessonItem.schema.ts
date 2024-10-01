@@ -30,6 +30,7 @@ export const lessonItemFileSchema = Type.Object({
 });
 
 export const lessonItemSchema = Type.Object({
+  id: UUIDSchema,
   lessonItemType: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   content: Type.Union([questionSchema, textBlockSchema, lessonItemFileSchema]),

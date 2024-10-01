@@ -264,6 +264,8 @@ export interface GetLessonResponse {
     imageUrl: string;
     description: string;
     lessonItems: {
+      /** @format uuid */
+      id: string;
       lessonItemType: string;
       displayOrder: number | null;
       content:
