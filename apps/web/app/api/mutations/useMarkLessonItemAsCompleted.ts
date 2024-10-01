@@ -1,6 +1,6 @@
-import { toast } from "~/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { toast } from "~/components/ui/use-toast";
 import { ApiClient } from "../api-client";
 
 export const useMarkLessonItemAsCompleted = () => {

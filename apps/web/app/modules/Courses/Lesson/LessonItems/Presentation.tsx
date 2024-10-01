@@ -36,7 +36,7 @@ export default function Presentation({
 
     const loadTimeout = setTimeout(() => {
       if (isInViewport && !isCompleted) {
-        markPresentationAsCompleted(presentationId);
+        markPresentationAsCompleted({ lessonItemId: presentationId, lessonId });
         markLessonItemAsCompleted({ id: presentationId, lessonId });
       }
     }, 200);

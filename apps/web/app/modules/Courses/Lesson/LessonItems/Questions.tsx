@@ -52,7 +52,7 @@ export default function Questions({
   });
 
   const handleClick = async (id: string) => {
-    markLessonItemAsCompleted(questionId);
+    markLessonItemAsCompleted({ lessonItemId: questionId, lessonId });
 
     if (isSingleQuestion) {
       setSelectedOption([id]);
@@ -83,10 +83,17 @@ export default function Questions({
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
-            onBlur={!isAdmin ? (e) => {
-              markLessonItemAsCompleted(questionId);
-              setOpenQuestion(e.target.value);
-            } : undefined}
+            onBlur={
+              !isAdmin
+                ? (e) => {
+                    markLessonItemAsCompleted({
+                      lessonItemId: questionId,
+                      lessonId,
+                    });
+                    setOpenQuestion(e.target.value);
+                  }
+                : undefined
+            }
             placeholder="Type your answer here"
             rows={5}
             className={cn({
@@ -99,9 +106,10 @@ export default function Questions({
               onClick={!isAdmin ? () => handleClick(answer.id) : undefined}
               key={answer.id}
               className={cn(
-                  "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
-                  { "cursor-not-allowed": isAdmin },
-              )}            >
+                "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
+                { "cursor-not-allowed": isAdmin }
+              )}
+            >
               {isSingleQuestion ? (
                 <Input
                   className="w-4 h-4"
@@ -122,7 +130,7 @@ export default function Questions({
                   type="checkbox"
                   value={answer.id}
                   {...register(
-                    `multiAnswerQuestions.${questionId}.${answer.id}`,
+                    `multiAnswerQuestions.${questionId}.${answer.id}`
                   )}
                 />
               )}
