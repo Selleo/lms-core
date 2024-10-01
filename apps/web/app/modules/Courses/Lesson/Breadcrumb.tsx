@@ -25,7 +25,7 @@ export default function Breadcrumb() {
   const lessonTitle = lessonData?.title || "Lesson";
 
   return (
-    <div className="py-6 sticky -top-8 z-10 bg-primary-50">
+    <div className="bg-primary-50">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
