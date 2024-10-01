@@ -4,7 +4,6 @@ import {
   type ActionResponse,
   type After,
   Filter,
-  ValidationError,
 } from "adminjs";
 import { CreatePasswordEmail } from "@repo/email-templates";
 import { nanoid } from "nanoid";
@@ -57,9 +56,12 @@ export const afterCreateUser: After<ActionResponse> = async (
         html,
       });
     } catch (error) {
-      throw new ValidationError({
-        email: { message: "Failed to send welcome email" },
-      });
+      response.notice = {
+        message:
+          "User was created but failed to send welcome email\n\n" + error,
+        type: "error",
+      };
+      return response;
     }
   }
 
