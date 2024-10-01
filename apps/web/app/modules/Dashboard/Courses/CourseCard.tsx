@@ -6,14 +6,23 @@ import { CategoryChip } from "~/components/ui/CategoryChip";
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
   CourseType,
-  "title" | "category" | "courseLessonCount" | "imageUrl"
+  "title" | "category" | "courseLessonCount" | "imageUrl" | "description"
 > & {
   href: string;
 };
 
-const CourseCard = ({ href, title, category, imageUrl }: CourseCardProps) => {
+const CourseCard = ({
+  href,
+  title,
+  description,
+  category,
+  imageUrl,
+}: CourseCardProps) => {
   return (
-    <Link to={href} className="relative border border-primary-200 hover:border-primary-500 transition rounded-lg">
+    <Link
+      to={href}
+      className="relative border border-primary-200 hover:border-primary-500 transition rounded-lg"
+    >
       <div className="absolute top-4 left-4 right-4 flex">
         <CategoryChip category={category} />
       </div>
@@ -30,11 +39,8 @@ const CourseCard = ({ href, title, category, imageUrl }: CourseCardProps) => {
           {title}
         </h3>
         <div className="justify-end text-neutral-500 text-sm">
-          {/*TODO: Replace from backend description*/}
           <span className="line-clamp-3">
-            lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            <div dangerouslySetInnerHTML={{ __html: description }} />
           </span>
         </div>
         <Button className="w-full mt-auto">Enroll</Button>

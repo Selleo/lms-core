@@ -12,8 +12,7 @@ import { SortOption } from "~/types/sorting";
 import Loader from "../common/Loader/Loader";
 import SearchFilter from "../common/SearchFilter/SearchFilter";
 import CourseCard from "./Courses/CourseCard";
-import {Icon} from "~/components/Icon";
-
+import { Icon } from "~/components/Icon";
 
 type State = {
   searchTitle: string | undefined;
@@ -87,7 +86,9 @@ export default function DashboardPage() {
   return (
     <div className="flex flex-1 flex-col h-full">
       <div className="flex flex-col">
-        <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Available Courses</h4>
+        <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
+          Available Courses
+        </h4>
         <p className="text-lg leading-7 text-neutral-800">
           All available career courses available to enroll
         </p>
@@ -110,12 +111,12 @@ export default function DashboardPage() {
                 <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
               </div>
               <div className="flex flex-col justify-center gap-2">
-              <p className="text-lg font-bold leading-5 text-neutral-950">
-               We could not find any courses
-              </p>
-              <p className="text-neutral-800 text-base leading-6 font-normal">
-                Please change the search criteria or try again later
-              </p>
+                <p className="text-lg font-bold leading-5 text-neutral-950">
+                  We could not find any courses
+                </p>
+                <p className="text-neutral-800 text-base leading-6 font-normal">
+                  Please change the search criteria or try again later
+                </p>
               </div>
             </div>
           ))}
@@ -125,16 +126,26 @@ export default function DashboardPage() {
           </div>
         )}
         {courses &&
-          courses.map(({ title, category, courseLessonCount, id, imageUrl }) => (
-            <CourseCard
-              key={id}
-              title={title}
-              imageUrl={imageUrl}
-              href={`/course/${id}`}
-              category={category}
-              courseLessonCount={courseLessonCount}
-            />
-          ))}
+          courses.map(
+            ({
+              title,
+              category,
+              description,
+              courseLessonCount,
+              id,
+              imageUrl,
+            }) => (
+              <CourseCard
+                category={category}
+                courseLessonCount={courseLessonCount}
+                description={description}
+                href={`/course/${id}`}
+                imageUrl={imageUrl}
+                key={id}
+                title={title}
+              />
+            )
+          )}
       </div>
     </div>
   );
