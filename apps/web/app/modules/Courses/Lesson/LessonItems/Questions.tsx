@@ -9,7 +9,7 @@ import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import type { TQuestionsForm } from "../types";
 import { useCompletedLessonItemsStore } from "./LessonItemStore";
-import type { UseFormRegister } from "react-hook-form";
+import type { UseFormGetValues, UseFormRegister } from "react-hook-form";
 
 type TProps = {
   content: {
@@ -22,34 +22,32 @@ type TProps = {
       position: number | null;
     }[];
   };
+  getValues: UseFormGetValues<TQuestionsForm>;
   questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
 };
 
 export default function Questions({
   content,
+  getValues,
   questionsArray,
   register,
 }: TProps) {
   const { isAdmin } = useUserRole();
   const { markLessonItemAsCompleted } = useCompletedLessonItemsStore();
   const { lessonId } = useParams();
+  const questionId = content.id;
 
   if (!lessonId) throw new Error("Lesson ID not found");
 
-  const [selectedOption, setSelectedOption] = useState<string[]>([]);
-  const [openQuestion, setOpenQuestion] = useState("");
-  const isSingleQuestion = content.questionType === "single_choice";
-  const isOpenAnswer = content.questionType === "open_answer";
-  const questionId = content.id;
-
-  useQuestionQuery({
+  const { sendAnswer, sendOpenAnswer } = useQuestionQuery({
     lessonId,
     questionId,
-    openQuestion,
-    selectedOption,
-    isOpenAnswer,
   });
+
+  const [selectedOption, setSelectedOption] = useState<string[]>([]);
+  const isSingleQuestion = content.questionType === "single_choice";
+  const isOpenAnswer = content.questionType === "open_answer";
 
   const handleClick = async (id: string) => {
     markLessonItemAsCompleted({ lessonItemId: questionId, lessonId });
@@ -64,6 +62,18 @@ export default function Questions({
         newSelectedOptions = [...selectedOption, id];
       }
       setSelectedOption(newSelectedOptions);
+    }
+  };
+
+  const handleOpenAnswerRequest = async (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    if (!isAdmin) {
+      markLessonItemAsCompleted({
+        lessonItemId: questionId,
+        lessonId,
+      });
+      await sendOpenAnswer(e.target.value);
     }
   };
 
@@ -83,17 +93,7 @@ export default function Questions({
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
-            onBlur={
-              !isAdmin
-                ? (e) => {
-                    markLessonItemAsCompleted({
-                      lessonItemId: questionId,
-                      lessonId,
-                    });
-                    setOpenQuestion(e.target.value);
-                  }
-                : undefined
-            }
+            onBlur={handleOpenAnswerRequest}
             placeholder="Type your answer here"
             rows={5}
             className={cn({
