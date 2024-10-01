@@ -10,7 +10,7 @@ export class S3Service {
 
   constructor(private configService: ConfigService) {
     this.s3Client = new S3Client({
-      region: this.configService.get<string>("s3.AWS_REGION") || "",
+      region: this.configService.get<string>("s3.AWS_REGION") || "us-east-1",
       credentials: {
         accessKeyId:
           this.configService.get<string>("s3.AWS_ACCESS_KEY_ID") || "",
