@@ -15,6 +15,7 @@ import { toast } from "~/components/ui/use-toast";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { cn } from "~/lib/utils";
 import { useUserRole } from "~/hooks/useUserRole";
+import { last } from "lodash-es";
 
 export const CourseViewMainCard = ({
   course,
@@ -28,6 +29,7 @@ export const CourseViewMainCard = ({
     title,
     enrolled: isEnrolled,
     courseLessonCount,
+    completedLessonCount,
   } = course;
   const { mutateAsync: enrollCourse } = useEnrollCourse();
   const { mutateAsync: unenrollCourse } = useUnenrollCourse();
@@ -42,7 +44,10 @@ export const CourseViewMainCard = ({
     throw new Error("Course ID not found");
   }
 
-  const COMPLETED_LESSONS_COUNT = 2; // TODO: Replace with actual count when available
+  const firstUncompletedLesson =
+    course.lessons.find(
+      (lesson) => lesson.itemsCompletedCount < lesson.itemsCount
+    )?.id ?? last(course.lessons)?.id;
 
   const handleEnroll = () => {
     enrollCourse({ id: courseId }).then(() => {
@@ -72,17 +77,17 @@ export const CourseViewMainCard = ({
       <div className="flex flex-col h-full bg-white p-8 pt-6 rounded-b-2xl min-h-0">
         <div className="gap-2 flex flex-col">
           <p className="text-neutral-600 text-xs leading-5">
-            Course progress: 2/{courseLessonCount}
+            Course progress: {completedLessonCount}/{courseLessonCount}
           </p>
           <div className="flex grow items-center gap-px">
-            {Array.from({ length: COMPLETED_LESSONS_COUNT }).map((_, index) => (
+            {Array.from({ length: completedLessonCount }).map((_, index) => (
               <span
                 key={index}
                 className="h-[5px] grow bg-secondary-500 rounded-[40px]"
               />
             ))}
             {Array.from({
-              length: courseLessonCount - COMPLETED_LESSONS_COUNT,
+              length: courseLessonCount - completedLessonCount,
             }).map((_, index) => (
               <span
                 key={index}
@@ -101,25 +106,25 @@ export const CourseViewMainCard = ({
         </div>
         <div className="mt-auto">
           {!isAdmin && isEnrolled && (
-            <Link to="#">
+            <Link to={`lesson/${firstUncompletedLesson}`}>
               <Button className="mt-4 w-full bg-secondary-500 text-white py-2 rounded-lg">
                 Continue
               </Button>
             </Link>
           )}
           {!isAdmin && (
-              <Button
-                  className={cn(
-                      "w-full bg-secondary-500 text-white py-2 rounded-lg",
-                      {
-                          "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
-                          isEnrolled,
-                      }
-                  )}
-                  onClick={!isEnrolled && !isAdmin ? handleEnroll : handleUnenroll}
-              >
-                  {isEnrolled && !isAdmin ? "Unenroll" : "Enroll"}
-              </Button>
+            <Button
+              className={cn(
+                "w-full bg-secondary-500 text-white py-2 rounded-lg",
+                {
+                  "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
+                    isEnrolled,
+                }
+              )}
+              onClick={!isEnrolled && !isAdmin ? handleEnroll : handleUnenroll}
+            >
+              {isEnrolled && !isAdmin ? "Unenroll" : "Enroll"}
+            </Button>
           )}
         </div>
       </div>

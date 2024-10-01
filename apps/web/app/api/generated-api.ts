@@ -245,6 +245,8 @@ export interface GetCourseResponse {
       title: string;
       imageUrl: string;
       description: string;
+      itemsCount: number;
+      itemsCompletedCount: number;
     }[];
   };
 }
@@ -264,6 +266,8 @@ export interface GetLessonResponse {
     title: string;
     imageUrl: string;
     description: string;
+    itemsCount: number;
+    itemsCompletedCount: number;
     lessonItems: {
       /** @format uuid */
       id: string;
@@ -298,8 +302,6 @@ export interface GetLessonResponse {
             url: string;
           };
     }[];
-    itemsCount: number;
-    itemsCompletedCount: number;
   };
 }
 

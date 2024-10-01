@@ -8,6 +8,7 @@ export const commonShowCourseSchema = Type.Object({
   description: Type.String(),
   category: Type.String(),
   courseLessonCount: Type.Number(),
+  completedLessonCount: Type.Number(),
   enrolled: Type.Boolean(),
   state: Type.Union([Type.String(), Type.Null()]),
   lessons: Type.Array(lessonSchema),
