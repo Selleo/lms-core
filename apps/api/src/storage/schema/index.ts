@@ -314,8 +314,11 @@ export const studentCompletedLessonItems = pgTable(
     lessonItemId: uuid("lesson_item_id")
       .references(() => lessonItems.id)
       .notNull(),
+    lessonId: uuid("lesson_id")
+      .references(() => lessons.id)
+      .notNull(),
   },
   (table) => ({
-    unq: unique().on(table.studentId, table.lessonItemId),
+    unq: unique().on(table.studentId, table.lessonItemId, table.lessonId),
   }),
 );

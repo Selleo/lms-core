@@ -13,6 +13,7 @@ import {
   lessons,
   questionAnswerOptions,
   questions,
+  studentCompletedLessonItems,
   studentCourses,
   studentQuestionAnswers,
   textBlocks,
@@ -70,6 +71,7 @@ export class LessonsService {
 
     const lessonItemsList = await this.db
       .select({
+        id: lessonItems.id,
         lessonItemType: lessonItems.lessonItemType,
         questionData: questions,
         textBlockData: textBlocks,
@@ -119,17 +121,17 @@ export class LessonsService {
                   optionText: questionAnswerOptions.optionText,
                   position: questionAnswerOptions.position,
                   isStudentAnswer: sql<boolean>`
-                    CASE
-                      WHEN ${studentQuestionAnswers.id} IS NOT NULL AND
-                        EXISTS (
-                          SELECT 1
-                          FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                          WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(${questionAnswerOptions.optionText})
-                        )
-                      THEN true
-                      ELSE false
-                    END
-                `,
+                  CASE
+                    WHEN ${studentQuestionAnswers.id} IS NOT NULL AND
+                      EXISTS (
+                        SELECT 1
+                        FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                        WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(${questionAnswerOptions.optionText})
+                      )
+                    THEN true
+                    ELSE false
+                  END
+              `,
                 })
                 .from(questionAnswerOptions)
                 .leftJoin(
@@ -184,6 +186,7 @@ export class LessonsService {
           });
 
         return {
+          id: item.id,
           lessonItemType: item.lessonItemType,
           displayOrder: item.displayOrder,
           content,
@@ -191,7 +194,21 @@ export class LessonsService {
       }),
     );
 
-    return { ...lesson, lessonItems: items };
+    const completedLessonItems = await this.db
+      .select({ lessonItemId: studentCompletedLessonItems.lessonItemId })
+      .from(studentCompletedLessonItems)
+      .where(eq(studentCompletedLessonItems.lessonId, lesson.id));
+
+    const completableLessonItems = items.filter(
+      (item) => item.lessonItemType !== "text_block",
+    );
+
+    return {
+      ...lesson,
+      lessonItems: items,
+      itemsCount: completableLessonItems.length,
+      itemsCompletedCount: completedLessonItems.length,
+    };
   }
 
   private isValidItem(item: any): boolean {

@@ -232,6 +232,13 @@
       "when": 1727261683161,
       "tag": "0032_create_student_completed_lesson_items",
       "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1727750250544,
+      "tag": "0033_add_lesson_id_to_student_completed_lesson_items",
+      "breakpoints": true
     }
   ]
 }
