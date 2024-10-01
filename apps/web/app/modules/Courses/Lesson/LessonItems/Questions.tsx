@@ -1,14 +1,15 @@
-import { useParams } from "@remix-run/react";
-import { useState } from "react";
 import { Card } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
+import { getQuestionDefaultValue } from "./utils";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
-import { useQuestionQuery } from "./useQuestionQuery";
-import { useUserRole } from "~/hooks/useUserRole";
-import { cn } from "~/lib/utils";
-import type { TQuestionsForm } from "../types";
 import { useCompletedLessonItemsStore } from "./LessonItemStore";
+import { useParams } from "@remix-run/react";
+import { useQuestionQuery } from "./useQuestionQuery";
+import { useState } from "react";
+import { useUserRole } from "~/hooks/useUserRole";
+import type { TQuestionsForm } from "../types";
 import type { UseFormGetValues, UseFormRegister } from "react-hook-form";
 
 type TProps = {
@@ -33,21 +34,24 @@ export default function Questions({
   questionsArray,
   register,
 }: TProps) {
-  const { isAdmin } = useUserRole();
-  const { markLessonItemAsCompleted } = useCompletedLessonItemsStore();
   const { lessonId } = useParams();
-  const questionId = content.id;
 
   if (!lessonId) throw new Error("Lesson ID not found");
+
+  const { isAdmin } = useUserRole();
+  const { markLessonItemAsCompleted } = useCompletedLessonItemsStore();
+  const questionId = content.id;
+  const isSingleQuestion = content.questionType === "single_choice";
+  const isOpenAnswer = content.questionType === "open_answer";
 
   const { sendAnswer, sendOpenAnswer } = useQuestionQuery({
     lessonId,
     questionId,
   });
 
-  const [selectedOption, setSelectedOption] = useState<string[]>([]);
-  const isSingleQuestion = content.questionType === "single_choice";
-  const isOpenAnswer = content.questionType === "open_answer";
+  const [selectedOption, setSelectedOption] = useState<string[]>(() =>
+    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion })
+  );
 
   const handleClick = async (id: string) => {
     markLessonItemAsCompleted({ lessonItemId: questionId, lessonId });
@@ -63,6 +67,7 @@ export default function Questions({
         newSelectedOptions = [...selectedOption, id];
       }
       setSelectedOption(newSelectedOptions);
+      await sendAnswer(newSelectedOptions);
     }
   };
 
