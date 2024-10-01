@@ -33,7 +33,7 @@ export const filesConfigOptions: ResourceOptions = {
     },
     ...archivingActions,
   },
-  editProperties: ["title", "state", "type", "file", "info", "archived"],
+  editProperties: ["title", "state", "type", "file", "archived"],
   filterProperties: ["type", "created_at", "state", "status"],
   listProperties: ["title", "author_id", "type", "state", "status"],
   showProperties: [

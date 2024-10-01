@@ -13,7 +13,7 @@ const PhotoPreview: React.FC<BasePropertyProps> = ({
   const isExternal = record?.params?.[urlKey]?.includes("https://");
 
   const getFilePath = () => {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV !== "production" && !isExternal) {
       return record?.params?.filePath;
     }
     if (isExternal) {

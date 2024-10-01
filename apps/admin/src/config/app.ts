@@ -24,9 +24,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { lessonItemsConfigOptions } from "../adminResourceOptions/lessonItemsOptions.js";
 import { uploadFile } from "../features/uploadFeature.js";
-import { targetRelationSettingsFeature } from "@adminjs/relations";
 import { courseLessonsConfigOptions } from "../adminResourceOptions/courseLessonsOptions.js";
-import { setManyToManyRelation } from "../utils/setManyToManyRelation.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -88,6 +86,9 @@ export class AdminApp {
   async init() {
     AdminJS.registerAdapter({ Database, Resource });
     const admin = new AdminJS({
+      assets: {
+        styles: ["/custom.css"],
+      },
       locale: {
         language: "en",
         debug: false,
@@ -127,14 +128,6 @@ export class AdminApp {
             ...coursesConfigOptions,
           },
           features: [
-            setManyToManyRelation({
-              resourceId: "lessons",
-              joinKey: "course_id",
-              inverseJoinKey: "lesson_id",
-              throughResourceId: "course_lessons",
-              enableDeleteRelation: true,
-              enableDeleteRelatedRecord: false,
-            }),
             uploadFile("courses", "image_url", 2, [
               "image/jpeg",
               "image/png",
@@ -153,7 +146,6 @@ export class AdminApp {
               resourceId: "lesson_items",
               joinKey: "lesson_id",
             }),
-            targetRelationSettingsFeature(),
             uploadFile("lessons", "image_url", 25, [
               "image/jpeg",
               "image/png",
@@ -284,7 +276,19 @@ export class AdminApp {
     this.app.use(express.static("assets"));
     this.app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //only for dev test
     this.app.use(admin.options.rootPath, adminRouter);
-
+    this.app.get(admin.options.rootPath, (req, res) => {
+      res.redirect(`/resources/users`);
+    });
+    this.app.use(
+      "/admin/assets",
+      express.static(path.join(__dirname, "public"), {
+        setHeaders: (res, filePath) => {
+          if (path.extname(filePath) === ".css") {
+            res.setHeader("Content-Type", "text/css");
+          }
+        },
+      }),
+    );
     this.app.listen(8888, () => {
       console.log(
         `AdminJS started on https://admin.lms.localhost${admin.options.rootPath} or http://localhost:8888${admin.options.rootPath}`,

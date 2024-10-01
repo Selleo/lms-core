@@ -21,6 +21,10 @@ const Components = {
     "StatusListValue",
     "./custom/StatusListValue",
   ),
+  CourseLessonsShow: componentLoader.add(
+    "CourseLessonsShow",
+    "./custom/CourseLessonsShow",
+  ),
 };
 
 export { componentLoader, Components };
