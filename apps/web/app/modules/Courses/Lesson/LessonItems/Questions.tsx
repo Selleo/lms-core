@@ -54,6 +54,7 @@ export default function Questions({
 
     if (isSingleQuestion) {
       setSelectedOption([id]);
+      await sendAnswer([id]);
     } else {
       let newSelectedOptions: string[];
       if (selectedOption.includes(id)) {
