@@ -212,7 +212,11 @@ export class CoursesService {
         imageUrl: courses.imageUrl,
         category: categories.title,
         description: sql<string>`${courses.description}`,
-        courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,
+        courseLessonCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${courseLessons}
+          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         state: studentCourses.state,
       })
@@ -244,6 +248,7 @@ export class CoursesService {
         and(
           eq(courseLessons.courseId, id),
           eq(lessons.archived, false),
+          eq(lessons.state, "published"),
           isNotNull(lessons.id),
           isNotNull(lessons.title),
           isNotNull(lessons.description),
@@ -362,7 +367,11 @@ export class CoursesService {
       imageUrl: courses.imageUrl,
       author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
       category: categories.title,
-      courseLessonCount: sql<number>`(SELECT COUNT(*) FROM ${courseLessons} WHERE ${courseLessons.courseId} = ${courses.id})::INTEGER`,
+      courseLessonCount: sql<number>`
+        (SELECT COUNT(*)
+        FROM ${courseLessons}
+        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
       enrolledParticipantCount: count(studentCourses.courseId),
     };
   }
