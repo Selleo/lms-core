@@ -1,4 +1,5 @@
 import { cn } from "~/lib/utils";
+import { useCompletedLessonItemsStore } from "../LessonItems/LessonItemStore";
 
 type TProps = {
   lesson: {
@@ -10,6 +11,8 @@ type TProps = {
 };
 
 export default function SingleLessonSummary({ lesson, isLast }: TProps) {
+  const { isLessonItemCompleted } = useCompletedLessonItemsStore();
+
   return (
     <div
       className={cn("flex items-center gap-2 py-4", {
@@ -17,7 +20,7 @@ export default function SingleLessonSummary({ lesson, isLast }: TProps) {
       })}
     >
       <input
-        checked={false}
+        checked={isLessonItemCompleted(lesson.id)}
         className="min-w-6 min-h-6"
         readOnly
         type="radio"

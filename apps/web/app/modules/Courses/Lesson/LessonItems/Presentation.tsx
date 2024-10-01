@@ -4,7 +4,7 @@ import { useParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useIntersection } from "react-use";
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
-import { useCompletedPresentationsStore } from "./LessonItemStore";
+import { useCompletedLessonItemsStore } from "./LessonItemStore";
 
 type PresentationProps = {
   url: string;
@@ -20,7 +20,7 @@ export default function Presentation({
   const {
     isLessonItemCompleted: isPresentationCompleted,
     markLessonItemAsCompleted: markPresentationAsCompleted,
-  } = useCompletedPresentationsStore();
+  } = useCompletedLessonItemsStore();
   const { mutate: markLessonItemAsCompleted } = useMarkLessonItemAsCompleted();
   const intersection = useIntersection(intersectionRef, {
     root: null,

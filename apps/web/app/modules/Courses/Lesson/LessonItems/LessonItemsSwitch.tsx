@@ -7,10 +7,10 @@ import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 import type { TQuestionsForm } from "../types";
 import type { UseFormRegister } from "react-hook-form";
 
-type LessonItemType = GetLessonResponse["data"]["lessonItems"][number];
+type TLessonItem = GetLessonResponse["data"]["lessonItems"][number];
 
 type TProps = {
-  lessonItem: LessonItemType;
+  lessonItem: TLessonItem;
   questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
 };
@@ -33,7 +33,8 @@ export default function LessonItemsSwitch({
     );
 
   if ("url" in lessonItem.content)
-    return <Files content={lessonItem.content} />;
+    return <Files content={lessonItem.content} lessonItemId={lessonItem.id} />;
+
   return (
     <div className="h4 text-center py-8 border-none drop-shadow-primary">
       Unknown lesson item type
