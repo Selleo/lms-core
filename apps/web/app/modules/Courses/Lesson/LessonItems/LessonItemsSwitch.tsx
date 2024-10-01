@@ -4,6 +4,8 @@ import TextBlock from "./TextBlock";
 import Files from "./Files";
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
+import type { TQuestionsForm } from "../types";
+import type { UseFormRegister } from "react-hook-form";
 
 type LessonItemType = GetLessonResponse["data"]["lessonItems"][number];
 
