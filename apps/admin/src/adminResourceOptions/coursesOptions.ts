@@ -61,7 +61,7 @@ export const coursesConfigOptions: ResourceOptions = {
     "updated_at",
     "status",
     "file",
-    "relations",
+    "lessons",
   ],
   properties: {
     title: {
@@ -105,6 +105,11 @@ export const coursesConfigOptions: ResourceOptions = {
     file: {
       components: {
         show: Components.PhotoPreview,
+      },
+    },
+    lessons: {
+      components: {
+        show: Components.CourseLessonsShow,
       },
     },
   },

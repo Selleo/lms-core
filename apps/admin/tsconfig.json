@@ -24,7 +24,8 @@
     "incremental": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["adminjs"]
   },
   "exclude": ["node_modules", "src/**/theme.bundle.js"],
   "include": ["src"]
