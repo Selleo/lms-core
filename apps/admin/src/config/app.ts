@@ -124,7 +124,6 @@ export class AdminApp {
         },
         {
           resource: this.db.getResource("courses"),
-          // componentLoader,
           options: {
             ...coursesConfigOptions,
           },
