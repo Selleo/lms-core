@@ -10,6 +10,7 @@ import {
 } from "@remix-run/react";
 import { queryClient } from "~/api/queryClient";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
+import { useUserRole } from "~/hooks/useUserRole";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Courses" }, { name: "description", content: "Courses" }];
@@ -23,6 +24,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 };
 
 export default function CoursesViewPage() {
+  const { isAdmin } = useUserRole();
   const { id } = useParams<{ id: string }>();
 
   const { data: course } = useCourseSuspense(id ?? "");
@@ -39,7 +41,10 @@ export default function CoursesViewPage() {
     <div className="h-full">
       <div className="flex flex-col md:flex-row h-full gap-6">
         <CourseViewMainCard course={course} />
-        <LessonsList lessons={course.lessons} isEnrolled={course.enrolled} />
+        <LessonsList
+          lessons={course.lessons}
+          isEnrolled={course.enrolled || isAdmin}
+        />
       </div>
     </div>
   );

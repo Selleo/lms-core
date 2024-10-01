@@ -5,6 +5,8 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { useQuestionQuery } from "./useQuestionQuery";
+import { useUserRole } from "~/hooks/useUserRole";
+import { cn } from "~/lib/utils";
 import type { TQuestionsForm } from "../types";
 import { useCompletedLessonItemsStore } from "./LessonItemStore";
 import type { UseFormRegister } from "react-hook-form";
@@ -29,6 +31,7 @@ export default function Questions({
   questionsArray,
   register,
 }: TProps) {
+  const { isAdmin } = useUserRole();
   const { markLessonItemAsCompleted } = useCompletedLessonItemsStore();
   const { lessonId } = useParams();
 
@@ -80,20 +83,25 @@ export default function Questions({
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
-            onBlur={(e) => {
+            onBlur={!isAdmin ? (e) => {
               markLessonItemAsCompleted(questionId);
               setOpenQuestion(e.target.value);
-            }}
+            } : undefined}
             placeholder="Type your answer here"
             rows={5}
+            className={cn({
+              "cursor-not-allowed": isAdmin,
+            })}
           />
         ) : (
           content.questionAnswers.map((answer) => (
             <button
-              onClick={() => handleClick(answer.id)}
+              onClick={!isAdmin ? () => handleClick(answer.id) : undefined}
               key={answer.id}
-              className="flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4"
-            >
+              className={cn(
+                  "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
+                  { "cursor-not-allowed": isAdmin },
+              )}            >
               {isSingleQuestion ? (
                 <Input
                   className="w-4 h-4"
@@ -114,7 +122,7 @@ export default function Questions({
                   type="checkbox"
                   value={answer.id}
                   {...register(
-                    `multiAnswerQuestions.${questionId}.${answer.id}`
+                    `multiAnswerQuestions.${questionId}.${answer.id}`,
                   )}
                 />
               )}

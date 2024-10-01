@@ -146,8 +146,7 @@ export class CoursesService {
       const queryDB = tx
         .select({
           ...this.getSelectFiled(),
-          enrolled: sql<boolean>`true`,
-          // enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+          enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         })
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
