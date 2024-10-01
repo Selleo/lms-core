@@ -10,6 +10,7 @@ import database from "./common/configuration/database";
 import jwtConfig from "./common/configuration/jwt";
 import emailConfig from "./common/configuration/email";
 import awsConfig from "./common/configuration/aws";
+import s3Config from "./common/configuration/s3";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { EmailModule } from "./common/emails/emails.module";
@@ -21,11 +22,12 @@ import { CoursesModule } from "./courses/courses.module";
 import { LessonsModule } from "./lessons/lessons.module";
 import { QuestionsModule } from "./questions/questions.module";
 import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/studentCompletedLessonItems.module";
+import { S3Module } from "./file/s3.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [database, jwtConfig, emailConfig, awsConfig],
+      load: [database, jwtConfig, emailConfig, awsConfig, s3Config],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({
@@ -68,6 +70,7 @@ import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/
     LessonsModule,
     QuestionsModule,
     StudentCompletedLessonItemsModule,
+    S3Module,
   ],
   controllers: [],
   providers: [

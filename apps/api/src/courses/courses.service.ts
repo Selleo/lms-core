@@ -32,10 +32,14 @@ import {
   users,
 } from "../storage/schema";
 import { getSortOptions } from "../common/helpers/getSortOptions";
+import { S3Service } from "src/file/s3.service";
 
 @Injectable()
 export class CoursesService {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private readonly s3Service: S3Service,
+  ) {}
 
   async getAllCourses(
     query: CoursesQuery,
@@ -54,7 +58,7 @@ export class CoursesService {
     const { sortOrder, sortedField } = getSortOptions(sort);
     const conditions = this.getFiltersConditions(filters);
 
-    return this.db.transaction(async (tx) => {
+    return await this.db.transaction(async (tx) => {
       const queryDB = tx
         .select({
           ...this.getSelectFiled(),
@@ -109,8 +113,10 @@ export class CoursesService {
           categories.title,
         );
 
+      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+
       return {
-        data: data,
+        data: dataWithS3SignedUrls,
         pagination: {
           totalItems: totalItems?.length || 0,
           page,
@@ -185,8 +191,10 @@ export class CoursesService {
           categories.title,
         );
 
+      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+
       return {
-        data: data,
+        data: dataWithS3SignedUrls,
         pagination: {
           totalItems: totalItems?.count || 0,
           page,
@@ -245,8 +253,13 @@ export class CoursesService {
 
     if (!courseLessonList) throw new NotFoundException("Lessons not found");
 
+    const imageUrl = (course.imageUrl as string).startsWith("https://")
+      ? course.imageUrl
+      : await this.s3Service.getSignedUrl(course.imageUrl);
+
     return {
       ...course,
+      imageUrl,
       lessons: courseLessonList,
     };
   }
@@ -315,6 +328,30 @@ export class CoursesService {
 
       if (!deletedCourse) throw new ConflictException("Course not unenrolled");
     });
+  }
+
+  private async addS3SignedUrls(
+    data: AllCoursesResponse,
+  ): Promise<AllCoursesResponse> {
+    return Promise.all(
+      data.map(async (item) => {
+        if (item.imageUrl) {
+          if (item.imageUrl.startsWith("https://")) return item;
+
+          try {
+            const signedUrl = await this.s3Service.getSignedUrl(item.imageUrl);
+            return { ...item, imageUrl: signedUrl };
+          } catch (error) {
+            console.error(
+              `Failed to get signed URL for ${item.imageUrl}:`,
+              error,
+            );
+            return item;
+          }
+        }
+        return item;
+      }),
+    );
   }
 
   private getSelectFiled() {
