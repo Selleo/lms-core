@@ -39,7 +39,7 @@ export const getUserAnswers = (
 ): TQuestionsForm => {
   const allQuestions = lesson.lessonItems
     .filter((lesson) => lesson.lessonItemType === "question")
-    .map((item) => item.content as QuestionContent);
+    .map((item) => item.content) as QuestionContent[];
 
   const singleQuestionsFromApi = allQuestions.filter(
     (question) => question.questionType === "single_choice"
@@ -53,8 +53,8 @@ export const getUserAnswers = (
     (question) => question.questionType === "open_answer"
   );
 
-  const singleAnswerQuestions = prepareSingleQuestions(singleQuestionsFromApi);
-  const multiAnswerQuestions = prepareMultiQuestions(multiQuestionsFromApi);
+  const singleAnswerQuestions = prepareQuestions(singleQuestionsFromApi);
+  const multiAnswerQuestions = prepareQuestions(multiQuestionsFromApi);
   const openQuestions = prepareOpenQuestions(openQuestionsFromApi);
 
   return {
@@ -64,44 +64,32 @@ export const getUserAnswers = (
   };
 };
 
-const prepareSingleQuestions = (
+const prepareQuestions = (
   questions: QuestionContent[]
-): { [key: string]: string } =>
+): Record<string, Record<string, string>> =>
   questions.reduce(
     (acc, question) => {
-      const selectedAnswer = question.questionAnswers.find(
-        (answer) => answer.isStudentAnswer
+      acc[question.id] = question.questionAnswers.reduce(
+        (innerAcc, item) => {
+          innerAcc[item.id] = item.isStudentAnswer ? `${item.id}` : "";
+          return innerAcc;
+        },
+        {} as Record<string, string>
       );
-      acc[question.id] = selectedAnswer ? selectedAnswer.id : "";
       return acc;
     },
-    {} as { [key: string]: string }
+    {} as Record<string, Record<string, string>>
   );
 
-const prepareMultiQuestions = (
-  questions: QuestionContent[]
-): { [key: string]: { [key: string]: boolean } } =>
+const prepareOpenQuestions = (questions: QuestionContent[]) =>
   questions.reduce(
     (acc, question) => {
-      acc[question.id] = {};
-      question.questionAnswers.forEach((answer) => {
-        acc[question.id][answer.id] = answer.isStudentAnswer || false;
-      });
+      const studentAnswer = question.questionAnswers?.[0]?.optionText;
+      const isStudentAnswer = question.questionAnswers?.[0]?.isStudentAnswer;
+      acc[question.id] = isStudentAnswer
+        ? (studentAnswer as unknown as string)
+        : "";
       return acc;
     },
-    {} as { [key: string]: { [key: string]: boolean } }
-  );
-
-const prepareOpenQuestions = (
-  questions: QuestionContent[]
-): { [key: string]: string } =>
-  questions.reduce(
-    (acc, question) => {
-      const studentAnswer = question.questionAnswers.find(
-        (answer) => answer.isStudentAnswer
-      );
-      acc[question.id] = studentAnswer ? studentAnswer.optionText : "";
-      return acc;
-    },
-    {} as { [key: string]: string }
+    {} as Record<string, string>
   );

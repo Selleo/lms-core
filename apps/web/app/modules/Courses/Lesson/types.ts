@@ -5,11 +5,13 @@ export type TQuestionsForm = {
     [key: string]: string;
   };
   singleAnswerQuestions: {
-    [key: string]: string;
+    [key: string]: {
+      [key: string]: string | null;
+    };
   };
   multiAnswerQuestions: {
     [key: string]: {
-      [key: string]: boolean;
+      [key: string]: string | null;
     };
   };
 };

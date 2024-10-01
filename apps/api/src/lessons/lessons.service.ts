@@ -160,12 +160,32 @@ export class LessonsService {
                   studentQuestionAnswers.id,
                   studentQuestionAnswers.answer,
                 );
+              if (item.questionData.questionType !== "open_answer") {
+                return {
+                  id: item.questionData.id,
+                  questionType: item.questionData.questionType,
+                  questionBody: item.questionData.questionBody,
+                  questionAnswers,
+                };
+              }
+              const studentAnswer = await this.db
+                .select({
+                  id: studentQuestionAnswers.id,
+                  optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
+                  isStudentAnswer: sql<boolean>`true`,
+                  position: sql<number>`1`,
+                })
+                .from(studentQuestionAnswers)
+                .where(
+                  eq(studentQuestionAnswers.questionId, item.questionData.id),
+                )
+                .limit(1);
 
               return {
                 id: item.questionData.id,
                 questionType: item.questionData.questionType,
                 questionBody: item.questionData.questionBody,
-                questionAnswers,
+                questionAnswers: studentAnswer,
               };
             },
           )
