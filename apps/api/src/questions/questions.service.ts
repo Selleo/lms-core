@@ -213,7 +213,6 @@ export class QuestionsService {
     answerId: string | null,
   ): Promise<void> {
     const jsonBuildObjectArgs = answer.join(",");
-
     if (answerId) {
       await trx
         .update(studentQuestionAnswers)

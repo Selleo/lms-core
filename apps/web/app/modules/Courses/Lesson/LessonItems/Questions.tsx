@@ -1,13 +1,12 @@
 import { useParams } from "@remix-run/react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Textarea } from "~/components/ui/textarea";
 import { useQuestionQuery } from "./useQuestionQuery";
-
-import { useFormContext } from "react-hook-form";
 import type { TQuestionsForm } from "../types";
+import type { UseFormRegister } from "react-hook-form";
 
 type TProps = {
   content: {
@@ -21,11 +20,15 @@ type TProps = {
     }[];
   };
   questionsArray: string[];
+  register: UseFormRegister<TQuestionsForm>;
 };
 
-export default function Questions({ content, questionsArray }: TProps) {
+export default function Questions({
+  content,
+  questionsArray,
+  register,
+}: TProps) {
   const { lessonId } = useParams();
-  const { register, watch, setValue } = useFormContext<TQuestionsForm>();
 
   if (!lessonId) throw new Error("Lesson ID not found");
 
@@ -43,32 +46,9 @@ export default function Questions({ content, questionsArray }: TProps) {
     isOpenAnswer,
   });
 
-  useEffect(() => {
-    if (isOpenAnswer) {
-      const savedOpenAnswer = watch(`openQuestions.${questionId}`);
-      if (savedOpenAnswer) {
-        setOpenQuestion(savedOpenAnswer);
-      }
-    } else if (isSingleQuestion) {
-      const savedSingleAnswer = watch(`singleAnswerQuestions.${questionId}`);
-      if (savedSingleAnswer) {
-        setSelectedOption([savedSingleAnswer]);
-      }
-    } else {
-      const savedMultiAnswer = watch(`multiAnswerQuestions.${questionId}`);
-      if (savedMultiAnswer) {
-        const selectedAnswers = Object.entries(savedMultiAnswer)
-          .filter(([_, value]) => value === true)
-          .map(([key]) => key);
-        setSelectedOption(selectedAnswers);
-      }
-    }
-  }, [isOpenAnswer, isSingleQuestion, questionId, watch]);
-
   const handleClick = async (id: string) => {
     if (isSingleQuestion) {
       setSelectedOption([id]);
-      setValue(`singleAnswerQuestions.${questionId}`, id);
     } else {
       let newSelectedOptions: string[];
       if (selectedOption.includes(id)) {
@@ -77,11 +57,6 @@ export default function Questions({ content, questionsArray }: TProps) {
         newSelectedOptions = [...selectedOption, id];
       }
       setSelectedOption(newSelectedOptions);
-      const updatedMultiAnswer = {
-        ...watch(`multiAnswerQuestions.${questionId}`),
-      };
-      updatedMultiAnswer[id] = !updatedMultiAnswer[id];
-      setValue(`multiAnswerQuestions.${questionId}`, updatedMultiAnswer);
     }
   };
 
@@ -101,11 +76,6 @@ export default function Questions({ content, questionsArray }: TProps) {
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
-            value={openQuestion}
-            onChange={(e) => {
-              setOpenQuestion(e.target.value);
-              setValue(`openQuestions.${questionId}`, e.target.value);
-            }}
             onBlur={(e) => setOpenQuestion(e.target.value)}
             placeholder="Type your answer here"
             rows={5}
@@ -125,7 +95,9 @@ export default function Questions({ content, questionsArray }: TProps) {
                   readOnly
                   type="radio"
                   value={answer.id}
-                  {...register(`singleAnswerQuestions.${questionId}`)}
+                  {...register(
+                    `singleAnswerQuestions.${questionId}.${answer.id}`
+                  )}
                 />
               ) : (
                 <Input
