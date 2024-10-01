@@ -6,6 +6,7 @@ import {
   files,
   lessonItems,
   lessons,
+  questionAnswerOptions,
   questions,
   textBlocks,
 } from "src/storage/schema";
@@ -131,10 +132,12 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             displayOrder: index + 2,
           });
         } else if (item.type === "question") {
+          const questionId = crypto.randomUUID();
+
           const [question] = await db
             .insert(questions)
             .values({
-              id: crypto.randomUUID(),
+              id: questionId,
               questionType: item.questionType,
               questionBody: item.questionBody,
               solutionExplanation:
@@ -145,6 +148,31 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
               updatedAt: new Date().toISOString(),
             })
             .returning();
+
+          if (
+            item.questionType === "multiple_choice" ||
+            item.questionType === "single_choice"
+          ) {
+            const mockedIsCorrect =
+              item.questionType === "single_choice"
+                ? index === 1
+                : index % 2 === 0;
+
+            for (let index = 1; index < 5; index++) {
+              await db
+                .insert(questionAnswerOptions)
+                .values({
+                  id: crypto.randomUUID(),
+                  createdAt: new Date().toISOString(),
+                  updatedAt: new Date().toISOString(),
+                  questionId,
+                  optionText: faker.lorem.sentence(),
+                  isCorrect: mockedIsCorrect,
+                  position: index,
+                })
+                .returning();
+            }
+          }
 
           await db.insert(lessonItems).values({
             id: crypto.randomUUID(),
