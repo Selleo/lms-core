@@ -236,6 +236,7 @@ export interface GetCourseResponse {
     description: string;
     category: string;
     courseLessonCount: number;
+    completedLessonCount: number;
     enrolled: boolean;
     state: string | null;
     lessons: {
