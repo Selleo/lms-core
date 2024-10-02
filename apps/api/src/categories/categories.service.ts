@@ -1,4 +1,4 @@
-import { count, like } from "drizzle-orm";
+import { and, count, eq, like } from "drizzle-orm";
 import { Inject, Injectable } from "@nestjs/common";
 
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
@@ -57,14 +57,14 @@ export class CategoriesService {
 
       const data = await paginatedQuery;
 
-      const [totalItems] = await tx
-        .select({ count: count() })
+      const [{ totalItems }] = await tx
+        .select({ totalItems: count() })
         .from(categories)
-        .where(filterCondition);
+        .where(and(eq(categories.archived, false), filterCondition));
 
       return {
         data: this.serializeCategories(data, isAdmin),
-        pagination: { totalItems: totalItems.count, page, perPage },
+        pagination: { totalItems: totalItems, page, perPage },
       };
     });
   }

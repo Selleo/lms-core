@@ -2,6 +2,7 @@ import {
   and,
   between,
   count,
+  countDistinct,
   eq,
   ilike,
   isNotNull,
@@ -96,24 +97,21 @@ export class CoursesService {
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
 
-      const totalItems = await tx
+      const [{ totalItems }] = await tx
         .select({
-          count: sql<number>`${courses.id}`,
+          totalItems: countDistinct(courses.id),
         })
         .from(courses)
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
-        .where(and(...conditions))
-        .groupBy(
-          courses.id,
-          courses.title,
-          courses.imageUrl,
-          courses.description,
-          users.firstName,
-          users.lastName,
-          categories.title,
+        .where(
+          and(
+            ...conditions,
+            eq(courses.archived, false),
+            eq(courses.state, "published"),
+          ),
         );
 
       const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
@@ -121,7 +119,7 @@ export class CoursesService {
       return {
         data: dataWithS3SignedUrls,
         pagination: {
-          totalItems: totalItems?.length || 0,
+          totalItems: totalItems || 0,
           page,
           perPage,
         },
@@ -174,23 +172,19 @@ export class CoursesService {
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
-      const [totalItems] = await tx
-        .select({ count: count() })
+      const [{ totalItems }] = await tx
+        .select({ totalItems: countDistinct(courses.id) })
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
-        .where(and(...conditions))
-        .groupBy(
-          courses.id,
-          courses.title,
-          courses.imageUrl,
-          courses.description,
-          users.firstName,
-          users.lastName,
-          studentCourses.studentId,
-          categories.title,
+        .where(
+          and(
+            ...conditions,
+            eq(courses.state, "published"),
+            eq(courses.archived, false),
+          ),
         );
 
       const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
@@ -198,7 +192,7 @@ export class CoursesService {
       return {
         data: dataWithS3SignedUrls,
         pagination: {
-          totalItems: totalItems?.count || 0,
+          totalItems: totalItems || 0,
           page,
           perPage,
         },
