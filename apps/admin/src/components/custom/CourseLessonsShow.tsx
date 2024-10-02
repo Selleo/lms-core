@@ -1,14 +1,5 @@
-import {
-  Box,
-  Label,
-  Table,
-  TableHead,
-  TableBody,
-  TableRow,
-  TableCell,
-  Button,
-} from "@adminjs/design-system";
-import { ApiClient, RecordJSON, ShowPropertyProps } from "adminjs";
+import { Box, Button, Label } from "@adminjs/design-system";
+import { ApiClient, type RecordJSON, type ShowPropertyProps } from "adminjs";
 import React, { useEffect, useState } from "react";
 
 const MaxPerPage = 500;
@@ -149,28 +140,31 @@ const CourseLessonsShow: React.FC<ShowPropertyProps> = ({ record }) => {
   };
 
   const renderLessonList = (lessons: Lesson[], title: string) => (
-    <Box mb={20}>
+    <Box mb={20} style={{ width: "50%" }}>
       <Label>{title}</Label>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Title</TableCell>
-            <TableCell>lesson thumbnail</TableCell>
-            <TableCell>Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
+      <Box style={{ width: "100%", maxHeight: "564px", overflowX: "auto" }}>
+        <Box flex style={{ flexDirection: "column", gap: "1rem" }}>
           {lessons.map((lesson: Lesson) => (
-            <TableRow key={lesson.params.id}>
-              <TableCell>{lesson.params.title}</TableCell>
-              <TableCell>
+            <Box
+              key={lesson.params.id}
+              flex
+              style={{
+                alignItems: "center",
+                justifyContent: "space-between",
+                backgroundColor: "#f4f4f5",
+                borderRadius: "8px",
+                overflow: "hidden",
+              }}
+            >
+              <Box flex style={{ alignItems: "center", gap: "0.5rem" }}>
                 <img
                   src={lesson.params.image_url}
                   alt={lesson.params.title}
                   style={{ width: "100px", height: "100px" }}
                 />
-              </TableCell>
-              <TableCell>
+                <span>{lesson.params.title}</span>
+              </Box>
+              <Box>
                 <Button
                   variant="text"
                   size="sm"
@@ -182,16 +176,16 @@ const CourseLessonsShow: React.FC<ShowPropertyProps> = ({ record }) => {
                 >
                   {title === "Assigned Lessons" ? "Remove" : "Assign"}
                 </Button>
-              </TableCell>
-            </TableRow>
+              </Box>
+            </Box>
           ))}
-        </TableBody>
-      </Table>
+        </Box>
+      </Box>
     </Box>
   );
 
   return (
-    <Box>
+    <Box flex style={{ display: "flex", width: "100%", gap: "1.5rem" }}>
       {renderLessonList(assignedLessons, "Assigned Lessons")}
       {renderLessonList(unassignedLessons, "Unassigned Lessons")}
     </Box>
