@@ -55,7 +55,7 @@ export const lessonsConfigOptions: ResourceOptions = {
     "state",
     "status",
     "file",
-    "relations",
+    "lesson_content_items",
   ],
   properties: {
     state: {
@@ -96,6 +96,11 @@ export const lessonsConfigOptions: ResourceOptions = {
     file: {
       components: {
         show: Components.PhotoPreview,
+      },
+    },
+    lesson_content_items: {
+      components: {
+        show: Components.LessonContentItemsTable,
       },
     },
   },

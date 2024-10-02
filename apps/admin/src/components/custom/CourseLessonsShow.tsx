@@ -25,7 +25,6 @@ interface Lesson extends RecordJSON {
 const CourseLessonsShow: React.FC<ShowPropertyProps> = ({ record }) => {
   const [assignedLessons, setAssignedLessons] = useState<Lesson[]>([]);
   const [unassignedLessons, setUnassignedLessons] = useState<Lesson[]>([]);
-
   const courseId = record.id;
   const api = new ApiClient();
 
