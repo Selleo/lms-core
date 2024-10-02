@@ -14,7 +14,7 @@ export default function Overview() {
 
   return (
     <Card className="w-full border-none drop-shadow-primary">
-      <CardContent className="p-8 flex flex-col align-center gap-6 lg:flex-row">
+      <CardContent className="p-8 flex flex-col align-center gap-6 2xl:flex-row">
         <div className="relative self-center w-[320px] aspect-video shrink-0">
           <img
             src={imageUrl}
