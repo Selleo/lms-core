@@ -142,10 +142,6 @@ export class AdminApp {
             ...lessonsConfigOptions,
           },
           features: [
-            setOneToManyRelation({
-              resourceId: "lesson_items",
-              joinKey: "lesson_id",
-            }),
             uploadFile("lessons", "image_url", 25, [
               "image/jpeg",
               "image/png",

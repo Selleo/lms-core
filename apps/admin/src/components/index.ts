@@ -17,6 +17,10 @@ const Components = {
   LessonItems: componentLoader.add("LessonItems", "./custom/LessonItems"),
   PhotoPreview: componentLoader.add("PhotoPreview", "./photo/PhotoPreview"),
   QuestionId: componentLoader.add("QuestionId", "./custom/QuestionId"),
+  LessonContentItemsTable: componentLoader.add(
+    "LessonContentItemsTable",
+    "./custom/LessonContentItemsTable",
+  ),
   StatusListValue: componentLoader.add(
     "StatusListValue",
     "./custom/StatusListValue",
