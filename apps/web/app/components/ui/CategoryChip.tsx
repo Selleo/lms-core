@@ -1,16 +1,23 @@
 import { Dot } from "lucide-react";
+import { cn } from "~/lib/utils";
 
-type Props = {
+type CategoryChipProps = {
   category: string;
+  color?: string;
 };
 
-export const CategoryChip = ({ category }: Props) => {
+export const CategoryChip = ({
+  category,
+  color = "text-primary-700",
+}: CategoryChipProps) => {
+  const dotClasses = cn("flex-shrink-0", color);
+
   return (
     <div className="max-w-fit bg-white px-2 py-1 rounded-lg items-center flex gap-2">
       <Dot
         size={8}
         strokeWidth={4}
-        className="flex-shrink-0 text-primary-700"
+        className={dotClasses}
         absoluteStrokeWidth
       />
       <div className="truncate text-xs text-primary-950">{category}</div>
