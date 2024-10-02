@@ -5,18 +5,20 @@ import Files from "./Files";
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 import type { TQuestionsForm } from "../types";
-import type { UseFormRegister } from "react-hook-form";
+import type { UseFormGetValues, UseFormRegister } from "react-hook-form";
 
 type TLessonItem = GetLessonResponse["data"]["lessonItems"][number];
 
 type TProps = {
   lessonItem: TLessonItem;
+  getValues: UseFormGetValues<TQuestionsForm>;
   questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
 };
 
 export default function LessonItemsSwitch({
   lessonItem,
+  getValues,
   questionsArray,
   register,
 }: TProps) {
@@ -27,6 +29,7 @@ export default function LessonItemsSwitch({
     return (
       <Questions
         content={lessonItem.content}
+        getValues={getValues}
         questionsArray={questionsArray}
         register={register}
       />

@@ -14,7 +14,7 @@ export default function LessonPage() {
     throw new Error(`Lesson with id: ${lessonId} not found`);
   }
 
-  const { register } = useForm<TQuestionsForm>({
+  const { getValues, register } = useForm<TQuestionsForm>({
     mode: "onChange",
     defaultValues: getUserAnswers(data),
   });
@@ -26,6 +26,7 @@ export default function LessonPage() {
     <>
       {orderedLessonsItems.map((lessonItem) => (
         <LessonItemsSwitch
+          getValues={getValues}
           key={lessonItem.content.id}
           lessonItem={lessonItem}
           questionsArray={questionsArray}
