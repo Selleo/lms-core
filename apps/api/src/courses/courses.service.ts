@@ -27,12 +27,15 @@ import {
   categories,
   courseLessons,
   courses,
+  lessonItems,
   lessons,
+  studentCompletedLessonItems,
   studentCourses,
   users,
 } from "../storage/schema";
 import { getSortOptions } from "../common/helpers/getSortOptions";
 import { S3Service } from "src/file/s3.service";
+import { isEmpty } from "lodash";
 
 @Injectable()
 export class CoursesService {
@@ -216,6 +219,25 @@ export class CoursesService {
           FROM ${courseLessons}
           JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
           WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
+        completedLessonCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${courseLessons}
+          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+          WHERE ${courseLessons.courseId} = ${courses.id}
+            AND ${lessons.state} = 'published'
+            AND ${lessons.archived} = false
+            AND (
+              SELECT COUNT(*)
+              FROM ${lessonItems}
+              WHERE ${lessonItems.lessonId} = ${lessons.id}
+                AND ${lessonItems.lessonItemType} != 'text_block'
+            ) = (
+              SELECT COUNT(*)
+              FROM ${studentCompletedLessonItems}
+              WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.studentId} = ${userId}
+            )
+          )::INTEGER`,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         state: studentCourses.state,
       })
@@ -240,6 +262,15 @@ export class CoursesService {
         title: lessons.title,
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
+        itemsCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+        itemsCompletedCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${studentCompletedLessonItems}
+          WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+          AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
       })
       .from(courseLessons)
       .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
@@ -255,7 +286,8 @@ export class CoursesService {
         ),
       );
 
-    if (!courseLessonList) throw new NotFoundException("Lessons not found");
+    if (isEmpty(courseLessonList))
+      throw new NotFoundException("Lessons not found");
 
     const imageUrl = (course.imageUrl as string).startsWith("https://")
       ? course.imageUrl

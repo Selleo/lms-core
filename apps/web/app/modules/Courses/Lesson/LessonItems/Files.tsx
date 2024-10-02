@@ -22,7 +22,7 @@ export default function Files({ content, lessonItemId }: TProps) {
       {isPresentation ? (
         <Presentation url={content.url} presentationId={lessonItemId} />
       ) : (
-        <Video url={content.url} videoId={content.id} />
+        <Video url={content.url} videoId={lessonItemId} />
       )}
     </Card>
   );

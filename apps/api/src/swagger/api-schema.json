@@ -1709,6 +1709,9 @@
               "courseLessonCount": {
                 "type": "number"
               },
+              "completedLessonCount": {
+                "type": "number"
+              },
               "enrolled": {
                 "type": "boolean"
               },
@@ -1739,13 +1742,21 @@
                     },
                     "description": {
                       "type": "string"
+                    },
+                    "itemsCount": {
+                      "type": "number"
+                    },
+                    "itemsCompletedCount": {
+                      "type": "number"
                     }
                   },
                   "required": [
                     "id",
                     "title",
                     "imageUrl",
-                    "description"
+                    "description",
+                    "itemsCount",
+                    "itemsCompletedCount"
                   ]
                 }
               }
@@ -1757,6 +1768,7 @@
               "description",
               "category",
               "courseLessonCount",
+              "completedLessonCount",
               "enrolled",
               "state",
               "lessons"
@@ -1807,6 +1819,12 @@
               },
               "description": {
                 "type": "string"
+              },
+              "itemsCount": {
+                "type": "number"
+              },
+              "itemsCompletedCount": {
+                "type": "number"
               },
               "lessonItems": {
                 "type": "array",
@@ -1945,12 +1963,6 @@
                     "content"
                   ]
                 }
-              },
-              "itemsCount": {
-                "type": "number"
-              },
-              "itemsCompletedCount": {
-                "type": "number"
               }
             },
             "required": [
@@ -1958,9 +1970,9 @@
               "title",
               "imageUrl",
               "description",
-              "lessonItems",
               "itemsCount",
-              "itemsCompletedCount"
+              "itemsCompletedCount",
+              "lessonItems"
             ]
           }
         },
