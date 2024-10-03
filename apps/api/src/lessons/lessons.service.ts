@@ -227,7 +227,9 @@ export class LessonsService {
       : await this.s3Service.getSignedUrl(lesson.imageUrl);
 
     const completedLessonItems = await this.db
-      .select({ lessonItemId: studentCompletedLessonItems.lessonItemId })
+      .selectDistinct({
+        lessonItemId: studentCompletedLessonItems.lessonItemId,
+      })
       .from(studentCompletedLessonItems)
       .where(eq(studentCompletedLessonItems.lessonId, lesson.id));
 
