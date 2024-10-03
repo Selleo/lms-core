@@ -199,3 +199,20 @@
   border-radius: 8px;
 }
 /* ------- end --------- */
+
+@supports (scrollbar-width: thin) {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: initial;
+  }
+}
+
+@supports selector(::-webkit-scrollbar) {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 0.25rem;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+  }
+}

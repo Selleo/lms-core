@@ -99,7 +99,7 @@ export const CourseViewMainCard = ({
         <h4 className="text-2xl font-bold mt-6 leading-10 text-neutral-950">
           {title}
         </h4>
-        <div className="min-h-0 overflow-auto">
+        <div className="min-h-0 scrollbar-thin overflow-auto">
           <p className="mt-4 text-neutral-900 leading-7 font-normal">
             {description}
           </p>

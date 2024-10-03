@@ -20,7 +20,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
         <span className="text-primary-700"> ({lessons.length})</span>
       </h3>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4 overflow-auto min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4 overflow-auto min-h-0 scrollbar-thin">
         {lessons.map(
           (
             {
