@@ -4,19 +4,14 @@ import {
   baseResponse,
   BaseResponse,
   nullResponse,
-  paginatedResponse,
   PaginatedResponse,
   UUIDSchema,
 } from "src/common";
 import { CoursesService } from "../courses.service";
-import {
-  type AllCoursesResponse,
-  allCoursesSchema,
-} from "../schemas/course.schema";
+import { type AllCoursesResponse } from "../schemas/course.schema";
 import {
   type CoursesFilterSchema,
   type SortCourseFieldsOptions,
-  sortCourseFieldsOptions,
 } from "../schemas/courseQuery";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import {
@@ -24,25 +19,14 @@ import {
   commonShowCourseSchema,
 } from "../schemas/showCourseCommon.schema";
 import { Type } from "@sinclair/typebox";
+import { allCoursesValidation } from "./validations";
 
 @Controller("courses")
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
-  @Validate({
-    response: paginatedResponse(allCoursesSchema),
-    request: [
-      { type: "query", name: "title", schema: Type.String() },
-      { type: "query", name: "category", schema: Type.String() },
-      { type: "query", name: "author", schema: Type.String() },
-      { type: "query", name: "creationDateRange[0]", schema: Type.String() },
-      { type: "query", name: "creationDateRange[1]", schema: Type.String() },
-      { type: "query", name: "page", schema: Type.Number({ minimum: 1 }) },
-      { type: "query", name: "perPage", schema: Type.Number() },
-      { type: "query", name: "sort", schema: sortCourseFieldsOptions },
-    ],
-  })
+  @Validate(allCoursesValidation)
   async getAllCourses(
     @Query("title") title: string,
     @Query("category") category: string,
@@ -71,19 +55,7 @@ export class CoursesController {
   }
 
   @Get("get-student-courses")
-  @Validate({
-    response: paginatedResponse(allCoursesSchema),
-    request: [
-      { type: "query", name: "title", schema: Type.String() },
-      { type: "query", name: "category", schema: Type.String() },
-      { type: "query", name: "author", schema: Type.String() },
-      { type: "query", name: "creationDateRange[0]", schema: Type.String() },
-      { type: "query", name: "creationDateRange[1]", schema: Type.String() },
-      { type: "query", name: "page", schema: Type.Number({ minimum: 1 }) },
-      { type: "query", name: "perPage", schema: Type.Number() },
-      { type: "query", name: "sort", schema: sortCourseFieldsOptions },
-    ],
-  })
+  @Validate(allCoursesValidation)
   async getStudentCourses(
     @Query("title") title: string,
     @Query("category") category: string,
