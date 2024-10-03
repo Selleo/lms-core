@@ -6,6 +6,7 @@ import {
 } from "@remix-run/react";
 import { last } from "lodash-es";
 import type { GetCourseResponse } from "~/api/generated-api";
+import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
 import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { queryClient } from "~/api/queryClient";
@@ -33,8 +34,11 @@ export const CourseViewMainCard = ({
     priceInCents,
   } = course;
   const { mutateAsync: unenrollCourse } = useUnenrollCourse();
+  const { mutateAsync: enrollCourse } = useEnrollCourse();
   const { id: courseId } = useParams<{ id: string }>();
   const { isAdmin } = useUserRole();
+
+  const isPayable = Boolean(priceInCents);
 
   if (!courseId) {
     toast({
@@ -46,8 +50,14 @@ export const CourseViewMainCard = ({
 
   const firstUncompletedLesson =
     course.lessons.find(
-      (lesson) => lesson.itemsCompletedCount < lesson.itemsCount,
+      (lesson) => lesson.itemsCompletedCount < lesson.itemsCount
     )?.id ?? last(course.lessons)?.id;
+
+  const handleEnroll = () => {
+    enrollCourse({ id: courseId }).then(() => {
+      queryClient.invalidateQueries(courseQueryOptions(courseId));
+    });
+  };
 
   const handleUnenroll = () => {
     unenrollCourse({ id: courseId }).then(() => {
@@ -106,7 +116,15 @@ export const CourseViewMainCard = ({
               </Button>
             </Link>
           )}
-          {!isAdmin && !isEnrolled && (
+          {!isAdmin && !isEnrolled && !isPayable && (
+            <Button
+              className="mt-4 w-full bg-secondary-500 text-white py-2 rounded-lg"
+              onClick={handleEnroll}
+            >
+              Enroll
+            </Button>
+          )}
+          {!isAdmin && !isEnrolled && isPayable && (
             <PaymentModal
               courseCurrency="usd" // TODO: Add currency from the course when available
               coursePrice={priceInCents}
@@ -121,7 +139,7 @@ export const CourseViewMainCard = ({
                 {
                   "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
                     isEnrolled,
-                },
+                }
               )}
               onClick={handleUnenroll}
             >
