@@ -1,13 +1,19 @@
 import { Link } from "@remix-run/react";
 import type { GetAllCoursesResponse } from "~/api/generated-api";
-import { Button } from "~/components/ui/button";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { useUserRole } from "~/hooks/useUserRole";
+import { cn } from "~/lib/utils";
+import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
   CourseType,
-  "title" | "category" | "courseLessonCount" | "imageUrl" | "description" | "enrolled"
+  | "title"
+  | "category"
+  | "courseLessonCount"
+  | "imageUrl"
+  | "description"
+  | "enrolled"
 > & {
   href: string;
 };
@@ -28,7 +34,13 @@ const CourseCard = ({
       className="relative border border-primary-200 hover:border-primary-500 transition rounded-lg"
     >
       <div className="absolute top-4 left-4 right-4 flex">
-        <CategoryChip category={category} />
+        <CategoryChip
+          category={category}
+          color={cn({
+            "text-secondary-600": enrolled,
+            "text-primary-700": isAdmin || !enrolled,
+          })}
+        />
       </div>
       <img
         src={imageUrl || "https://placehold.co/600x400/png"}
@@ -47,9 +59,7 @@ const CourseCard = ({
             <div dangerouslySetInnerHTML={{ __html: description }} />
           </span>
         </div>
-        <Button className="w-full mt-auto">
-          {isAdmin || enrolled ? "View" : "Enroll"}
-        </Button>
+        <CourseCardButton enrolled={enrolled} isAdmin={isAdmin} />
       </div>
     </Link>
   );
