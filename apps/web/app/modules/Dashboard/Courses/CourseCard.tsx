@@ -1,10 +1,9 @@
 import { Link } from "@remix-run/react";
 import type { GetAllCoursesResponse } from "~/api/generated-api";
-import { Button } from "~/components/ui/button";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { useUserRole } from "~/hooks/useUserRole";
-import { Icon } from "~/components/Icon";
 import { cn } from "~/lib/utils";
+import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
@@ -60,20 +59,7 @@ const CourseCard = ({
             <div dangerouslySetInnerHTML={{ __html: description }} />
           </span>
         </div>
-        <Button
-          variant={enrolled ? "secondary" : "primary"}
-          className="mt-auto w-full"
-        >
-          {enrolled ? (
-            <span className="flex gap-x-2 items-center">
-              <Icon name="ArrowRight" className="w-4 h-4 text-white" /> Continue
-            </span>
-          ) : isAdmin ? (
-            "View"
-          ) : (
-            "Enroll"
-          )}
-        </Button>
+        <CourseCardButton enrolled={enrolled} isAdmin={isAdmin} />
       </div>
     </Link>
   );
