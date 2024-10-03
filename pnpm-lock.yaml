@@ -153,6 +153,9 @@ importers:
       '@faker-js/faker':
         specifier: ^8.4.1
         version: 8.4.1
+      '@golevelup/nestjs-stripe':
+        specifier: ^0.8.2
+        version: 0.8.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1))(rxjs@7.8.1)(stripe@17.0.0)
       '@knaadh/nestjs-drizzle-postgres':
         specifier: ^1.0.0
         version: 1.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(drizzle-orm@0.31.2(@types/pg@8.11.6)(@types/react@18.3.4)(knex@2.5.1(mysql2@3.11.0)(pg@8.12.0))(mysql2@3.11.0)(pg@8.12.0)(postgres@3.4.4)(react@18.3.1))(postgres@3.4.4)
@@ -249,6 +252,9 @@ importers:
       rxjs:
         specifier: ^7.8.1
         version: 7.8.1
+      stripe:
+        specifier: ^17.0.0
+        version: 17.0.0
       ts-pattern:
         specifier: ^5.2.0
         version: 5.2.0
@@ -2624,6 +2630,28 @@ packages:
 
   '@floating-ui/utils@0.2.7':
     resolution: {integrity: sha512-X8R8Oj771YRl/w+c1HqAC1szL8zWQRwFvgDwT129k9ACdBoud/+/rX9V0qiMl6LWUdP9voC2nDVZYPMQQsb6eA==}
+
+  '@golevelup/nestjs-common@2.0.0':
+    resolution: {integrity: sha512-D9RLXgkqn9SDLnZ2VoMER9l/+g5CM9Z7sZXa+10+0rZs6yevMepoiWmMVsFoUXLzYG2GwfixHLExwUr3XBCHFw==}
+    peerDependencies:
+      '@nestjs/common': ^10.x
+
+  '@golevelup/nestjs-discovery@4.0.1':
+    resolution: {integrity: sha512-HFXBJayEkYcU/bbxOztozONdWaZR34ZeJ2zRbZIWY8d5K26oPZQTvJ4L0STW3XVRGWtoE0WBpmx2YPNgYvcmJQ==}
+    peerDependencies:
+      '@nestjs/common': ^10.x
+      '@nestjs/core': ^10.x
+
+  '@golevelup/nestjs-modules@0.7.1':
+    resolution: {integrity: sha512-L5hBuU57ujl73IAyyZYkT+41tbo+9BggLzze7AMSWJhNUJBhvifFvtfSNRy2aTTPsLYuHLH2tmerjjOQkEdgDg==}
+    peerDependencies:
+      '@nestjs/common': ^10.x
+      rxjs: ^7.x
+
+  '@golevelup/nestjs-stripe@0.8.2':
+    resolution: {integrity: sha512-ar9Pmh27oXYcaxt3tYewHbVQpEd19iOpkkcanxrrCNoVOjpzwi1ikJJzaz4RT9KD7Bu2gMO8Q/vWbagbMOdkUA==}
+    peerDependencies:
+      stripe: ^14.19.0
 
   '@google-cloud/paginator@3.0.7':
     resolution: {integrity: sha512-jJNutk0arIQhmpUUQJPJErsojqo834KcyB6X7a1mxuic8i1tKXxde8E69IZxNZawRIlZdIK2QY4WALvlK5MzYQ==}
@@ -11199,6 +11227,10 @@ packages:
     resolution: {integrity: sha512-6fPc+R4ihwqP6N/aIv2f1gMH8lOVtWQHoqC4yK6oSDVVocumAsfCqjkXnqiYMhmMwS/mEHLp7Vehlt3ql6lEig==}
     engines: {node: '>=8'}
 
+  stripe@17.0.0:
+    resolution: {integrity: sha512-URKpnjH2O+OWxhvXLIaEIaAkp2fQvqITm/3zJS0a3nGCREjH3qJYxmGowngA46Qu1x2MumNL3Y/OdY6uzIhpCQ==}
+    engines: {node: '>=12.*'}
+
   strnum@1.0.5:
     resolution: {integrity: sha512-J8bbNyKKXl5qYcR36TIO8W3mVGVHrmmxsd5PAItGkmyzwJvybiw2IVq5nqd0i4LSNSkB/sx9VHllbfFdr9k1JA==}
 
@@ -15251,6 +15283,35 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@floating-ui/utils@0.2.7': {}
+
+  '@golevelup/nestjs-common@2.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))':
+    dependencies:
+      '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
+      lodash: 4.17.21
+      nanoid: 3.3.7
+
+  '@golevelup/nestjs-discovery@4.0.1(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1))':
+    dependencies:
+      '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
+      '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1)
+      lodash: 4.17.21
+
+  '@golevelup/nestjs-modules@0.7.1(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(rxjs@7.8.1)':
+    dependencies:
+      '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
+      lodash: 4.17.21
+      rxjs: 7.8.1
+
+  '@golevelup/nestjs-stripe@0.8.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1))(rxjs@7.8.1)(stripe@17.0.0)':
+    dependencies:
+      '@golevelup/nestjs-common': 2.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))
+      '@golevelup/nestjs-discovery': 4.0.1(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1))
+      '@golevelup/nestjs-modules': 0.7.1(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(rxjs@7.8.1)
+      stripe: 17.0.0
+    transitivePeerDependencies:
+      - '@nestjs/common'
+      - '@nestjs/core'
+      - rxjs
 
   '@google-cloud/paginator@3.0.7':
     dependencies:
@@ -25823,6 +25884,11 @@ snapshots:
   strip-json-comments@2.0.1: {}
 
   strip-json-comments@3.1.1: {}
+
+  stripe@17.0.0:
+    dependencies:
+      '@types/node': 20.14.14
+      qs: 6.13.0
 
   strnum@1.0.5: {}
 

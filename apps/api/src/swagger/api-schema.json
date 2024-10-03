@@ -1139,6 +1139,60 @@
           }
         }
       }
+    },
+    "/api/stripe_client_controller": {
+      "post": {
+        "operationId": "StripeClientController_createPaymentIntent",
+        "parameters": [
+          {
+            "name": "amount",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "currency",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePaymentIntentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/stripe/webhook": {
+      "post": {
+        "operationId": "StripeWebhookController_handleWebhook",
+        "parameters": [
+          {
+            "name": "stripe-signature",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "info": {
@@ -2269,6 +2323,25 @@
             },
             "required": [
               "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreatePaymentIntentResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "clientSecret": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "clientSecret"
             ]
           }
         },
