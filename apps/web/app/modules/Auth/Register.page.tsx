@@ -3,10 +3,10 @@ import { useRegisterUser } from "~/api/mutations/useRegisterUser";
 import { Button } from "~/components/ui/button";
 import {
   Card,
+  CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -16,6 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { RegisterBody } from "~/api/generated-api";
 
 const registerSchema = z.object({
+  firstName: z.string().min(2, { message: "First name is required" }),
+  lastName: z.string().min(2, { message: "Last name is required" }),
   email: z.string().email({ message: "Invalid email" }),
   password: z
     .string()
@@ -44,6 +46,34 @@ export default function RegisterPage() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="firstName">First name</Label>
+            <Input
+              id="firstName"
+              type="text"
+              placeholder="John"
+              {...register("firstName")}
+            />
+            {errors.firstName && (
+              <div className="text-red-500 text-sm">
+                {errors.firstName.message}
+              </div>
+            )}
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="lastName">Last name</Label>
+            <Input
+              id="lastName"
+              type="text"
+              placeholder="Doe"
+              {...register("lastName")}
+            />
+            {errors.lastName && (
+              <div className="text-red-500 text-sm">
+                {errors.lastName.message}
+              </div>
+            )}
+          </div>
           <div className="grid gap-2">
             <Label htmlFor="email">Email</Label>
             <Input

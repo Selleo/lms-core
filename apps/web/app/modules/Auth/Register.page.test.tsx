@@ -3,8 +3,8 @@ import { screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import {
-  mockRemixReact,
   mockedUseNavigate,
+  mockRemixReact,
 } from "~/utils/mocks/remix-run-mock";
 import { renderWith } from "~/utils/testUtils";
 import RegisterPage from "./Register.page";
@@ -29,7 +29,7 @@ describe("Register page", () => {
     renderWith({ withQuery: true }).render(<RemixStub />);
 
     expect(
-      screen.getByRole("heading", { name: "Sign Up" })
+      screen.getByRole("heading", { name: "Sign Up" }),
     ).toBeInTheDocument();
   });
 
@@ -37,8 +37,12 @@ describe("Register page", () => {
     renderWith({ withQuery: true }).render(<RemixStub />);
 
     const user = userEvent.setup();
+
+    await user.type(screen.getByLabelText("First name"), "Name");
+    await user.type(screen.getByLabelText("Last name"), "Surname");
     await user.type(screen.getByLabelText("Email"), "test@example.com");
     await user.type(screen.getByLabelText("Password"), "password123");
+
     await user.click(screen.getByRole("button", { name: "Create an account" }));
 
     await waitFor(() => {
@@ -52,9 +56,11 @@ describe("Register page", () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole("button", { name: "Create an account" }));
 
+    expect(screen.getByText("First name is required")).toBeInTheDocument();
+    expect(screen.getByText("Last name is required")).toBeInTheDocument();
     expect(screen.getByText("Invalid email")).toBeInTheDocument();
     expect(
-      screen.getByText("Password must be at least 8 characters")
+      screen.getByText("Password must be at least 8 characters"),
     ).toBeInTheDocument();
   });
 
