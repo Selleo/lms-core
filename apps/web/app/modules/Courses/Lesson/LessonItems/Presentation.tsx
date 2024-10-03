@@ -9,11 +9,13 @@ import { useCompletedLessonItemsStore } from "./LessonItemStore";
 type PresentationProps = {
   url: string;
   presentationId: string;
+  isAdmin: boolean;
 };
 
 export default function Presentation({
   url,
   presentationId,
+  isAdmin,
 }: PresentationProps) {
   const intersectionRef = useRef<HTMLDivElement>(null);
   const { lessonId } = useParams<{ lessonId: string }>();
@@ -35,7 +37,7 @@ export default function Presentation({
     const isInViewport = intersection && intersection.intersectionRatio === 1;
 
     const loadTimeout = setTimeout(() => {
-      if (isInViewport && !isCompleted) {
+      if (isInViewport && !isCompleted && !isAdmin) {
         markPresentationAsCompleted({ lessonItemId: presentationId, lessonId });
         markLessonItemAsCompleted({ id: presentationId, lessonId });
       }
