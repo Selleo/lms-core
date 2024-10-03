@@ -46,7 +46,7 @@ export const CourseViewMainCard = ({
 
   const firstUncompletedLesson =
     course.lessons.find(
-      (lesson) => lesson.itemsCompletedCount < lesson.itemsCount
+      (lesson) => lesson.itemsCompletedCount < lesson.itemsCount,
     )?.id ?? last(course.lessons)?.id;
 
   const handleEnroll = () => {
@@ -99,7 +99,7 @@ export const CourseViewMainCard = ({
         <h4 className="text-2xl font-bold mt-6 leading-10 text-neutral-950">
           {title}
         </h4>
-        <div className="min-h-0 overflow-auto scrollbar-thin">
+        <div className="min-h-0 overflow-auto">
           <p className="mt-4 text-neutral-900 leading-7 font-normal">
             {description}
           </p>
@@ -119,7 +119,7 @@ export const CourseViewMainCard = ({
                 {
                   "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
                     isEnrolled,
-                }
+                },
               )}
               onClick={!isEnrolled && !isAdmin ? handleEnroll : handleUnenroll}
             >

@@ -20,7 +20,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
         <span className="text-primary-700"> ({lessons.length})</span>
       </h3>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4 overflow-auto min-h-0 scrollbar-thin">
+      <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-3 3xl:grid-cols-4 gap-4 overflow-auto min-h-0">
         {lessons.map(
           (
             {
@@ -31,7 +31,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
               itemsCount,
               itemsCompletedCount,
             },
-            index
+            index,
           ) => (
             <Card
               key={index}
@@ -69,7 +69,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                                   key={index}
                                   className="h-[5px] flex-grow bg-secondary-500 rounded-[40px]"
                                 />
-                              )
+                              ),
                             )}
                             {Array.from({
                               length: itemsCount - itemsCompletedCount,
@@ -108,7 +108,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                 </Link>
               </CardContent>
             </Card>
-          )
+          ),
         )}
       </div>
     </div>
