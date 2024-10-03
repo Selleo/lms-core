@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import { currentUser } from "../data/currentUser";
 
 interface Credentials {
   email: string;
@@ -29,5 +30,8 @@ export const handlers = [
     } else {
       return new HttpResponse(null, { status: 401 });
     }
+  }),
+  http.get("/api/auth/current-user", () => {
+    return HttpResponse.json(currentUser);
   }),
 ];

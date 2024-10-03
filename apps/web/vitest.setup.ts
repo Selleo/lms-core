@@ -15,6 +15,8 @@ installGlobals();
 beforeAll(() => {
   server.listen();
   window.ResizeObserver = ResizeObserver;
+  window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+  Element.prototype.scrollIntoView = vi.fn();
 });
 
 afterEach(() => {
