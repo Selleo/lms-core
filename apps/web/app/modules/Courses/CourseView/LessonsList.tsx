@@ -31,7 +31,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
               itemsCount,
               itemsCompletedCount,
             },
-            index
+            index,
           ) => (
             <Card
               key={index}
@@ -69,7 +69,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                                   key={index}
                                   className="h-[5px] flex-grow bg-secondary-500 rounded-[40px]"
                                 />
-                              )
+                              ),
                             )}
                             {Array.from({
                               length: itemsCount - itemsCompletedCount,
@@ -108,7 +108,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                 </Link>
               </CardContent>
             </Card>
-          )
+          ),
         )}
       </div>
     </div>
