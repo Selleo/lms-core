@@ -74,13 +74,11 @@ export default function Questions({
   const handleOpenAnswerRequest = async (
     e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    if (!isAdmin) {
-      markLessonItemAsCompleted({
-        lessonItemId: questionId,
-        lessonId,
-      });
-      await sendOpenAnswer(e.target.value);
-    }
+    markLessonItemAsCompleted({
+      lessonItemId: questionId,
+      lessonId,
+    });
+    await sendOpenAnswer(e.target.value);
   };
 
   return (
@@ -99,7 +97,7 @@ export default function Questions({
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
-            onBlur={handleOpenAnswerRequest}
+            {...(!isAdmin && { onBlur: handleOpenAnswerRequest })}
             placeholder="Type your answer here"
             rows={5}
             className={cn({

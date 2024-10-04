@@ -45,6 +45,7 @@ export default function Presentation({
 
     return () => clearTimeout(loadTimeout);
   }, [
+    isAdmin,
     lessonId,
     presentationId,
     markLessonItemAsCompleted,
