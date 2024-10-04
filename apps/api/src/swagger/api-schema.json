@@ -837,6 +837,138 @@
         }
       }
     },
+    "/api/courses/available-courses": {
+      "get": {
+        "operationId": "CoursesController_getAvailableCourses",
+        "parameters": [
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creationDateRange[0]",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creationDateRange[1]",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "title",
+                  "type": "string"
+                },
+                {
+                  "const": "category",
+                  "type": "string"
+                },
+                {
+                  "const": "creationDate",
+                  "type": "string"
+                },
+                {
+                  "const": "author",
+                  "type": "string"
+                },
+                {
+                  "const": "lessonsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "enrolledParticipantsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "-title",
+                  "type": "string"
+                },
+                {
+                  "const": "-category",
+                  "type": "string"
+                },
+                {
+                  "const": "-creationDate",
+                  "type": "string"
+                },
+                {
+                  "const": "-author",
+                  "type": "string"
+                },
+                {
+                  "const": "-lessonsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "-enrolledParticipantsCount",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAvailableCoursesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/courses/course": {
       "get": {
         "operationId": "CoursesController_getCourse",
@@ -1550,6 +1682,9 @@
                 "courseLessonCount": {
                   "type": "number"
                 },
+                "completedLessonCount": {
+                  "type": "number"
+                },
                 "enrolled": {
                   "type": "boolean"
                 },
@@ -1565,6 +1700,7 @@
                 "author",
                 "category",
                 "courseLessonCount",
+                "completedLessonCount",
                 "enrolled",
                 "enrolledParticipantCount"
               ]
@@ -1632,6 +1768,9 @@
                 "courseLessonCount": {
                   "type": "number"
                 },
+                "completedLessonCount": {
+                  "type": "number"
+                },
                 "enrolled": {
                   "type": "boolean"
                 },
@@ -1647,6 +1786,93 @@
                 "author",
                 "category",
                 "courseLessonCount",
+                "completedLessonCount",
+                "enrolled",
+                "enrolledParticipantCount"
+              ]
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
+          }
+        },
+        "required": [
+          "data",
+          "pagination"
+        ]
+      },
+      "GetAvailableCoursesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "author": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "courseLessonCount": {
+                  "type": "number"
+                },
+                "completedLessonCount": {
+                  "type": "number"
+                },
+                "enrolled": {
+                  "type": "boolean"
+                },
+                "enrolledParticipantCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "imageUrl",
+                "description",
+                "author",
+                "category",
+                "courseLessonCount",
+                "completedLessonCount",
                 "enrolled",
                 "enrolledParticipantCount"
               ]

@@ -86,6 +86,38 @@ export class CoursesController {
     return new PaginatedResponse(data);
   }
 
+  @Get("available-courses")
+  @Validate(allCoursesValidation)
+  async getAvailableCourses(
+    @Query("title") title: string,
+    @Query("category") category: string,
+    @Query("author") author: string,
+    @Query("creationDateRange[0]") creationDateRangeStart: string,
+    @Query("creationDateRange[1]") creationDateRangeEnd: string,
+    @Query("page") page: number,
+    @Query("perPage") perPage: number,
+    @Query("sort") sort: SortCourseFieldsOptions,
+    @CurrentUser("userId") currentUserId: string,
+  ): Promise<PaginatedResponse<AllCoursesResponse>> {
+    const filters: CoursesFilterSchema = {
+      title,
+      category,
+      author,
+      creationDateRange:
+        creationDateRangeStart && creationDateRangeEnd
+          ? [creationDateRangeStart, creationDateRangeEnd]
+          : undefined,
+    };
+    const query = { filters, page, perPage, sort };
+
+    const data = await this.coursesService.getAvailableCourses(
+      query,
+      currentUserId,
+    );
+
+    return new PaginatedResponse(data);
+  }
+
   @Get("course")
   @Validate({
     request: [

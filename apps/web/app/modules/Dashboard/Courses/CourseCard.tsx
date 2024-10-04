@@ -4,6 +4,7 @@ import { CategoryChip } from "~/components/ui/CategoryChip";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
+import CourseProgress from "~/components/CourseProgress";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
@@ -16,6 +17,7 @@ type CourseCardProps = Pick<
   | "enrolled"
 > & {
   href: string;
+  completedLessonCount?: number;
 };
 
 const CourseCard = ({
@@ -25,13 +27,15 @@ const CourseCard = ({
   category,
   imageUrl,
   enrolled,
+  courseLessonCount,
+  completedLessonCount,
 }: CourseCardProps) => {
   const { isAdmin } = useUserRole();
 
   return (
     <Link
       to={href}
-      className="relative border border-primary-200 hover:border-primary-500 transition rounded-lg"
+      className="relative max-w-[320px] overflow-hidden w-full transition rounded-lg"
     >
       <div className="absolute top-4 left-4 right-4 flex">
         <CategoryChip
@@ -50,14 +54,36 @@ const CourseCard = ({
           (e.target as HTMLImageElement).src = "https://picsum.photos/500/300";
         }}
       />
-      <div className="flex flex-col gap-3 p-4 pt-5 w-full aspect-[291/212]">
-        <h3 className="font-bold leading-5 text-lg text-neutral-950 line-clamp-2">
-          {title}
-        </h3>
-        <div className="justify-end text-neutral-500 text-sm">
-          <span className="line-clamp-3">
-            <div dangerouslySetInnerHTML={{ __html: description }} />
-          </span>
+      <div
+        className={cn(
+          "flex flex-col border-x border-b rounded-b-lg max-w-[320px] gap-y-2 py-4 px-2 w-full h-auto aspect-[291/212]",
+          {
+            "border-secondary-200 hover:border-secondary-500": enrolled,
+            "border-primary-200 hover:border-primary-500": !enrolled,
+          },
+        )}
+      >
+        <div className="flex flex-col gap-y-3">
+          {enrolled && typeof completedLessonCount === "number" && (
+            <CourseProgress
+              courseLessonCount={courseLessonCount}
+              completedLessonCount={completedLessonCount}
+            />
+          )}
+          <div
+            className={cn("flex flex-col gap-y-3", {
+              "pt-3 pb-2 px-4": !enrolled,
+            })}
+          >
+            <h3 className="font-bold leading-5 text-lg text-neutral-950 line-clamp-2">
+              {title}
+            </h3>
+            <div className="justify-end text-neutral-500 text-sm">
+              <span className="line-clamp-3">
+                <div dangerouslySetInnerHTML={{ __html: description }} />
+              </span>
+            </div>
+          </div>
         </div>
         <CourseCardButton enrolled={enrolled} isAdmin={isAdmin} />
       </div>
