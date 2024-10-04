@@ -1,0 +1,90 @@
+import { Elements } from "@stripe/react-stripe-js";
+import { Appearance } from "@stripe/stripe-js";
+import { useState } from "react";
+import { useStripePaymentIntent } from "~/api/mutations/useStripePaymentIntent";
+import { Button } from "~/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
+import { useStripePromise } from "./hooks/useStripePromise";
+import { PaymentForm } from "./PaymentForm";
+import { formatPrice } from "~/lib/formatters/priceFormatter";
+
+type PaymentModalProps = {
+  coursePrice: number;
+  courseCurrency: string;
+  courseTitle: string;
+  courseId: string;
+};
+
+const appearance: Appearance = {
+  theme: "stripe",
+  variables: {},
+  rules: {},
+};
+
+export function PaymentModal({
+  coursePrice,
+  courseCurrency,
+  courseTitle,
+  courseId,
+}: PaymentModalProps) {
+  const [open, setOpen] = useState(false);
+  const stripePromise = useStripePromise();
+  const { clientSecret, createPaymentIntent, resetClientSecret } =
+    useStripePaymentIntent();
+
+  const handlePayment = async () => {
+    try {
+      await createPaymentIntent({
+        amount: coursePrice,
+        currency: courseCurrency,
+      });
+      setOpen(true);
+    } catch (error) {
+      console.error("Error creating payment intent:", error);
+    }
+  };
+
+  const handlePaymentSuccess = () => {
+    setOpen(false);
+    resetClientSecret();
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button
+          onClick={handlePayment}
+          className="w-full bg-secondary-500 text-white py-2 rounded-lg"
+        >
+          Enroll - {formatPrice(coursePrice, courseCurrency)}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle className="line-clamp-1 my-2">
+            Enroll in {courseTitle}
+          </DialogTitle>
+        </DialogHeader>
+        {clientSecret && (
+          <Elements
+            stripe={stripePromise}
+            options={{ clientSecret, appearance }}
+          >
+            <PaymentForm
+              currency={courseCurrency}
+              courseId={courseId}
+              price={coursePrice}
+              onPaymentSuccess={handlePaymentSuccess}
+            />
+          </Elements>
+        )}
+      </DialogContent>
+    </Dialog>
+  );
+}

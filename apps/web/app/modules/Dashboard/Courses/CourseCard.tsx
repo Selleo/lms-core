@@ -5,6 +5,7 @@ import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
 import CourseProgress from "~/components/CourseProgress";
+import { formatPrice } from "~/lib/formatters/priceFormatter";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
@@ -15,6 +16,7 @@ type CourseCardProps = Pick<
   | "imageUrl"
   | "description"
   | "enrolled"
+  | "priceInCents"
 > & {
   href: string;
   completedLessonCount?: number;
@@ -29,6 +31,7 @@ const CourseCard = ({
   enrolled,
   courseLessonCount,
   completedLessonCount,
+  priceInCents,
 }: CourseCardProps) => {
   const { isAdmin } = useUserRole();
 

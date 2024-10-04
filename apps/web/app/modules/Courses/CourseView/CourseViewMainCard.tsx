@@ -1,21 +1,21 @@
-import { Button } from "~/components/ui/button";
-import type { GetCourseResponse } from "~/api/generated-api";
-import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
 import {
   isRouteErrorResponse,
   Link,
   useParams,
   useRouteError,
 } from "@remix-run/react";
-import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
-import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
-import { queryClient } from "~/api/queryClient";
-import { courseQueryOptions } from "~/api/queries/useCourse";
-import { toast } from "~/components/ui/use-toast";
-import { CategoryChip } from "~/components/ui/CategoryChip";
-import { cn } from "~/lib/utils";
-import { useUserRole } from "~/hooks/useUserRole";
 import { last } from "lodash-es";
+import type { GetCourseResponse } from "~/api/generated-api";
+import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
+import { courseQueryOptions } from "~/api/queries/useCourse";
+import { queryClient } from "~/api/queryClient";
+import { Button } from "~/components/ui/button";
+import { CategoryChip } from "~/components/ui/CategoryChip";
+import { toast } from "~/components/ui/use-toast";
+import { useUserRole } from "~/hooks/useUserRole";
+import { cn } from "~/lib/utils";
+import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
+import { PaymentModal } from "~/modules/stripe/PaymentModal";
 
 export const CourseViewMainCard = ({
   course,
@@ -30,8 +30,8 @@ export const CourseViewMainCard = ({
     enrolled: isEnrolled,
     courseLessonCount,
     completedLessonCount,
+    priceInCents,
   } = course;
-  const { mutateAsync: enrollCourse } = useEnrollCourse();
   const { mutateAsync: unenrollCourse } = useUnenrollCourse();
   const { id: courseId } = useParams<{ id: string }>();
   const { isAdmin } = useUserRole();
@@ -48,12 +48,6 @@ export const CourseViewMainCard = ({
     course.lessons.find(
       (lesson) => lesson.itemsCompletedCount < lesson.itemsCount,
     )?.id ?? last(course.lessons)?.id;
-
-  const handleEnroll = () => {
-    enrollCourse({ id: courseId }).then(() => {
-      queryClient.invalidateQueries(courseQueryOptions(courseId));
-    });
-  };
 
   const handleUnenroll = () => {
     unenrollCourse({ id: courseId }).then(() => {
@@ -112,7 +106,15 @@ export const CourseViewMainCard = ({
               </Button>
             </Link>
           )}
-          {!isAdmin && (
+          {!isAdmin && !isEnrolled && (
+            <PaymentModal
+              courseCurrency="usd" // TODO: Add currency from the course when available
+              coursePrice={priceInCents}
+              courseTitle={title}
+              courseId={courseId}
+            />
+          )}
+          {!isAdmin && isEnrolled && (
             <Button
               className={cn(
                 "w-full bg-secondary-500 text-white py-2 rounded-lg",
@@ -121,9 +123,9 @@ export const CourseViewMainCard = ({
                     isEnrolled,
                 },
               )}
-              onClick={!isEnrolled && !isAdmin ? handleEnroll : handleUnenroll}
+              onClick={handleUnenroll}
             >
-              {isEnrolled && !isAdmin ? "Unenroll" : "Enroll"}
+              Unenroll
             </Button>
           )}
         </div>

@@ -200,6 +200,7 @@ export interface GetAllCoursesResponse {
     completedLessonCount: number;
     enrolled: boolean;
     enrolledParticipantCount: number;
+    priceInCents: number;
   }[];
   pagination: {
     totalItems: number;
@@ -242,6 +243,7 @@ export interface GetAvailableCoursesResponse {
     completedLessonCount: number;
     enrolled: boolean;
     enrolledParticipantCount: number;
+    priceInCents: number;
   }[];
   pagination: {
     totalItems: number;
@@ -271,6 +273,7 @@ export interface GetCourseResponse {
       itemsCount: number;
       itemsCompletedCount: number;
     }[];
+    priceInCents: number;
   };
 }
 
@@ -345,6 +348,12 @@ export interface AnswerQuestionResponse {
 export interface MarkLessonItemAsCompletedResponse {
   data: {
     message: string;
+  };
+}
+
+export interface CreatePaymentIntentResponse {
+  data: {
+    clientSecret: string;
   };
 }
 
@@ -1045,6 +1054,40 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         query: query,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StripeClientControllerCreatePaymentIntent
+     * @request POST:/api/stripe_client_controller
+     */
+    stripeClientControllerCreatePaymentIntent: (
+      query?: {
+        amount?: number;
+        currency?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<CreatePaymentIntentResponse, any>({
+        path: `/api/stripe_client_controller`,
+        method: "POST",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StripeWebhookControllerHandleWebhook
+     * @request POST:/api/stripe/webhook
+     */
+    stripeWebhookControllerHandleWebhook: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/stripe/webhook`,
+        method: "POST",
         ...params,
       }),
   };

@@ -379,7 +379,7 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dialog':
-        specifier: ^1.1.0
+        specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.2.19)(@types/react@18.2.61)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-dropdown-menu':
         specifier: ^2.1.1
@@ -411,6 +411,12 @@ importers:
       '@remix-run/react':
         specifier: ^2.9.2
         version: 2.10.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.4.5)
+      '@stripe/react-stripe-js':
+        specifier: ^2.8.0
+        version: 2.8.0(@stripe/stripe-js@4.6.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@stripe/stripe-js':
+        specifier: ^4.6.0
+        version: 4.6.0
       '@tanstack/react-query':
         specifier: ^5.40.1
         version: 5.40.1(react@18.3.1)
@@ -4653,6 +4659,17 @@ packages:
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
+
+  '@stripe/react-stripe-js@2.8.0':
+    resolution: {integrity: sha512-Vf1gNEuBxA9EtxiLghm2ZWmgbADNMJw4HW6eolUu0DON/6mZvWZgk0KHolN0sozNJwYp0i/8hBsDBcBUWcvnbw==}
+    peerDependencies:
+      '@stripe/stripe-js': ^1.44.1 || ^2.0.0 || ^3.0.0 || ^4.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+
+  '@stripe/stripe-js@4.6.0':
+    resolution: {integrity: sha512-ZoK0dMFnVH0J5XUWGqsta8S8xm980qEwJKAIgZcLQxaSsbGRB9CsVvfOjwQFE1JC1q3rPwb/b+gQAmzIESnHnA==}
+    engines: {node: '>=12.16'}
 
   '@styled-system/background@5.1.2':
     resolution: {integrity: sha512-jtwH2C/U6ssuGSvwTN3ri/IyjdHb8W9X/g8Y0JLcrH02G+BW3OS8kZdHphF1/YyRklnrKrBT2ngwGUK6aqqV3A==}
@@ -17797,6 +17814,15 @@ snapshots:
       tslib: 2.6.3
 
   '@socket.io/component-emitter@3.1.2': {}
+
+  '@stripe/react-stripe-js@2.8.0(@stripe/stripe-js@4.6.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@stripe/stripe-js': 4.6.0
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@stripe/stripe-js@4.6.0': {}
 
   '@styled-system/background@5.1.2':
     dependencies:
