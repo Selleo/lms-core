@@ -8,7 +8,6 @@ import { useCompletedLessonItemsStore } from "./LessonItemStore";
 import { useParams } from "@remix-run/react";
 import { useQuestionQuery } from "./useQuestionQuery";
 import { useState } from "react";
-import { useUserRole } from "~/hooks/useUserRole";
 import type { TQuestionsForm } from "../types";
 import type { UseFormGetValues, UseFormRegister } from "react-hook-form";
 
@@ -26,6 +25,7 @@ type TProps = {
   getValues: UseFormGetValues<TQuestionsForm>;
   questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
+  isAdmin: boolean;
 };
 
 export default function Questions({
@@ -33,12 +33,12 @@ export default function Questions({
   getValues,
   questionsArray,
   register,
+  isAdmin,
 }: TProps) {
   const { lessonId } = useParams();
 
   if (!lessonId) throw new Error("Lesson ID not found");
 
-  const { isAdmin } = useUserRole();
   const { markLessonItemAsCompleted } = useCompletedLessonItemsStore();
   const questionId = content.id;
   const isSingleQuestion = content.questionType === "single_choice";
@@ -50,7 +50,7 @@ export default function Questions({
   });
 
   const [selectedOption, setSelectedOption] = useState<string[]>(() =>
-    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion })
+    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion }),
   );
 
   const handleClick = async (id: string) => {
@@ -72,15 +72,13 @@ export default function Questions({
   };
 
   const handleOpenAnswerRequest = async (
-    e: React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    if (!isAdmin) {
-      markLessonItemAsCompleted({
-        lessonItemId: questionId,
-        lessonId,
-      });
-      await sendOpenAnswer(e.target.value);
-    }
+    markLessonItemAsCompleted({
+      lessonItemId: questionId,
+      lessonId,
+    });
+    await sendOpenAnswer(e.target.value);
   };
 
   return (
@@ -99,7 +97,7 @@ export default function Questions({
         {isOpenAnswer ? (
           <Textarea
             {...register(`openQuestions.${questionId}`)}
-            onBlur={handleOpenAnswerRequest}
+            {...(!isAdmin && { onBlur: handleOpenAnswerRequest })}
             placeholder="Type your answer here"
             rows={5}
             className={cn({
@@ -109,11 +107,11 @@ export default function Questions({
         ) : (
           content.questionAnswers.map((answer) => (
             <button
-              onClick={!isAdmin ? () => handleClick(answer.id) : undefined}
+              {...(!isAdmin && { onClick: () => handleClick(answer.id) })}
               key={answer.id}
               className={cn(
                 "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
-                { "cursor-not-allowed": isAdmin }
+                { "cursor-not-allowed": isAdmin },
               )}
             >
               {isSingleQuestion ? (
@@ -125,7 +123,7 @@ export default function Questions({
                   type="radio"
                   value={answer.id}
                   {...register(
-                    `singleAnswerQuestions.${questionId}.${answer.id}`
+                    `singleAnswerQuestions.${questionId}.${answer.id}`,
                   )}
                 />
               ) : (
@@ -136,7 +134,7 @@ export default function Questions({
                   type="checkbox"
                   value={answer.id}
                   {...register(
-                    `multiAnswerQuestions.${questionId}.${answer.id}`
+                    `multiAnswerQuestions.${questionId}.${answer.id}`,
                   )}
                 />
               )}

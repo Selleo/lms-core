@@ -5,9 +5,10 @@ import { useCompletedLessonItemsStore } from "./LessonItemStore";
 type VideoProps = {
   url: string;
   videoId: string;
+  isAdmin: boolean;
 };
 
-export default function Video({ url, videoId }: VideoProps) {
+export default function Video({ url, videoId, isAdmin }: VideoProps) {
   const { lessonId } = useParams<{ lessonId: string }>();
   const { mutate: markLessonItemAsCompleted } = useMarkLessonItemAsCompleted();
   const {
@@ -37,7 +38,7 @@ export default function Video({ url, videoId }: VideoProps) {
         height="auto"
         controls
         className="rounded-lg"
-        onEnded={handleMarkLessonItemAsCompleted}
+        {...(!isAdmin && { onEnded: handleMarkLessonItemAsCompleted })}
       >
         <source src={src} />
         <track kind="captions" />

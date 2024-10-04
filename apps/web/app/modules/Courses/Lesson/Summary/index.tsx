@@ -6,7 +6,7 @@ import SingleLessonSummary from "./SingleLessonSummary";
 
 export default function Summary() {
   const { lessonId } = useParams();
-  const { data } = useLessonSuspense(lessonId ?? "");
+  const { data } = useLessonSuspense(lessonId);
   const lessonItemsCount = data.itemsCount;
   const lessonItemsCompletedCount = data.itemsCompletedCount;
 
