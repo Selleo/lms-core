@@ -6,6 +6,7 @@ import {
   eq,
   ilike,
   isNotNull,
+  isNull,
   like,
   sql,
 } from "drizzle-orm";
@@ -64,10 +65,7 @@ export class CoursesService {
 
     return await this.db.transaction(async (tx) => {
       const queryDB = tx
-        .select({
-          ...this.getSelectFiled(),
-          enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
-        })
+        .select(this.getSelectField(userId))
         .from(courses)
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
@@ -145,10 +143,7 @@ export class CoursesService {
       conditions.push(...this.getFiltersConditions(filters));
 
       const queryDB = tx
-        .select({
-          ...this.getSelectFiled(),
-          enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
-        })
+        .select(this.getSelectField(userId))
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
@@ -200,9 +195,77 @@ export class CoursesService {
     });
   }
 
+  async getAvailableCourses(
+    query: CoursesQuery,
+    userId: string,
+  ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
+    const {
+      sort = CourseSortFields.title,
+      perPage = DEFAULT_PAGE_SIZE,
+      page = 1,
+      filters = {},
+    } = query;
+    const { sortOrder, sortedField } = getSortOptions(sort);
+
+    return this.db.transaction(async (tx) => {
+      const conditions = [
+        eq(courses.state, "published"),
+        eq(courses.archived, false),
+        isNull(studentCourses.studentId),
+      ];
+      conditions.push(...this.getFiltersConditions(filters));
+
+      const queryDB = tx
+        .select(this.getSelectField(userId))
+        .from(courses)
+        .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
+        .leftJoin(categories, eq(courses.categoryId, categories.id))
+        .leftJoin(users, eq(courses.authorId, users.id))
+        .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
+        .where(and(...conditions))
+        .groupBy(
+          courses.id,
+          courses.title,
+          courses.imageUrl,
+          courses.description,
+          users.firstName,
+          users.lastName,
+          studentCourses.studentId,
+          categories.title,
+        )
+        .orderBy(
+          sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)),
+        );
+
+      const dynamicQuery = queryDB.$dynamic();
+      const paginatedQuery = addPagination(dynamicQuery, page, perPage);
+      const data = await paginatedQuery;
+      const [{ totalItems }] = await tx
+        .select({ totalItems: countDistinct(courses.id) })
+        .from(courses)
+        .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
+        .leftJoin(categories, eq(courses.categoryId, categories.id))
+        .leftJoin(users, eq(courses.authorId, users.id))
+        .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
+        .where(and(...conditions));
+
+      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+
+      return {
+        data: dataWithS3SignedUrls,
+        pagination: {
+          totalItems: totalItems || 0,
+          page,
+          perPage,
+        },
+      };
+    });
+  }
+
   async getCourse(id: string, userId: string) {
     const [course] = await this.db
       .select({
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         id: courses.id,
         title: courses.title,
         imageUrl: courses.imageUrl,
@@ -232,7 +295,6 @@ export class CoursesService {
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             )
           )::INTEGER`,
-        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         state: studentCourses.state,
       })
       .from(courses)
@@ -384,20 +446,42 @@ export class CoursesService {
     );
   }
 
-  private getSelectFiled() {
+  private getSelectField(userId: string) {
     return {
       id: courses.id,
       description: sql<string>`${courses.description}`,
       title: courses.title,
       imageUrl: courses.imageUrl,
       author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
-      category: categories.title,
+      category: sql<string>`categories.title`,
+      enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+      enrolledParticipantCount: count(studentCourses.courseId),
       courseLessonCount: sql<number>`
         (SELECT COUNT(*)
         FROM ${courseLessons}
         JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
-      enrolledParticipantCount: count(studentCourses.courseId),
+        WHERE ${courseLessons.courseId} = ${courses.id} 
+          AND ${lessons.state} = 'published' 
+          AND ${lessons.archived} = false)::INTEGER`,
+      completedLessonCount: sql<number>`
+        (SELECT COUNT(*)
+        FROM ${courseLessons}
+        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+        WHERE ${courseLessons.courseId} = ${courses.id}
+          AND ${lessons.state} = 'published'
+          AND ${lessons.archived} = false
+          AND (
+            SELECT COUNT(*)
+            FROM ${lessonItems}
+            WHERE ${lessonItems.lessonId} = ${lessons.id}
+              AND ${lessonItems.lessonItemType} != 'text_block'
+          ) = (
+            SELECT COUNT(*)
+            FROM ${studentCompletedLessonItems}
+            WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+              AND ${studentCompletedLessonItems.studentId} = ${userId}
+          )
+        )::INTEGER`,
     };
   }
 

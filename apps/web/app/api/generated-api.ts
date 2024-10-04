@@ -197,6 +197,7 @@ export interface GetAllCoursesResponse {
     author: string;
     category: string;
     courseLessonCount: number;
+    completedLessonCount: number;
     enrolled: boolean;
     enrolledParticipantCount: number;
   }[];
@@ -217,6 +218,28 @@ export interface GetStudentCoursesResponse {
     author: string;
     category: string;
     courseLessonCount: number;
+    completedLessonCount: number;
+    enrolled: boolean;
+    enrolledParticipantCount: number;
+  }[];
+  pagination: {
+    totalItems: number;
+    page: number;
+    perPage: number;
+  };
+}
+
+export interface GetAvailableCoursesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string | null;
+    description: string;
+    author: string;
+    category: string;
+    courseLessonCount: number;
+    completedLessonCount: number;
     enrolled: boolean;
     enrolledParticipantCount: number;
   }[];
@@ -856,6 +879,46 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<GetStudentCoursesResponse, any>({
         path: `/api/courses/get-student-courses`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerGetAvailableCourses
+     * @request GET:/api/courses/available-courses
+     */
+    coursesControllerGetAvailableCourses: (
+      query?: {
+        title?: string;
+        category?: string;
+        author?: string;
+        "creationDateRange[0]"?: string;
+        "creationDateRange[1]"?: string;
+        /** @min 1 */
+        page?: number;
+        perPage?: number;
+        sort?:
+          | "title"
+          | "category"
+          | "creationDate"
+          | "author"
+          | "lessonsCount"
+          | "enrolledParticipantsCount"
+          | "-title"
+          | "-category"
+          | "-creationDate"
+          | "-author"
+          | "-lessonsCount"
+          | "-enrolledParticipantsCount";
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetAvailableCoursesResponse, any>({
+        path: `/api/courses/available-courses`,
         method: "GET",
         query: query,
         format: "json",

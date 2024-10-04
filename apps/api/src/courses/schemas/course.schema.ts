@@ -10,6 +10,7 @@ export const allCoursesSchema = Type.Array(
     author: Type.String(),
     category: Type.String(),
     courseLessonCount: Type.Number(),
+    completedLessonCount: Type.Number(),
     enrolled: Type.Boolean(),
     enrolledParticipantCount: Type.Number(),
   }),
