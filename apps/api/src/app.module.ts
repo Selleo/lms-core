@@ -24,7 +24,7 @@ import { LessonsModule } from "./lessons/lessons.module";
 import { QuestionsModule } from "./questions/questions.module";
 import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/studentCompletedLessonItems.module";
 import { S3Module } from "./file/s3.module";
-import { StripeClientModule } from "./stripe/stripeClient.module";
+import { StripeModule } from "./stripe/stripe.module";
 
 @Module({
   imports: [
@@ -80,7 +80,7 @@ import { StripeClientModule } from "./stripe/stripeClient.module";
     QuestionsModule,
     StudentCompletedLessonItemsModule,
     S3Module,
-    StripeClientModule,
+    StripeModule,
   ],
   controllers: [],
   providers: [

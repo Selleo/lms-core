@@ -1061,10 +1061,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name StripeClientControllerCreatePaymentIntent
-     * @request POST:/api/stripe_client_controller
+     * @name StripeControllerCreatePaymentIntent
+     * @request POST:/api/stripe
      */
-    stripeClientControllerCreatePaymentIntent: (
+    stripeControllerCreatePaymentIntent: (
       query?: {
         amount?: number;
         currency?: string;
@@ -1072,10 +1072,23 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<CreatePaymentIntentResponse, any>({
-        path: `/api/stripe_client_controller`,
+        path: `/api/stripe`,
         method: "POST",
         query: query,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StripeControllerTestRoute
+     * @request GET:/api/stripe/test
+     */
+    stripeControllerTestRoute: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/stripe/test`,
+        method: "GET",
         ...params,
       }),
 

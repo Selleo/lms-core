@@ -1140,9 +1140,9 @@
         }
       }
     },
-    "/api/stripe_client_controller": {
+    "/api/stripe": {
       "post": {
-        "operationId": "StripeClientController_createPaymentIntent",
+        "operationId": "StripeController_createPaymentIntent",
         "parameters": [
           {
             "name": "amount",
@@ -1170,6 +1170,17 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/stripe/test": {
+      "get": {
+        "operationId": "StripeController_testRoute",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
           }
         }
       }

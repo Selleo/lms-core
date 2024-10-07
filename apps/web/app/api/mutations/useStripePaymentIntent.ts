@@ -23,11 +23,10 @@ export function useStripePaymentIntent() {
     StripeClientPaymentIntent
   >({
     mutationFn: async (options: StripeClientPaymentIntent) => {
-      const response =
-        await ApiClient.api.stripeClientControllerCreatePaymentIntent({
-          amount: options.amount,
-          currency: options.currency,
-        });
+      const response = await ApiClient.api.stripeControllerCreatePaymentIntent({
+        amount: options.amount,
+        currency: options.currency,
+      });
       return response.data.data;
     },
     onSuccess: (data) => {
@@ -54,7 +53,7 @@ export function useStripePaymentIntent() {
       setClientSecret(null);
       await mutation.mutateAsync(options);
     },
-    [mutation]
+    [mutation],
   );
 
   const resetClientSecret = useCallback(() => {
