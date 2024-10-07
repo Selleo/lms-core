@@ -222,6 +222,7 @@ export interface GetStudentCoursesResponse {
     completedLessonCount: number;
     enrolled: boolean;
     enrolledParticipantCount: number;
+    priceInCents: number;
   }[];
   pagination: {
     totalItems: number;

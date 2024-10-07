@@ -40,7 +40,15 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
       </TableHeader>
       <TableBody className="before:block before:h-4 before:content-['']">
         {availableCourses?.map(
-          ({ id, title, imageUrl, description, category, enrolled }) => (
+          ({
+            id,
+            title,
+            imageUrl,
+            description,
+            category,
+            enrolled,
+            priceInCents,
+          }) => (
             <TableRow
               key={id}
               className="group hover:bg-primary-50 border-none"
@@ -69,7 +77,11 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
               </TableCell>
               <TableCell className="p-4 rounded-e-lg">
                 <Link to={`/course/${id}`} className="block w-full">
-                  <CourseCardButton enrolled={enrolled} isAdmin={isAdmin} />
+                  <CourseCardButton
+                    enrolled={enrolled}
+                    isAdmin={isAdmin}
+                    priceInCents={priceInCents}
+                  />
                 </Link>
               </TableCell>
             </TableRow>

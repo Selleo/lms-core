@@ -1,11 +1,10 @@
 import { Link } from "@remix-run/react";
 import type { GetAllCoursesResponse } from "~/api/generated-api";
+import CourseProgress from "~/components/CourseProgress";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
-import CourseProgress from "~/components/CourseProgress";
-import { formatPrice } from "~/lib/formatters/priceFormatter";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
@@ -88,7 +87,11 @@ const CourseCard = ({
             </div>
           </div>
         </div>
-        <CourseCardButton enrolled={enrolled} isAdmin={isAdmin} />
+        <CourseCardButton
+          enrolled={enrolled}
+          isAdmin={isAdmin}
+          priceInCents={priceInCents}
+        />
       </div>
     </Link>
   );

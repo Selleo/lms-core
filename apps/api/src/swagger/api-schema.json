@@ -1849,7 +1849,8 @@
                 "courseLessonCount",
                 "completedLessonCount",
                 "enrolled",
-                "enrolledParticipantCount"
+                "enrolledParticipantCount",
+                "priceInCents"
               ]
             }
           },
@@ -1922,6 +1923,9 @@
                   "type": "boolean"
                 },
                 "enrolledParticipantCount": {
+                  "type": "number"
+                },
+                "priceInCents": {
                   "type": "number"
                 }
               },
