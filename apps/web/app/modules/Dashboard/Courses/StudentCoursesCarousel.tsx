@@ -43,13 +43,13 @@ export const StudentCoursesCarousel = ({
   const carouselItems = renderCarouselItems();
 
   return (
-    <Carousel className="w-full">
+    <Carousel className="w-full" opts={{ slidesToScroll: "auto" }}>
       <CarouselContent className="flex bg-white w-full rounded-lg">
         {carouselItems}
       </CarouselContent>
       <div className="absolute -right-8 -top-[96px]">
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious className="rounded-full" />
+        <CarouselNext className="rounded-full" />
       </div>
     </Carousel>
   );

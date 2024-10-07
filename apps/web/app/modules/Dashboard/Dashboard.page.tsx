@@ -1,21 +1,28 @@
 import type { MetaFunction } from "@remix-run/node";
 import { isEmpty } from "lodash-es";
-import { useReducer } from "react";
+import { ReactNode, useReducer } from "react";
 import { match } from "ts-pattern";
+import { useAvailableCourses } from "~/api/queries/useAvailableCourses";
 import {
   categoriesQueryOptions,
   useCategoriesSuspense,
 } from "~/api/queries/useCategories";
 import { coursesQueryOptions } from "~/api/queries/useCourses";
+import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
+import { Icon } from "~/components/Icon";
 import type { SortOption } from "~/types/sorting";
 import Loader from "../common/Loader/Loader";
 import SearchFilter from "../common/SearchFilter/SearchFilter";
-import CourseCard from "./Courses/CourseCard";
-import { Icon } from "~/components/Icon";
-import { useAvailableCourses } from "~/api/queries/useAvailableCourses";
 import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
-import { useStudentCourses } from "~/api/queries/useStudentCourses";
+import { TableCourseList } from "./Courses/TableCourseList";
+import { CardCourseList } from "./Courses/CardCourseList";
+import { useLayoutsStore } from "../common/Layout/LayoutsStore";
+import { DashboardIcon, HamburgerIcon } from "../icons/icons";
+import { Button } from "~/components/ui/button";
+import { cn } from "~/lib/utils";
+import { GetAllCoursesResponse } from "~/api/generated-api";
+import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 
 type State = {
   searchTitle: string | undefined;
@@ -78,6 +85,8 @@ export default function DashboardPage() {
   const { data: categories, isLoading: isCategoriesLoading } =
     useCategoriesSuspense();
 
+  const { courseListLayout, setCourseListLayout } = useLayoutsStore();
+
   const handleSearchTitleChange = (title: string | undefined) => {
     dispatch({ type: "SET_SEARCH_TITLE", payload: title });
   };
@@ -90,8 +99,20 @@ export default function DashboardPage() {
     dispatch({ type: "SET_CATEGORY", payload: category ?? undefined });
   };
 
+  const CourseList: React.FC<{
+    availableCourses: GetAllCoursesResponse["data"];
+  }> = ({ availableCourses }) =>
+    match(courseListLayout)
+      .with("card", () => (
+        <CardCourseList availableCourses={availableCourses} />
+      ))
+      .with("table", () => (
+        <TableCourseList availableCourses={availableCourses} />
+      ))
+      .exhaustive();
+
   return (
-    <div className="flex flex-1 flex-col gap-y-12 h-full">
+    <div className="flex flex-1 flex-col gap-y-12 h-auto">
       <div className="flex flex-col gap-y-6">
         <div className="flex flex-col">
           <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
@@ -134,18 +155,41 @@ export default function DashboardPage() {
           <p className="text-lg leading-7 text-neutral-800">
             All available career courses available to enroll
           </p>
-          <SearchFilter
-            onSearchTitleChange={handleSearchTitleChange}
-            onSortChange={handleSortChange}
-            onCategoryChange={handleCategoryChange}
-            searchValue={state.searchTitle}
-            sortValue={state.sort}
-            categoryValue={state.category}
-            categories={categories}
-            isLoading={isCategoriesLoading}
-          />
+          <div className="flex items-center justify-between">
+            <SearchFilter
+              onSearchTitleChange={handleSearchTitleChange}
+              onSortChange={handleSortChange}
+              onCategoryChange={handleCategoryChange}
+              searchValue={state.searchTitle}
+              sortValue={state.sort}
+              categoryValue={state.category}
+              categories={categories}
+              isLoading={isCategoriesLoading}
+            />
+            <ButtonGroup
+              buttons={[
+                {
+                  children: <DashboardIcon />,
+                  isActive: courseListLayout === "card",
+                  onClick: () => setCourseListLayout("card"),
+                },
+                {
+                  children: <HamburgerIcon />,
+                  isActive: courseListLayout === "table",
+                  onClick: () => setCourseListLayout("table"),
+                },
+              ]}
+            />
+          </div>
         </div>
-        <div className="grid p-8 gap-6 grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5 bg-white rounded-lg drop-shadow-primary">
+        <div
+          className={cn({
+            "grid p-8 gap-6 grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5 bg-white rounded-lg drop-shadow-primary":
+              courseListLayout === "card",
+            "p-8 gap-6 bg-white rounded-lg drop-shadow-primary":
+              courseListLayout === "table",
+          })}
+        >
           {!availableCourses ||
             (isEmpty(availableCourses) && (
               <div className="col-span-3 flex gap-8 ">
@@ -167,35 +211,9 @@ export default function DashboardPage() {
               <Loader />
             </div>
           )}
-          {availableCourses &&
-            availableCourses.map(
-              ({
-                title,
-                category,
-                description,
-                courseLessonCount,
-                id,
-                imageUrl,
-                enrolled,
-              }) => {
-                if (!enrolled) {
-                  return (
-                    <CourseCard
-                      key={id}
-                      title={title}
-                      imageUrl={imageUrl}
-                      description={description}
-                      href={`/course/${id}`}
-                      category={category}
-                      courseLessonCount={courseLessonCount}
-                      enrolled={enrolled}
-                    />
-                  );
-                }
-
-                return null;
-              },
-            )}
+          {availableCourses && (
+            <CourseList availableCourses={availableCourses} />
+          )}
         </div>
       </div>
     </div>
