@@ -18,10 +18,10 @@ type PaymentForm = {
 };
 
 export const PaymentForm = ({
-  courseId,
   price,
   currency,
   onPaymentSuccess,
+  courseId,
 }: PaymentForm) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -52,9 +52,11 @@ export const PaymentForm = ({
       result.paymentIntent &&
       result.paymentIntent.status === "succeeded"
     ) {
-      queryClient.invalidateQueries(courseQueryOptions(courseId));
-      setProcessing(false);
-      onPaymentSuccess();
+      setTimeout(() => {
+        queryClient.invalidateQueries(courseQueryOptions(courseId));
+        setProcessing(false);
+        onPaymentSuccess();
+      }, 4000);
     } else {
       console.log("Payment status:", result.paymentIntent?.status);
       setProcessing(false);

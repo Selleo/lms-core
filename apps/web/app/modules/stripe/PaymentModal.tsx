@@ -6,6 +6,7 @@ import {
   currentUserQueryOptions,
   useCurrentUserSuspense,
 } from "~/api/queries/useCurrentUser";
+import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -17,7 +18,6 @@ import {
 import { formatPrice } from "~/lib/formatters/priceFormatter";
 import { useStripePromise } from "./hooks/useStripePromise";
 import { PaymentForm } from "./PaymentForm";
-import { queryClient } from "~/api/queryClient";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(currentUserQueryOptions);
