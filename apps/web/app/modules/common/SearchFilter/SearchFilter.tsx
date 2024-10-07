@@ -62,7 +62,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
   const isAnyFilterApplied = !!searchValue || !!categoryValue || !!sortValue;
 
   return (
-    <div className="flex flex-wrap gap-2 items-center py-6">
+    <div className="flex flex-wrap gap-2 items-center py-6 grow">
       <div className="relative flex-grow max-w-2xl">
         <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-neutral-800 w-5 h-5" />
         <Input
