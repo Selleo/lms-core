@@ -7,6 +7,8 @@ import { ApiClient } from "../api-client";
 type StripeClientPaymentIntent = {
   amount: number;
   currency: string;
+  customerId: string;
+  courseId: string;
 };
 
 type StripePaymentIntentResult = {
@@ -26,6 +28,8 @@ export function useStripePaymentIntent() {
       const response = await ApiClient.api.stripeControllerCreatePaymentIntent({
         amount: options.amount,
         currency: options.currency,
+        customerId: options.customerId,
+        courseId: options.courseId,
       });
       return response.data.data;
     },
@@ -53,7 +57,7 @@ export function useStripePaymentIntent() {
       setClientSecret(null);
       await mutation.mutateAsync(options);
     },
-    [mutation],
+    [mutation]
   );
 
   const resetClientSecret = useCallback(() => {

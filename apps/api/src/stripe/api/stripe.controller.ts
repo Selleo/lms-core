@@ -50,20 +50,41 @@ export class StripeController {
         type: "query",
         name: "amount",
         schema: Type.Number(),
+        required: true,
       },
       {
         type: "query",
         name: "currency",
         schema: Type.String(),
+        required: true,
+      },
+      {
+        type: "query",
+        name: "customerId",
+        schema: Type.String(),
+        required: true,
+      },
+      {
+        type: "query",
+        name: "courseId",
+        schema: Type.String(),
+        required: true,
       },
     ],
   })
   async createPaymentIntent(
     @Query("amount") amount: number,
     @Query("currency") currency: string,
+    @Query("customerId") customerId: string,
+    @Query("courseId") courseId: string,
   ) {
     return new BaseResponse({
-      clientSecret: await this.stripeService.payment(amount, currency),
+      clientSecret: await this.stripeService.payment(
+        amount,
+        currency,
+        customerId,
+        courseId,
+      ),
     });
   }
 

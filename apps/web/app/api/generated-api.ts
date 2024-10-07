@@ -1065,9 +1065,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/stripe
      */
     stripeControllerCreatePaymentIntent: (
-      query?: {
-        amount?: number;
-        currency?: string;
+      query: {
+        amount: number;
+        currency: string;
+        customerId: string;
+        courseId: string;
       },
       params: RequestParams = {},
     ) =>

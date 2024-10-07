@@ -1146,7 +1146,7 @@
         "parameters": [
           {
             "name": "amount",
-            "required": false,
+            "required": true,
             "in": "query",
             "schema": {
               "type": "number"
@@ -1154,7 +1154,23 @@
           },
           {
             "name": "currency",
-            "required": false,
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "customerId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": true,
             "in": "query",
             "schema": {
               "type": "string"

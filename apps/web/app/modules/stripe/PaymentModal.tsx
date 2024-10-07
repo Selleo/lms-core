@@ -2,6 +2,10 @@ import { Elements } from "@stripe/react-stripe-js";
 import { Appearance } from "@stripe/stripe-js";
 import { useState } from "react";
 import { useStripePaymentIntent } from "~/api/mutations/useStripePaymentIntent";
+import {
+  currentUserQueryOptions,
+  useCurrentUserSuspense,
+} from "~/api/queries/useCurrentUser";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -10,9 +14,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { formatPrice } from "~/lib/formatters/priceFormatter";
 import { useStripePromise } from "./hooks/useStripePromise";
 import { PaymentForm } from "./PaymentForm";
-import { formatPrice } from "~/lib/formatters/priceFormatter";
+import { queryClient } from "~/api/queryClient";
+
+export const clientLoader = async () => {
+  await queryClient.prefetchQuery(currentUserQueryOptions);
+  return null;
+};
 
 type PaymentModalProps = {
   coursePrice: number;
@@ -34,6 +44,9 @@ export function PaymentModal({
   courseId,
 }: PaymentModalProps) {
   const [open, setOpen] = useState(false);
+  const {
+    data: { id: currentUserId },
+  } = useCurrentUserSuspense();
   const stripePromise = useStripePromise();
   const { clientSecret, createPaymentIntent, resetClientSecret } =
     useStripePaymentIntent();
@@ -43,6 +56,8 @@ export function PaymentModal({
       await createPaymentIntent({
         amount: coursePrice,
         currency: courseCurrency,
+        customerId: currentUserId,
+        courseId,
       });
       setOpen(true);
     } catch (error) {
