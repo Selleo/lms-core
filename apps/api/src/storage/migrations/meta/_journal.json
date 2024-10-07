@@ -239,6 +239,13 @@
       "when": 1727750250544,
       "tag": "0033_add_lesson_id_to_student_completed_lesson_items",
       "breakpoints": true
+    },
+    {
+      "idx": 34,
+      "version": "7",
+      "when": 1728309446715,
+      "tag": "0034_add_payment_id_to_student_courses",
+      "breakpoints": true
     }
   ]
 }

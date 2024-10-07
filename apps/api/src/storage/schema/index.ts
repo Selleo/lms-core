@@ -279,6 +279,7 @@ export const studentCourses = pgTable(
     numberOfAssignments: integer("number_of_assignments"),
     numberOfFinishedAssignments: integer("number_of_finished_assignments"),
     state: text("state").notNull().default("not_started"),
+    paymentId: text("payment_id"),
     archived,
   },
   (table) => ({
