@@ -1,6 +1,6 @@
 import type { MetaFunction } from "@remix-run/node";
 import { isEmpty } from "lodash-es";
-import { ReactNode, useReducer } from "react";
+import { useReducer } from "react";
 import { match } from "ts-pattern";
 import { useAvailableCourses } from "~/api/queries/useAvailableCourses";
 import {
@@ -10,19 +10,16 @@ import {
 import { coursesQueryOptions } from "~/api/queries/useCourses";
 import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
+import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
+import { cn } from "~/lib/utils";
 import type { SortOption } from "~/types/sorting";
+import { useLayoutsStore } from "../common/Layout/LayoutsStore";
 import Loader from "../common/Loader/Loader";
 import SearchFilter from "../common/SearchFilter/SearchFilter";
-import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
-import { TableCourseList } from "./Courses/TableCourseList";
-import { CardCourseList } from "./Courses/CardCourseList";
-import { useLayoutsStore } from "../common/Layout/LayoutsStore";
 import { DashboardIcon, HamburgerIcon } from "../icons/icons";
-import { Button } from "~/components/ui/button";
-import { cn } from "~/lib/utils";
-import { GetAllCoursesResponse } from "~/api/generated-api";
-import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
+import { CourseList } from "./Courses/CourseList";
+import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
 
 type State = {
   searchTitle: string | undefined;
@@ -99,18 +96,6 @@ export default function DashboardPage() {
     dispatch({ type: "SET_CATEGORY", payload: category ?? undefined });
   };
 
-  const CourseList: React.FC<{
-    availableCourses: GetAllCoursesResponse["data"];
-  }> = ({ availableCourses }) =>
-    match(courseListLayout)
-      .with("card", () => (
-        <CardCourseList availableCourses={availableCourses} />
-      ))
-      .with("table", () => (
-        <TableCourseList availableCourses={availableCourses} />
-      ))
-      .exhaustive();
-
   return (
     <div className="flex flex-1 flex-col gap-y-12 h-auto">
       <div className="flex flex-col gap-y-6">
@@ -183,13 +168,18 @@ export default function DashboardPage() {
           </div>
         </div>
         <div
-          className={cn({
-            "grid p-8 gap-6 grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5 bg-white rounded-lg drop-shadow-primary":
+          className={cn("p-8 gap-6 rounded-lg drop-shadow-primary bg-white", {
+            "grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5":
               courseListLayout === "card",
-            "p-8 gap-6 bg-white rounded-lg drop-shadow-primary":
-              courseListLayout === "table",
+            block: courseListLayout === "table",
           })}
         >
+          {availableCourses && !isEmpty(availableCourses) && (
+            <CourseList
+              availableCourses={availableCourses}
+              courseListLayout={courseListLayout}
+            />
+          )}
           {!availableCourses ||
             (isEmpty(availableCourses) && (
               <div className="col-span-3 flex gap-8 ">
@@ -210,9 +200,6 @@ export default function DashboardPage() {
             <div className="flex justify-center items-center h-full">
               <Loader />
             </div>
-          )}
-          {availableCourses && (
-            <CourseList availableCourses={availableCourses} />
           )}
         </div>
       </div>

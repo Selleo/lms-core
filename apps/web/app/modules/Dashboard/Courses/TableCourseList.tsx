@@ -10,12 +10,15 @@ import {
 import CourseCardButton from "./CourseCardButton";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { Link } from "@remix-run/react";
+import { useUserRole } from "~/hooks/useUserRole";
 
 type CardCourseListProps = {
   availableCourses?: GetAvailableCoursesResponse["data"];
 };
 
 export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
+  const { isAdmin } = useUserRole();
+
   return (
     <Table className="w-full">
       <TableHeader>
@@ -35,10 +38,9 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
           <TableHead className="w-28 rounded-e-lg"></TableHead>
         </TableRow>
       </TableHeader>
-      <div className="h-4" />
-      <TableBody>
+      <TableBody className="before:block before:h-4 before:content-['']">
         {availableCourses?.map(
-          ({ id, title, imageUrl, description, category }) => (
+          ({ id, title, imageUrl, description, category, enrolled }) => (
             <TableRow
               key={id}
               className="group hover:bg-primary-50 border-none"
@@ -67,7 +69,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
               </TableCell>
               <TableCell className="p-4 rounded-e-lg">
                 <Link to={`/course/${id}`} className="block w-full">
-                  <CourseCardButton enrolled={false} isAdmin={false} />
+                  <CourseCardButton enrolled={enrolled} isAdmin={isAdmin} />
                 </Link>
               </TableCell>
             </TableRow>

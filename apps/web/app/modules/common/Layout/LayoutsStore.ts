@@ -1,12 +1,13 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { CourseListLayout } from "~/types/shared";
 
-type TLayoutsStore = {
-  courseListLayout: "table" | "card";
-  setCourseListLayout: (layout: "table" | "card") => void;
-};
+interface ILayoutsStore {
+  courseListLayout: CourseListLayout;
+  setCourseListLayout: (layout: this["courseListLayout"]) => void;
+}
 
-export const useLayoutsStore = create<TLayoutsStore>()(
+export const useLayoutsStore = create<ILayoutsStore>()(
   persist(
     (set) => ({
       courseListLayout: "card",

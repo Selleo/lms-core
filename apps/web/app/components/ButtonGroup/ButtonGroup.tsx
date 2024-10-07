@@ -20,13 +20,13 @@ export const ButtonGroup = ({ className, buttons }: ButtonGroupProps) => {
         className
       )}
     >
-      {buttons.map((button, index) => (
+      {buttons.map(({ isActive, ...button }, index) => (
         <Button
           key={index}
           {...button}
           className={cn({
-            "bg-white text-primary-700 shadow-primary": button.isActive,
-            "bg-neutral-50 text-neutral-400": !button.isActive,
+            "bg-white text-primary-700 shadow-primary": isActive,
+            "bg-neutral-50 text-neutral-400": !isActive,
           })}
         />
       ))}
