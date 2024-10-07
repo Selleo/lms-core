@@ -31,7 +31,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
               itemsCount,
               itemsCompletedCount,
             },
-            index,
+            index
           ) => (
             <Card
               key={index}
@@ -42,8 +42,12 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
             >
               <CardContent className="p-4 h-full">
                 <Link
-                  to={`lesson/${id}`}
-                  className="flex flex-col h-full gap-4"
+                  className={cn("flex flex-col h-full gap-4", {
+                    "cursor-not-allowed": !isEnrolled,
+                  })}
+                  to={isEnrolled ? `/lesson/${id}` : "#"}
+                  onClick={(e) => !isEnrolled && e.preventDefault()}
+                  aria-disabled={!isEnrolled}
                 >
                   <div className="relative">
                     <img
@@ -69,7 +73,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                                   key={index}
                                   className="h-[5px] flex-grow bg-secondary-500 rounded-[40px]"
                                 />
-                              ),
+                              )
                             )}
                             {Array.from({
                               length: itemsCount - itemsCompletedCount,
@@ -108,7 +112,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                 </Link>
               </CardContent>
             </Card>
-          ),
+          )
         )}
       </div>
     </div>
