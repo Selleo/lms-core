@@ -5,7 +5,6 @@ import {
 } from "@stripe/react-stripe-js";
 import { Loader } from "lucide-react";
 import { useState } from "react";
-import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
@@ -28,15 +27,6 @@ export const PaymentForm = ({
   const elements = useElements();
   const [error, setError] = useState<string>();
   const [processing, setProcessing] = useState(false);
-  const { mutateAsync: enrollCourse } = useEnrollCourse();
-
-  const handleEnroll = () => {
-    enrollCourse({ id: courseId }).then(() => {
-      queryClient.invalidateQueries(courseQueryOptions(courseId));
-      setProcessing(false);
-      onPaymentSuccess();
-    });
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -62,8 +52,9 @@ export const PaymentForm = ({
       result.paymentIntent &&
       result.paymentIntent.status === "succeeded"
     ) {
-      console.log("Payment succeeded");
-      handleEnroll();
+      queryClient.invalidateQueries(courseQueryOptions(courseId));
+      setProcessing(false);
+      onPaymentSuccess();
     } else {
       console.log("Payment status:", result.paymentIntent?.status);
       setProcessing(false);
