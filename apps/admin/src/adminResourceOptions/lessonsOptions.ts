@@ -100,7 +100,7 @@ export const lessonsConfigOptions: ResourceOptions = {
     },
     lesson_content_items: {
       components: {
-        show: Components.LessonContentItemsTable,
+        show: Components.LessonItemsAssigner,
       },
     },
   },
