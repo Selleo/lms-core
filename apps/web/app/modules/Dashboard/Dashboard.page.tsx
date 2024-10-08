@@ -140,7 +140,7 @@ export default function DashboardPage() {
           <p className="text-lg leading-7 text-neutral-800">
             All available career courses available to enroll
           </p>
-          <div className="flex items-center justify-between">
+          <div className="flex justify-between gap-2 items-center">
             <SearchFilter
               onSearchTitleChange={handleSearchTitleChange}
               onSortChange={handleSortChange}
@@ -169,7 +169,7 @@ export default function DashboardPage() {
         </div>
         <div
           className={cn("p-8 gap-6 rounded-lg drop-shadow-primary bg-white", {
-            "grid grid-cols-1 lg:grid-cols-3 2xl:grid-cols-5":
+            "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5":
               courseListLayout === "card",
             block: courseListLayout === "table",
           })}
