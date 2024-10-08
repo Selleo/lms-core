@@ -24,7 +24,9 @@ const CourseCardButton = ({
 
     if (isAdmin) return "View";
 
-    return `Enroll - ${formatPrice(priceInCents)}`;
+    if (priceInCents) return `Enroll - ${formatPrice(priceInCents)}`;
+
+    return "Enroll";
   };
 
   const buttonLabel = getButtonLabel(enrolled, isAdmin);
