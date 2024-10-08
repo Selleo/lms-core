@@ -18,6 +18,7 @@ import {
 import { formatPrice } from "~/lib/formatters/priceFormatter";
 import { useStripePromise } from "./hooks/useStripePromise";
 import { PaymentForm } from "./PaymentForm";
+import { toast } from "~/components/ui/use-toast";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(currentUserQueryOptions);
@@ -68,6 +69,9 @@ export function PaymentModal({
   const handlePaymentSuccess = () => {
     setOpen(false);
     resetClientSecret();
+    toast({
+      description: "Payment successful",
+    });
   };
 
   return (
