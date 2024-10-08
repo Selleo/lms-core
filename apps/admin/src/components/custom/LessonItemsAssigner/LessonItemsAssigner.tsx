@@ -128,12 +128,12 @@ const LessonItemsAssigner: React.FC<ShowPropertyProps> = ({ record }) => {
     const items = updatedItems.filter(
       ({ columnId }) => columnId === "column-assigned",
     );
-    const nowa_karta = items.indexOf(item);
+    const newItemActionIndex = items.indexOf(item);
 
     for (let index = 0; index < items.length; index++) {
       const lesson = items[index];
-      console.log({ lesson });
-      if (index < nowa_karta && lesson?.params.lesson_item_id) {
+
+      if (index < newItemActionIndex && lesson?.params.lesson_item_id) {
         try {
           await api.recordAction({
             resourceId: "lesson_items",
@@ -150,10 +150,9 @@ const LessonItemsAssigner: React.FC<ShowPropertyProps> = ({ record }) => {
         } catch (error) {
           console.error("Error updating lesson order:", error);
         }
-        console.log("pierwsza");
       }
 
-      if (index === nowa_karta && lesson?.params.lesson_item_id) {
+      if (index === newItemActionIndex && lesson?.params.lesson_item_id) {
         try {
           await api.recordAction({
             resourceId: "lesson_items",
@@ -170,10 +169,9 @@ const LessonItemsAssigner: React.FC<ShowPropertyProps> = ({ record }) => {
         } catch (error) {
           console.error("Error updating lesson order:", error);
         }
-        console.log("druga");
       }
 
-      if (index > nowa_karta && lesson?.params.lesson_item_id) {
+      if (index > newItemActionIndex && lesson?.params.lesson_item_id) {
         try {
           await api.recordAction({
             resourceId: "lesson_items",
@@ -190,7 +188,6 @@ const LessonItemsAssigner: React.FC<ShowPropertyProps> = ({ record }) => {
         } catch (error) {
           console.error("Error updating lesson order:", error);
         }
-        console.log("trzecia");
       }
     }
 
@@ -215,7 +212,7 @@ const LessonItemsAssigner: React.FC<ShowPropertyProps> = ({ record }) => {
   };
 
   const renderLessonItemsList = (lessonItems: TransformedLessonItem[]) => {
-    const columns = 2;
+    const COLUMNS = 2;
 
     const assignedLessons = lessonItems.filter(
       ({ columnId }) => columnId === "column-assigned",
@@ -224,7 +221,7 @@ const LessonItemsAssigner: React.FC<ShowPropertyProps> = ({ record }) => {
       ({ columnId }) => columnId === "column-unassigned",
     );
 
-    return Array.from({ length: columns }).map((_, index) => {
+    return Array.from({ length: COLUMNS }).map((_, index) => {
       return (
         <LessonItemsColumn
           key={index}
@@ -374,9 +371,9 @@ const LessonItemsAssigner: React.FC<ShowPropertyProps> = ({ record }) => {
         onDragEnd={handleDragEnd}
       >
         <DragOverlay>
-          {currentlyDraggedItem ? (
+          {currentlyDraggedItem && (
             <LessonItemCard lessonItem={currentlyDraggedItem} />
-          ) : null}
+          )}
         </DragOverlay>
         {renderLessonItemsList(lessonItems)}
       </DndContext>

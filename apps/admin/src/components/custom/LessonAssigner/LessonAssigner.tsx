@@ -200,7 +200,7 @@ const LessonAssigner: FC<ShowPropertyProps> = ({ record }) => {
   };
 
   const renderLessonList = (lessons: TransformedLesson[]) => {
-    const columns = 2;
+    const COLUMNS = 2;
 
     const assignedLessons = lessons.filter(
       ({ columnId }) => columnId === "column-assigned",
@@ -209,7 +209,7 @@ const LessonAssigner: FC<ShowPropertyProps> = ({ record }) => {
       ({ columnId }) => columnId === "column-unassigned",
     );
 
-    return Array.from({ length: columns }).map((_, index) => {
+    return Array.from({ length: COLUMNS }).map((_, index) => {
       return (
         <LessonsColumn
           key={index}
@@ -357,9 +357,7 @@ const LessonAssigner: FC<ShowPropertyProps> = ({ record }) => {
         onDragEnd={handleDragEnd}
       >
         <DragOverlay>
-          {currentlyDraggedItem ? (
-            <LessonCard lesson={currentlyDraggedItem} />
-          ) : null}
+          {currentlyDraggedItem && <LessonCard lesson={currentlyDraggedItem} />}
         </DragOverlay>
         {renderLessonList(lessons)}
       </DndContext>
