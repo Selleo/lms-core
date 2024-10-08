@@ -45,7 +45,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                   className={cn("flex flex-col h-full gap-4", {
                     "cursor-not-allowed": !isEnrolled,
                   })}
-                  to={isEnrolled ? `/lesson/${id}` : "#"}
+                  to={isEnrolled ? `lesson/${id}` : "#"}
                   onClick={(e) => !isEnrolled && e.preventDefault()}
                   aria-disabled={!isEnrolled}
                 >
