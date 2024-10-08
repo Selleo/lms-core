@@ -218,21 +218,15 @@ export const lessonTextBlocks = pgTable("lesson_text_blocks", {
     .notNull(),
 });
 
-export const lessonItems = pgTable(
-  "lesson_items",
-  {
-    ...id,
-    lessonId: uuid("lesson_id")
-      .references(() => lessons.id)
-      .notNull(),
-    lessonItemId: uuid("lesson_item_id").notNull(),
-    lessonItemType: text("lesson_item_type").notNull(),
-    displayOrder: integer("display_order"),
-  },
-  (table) => ({
-    unq: unique().on(table.lessonId, table.displayOrder),
-  }),
-);
+export const lessonItems = pgTable("lesson_items", {
+  ...id,
+  lessonId: uuid("lesson_id")
+    .references(() => lessons.id)
+    .notNull(),
+  lessonItemId: uuid("lesson_item_id").notNull(),
+  lessonItemType: text("lesson_item_type").notNull(),
+  displayOrder: integer("display_order"),
+});
 
 export const notifications = pgTable("notifications", {
   ...id,
@@ -259,6 +253,7 @@ export const courseLessons = pgTable(
     lessonId: uuid("lesson_id")
       .references(() => lessons.id)
       .notNull(),
+    displayOrder: integer("display_order"),
   },
   (table) => ({
     unq: unique().on(table.courseId, table.lessonId),
