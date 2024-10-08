@@ -296,6 +296,7 @@ export class CoursesService {
             )
           )::INTEGER`,
         state: studentCourses.state,
+        priceInCents: courses.priceInCents,
       })
       .from(courses)
       .innerJoin(categories, eq(courses.categoryId, categories.id))
@@ -460,8 +461,8 @@ export class CoursesService {
         (SELECT COUNT(*)
         FROM ${courseLessons}
         JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-        WHERE ${courseLessons.courseId} = ${courses.id} 
-          AND ${lessons.state} = 'published' 
+        WHERE ${courseLessons.courseId} = ${courses.id}
+          AND ${lessons.state} = 'published'
           AND ${lessons.archived} = false)::INTEGER`,
       completedLessonCount: sql<number>`
         (SELECT COUNT(*)
@@ -482,6 +483,7 @@ export class CoursesService {
               AND ${studentCompletedLessonItems.studentId} = ${userId}
           )
         )::INTEGER`,
+      priceInCents: courses.priceInCents,
     };
   }
 

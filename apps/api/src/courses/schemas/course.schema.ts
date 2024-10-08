@@ -13,6 +13,7 @@ export const allCoursesSchema = Type.Array(
     completedLessonCount: Type.Number(),
     enrolled: Type.Boolean(),
     enrolledParticipantCount: Type.Number(),
+    priceInCents: Type.Number(),
   }),
 );
 

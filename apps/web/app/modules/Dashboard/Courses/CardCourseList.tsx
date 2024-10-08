@@ -18,6 +18,7 @@ export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
             id,
             imageUrl,
             enrolled,
+            priceInCents,
           }) => {
             if (!enrolled) {
               return (
@@ -30,6 +31,7 @@ export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
                   category={category}
                   courseLessonCount={courseLessonCount}
                   enrolled={enrolled}
+                  priceInCents={priceInCents}
                 />
               );
             }

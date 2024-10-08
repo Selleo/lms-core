@@ -12,6 +12,7 @@ export const commonShowCourseSchema = Type.Object({
   enrolled: Type.Boolean(),
   state: Type.Union([Type.String(), Type.Null()]),
   lessons: Type.Array(lessonSchema),
+  priceInCents: Type.Number(),
 });
 
 export type CommonShowCourse = Static<typeof commonShowCourseSchema>;
