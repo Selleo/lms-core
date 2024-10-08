@@ -28,6 +28,9 @@ const Components = {
   CourseLessonsShow: componentLoader.add(
     "CourseLessonsShow",
     "./custom/CourseLessonsShow",
+  LessonAssigner: componentLoader.add(
+    "LessonAssigner",
+    "./custom/LessonAssigner/LessonAssigner",
   ),
 };
 
