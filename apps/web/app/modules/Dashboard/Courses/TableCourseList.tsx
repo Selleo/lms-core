@@ -1,11 +1,11 @@
-import { GetAvailableCoursesResponse } from "~/api/generated-api";
+import type { GetAvailableCoursesResponse } from "~/api/generated-api";
 import {
   Table,
-  TableHeader,
-  TableRow,
-  TableHead,
   TableBody,
   TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "~/components/ui/table";
 import CourseCardButton from "./CourseCardButton";
 import { CategoryChip } from "~/components/ui/CategoryChip";
@@ -41,6 +41,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
       <TableBody className="before:block before:h-4 before:content-['']">
         {availableCourses?.map(
           ({
+            currency,
             id,
             title,
             imageUrl,
@@ -81,11 +82,12 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
                     enrolled={enrolled}
                     isAdmin={isAdmin}
                     priceInCents={priceInCents}
+                    currency={currency}
                   />
                 </Link>
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </Table>

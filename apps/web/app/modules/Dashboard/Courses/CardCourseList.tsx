@@ -1,4 +1,4 @@
-import { GetAvailableCoursesResponse } from "~/api/generated-api";
+import type { GetAvailableCoursesResponse } from "~/api/generated-api";
 import CourseCard from "./CourseCard";
 
 type CardCourseListProps = {
@@ -19,6 +19,7 @@ export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
             imageUrl,
             enrolled,
             priceInCents,
+            currency,
           }) => {
             if (!enrolled) {
               return (
@@ -32,12 +33,13 @@ export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
                   courseLessonCount={courseLessonCount}
                   enrolled={enrolled}
                   priceInCents={priceInCents}
+                  currency={currency}
                 />
               );
             }
 
             return null;
-          }
+          },
         )}
     </>
   );

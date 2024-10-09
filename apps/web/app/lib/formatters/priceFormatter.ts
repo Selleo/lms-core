@@ -13,7 +13,7 @@ type CurrencyCode = "USD" | "EUR" | "GBP" | "JPY" | "KRW" | "BHD" | string;
 export function formatPrice(
   amount: number,
   currency: CurrencyCode = "USD",
-  locale: string = "en-US"
+  locale: string = "en-US",
 ): string {
   const upperCaseCurrency = currency.toUpperCase() as CurrencyCode;
   const majorUnits = convertToMajorUnits(amount, upperCaseCurrency);

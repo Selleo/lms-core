@@ -17,6 +17,7 @@ type CourseCardProps = Pick<
   | "description"
   | "enrolled"
   | "priceInCents"
+  | "currency"
 > & {
   href: string;
   completedLessonCount?: number;
@@ -31,6 +32,7 @@ const CourseCard = ({
   enrolled,
   courseLessonCount,
   completedLessonCount,
+  currency,
   priceInCents,
 }: CourseCardProps) => {
   const { isAdmin } = useUserRole();
@@ -66,7 +68,7 @@ const CourseCard = ({
           {
             "border-secondary-200 hover:border-secondary-500": enrolled,
             "border-primary-200 hover:border-primary-500": !enrolled,
-          }
+          },
         )}
       >
         <div className="flex flex-col gap-y-3 flex-grow">
@@ -85,6 +87,7 @@ const CourseCard = ({
         </div>
         <div className="mt-4">
           <CourseCardButton
+            currency={currency}
             enrolled={enrolled}
             isAdmin={isAdmin}
             priceInCents={priceInCents}

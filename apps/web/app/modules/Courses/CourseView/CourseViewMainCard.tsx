@@ -25,6 +25,7 @@ export const CourseViewMainCard = ({
 }) => {
   const {
     category,
+    currency,
     description,
     imageUrl,
     title,
@@ -50,7 +51,7 @@ export const CourseViewMainCard = ({
 
   const firstUncompletedLesson =
     course.lessons.find(
-      (lesson) => lesson.itemsCompletedCount < lesson.itemsCount
+      (lesson) => lesson.itemsCompletedCount < lesson.itemsCount,
     )?.id ?? last(course.lessons)?.id;
 
   const handleEnroll = () => {
@@ -126,7 +127,7 @@ export const CourseViewMainCard = ({
           )}
           {!isAdmin && !isEnrolled && isPayable && (
             <PaymentModal
-              courseCurrency="usd" // TODO: Add currency from the course when available
+              courseCurrency={currency}
               coursePrice={priceInCents}
               courseTitle={title}
               courseId={courseId}
@@ -139,7 +140,7 @@ export const CourseViewMainCard = ({
                 {
                   "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
                     isEnrolled,
-                }
+                },
               )}
               onClick={handleUnenroll}
             >

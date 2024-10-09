@@ -61,12 +61,12 @@ export const coursesConfigOptions: ResourceOptions = {
     "category_id",
     "author_id",
     "price_in_cents",
+    "currency",
     "created_at",
     "updated_at",
     "status",
     "file",
     "lessons",
-    "currency",
   ],
   properties: {
     title: {
