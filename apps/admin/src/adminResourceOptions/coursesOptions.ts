@@ -1,6 +1,5 @@
 import { ResourceOptions } from "adminjs";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
-import { Components } from "../components/index.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
@@ -10,6 +9,7 @@ import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
 import { beforeCreateCourse } from "./common/actions/before/createCourse.js";
 import { beforeUpdateCourse } from "./common/actions/before/updateCourse.js";
 import { addResourceId } from "./common/actions/before/addResourceId.js";
+import { Components } from "../components/index.js";
 
 export const coursesConfigOptions: ResourceOptions = {
   ...noParentNavigation,
@@ -109,7 +109,7 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     lessons: {
       components: {
-        show: Components.CourseLessonsShow,
+        show: Components.LessonAssigner,
       },
     },
   },

@@ -246,6 +246,20 @@
       "when": 1728309446715,
       "tag": "0034_add_payment_id_to_student_courses",
       "breakpoints": true
+    },
+    {
+      "idx": 35,
+      "version": "7",
+      "when": 1728300888263,
+      "tag": "0035_add_column_display_order_to_course_lessons_table",
+      "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "7",
+      "when": 1728386596150,
+      "tag": "0036_remove_unique_from_display_order_in_lesson_items",
+      "breakpoints": true
     }
   ]
 }
