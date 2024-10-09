@@ -1,25 +1,19 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { createRemixStub } from "@remix-run/testing";
 import { screen, waitFor, within } from "@testing-library/react";
+import { userEvent } from "@testing-library/user-event";
+import { last } from "lodash-es";
+import { Suspense } from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { availableCourses, studentCourses } from "~/utils/mocks/data/courses";
+import { setMatchingMediaQuery } from "~/utils/mocks/matchMedia.mock";
 import { mockRemixReact } from "~/utils/mocks/remix-run-mock";
 import { renderWith } from "~/utils/testUtils";
-import { createRemixStub } from "@remix-run/testing";
 import DashboardPage from "./Dashboard.page";
-import { Suspense } from "react";
-import { courses } from "~/utils/mocks/data/courses";
-import { userEvent } from "@testing-library/user-event";
-import { server } from "~/utils/mocks/node";
-import { http, HttpResponse } from "msw";
-import { withSearchParams } from "~/utils/mocks/resolvers/withSearchParams";
 
 vi.mock("../../../api/api-client");
-
 mockRemixReact();
 
 describe("Dashboard page", () => {
-  beforeEach(() => {
-    vi.resetAllMocks();
-  });
-
   const RemixStub = createRemixStub([
     {
       path: "/",
@@ -31,206 +25,220 @@ describe("Dashboard page", () => {
     },
   ]);
 
-  it("renders courses correctly", async () => {
-    renderWith({ withQuery: true }).render(<RemixStub />);
+  beforeEach(() => {
+    vi.resetAllMocks();
+    setMatchingMediaQuery("(min-width: 1200px)");
+  });
 
-    const courseCards = await screen.findAllByRole("link");
+  describe("enrolled courses", () => {
+    it("renders student courses correctly", async () => {
+      renderWith({ withQuery: true }).render(<RemixStub />);
 
-    expect(courseCards).toHaveLength(courses.data.length);
-
-    courses.data.forEach((course, index) => {
-      expect(courseCards[index]).toHaveTextContent(course.title);
-      expect(courseCards[index]).toHaveTextContent(course.description);
-      expect(courseCards[index]).toHaveTextContent(course.category);
-
-      const buttonText = course.enrolled ? "Continue" : "Enroll";
-      expect(within(courseCards[index]).getByRole("button")).toHaveTextContent(
-        buttonText
+      const enrolledCoursesSection =
+        await screen.findByTestId("enrolled-courses");
+      const courseCards = await within(enrolledCoursesSection).findAllByRole(
+        "link"
       );
-      expect(courseCards[index]).toHaveAttribute(
-        "href",
-        `/course/${course.id}`
+
+      expect(courseCards).toHaveLength(studentCourses.data.length);
+
+      studentCourses.data.forEach((course, index) => {
+        const card = courseCards[index];
+        expect(card).toHaveTextContent(course.title);
+        expect(card).toHaveTextContent(course.description);
+        expect(card).toHaveTextContent(course.category);
+
+        const buttonText = course.enrolled ? "Continue" : "Enroll";
+        expect(within(card).getByRole("button")).toHaveTextContent(buttonText);
+        expect(card).toHaveAttribute("href", `/course/${course.id}`);
+      });
+    });
+  });
+
+  describe("unenrolled courses", () => {
+    it("renders student courses correctly", async () => {
+      renderWith({ withQuery: true }).render(<RemixStub />);
+
+      const unenrolledCoursesSection =
+        await screen.findByTestId("unenrolled-courses");
+      const courseCards = await within(unenrolledCoursesSection).findAllByRole(
+        "link"
       );
-    });
-  });
 
-  it("displays matching courses when searching by name", async () => {
-    const inputText = "Accounting";
+      expect(courseCards).toHaveLength(availableCourses.data.length);
 
-    server.use(
-      http.get(
-        "/api/courses",
-        withSearchParams(
-          (params) => params.get("title") === inputText,
-          () => HttpResponse.json({ ...courses, data: [courses.data[2]] })
-        )
-      )
-    );
+      availableCourses.data.forEach((course, index) => {
+        const card = courseCards[index];
+        expect(card).toHaveTextContent(course.title);
+        expect(card).toHaveTextContent(course.description);
+        expect(card).toHaveTextContent(course.category);
 
-    renderWith({ withQuery: true }).render(<RemixStub />);
-
-    const searchInput = await screen.findByRole("textbox");
-
-    await waitFor(() => {
-      userEvent.type(searchInput, inputText);
+        const buttonText = course.enrolled ? "Continue" : "Enroll";
+        expect(within(card).getByRole("button")).toHaveTextContent(buttonText);
+        expect(card).toHaveAttribute("href", `/course/${course.id}`);
+      });
     });
 
-    await waitFor(() => {
-      expect(
-        screen.getByRole("button", { name: "Clear All" })
-      ).toBeInTheDocument();
+    it("displays matching courses when searching by name", async () => {
+      const inputText = "Surviving";
+      renderWith({ withQuery: true }).render(<RemixStub />);
+
+      const unenrolledCoursesSection =
+        await screen.findByTestId("unenrolled-courses");
+      const searchInput = await screen.findByRole("textbox");
+
+      await waitFor(() => {
+        userEvent.type(searchInput, inputText);
+      });
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole("button", { name: "Clear All" })
+        ).toBeInTheDocument();
+      });
+
+      const courseCards = await within(unenrolledCoursesSection).findAllByRole(
+        "link"
+      );
+
+      expect(courseCards).toHaveLength(1);
+      expect(last(courseCards)).toHaveTextContent("Xenobiology");
     });
 
-    const courseCards = await screen.findAllByRole("link");
-    expect(courseCards).toHaveLength(1);
-    expect(courseCards[0]).toHaveTextContent("Accounting and Finance");
-  });
+    it("displays matching courses when filtering by category", async () => {
+      renderWith({ withQuery: true }).render(<RemixStub />);
 
-  it("displays matching courses when filtering by category", async () => {
-    server.use(
-      http.get(
-        "/api/courses",
-        withSearchParams(
-          (params) => params.get("category") === "Software Development",
-          () => HttpResponse.json({ ...courses, data: courses.data.slice(1) })
-        )
-      )
-    );
+      const [categoriesSelect] = await screen.findAllByRole("combobox");
+      expect(categoriesSelect).toHaveTextContent("All Categories");
 
-    renderWith({ withQuery: true }).render(<RemixStub />);
+      userEvent.click(categoriesSelect);
 
-    const [categoriesSelect] = await screen.findAllByRole("combobox");
-    expect(categoriesSelect).toHaveTextContent("All Categories");
+      const categoriesDropdown = await screen.findByRole("listbox");
+      const categoryOptions = within(categoriesDropdown).getAllByRole("option");
+      expect(categoryOptions).toHaveLength(4);
 
-    userEvent.click(categoriesSelect);
+      userEvent.click(categoryOptions[1]);
 
-    const categoriesDropdown = await screen.findByRole("listbox");
-    const categoryOptions = within(categoriesDropdown).getAllByRole("option");
-    expect(categoryOptions).toHaveLength(4);
+      await waitFor(() => {
+        expect(categoriesSelect).toHaveTextContent("Software Development");
+      });
 
-    userEvent.click(categoryOptions[1]);
+      const unenrolledCoursesSection =
+        await screen.findByTestId("unenrolled-courses");
+      const courseCards = await within(unenrolledCoursesSection).findAllByRole(
+        "link"
+      );
 
-    await waitFor(() => {
-      expect(categoriesSelect).toHaveTextContent("Software Development");
+      expect(courseCards).toHaveLength(1);
     });
 
-    const courseCards = await screen.findAllByRole("link");
-    expect(courseCards).toHaveLength(2);
-  });
+    it("display empty courses message when no courses match the search", async () => {
+      renderWith({ withQuery: true }).render(<RemixStub />);
 
-  it("display empty courses message when no courses match the search", async () => {
-    server.use(
-      http.get(
-        "/api/courses",
-        withSearchParams(
-          (params) => params.get("title") === "Test",
-          () => HttpResponse.json({ ...courses, data: [] })
-        )
-      )
-    );
+      const searchInput = await screen.findByRole("textbox");
 
-    renderWith({ withQuery: true }).render(<RemixStub />);
+      await waitFor(() => {
+        userEvent.type(searchInput, "Test");
+      });
 
-    const searchInput = await screen.findByRole("textbox");
-
-    await waitFor(() => {
-      userEvent.type(searchInput, "Test");
+      await waitFor(() => {
+        expect(
+          screen.getByText("We could not find any courses")
+        ).toBeInTheDocument();
+      });
     });
 
-    await waitFor(() => {
-      expect(
-        screen.getByText("We could not find any courses")
-      ).toBeInTheDocument();
-    });
-  });
+    it("display sorted courses when sort value is changed", async () => {
+      const reversedCourseData = [...availableCourses.data].sort((a, b) =>
+        b.title.localeCompare(a.title)
+      );
 
-  it("display sorted courses when sort value is changed", async () => {
-    const reversedCourseData = courses.data.slice().reverse();
+      renderWith({ withQuery: true }).render(<RemixStub />);
 
-    server.use(
-      http.get(
-        "/api/courses",
-        withSearchParams(
-          (params) => params.get("sort") === "-title",
-          () =>
-            HttpResponse.json({
-              ...courses,
-              data: reversedCourseData,
-            })
-        )
-      )
-    );
+      const [, sortSelect] = await screen.findAllByRole("combobox");
+      expect(sortSelect).toHaveTextContent("Sort");
 
-    renderWith({ withQuery: true }).render(<RemixStub />);
+      userEvent.click(sortSelect);
 
-    const [, sortSelect] = await screen.findAllByRole("combobox");
-    expect(sortSelect).toHaveTextContent("Sort");
+      const sortDropdown = await screen.findByRole("listbox");
+      userEvent.click(
+        within(sortDropdown).getByRole("option", { name: "Course Name Z-A" })
+      );
 
-    userEvent.click(sortSelect);
+      await waitFor(() => {
+        expect(sortSelect).toHaveTextContent("Course Name Z-A");
+      });
 
-    const sortDropdown = await screen.findByRole("listbox");
-    userEvent.click(
-      within(sortDropdown).getByRole("option", { name: "Course Name Z-A" })
-    );
+      const unenrolledCoursesSection =
+        await screen.findByTestId("unenrolled-courses");
 
-    await waitFor(() => {
-      expect(sortSelect).toHaveTextContent("Course Name Z-A");
+      await waitFor(() => {
+        const courseCards = within(unenrolledCoursesSection).getAllByRole(
+          "link"
+        );
+        const renderedTitles = courseCards.map(
+          (card) => within(card).getByRole("heading").textContent
+        );
+        const expectedTitles = reversedCourseData.map((course) => course.title);
+
+        expect(renderedTitles).toEqual(expectedTitles);
+      });
     });
 
-    const courseCards = await screen.findAllByRole("link");
-    reversedCourseData.forEach((course, index) => {
-      expect(courseCards[index]).toHaveTextContent(course.title);
+    it('clears search and filters when "Clear All" is clicked', async () => {
+      const user = userEvent.setup();
+
+      renderWith({ withQuery: true }).render(<RemixStub />);
+
+      await waitFor(() => {
+        expect(screen.getByRole("textbox")).toBeInTheDocument();
+      });
+
+      const searchInput = screen.getByRole("textbox");
+      await user.type(searchInput, "Programming");
+
+      const [categoriesSelect, sortSelect] = screen.getAllByRole("combobox");
+
+      await user.click(categoriesSelect);
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole("option", { name: "Software Development" })
+        ).toBeInTheDocument();
+      });
+
+      await user.click(
+        screen.getByRole("option", { name: "Software Development" })
+      );
+
+      await waitFor(() => {
+        expect(sortSelect).not.toBeDisabled();
+      });
+
+      await user.click(sortSelect);
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole("option", { name: "Category A-Z" })
+        ).toBeInTheDocument();
+      });
+
+      await user.click(screen.getByRole("option", { name: "Category A-Z" }));
+
+      const clearAllButton = await screen.findByRole("button", {
+        name: "Clear All",
+      });
+
+      await user.click(clearAllButton);
+
+      await waitFor(() => {
+        expect(
+          screen.queryByRole("button", { name: "Clear All" })
+        ).not.toBeInTheDocument();
+        expect(searchInput).toHaveValue("");
+        expect(categoriesSelect).toHaveTextContent("All Categories");
+        expect(sortSelect).toHaveTextContent("Sort");
+      });
     });
-  });
-
-  it('clears search and filters when "Clear All" is clicked', async () => {
-    renderWith({ withQuery: true }).render(<RemixStub />);
-
-    const searchInput = await screen.findByRole("textbox");
-
-    await waitFor(() => {
-      userEvent.type(searchInput, "Programming");
-    });
-
-    const [categoriesSelect, sortSelect] = screen.getAllByRole("combobox");
-
-    userEvent.click(categoriesSelect);
-    userEvent.click(
-      await screen.findByRole("option", { name: "Software Development" })
-    );
-
-    await waitFor(() => {
-      expect(sortSelect).not.toBeDisabled();
-    });
-
-    userEvent.click(sortSelect);
-    userEvent.click(
-      await screen.findByRole("option", { name: "Category A-Z" })
-    );
-
-    let hasClearedFilters = false;
-
-    server.use(
-      http.get("/api/courses", ({ params }) => {
-        if (!params.title && !params.category && !params.sort) {
-          hasClearedFilters = true;
-        }
-        return HttpResponse.json(courses);
-      })
-    );
-
-    const clearAllButton = await screen.findByRole("button", {
-      name: "Clear All",
-    });
-    userEvent.click(clearAllButton);
-
-    await waitFor(() => {
-      expect(clearAllButton).not.toBeInTheDocument();
-    });
-
-    expect(searchInput).toHaveValue("");
-    expect(categoriesSelect).toHaveTextContent("All Categories");
-    expect(sortSelect).toHaveTextContent("Sort");
-    expect(hasClearedFilters).toBe(true);
   });
 });

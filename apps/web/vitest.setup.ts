@@ -3,6 +3,7 @@ import { cleanup } from "@testing-library/react";
 import { afterAll, afterEach, beforeAll } from "vitest";
 import { installGlobals } from "@remix-run/node";
 import { server } from "~/utils/mocks/node";
+import "./app/utils/mocks/intersectionObserver.mock";
 
 class ResizeObserver {
   observe() {}
