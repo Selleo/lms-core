@@ -8,7 +8,7 @@ const addError = (errors: ValidationErrors, field: string, message: string) => {
 export const beforeUpdateCourse: Before = async (request: ActionRequest) => {
   if (!Object.keys(request.payload || {}).length) return request;
 
-  const { title, description, category_id, state, price_in_cents } =
+  const { title, description, category_id, state, price_in_cents, currency } =
     request?.payload ?? {};
   const errors: ValidationErrors = {};
 
@@ -50,6 +50,20 @@ export const beforeUpdateCourse: Before = async (request: ActionRequest) => {
 
   if (!price_in_cents) {
     addError(errors, "price_in_cents", "Please provide the price");
+  }
+
+  if (!currency) {
+    addError(errors, "currency", "Please provide the currency");
+  }
+
+  const currencyRegex = /^[A-Z]{3}$/;
+
+  if (!currencyRegex.test(currency)) {
+    addError(
+      errors,
+      "currency",
+      "Currency must be a capitalized 3-letter code",
+    );
   }
 
   if (
