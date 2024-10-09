@@ -201,6 +201,7 @@ export interface GetAllCoursesResponse {
     enrolled: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
+    currency: string;
   }[];
   pagination: {
     totalItems: number;
@@ -223,6 +224,7 @@ export interface GetStudentCoursesResponse {
     enrolled: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
+    currency: string;
   }[];
   pagination: {
     totalItems: number;
@@ -245,6 +247,7 @@ export interface GetAvailableCoursesResponse {
     enrolled: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
+    currency: string;
   }[];
   pagination: {
     totalItems: number;
@@ -275,6 +278,7 @@ export interface GetCourseResponse {
       itemsCompletedCount: number;
     }[];
     priceInCents: number;
+    currency: string;
   };
 }
 

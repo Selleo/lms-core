@@ -1,4 +1,4 @@
-import { Static, Type } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
 import { lessonSchema } from "../../lessons/schemas/lesson.schema";
 
 export const commonShowCourseSchema = Type.Object({
@@ -13,6 +13,7 @@ export const commonShowCourseSchema = Type.Object({
   state: Type.Union([Type.String(), Type.Null()]),
   lessons: Type.Array(lessonSchema),
   priceInCents: Type.Number(),
+  currency: Type.String(),
 });
 
 export type CommonShowCourse = Static<typeof commonShowCourseSchema>;

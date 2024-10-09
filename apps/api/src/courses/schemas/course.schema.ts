@@ -14,6 +14,7 @@ export const allCoursesSchema = Type.Array(
     enrolled: Type.Boolean(),
     enrolledParticipantCount: Type.Number(),
     priceInCents: Type.Number(),
+    currency: Type.String(),
   }),
 );
 

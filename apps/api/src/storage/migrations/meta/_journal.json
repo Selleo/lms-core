@@ -260,6 +260,13 @@
       "when": 1728386596150,
       "tag": "0036_remove_unique_from_display_order_in_lesson_items",
       "breakpoints": true
+    },
+    {
+      "idx": 37,
+      "version": "7",
+      "when": 1728463067798,
+      "tag": "0037_add_currency_column_to_courses_table",
+      "breakpoints": true
     }
   ]
 }
