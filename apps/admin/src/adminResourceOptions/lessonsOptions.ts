@@ -1,5 +1,4 @@
 import { Components } from "../components/index.js";
-import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { ResourceOptions } from "adminjs";
 import { stateOptions } from "./common/consts/selectOptions/stateOptions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
@@ -13,7 +12,10 @@ import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
 import { addResourceId } from "./common/actions/before/addResourceId.js";
 
 export const lessonsConfigOptions: ResourceOptions = {
-  ...noParentNavigation,
+  navigation: {
+    name: null,
+    icon: "FileText",
+  },
   actions: {
     list: {
       before: [statusFilterBeforeAction],

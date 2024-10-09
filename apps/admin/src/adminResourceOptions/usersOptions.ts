@@ -4,13 +4,15 @@ import { adminLikeRoles } from "./common/consts/selectOptions/adminLikeRoles.js"
 import { beforeCreateOrUpdateUser } from "./common/actions/before/createOrUpdateUser.js";
 import { afterCreateUser } from "./common/actions/after/createUser.js";
 import { nonAdminRoles } from "./common/consts/selectOptions/nonAdminRoles.js";
-import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 
 export const usersConfigOptions: ResourceOptions = {
-  ...noParentNavigation,
+  navigation: {
+    name: null,
+    icon: "Users",
+  },
   actions: {
     delete: {
       isAccessible: false,

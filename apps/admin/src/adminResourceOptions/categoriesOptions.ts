@@ -3,12 +3,14 @@ import { Components } from "../components/index.js";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
-import { noParentNavigation } from "./common/navigation/noParentNavigation.js";
 import { beforeCreateCategory } from "./common/actions/before/createCategory.js";
 import { beforeUpdateCategory } from "./common/actions/before/updateCategory.js";
 
 export const categoriesConfigOptions: ResourceOptions = {
-  ...noParentNavigation,
+  navigation: {
+    name: null,
+    icon: "List",
+  },
   actions: {
     list: {
       before: [statusFilterBeforeAction],
