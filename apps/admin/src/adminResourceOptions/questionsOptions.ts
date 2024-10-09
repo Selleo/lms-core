@@ -9,7 +9,10 @@ import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.j
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
 
 export const questionsConfigOptions: ResourceOptions = {
-  parent: "lesson-items",
+  parent: {
+    name: "lesson-items",
+    icon: "Box",
+  },
   actions: {
     list: {
       before: [statusFilterBeforeAction],

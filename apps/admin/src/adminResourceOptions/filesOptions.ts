@@ -11,7 +11,10 @@ import { tempAddUrl } from "./common/actions/before/tempAddUrl.js";
 import { addResourceId } from "./common/actions/before/addResourceId.js";
 
 export const filesConfigOptions: ResourceOptions = {
-  parent: "lesson-items",
+  parent: {
+    name: "lesson-items",
+    icon: "Box",
+  },
   actions: {
     new: {
       before: [
