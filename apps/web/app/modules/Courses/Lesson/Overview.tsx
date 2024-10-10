@@ -13,9 +13,9 @@ export default function Overview() {
   const lessonItemsCompletedCount = data.itemsCompletedCount;
 
   return (
-    <Card className="w-full border-none drop-shadow-primary">
-      <CardContent className="p-8 flex flex-col align-center gap-6 2xl:flex-row">
-        <div className="relative self-center w-[320px] aspect-video shrink-0">
+    <Card className="w-full pt-6 border-none drop-shadow-primary">
+      <CardContent className="lg:p-8 flex flex-col align-center gap-6 2xl:flex-row">
+        <div className="relative self-center w-full lg:w-[320px] aspect-video">
           <img
             src={imageUrl}
             alt={title}

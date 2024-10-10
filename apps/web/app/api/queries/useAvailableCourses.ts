@@ -10,7 +10,7 @@ type CourseParams = {
   userId?: string;
 };
 
-export const coursesQueryOptions = (searchParams?: CourseParams) => ({
+export const availableCoursesQueryOptions = (searchParams?: CourseParams) => ({
   queryKey: ["available-courses", searchParams],
   queryFn: async () => {
     const response = await ApiClient.api.coursesControllerGetAvailableCourses({
@@ -27,9 +27,9 @@ export const coursesQueryOptions = (searchParams?: CourseParams) => ({
 });
 
 export function useAvailableCourses(searchParams?: CourseParams) {
-  return useQuery(coursesQueryOptions(searchParams));
+  return useQuery(availableCoursesQueryOptions(searchParams));
 }
 
 export function useAvailableCoursesSuspense(searchParams?: CourseParams) {
-  return useSuspenseQuery(coursesQueryOptions(searchParams));
+  return useSuspenseQuery(availableCoursesQueryOptions(searchParams));
 }

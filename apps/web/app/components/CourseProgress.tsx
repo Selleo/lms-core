@@ -1,11 +1,13 @@
 import { cn } from "~/lib/utils";
 
 type CourseProgressProps = {
+  label: string;
   completedLessonCount: number;
   courseLessonCount: number;
 };
 
 const CourseProgress = ({
+  label,
   completedLessonCount,
   courseLessonCount,
 }: CourseProgressProps) => {
@@ -26,7 +28,9 @@ const CourseProgress = ({
 
   return (
     <div className="gap-2 flex flex-col">
-      <p className="text-neutral-600 text-xs">{`Lesson progress: ${completedLessonCount}/${courseLessonCount}`}</p>
+      <p className="text-neutral-600 text-xs">
+        {label} {completedLessonCount}/{courseLessonCount}
+      </p>
       <div className="flex justify-between items-center gap-px">
         {courseProgressParts}
       </div>

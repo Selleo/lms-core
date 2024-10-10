@@ -2,7 +2,6 @@ import { Outlet, redirect } from "@remix-run/react";
 import { currentUserQueryOptions } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
 import { useAuthEffect } from "../Auth/authEffect";
-import { DashboardNavigation } from "./DashboardNavigation/DashboardNavigation";
 
 export const clientLoader = async () => {
   try {
@@ -24,8 +23,8 @@ export default function DashboardLayout() {
   return (
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 overflow-hidden">
-        <DashboardNavigation />
-        <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
+        {/*<DashboardNavigation />*/}
+        <main className="flex-1 overflow-y-auto py-6 lg:p-6 bg-primary-50">
           <Outlet />
         </main>
       </div>

@@ -8,7 +8,7 @@ import { SelleoLogo } from "~/assets/svgs";
 import { Icon } from "~/components/Icon";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { MenuItem } from "~/modules/Dashboard/DashboardNavigation/MenuItem";
-import { IconName } from "~/types/shared";
+import type { IconName } from "~/types/shared";
 
 export type Role = GetUsersResponse["data"][number]["role"];
 
@@ -41,7 +41,7 @@ const menuItems: MenuItemType[] = [
     link: "/settings",
     roles: ["admin", "student"],
     iconName: "Settings",
-  }
+  },
 ];
 
 export function DashboardNavigation() {

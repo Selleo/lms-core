@@ -17,6 +17,7 @@ import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 import { PaymentModal } from "~/modules/stripe/PaymentModal";
+import CourseProgress from "~/components/CourseProgress";
 
 export const CourseViewMainCard = ({
   course,
@@ -77,31 +78,15 @@ export const CourseViewMainCard = ({
           "https://foundr.com/wp-content/uploads/2023/04/How-to-create-an-online-course.jpg.webp"
         }
         alt="Course"
-        className="w-full object-cover aspect-video object-center rounded-2xl"
+        className="w-full object-cover aspect-video object-center rounded-t-2xl lg:rounded-2xl"
       />
-      <div className="flex flex-col h-full bg-white p-8 pt-6 rounded-b-2xl min-h-0">
-        <div className="gap-2 flex flex-col">
-          <p className="text-neutral-600 text-xs leading-5">
-            Course progress: {completedLessonCount}/{courseLessonCount}
-          </p>
-          <div className="flex grow items-center gap-px">
-            {Array.from({ length: completedLessonCount }).map((_, index) => (
-              <span
-                key={index}
-                className="h-[5px] grow bg-secondary-500 rounded-[40px]"
-              />
-            ))}
-            {Array.from({
-              length: courseLessonCount - completedLessonCount,
-            }).map((_, index) => (
-              <span
-                key={index}
-                className="h-[5px] grow bg-primary-50 rounded-[40px]"
-              />
-            ))}
-          </div>
-        </div>
-        <h4 className="text-2xl font-bold mt-6 leading-10 text-neutral-950">
+      <div className="flex flex-col h-full bg-white p-6 lg:p-8 pt-6 rounded-b-2xl min-h-0">
+        <CourseProgress
+          label="Course progress:"
+          completedLessonCount={completedLessonCount}
+          courseLessonCount={courseLessonCount}
+        />
+        <h4 className="text-2xl font-bold mt-4 lg:mt-6 leading-10 text-neutral-950">
           {title}
         </h4>
         <div className="min-h-0 scrollbar-thin overflow-auto">

@@ -40,7 +40,7 @@ const CourseCard = ({
   return (
     <Link
       to={href}
-      className="flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-full"
+      className="flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-full bg-white lg:bg-none"
     >
       <div className="relative">
         <img
@@ -74,6 +74,7 @@ const CourseCard = ({
         <div className="flex flex-col gap-y-3 flex-grow">
           {enrolled && typeof completedLessonCount === "number" && (
             <CourseProgress
+              label="Course progress:"
               courseLessonCount={courseLessonCount}
               completedLessonCount={completedLessonCount}
             />

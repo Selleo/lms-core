@@ -18,7 +18,7 @@ import {
   users,
 } from "./storage/schema";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
-import { DatabasePg } from "./common";
+import type { DatabasePg } from "./common";
 import hashPassword from "./common/helpers/hashPassword";
 
 dotenv.config({ path: "./.env" });

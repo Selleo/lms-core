@@ -69,7 +69,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
           ref={inputRef}
           type="text"
           placeholder="Search by name or keyword..."
-          className="pl-8 pr-4 py-2 w-full border border-neutral-300"
+          className="pl-8 pr-4 py-2 max-w-[320px] md:max-w-none w-full border border-neutral-300"
           onChange={handleSearchChange}
         />
       </div>
@@ -79,7 +79,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         onValueChange={handleCategoryChange}
         disabled={isLoading}
       >
-        <SelectTrigger className="w-[180px] border border-neutral-300">
+        <SelectTrigger className="w-full max-w-[320px] sm:w-[180px] border border-neutral-300">
           <SelectValue placeholder="All Categories" />
         </SelectTrigger>
         <SelectContent>
@@ -97,7 +97,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
         onValueChange={handleSortChange}
         disabled={isLoading}
       >
-        <SelectTrigger className="w-[180px] border border-neutral-300">
+        <SelectTrigger className="w-full max-w-[320px] sm:w-[180px] border border-neutral-300">
           <SelectValue placeholder="Sort" />
         </SelectTrigger>
         <SelectContent>

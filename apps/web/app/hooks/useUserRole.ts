@@ -1,4 +1,4 @@
-import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
+import { useCurrentUserSuspense } from "~/api/queries";
 
 export const useUserRole = () => {
   const {

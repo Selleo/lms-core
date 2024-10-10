@@ -1,9 +1,9 @@
-import { MetaFunction } from "@remix-run/node";
-import { courseQueryOptions, useCourseSuspense } from "~/api/queries/useCourse";
+import type { MetaFunction } from "@remix-run/node";
+import { courseQueryOptions, useCourseSuspense } from "~/api/queries";
 import { CourseViewMainCard } from "./CourseViewMainCard";
 import { LessonsList } from "./LessonsList";
 import {
-  ClientLoaderFunctionArgs,
+  type ClientLoaderFunctionArgs,
   isRouteErrorResponse,
   useParams,
   useRouteError,
@@ -39,7 +39,7 @@ export default function CoursesViewPage() {
 
   return (
     <div className="h-full">
-      <div className="flex flex-col md:flex-row h-full gap-6">
+      <div className="flex flex-col md:flex-row h-full gap-6 px-6">
         <CourseViewMainCard course={course} />
         <LessonsList
           lessons={course.lessons}
