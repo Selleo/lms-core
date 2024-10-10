@@ -12,6 +12,10 @@ const Components = {
     "./custom/BodyTextCounter",
   ),
   Dashboard: componentLoader.add("Dashboard", "./custom/Dashboard"),
+  DynamicFileInput: componentLoader.add(
+    "DynamicFileInput",
+    "./custom/DynamicFileInput",
+  ),
   FilesPreview: componentLoader.add("FilesPreview", "./custom/FilesPreview"),
   FilterSelect: componentLoader.add("FilterSelect", "./filters/FilterSelect"),
   LessonItems: componentLoader.add("LessonItems", "./custom/LessonItems"),
