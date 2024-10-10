@@ -1,4 +1,4 @@
-import { ResourceOptions } from "adminjs";
+import type { ResourceOptions } from "adminjs";
 import { archivingActions } from "./common/actions/custom/archivingActions.js";
 import { statusFilterBeforeAction } from "./common/actions/before/statusFilter.js";
 import { statusOptions } from "./common/consts/selectOptions/statusOptions.js";
@@ -43,6 +43,7 @@ export const coursesConfigOptions: ResourceOptions = {
     "state",
     "file",
     "price_in_cents",
+    "currency",
   ],
   filterProperties: ["category_id", "state", "status"],
   listProperties: [
@@ -52,6 +53,7 @@ export const coursesConfigOptions: ResourceOptions = {
     "created_at",
     "state",
     "status",
+    "currency",
   ],
   showProperties: [
     "title",
@@ -59,6 +61,7 @@ export const coursesConfigOptions: ResourceOptions = {
     "category_id",
     "author_id",
     "price_in_cents",
+    "currency",
     "created_at",
     "updated_at",
     "status",
@@ -103,6 +106,10 @@ export const coursesConfigOptions: ResourceOptions = {
     },
     price_in_cents: {
       isRequired: false,
+    },
+    currency: {
+      isRequired: false,
+      description: "Currency code e.g. PLN / EUR / USD",
     },
     file: {
       components: {

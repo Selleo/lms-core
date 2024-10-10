@@ -297,6 +297,7 @@ export class CoursesService {
           )::INTEGER`,
         state: studentCourses.state,
         priceInCents: courses.priceInCents,
+        currency: courses.currency,
       })
       .from(courses)
       .innerJoin(categories, eq(courses.categoryId, categories.id))
@@ -484,6 +485,7 @@ export class CoursesService {
           )
         )::INTEGER`,
       priceInCents: courses.priceInCents,
+      currency: courses.currency,
     };
   }
 

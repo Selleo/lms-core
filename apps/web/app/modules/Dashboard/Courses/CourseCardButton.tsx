@@ -3,12 +3,14 @@ import { Button } from "~/components/ui/button";
 import { formatPrice } from "~/lib/formatters/priceFormatter";
 
 type CourseCardButtonProps = {
+  currency: string;
   enrolled: boolean;
   isAdmin: boolean;
   priceInCents: number;
 };
 
 const CourseCardButton = ({
+  currency,
   enrolled,
   isAdmin,
   priceInCents,
@@ -24,7 +26,7 @@ const CourseCardButton = ({
 
     if (isAdmin) return "View";
 
-    if (priceInCents) return `Enroll - ${formatPrice(priceInCents)}`;
+    if (priceInCents) return `Enroll - ${formatPrice(priceInCents, currency)}`;
 
     return "Enroll";
   };
