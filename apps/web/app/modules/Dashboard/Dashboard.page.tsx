@@ -98,7 +98,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-y-12 h-auto">
-      <div className="flex flex-col gap-y-6">
+      <div className="flex flex-col gap-y-6" data-testid="enrolled-courses">
         <div className="flex flex-col">
           <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
             Your Courses
@@ -173,6 +173,7 @@ export default function DashboardPage() {
               courseListLayout === "card",
             block: courseListLayout === "table",
           })}
+          data-testid="unenrolled-courses"
         >
           {availableCourses && !isEmpty(availableCourses) && (
             <CourseList
