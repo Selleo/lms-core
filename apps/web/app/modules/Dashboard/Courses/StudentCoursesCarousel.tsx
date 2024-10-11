@@ -23,7 +23,7 @@ export const StudentCoursesCarousel = ({
         return (
           <CarouselItem
             key={studentCourse.id}
-            className="max-w-[320px] shrink-0 w-full mr-6 last:mr-0"
+            className="max-w-[calc(100%-24px)] xs:max-w-[320px] w-full shrink-0 mr-3 sm:mr-6 sm:last:mr-0"
           >
             <CourseCard
               {...studentCourse}
@@ -32,6 +32,8 @@ export const StudentCoursesCarousel = ({
           </CarouselItem>
         );
       }
+
+      return null;
     });
   };
 
@@ -39,10 +41,10 @@ export const StudentCoursesCarousel = ({
 
   return (
     <Carousel className="w-full" opts={{ slidesToScroll: "auto" }}>
-      <CarouselContent className="flex bg-white w-full rounded-lg">
+      <CarouselContent className="flex lg:bg-white w-full rounded-lg ">
         {carouselItems}
       </CarouselContent>
-      <div className="absolute -right-8 -top-[96px]">
+      <div className="lg:absolute lg:-right-8 lg:-top-[96px] sr-only">
         <CarouselPrevious className="rounded-full" />
         <CarouselNext className="rounded-full" />
       </div>

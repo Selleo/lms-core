@@ -4,6 +4,7 @@ import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 import { CaretRight } from "~/assets/svgs";
 import { useUserRole } from "~/hooks/useUserRole";
+import CourseProgress from "~/components/CourseProgress";
 
 type LessonsListProps = {
   lessons: GetCourseResponse["data"]["lessons"];
@@ -14,7 +15,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
   const { isAdmin } = useUserRole();
 
   return (
-    <div className="grow flex flex-col rounded-2xl bg-white drop-shadow-primary relative p-8">
+    <div className="grow flex flex-col rounded-2xl bg-white drop-shadow-primary relative p-6 lg:p-8">
       <h3 className="text-xl font-semibold mb-4">
         Lessons
         <span className="text-primary-700"> ({lessons.length})</span>
@@ -31,7 +32,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
               itemsCount,
               itemsCompletedCount,
             },
-            index
+            index,
           ) => (
             <Card
               key={index}
@@ -62,29 +63,11 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                   <div className="flex flex-col flex-grow">
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col h-full bg-white w-full">
-                        <div className="gap-2 flex flex-col">
-                          <p className="text-neutral-600 text-xs">
-                            Lesson progress: {itemsCompletedCount}/{itemsCount}
-                          </p>
-                          <div className="flex justify-between items-center gap-px">
-                            {Array.from({ length: itemsCompletedCount }).map(
-                              (_, index) => (
-                                <span
-                                  key={index}
-                                  className="h-[5px] flex-grow bg-secondary-500 rounded-[40px]"
-                                />
-                              )
-                            )}
-                            {Array.from({
-                              length: itemsCount - itemsCompletedCount,
-                            }).map((_, index) => (
-                              <span
-                                key={index}
-                                className="h-[5px] flex-grow bg-primary-50 rounded-[40px]"
-                              />
-                            ))}
-                          </div>
-                        </div>
+                        <CourseProgress
+                          label="Lesson progress:"
+                          completedLessonCount={itemsCompletedCount}
+                          courseLessonCount={itemsCount}
+                        />
                       </div>
                     </div>
                     <div className="flex flex-col gap-y-2 pb-4">
@@ -112,7 +95,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                 </Link>
               </CardContent>
             </Card>
-          )
+          ),
         )}
       </div>
     </div>
