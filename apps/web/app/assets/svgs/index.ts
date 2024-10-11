@@ -7,3 +7,5 @@ export { default as CaretRight } from "./chevron-right.svg?react";
 export { default as EmptyCourse } from "./emptyCourse.svg?react";
 export { default as Settings } from "./settings.svg?react";
 export { default as ArrowRight } from "./arrow-right.svg?react";
+export { default as HamburgerMenu } from "./hamburger-menu.svg?react";
+export { default as HamburgerMenuClose } from "./hamburger-menu-close.svg?react";
