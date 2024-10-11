@@ -4,7 +4,7 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
-import { GetCourseResponse } from "../generated-api";
+import type { GetCourseResponse } from "../generated-api";
 
 export const courseQueryOptions = (id: string) =>
   queryOptions({
