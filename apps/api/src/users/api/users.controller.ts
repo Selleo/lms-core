@@ -5,7 +5,7 @@ import {
   ForbiddenException,
   Get,
   Patch,
-  UnauthorizedException,
+  UseGuards,
 } from "@nestjs/common";
 import { Static } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
@@ -15,7 +15,9 @@ import {
   nullResponse,
   UUIDSchema,
 } from "src/common";
+import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
+import { RolesGuard } from "src/common/guards/roles.guard";
 import {
   CommonUser,
   commonUserSchema,
@@ -40,6 +42,7 @@ import {
 import { UsersService } from "../users.service";
 
 @Controller("users")
+@UseGuards(RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -89,6 +92,7 @@ export class UsersController {
   }
 
   @Patch("admin/:id")
+  @Roles("admin")
   @Validate({
     response: baseResponse(commonUserSchema),
     request: [
@@ -99,13 +103,8 @@ export class UsersController {
   async adminUpdateUser(
     id: string,
     @Body() data: UpdateUserBody,
-    @CurrentUser() currentUser: { role: string },
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     {
-      if (currentUser.role !== "admin") {
-        throw new UnauthorizedException("You don't have permission to update");
-      }
-
       const updatedUser = await this.usersService.updateUser(id, data);
 
       return new BaseResponse(updatedUser);
@@ -156,20 +155,12 @@ export class UsersController {
   }
 
   @Delete()
+  @Roles("admin")
   @Validate({
     response: nullResponse(),
     request: [{ type: "body", schema: deleteUsersSchema }],
   })
-  async deleteBulkUsers(
-    @Body() data: DeleteUsersSchema,
-    @CurrentUser() currentUser: { userId: string; role: string },
-  ): Promise<null> {
-    if (currentUser.role !== "admin") {
-      throw new UnauthorizedException(
-        "You don't have permission to delete users",
-      );
-    }
-
+  async deleteBulkUsers(@Body() data: DeleteUsersSchema): Promise<null> {
     await this.usersService.deleteBulkUsers(data.userIds);
 
     return null;

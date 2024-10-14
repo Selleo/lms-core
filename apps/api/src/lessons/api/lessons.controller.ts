@@ -6,12 +6,14 @@ import {
   Param,
   Post,
   Query,
-  UnauthorizedException,
+  UseGuards,
 } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 import { baseResponse, BaseResponse, UUIDSchema } from "src/common";
+import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
+import { RolesGuard } from "src/common/guards/roles.guard";
 import type { UserRole } from "src/users/schemas/user-roles";
 import { LessonsService } from "../lessons.service";
 import {
@@ -22,24 +24,21 @@ import {
 } from "../schemas/lesson.schema";
 
 @Controller("courses")
+@UseGuards(RolesGuard)
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}
 
   @Get("lessons")
+  @Roles("tutor", "admin")
   @Validate({
     response: baseResponse(allLessonsSchema),
   })
-  async getAllLessons(
-    @CurrentUser() currentUser: { role: string },
-  ): Promise<BaseResponse<AllLessonsResponse>> {
-    if (currentUser.role !== "admin") {
-      throw new UnauthorizedException("You don't have permission to update");
-    }
-
+  async getAllLessons(): Promise<BaseResponse<AllLessonsResponse>> {
     return new BaseResponse(await this.lessonsService.getAllLessons());
   }
 
   @Get("available-lessons")
+  @Roles("tutor", "admin")
   @Validate({
     response: baseResponse(
       Type.Array(
@@ -94,6 +93,7 @@ export class LessonsController {
   }
 
   @Post("add")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {
@@ -119,6 +119,7 @@ export class LessonsController {
   }
 
   @Delete(":courseId/:lessonId")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       { type: "param", name: "courseId", schema: UUIDSchema },
