@@ -1261,7 +1261,7 @@
         }
       }
     },
-    "/api/courses/lessons": {
+    "/api/lessons": {
       "get": {
         "operationId": "LessonsController_getAllLessons",
         "parameters": [],
@@ -1278,7 +1278,7 @@
         }
       }
     },
-    "/api/courses/available-lessons": {
+    "/api/lessons/available-lessons": {
       "get": {
         "operationId": "LessonsController_getAvailableLessons",
         "parameters": [],
@@ -1295,7 +1295,7 @@
         }
       }
     },
-    "/api/courses/lesson": {
+    "/api/lessons/lesson": {
       "get": {
         "operationId": "LessonsController_getLesson",
         "parameters": [
@@ -1322,7 +1322,7 @@
         }
       }
     },
-    "/api/courses/add": {
+    "/api/lessons/add": {
       "post": {
         "operationId": "LessonsController_addLessonToCourse",
         "parameters": [],
@@ -1349,7 +1349,7 @@
         }
       }
     },
-    "/api/courses/{courseId}/{lessonId}": {
+    "/api/lessons/{courseId}/{lessonId}": {
       "delete": {
         "operationId": "LessonsController_removeLessonFromCourse",
         "parameters": [
@@ -1378,6 +1378,263 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RemoveLessonFromCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/lesson-items": {
+      "get": {
+        "operationId": "LessonsController_getAllLessonItems",
+        "parameters": [
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "text-block",
+                  "type": "string"
+                },
+                {
+                  "const": "question",
+                  "type": "string"
+                },
+                {
+                  "const": "file",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllLessonItemsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/lesson-items/{id}": {
+      "get": {
+        "operationId": "LessonsController_getLessonItemById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLessonItemByIdResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/text-block-item": {
+      "patch": {
+        "operationId": "LessonsController_updateTextBlockItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTextBlockItemBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTextBlockItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/question-item": {
+      "patch": {
+        "operationId": "LessonsController_updateQuestionItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuestionItemBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateQuestionItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/file-item": {
+      "patch": {
+        "operationId": "LessonsController_updateFileItem",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFileItemBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateFileItemResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/create-text-block": {
+      "post": {
+        "operationId": "LessonsController_createTextBlock",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTextBlockBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTextBlockResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/create-question": {
+      "post": {
+        "operationId": "LessonsController_createQuestion",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateQuestionBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateQuestionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/create-file": {
+      "post": {
+        "operationId": "LessonsController_createFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFileBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFileResponse"
                 }
               }
             }
@@ -1441,6 +1698,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/MarkLessonItemAsCompletedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/upload": {
+      "post": {
+        "operationId": "S3Controller_uploadFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileUploadResponse"
                 }
               }
             }
@@ -3081,15 +3372,14 @@
                             "questionBody": {
                               "type": "string"
                             },
+                            "state": {
+                              "type": "string"
+                            },
                             "questionAnswers": {
                               "type": "array",
                               "items": {
                                 "type": "object",
                                 "properties": {
-                                  "id": {
-                                    "format": "uuid",
-                                    "type": "string"
-                                  },
                                   "optionText": {
                                     "type": "string"
                                   },
@@ -3108,12 +3398,24 @@
                                   }
                                 },
                                 "required": [
-                                  "id",
                                   "optionText",
                                   "position",
                                   "isStudentAnswer"
                                 ]
                               }
+                            },
+                            "solutionExplanation": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "archived": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
@@ -3138,13 +3440,15 @@
                             },
                             "state": {
                               "type": "string"
+                            },
+                            "archived": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
                             "id",
                             "title",
-                            "body",
-                            "state"
+                            "body"
                           ]
                         },
                         {
@@ -3162,6 +3466,12 @@
                             },
                             "url": {
                               "type": "string"
+                            },
+                            "state": {
+                              "type": "string"
+                            },
+                            "archived": {
+                              "type": "boolean"
                             }
                           },
                           "required": [
@@ -3256,6 +3566,703 @@
           "data"
         ]
       },
+      "GetAllLessonItemsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "body": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "authorId": {
+                          "type": "string"
+                        },
+                        "archived": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "title",
+                        "body",
+                        "state",
+                        "authorId",
+                        "archived",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "itemType": {
+                          "const": "text-block",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "itemType"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "questionType": {
+                          "type": "string"
+                        },
+                        "questionBody": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "authorId": {
+                          "type": "string"
+                        },
+                        "archived": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        },
+                        "solutionExplanation": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "questionType",
+                        "questionBody",
+                        "state",
+                        "authorId",
+                        "archived",
+                        "createdAt",
+                        "updatedAt",
+                        "solutionExplanation"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "itemType": {
+                          "const": "question",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "itemType"
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "object",
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "state": {
+                          "type": "string"
+                        },
+                        "authorId": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "url": {
+                          "type": "string"
+                        },
+                        "archived": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "title",
+                        "state",
+                        "authorId",
+                        "type",
+                        "url",
+                        "archived",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "itemType": {
+                          "const": "file",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "itemType"
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetLessonItemByIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "anyOf": [
+              {
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "body": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "authorId": {
+                        "type": "string"
+                      },
+                      "archived": {
+                        "type": "boolean"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title",
+                      "body",
+                      "state",
+                      "authorId",
+                      "archived",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "itemType": {
+                        "const": "text-block",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "itemType"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "questionType": {
+                        "type": "string"
+                      },
+                      "questionBody": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "authorId": {
+                        "type": "string"
+                      },
+                      "archived": {
+                        "type": "boolean"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      },
+                      "solutionExplanation": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "questionType",
+                      "questionBody",
+                      "state",
+                      "authorId",
+                      "archived",
+                      "createdAt",
+                      "updatedAt",
+                      "solutionExplanation"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "itemType": {
+                        "const": "question",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "itemType"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "object",
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "authorId": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "url": {
+                        "type": "string"
+                      },
+                      "archived": {
+                        "type": "boolean"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title",
+                      "state",
+                      "authorId",
+                      "type",
+                      "url",
+                      "archived",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "itemType": {
+                        "const": "file",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "itemType"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateTextBlockItemBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateTextBlockItemResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateQuestionItemBody": {
+        "type": "object",
+        "properties": {
+          "questionType": {
+            "type": "string"
+          },
+          "questionBody": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "questionAnswers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "optionText": {
+                  "type": "string"
+                },
+                "position": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isStudentAnswer": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "optionText",
+                "position",
+                "isStudentAnswer"
+              ]
+            }
+          },
+          "solutionExplanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateQuestionItemResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateFileItemBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateFileItemResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateTextBlockBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "authorId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body",
+          "state",
+          "authorId"
+        ]
+      },
+      "CreateTextBlockResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateQuestionBody": {
+        "type": "object",
+        "properties": {
+          "questionType": {
+            "type": "string"
+          },
+          "questionBody": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "authorId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "solutionExplanation": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "questionType",
+          "questionBody",
+          "state",
+          "authorId"
+        ]
+      },
+      "CreateQuestionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateFileBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "authorId": {
+            "format": "uuid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "type",
+          "url",
+          "state",
+          "authorId"
+        ]
+      },
+      "CreateFileResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "AnswerQuestionBody": {
         "type": "object",
         "properties": {
@@ -3324,6 +4331,21 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "FileUploadResponse": {
+        "type": "object",
+        "properties": {
+          "fileKey": {
+            "type": "string"
+          },
+          "fileUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fileKey",
+          "fileUrl"
         ]
       },
       "CreatePaymentIntentResponse": {

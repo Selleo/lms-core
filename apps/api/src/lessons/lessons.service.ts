@@ -223,6 +223,7 @@ export class LessonsService {
               body: item.textBlockData.body || "",
               state: item.textBlockData.state,
               title: item.textBlockData.title,
+              authorId: userId,
             }),
           )
           .with(
