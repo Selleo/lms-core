@@ -1502,6 +1502,40 @@
         }
       }
     },
+    "/api/upload": {
+      "post": {
+        "operationId": "S3Controller_uploadFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileUploadResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/stripe": {
       "post": {
         "operationId": "StripeController_createPaymentIntent",
@@ -3326,6 +3360,21 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "FileUploadResponse": {
+        "type": "object",
+        "properties": {
+          "fileKey": {
+            "type": "string"
+          },
+          "fileUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fileKey",
+          "fileUrl"
         ]
       },
       "CreatePaymentIntentResponse": {

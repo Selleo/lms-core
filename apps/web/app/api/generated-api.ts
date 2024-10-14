@@ -462,21 +462,23 @@ export interface GetLessonResponse {
             id: string;
             questionType: string;
             questionBody: string;
+            state?: string;
             questionAnswers: {
-              /** @format uuid */
-              id: string;
               optionText: string;
               position: number | null;
               isCorrect: boolean | null;
               isStudentAnswer: boolean;
             }[];
+            solutionExplanation?: string | null;
+            archived?: boolean;
           }
         | {
             /** @format uuid */
             id: string;
             title: string;
             body: string;
-            state: string;
+            state?: string;
+            archived?: boolean;
           }
         | {
             /** @format uuid */
@@ -484,6 +486,8 @@ export interface GetLessonResponse {
             title: string;
             type: string;
             url: string;
+            state?: string;
+            archived?: boolean;
           };
       /** @format uuid */
       id: string;
@@ -552,6 +556,11 @@ export interface MarkLessonItemAsCompletedResponse {
   };
 }
 
+export interface FileUploadResponse {
+  fileKey: string;
+  fileUrl: string;
+}
+
 export interface CreatePaymentIntentResponse {
   data: {
     clientSecret: string;
@@ -593,7 +602,7 @@ export type RequestParams = Omit<
 export interface ApiConfig<SecurityDataType = unknown>
   extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
-    securityData: SecurityDataType | null,
+    securityData: SecurityDataType | null
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
   secure?: boolean;
   format?: ResponseType;
@@ -634,7 +643,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected mergeRequestParams(
     params1: AxiosRequestConfig,
-    params2?: AxiosRequestConfig,
+    params2?: AxiosRequestConfig
   ): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
@@ -675,7 +684,7 @@ export class HttpClient<SecurityDataType = unknown> {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
         formData.append(
           key,
-          isFileType ? formItem : this.stringifyFormItem(formItem),
+          isFileType ? formItem : this.stringifyFormItem(formItem)
         );
       }
 
@@ -827,7 +836,7 @@ export class API<
      */
     authControllerForgotPassword: (
       data: ForgotPasswordBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/auth/forgot-password`,
@@ -845,7 +854,7 @@ export class API<
      */
     authControllerCreatePassword: (
       data: CreatePasswordBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/auth/create-password`,
@@ -863,7 +872,7 @@ export class API<
      */
     authControllerResetPassword: (
       data: ResetPasswordBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<void, any>({
         path: `/api/auth/reset-password`,
@@ -966,7 +975,7 @@ export class API<
      */
     usersControllerDeleteBulkUsers: (
       data: DeleteBulkUsersBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<DeleteBulkUsersResponse, any>({
         path: `/api/users`,
@@ -1000,7 +1009,7 @@ export class API<
     usersControllerUpdateUser: (
       id: string,
       data: UpdateUserBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UpdateUserResponse, any>({
         path: `/api/users/${id}`,
@@ -1034,7 +1043,7 @@ export class API<
     usersControllerAdminUpdateUser: (
       id: string,
       data: AdminUpdateUserBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<AdminUpdateUserResponse, any>({
         path: `/api/users/admin/${id}`,
@@ -1054,7 +1063,7 @@ export class API<
     usersControllerChangePassword: (
       id: string,
       data: ChangePasswordBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<ChangePasswordResponse, any>({
         path: `/api/users/${id}/change-password`,
@@ -1111,7 +1120,7 @@ export class API<
           | "-createdAt"
           | "-archived";
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetAllCategoriesResponse, any>({
         path: `/api/categories`,
@@ -1129,7 +1138,7 @@ export class API<
      */
     categoriesControllerGetCategoryById: (
       id: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetCategoryByIdResponse, any>({
         path: `/api/categories/${id}`,
@@ -1147,7 +1156,7 @@ export class API<
     categoriesControllerUpdateCategory: (
       id: string,
       data: UpdateCategoryBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UpdateCategoryResponse, any>({
         path: `/api/categories/${id}`,
@@ -1188,7 +1197,7 @@ export class API<
           | "-lessonsCount"
           | "-enrolledParticipantsCount";
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetAllCoursesResponse, any>({
         path: `/api/courses`,
@@ -1206,7 +1215,7 @@ export class API<
      */
     coursesControllerCreateCourse: (
       data: CreateCourseBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<CreateCourseResponse, any>({
         path: `/api/courses`,
@@ -1247,7 +1256,7 @@ export class API<
           | "-lessonsCount"
           | "-enrolledParticipantsCount";
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetStudentCoursesResponse, any>({
         path: `/api/courses/get-student-courses`,
@@ -1287,7 +1296,7 @@ export class API<
           | "-lessonsCount"
           | "-enrolledParticipantsCount";
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetAvailableCoursesResponse, any>({
         path: `/api/courses/available-courses`,
@@ -1308,7 +1317,7 @@ export class API<
         /** @format uuid */
         id: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetCourseResponse, any>({
         path: `/api/courses/course`,
@@ -1329,7 +1338,7 @@ export class API<
         /** @format uuid */
         id: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetCourseByIdResponse, any>({
         path: `/api/courses/course-by-id`,
@@ -1348,7 +1357,7 @@ export class API<
     coursesControllerUpdateCourse: (
       id: string,
       data: UpdateCourseBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UpdateCourseResponse, any>({
         path: `/api/courses/${id}`,
@@ -1370,7 +1379,7 @@ export class API<
         /** @format uuid */
         id?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<EnrollCourseResponse, any>({
         path: `/api/courses/enroll-course`,
@@ -1391,7 +1400,7 @@ export class API<
         /** @format uuid */
         id?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<UnenrollCourseResponse, any>({
         path: `/api/courses/unenroll-course`,
@@ -1440,7 +1449,7 @@ export class API<
         /** @format uuid */
         id?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<GetLessonResponse, any>({
         path: `/api/lessons/lesson`,
@@ -1458,7 +1467,7 @@ export class API<
      */
     lessonsControllerAddLessonToCourse: (
       data: AddLessonToCourseBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<AddLessonToCourseResponse, any>({
         path: `/api/lessons/add`,
@@ -1478,7 +1487,7 @@ export class API<
     lessonsControllerRemoveLessonFromCourse: (
       courseId: string,
       lessonId: string,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<RemoveLessonFromCourseResponse, any>({
         path: `/api/lessons/${courseId}/${lessonId}`,
@@ -1498,7 +1507,7 @@ export class API<
         /** @format uuid */
         lessonId?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<EvaluationQuizResponse, any>({
         path: `/api/lessons/evaluation-quiz`,
@@ -1519,7 +1528,7 @@ export class API<
         /** @format uuid */
         lessonId?: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<ClearQuizProgressResponse, any>({
         path: `/api/lessons/clear-quiz-progress`,
@@ -1537,7 +1546,7 @@ export class API<
      */
     questionsControllerAnswerQuestion: (
       data: AnswerQuestionBody,
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<AnswerQuestionResponse, any>({
         path: `/api/questions/answer`,
@@ -1561,7 +1570,7 @@ export class API<
         /** @format uuid */
         lessonId: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<MarkLessonItemAsCompletedResponse, any>({
         path: `/api/studentCompletedLessonItems`,
@@ -1584,7 +1593,7 @@ export class API<
         customerId: string;
         courseId: string;
       },
-      params: RequestParams = {},
+      params: RequestParams = {}
     ) =>
       this.request<CreatePaymentIntentResponse, any>({
         path: `/api/stripe`,
