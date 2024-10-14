@@ -349,6 +349,31 @@
             }
           }
         }
+      },
+      "delete": {
+        "operationId": "UsersController_deleteBulkUsers",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteBulkUsersBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteBulkUsersResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/users/{id}": {
@@ -431,6 +456,43 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/admin/{id}": {
+      "patch": {
+        "operationId": "UsersController_adminUpdateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUpdateUserBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUpdateUserResponse"
                 }
               }
             }
@@ -1579,13 +1641,119 @@
       "UpdateUserBody": {
         "type": "object",
         "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
           "email": {
             "format": "email",
             "type": "string"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "const": "admin",
+                "type": "string"
+              },
+              {
+                "const": "student",
+                "type": "string"
+              },
+              {
+                "const": "tutor",
+                "type": "string"
+              }
+            ]
+          },
+          "archived": {
+            "type": "boolean"
           }
         }
       },
       "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email",
+              "firstName",
+              "lastName",
+              "role",
+              "archived"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AdminUpdateUserBody": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "format": "email",
+            "type": "string"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "const": "admin",
+                "type": "string"
+              },
+              {
+                "const": "student",
+                "type": "string"
+              },
+              {
+                "const": "tutor",
+                "type": "string"
+              }
+            ]
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AdminUpdateUserResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -1655,6 +1823,23 @@
         "type": "null"
       },
       "DeleteUserResponse": {
+        "type": "null"
+      },
+      "DeleteBulkUsersBody": {
+        "type": "object",
+        "properties": {
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "userIds"
+        ]
+      },
+      "DeleteBulkUsersResponse": {
         "type": "null"
       },
       "GetAllCategoriesResponse": {

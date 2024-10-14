@@ -61,5 +61,14 @@ export const routes: (
       route("users", "modules/Users/Users.page.tsx");
       route("categories", "modules/Courses/Categories/Categories.page.tsx");
     });
+    route("admin", "modules/Admin/Admin.layout.tsx", () => {
+      route("courses", "modules/Admin/Courses/Courses.page.tsx", {
+        index: true,
+      });
+      route("users", "modules/Admin/Users/Users.page.tsx");
+      route("users/:id", "modules/Admin/Users/User.page.tsx");
+      route("categories", "modules/Admin/Categories/Categories.page.tsx");
+      route("lessons", "modules/Admin/Lessons/Lessons.page.tsx");
+    });
   });
 };

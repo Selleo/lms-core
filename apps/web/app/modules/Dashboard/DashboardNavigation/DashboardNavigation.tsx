@@ -47,14 +47,18 @@ const menuItems: MenuItemType[] = [
   },
 ];
 
-export function DashboardNavigation() {
+export function DashboardNavigation({
+  menuItemsOverwrite,
+}: {
+  menuItemsOverwrite?: MenuItemType[];
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: logout } = useLogoutUser();
   const {
     data: { role, firstName, lastName, email },
   } = useCurrentUserSuspense();
   const authorizedMenuItems = useAuthorizedMenuItems({
-    menuItems,
+    menuItems: menuItemsOverwrite ?? menuItems,
     userRole: role,
   });
 
@@ -70,7 +74,7 @@ export function DashboardNavigation() {
           "fixed top-6 lg:sr-only right-6 bg-white z-10 drop-shadow rounded-lg p-2 grid place-items-center",
           {
             "sr-only": isOpen,
-          },
+          }
         )}
         onClick={() => setIsOpen((prev) => !prev)}
       >
@@ -82,7 +86,7 @@ export function DashboardNavigation() {
           {
             "translate-x-full lg:translate-x-0": !isOpen,
             "translate-x-0 lg:translate-x-0": isOpen,
-          },
+          }
         )}
       >
         <div className="lg:sr-only">

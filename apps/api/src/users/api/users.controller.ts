@@ -5,8 +5,10 @@ import {
   ForbiddenException,
   Get,
   Patch,
+  Post,
+  UnauthorizedException,
 } from "@nestjs/common";
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 import {
   baseResponse,
@@ -33,6 +35,10 @@ import {
   CommonUser,
   commonUserSchema,
 } from "src/common/schemas/common-user.schema";
+import {
+  deleteUsersSchema,
+  DeleteUsersSchema,
+} from "../schemas/delete-users.schema";
 
 @Controller("users")
 export class UsersController {
@@ -83,6 +89,30 @@ export class UsersController {
     }
   }
 
+  @Patch("admin/:id")
+  @Validate({
+    response: baseResponse(commonUserSchema),
+    request: [
+      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "body", schema: updateUserSchema },
+    ],
+  })
+  async adminUpdateUser(
+    id: string,
+    @Body() data: UpdateUserBody,
+    @CurrentUser() currentUser: { role: string },
+  ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
+    {
+      if (currentUser.role !== "admin") {
+        throw new UnauthorizedException("You don't have permission to update");
+      }
+
+      const updatedUser = await this.usersService.updateUser(id, data);
+
+      return new BaseResponse(updatedUser);
+    }
+  }
+
   @Patch(":id/change-password")
   @Validate({
     response: nullResponse(),
@@ -122,6 +152,26 @@ export class UsersController {
     }
 
     await this.usersService.deleteUser(id);
+
+    return null;
+  }
+
+  @Delete()
+  @Validate({
+    response: nullResponse(),
+    request: [{ type: "body", schema: deleteUsersSchema }],
+  })
+  async deleteBulkUsers(
+    @Body() data: DeleteUsersSchema,
+    @CurrentUser() currentUser: { userId: string; role: string },
+  ): Promise<null> {
+    if (currentUser.role !== "admin") {
+      throw new UnauthorizedException(
+        "You don't have permission to delete users",
+      );
+    }
+
+    await this.usersService.deleteBulkUsers(data.userIds);
 
     return null;
   }

@@ -138,11 +138,37 @@ export interface GetUserByIdResponse {
 }
 
 export interface UpdateUserBody {
+  firstName?: string;
+  lastName?: string;
   /** @format email */
   email?: string;
+  role?: "admin" | "student" | "tutor";
+  archived?: boolean;
 }
 
 export interface UpdateUserResponse {
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    archived: boolean;
+  };
+}
+
+export interface AdminUpdateUserBody {
+  firstName?: string;
+  lastName?: string;
+  /** @format email */
+  email?: string;
+  role?: "admin" | "student" | "tutor";
+  archived?: boolean;
+}
+
+export interface AdminUpdateUserResponse {
   data: {
     id: string;
     createdAt: string;
@@ -171,6 +197,12 @@ export interface ChangePasswordBody {
 export type ChangePasswordResponse = null;
 
 export type DeleteUserResponse = null;
+
+export interface DeleteBulkUsersBody {
+  userIds: string[];
+}
+
+export type DeleteBulkUsersResponse = null;
 
 export interface GetAllCategoriesResponse {
   data: {
@@ -712,6 +744,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name UsersControllerDeleteBulkUsers
+     * @request DELETE:/api/users
+     */
+    usersControllerDeleteBulkUsers: (data: DeleteBulkUsersBody, params: RequestParams = {}) =>
+      this.request<DeleteBulkUsersResponse, any>({
+        path: `/api/users`,
+        method: "DELETE",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name UsersControllerGetUserById
      * @request GET:/api/users/{id}
      */
@@ -749,6 +797,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<DeleteUserResponse, any>({
         path: `/api/users/${id}`,
         method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name UsersControllerAdminUpdateUser
+     * @request PATCH:/api/users/admin/{id}
+     */
+    usersControllerAdminUpdateUser: (id: string, data: AdminUpdateUserBody, params: RequestParams = {}) =>
+      this.request<AdminUpdateUserResponse, any>({
+        path: `/api/users/admin/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
