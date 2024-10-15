@@ -139,6 +139,35 @@ export class CoursesController {
     return new PaginatedResponse(data);
   }
 
+  @Get("non-course-lessons")
+  @Validate({
+    response: baseResponse(
+      Type.Array(
+        Type.Object({
+          id: Type.String(),
+          title: Type.String(),
+          description: Type.String(),
+          imageUrl: Type.String(),
+          itemsCount: Type.Number(),
+        }),
+      ),
+    ),
+  })
+  async getNonCourseLessons(): Promise<
+    BaseResponse<
+      Array<{
+        id: string;
+        title: string;
+        description: string;
+        imageUrl: string;
+        itemsCount: number;
+      }>
+    >
+  > {
+    const nonCourseLessons = await this.coursesService.getNonCourseLessons();
+    return new BaseResponse(nonCourseLessons);
+  }
+
   @Get("course")
   @Validate({
     request: [

@@ -219,6 +219,32 @@ export interface GetAllCategoriesResponse {
   };
 }
 
+export interface GetCategoryByIdResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    archived: boolean | null;
+    createdAt: string | null;
+  };
+}
+
+export interface UpdateCategoryBody {
+  /** @format uuid */
+  id?: string;
+  title?: string;
+}
+
+export interface UpdateCategoryResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    archived: boolean | null;
+    createdAt: string | null;
+  };
+}
+
 export interface GetAllCoursesResponse {
   data: {
     /** @format uuid */
@@ -292,6 +318,16 @@ export interface GetAvailableCoursesResponse {
     page: number;
     perPage: number;
   };
+}
+
+export interface GetNonCourseLessonsResponse {
+  data: {
+    id: string;
+    title: string;
+    description: string;
+    imageUrl: string;
+    itemsCount: number;
+  }[];
 }
 
 export interface GetCourseResponse {
@@ -395,6 +431,18 @@ export interface CreateFavouritedCourseResponse {
 
 export type DeleteFavouritedCourseForUserResponse = null;
 
+export interface GetAllLessonsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string;
+    description: string;
+    itemsCount: number;
+    itemsCompletedCount?: number;
+  }[];
+}
+
 export interface GetLessonResponse {
   data: {
     /** @format uuid */
@@ -438,6 +486,26 @@ export interface GetLessonResponse {
             url: string;
           };
     }[];
+  };
+}
+
+export interface AddLessonToCourseBody {
+  /** @format uuid */
+  courseId: string;
+  /** @format uuid */
+  lessonId: string;
+  displayOrder?: number;
+}
+
+export interface AddLessonToCourseResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface RemoveLessonFromCourseResponse {
+  data: {
+    message: string;
   };
 }
 
@@ -959,6 +1027,36 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CategoriesControllerGetCategoryById
+     * @request GET:/api/categories/{id}
+     */
+    categoriesControllerGetCategoryById: (id: string, params: RequestParams = {}) =>
+      this.request<GetCategoryByIdResponse, any>({
+        path: `/api/categories/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CategoriesControllerUpdateCategory
+     * @request PATCH:/api/categories/{id}
+     */
+    categoriesControllerUpdateCategory: (id: string, data: UpdateCategoryBody, params: RequestParams = {}) =>
+      this.request<UpdateCategoryResponse, any>({
+        path: `/api/categories/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name CoursesControllerGetAllCourses
      * @request GET:/api/courses
      */
@@ -1095,6 +1193,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CoursesControllerGetNonCourseLessons
+     * @request GET:/api/courses/non-course-lessons
+     */
+    coursesControllerGetNonCourseLessons: (params: RequestParams = {}) =>
+      this.request<GetNonCourseLessonsResponse, any>({
+        path: `/api/courses/non-course-lessons`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name CoursesControllerGetCourse
      * @request GET:/api/courses/course
      */
@@ -1195,6 +1307,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name LessonsControllerGetAllLessons
+     * @request GET:/api/courses/lessons
+     */
+    lessonsControllerGetAllLessons: (params: RequestParams = {}) =>
+      this.request<GetAllLessonsResponse, any>({
+        path: `/api/courses/lessons`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LessonsControllerGetLesson
      * @request GET:/api/courses/lesson
      */
@@ -1209,6 +1335,36 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/courses/lesson`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerAddLessonToCourse
+     * @request POST:/api/courses/add
+     */
+    lessonsControllerAddLessonToCourse: (data: AddLessonToCourseBody, params: RequestParams = {}) =>
+      this.request<AddLessonToCourseResponse, any>({
+        path: `/api/courses/add`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerRemoveLessonFromCourse
+     * @request DELETE:/api/courses/{courseId}/{lessonId}
+     */
+    lessonsControllerRemoveLessonFromCourse: (courseId: string, lessonId: string, params: RequestParams = {}) =>
+      this.request<RemoveLessonFromCourseResponse, any>({
+        path: `/api/courses/${courseId}/${lessonId}`,
+        method: "DELETE",
         format: "json",
         ...params,
       }),

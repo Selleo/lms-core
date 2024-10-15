@@ -1,7 +1,11 @@
-import { Outlet, useNavigate } from "@remix-run/react";
+import { MetaFunction, Outlet, useNavigate } from "@remix-run/react";
 import { DashboardNavigation } from "../Dashboard/DashboardNavigation/DashboardNavigation";
 import { useUserRole } from "~/hooks/useUserRole";
 import { useLayoutEffect } from "react";
+
+export const meta: MetaFunction = () => {
+  return [{ title: "Admin" }];
+};
 
 const AdminLayout = () => {
   const { isAdmin } = useUserRole();

@@ -10,7 +10,7 @@ export {
 } from "./useCategories";
 export { courseQueryOptions, useCourse, useCourseSuspense } from "./useCourse";
 export {
-  coursesQueryOptions,
+  allCoursesQueryOptions,
   useCourses,
   useCoursesSuspense,
 } from "./useCourses";

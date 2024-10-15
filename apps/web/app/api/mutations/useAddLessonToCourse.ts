@@ -2,20 +2,19 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../api-client";
-import { UpdateCourseBody } from "../generated-api";
+import { AddLessonToCourseBody } from "../generated-api";
 
 type UpdateCourseOptions = {
-  data: UpdateCourseBody;
+  data: AddLessonToCourseBody;
   courseId: string;
 };
 
-export function useUpdateCourse() {
+export function useAddLessonToCourse() {
   const { toast } = useToast();
 
   return useMutation({
     mutationFn: async (options: UpdateCourseOptions) => {
-      const response = await ApiClient.api.coursesControllerUpdateCourse(
-        options.courseId,
+      const response = await ApiClient.api.lessonsControllerAddLessonToCourse(
         options.data
       );
 

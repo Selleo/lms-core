@@ -34,7 +34,7 @@ import {
   useCategoriesSuspense,
 } from "~/api/queries/useCategories";
 import { queryClient } from "~/api/queryClient";
-import { coursesQueryOptions } from "~/api/queries/useAvailableCourses";
+import { allCoursesQueryOptions } from "~/api/queries";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(categoriesQueryOptions);
@@ -78,7 +78,7 @@ export const CreateNewCourse = () => {
       data: { ...values, priceInCents: Number(values.priceInCents) },
     }).then(() => {
       setOpen(false);
-      queryClient.invalidateQueries(coursesQueryOptions());
+      queryClient.invalidateQueries(allCoursesQueryOptions());
     });
   };
 

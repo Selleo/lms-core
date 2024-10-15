@@ -41,7 +41,7 @@ export const meta: MetaFunction = () => {
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(allCoursesQueryOptions());
-  await queryClient.prefetchQuery(categoriesQueryOptions());
+  await queryClient.prefetchQuery(categoriesQueryOptions);
   return null;
 };
 

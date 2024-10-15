@@ -10,10 +10,12 @@ import {
   count,
   countDistinct,
   eq,
+  exists,
   ilike,
   isNotNull,
   isNull,
   like,
+  not,
   sql,
 } from "drizzle-orm";
 import { isEmpty } from "lodash";
@@ -351,6 +353,53 @@ export class CoursesService {
       imageUrl,
       lessons: courseLessonList,
     };
+  }
+
+  async getNonCourseLessons() {
+    const nonCourseLessonList = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
+        itemsCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+      })
+      .from(lessons)
+      .where(
+        and(
+          eq(lessons.archived, false),
+          eq(lessons.state, "published"),
+          isNotNull(lessons.id),
+          isNotNull(lessons.title),
+          isNotNull(lessons.description),
+          isNotNull(lessons.imageUrl),
+          not(
+            exists(
+              this.db
+                .select()
+                .from(courseLessons)
+                .where(eq(courseLessons.lessonId, lessons.id)),
+            ),
+          ),
+        ),
+      );
+
+    if (isEmpty(nonCourseLessonList))
+      throw new NotFoundException("No non-course lessons found");
+
+    const lessonsWithSignedUrls = await Promise.all(
+      nonCourseLessonList.map(async (lesson) => {
+        const imageUrl = lesson.imageUrl.startsWith("https://")
+          ? lesson.imageUrl
+          : await this.s3Service.getSignedUrl(lesson.imageUrl);
+        return { ...lesson, imageUrl };
+      }),
+    );
+
+    return lessonsWithSignedUrls;
   }
 
   async getCourseById(id: string) {
