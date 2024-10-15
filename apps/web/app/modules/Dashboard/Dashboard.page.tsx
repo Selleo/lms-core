@@ -2,17 +2,8 @@ import type { MetaFunction } from "@remix-run/node";
 import { isEmpty } from "lodash-es";
 import { useReducer } from "react";
 import { match } from "ts-pattern";
-import { useAvailableCourses } from "~/api/queries/useAvailableCourses";
-import {
-  categoriesQueryOptions,
-  useCategoriesSuspense,
-} from "~/api/queries/useCategories";
-import { coursesQueryOptions } from "~/api/queries/useCourses";
-import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
-import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
-import { cn } from "~/lib/utils";
 import type { SortOption } from "~/types/sorting";
 import { useLayoutsStore } from "../common/Layout/LayoutsStore";
 import Loader from "../common/Loader/Loader";
@@ -20,6 +11,15 @@ import SearchFilter from "../common/SearchFilter/SearchFilter";
 import { DashboardIcon, HamburgerIcon } from "../icons/icons";
 import { CourseList } from "./Courses/CourseList";
 import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
+import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
+import { cn } from "~/lib/utils";
+import {
+  categoriesQueryOptions,
+  coursesQueryOptions,
+  useAvailableCourses,
+  useCategoriesSuspense,
+  useStudentCourses,
+} from "~/api/queries";
 
 type State = {
   searchTitle: string | undefined;
@@ -98,8 +98,8 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-y-12 h-auto">
-      <div className="flex flex-col gap-y-6" data-testid="enrolled-courses">
-        <div className="flex flex-col">
+      <div className="flex flex-col gap-y-6">
+        <div className="flex flex-col px-6">
           <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
             Your Courses
           </h4>
@@ -107,7 +107,10 @@ export default function DashboardPage() {
             Courses you are currently enrolled in
           </p>
         </div>
-        <div className="flex p-8 gap-6 bg-white w-full rounded-lg drop-shadow-primary">
+        <div
+          data-testid="enrolled-courses"
+          className="flex lg:p-8 pl-6 gap-6 lg:bg-white w-full lg:rounded-lg drop-shadow-primary"
+        >
           {!studentCourses ||
             (isEmpty(studentCourses) && (
               <div className="col-span-3 flex gap-8 ">
@@ -132,8 +135,8 @@ export default function DashboardPage() {
           <StudentCoursesCarousel studentCourses={studentCourses} />
         </div>
       </div>
-      <div className="flex flex-col">
-        <div className="flex flex-col">
+      <div className="flex flex-col px-6">
+        <div className="flex flex-col lg:p-0">
           <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
             Available Courses
           </h4>
@@ -152,6 +155,7 @@ export default function DashboardPage() {
               isLoading={isCategoriesLoading}
             />
             <ButtonGroup
+              className="sr-only lg:not-sr-only"
               buttons={[
                 {
                   children: <DashboardIcon />,
@@ -168,12 +172,14 @@ export default function DashboardPage() {
           </div>
         </div>
         <div
-          className={cn("p-8 gap-6 rounded-lg drop-shadow-primary bg-white", {
-            "grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5":
-              courseListLayout === "card",
-            block: courseListLayout === "table",
-          })}
           data-testid="unenrolled-courses"
+          className={cn(
+            "lg:p-8 gap-6 rounded-lg drop-shadow-primary lg:bg-white",
+            {
+              "flex flex-wrap": courseListLayout === "card",
+              block: courseListLayout === "table",
+            },
+          )}
         >
           {availableCourses && !isEmpty(availableCourses) && (
             <CourseList

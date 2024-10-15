@@ -2,10 +2,14 @@ import { Button } from "~/components/ui/button";
 import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
 import { useForm } from "react-hook-form";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
-import { ClientLoaderFunctionArgs, Link, useParams } from "@remix-run/react";
+import {
+  type ClientLoaderFunctionArgs,
+  Link,
+  useParams,
+} from "@remix-run/react";
 import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 import type { TQuestionsForm } from "./types";
-import { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
 import { coursesQueryOptions } from "~/api/queries/useCourses";
 import { useCourseSuspense } from "~/api/queries/useCourse";
@@ -62,7 +66,7 @@ export default function LessonPage() {
           register={register}
         />
       ))}
-      <div className="w-full flex gap-4 justify-end">
+      <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
         <Link
           to={
             previousLessonId
@@ -75,7 +79,7 @@ export default function LessonPage() {
         >
           <Button
             variant="outline"
-            className="w-[180px]"
+            className="w-full sm:w-[180px]"
             disabled={!previousLessonId}
           >
             Previous lesson
@@ -87,7 +91,7 @@ export default function LessonPage() {
           reloadDocument
           replace
         >
-          <Button className="w-[180px]" disabled={!nextLessonId}>
+          <Button className="w-full sm:w-[180px]" disabled={!nextLessonId}>
             Next lesson
           </Button>
         </Link>
