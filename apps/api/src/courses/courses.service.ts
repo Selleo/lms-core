@@ -1,4 +1,10 @@
 import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import {
   and,
   between,
   count,
@@ -10,21 +16,11 @@ import {
   like,
   sql,
 } from "drizzle-orm";
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
-import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import type { CoursesQuery } from "./api/courses.types";
+import { isEmpty } from "lodash";
 import type { DatabasePg, Pagination } from "src/common";
-import type { AllCoursesResponse } from "./schemas/course.schema";
-import {
-  type CoursesFilterSchema,
-  type CourseSortField,
-  CourseSortFields,
-} from "./schemas/courseQuery";
+import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
+import { S3Service } from "src/file/s3.service";
+import { getSortOptions } from "../common/helpers/getSortOptions";
 import {
   categories,
   courseLessons,
@@ -35,9 +31,15 @@ import {
   studentCourses,
   users,
 } from "../storage/schema";
-import { getSortOptions } from "../common/helpers/getSortOptions";
-import { S3Service } from "src/file/s3.service";
-import { isEmpty } from "lodash";
+import type { CoursesQuery } from "./api/courses.types";
+import type { AllCoursesResponse } from "./schemas/course.schema";
+import {
+  type CoursesFilterSchema,
+  type CourseSortField,
+  CourseSortFields,
+} from "./schemas/courseQuery";
+import { CreateCourseBody } from "./schemas/createCourse.schema";
+import { UpdateCourseBody } from "./schemas/updateCourse.schema";
 
 @Injectable()
 export class CoursesService {
@@ -46,10 +48,7 @@ export class CoursesService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async getAllCourses(
-    query: CoursesQuery,
-    userId: string,
-  ): Promise<{
+  async getAllCourses(query: CoursesQuery): Promise<{
     data: AllCoursesResponse;
     pagination: Pagination;
   }> {
@@ -61,63 +60,59 @@ export class CoursesService {
     } = query;
 
     const { sortOrder, sortedField } = getSortOptions(sort);
-    const conditions = this.getFiltersConditions(filters);
 
     return await this.db.transaction(async (tx) => {
+      const conditions = this.getFiltersConditions(filters, false);
+
       const queryDB = tx
-        .select(this.getSelectField(userId))
+        .select({
+          id: courses.id,
+          description: sql<string>`${courses.description}`,
+          title: courses.title,
+          imageUrl: courses.imageUrl,
+          author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+          category: sql<string>`${categories.title}`,
+          enrolledParticipantCount: count(studentCourses.courseId),
+          courseLessonCount: count(courseLessons.id),
+          completedLessonCount: sql<number>`0::INTEGER`,
+          priceInCents: courses.priceInCents,
+          currency: courses.currency,
+          state: courses.state,
+          archived: courses.archived,
+        })
         .from(courses)
-        .innerJoin(categories, eq(courses.categoryId, categories.id))
+        .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
-        .leftJoin(
-          studentCourses,
-          and(
-            eq(courses.id, studentCourses.courseId),
-            eq(studentCourses.studentId, userId),
-          ),
-        )
+        .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
         .where(and(...conditions))
         .groupBy(
           courses.id,
           courses.title,
           courses.imageUrl,
+          courses.description,
           users.firstName,
           users.lastName,
-          studentCourses.studentId,
           categories.title,
+          courses.priceInCents,
+          courses.currency,
+          courses.state,
+          courses.archived,
         )
         .orderBy(
           sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)),
         );
 
-      const dynamicQuery = queryDB.$dynamic();
-      const paginatedQuery = addPagination(dynamicQuery, page, perPage);
-      const data = await paginatedQuery;
-
-      const [{ totalItems }] = await tx
-        .select({
-          totalItems: countDistinct(courses.id),
-        })
-        .from(courses)
-        .innerJoin(categories, eq(courses.categoryId, categories.id))
-        .leftJoin(users, eq(courses.authorId, users.id))
-        .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
-        .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
-        .where(
-          and(
-            ...conditions,
-            eq(courses.archived, false),
-            eq(courses.state, "published"),
-          ),
-        );
+      const data = await queryDB;
 
       const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+
+      const totalItems = data.length;
 
       return {
         data: dataWithS3SignedUrls,
         pagination: {
-          totalItems: totalItems || 0,
+          totalItems,
           page,
           perPage,
         },
@@ -358,6 +353,219 @@ export class CoursesService {
     };
   }
 
+  async getCourseById(id: string) {
+    const [course] = await this.db
+      .select({
+        id: courses.id,
+        title: courses.title,
+        imageUrl: courses.imageUrl,
+        category: categories.title,
+        categoryId: categories.id,
+        description: sql<string>`${courses.description}`,
+        courseLessonCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${courseLessons}
+          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
+        state: courses.state,
+        priceInCents: courses.priceInCents,
+        currency: courses.currency,
+        archived: courses.archived,
+      })
+      .from(courses)
+      .innerJoin(categories, eq(courses.categoryId, categories.id))
+      .where(and(eq(courses.id, id), eq(courses.archived, false)));
+
+    if (!course) throw new NotFoundException("Course not found");
+    // TODO: if (!course.imageUrl) throw new ConflictException("Course has no image");
+
+    const courseLessonList = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
+        itemsCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+      })
+      .from(courseLessons)
+      .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+      .where(
+        and(
+          eq(courseLessons.courseId, id),
+          eq(lessons.archived, false),
+          eq(lessons.state, "published"),
+          isNotNull(lessons.id),
+          isNotNull(lessons.title),
+          isNotNull(lessons.description),
+          isNotNull(lessons.imageUrl),
+        ),
+      );
+
+    // TODO:
+    // const imageUrl = (course.imageUrl as string).startsWith("https://")
+    //   ? course.imageUrl
+    //   : await this.s3Service.getSignedUrl(course.imageUrl);
+
+    return {
+      ...course,
+      // imageUrl,
+      lessons: courseLessonList,
+    };
+  }
+
+  async createCourse(
+    createCourseBody: CreateCourseBody,
+    authorId: string,
+    image?: Express.Multer.File,
+  ) {
+    return this.db.transaction(async (tx) => {
+      const [category] = await tx
+        .select()
+        .from(categories)
+        .where(eq(categories.id, createCourseBody.categoryId));
+
+      if (!category) {
+        throw new NotFoundException("Category not found");
+      }
+
+      const [author] = await tx
+        .select()
+        .from(users)
+        .where(eq(users.id, authorId));
+
+      if (!author) {
+        throw new NotFoundException("Author not found");
+      }
+
+      let imageKey = null;
+      if (image) {
+        try {
+          const fileExtension = image.originalname.split(".").pop();
+          imageKey = `courses/${crypto.randomUUID()}.${fileExtension}`;
+
+          await this.s3Service.uploadFile(
+            image.buffer,
+            imageKey,
+            image.mimetype,
+          );
+        } catch (error) {
+          throw new ConflictException("Failed to upload course image");
+        }
+      }
+
+      const [newCourse] = await tx
+        .insert(courses)
+        .values({
+          title: createCourseBody.title,
+          description: createCourseBody.description,
+          imageUrl: imageKey,
+          state: createCourseBody.state || "draft",
+          priceInCents: createCourseBody.priceInCents,
+          currency: createCourseBody.currency || "usd",
+          authorId: authorId,
+          categoryId: createCourseBody.categoryId,
+        })
+        .returning();
+
+      if (!newCourse) {
+        throw new ConflictException("Failed to create course");
+      }
+
+      if (createCourseBody.lessons && createCourseBody.lessons.length > 0) {
+        const courseLessonsData = createCourseBody.lessons.map(
+          (lessonId, index) => ({
+            courseId: newCourse.id,
+            lessonId: lessonId,
+            displayOrder: index + 1,
+          }),
+        );
+
+        await tx.insert(courseLessons).values(courseLessonsData);
+      }
+
+      if (newCourse.imageUrl) {
+        newCourse.imageUrl = await this.s3Service.getSignedUrl(
+          newCourse.imageUrl,
+        );
+      }
+
+      return newCourse;
+    });
+  }
+
+  async updateCourse(
+    id: string,
+    updateCourseBody: UpdateCourseBody,
+    image?: Express.Multer.File,
+  ) {
+    return this.db.transaction(async (tx) => {
+      if (updateCourseBody.categoryId) {
+        const [category] = await tx
+          .select()
+          .from(categories)
+          .where(eq(categories.id, updateCourseBody.categoryId));
+
+        if (!category) {
+          throw new NotFoundException("Category not found");
+        }
+      }
+
+      let imageKey = undefined;
+      if (image) {
+        try {
+          const fileExtension = image.originalname.split(".").pop();
+          imageKey = `courses/${crypto.randomUUID()}.${fileExtension}`;
+          await this.s3Service.uploadFile(
+            image.buffer,
+            imageKey,
+            image.mimetype,
+          );
+        } catch (error) {
+          throw new ConflictException("Failed to upload course image");
+        }
+      }
+
+      const [existingCourse] = await tx
+        .select()
+        .from(courses)
+        .where(eq(courses.id, id));
+
+      if (!existingCourse) {
+        throw new NotFoundException("Course not found");
+      }
+
+      const updateData = {
+        ...updateCourseBody,
+        ...(imageKey && { imageUrl: imageKey }),
+      };
+
+      const [updatedCourse] = await tx
+        .update(courses)
+        .set(updateData)
+        .where(eq(courses.id, id))
+        .returning();
+
+      if (!updatedCourse) {
+        throw new ConflictException("Failed to update course");
+      }
+
+      // if (imageKey && existingCourse.imageUrl !== imageKey) {
+      //   TODO: remove old image
+      // }
+
+      if (updatedCourse.imageUrl) {
+        updatedCourse.imageUrl = await this.s3Service.getSignedUrl(
+          updatedCourse.imageUrl,
+        );
+      }
+
+      return updatedCourse;
+    });
+  }
+
   async enrollCourse(id: string, userId: string) {
     const [course] = await this.db
       .select({
@@ -489,8 +697,11 @@ export class CoursesService {
     };
   }
 
-  private getFiltersConditions(filters: CoursesFilterSchema) {
-    const conditions = [eq(courses.state, "published")];
+  private getFiltersConditions(
+    filters: CoursesFilterSchema,
+    publishedOnly = true,
+  ) {
+    const conditions = [];
     if (filters.title) {
       conditions.push(ilike(courses.title, `%${filters.title.toLowerCase()}%`));
     }
@@ -508,6 +719,11 @@ export class CoursesService {
 
       conditions.push(between(courses.createdAt, start, end));
     }
+
+    if (publishedOnly) {
+      conditions.push(eq(courses.state, "published"));
+    }
+
     return conditions;
   }
 

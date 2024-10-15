@@ -65,9 +65,11 @@ export const routes: (
       route("courses", "modules/Admin/Courses/Courses.page.tsx", {
         index: true,
       });
+      route("courses/:id", "modules/Admin/Courses/Course.page.tsx");
       route("users", "modules/Admin/Users/Users.page.tsx");
       route("users/:id", "modules/Admin/Users/User.page.tsx");
       route("categories", "modules/Admin/Categories/Categories.page.tsx");
+      route("categories/:id", "modules/Admin/Categories/Category.page.tsx");
       route("lessons", "modules/Admin/Lessons/Lessons.page.tsx");
     });
   });

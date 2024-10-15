@@ -5,10 +5,9 @@ import {
   ForbiddenException,
   Get,
   Patch,
-  Post,
   UnauthorizedException,
 } from "@nestjs/common";
-import { Static, Type } from "@sinclair/typebox";
+import { Static } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 import {
   baseResponse,
@@ -18,9 +17,17 @@ import {
 } from "src/common";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import {
+  CommonUser,
+  commonUserSchema,
+} from "src/common/schemas/common-user.schema";
+import {
   ChangePasswordBody,
   changePasswordSchema,
 } from "../schemas/change-password.schema";
+import {
+  deleteUsersSchema,
+  DeleteUsersSchema,
+} from "../schemas/delete-users.schema";
 import {
   UpdateUserBody,
   updateUserSchema,
@@ -31,14 +38,6 @@ import {
   UserResponse,
 } from "../schemas/user.schema";
 import { UsersService } from "../users.service";
-import {
-  CommonUser,
-  commonUserSchema,
-} from "src/common/schemas/common-user.schema";
-import {
-  deleteUsersSchema,
-  DeleteUsersSchema,
-} from "../schemas/delete-users.schema";
 
 @Controller("users")
 export class UsersController {

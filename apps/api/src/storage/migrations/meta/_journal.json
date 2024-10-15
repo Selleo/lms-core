@@ -8,6 +8,13 @@
       "when": 1728990175810,
       "tag": "0000_a_new_hope",
       "breakpoints": true
+    },
+    {
+      "idx": 38,
+      "version": "7",
+      "when": 1728927580285,
+      "tag": "0038_empty_fat_cobra",
+      "breakpoints": true
     }
   ]
 }

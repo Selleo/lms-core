@@ -1,4 +1,3 @@
-import { archived } from "./../storage/schema/utils";
 import {
   Inject,
   Injectable,
@@ -8,8 +7,8 @@ import {
 import * as bcrypt from "bcrypt";
 import { eq, inArray } from "drizzle-orm";
 import { DatabasePg } from "src/common";
-import { credentials, users } from "../storage/schema";
 import hashPassword from "src/common/helpers/hashPassword";
+import { credentials, users } from "../storage/schema";
 import { UserRole } from "./schemas/user-roles";
 
 @Injectable()

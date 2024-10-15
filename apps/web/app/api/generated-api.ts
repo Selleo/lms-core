@@ -230,10 +230,12 @@ export interface GetAllCoursesResponse {
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
-    enrolled: boolean;
+    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
+    state?: string;
+    archived?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -253,10 +255,12 @@ export interface GetStudentCoursesResponse {
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
-    enrolled: boolean;
+    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
+    state?: string;
+    archived?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -276,10 +280,12 @@ export interface GetAvailableCoursesResponse {
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
-    enrolled: boolean;
+    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
+    state?: string;
+    archived?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -296,9 +302,11 @@ export interface GetCourseResponse {
     imageUrl: string | null;
     description: string;
     category: string;
+    /** @format uuid */
+    categoryId?: string;
     courseLessonCount: number;
-    completedLessonCount: number;
-    enrolled: boolean;
+    completedLessonCount?: number;
+    enrolled?: boolean;
     state: string | null;
     lessons: {
       /** @format uuid */
@@ -307,10 +315,75 @@ export interface GetCourseResponse {
       imageUrl: string;
       description: string;
       itemsCount: number;
-      itemsCompletedCount: number;
+      itemsCompletedCount?: number;
     }[];
     priceInCents: number;
     currency: string;
+    archived?: boolean;
+  };
+}
+
+export interface GetCourseByIdResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string | null;
+    description: string;
+    category: string;
+    /** @format uuid */
+    categoryId?: string;
+    courseLessonCount: number;
+    completedLessonCount?: number;
+    enrolled?: boolean;
+    state: string | null;
+    lessons: {
+      /** @format uuid */
+      id: string;
+      title: string;
+      imageUrl: string;
+      description: string;
+      itemsCount: number;
+      itemsCompletedCount?: number;
+    }[];
+    priceInCents: number;
+    currency: string;
+    archived?: boolean;
+  };
+}
+
+export interface CreateCourseBody {
+  title: string;
+  description: string;
+  state: "draft" | "published";
+  priceInCents: number;
+  currency?: string;
+  /** @format uuid */
+  categoryId: string;
+  lessons?: string[];
+}
+
+export interface CreateCourseResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface UpdateCourseBody {
+  title?: string;
+  description?: string;
+  state?: "draft" | "published";
+  priceInCents?: number;
+  currency?: string;
+  /** @format uuid */
+  categoryId?: string;
+  lessons?: string[];
+  archived?: boolean;
+}
+
+export interface UpdateCourseResponse {
+  data: {
+    message: string;
   };
 }
 
@@ -926,6 +999,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CoursesControllerCreateCourse
+     * @request POST:/api/courses
+     */
+    coursesControllerCreateCourse: (data: CreateCourseBody, params: RequestParams = {}) =>
+      this.request<CreateCourseResponse, any>({
+        path: `/api/courses`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name CoursesControllerGetStudentCourses
      * @request GET:/api/courses/get-student-courses
      */
@@ -1020,6 +1109,43 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/courses/course`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerGetCourseById
+     * @request GET:/api/courses/course-by-id
+     */
+    coursesControllerGetCourseById: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetCourseByIdResponse, any>({
+        path: `/api/courses/course-by-id`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerUpdateCourse
+     * @request PATCH:/api/courses/{id}
+     */
+    coursesControllerUpdateCourse: (id: string, data: UpdateCourseBody, params: RequestParams = {}) =>
+      this.request<UpdateCourseResponse, any>({
+        path: `/api/courses/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),

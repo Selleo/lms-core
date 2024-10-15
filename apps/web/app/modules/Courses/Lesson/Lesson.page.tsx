@@ -11,7 +11,7 @@ import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 import type { TQuestionsForm } from "./types";
 import type { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
-import { coursesQueryOptions } from "~/api/queries/useCourses";
+import { allCoursesQueryOptions } from "~/api/queries/useCourses";
 import { useCourseSuspense } from "~/api/queries/useCourse";
 
 export const meta: MetaFunction = () => {
@@ -21,7 +21,7 @@ export const meta: MetaFunction = () => {
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
   const { lessonId } = params;
   if (!lessonId) throw new Error("Lesson ID not found");
-  await queryClient.prefetchQuery(coursesQueryOptions());
+  await queryClient.prefetchQuery(allCoursesQueryOptions());
   await queryClient.prefetchQuery(lessonQueryOptions(lessonId));
   return null;
 };

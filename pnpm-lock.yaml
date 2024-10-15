@@ -210,6 +210,9 @@ importers:
       '@sinclair/typebox':
         specifier: ^0.32.34
         version: 0.32.34
+      '@types/multer':
+        specifier: ^1.4.12
+        version: 1.4.12
       add:
         specifier: ^2.0.6
         version: 2.0.6
@@ -5415,6 +5418,9 @@ packages:
 
   '@types/ms@0.7.34':
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
+
+  '@types/multer@1.4.12':
+    resolution: {integrity: sha512-pQ2hoqvXiJt2FP9WQVLPRO+AmiIm/ZYkavPlIQnx282u4ZrVdztx0pkh3jjpQt0Kz+YI0YhSG264y08UJKoUQg==}
 
   '@types/mustache@4.2.5':
     resolution: {integrity: sha512-PLwiVvTBg59tGFL/8VpcGvqOu3L4OuveNvPi0EYbWchRdEVP++yRUXJPFl+CApKEq13017/4Nf7aQ5lTtHUNsA==}
@@ -18750,6 +18756,10 @@ snapshots:
       '@types/node': 20.14.14
 
   '@types/ms@0.7.34': {}
+
+  '@types/multer@1.4.12':
+    dependencies:
+      '@types/express': 4.17.21
 
   '@types/mustache@4.2.5': {}
 

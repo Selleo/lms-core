@@ -2,8 +2,17 @@ import type { MetaFunction } from "@remix-run/node";
 import { isEmpty } from "lodash-es";
 import { useReducer } from "react";
 import { match } from "ts-pattern";
+import { useAvailableCourses } from "~/api/queries/useAvailableCourses";
+import {
+  categoriesQueryOptions,
+  useCategoriesSuspense,
+} from "~/api/queries/useCategories";
+import { allCoursesQueryOptions } from "~/api/queries/useCourses";
+import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
+import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
+import { cn } from "~/lib/utils";
 import type { SortOption } from "~/types/sorting";
 import { useLayoutsStore } from "../common/Layout/LayoutsStore";
 import Loader from "../common/Loader/Loader";
@@ -11,15 +20,6 @@ import SearchFilter from "../common/SearchFilter/SearchFilter";
 import { DashboardIcon, HamburgerIcon } from "../icons/icons";
 import { CourseList } from "./Courses/CourseList";
 import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
-import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
-import { cn } from "~/lib/utils";
-import {
-  categoriesQueryOptions,
-  coursesQueryOptions,
-  useAvailableCourses,
-  useCategoriesSuspense,
-  useStudentCourses,
-} from "~/api/queries";
 
 type State = {
   searchTitle: string | undefined;
@@ -40,7 +40,7 @@ export const meta: MetaFunction = () => {
 };
 
 export const clientLoader = async () => {
-  await queryClient.prefetchQuery(coursesQueryOptions());
+  await queryClient.prefetchQuery(allCoursesQueryOptions());
   await queryClient.prefetchQuery(categoriesQueryOptions());
   return null;
 };
@@ -178,7 +178,7 @@ export default function DashboardPage() {
             {
               "flex flex-wrap": courseListLayout === "card",
               block: courseListLayout === "table",
-            },
+            }
           )}
         >
           {availableCourses && !isEmpty(availableCourses) && (

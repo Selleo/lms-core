@@ -765,6 +765,31 @@
             }
           }
         }
+      },
+      "post": {
+        "operationId": "CoursesController_createCourse",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCourseResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/courses/get-student-courses": {
@@ -1051,6 +1076,70 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/course-by-id": {
+      "get": {
+        "operationId": "CoursesController_getCourseById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseByIdResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/{id}": {
+      "patch": {
+        "operationId": "CoursesController_updateCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCourseResponse"
                 }
               }
             }
@@ -1962,6 +2051,12 @@
                 },
                 "currency": {
                   "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "archived": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -1973,7 +2068,6 @@
                 "category",
                 "courseLessonCount",
                 "completedLessonCount",
-                "enrolled",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -2056,6 +2150,12 @@
                 },
                 "currency": {
                   "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "archived": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -2067,7 +2167,6 @@
                 "category",
                 "courseLessonCount",
                 "completedLessonCount",
-                "enrolled",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -2150,6 +2249,12 @@
                 },
                 "currency": {
                   "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "archived": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -2161,7 +2266,6 @@
                 "category",
                 "courseLessonCount",
                 "completedLessonCount",
-                "enrolled",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -2222,6 +2326,10 @@
               "category": {
                 "type": "string"
               },
+              "categoryId": {
+                "format": "uuid",
+                "type": "string"
+              },
               "courseLessonCount": {
                 "type": "number"
               },
@@ -2271,8 +2379,7 @@
                     "title",
                     "imageUrl",
                     "description",
-                    "itemsCount",
-                    "itemsCompletedCount"
+                    "itemsCount"
                   ]
                 }
               },
@@ -2281,6 +2388,9 @@
               },
               "currency": {
                 "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -2290,12 +2400,252 @@
               "description",
               "category",
               "courseLessonCount",
-              "completedLessonCount",
-              "enrolled",
               "state",
               "lessons",
               "priceInCents",
               "currency"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetCourseByIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "categoryId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "courseLessonCount": {
+                "type": "number"
+              },
+              "completedLessonCount": {
+                "type": "number"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "itemsCount": {
+                      "type": "number"
+                    },
+                    "itemsCompletedCount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "imageUrl",
+                    "description",
+                    "itemsCount"
+                  ]
+                }
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "imageUrl",
+              "description",
+              "category",
+              "courseLessonCount",
+              "state",
+              "lessons",
+              "priceInCents",
+              "currency"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateCourseBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "const": "draft",
+                "type": "string"
+              },
+              {
+                "const": "published",
+                "type": "string"
+              }
+            ]
+          },
+          "priceInCents": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "categoryId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "lessons": {
+            "type": "array",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "state",
+          "priceInCents",
+          "categoryId"
+        ]
+      },
+      "CreateCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateCourseBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "const": "draft",
+                "type": "string"
+              },
+              {
+                "const": "published",
+                "type": "string"
+              }
+            ]
+          },
+          "priceInCents": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "categoryId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "lessons": {
+            "type": "array",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
             ]
           }
         },

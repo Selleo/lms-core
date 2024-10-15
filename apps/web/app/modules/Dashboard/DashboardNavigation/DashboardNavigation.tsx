@@ -10,6 +10,10 @@ import { Icon } from "~/components/Icon";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { MenuItem } from "~/modules/Dashboard/DashboardNavigation/MenuItem";
 import type { IconName } from "~/types/shared";
+import { Button } from "~/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { useLocation, useNavigate } from "@remix-run/react";
+import { useUserRole } from "~/hooks/useUserRole";
 import { useState } from "react";
 import { cx } from "class-variance-authority";
 
@@ -52,6 +56,9 @@ export function DashboardNavigation({
 }: {
   menuItemsOverwrite?: MenuItemType[];
 }) {
+  const { isAdmin } = useUserRole();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const { mutate: logout } = useLogoutUser();
   const {
@@ -61,6 +68,7 @@ export function DashboardNavigation({
     menuItems: menuItemsOverwrite ?? menuItems,
     userRole: role,
   });
+  const isAdminRoute = pathname.startsWith("/admin");
 
   if (isEmpty(authorizedMenuItems)) {
     return null;
@@ -129,8 +137,17 @@ export function DashboardNavigation({
             </hgroup>
           </div>
         </div>
-
-        <div className="flex items-center border-t border-t-primary-200 w-full pt-4">
+        <div className="flex items-center border-t border-t-primary-200 w-full pt-4 gap-2 flex-col">
+          {isAdmin && (
+            <Button
+              className="w-full justify-start gap-2"
+              variant="outline"
+              onClick={() => navigate(isAdminRoute ? "/" : "/admin/courses")}
+            >
+              {`Go to ${isAdminRoute ? "Dashboard" : "Admin"}`}
+              <ArrowRight className="w-4 h-4 inline-block text-primary-700" />
+            </Button>
+          )}
           <button
             onClick={() => logout()}
             className="flex items-center rounded-md hover:bg-primary-50 subtle font-md gap-x-2 w-full p-2"
