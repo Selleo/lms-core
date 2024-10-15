@@ -1,1 +1,0 @@
-ALTER TABLE "users" ADD COLUMN "archived" boolean DEFAULT false NOT NULL;

@@ -1,1 +1,0 @@
-ALTER TABLE "courses" RENAME COLUMN "status" TO "state";
