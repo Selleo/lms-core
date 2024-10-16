@@ -58,7 +58,7 @@ const niceCourseData = Type.Intersect([
 
 type NiceCourseData = Static<typeof niceCourseData>;
 
-export const niceCourses: NiceCourseData[] = [
+export const niceCourses: CourseData[] = [
   {
     title: "Introduction to Web Development: Building Your First Website",
     description:

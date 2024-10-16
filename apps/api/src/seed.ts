@@ -279,8 +279,10 @@ async function seed() {
     await createUsers(5);
     console.log("Created users with credentials");
 
-    await createNiceCourses(adminUser.id, db);
+    await createNiceCourses(adminUser.id, db, niceCourses);
     console.log("✨✨✨Created created nice courses✨✨✨");
+    await createNiceCourses(adminUser.id, db, e2eCourses);
+    console.log("🧪 Created e2e courses");
 
     const createdCategories = await createEntities(
       categories,
