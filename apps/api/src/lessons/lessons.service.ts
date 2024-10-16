@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, isNotNull, sql } from "drizzle-orm";
 import type { DatabasePg } from "src/common";
 import { S3Service } from "src/file/s3.service";
 import {
@@ -22,6 +22,7 @@ import {
 } from "src/storage/schema";
 import { match, P } from "ts-pattern";
 import type { LessonItemResponse } from "./schemas/lessonItem.schema";
+import { isEmpty } from "lodash";
 
 @Injectable()
 export class LessonsService {
@@ -270,6 +271,45 @@ export class LessonsService {
       itemsCount: completableLessonItems.length,
       itemsCompletedCount: completedLessonItems.length,
     };
+  }
+
+  async getAvailableLessons() {
+    const availableLessons = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
+        itemsCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+      })
+      .from(lessons)
+      .where(
+        and(
+          eq(lessons.archived, false),
+          eq(lessons.state, "published"),
+          isNotNull(lessons.id),
+          isNotNull(lessons.title),
+          isNotNull(lessons.description),
+          isNotNull(lessons.imageUrl),
+        ),
+      );
+
+    if (isEmpty(availableLessons))
+      throw new NotFoundException("No lessons found");
+
+    const lessonsWithSignedUrls = await Promise.all(
+      availableLessons.map(async (lesson) => {
+        const imageUrl = lesson.imageUrl.startsWith("https://")
+          ? lesson.imageUrl
+          : await this.s3Service.getSignedUrl(lesson.imageUrl);
+        return { ...lesson, imageUrl };
+      }),
+    );
+
+    return lessonsWithSignedUrls;
   }
 
   async addLessonToCourse(

@@ -5,6 +5,7 @@ export const updateCategorySchema = Type.Partial(
   Type.Object({
     id: UUIDSchema,
     title: Type.String(),
+    archived: Type.Boolean(),
   }),
 );
 

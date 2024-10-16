@@ -1,6 +1,5 @@
 import { useNavigate } from "@remix-run/react";
 import {
-  Column,
   ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -10,7 +9,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { isEmpty } from "lodash-es";
-import { ArrowDown, ArrowUp, ArrowUpDown, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import React from "react";
 import { GetAllCoursesResponse } from "~/api/generated-api";
 import {
@@ -18,6 +17,7 @@ import {
   useCoursesSuspense,
 } from "~/api/queries/useCourses";
 import { queryClient } from "~/api/queryClient";
+import SortButton from "~/components/TableSortButton/TableSortButton";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -39,28 +39,6 @@ export const clientLoader = async () => {
   await queryClient.prefetchQuery(allCoursesQueryOptions());
   return null;
 };
-
-interface SortButtonProps<T> {
-  column: Column<T, unknown>;
-  children: React.ReactNode;
-}
-
-const SortButton = <T,>({ column, children }: SortButtonProps<T>) => (
-  <Button
-    variant="ghost"
-    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    className="flex items-center"
-  >
-    {children}
-    {column.getIsSorted() === "asc" ? (
-      <ArrowUp className="ml-2 h-4 w-4" />
-    ) : column.getIsSorted() === "desc" ? (
-      <ArrowDown className="ml-2 h-4 w-4" />
-    ) : (
-      <ArrowUpDown className="ml-2 h-4 w-4" />
-    )}
-  </Button>
-);
 
 const Courses = () => {
   const navigate = useNavigate();
@@ -155,9 +133,8 @@ const Courses = () => {
     .rows.map((row) => row.original.id);
 
   const handleDeleteCourses = () => {
+    // TODO: Implement archive functionality
     console.log("Deleting courses:", selectedCourses);
-    // Implement delete functionality here
-    // After deletion, reset selection and invalidate query
     table.resetRowSelection();
     queryClient.invalidateQueries(allCoursesQueryOptions());
   };

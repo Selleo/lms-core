@@ -1,4 +1,3 @@
-"use client";
 import { isEmpty } from "lodash-es";
 import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
 import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
@@ -68,7 +67,7 @@ export function DashboardNavigation({
     menuItems: menuItemsOverwrite ?? menuItems,
     userRole: role,
   });
-  const isAdminRoute = pathname.startsWith("/admin");
+  const isAdminRoute = pathname.startsWith("/new-admin");
 
   if (isEmpty(authorizedMenuItems)) {
     return null;
@@ -142,7 +141,9 @@ export function DashboardNavigation({
             <Button
               className="w-full justify-start gap-2"
               variant="outline"
-              onClick={() => navigate(isAdminRoute ? "/" : "/admin/courses")}
+              onClick={() =>
+                navigate(isAdminRoute ? "/" : "/new-admin/courses")
+              }
             >
               {`Go to ${isAdminRoute ? "Dashboard" : "Admin"}`}
               <ArrowRight className="w-4 h-4 inline-block text-primary-700" />

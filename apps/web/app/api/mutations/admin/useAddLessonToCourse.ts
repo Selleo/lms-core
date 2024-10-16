@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
-import { ApiClient } from "../api-client";
-import { AddLessonToCourseBody } from "../generated-api";
+import { ApiClient } from "../../api-client";
+import { AddLessonToCourseBody } from "../../generated-api";
 
 type UpdateCourseOptions = {
   data: AddLessonToCourseBody;

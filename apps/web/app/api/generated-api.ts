@@ -233,6 +233,7 @@ export interface UpdateCategoryBody {
   /** @format uuid */
   id?: string;
   title?: string;
+  archived?: boolean;
 }
 
 export interface UpdateCategoryResponse {
@@ -318,16 +319,6 @@ export interface GetAvailableCoursesResponse {
     page: number;
     perPage: number;
   };
-}
-
-export interface GetNonCourseLessonsResponse {
-  data: {
-    id: string;
-    title: string;
-    description: string;
-    imageUrl: string;
-    itemsCount: number;
-  }[];
 }
 
 export interface GetCourseResponse {
@@ -440,6 +431,16 @@ export interface GetAllLessonsResponse {
     description: string;
     itemsCount: number;
     itemsCompletedCount?: number;
+  }[];
+}
+
+export interface GetAvailableLessonsResponse {
+  data: {
+    id: string;
+    title: string;
+    description: string;
+    imageUrl: string;
+    itemsCount: number;
   }[];
 }
 
@@ -1193,20 +1194,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetNonCourseLessons
-     * @request GET:/api/courses/non-course-lessons
-     */
-    coursesControllerGetNonCourseLessons: (params: RequestParams = {}) =>
-      this.request<GetNonCourseLessonsResponse, any>({
-        path: `/api/courses/non-course-lessons`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @name CoursesControllerGetCourse
      * @request GET:/api/courses/course
      */
@@ -1313,6 +1300,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     lessonsControllerGetAllLessons: (params: RequestParams = {}) =>
       this.request<GetAllLessonsResponse, any>({
         path: `/api/courses/lessons`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerGetAvailableLessons
+     * @request GET:/api/courses/available-lessons
+     */
+    lessonsControllerGetAvailableLessons: (params: RequestParams = {}) =>
+      this.request<GetAvailableLessonsResponse, any>({
+        path: `/api/courses/available-lessons`,
         method: "GET",
         format: "json",
         ...params,

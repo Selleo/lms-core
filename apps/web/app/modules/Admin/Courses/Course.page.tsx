@@ -3,16 +3,18 @@ import { capitalize, startCase } from "lodash-es";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { UpdateCourseBody } from "~/api/generated-api";
-import { useUpdateCourse } from "~/api/mutations/useUpdateCourse";
+import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
 import {
   categoriesQueryOptions,
   useCategoriesSuspense,
 } from "~/api/queries/useCategories";
-import { courseQueryOptions, useCourseById } from "~/api/queries/useCourseById";
+import {
+  courseQueryOptions,
+  useCourseById,
+} from "~/api/queries/admin/useCourseById";
 import { queryClient } from "~/api/queryClient";
 import LessonAssigner from "./LessonAssigner/LessonAssigner";
 
-// Import shadcn components
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -161,6 +163,7 @@ const Course = () => {
 
         if (name === "description") {
           return (
+            // @ts-expect-error - TODO: Fix the type of the textarea - the field type contains the value of the archived wchich is a boolean
             <Textarea
               {...field}
               placeholder="Enter course description"
@@ -170,6 +173,7 @@ const Course = () => {
         }
 
         return (
+          // @ts-expect-error - TODO: Fix the type of the textarea - the field type contains the value of the archived wchich is a boolean
           <Input
             {...field}
             type={name === "priceInCents" ? "number" : "text"}
@@ -216,10 +220,7 @@ const Course = () => {
         <h3 className="text-xl font-bold text-gray-900 mb-4">
           Lesson Assignment
         </h3>
-        <LessonAssigner
-          courseId={id}
-          assignedLessonIds={course.lessons.map((lesson) => lesson.id)}
-        />
+        <LessonAssigner courseId={id} />
       </div>
     </div>
   );

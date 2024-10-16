@@ -39,6 +39,35 @@ export class LessonsController {
     return new BaseResponse(await this.lessonsService.getAllLessons());
   }
 
+  @Get("available-lessons")
+  @Validate({
+    response: baseResponse(
+      Type.Array(
+        Type.Object({
+          id: Type.String(),
+          title: Type.String(),
+          description: Type.String(),
+          imageUrl: Type.String(),
+          itemsCount: Type.Number(),
+        }),
+      ),
+    ),
+  })
+  async getAvailableLessons(): Promise<
+    BaseResponse<
+      Array<{
+        id: string;
+        title: string;
+        description: string;
+        imageUrl: string;
+        itemsCount: number;
+      }>
+    >
+  > {
+    const availableLessons = await this.lessonsService.getAvailableLessons();
+    return new BaseResponse(availableLessons);
+  }
+
   @Get("lesson")
   @Validate({
     response: baseResponse(showLessonSchema),

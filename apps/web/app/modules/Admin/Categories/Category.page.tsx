@@ -1,32 +1,26 @@
 import { useParams } from "@remix-run/react";
-import { capitalize, startCase } from "lodash-es";
+import { startCase } from "lodash-es";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { UpdateCategoryBody, UpdateUserBody } from "~/api/generated-api";
-import { useAdminUpdateUser } from "~/api/mutations/useAdminUpdateUser";
-import { useCategoryById } from "~/api/queries/useCategoryById";
+import { UpdateCategoryBody } from "~/api/generated-api";
+import { useUpdateCategory } from "~/api/mutations/admin/useUpdateCategory";
+import { categoriesQueryOptions } from "~/api/queries";
+import { useCategoryById } from "~/api/queries/admin/useCategoryById";
+import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import Loader from "~/modules/common/Loader/Loader";
 
-const displayedFields: Array<keyof UpdateCategoryBody> = ["title"];
+const displayedFields: Array<keyof UpdateCategoryBody> = ["title", "archived"];
 
 const Category = () => {
   const { id } = useParams<{ id: string }>();
   if (!id) throw new Error("Category ID not found");
 
   const { data: user, isLoading } = useCategoryById(id);
-  const { mutateAsync: updateUser } = useAdminUpdateUser();
+  const { mutateAsync: updateCategory } = useUpdateCategory();
   const [isEditing, setIsEditing] = useState(false);
 
   const {
@@ -44,9 +38,10 @@ const Category = () => {
   if (!user) throw new Error("User not found");
 
   const onSubmit = (data: UpdateCategoryBody) => {
-    console.log(data);
-    updateUser({ data, userId: id });
-    setIsEditing(false);
+    updateCategory({ data, categoryId: id }).then(() => {
+      queryClient.invalidateQueries(categoriesQueryOptions);
+      setIsEditing(false);
+    });
   };
 
   const UserInfoItem: React.FC<{ name: keyof UpdateCategoryBody }> = ({
@@ -72,31 +67,6 @@ const Category = () => {
           );
         }
 
-        if (name === "role") {
-          return (
-            <Select
-              onValueChange={field.onChange}
-              value={field.value as UpdateCategoryBody["role"] | undefined}
-            >
-              <SelectTrigger className="w-full rounded-md border border-neutral-300 px-2 py-1">
-                <SelectValue
-                  placeholder={capitalize(field.value as string)}
-                  className="capitalize"
-                />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {["student", "admin", "tutor"].map((role) => (
-                    <SelectItem className="capitalize" value={role} key={role}>
-                      {role}
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-          );
-        }
-
         if (name === "archived") {
           return (
             <div className="flex items-center space-x-2">
@@ -119,7 +89,6 @@ const Category = () => {
           <Input
             {...field}
             value={field.value as string}
-            type={name === "email" ? "email" : "text"}
             className="w-full rounded-md border border-neutral-300 px-2 py-1"
           />
         );

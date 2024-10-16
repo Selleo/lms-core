@@ -3,8 +3,8 @@ import {
   useQuery,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import { ApiClient } from "../api-client";
-import { GetCategoryByIdResponse } from "../generated-api";
+import { ApiClient } from "../../api-client";
+import { GetCategoryByIdResponse } from "../../generated-api";
 
 export const categoryByIdQueryOptions = (id: string) =>
   queryOptions({

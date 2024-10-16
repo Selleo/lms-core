@@ -1,6 +1,5 @@
 import { useNavigate } from "@remix-run/react";
 import {
-  Column,
   ColumnDef,
   flexRender,
   getCoreRowModel,
@@ -10,16 +9,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { isEmpty } from "lodash-es";
-import { ArrowDown, ArrowUp, ArrowUpDown, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import React from "react";
-import {
-  GetAllCategoriesResponse,
-  GetUsersResponse,
-} from "~/api/generated-api";
-import { useBulkDeleteUsers } from "~/api/mutations/useBulkDeleteUsers";
+import { GetAllCategoriesResponse } from "~/api/generated-api";
+import { useBulkDeleteUsers } from "~/api/mutations/admin/useBulkDeleteUsers";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
 import { usersQueryOptions } from "~/api/queries/useUsers";
 import { queryClient } from "~/api/queryClient";
+import SortButton from "~/components/TableSortButton/TableSortButton";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -39,28 +36,6 @@ export const clientLoader = async () => {
   queryClient.prefetchQuery(usersQueryOptions);
   return null;
 };
-
-interface SortButtonProps<T> {
-  column: Column<T, unknown>;
-  children: React.ReactNode;
-}
-
-const SortButton = <T,>({ column, children }: SortButtonProps<T>) => (
-  <Button
-    variant="ghost"
-    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-    className="flex items-center"
-  >
-    {children}
-    {column.getIsSorted() === "asc" ? (
-      <ArrowUp className="ml-2 h-4 w-4" />
-    ) : column.getIsSorted() === "desc" ? (
-      <ArrowDown className="ml-2 h-4 w-4" />
-    ) : (
-      <ArrowUpDown className="ml-2 h-4 w-4" />
-    )}
-  </Button>
-);
 
 const Categories = () => {
   const navigate = useNavigate();

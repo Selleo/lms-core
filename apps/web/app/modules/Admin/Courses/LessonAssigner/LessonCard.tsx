@@ -1,3 +1,5 @@
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { GetAllLessonsResponse } from "~/api/generated-api";
 
 type TransformedLesson = GetAllLessonsResponse["data"][number] & {
@@ -9,8 +11,22 @@ interface LessonCardProps {
 }
 
 export function LessonCard({ lesson }: LessonCardProps) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({ id: lesson.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
   return (
-    <div className="bg-white p-2 mb-2 rounded shadow flex items-center gap-2">
+    <div
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      {...listeners}
+      className="bg-white p-2 mb-2 rounded shadow flex items-center gap-2 cursor-move"
+    >
       <img src={lesson.imageUrl} alt="" className="w-16 h-16 rounded-md" />
       <div>
         <h4 className="font-medium">{lesson.title}</h4>

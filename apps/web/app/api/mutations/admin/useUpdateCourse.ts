@@ -1,31 +1,28 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
-import { ApiClient } from "../api-client";
-import { UpdateUserBody } from "../generated-api";
-import { usersQueryOptions } from "../queries/useUsers";
-import { queryClient } from "../queryClient";
+import { ApiClient } from "../../api-client";
+import { UpdateCourseBody } from "../../generated-api";
 
-type UpdateUserOptions = {
-  data: UpdateUserBody;
-  userId: string;
+type UpdateCourseOptions = {
+  data: UpdateCourseBody;
+  courseId: string;
 };
 
-export function useAdminUpdateUser() {
+export function useUpdateCourse() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: UpdateUserOptions) => {
-      const response = await ApiClient.api.usersControllerAdminUpdateUser(
-        options.userId,
+    mutationFn: async (options: UpdateCourseOptions) => {
+      const response = await ApiClient.api.coursesControllerUpdateCourse(
+        options.courseId,
         options.data
       );
 
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(usersQueryOptions);
-      toast({ description: "User updated successfully" });
+      toast({ description: "Course updated successfully" });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

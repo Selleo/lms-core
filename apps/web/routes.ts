@@ -61,7 +61,7 @@ export const routes: (
       route("users", "modules/Users/Users.page.tsx");
       route("categories", "modules/Courses/Categories/Categories.page.tsx");
     });
-    route("admin", "modules/Admin/Admin.layout.tsx", () => {
+    route("new-admin", "modules/Admin/Admin.layout.tsx", () => {
       route("courses", "modules/Admin/Courses/Courses.page.tsx", {
         index: true,
       });

@@ -24,32 +24,32 @@ const AdminLayout = () => {
           menuItemsOverwrite={[
             {
               label: "courses",
-              link: "/admin/courses",
+              link: "courses",
               roles: ["admin"],
               iconName: "CaretRight",
             },
             {
               label: "categories",
-              link: "/admin/categories",
+              link: "categories",
               roles: ["admin"],
               iconName: "CaretRight",
             },
             {
               label: "lessons",
-              link: "/admin/lessons",
+              link: "lessons",
               roles: ["admin"],
               iconName: "CaretRight",
             },
             {
               label: "users",
-              link: "/admin/users",
+              link: "users",
               roles: ["admin"],
               iconName: "CaretRight",
             },
           ]}
         />
         <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
-          <Outlet />
+          {isAdmin && <Outlet />}
         </main>
       </div>
     </div>

@@ -1,109 +1,104 @@
-import React, { FC, useEffect, useState, useCallback } from "react";
 import {
-  allLessonsQueryOptions,
-  useAllLessons,
-  useAllLessonsSuspense,
-} from "~/api/queries/useAllLessons";
-import { useUpdateCourse } from "~/api/mutations/useUpdateCourse";
-import { GetAllLessonsResponse } from "~/api/generated-api";
-import {
-  DndContext,
   closestCorners,
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
   KeyboardSensor,
   PointerSensor,
+  useDroppable,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
-  useSortable,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { queryClient } from "~/api/queryClient";
-import { useAddLessonToCourse } from "~/api/mutations/useAddLessonToCourse";
-import { useRemoveLessonFromCourse } from "~/api/mutations/useRemoveLessonFromCourse copy";
-import { LessonCard } from "./LessonCard";
+import { FC, useCallback, useEffect, useState } from "react";
+import { GetAllLessonsResponse } from "~/api/generated-api";
+import { useAddLessonToCourse } from "~/api/mutations/admin/useAddLessonToCourse";
+import { useRemoveLessonFromCourse } from "~/api/mutations/admin/useRemoveLessonFromCourse";
 import { useCourse } from "~/api/queries";
-import { useNonCourseLessons } from "~/api/queries/useNonCourseLessons";
-
-export const clientLoader = () => {
-  queryClient.prefetchQuery(allLessonsQueryOptions);
-  return null;
-};
+import { useAvailableLessons } from "~/api/queries/useAvailableLessons";
+import { LessonCard } from "./LessonCard";
 
 type TransformedLesson = GetAllLessonsResponse["data"][number] & {
   columnId: string;
 };
 
-interface SortableItemProps {
-  id: string;
-  children: React.ReactNode;
-}
-
-export function SortableItem({ id, children }: SortableItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {children}
-    </div>
-  );
-}
-
 interface LessonAssignerProps {
   courseId: string;
-  assignedLessonIds: string[];
 }
 
-const LessonAssigner: FC<LessonAssignerProps> = ({
-  courseId,
-  assignedLessonIds: initialAssignedLessonIds,
-}) => {
-  const [lessons, setLessons] = useState<TransformedLesson[]>([]);
-  const [assignedLessonIds, setAssignedLessonIds] = useState<string[]>(
-    initialAssignedLessonIds
-  );
+interface LessonsColumnProps {
+  lessons: TransformedLesson[];
+  columnTitle: string;
+  columnId: string;
+}
 
-  // const { data: { lessons: courseLessons } = {} } = useCourse(courseId);
-  // const {} = useNonCourseLessons();
-  const { data: allLessons } = useAllLessons();
+const LessonsColumn: FC<LessonsColumnProps> = ({
+  lessons,
+  columnTitle,
+  columnId,
+}) => {
+  const { setNodeRef } = useDroppable({ id: columnId });
+
+  return (
+    <div className="mb-5 w-full">
+      <h3 className="text-lg font-semibold mb-2">{columnTitle}</h3>
+      <div className="w-full max-h-[564px] overflow-x-auto">
+        <SortableContext items={lessons} strategy={verticalListSortingStrategy}>
+          <div ref={setNodeRef} className="flex flex-col gap-4">
+            {lessons.map((lesson) => (
+              <LessonCard key={lesson.id} lesson={lesson} />
+            ))}
+          </div>
+        </SortableContext>
+      </div>
+    </div>
+  );
+};
+
+const LessonAssigner: FC<LessonAssignerProps> = ({ courseId }) => {
+  const [lessons, setLessons] = useState<TransformedLesson[]>([]);
+  const [currentlyDraggedItem, setCurrentlyDraggedItem] =
+    useState<TransformedLesson | null>(null);
+
+  const { data: course } = useCourse(courseId);
+  const { data: allLessons } = useAvailableLessons();
   const { mutateAsync: addLessonToCourse } = useAddLessonToCourse();
   const { mutateAsync: removeLessonFromCourse } = useRemoveLessonFromCourse();
-
-  useEffect(() => {
-    if (allLessons) {
-      const transformedLessons = allLessons.map((lesson) => ({
-        ...lesson,
-        columnId: assignedLessonIds.includes(lesson.id)
-          ? "column-assigned"
-          : "column-unassigned",
-      }));
-      setLessons(transformedLessons);
-    }
-  }, [allLessons, assignedLessonIds]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
+  );
+
+  useEffect(() => {
+    if (allLessons && course) {
+      const courseAssignedLessonIds = course.lessons.map((lesson) => lesson.id);
+      const transformedLessons = allLessons.map((lesson) => ({
+        ...lesson,
+        columnId: courseAssignedLessonIds.includes(lesson.id)
+          ? "column-assigned"
+          : "column-unassigned",
+      }));
+      setLessons(transformedLessons);
+    }
+  }, [allLessons, course]);
+
+  const handleDragStart = useCallback(
+    (event: DragStartEvent) => {
+      const { active } = event;
+      const draggedLesson = lessons.find((lesson) => lesson.id === active.id);
+      if (draggedLesson) {
+        setCurrentlyDraggedItem(draggedLesson);
+      }
+    },
+    [lessons]
   );
 
   const handleDragEnd = useCallback(
@@ -114,63 +109,44 @@ const LessonAssigner: FC<LessonAssignerProps> = ({
       const activeLesson = lessons.find((lesson) => lesson.id === active.id);
       if (!activeLesson) return;
 
-      const newColumnId =
-        over.id === "column-assigned" || over.id === "column-unassigned"
-          ? over.id
-          : activeLesson.columnId === "column-assigned"
-            ? "column-unassigned"
-            : "column-assigned";
+      const isOverAColumn =
+        over.id === "column-assigned" || over.id === "column-unassigned";
+      const newColumnId = isOverAColumn
+        ? (over.id as string)
+        : lessons.find((lesson) => lesson.id === over.id)?.columnId ||
+          activeLesson.columnId;
 
-      if (newColumnId === activeLesson.columnId) return;
+      if (activeLesson.columnId !== newColumnId) {
+        try {
+          if (newColumnId === "column-assigned") {
+            await addLessonToCourse({
+              data: { lessonId: activeLesson.id, courseId },
+              courseId,
+            });
+          } else if (newColumnId === "column-unassigned") {
+            await removeLessonFromCourse({
+              courseId,
+              lessonId: activeLesson.id,
+            });
+          }
 
-      try {
-        if (newColumnId === "column-assigned") {
-          await addLessonToCourse({
-            data: { lessonId: activeLesson.id, courseId },
-            courseId,
-          });
-        } else {
-          await removeLessonFromCourse({ courseId, lessonId: activeLesson.id });
+          setLessons((prev) =>
+            prev.map((lesson) =>
+              lesson.id === activeLesson.id
+                ? { ...lesson, columnId: newColumnId }
+                : lesson
+            )
+          );
+        } catch (error) {
+          console.error("Error updating lesson assignment:", error);
         }
-
-        const newLessons = lessons.map((lesson) =>
-          lesson.id === activeLesson.id
-            ? { ...lesson, columnId: newColumnId }
-            : lesson
-        );
-
-        setLessons(newLessons);
-        setAssignedLessonIds(
-          newLessons
-            .filter((lesson) => lesson.columnId === "column-assigned")
-            .map((lesson) => lesson.id)
-        );
-      } catch (error) {
-        console.error("Failed to update lesson assignment:", error);
+      } else {
+        console.info("Lesson did not change columns, no mutation needed");
       }
+
+      setCurrentlyDraggedItem(null);
     },
     [lessons, courseId, addLessonToCourse, removeLessonFromCourse]
-  );
-
-  const renderLessonList = (
-    columnLessons: TransformedLesson[],
-    title: string
-  ) => (
-    <div className="bg-gray-100 p-4 rounded-lg h-screen overflow-scroll">
-      <h3 className="text-lg font-semibold mb-2">
-        {title} ({columnLessons.length})
-      </h3>
-      <SortableContext
-        items={columnLessons}
-        strategy={verticalListSortingStrategy}
-      >
-        {columnLessons.map((lesson) => (
-          <SortableItem key={lesson.id} id={lesson.id}>
-            <LessonCard lesson={lesson} />
-          </SortableItem>
-        ))}
-      </SortableContext>
-    </div>
   );
 
   const assignedLessons = lessons.filter(
@@ -184,12 +160,24 @@ const LessonAssigner: FC<LessonAssignerProps> = ({
     <DndContext
       sensors={sensors}
       collisionDetection={closestCorners}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <div className="grid grid-cols-2 gap-4">
-        {renderLessonList(assignedLessons, "Assigned Lessons")}
-        {renderLessonList(unassignedLessons, "Unassigned Lessons")}
+        <LessonsColumn
+          columnId="column-assigned"
+          columnTitle="Assigned Lessons"
+          lessons={assignedLessons}
+        />
+        <LessonsColumn
+          columnId="column-unassigned"
+          columnTitle="Unassigned Lessons"
+          lessons={unassignedLessons}
+        />
       </div>
+      <DragOverlay>
+        {currentlyDraggedItem && <LessonCard lesson={currentlyDraggedItem} />}
+      </DragOverlay>
     </DndContext>
   );
 };

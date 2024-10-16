@@ -6,9 +6,9 @@ import {
 import { ApiClient } from "../api-client";
 import type { GetCourseResponse } from "../generated-api";
 
-export const courseQueryOptions = (id?: string) =>
+export const courseQueryOptions = (id: string) =>
   queryOptions({
-    queryKey: ["course", id],
+    queryKey: ["course", { id }],
     queryFn: async () => {
       const response = await ApiClient.api.coursesControllerGetCourse({
         id: id ?? "",

@@ -1116,23 +1116,6 @@
         }
       }
     },
-    "/api/courses/non-course-lessons": {
-      "get": {
-        "operationId": "CoursesController_getNonCourseLessons",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetNonCourseLessonsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/courses/course": {
       "get": {
         "operationId": "CoursesController_getCourse",
@@ -1288,6 +1271,23 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetAllLessonsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/available-lessons": {
+      "get": {
+        "operationId": "LessonsController_getAvailableLessons",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAvailableLessonsResponse"
                 }
               }
             }
@@ -2212,6 +2212,9 @@
           },
           "title": {
             "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
           }
         }
       },
@@ -2556,44 +2559,6 @@
         "required": [
           "data",
           "pagination"
-        ]
-      },
-      "GetNonCourseLessonsResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "title": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "imageUrl": {
-                  "type": "string"
-                },
-                "itemsCount": {
-                  "type": "number"
-                }
-              },
-              "required": [
-                "id",
-                "title",
-                "description",
-                "imageUrl",
-                "itemsCount"
-              ]
-            }
-          }
-        },
-        "required": [
-          "data"
         ]
       },
       "GetCourseResponse": {
@@ -3007,6 +2972,44 @@
                 "title",
                 "imageUrl",
                 "description",
+                "itemsCount"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetAvailableLessonsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string"
+                },
+                "itemsCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "description",
+                "imageUrl",
                 "itemsCount"
               ]
             }
