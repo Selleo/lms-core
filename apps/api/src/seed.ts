@@ -20,6 +20,8 @@ import {
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import { DatabasePg } from "./common";
 import hashPassword from "./common/helpers/hashPassword";
+import { niceCourses } from "./nice-data-seeds";
+import { e2eCourses } from "./e2e-data-seeds";
 
 dotenv.config({ path: "./.env" });
 
@@ -177,8 +179,10 @@ async function seed() {
     await createUsers(5);
     console.log("Created users with credentials");
 
-    await createNiceCourses(adminUser.id, db);
+    await createNiceCourses(adminUser.id, db, niceCourses);
     console.log("✨✨✨Created created nice courses✨✨✨");
+    await createNiceCourses(adminUser.id, db, e2eCourses);
+    console.log("🧪 Created e2e courses");
 
     const createdCategories = await createEntities(categories, 6, () => ({
       id: faker.string.uuid(),
