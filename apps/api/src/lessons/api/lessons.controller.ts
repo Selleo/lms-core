@@ -23,7 +23,7 @@ import {
   showLessonSchema,
 } from "../schemas/lesson.schema";
 
-@Controller("courses")
+@Controller("lessons")
 @UseGuards(RolesGuard)
 export class LessonsController {
   constructor(private readonly lessonsService: LessonsService) {}
@@ -69,14 +69,8 @@ export class LessonsController {
 
   @Get("lesson")
   @Validate({
+    request: [{ type: "query", name: "id", schema: UUIDSchema }],
     response: baseResponse(showLessonSchema),
-    request: [
-      {
-        type: "query",
-        name: "id",
-        schema: Type.String({ format: "uuid" }),
-      },
-    ],
   })
   async getLesson(
     @Query("id") id: string,
@@ -134,6 +128,21 @@ export class LessonsController {
     await this.lessonsService.removeLessonFromCourse(courseId, lessonId);
     return new BaseResponse({
       message: "Lesson removed from course successfully",
+    });
+  }
+
+  @Post("evaluation-quiz")
+  @Validate({
+    request: [{ type: "query", name: "lessonId", schema: UUIDSchema }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async evaluationQuiz(
+    @Query("lessonId") lessonId: string,
+    @CurrentUser("userId") currentUserId: string,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.lessonsService.evaluationQuiz(lessonId, currentUserId);
+    return new BaseResponse({
+      message: "Evaluation quiz successfully",
     });
   }
 }

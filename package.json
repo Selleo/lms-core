@@ -13,6 +13,7 @@
     "test:api": "pnpm run --filter=api test",
     "test:web:e2e": "pnpm run --filter=web test:e2e",
     "test:api:e2e": "pnpm run --filter=api test:e2e",
+    "start:debug": "pnpm run --filter=api start:debug",
     "prepare": "husky",
     "gpush": "git push --no-verify"
   },
