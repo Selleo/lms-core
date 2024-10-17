@@ -10,7 +10,7 @@ type CourseParams = {
   userId?: string;
 };
 
-export const coursesQueryOptions = (searchParams?: CourseParams) => ({
+export const allCoursesQueryOptions = (searchParams?: CourseParams) => ({
   queryKey: ["courses", searchParams],
   queryFn: async () => {
     const response = await ApiClient.api.coursesControllerGetAllCourses({
@@ -27,9 +27,9 @@ export const coursesQueryOptions = (searchParams?: CourseParams) => ({
 });
 
 export function useCourses(searchParams?: CourseParams) {
-  return useQuery(coursesQueryOptions(searchParams));
+  return useQuery(allCoursesQueryOptions(searchParams));
 }
 
 export function useCoursesSuspense(searchParams?: CourseParams) {
-  return useSuspenseQuery(coursesQueryOptions(searchParams));
+  return useSuspenseQuery(allCoursesQueryOptions(searchParams));
 }

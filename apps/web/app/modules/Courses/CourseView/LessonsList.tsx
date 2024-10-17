@@ -30,9 +30,9 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
               title,
               id,
               itemsCount,
-              itemsCompletedCount,
+              itemsCompletedCount = 0,
             },
-            index,
+            index
           ) => (
             <Card
               key={index}
@@ -95,7 +95,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
                 </Link>
               </CardContent>
             </Card>
-          ),
+          )
         )}
       </div>
     </div>

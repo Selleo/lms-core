@@ -32,7 +32,7 @@ export const CourseViewMainCard = ({
     title,
     enrolled: isEnrolled,
     courseLessonCount,
-    completedLessonCount,
+    completedLessonCount = 0,
     priceInCents,
   } = course;
   const { mutateAsync: unenrollCourse } = useUnenrollCourse();
@@ -52,7 +52,7 @@ export const CourseViewMainCard = ({
 
   const firstUncompletedLesson =
     course.lessons.find(
-      (lesson) => lesson.itemsCompletedCount < lesson.itemsCount,
+      (lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount
     )?.id ?? last(course.lessons)?.id;
 
   const handleEnroll = () => {
@@ -125,7 +125,7 @@ export const CourseViewMainCard = ({
                 {
                   "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
                     isEnrolled,
-                },
+                }
               )}
               onClick={handleUnenroll}
             >

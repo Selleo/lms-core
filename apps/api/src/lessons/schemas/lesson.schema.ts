@@ -8,7 +8,7 @@ export const lessonSchema = Type.Object({
   imageUrl: Type.String(),
   description: Type.String(),
   itemsCount: Type.Number(),
-  itemsCompletedCount: Type.Number(),
+  itemsCompletedCount: Type.Optional(Type.Number()),
 });
 
 export const allLessonsSchema = Type.Array(lessonSchema);

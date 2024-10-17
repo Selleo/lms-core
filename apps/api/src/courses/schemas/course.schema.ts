@@ -11,10 +11,12 @@ export const allCoursesSchema = Type.Array(
     category: Type.String(),
     courseLessonCount: Type.Number(),
     completedLessonCount: Type.Number(),
-    enrolled: Type.Boolean(),
+    enrolled: Type.Optional(Type.Boolean()),
     enrolledParticipantCount: Type.Number(),
     priceInCents: Type.Number(),
     currency: Type.String(),
+    state: Type.Optional(Type.String()),
+    archived: Type.Optional(Type.Boolean()),
   }),
 );
 

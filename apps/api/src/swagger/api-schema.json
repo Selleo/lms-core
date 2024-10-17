@@ -349,6 +349,31 @@
             }
           }
         }
+      },
+      "delete": {
+        "operationId": "UsersController_deleteBulkUsers",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteBulkUsersBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteBulkUsersResponse"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/users/{id}": {
@@ -431,6 +456,43 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DeleteUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/admin/{id}": {
+      "patch": {
+        "operationId": "UsersController_adminUpdateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdminUpdateUserBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUpdateUserResponse"
                 }
               }
             }
@@ -573,6 +635,66 @@
         }
       }
     },
+    "/api/categories/{id}": {
+      "get": {
+        "operationId": "CategoriesController_getCategoryById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCategoryByIdResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "CategoriesController_updateCategory",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCategoryBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCategoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/courses": {
       "get": {
         "operationId": "CoursesController_getAllCourses",
@@ -698,6 +820,31 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetAllCoursesResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CoursesController_createCourse",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCourseResponse"
                 }
               }
             }
@@ -996,6 +1143,70 @@
         }
       }
     },
+    "/api/courses/course-by-id": {
+      "get": {
+        "operationId": "CoursesController_getCourseById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCourseByIdResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/{id}": {
+      "patch": {
+        "operationId": "CoursesController_updateCourse",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/courses/enroll-course": {
       "post": {
         "operationId": "CoursesController_createFavouritedCourse",
@@ -1050,6 +1261,40 @@
         }
       }
     },
+    "/api/courses/lessons": {
+      "get": {
+        "operationId": "LessonsController_getAllLessons",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllLessonsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/available-lessons": {
+      "get": {
+        "operationId": "LessonsController_getAvailableLessons",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAvailableLessonsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/courses/lesson": {
       "get": {
         "operationId": "LessonsController_getLesson",
@@ -1070,6 +1315,69 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/add": {
+      "post": {
+        "operationId": "LessonsController_addLessonToCourse",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddLessonToCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddLessonToCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/{courseId}/{lessonId}": {
+      "delete": {
+        "operationId": "LessonsController_removeLessonFromCourse",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveLessonFromCourseResponse"
                 }
               }
             }
@@ -1579,13 +1887,119 @@
       "UpdateUserBody": {
         "type": "object",
         "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
           "email": {
             "format": "email",
             "type": "string"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "const": "admin",
+                "type": "string"
+              },
+              {
+                "const": "student",
+                "type": "string"
+              },
+              {
+                "const": "tutor",
+                "type": "string"
+              }
+            ]
+          },
+          "archived": {
+            "type": "boolean"
           }
         }
       },
       "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "firstName": {
+                "type": "string"
+              },
+              "lastName": {
+                "type": "string"
+              },
+              "role": {
+                "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "email",
+              "firstName",
+              "lastName",
+              "role",
+              "archived"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AdminUpdateUserBody": {
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "format": "email",
+            "type": "string"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "const": "admin",
+                "type": "string"
+              },
+              {
+                "const": "student",
+                "type": "string"
+              },
+              {
+                "const": "tutor",
+                "type": "string"
+              }
+            ]
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AdminUpdateUserResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -1657,6 +2071,23 @@
       "DeleteUserResponse": {
         "type": "null"
       },
+      "DeleteBulkUsersBody": {
+        "type": "object",
+        "properties": {
+          "userIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "userIds"
+        ]
+      },
+      "DeleteBulkUsersResponse": {
+        "type": "null"
+      },
       "GetAllCategoriesResponse": {
         "type": "object",
         "properties": {
@@ -1726,6 +2157,113 @@
           "pagination"
         ]
       },
+      "GetCategoryByIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "archived": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "archived",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateCategoryBody": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "archived": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "createdAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "archived",
+              "createdAt"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "GetAllCoursesResponse": {
         "type": "object",
         "properties": {
@@ -1777,6 +2315,12 @@
                 },
                 "currency": {
                   "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "archived": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -1788,7 +2332,6 @@
                 "category",
                 "courseLessonCount",
                 "completedLessonCount",
-                "enrolled",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -1871,6 +2414,12 @@
                 },
                 "currency": {
                   "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "archived": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -1882,7 +2431,6 @@
                 "category",
                 "courseLessonCount",
                 "completedLessonCount",
-                "enrolled",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -1965,6 +2513,12 @@
                 },
                 "currency": {
                   "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "archived": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -1976,7 +2530,6 @@
                 "category",
                 "courseLessonCount",
                 "completedLessonCount",
-                "enrolled",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -2037,6 +2590,10 @@
               "category": {
                 "type": "string"
               },
+              "categoryId": {
+                "format": "uuid",
+                "type": "string"
+              },
               "courseLessonCount": {
                 "type": "number"
               },
@@ -2086,8 +2643,7 @@
                     "title",
                     "imageUrl",
                     "description",
-                    "itemsCount",
-                    "itemsCompletedCount"
+                    "itemsCount"
                   ]
                 }
               },
@@ -2096,6 +2652,9 @@
               },
               "currency": {
                 "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -2105,12 +2664,252 @@
               "description",
               "category",
               "courseLessonCount",
-              "completedLessonCount",
-              "enrolled",
               "state",
               "lessons",
               "priceInCents",
               "currency"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetCourseByIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "categoryId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "courseLessonCount": {
+                "type": "number"
+              },
+              "completedLessonCount": {
+                "type": "number"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "itemsCount": {
+                      "type": "number"
+                    },
+                    "itemsCompletedCount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "imageUrl",
+                    "description",
+                    "itemsCount"
+                  ]
+                }
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "imageUrl",
+              "description",
+              "category",
+              "courseLessonCount",
+              "state",
+              "lessons",
+              "priceInCents",
+              "currency"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateCourseBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "const": "draft",
+                "type": "string"
+              },
+              {
+                "const": "published",
+                "type": "string"
+              }
+            ]
+          },
+          "priceInCents": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "categoryId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "lessons": {
+            "type": "array",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "description",
+          "state",
+          "priceInCents",
+          "categoryId"
+        ]
+      },
+      "CreateCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateCourseBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "const": "draft",
+                "type": "string"
+              },
+              {
+                "const": "published",
+                "type": "string"
+              }
+            ]
+          },
+          "priceInCents": {
+            "type": "integer"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "categoryId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "lessons": {
+            "type": "array",
+            "items": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          "archived": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UpdateCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
             ]
           }
         },
@@ -2139,6 +2938,86 @@
       },
       "DeleteFavouritedCourseForUserResponse": {
         "type": "null"
+      },
+      "GetAllLessonsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "itemsCount": {
+                  "type": "number"
+                },
+                "itemsCompletedCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "imageUrl",
+                "description",
+                "itemsCount"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetAvailableLessonsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string"
+                },
+                "itemsCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "description",
+                "imageUrl",
+                "itemsCount"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
       },
       "GetLessonResponse": {
         "type": "object",
@@ -2312,6 +3191,64 @@
               "itemsCount",
               "itemsCompletedCount",
               "lessonItems"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "AddLessonToCourseBody": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "lessonId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "courseId",
+          "lessonId"
+        ]
+      },
+      "AddLessonToCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RemoveLessonFromCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
             ]
           }
         },
