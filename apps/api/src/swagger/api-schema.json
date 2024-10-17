@@ -1077,6 +1077,33 @@
         }
       }
     },
+    "/api/courses/evaluation-quiz": {
+      "post": {
+        "operationId": "LessonsController_evaluationQuiz",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationQuizResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/questions/answer": {
       "post": {
         "operationId": "QuestionsController_answerQuestion",
@@ -2186,120 +2213,12 @@
                           "type": "null"
                         }
                       ]
-                    },
-                    "content": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "format": "uuid",
-                              "type": "string"
-                            },
-                            "questionType": {
-                              "type": "string"
-                            },
-                            "questionBody": {
-                              "type": "string"
-                            },
-                            "questionAnswers": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "format": "uuid",
-                                    "type": "string"
-                                  },
-                                  "optionText": {
-                                    "type": "string"
-                                  },
-                                  "position": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "isStudentAnswer": {
-                                    "type": "boolean"
-                                  }
-                                },
-                                "required": [
-                                  "id",
-                                  "optionText",
-                                  "position",
-                                  "isStudentAnswer"
-                                ]
-                              }
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "questionType",
-                            "questionBody",
-                            "questionAnswers"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "format": "uuid",
-                              "type": "string"
-                            },
-                            "title": {
-                              "type": "string"
-                            },
-                            "body": {
-                              "type": "string"
-                            },
-                            "state": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "title",
-                            "body",
-                            "state"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "format": "uuid",
-                              "type": "string"
-                            },
-                            "title": {
-                              "type": "string"
-                            },
-                            "type": {
-                              "type": "string"
-                            },
-                            "url": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "title",
-                            "type",
-                            "url"
-                          ]
-                        }
-                      ]
                     }
                   },
                   "required": [
                     "id",
                     "lessonItemType",
-                    "displayOrder",
-                    "content"
+                    "displayOrder"
                   ]
                 }
               }
@@ -2312,6 +2231,25 @@
               "itemsCount",
               "itemsCompletedCount",
               "lessonItems"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "EvaluationQuizResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
             ]
           }
         },
