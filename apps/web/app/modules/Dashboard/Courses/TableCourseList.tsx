@@ -47,7 +47,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
             imageUrl,
             description,
             category,
-            enrolled,
+            enrolled = false,
             priceInCents,
           }) => (
             <TableRow
@@ -87,7 +87,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
                 </Link>
               </TableCell>
             </TableRow>
-          ),
+          )
         )}
       </TableBody>
     </Table>

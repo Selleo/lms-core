@@ -5,10 +5,11 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 import { DatabasePg } from "src/common";
-import { credentials, users } from "../storage/schema";
 import hashPassword from "src/common/helpers/hashPassword";
+import { credentials, users } from "../storage/schema";
+import { UserRole } from "./schemas/user-roles";
 
 @Injectable()
 export class UsersService {
@@ -45,7 +46,13 @@ export class UsersService {
 
   public async updateUser(
     id: string,
-    data: { email?: string; firstName?: string; lastName?: string },
+    data: {
+      email?: string;
+      firstName?: string;
+      lastName?: string;
+      archived?: boolean;
+      role?: UserRole;
+    },
   ) {
     const [existingUser] = await this.db
       .select()
@@ -133,6 +140,17 @@ export class UsersService {
 
     if (!deletedUser) {
       throw new NotFoundException("User not found");
+    }
+  }
+
+  public async deleteBulkUsers(ids: string[]) {
+    const deletedUsers = await this.db
+      .delete(users)
+      .where(inArray(users.id, ids))
+      .returning();
+
+    if (deletedUsers.length !== ids.length) {
+      throw new NotFoundException("Users not found");
     }
   }
 }

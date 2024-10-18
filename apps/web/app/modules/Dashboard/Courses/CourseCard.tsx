@@ -29,7 +29,7 @@ const CourseCard = ({
   description,
   category,
   imageUrl,
-  enrolled,
+  enrolled = false,
   courseLessonCount,
   completedLessonCount,
   currency,
@@ -68,7 +68,7 @@ const CourseCard = ({
           {
             "border-secondary-200 hover:border-secondary-500": enrolled,
             "border-primary-200 hover:border-primary-500": !enrolled,
-          },
+          }
         )}
       >
         <div className="flex flex-col gap-y-3 flex-grow">

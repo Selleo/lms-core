@@ -138,11 +138,37 @@ export interface GetUserByIdResponse {
 }
 
 export interface UpdateUserBody {
+  firstName?: string;
+  lastName?: string;
   /** @format email */
   email?: string;
+  role?: "admin" | "student" | "tutor";
+  archived?: boolean;
 }
 
 export interface UpdateUserResponse {
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    archived: boolean;
+  };
+}
+
+export interface AdminUpdateUserBody {
+  firstName?: string;
+  lastName?: string;
+  /** @format email */
+  email?: string;
+  role?: "admin" | "student" | "tutor";
+  archived?: boolean;
+}
+
+export interface AdminUpdateUserResponse {
   data: {
     id: string;
     createdAt: string;
@@ -172,6 +198,12 @@ export type ChangePasswordResponse = null;
 
 export type DeleteUserResponse = null;
 
+export interface DeleteBulkUsersBody {
+  userIds: string[];
+}
+
+export type DeleteBulkUsersResponse = null;
+
 export interface GetAllCategoriesResponse {
   data: {
     /** @format uuid */
@@ -187,6 +219,33 @@ export interface GetAllCategoriesResponse {
   };
 }
 
+export interface GetCategoryByIdResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    archived: boolean | null;
+    createdAt: string | null;
+  };
+}
+
+export interface UpdateCategoryBody {
+  /** @format uuid */
+  id?: string;
+  title?: string;
+  archived?: boolean;
+}
+
+export interface UpdateCategoryResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    archived: boolean | null;
+    createdAt: string | null;
+  };
+}
+
 export interface GetAllCoursesResponse {
   data: {
     /** @format uuid */
@@ -198,10 +257,12 @@ export interface GetAllCoursesResponse {
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
-    enrolled: boolean;
+    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
+    state?: string;
+    archived?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -221,10 +282,12 @@ export interface GetStudentCoursesResponse {
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
-    enrolled: boolean;
+    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
+    state?: string;
+    archived?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -244,10 +307,12 @@ export interface GetAvailableCoursesResponse {
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
-    enrolled: boolean;
+    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
+    state?: string;
+    archived?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -264,9 +329,11 @@ export interface GetCourseResponse {
     imageUrl: string | null;
     description: string;
     category: string;
+    /** @format uuid */
+    categoryId?: string;
     courseLessonCount: number;
-    completedLessonCount: number;
-    enrolled: boolean;
+    completedLessonCount?: number;
+    enrolled?: boolean;
     state: string | null;
     lessons: {
       /** @format uuid */
@@ -275,10 +342,75 @@ export interface GetCourseResponse {
       imageUrl: string;
       description: string;
       itemsCount: number;
-      itemsCompletedCount: number;
+      itemsCompletedCount?: number;
     }[];
     priceInCents: number;
     currency: string;
+    archived?: boolean;
+  };
+}
+
+export interface GetCourseByIdResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string | null;
+    description: string;
+    category: string;
+    /** @format uuid */
+    categoryId?: string;
+    courseLessonCount: number;
+    completedLessonCount?: number;
+    enrolled?: boolean;
+    state: string | null;
+    lessons: {
+      /** @format uuid */
+      id: string;
+      title: string;
+      imageUrl: string;
+      description: string;
+      itemsCount: number;
+      itemsCompletedCount?: number;
+    }[];
+    priceInCents: number;
+    currency: string;
+    archived?: boolean;
+  };
+}
+
+export interface CreateCourseBody {
+  title: string;
+  description: string;
+  state: "draft" | "published";
+  priceInCents: number;
+  currency?: string;
+  /** @format uuid */
+  categoryId: string;
+  lessons?: string[];
+}
+
+export interface CreateCourseResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface UpdateCourseBody {
+  title?: string;
+  description?: string;
+  state?: "draft" | "published";
+  priceInCents?: number;
+  currency?: string;
+  /** @format uuid */
+  categoryId?: string;
+  lessons?: string[];
+  archived?: boolean;
+}
+
+export interface UpdateCourseResponse {
+  data: {
+    message: string;
   };
 }
 
@@ -289,6 +421,28 @@ export interface CreateFavouritedCourseResponse {
 }
 
 export type DeleteFavouritedCourseForUserResponse = null;
+
+export interface GetAllLessonsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string;
+    description: string;
+    itemsCount: number;
+    itemsCompletedCount?: number;
+  }[];
+}
+
+export interface GetAvailableLessonsResponse {
+  data: {
+    id: string;
+    title: string;
+    description: string;
+    imageUrl: string;
+    itemsCount: number;
+  }[];
+}
 
 export interface GetLessonResponse {
   data: {
@@ -333,6 +487,26 @@ export interface GetLessonResponse {
             url: string;
           };
     }[];
+  };
+}
+
+export interface AddLessonToCourseBody {
+  /** @format uuid */
+  courseId: string;
+  /** @format uuid */
+  lessonId: string;
+  displayOrder?: number;
+}
+
+export interface AddLessonToCourseResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface RemoveLessonFromCourseResponse {
+  data: {
+    message: string;
   };
 }
 
@@ -712,6 +886,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name UsersControllerDeleteBulkUsers
+     * @request DELETE:/api/users
+     */
+    usersControllerDeleteBulkUsers: (data: DeleteBulkUsersBody, params: RequestParams = {}) =>
+      this.request<DeleteBulkUsersResponse, any>({
+        path: `/api/users`,
+        method: "DELETE",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name UsersControllerGetUserById
      * @request GET:/api/users/{id}
      */
@@ -749,6 +939,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<DeleteUserResponse, any>({
         path: `/api/users/${id}`,
         method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name UsersControllerAdminUpdateUser
+     * @request PATCH:/api/users/admin/{id}
+     */
+    usersControllerAdminUpdateUser: (id: string, data: AdminUpdateUserBody, params: RequestParams = {}) =>
+      this.request<AdminUpdateUserResponse, any>({
+        path: `/api/users/admin/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -822,6 +1028,36 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CategoriesControllerGetCategoryById
+     * @request GET:/api/categories/{id}
+     */
+    categoriesControllerGetCategoryById: (id: string, params: RequestParams = {}) =>
+      this.request<GetCategoryByIdResponse, any>({
+        path: `/api/categories/${id}`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CategoriesControllerUpdateCategory
+     * @request PATCH:/api/categories/{id}
+     */
+    categoriesControllerUpdateCategory: (id: string, data: UpdateCategoryBody, params: RequestParams = {}) =>
+      this.request<UpdateCategoryResponse, any>({
+        path: `/api/categories/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name CoursesControllerGetAllCourses
      * @request GET:/api/courses
      */
@@ -855,6 +1091,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/courses`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerCreateCourse
+     * @request POST:/api/courses
+     */
+    coursesControllerCreateCourse: (data: CreateCourseBody, params: RequestParams = {}) =>
+      this.request<CreateCourseResponse, any>({
+        path: `/api/courses`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -963,6 +1215,43 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CoursesControllerGetCourseById
+     * @request GET:/api/courses/course-by-id
+     */
+    coursesControllerGetCourseById: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetCourseByIdResponse, any>({
+        path: `/api/courses/course-by-id`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerUpdateCourse
+     * @request PATCH:/api/courses/{id}
+     */
+    coursesControllerUpdateCourse: (id: string, data: UpdateCourseBody, params: RequestParams = {}) =>
+      this.request<UpdateCourseResponse, any>({
+        path: `/api/courses/${id}`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name CoursesControllerCreateFavouritedCourse
      * @request POST:/api/courses/enroll-course
      */
@@ -1005,6 +1294,34 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name LessonsControllerGetAllLessons
+     * @request GET:/api/courses/lessons
+     */
+    lessonsControllerGetAllLessons: (params: RequestParams = {}) =>
+      this.request<GetAllLessonsResponse, any>({
+        path: `/api/courses/lessons`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerGetAvailableLessons
+     * @request GET:/api/courses/available-lessons
+     */
+    lessonsControllerGetAvailableLessons: (params: RequestParams = {}) =>
+      this.request<GetAvailableLessonsResponse, any>({
+        path: `/api/courses/available-lessons`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LessonsControllerGetLesson
      * @request GET:/api/courses/lesson
      */
@@ -1019,6 +1336,36 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/courses/lesson`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerAddLessonToCourse
+     * @request POST:/api/courses/add
+     */
+    lessonsControllerAddLessonToCourse: (data: AddLessonToCourseBody, params: RequestParams = {}) =>
+      this.request<AddLessonToCourseResponse, any>({
+        path: `/api/courses/add`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerRemoveLessonFromCourse
+     * @request DELETE:/api/courses/{courseId}/{lessonId}
+     */
+    lessonsControllerRemoveLessonFromCourse: (courseId: string, lessonId: string, params: RequestParams = {}) =>
+      this.request<RemoveLessonFromCourseResponse, any>({
+        path: `/api/courses/${courseId}/${lessonId}`,
+        method: "DELETE",
         format: "json",
         ...params,
       }),

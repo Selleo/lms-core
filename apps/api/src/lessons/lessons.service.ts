@@ -1,11 +1,13 @@
 import {
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, isNotNull, sql } from "drizzle-orm";
 import type { DatabasePg } from "src/common";
+import { S3Service } from "src/file/s3.service";
 import {
   courseLessons,
   files,
@@ -18,9 +20,9 @@ import {
   studentQuestionAnswers,
   textBlocks,
 } from "src/storage/schema";
-import type { LessonItemResponse } from "./schemas/lessonItem.schema";
 import { match, P } from "ts-pattern";
-import { S3Service } from "src/file/s3.service";
+import type { LessonItemResponse } from "./schemas/lessonItem.schema";
+import { isEmpty } from "lodash";
 
 @Injectable()
 export class LessonsService {
@@ -28,6 +30,31 @@ export class LessonsService {
     @Inject("DB") private readonly db: DatabasePg,
     private readonly s3Service: S3Service,
   ) {}
+
+  async getAllLessons() {
+    const lessonsData = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
+        state: lessons.state,
+        archived: lessons.archived,
+        itemsCount: sql<number>`CAST(COUNT(DISTINCT ${lessonItems.id}) AS INTEGER)`,
+      })
+      .from(lessons)
+      .leftJoin(lessonItems, eq(lessonItems.lessonId, lessons.id))
+      .groupBy(lessons.id);
+
+    return Promise.all(
+      lessonsData.map(async (lesson) => ({
+        ...lesson,
+        imageUrl: lesson.imageUrl.startsWith("https://")
+          ? lesson.imageUrl
+          : await this.s3Service.getSignedUrl(lesson.imageUrl),
+      })),
+    );
+  }
 
   async getLesson(id: string, userId: string, isAdmin?: boolean) {
     const [accessCourseLessons] = await this.db
@@ -244,6 +271,104 @@ export class LessonsService {
       itemsCount: completableLessonItems.length,
       itemsCompletedCount: completedLessonItems.length,
     };
+  }
+
+  async getAvailableLessons() {
+    const availableLessons = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
+        itemsCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+      })
+      .from(lessons)
+      .where(
+        and(
+          eq(lessons.archived, false),
+          eq(lessons.state, "published"),
+          isNotNull(lessons.id),
+          isNotNull(lessons.title),
+          isNotNull(lessons.description),
+          isNotNull(lessons.imageUrl),
+        ),
+      );
+
+    if (isEmpty(availableLessons))
+      throw new NotFoundException("No lessons found");
+
+    const lessonsWithSignedUrls = await Promise.all(
+      availableLessons.map(async (lesson) => {
+        const imageUrl = lesson.imageUrl.startsWith("https://")
+          ? lesson.imageUrl
+          : await this.s3Service.getSignedUrl(lesson.imageUrl);
+        return { ...lesson, imageUrl };
+      }),
+    );
+
+    return lessonsWithSignedUrls;
+  }
+
+  async addLessonToCourse(
+    courseId: string,
+    lessonId: string,
+    displayOrder?: number,
+  ) {
+    try {
+      if (displayOrder === undefined) {
+        const [maxOrderResult] = await this.db
+          .select({ maxOrder: sql<number>`MAX(${courseLessons.displayOrder})` })
+          .from(courseLessons)
+          .where(eq(courseLessons.courseId, courseId));
+
+        displayOrder = (maxOrderResult?.maxOrder ?? 0) + 1;
+      }
+
+      await this.db.insert(courseLessons).values({
+        courseId,
+        lessonId,
+        displayOrder,
+      });
+    } catch (error) {
+      if (error.code === "23505") {
+        // postgres uniq error code
+        throw new ConflictException(
+          "This lesson is already added to the course",
+        );
+      }
+      throw error;
+    }
+  }
+
+  async removeLessonFromCourse(courseId: string, lessonId: string) {
+    const result = await this.db
+      .delete(courseLessons)
+      .where(
+        and(
+          eq(courseLessons.courseId, courseId),
+          eq(courseLessons.lessonId, lessonId),
+        ),
+      )
+      .returning();
+
+    if (result.length === 0) {
+      throw new NotFoundException("Lesson not found in this course");
+    }
+
+    await this.db.execute(sql`
+      UPDATE ${courseLessons}
+      SET display_order = display_order - 1
+      WHERE course_id = ${courseId}
+        AND display_order > (
+          SELECT display_order
+          FROM ${courseLessons}
+          WHERE course_id = ${courseId}
+            AND lesson_id = ${lessonId}
+        )
+    `);
   }
 
   private isValidItem(item: any): boolean {

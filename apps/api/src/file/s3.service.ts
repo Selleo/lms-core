@@ -1,6 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
+import {
+  S3Client,
+  GetObjectCommand,
+  PutObjectCommand,
+} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 @Injectable()
@@ -29,5 +33,20 @@ export class S3Service {
     });
 
     return getSignedUrl(this.s3Client, command, { expiresIn });
+  }
+
+  async uploadFile(
+    fileBuffer: Buffer,
+    key: string,
+    contentType: string,
+  ): Promise<void> {
+    const command = new PutObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+      Body: fileBuffer,
+      ContentType: contentType,
+    });
+
+    await this.s3Client.send(command);
   }
 }

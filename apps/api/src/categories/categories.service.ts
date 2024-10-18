@@ -1,5 +1,5 @@
 import { and, count, eq, like } from "drizzle-orm";
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import type { AllCategoriesResponse } from "./schemas/category.schema";
@@ -12,6 +12,7 @@ import {
 import type { DatabasePg, Pagination } from "src/common";
 import { type UserRole, UserRoles } from "src/users/schemas/user-roles";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
+import { UpdateCategoryBody } from "./schemas/updateCategorySchema";
 
 @Injectable()
 export class CategoriesService {
@@ -67,6 +68,37 @@ export class CategoriesService {
         pagination: { totalItems: totalItems, page, perPage },
       };
     });
+  }
+
+  public async getCategoryById(id: string) {
+    const [category] = await this.db
+      .select()
+      .from(categories)
+      .where(eq(categories.id, id));
+
+    return category;
+  }
+
+  public async updateCategory(
+    id: string,
+    updateCategoryBody: UpdateCategoryBody,
+  ) {
+    const [existingCategory] = await this.db
+      .select()
+      .from(categories)
+      .where(eq(categories.id, id));
+
+    if (!existingCategory) {
+      throw new NotFoundException("Category not found");
+    }
+
+    const [updatedCategory] = await this.db
+      .update(categories)
+      .set(updateCategoryBody)
+      .where(eq(categories.id, id))
+      .returning();
+
+    return updatedCategory;
   }
 
   private createLikeFilter(filter: string) {
