@@ -1,0 +1,143 @@
+import { Fragment, useEffect, useState } from "react";
+import { Card } from "~/components/ui/card";
+import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import { UseFormRegister } from "react-hook-form";
+
+type ReplaceTemplatesProps = {
+  content: string;
+  replacement: (index: number) => JSX.Element;
+};
+
+const FillInTheTextBlanks: React.FC<ReplaceTemplatesProps> = ({
+  content,
+  replacement,
+}) => {
+  const parts = content.split(/\[word]/g);
+
+  return (
+    <div className="flex flex-wrap text-neutral-900 body-base items-center">
+      {parts.map((part, index) => (
+        <Fragment key={index}>
+          {part}
+          {index < parts.length - 1 && replacement(index)}
+        </Fragment>
+      ))}
+    </div>
+  );
+};
+
+type FillTheBlanksProps = {
+  content: string;
+  sendAnswer: (selectedOption: string[]) => Promise<void>;
+  answers: {
+    id: string;
+    optionText: string;
+    position: number | null;
+  }[];
+  register: UseFormRegister<TQuestionsForm>;
+  questionId: string;
+};
+
+const MAX_ANSWERS_AMOUNT = 2;
+
+type Word = {
+  index: number;
+  value: string;
+};
+
+type Blank = {
+  index: number;
+  studentAnswer?: string;
+  handleOnBlur: (value: string, index: number) => void;
+};
+
+const Blank = ({ index, studentAnswer, handleOnBlur }: Blank) => {
+  return (
+    <input
+      key={index}
+      defaultValue={studentAnswer}
+      onBlur={(e) => {
+        const value = e.target.value;
+        handleOnBlur(value, index);
+      }}
+      type="text"
+      className="bg-transparent border-dashed border-b mx-1.5 w-20 border-b-black focus:ring-0 focus:outline-none"
+    />
+  );
+};
+
+export const FillTheBlanks = ({
+  content,
+  sendAnswer,
+  answers,
+  register,
+  questionId,
+}: FillTheBlanksProps) => {
+  const [words, setWords] = useState<Word[]>([]);
+  console.log({ answers });
+  useEffect(() => {
+    if (words.length >= 1 && words.length <= MAX_ANSWERS_AMOUNT) {
+      const sortedWords = words.sort((a, b) => a.index - b.index);
+      if (sortedWords.length > 0 && sortedWords.length <= MAX_ANSWERS_AMOUNT) {
+        //@ts-ignore
+        sendAnswer(sortedWords);
+      }
+    }
+  }, [words]);
+
+  console.log({ words });
+
+  const handleWordUpdate = (
+    prevWords: Word[],
+    index: number,
+    value: string,
+  ) => {
+    const trimmedValue = value.trim();
+    const existingWordIndex = prevWords.findIndex(
+      (word) => word.index === index,
+    );
+    console.log(existingWordIndex);
+    if (trimmedValue === "") {
+      if (!prevWords?.length) return [{ index, value }];
+
+      return existingWordIndex !== -1
+        ? prevWords.filter((word) => word.index !== index)
+        : prevWords;
+    }
+
+    if (existingWordIndex !== -1) {
+      const updatedWords = [...prevWords];
+      updatedWords[existingWordIndex] = { index, value: trimmedValue };
+      return updatedWords;
+    }
+
+    if (prevWords.length < MAX_ANSWERS_AMOUNT) {
+      return [...prevWords, { index, value: trimmedValue }];
+    }
+
+    return prevWords;
+  };
+
+  const handleOnBlur = (value: string, index: number) => {
+    setWords((prev) => handleWordUpdate(prev, index + 1, value));
+  };
+
+  return (
+    <Card className="flex flex-col gap-4 p-8 border-none drop-shadow-primary">
+      <div className="details text-primary-700 uppercase">{`question 0`}</div>
+      <div className="h6 text-neutral-950">Decerno audeo tam altus aequus.</div>
+      <FillInTheTextBlanks
+        content={content}
+        replacement={(index) => {
+          return (
+            <Blank
+              studentAnswer={answers[index]?.optionText}
+              index={index}
+              handleOnBlur={handleOnBlur}
+            />
+          );
+        }}
+      />
+    </Card>
+  );
+};
