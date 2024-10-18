@@ -46,6 +46,8 @@ export class QuestionsService {
         [QuestionType.single_choice.key]: this.handleChoiceAnswer.bind(this),
         [QuestionType.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
         [QuestionType.open_answer.key]: this.handleOpenAnswer.bind(this),
+        [QuestionType.fill_in_the_blanks.key]:
+          this.handleFillInTheBlanksAnswer.bind(this),
       } as const;
 
       const handler =
@@ -153,7 +155,16 @@ export class QuestionsService {
       .where(
         and(
           eq(questionAnswerOptions.questionId, questionData.questionId),
-          inArray(questionAnswerOptions.id, answerQuestion.answer),
+          inArray(
+            questionAnswerOptions.id,
+            answerQuestion.answer.map((a) => {
+              if (typeof a !== "string") {
+                return a.value;
+              }
+
+              return a;
+            }),
+          ),
         ),
       );
 
@@ -162,6 +173,33 @@ export class QuestionsService {
 
     const studentAnswer = answers.reduce((acc, answer, index) => {
       acc.push(`'answer_${index + 1}'`, `'${answer.answer}'`);
+      return acc;
+    }, [] as string[]);
+
+    await this.upsertAnswer(
+      trx,
+      questionData.questionId,
+      studentAnswer,
+      userId,
+      lastAnswerId,
+    );
+  }
+
+  private async handleFillInTheBlanksAnswer(
+    trx: any,
+    questionData: QuestionSchema,
+    answerQuestion: AnswerQuestionSchema,
+    lastAnswerId: string | null,
+    userId: string,
+  ): Promise<void> {
+    if (!Array.isArray(answerQuestion.answer)) {
+      throw new BadRequestException("Wrong answer format");
+    }
+
+    const studentAnswer = answerQuestion.answer.reduce((acc, answer) => {
+      if (typeof answer === "string") return acc;
+
+      acc.push(`'answer_${answer.index}'`, `'${answer.value}'`);
       return acc;
     }, [] as string[]);
 
@@ -229,4 +267,6 @@ export class QuestionsService {
       studentId: userId,
     });
   }
+
+  private async createFillInTheBlanksAnswers() {}
 }

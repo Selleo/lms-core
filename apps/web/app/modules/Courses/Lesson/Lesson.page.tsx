@@ -13,6 +13,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
 import { coursesQueryOptions } from "~/api/queries/useCourses";
 import { useCourseSuspense } from "~/api/queries/useCourse";
+import { Fragment } from "react";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Lesson" }];
@@ -29,6 +30,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 export default function LessonPage() {
   const { lessonId, courseId } = useParams();
   const { data } = useLessonSuspense(lessonId ?? "");
+  console.log({ data });
   const {
     data: { lessons },
   } = useCourseSuspense(courseId ?? "");
@@ -54,6 +56,29 @@ export default function LessonPage() {
     currentLessonIndex < lessonsIds.length - 1
       ? lessonsIds[currentLessonIndex + 1]
       : null;
+
+  type ReplaceTemplatesProps = {
+    text: string;
+    replacement: JSX.Element;
+  };
+
+  const ReplaceTemplates: React.FC<ReplaceTemplatesProps> = ({
+    text,
+    replacement,
+  }) => {
+    const parts = text.split(/\[fill]/g);
+
+    return (
+      <div className="flex flex-wrap text-neutral-900 body-base">
+        {parts.map((part, index) => (
+          <Fragment key={index}>
+            {part}
+            {index < parts.length - 1 && replacement}
+          </Fragment>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <>
