@@ -20,12 +20,21 @@ type TProps = {
       id: string;
       optionText: string;
       position: number | null;
+      isCorrect: boolean | null;
+      isStudentAnswer: boolean;
     }[];
   };
   getValues: UseFormGetValues<TQuestionsForm>;
   questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
   isAdmin: boolean;
+};
+
+const classesMap = {
+  default: "border-primary-200",
+  correctAnswerSelected: "border-green-500 bg-green-500/10",
+  correctAnswerUnselected: "border-yellow-500 bg-yellow-500/10",
+  incorrectAnswerSelected: "border-red-500 bg-red-500/10",
 };
 
 export default function Questions({
@@ -105,48 +114,74 @@ export default function Questions({
             })}
           />
         ) : (
-          content.questionAnswers.map((answer) => (
-            <button
-              {...(!isAdmin && { onClick: () => handleClick(answer.id) })}
-              key={answer.id}
-              className={cn(
-                "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
-                { "cursor-not-allowed": isAdmin },
-              )}
-            >
-              {isSingleQuestion ? (
-                <Input
-                  className="w-4 h-4"
-                  checked={selectedOption.includes(answer.id)}
-                  id={answer.id}
-                  readOnly
-                  type="radio"
-                  value={answer.id}
-                  {...register(
-                    `singleAnswerQuestions.${questionId}.${answer.id}`,
-                  )}
-                />
-              ) : (
-                <Input
-                  className="w-4 h-4"
-                  checked={selectedOption.includes(answer.id)}
-                  id={answer.id}
-                  type="checkbox"
-                  value={answer.id}
-                  {...register(
-                    `multiAnswerQuestions.${questionId}.${answer.id}`,
-                  )}
-                />
-              )}
-              <Label
-                className="body-base text-neutral-950"
-                htmlFor={answer.id}
-                onClick={(e) => e.stopPropagation()}
+          content.questionAnswers.map((answer) => {
+            const isFieldDisabled =
+              isAdmin || typeof answer?.isCorrect === "boolean";
+
+            const getAnswerClasses = () => {
+              if (answer.isCorrect === null) return classesMap.default;
+
+              if (answer.isCorrect && answer.isStudentAnswer) {
+                return classesMap.correctAnswerSelected;
+              }
+              if (answer.isCorrect && !answer.isStudentAnswer) {
+                return classesMap.correctAnswerUnselected;
+              }
+              if (!answer.isCorrect && answer.isStudentAnswer) {
+                return classesMap.incorrectAnswerSelected;
+              }
+
+              return classesMap.default;
+            };
+
+            const classes = getAnswerClasses();
+
+            return (
+              <button
+                {...(!isFieldDisabled && {
+                  onClick: () => handleClick(answer.id),
+                })}
+                key={answer.id}
+                className={cn(
+                  "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
+                  { "cursor-not-allowed": isFieldDisabled },
+                  classes,
+                )}
               >
-                {answer.optionText}
-              </Label>
-            </button>
-          ))
+                {isSingleQuestion ? (
+                  <Input
+                    className="w-4 h-4"
+                    checked={selectedOption.includes(answer.id)}
+                    id={answer.id}
+                    readOnly
+                    type="radio"
+                    value={answer.id}
+                    {...register(
+                      `singleAnswerQuestions.${questionId}.${answer.id}`,
+                    )}
+                  />
+                ) : (
+                  <Input
+                    className="w-4 h-4"
+                    checked={selectedOption.includes(answer.id)}
+                    id={answer.id}
+                    type="checkbox"
+                    value={answer.id}
+                    {...register(
+                      `multiAnswerQuestions.${questionId}.${answer.id}`,
+                    )}
+                  />
+                )}
+                <Label
+                  className="body-base text-neutral-950"
+                  htmlFor={answer.id}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {answer.optionText}
+                </Label>
+              </button>
+            );
+          })
         )}
       </div>
     </Card>
