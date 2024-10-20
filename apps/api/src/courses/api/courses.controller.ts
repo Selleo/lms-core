@@ -7,8 +7,8 @@ import {
   Patch,
   Post,
   Query,
-  UnauthorizedException,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
@@ -41,8 +41,11 @@ import {
   UpdateCourseBody,
   updateCourseSchema,
 } from "../schemas/updateCourse.schema";
+import { RolesGuard } from "src/common/guards/roles.guard";
+import { Roles } from "src/common/decorators/roles.decorator";
 
 @Controller("courses")
+@UseGuards(RolesGuard)
 export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
@@ -156,6 +159,7 @@ export class CoursesController {
   }
 
   @Get("course-by-id")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       { type: "query", name: "id", schema: UUIDSchema, required: true },
@@ -164,14 +168,7 @@ export class CoursesController {
   })
   async getCourseById(
     @Query("id") id: string,
-    @CurrentUser() currentUser: { role: string },
   ): Promise<BaseResponse<CommonShowCourse>> {
-    if (currentUser.role !== "admin") {
-      throw new UnauthorizedException(
-        "You don't have permission to view this course",
-      );
-    }
-
     return new BaseResponse(await this.coursesService.getCourseById(id));
   }
 
@@ -196,6 +193,7 @@ export class CoursesController {
 
   @Patch(":id")
   @UseInterceptors(FileInterceptor("image"))
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       { type: "param", name: "id", schema: UUIDSchema },
@@ -207,14 +205,7 @@ export class CoursesController {
     @Param("id") id: string,
     @Body() updateCourseBody: UpdateCourseBody,
     @UploadedFile() image: Express.Multer.File,
-    @CurrentUser() currentUser: { userId: string; role: string },
   ): Promise<BaseResponse<{ message: string }>> {
-    if (currentUser.role !== "admin") {
-      throw new UnauthorizedException(
-        "You don't have permission to update this course",
-      );
-    }
-
     await this.coursesService.updateCourse(id, updateCourseBody, image);
 
     return new BaseResponse({ message: "Course updated successfully" });
