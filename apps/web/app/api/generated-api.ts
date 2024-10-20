@@ -515,7 +515,13 @@ export interface AnswerQuestionBody {
   lessonId: string;
   /** @format uuid */
   questionId: string;
-  answer: string[] | string;
+  answer:
+    | string[]
+    | string
+    | {
+        index: number;
+        value: string;
+      }[];
 }
 
 export interface AnswerQuestionResponse {

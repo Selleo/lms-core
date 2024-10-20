@@ -147,6 +147,8 @@ export class LessonsService {
           .returnType<Promise<LessonItemResponse["content"]>>()
           .with(
             { lessonItemType: "question", questionData: P.not(P.nullish) },
+            //todo: remove redundant ts-ignores
+            //@ts-ignore
             async (item) => {
               const questionAnswers = await this.db
                 .select({
@@ -187,7 +189,10 @@ export class LessonsService {
                   studentQuestionAnswers.id,
                   studentQuestionAnswers.answer,
                 );
-              if (item.questionData.questionType !== "open_answer") {
+              if (
+                item.questionData.questionType !== "open_answer" &&
+                item.questionData.questionType !== "fill_in_the_blanks"
+              ) {
                 return {
                   id: item.questionData.id,
                   questionType: item.questionData.questionType,
@@ -195,12 +200,33 @@ export class LessonsService {
                   questionAnswers,
                 };
               }
-              const studentAnswer = await this.db
+
+              if (item.questionData.questionType === "open_answer") {
+                const studentAnswer = await this.db
+                  .select({
+                    id: studentQuestionAnswers.id,
+                    optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
+                    isStudentAnswer: sql<boolean>`true`,
+                    position: sql<number>`1`,
+                  })
+                  .from(studentQuestionAnswers)
+                  .where(
+                    eq(studentQuestionAnswers.questionId, item.questionData.id),
+                  )
+                  .limit(1);
+
+                return {
+                  id: item.questionData.id,
+                  questionType: item.questionData.questionType,
+                  questionBody: item.questionData.questionBody,
+                  questionAnswers: studentAnswer,
+                };
+              }
+
+              const [studentAnswers] = await this.db
                 .select({
                   id: studentQuestionAnswers.id,
-                  optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
-                  isStudentAnswer: sql<boolean>`true`,
-                  position: sql<number>`1`,
+                  answer: studentQuestionAnswers.answer,
                 })
                 .from(studentQuestionAnswers)
                 .where(
@@ -208,11 +234,28 @@ export class LessonsService {
                 )
                 .limit(1);
 
+              //@ts-ignore
+              const result = !!studentAnswers?.answer
+                ? Object.keys(studentAnswers.answer).map((key) => {
+                    const position = parseInt(key.split("_")[1]);
+                    return {
+                      id: studentAnswers.id,
+                      optionText:
+                        //@ts-ignore
+                        studentAnswers.answer[
+                          key as keyof typeof studentAnswers.answer
+                        ],
+                      position: position,
+                      isStudentAnswer: true,
+                    };
+                  })
+                : [];
+              console.log({ result });
               return {
                 id: item.questionData.id,
                 questionType: item.questionData.questionType,
                 questionBody: item.questionData.questionBody,
-                questionAnswers: studentAnswer,
+                questionAnswers: result,
               };
             },
           )

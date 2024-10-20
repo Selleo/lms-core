@@ -24,7 +24,6 @@ export default function LessonItemsSwitch({
   register,
 }: TProps) {
   const { isAdmin } = useUserRole();
-
   if ("body" in lessonItem.content)
     return <TextBlock content={lessonItem.content} />;
 
