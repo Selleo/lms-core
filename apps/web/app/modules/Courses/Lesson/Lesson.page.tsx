@@ -13,6 +13,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
 import { allCoursesQueryOptions } from "~/api/queries/useCourses";
 import { useCourseSuspense } from "~/api/queries/useCourse";
+import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Lesson" }];
@@ -28,10 +29,12 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 
 export default function LessonPage() {
   const { lessonId, courseId } = useParams();
-  const { data } = useLessonSuspense(lessonId ?? "");
+  const { data, refetch } = useLessonSuspense(lessonId ?? "");
   const {
     data: { lessons },
   } = useCourseSuspense(courseId ?? "");
+
+  const submitQuiz = useSubmitQuiz({ handleOnSuccess: refetch });
 
   const lessonsIds = lessons.map((lesson) => lesson.id);
   const currentLessonIndex = lessonsIds.indexOf(lessonId ?? "");
@@ -67,6 +70,11 @@ export default function LessonPage() {
         />
       ))}
       <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
+        {!!data?.type && data.type === "quiz" && (
+          <Button onClick={() => submitQuiz.mutate({ lessonId })}>
+            Check answers
+          </Button>
+        )}
         <Link
           to={
             previousLessonId
