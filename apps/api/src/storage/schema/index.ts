@@ -94,6 +94,7 @@ export const lessons = pgTable("lessons", {
     .notNull(),
   state: text("state").notNull().default("draft"),
   archived,
+  type: text("type").notNull().default("multimedia"),
 });
 
 export const conversations = pgTable("conversations", {
@@ -317,5 +318,23 @@ export const studentCompletedLessonItems = pgTable(
   },
   (table) => ({
     unq: unique().on(table.studentId, table.lessonItemId, table.lessonId),
+  }),
+);
+
+export const studentLessonsProgress = pgTable(
+  "student_lessons_progress",
+  {
+    ...id,
+    ...timestamps,
+    studentId: uuid("student_id")
+      .references(() => users.id)
+      .notNull(),
+    lessonId: uuid("lesson_id")
+      .references(() => lessons.id)
+      .notNull(),
+    quizCompleted: boolean("quiz_completed"),
+  },
+  (table) => ({
+    unq: unique().on(table.studentId, table.lessonId),
   }),
 );

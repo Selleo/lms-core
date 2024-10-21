@@ -8,6 +8,20 @@
       "when": 1728990175810,
       "tag": "0000_a_new_hope",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1729173226533,
+      "tag": "0001_add_type_to_lesson",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1729173914932,
+      "tag": "0002_create_student_lessons_progress",
+      "breakpoints": true
     }
   ]
 }

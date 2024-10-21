@@ -1,9 +1,16 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { StripeWebhookHandler as StripeWebhookHandlerDecorator } from "@golevelup/nestjs-stripe";
 import Stripe from "stripe";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
-import { courses, studentCourses, users } from "src/storage/schema";
+import {
+  courseLessons,
+  courses,
+  lessons,
+  studentCourses,
+  studentLessonsProgress,
+  users,
+} from "src/storage/schema";
 
 @Injectable()
 export class StripeWebhookHandler {
@@ -12,13 +19,6 @@ export class StripeWebhookHandler {
   @StripeWebhookHandlerDecorator("payment_intent.succeeded")
   async handlePaymentIntentSucceeded(event: Stripe.Event) {
     const paymentIntent = event.data.object as Stripe.PaymentIntent;
-    console.log("PaymentIntent was successful!");
-    console.log("PaymentIntent ID:", paymentIntent.id);
-    console.log("Amount:", paymentIntent.amount);
-    console.log("Currency:", paymentIntent.currency);
-    console.log("Customer ID:", paymentIntent.customer);
-    console.log("Metadata:", paymentIntent.metadata);
-
     const userId = paymentIntent.metadata.customerId;
     const courseId = paymentIntent.metadata.courseId;
 
@@ -48,6 +48,31 @@ export class StripeWebhookHandler {
       .returning();
 
     if (!payment) return null;
+
+    await this.db.transaction(async (trx) => {
+      const quizLessons = await trx
+        .select({ id: lessons.id })
+        .from(courseLessons)
+        .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+        .where(
+          and(
+            eq(courseLessons.courseId, course.id),
+            eq(lessons.archived, false),
+            eq(lessons.state, "published"),
+            eq(lessons.type, "quiz"),
+          ),
+        );
+
+      if (quizLessons.length > 0) {
+        await trx.insert(studentLessonsProgress).values(
+          quizLessons.map((lesson) => ({
+            studentId: userId,
+            lessonId: lesson.id,
+            quizCompleted: false,
+          })),
+        );
+      }
+    });
 
     return true;
   }

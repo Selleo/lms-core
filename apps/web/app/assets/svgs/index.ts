@@ -9,3 +9,6 @@ export { default as Settings } from "./settings.svg?react";
 export { default as ArrowRight } from "./arrow-right.svg?react";
 export { default as HamburgerMenu } from "./hamburger-menu.svg?react";
 export { default as HamburgerMenuClose } from "./hamburger-menu-close.svg?react";
+export { default as InputRoundedMarker } from "./input-rounded-marker.svg?react";
+export { default as InputRoundedMarkerSuccess } from "./input-rounded-marker-success.svg?react";
+export { default as InputRoundedMarkerError } from "./input-rounded-marker-error.svg?react";
