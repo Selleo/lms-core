@@ -211,26 +211,12 @@ export class CoursesController {
     return new BaseResponse({ message: "Course updated successfully" });
   }
 
-  @Post("enroll-course")
-  @Validate({
-    request: [{ type: "query", name: "id", schema: UUIDSchema }],
-    response: baseResponse(Type.Object({ message: Type.String() })),
-  })
-  async createFavouritedCourse(
-    @Query("id") id: string,
-    @CurrentUser() currentUser: { userId: string },
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.coursesService.enrollCourse(id, currentUser.userId);
-
-    return new BaseResponse({ message: "Course enrolled successfully" });
-  }
-
   @Delete("unenroll-course")
   @Validate({
     response: nullResponse(),
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
   })
-  async deleteFavouritedCourseForUser(
+  async unenrollCourse(
     @Query("id") id: string,
     @CurrentUser() currentUser: { userId: string },
   ): Promise<null> {

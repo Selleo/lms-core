@@ -1207,36 +1207,9 @@
         }
       }
     },
-    "/api/courses/enroll-course": {
-      "post": {
-        "operationId": "CoursesController_createFavouritedCourse",
-        "parameters": [
-          {
-            "name": "id",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateFavouritedCourseResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/courses/unenroll-course": {
       "delete": {
-        "operationId": "CoursesController_deleteFavouritedCourseForUser",
+        "operationId": "CoursesController_unenrollCourse",
         "parameters": [
           {
             "name": "id",
@@ -1253,7 +1226,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteFavouritedCourseForUserResponse"
+                  "$ref": "#/components/schemas/UnenrollCourseResponse"
                 }
               }
             }
@@ -2971,26 +2944,7 @@
           "data"
         ]
       },
-      "CreateFavouritedCourseResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "message"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
-      "DeleteFavouritedCourseForUserResponse": {
+      "UnenrollCourseResponse": {
         "type": "null"
       },
       "GetAllLessonsResponse": {

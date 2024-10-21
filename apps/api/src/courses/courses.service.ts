@@ -28,6 +28,7 @@ import {
   lessons,
   studentCompletedLessonItems,
   studentCourses,
+  studentLessonsProgress,
   users,
 } from "../storage/schema";
 import type { CoursesQuery } from "./api/courses.types";
@@ -312,6 +313,8 @@ export class CoursesService {
       .select({
         id: lessons.id,
         title: lessons.title,
+        type: lessons.type,
+        isSubmitted: sql<boolean>`(SELECT TRUE FROM ${studentLessonsProgress} WHERE ${studentLessonsProgress.lessonId} = ${lessons.id} AND ${studentLessonsProgress.studentId} = ${userId} AND ${studentLessonsProgress.quizCompleted})::BOOLEAN`,
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
         itemsCount: sql<number>`
@@ -559,37 +562,6 @@ export class CoursesService {
       }
 
       return updatedCourse;
-    });
-  }
-
-  async enrollCourse(id: string, userId: string) {
-    const [course] = await this.db
-      .select({
-        id: courses.id,
-        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
-      })
-      .from(courses)
-      .leftJoin(
-        studentCourses,
-        and(
-          eq(courses.id, studentCourses.courseId),
-          eq(studentCourses.studentId, userId),
-        ),
-      )
-      .where(and(eq(courses.id, id), eq(courses.archived, false)));
-
-    if (!course) throw new NotFoundException("Course not found");
-
-    if (course.enrolled)
-      throw new ConflictException("Course is already enrolled");
-
-    await this.db.transaction(async (trx) => {
-      const [enrolledCourse] = await trx
-        .insert(studentCourses)
-        .values({ studentId: userId, courseId: id })
-        .returning();
-
-      if (!enrolledCourse) throw new ConflictException("Course not enrolled");
     });
   }
 

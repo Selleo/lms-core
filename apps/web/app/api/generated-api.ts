@@ -414,13 +414,7 @@ export interface UpdateCourseResponse {
   };
 }
 
-export interface CreateFavouritedCourseResponse {
-  data: {
-    message: string;
-  };
-}
-
-export type DeleteFavouritedCourseForUserResponse = null;
+export type UnenrollCourseResponse = null;
 
 export interface GetAllLessonsResponse {
   data: {
@@ -483,6 +477,12 @@ export interface RemoveLessonFromCourseResponse {
 }
 
 export interface EvaluationQuizResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface ClearQuizProgressResponse {
   data: {
     message: string;
   };
@@ -1230,38 +1230,17 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerCreateFavouritedCourse
-     * @request POST:/api/courses/enroll-course
-     */
-    coursesControllerCreateFavouritedCourse: (
-      query?: {
-        /** @format uuid */
-        id?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<CreateFavouritedCourseResponse, any>({
-        path: `/api/courses/enroll-course`,
-        method: "POST",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name CoursesControllerDeleteFavouritedCourseForUser
+     * @name CoursesControllerUnenrollCourse
      * @request DELETE:/api/courses/unenroll-course
      */
-    coursesControllerDeleteFavouritedCourseForUser: (
+    coursesControllerUnenrollCourse: (
       query?: {
         /** @format uuid */
         id?: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<DeleteFavouritedCourseForUserResponse, any>({
+      this.request<UnenrollCourseResponse, any>({
         path: `/api/courses/unenroll-course`,
         method: "DELETE",
         query: query,
@@ -1364,6 +1343,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<EvaluationQuizResponse, any>({
         path: `/api/lessons/evaluation-quiz`,
         method: "POST",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerClearQuizProgress
+     * @request DELETE:/api/lessons/clear-quiz-progress
+     */
+    lessonsControllerClearQuizProgress: (
+      query?: {
+        /** @format uuid */
+        lessonId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ClearQuizProgressResponse, any>({
+        path: `/api/lessons/clear-quiz-progress`,
+        method: "DELETE",
         query: query,
         format: "json",
         ...params,

@@ -33,6 +33,7 @@ export class QuestionsService {
       );
 
       if (!questionData || !questionData.questionId) {
+        console.log("o nie");
         throw new NotFoundException("Question not found");
       }
 
