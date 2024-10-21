@@ -593,6 +593,29 @@ export class CoursesService {
         .returning();
 
       if (!enrolledCourse) throw new ConflictException("Course not enrolled");
+
+      const quizLessons = await trx
+        .select({ id: lessons.id })
+        .from(courseLessons)
+        .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+        .where(
+          and(
+            eq(courseLessons.courseId, course.id),
+            eq(lessons.archived, false),
+            eq(lessons.state, "published"),
+            eq(lessons.type, "quiz"),
+          ),
+        );
+
+      if (quizLessons.length > 0) {
+        await trx.insert(studentLessonsProgress).values(
+          quizLessons.map((lesson) => ({
+            studentId: userId,
+            lessonId: lesson.id,
+            quizCompleted: false,
+          })),
+        );
+      }
     });
   }
 
