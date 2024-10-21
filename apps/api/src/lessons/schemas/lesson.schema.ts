@@ -1,4 +1,4 @@
-import { Type, Static } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
 import { UUIDSchema } from "src/common";
 import { lessonItemSchema } from "./lessonItem.schema";
 

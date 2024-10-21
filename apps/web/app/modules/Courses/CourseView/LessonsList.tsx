@@ -31,34 +31,15 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
   );
 
   const lessonCards = useMemo(() => {
-    return filteredLessons.map(
-      (
-        {
-          description,
-          imageUrl,
-          title,
-          type,
-          id,
-          itemsCount,
-          itemsCompletedCount,
-        },
-        index,
-      ) => (
-        <LessonCard
-          key={id}
-          index={index}
-          isEnrolled={isEnrolled}
-          itemsCompletedCount={itemsCompletedCount}
-          itemsCount={itemsCount}
-          title={title}
-          type={type}
-          description={description}
-          isAdmin={isAdmin}
-          lessonId={id}
-          imageUrl={imageUrl}
-        />
-      ),
-    );
+    return filteredLessons.map((item, index) => (
+      <LessonCard
+        {...item}
+        key={item.id}
+        index={index}
+        isEnrolled={!!isEnrolled}
+        isAdmin={isAdmin}
+      />
+    ));
   }, [filteredLessons, isAdmin, isEnrolled]);
 
   return (

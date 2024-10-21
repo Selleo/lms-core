@@ -3,21 +3,19 @@ import { Card, CardContent } from "~/components/ui/card";
 import { Link } from "@remix-run/react";
 import CourseProgress from "~/components/CourseProgress";
 import { CaretRight } from "~/assets/svgs";
+import type { GetCourseResponse } from "~/api/generated-api";
 
-type LessonCardProps = {
+type Lesson = GetCourseResponse["data"]["lessons"][number];
+
+type LessonCardProps = Lesson & {
   index: number;
   isEnrolled: boolean;
-  imageUrl?: string;
-  itemsCompletedCount: number;
-  itemsCount: number;
-  title: string;
-  type: "quiz" | "multimedia";
-  description: string;
   isAdmin: boolean;
-  lessonId: string;
+  type: string;
 };
 
 export const LessonCard = ({
+  id: lessonId,
   index,
   isEnrolled,
   imageUrl,
@@ -27,7 +25,6 @@ export const LessonCard = ({
   type,
   description,
   isAdmin,
-  lessonId,
 }: LessonCardProps) => {
   return (
     <Card
@@ -63,7 +60,7 @@ export const LessonCard = ({
                   label={
                     type === "quiz" ? "Quiz progress:" : "Lesson progress:"
                   }
-                  completedLessonCount={itemsCompletedCount}
+                  completedLessonCount={itemsCompletedCount ?? 0}
                   courseLessonCount={itemsCount}
                 />
               </div>

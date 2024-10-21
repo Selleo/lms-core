@@ -12,10 +12,9 @@ export function useUnenrollCourse() {
 
   return useMutation({
     mutationFn: async (options: UnenrollCourseOptions) => {
-      const response =
-        await ApiClient.api.coursesControllerDeleteFavouritedCourseForUser({
-          id: options.id,
-        });
+      const response = await ApiClient.api.coursesControllerUnenrollCourse({
+        id: options.id,
+      });
 
       return response.data;
     },

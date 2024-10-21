@@ -28,6 +28,7 @@ import {
   lessons,
   studentCompletedLessonItems,
   studentCourses,
+  studentLessonsProgress,
   users,
 } from "../storage/schema";
 import type { CoursesQuery } from "./api/courses.types";
@@ -312,6 +313,8 @@ export class CoursesService {
       .select({
         id: lessons.id,
         title: lessons.title,
+        type: lessons.type,
+        isSubmitted: sql<boolean>`(SELECT TRUE FROM ${studentLessonsProgress} WHERE ${studentLessonsProgress.lessonId} = ${lessons.id} AND ${studentLessonsProgress.studentId} = ${userId} AND ${studentLessonsProgress.quizCompleted})::BOOLEAN`,
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
         itemsCount: sql<number>`

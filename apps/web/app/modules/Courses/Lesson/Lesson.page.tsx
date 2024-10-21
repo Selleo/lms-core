@@ -14,6 +14,7 @@ import { queryClient } from "~/api/queryClient";
 import { allCoursesQueryOptions } from "~/api/queries/useCourses";
 import { useCourseSuspense } from "~/api/queries/useCourse";
 import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
+import { useClearQuizProgress } from "~/api/mutations/useClearQuizProgress";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Lesson" }];
@@ -29,12 +30,23 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 
 export default function LessonPage() {
   const { lessonId, courseId } = useParams();
-  const { data, refetch } = useLessonSuspense(lessonId ?? "");
+  const { data, refetch } = useLessonSuspense(lessonId);
   const {
     data: { lessons },
   } = useCourseSuspense(courseId ?? "");
 
+  const { getValues, register, reset } = useForm<TQuestionsForm>({
+    mode: "onChange",
+    defaultValues: getUserAnswers(data),
+  });
+
   const submitQuiz = useSubmitQuiz({ handleOnSuccess: refetch });
+  const clearQuizProgress = useClearQuizProgress({
+    handleOnSuccess: async () => {
+      reset();
+      await refetch();
+    },
+  });
 
   const lessonsIds = lessons.map((lesson) => lesson.id);
   const currentLessonIndex = lessonsIds.indexOf(lessonId ?? "");
@@ -42,11 +54,6 @@ export default function LessonPage() {
   if (!data || !lessonId) {
     throw new Error(`Lesson with id: ${lessonId} not found`);
   }
-
-  const { getValues, register } = useForm<TQuestionsForm>({
-    mode: "onChange",
-    defaultValues: getUserAnswers(data),
-  });
 
   const orderedLessonsItems = getOrderedLessons(data);
   const questionsArray = getQuestionsArray(orderedLessonsItems);
@@ -58,23 +65,36 @@ export default function LessonPage() {
       ? lessonsIds[currentLessonIndex + 1]
       : null;
 
+  const isQuiz = data?.type === "quiz";
+
   return (
     <>
-      {orderedLessonsItems.map((lessonItem) => (
-        <LessonItemsSwitch
-          getValues={getValues}
-          key={lessonItem.content.id}
-          lessonItem={lessonItem}
-          questionsArray={questionsArray}
-          register={register}
-        />
-      ))}
+      {orderedLessonsItems.map((lessonItem) => {
+        return (
+          <LessonItemsSwitch
+            isSubmitted={data?.isSubmitted}
+            getValues={getValues}
+            key={lessonItem.content.id}
+            lessonItem={lessonItem}
+            questionsArray={questionsArray}
+            register={register}
+          />
+        );
+      })}
+      {isQuiz && (
+        <Button
+          className="w-min self-end"
+          variant="outline"
+          onClick={
+            data?.isSubmitted
+              ? () => clearQuizProgress.mutate({ lessonId })
+              : () => submitQuiz.mutate({ lessonId })
+          }
+        >
+          {data?.isSubmitted ? "Clear progress" : "Check answers"}
+        </Button>
+      )}
       <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
-        {!!data?.type && data.type === "quiz" && (
-          <Button onClick={() => submitQuiz.mutate({ lessonId })}>
-            Check answers
-          </Button>
-        )}
         <Link
           to={
             previousLessonId

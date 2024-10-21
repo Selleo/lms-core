@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { and, count, eq, isNotNull, sql } from "drizzle-orm";
+import { and, count, eq, inArray, isNotNull, sql } from "drizzle-orm";
 import type { DatabasePg, UUIDType } from "src/common";
 import {
   courseLessons,
@@ -26,9 +26,8 @@ import type {
   LessonItemWithContentSchema,
   QuestionWithContent,
 } from "./schemas/lessonItem.schema";
-import { isEmpty } from "lodash";
+import { isEmpty, isNull } from "lodash";
 import { Lesson } from "./schemas/lesson.schema";
-import { isNull } from "lodash";
 import { S3Service } from "src/file/s3.service";
 
 @Injectable()
@@ -76,8 +75,16 @@ export class LessonsService {
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
         type: sql<string>`${lessons.type}`,
+        isSubmitted: sql<boolean>`(${studentLessonsProgress.quizCompleted})`,
       })
       .from(lessons)
+      .leftJoin(
+        studentLessonsProgress,
+        and(
+          eq(studentLessonsProgress.lessonId, id),
+          eq(studentLessonsProgress.studentId, userId),
+        ),
+      )
       .where(
         and(
           eq(lessons.id, id),
@@ -237,14 +244,36 @@ export class LessonsService {
 
     try {
       return await this.db.transaction(async (trx) => {
+        const questionIds = await this.db
+          .select({
+            questionId: studentQuestionAnswers.questionId,
+          })
+          .from(studentQuestionAnswers)
+          .leftJoin(
+            lessonItems,
+            eq(studentQuestionAnswers.questionId, lessonItems.lessonItemId),
+          )
+          .where(eq(lessonItems.lessonId, lessonId));
+
         await trx
-          .delete(studentLessonsProgress)
+          .update(studentLessonsProgress)
+          .set({ quizCompleted: false })
           .where(
             and(
               eq(studentLessonsProgress.studentId, userId),
               eq(studentLessonsProgress.lessonId, lessonId),
             ),
           );
+
+        await trx.delete(studentQuestionAnswers).where(
+          and(
+            eq(studentQuestionAnswers.studentId, userId),
+            inArray(
+              studentQuestionAnswers.questionId,
+              questionIds.map((q) => q.questionId),
+            ),
+          ),
+        );
 
         await trx
           .delete(studentCompletedLessonItems)
