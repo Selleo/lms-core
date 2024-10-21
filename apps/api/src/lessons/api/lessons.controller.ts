@@ -145,4 +145,27 @@ export class LessonsController {
       message: "Evaluation quiz successfully",
     });
   }
+
+  @Delete("clear-quiz-progress")
+  @Validate({
+    request: [{ type: "query", name: "lessonId", schema: UUIDSchema }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async clearQuizProgress(
+    @Query("lessonId") lessonId: string,
+    @CurrentUser("userId") currentUserId: string,
+  ): Promise<BaseResponse<{ message: string }>> {
+    const result = await this.lessonsService.clearQuizProgress(
+      lessonId,
+      currentUserId,
+    );
+    if (result)
+      return new BaseResponse({
+        message: "Evaluation quiz successfully",
+      });
+
+    return new BaseResponse({
+      message: "Evaluation quiz ending in error",
+    });
+  }
 }

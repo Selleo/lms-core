@@ -1412,6 +1412,33 @@
         }
       }
     },
+    "/api/lessons/clear-quiz-progress": {
+      "delete": {
+        "operationId": "LessonsController_clearQuizProgress",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearQuizProgressResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/questions/answer": {
       "post": {
         "operationId": "QuestionsController_answerQuestion",
@@ -3176,6 +3203,25 @@
         ]
       },
       "EvaluationQuizResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ClearQuizProgressResponse": {
         "type": "object",
         "properties": {
           "data": {

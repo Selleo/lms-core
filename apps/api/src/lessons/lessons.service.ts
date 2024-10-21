@@ -193,10 +193,39 @@ export class LessonsService {
       throw new ConflictException("Lesson is not completed");
 
     await this.db
-      .update(studentLessonsProgress)
-      .set({
+      .insert(studentLessonsProgress)
+      .values({
+        studentId: userId,
+        lessonId: lessonId,
         quizCompleted: true,
       })
+      .onConflictDoUpdate({
+        target: [
+          studentLessonsProgress.studentId,
+          studentLessonsProgress.lessonId,
+        ],
+        set: {
+          quizCompleted: true,
+        },
+      });
+
+    return true;
+  }
+
+  async clearQuizProgress(lessonId: UUIDType, userId: UUIDType) {
+    const [accessCourseLessons] = await this.checkLessonAssignment(
+      lessonId,
+      userId,
+    );
+
+    if (!accessCourseLessons)
+      throw new UnauthorizedException(
+        "You don't have assignment to this lesson",
+      );
+
+    const [quizProgress] = await this.db
+      .select({ id: studentLessonsProgress.id })
+      .from(studentLessonsProgress)
       .where(
         and(
           eq(studentLessonsProgress.studentId, userId),
@@ -204,7 +233,33 @@ export class LessonsService {
         ),
       );
 
-    return true;
+    if (!quizProgress) throw new NotFoundException("Lesson progress not found");
+
+    try {
+      return await this.db.transaction(async (trx) => {
+        await trx
+          .delete(studentLessonsProgress)
+          .where(
+            and(
+              eq(studentLessonsProgress.studentId, userId),
+              eq(studentLessonsProgress.lessonId, lessonId),
+            ),
+          );
+
+        await trx
+          .delete(studentCompletedLessonItems)
+          .where(
+            and(
+              eq(studentCompletedLessonItems.studentId, userId),
+              eq(studentCompletedLessonItems.lessonId, lessonId),
+            ),
+          );
+
+        return true;
+      });
+    } catch (error) {
+      return false;
+    }
   }
 
   private async checkLessonAssignment(lessonId: UUIDType, userId: UUIDType) {
