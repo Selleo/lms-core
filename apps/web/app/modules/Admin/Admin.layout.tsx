@@ -46,6 +46,12 @@ const AdminLayout = () => {
               roles: ["admin"],
               iconName: "CaretRight",
             },
+            {
+              label: "Lesson Items",
+              link: "lesson-items",
+              roles: ["admin"],
+              iconName: "CaretRight",
+            },
           ]}
         />
         <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
