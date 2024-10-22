@@ -30,6 +30,7 @@ export const FillTheBlanks = ({
   answers,
 }: FillTheBlanksProps) => {
   const [words, setWords] = useState<Word[]>([]);
+
   useEffect(() => {
     if (words.length >= 1 && words.length <= MAX_ANSWERS_AMOUNT) {
       const sortedWords = words.sort((a, b) => a.index - b.index);
@@ -37,7 +38,7 @@ export const FillTheBlanks = ({
         sendAnswer(sortedWords);
       }
     }
-  }, [words]);
+  }, [sendAnswer, words]);
 
   const handleWordUpdate = (
     prevWords: Word[],

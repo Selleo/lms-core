@@ -501,40 +501,74 @@ export class LessonsService {
         studentQuestionAnswers.answer,
       );
 
-    if (item.questionData.questionType !== "open_answer") {
+      if (
+          item.questionData.questionType !== "open_answer" &&
+          item.questionData.questionType !== "fill_in_the_blanks"
+      ) {
+          return {
+              id: item.questionData.id,
+              questionType: item.questionData.questionType,
+              questionBody: item.questionData.questionBody,
+              questionAnswers,
+          };
+      }
+
+      if (item.questionData.questionType === "open_answer") {
+          const studentAnswer = await this.db
+              .select({
+                  id: studentQuestionAnswers.id,
+                  optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
+                  isStudentAnswer: sql<boolean>`true`,
+                  position: sql<number>`1`,
+              })
+              .from(studentQuestionAnswers)
+              .where(
+                  eq(studentQuestionAnswers.questionId, item.questionData.id),
+              )
+              .limit(1);
+
+          return {
+              id: item.questionData.id,
+              questionType: item.questionData.questionType,
+              questionBody: item.questionData.questionBody,
+              questionAnswers: studentAnswer,
+          };
+      }
+
+      const [studentAnswers] = await this.db
+          .select({
+              id: studentQuestionAnswers.id,
+              answer: studentQuestionAnswers.answer,
+          })
+          .from(studentQuestionAnswers)
+          .where(
+              eq(studentQuestionAnswers.questionId, item.questionData.id),
+          )
+          .limit(1);
+
+      const result = !!studentAnswers?.answer
+          ? Object.keys(studentAnswers.answer).map((key) => {
+              const position = parseInt(key.split("_")[1]);
+              return {
+                  id: studentAnswers.id,
+                  optionText: (
+                      studentAnswers.answer as Record<string, string>
+                  )[key as keyof typeof studentAnswers.answer],
+                  position: position,
+                  isStudentAnswer: true,
+              };
+          })
+          : [];
+
+
       return {
-        id: item.questionData.id,
-        questionType: item.questionData.questionType,
-        questionBody: item.questionData.questionBody,
-        questionAnswers,
-      };
-    }
-
-    const studentAnswer = await this.db
-      .select({
-        id: studentQuestionAnswers.id,
-        optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
-        isStudentAnswer: sql<boolean>`true`,
-        position: sql<number>`1`,
-        isCorrect: sql<boolean | null>`
-          CASE
-            WHEN ${lessonType} = 'quiz' AND ${lessonRated} THEN
-              ${studentQuestionAnswers.isCorrect}
-            ELSE null
-          END
-        `,
-      })
-      .from(studentQuestionAnswers)
-      .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
-      .limit(1);
-
-    return {
       id: item.questionData.id,
       questionType: item.questionData.questionType,
       questionBody: item.questionData.questionBody,
-      questionAnswers: studentAnswer,
+      questionAnswers: result,
     };
   }
+
 
   async getAvailableLessons() {
     const availableLessons = await this.db

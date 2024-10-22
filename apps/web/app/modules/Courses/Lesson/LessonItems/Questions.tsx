@@ -113,7 +113,6 @@ export default function Questions({
         return (
             <FillTheBlanks
                 content={content.questionBody}
-                // @ts-ignore
                 sendAnswer={sendAnswer}
                 answers={content.questionAnswers}
                 register={register}
