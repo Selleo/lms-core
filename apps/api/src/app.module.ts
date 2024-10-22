@@ -48,7 +48,6 @@ import { StripeModule } from "./stripe/stripe.module";
           },
           config: {
             schema: { ...schema },
-            logger: true,
           },
         };
       },

@@ -1,5 +1,10 @@
 import { and, count, eq, like } from "drizzle-orm";
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from "@nestjs/common";
 
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import type { AllCategoriesResponse } from "./schemas/category.schema";
@@ -13,6 +18,7 @@ import type { DatabasePg, Pagination } from "src/common";
 import { type UserRole, UserRoles } from "src/users/schemas/user-roles";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { UpdateCategoryBody } from "./schemas/updateCategorySchema";
+import { CreateCategoryBody } from "./schemas/createCategorySchema";
 
 @Injectable()
 export class CategoriesService {
@@ -77,6 +83,18 @@ export class CategoriesService {
       .where(eq(categories.id, id));
 
     return category;
+  }
+
+  public async createCategory(createCategoryBody: CreateCategoryBody) {
+    const [newCategory] = await this.db
+      .insert(categories)
+      .values(createCategoryBody)
+      .returning();
+
+    if (!newCategory)
+      throw new UnprocessableEntityException("Category not created");
+
+    return newCategory;
   }
 
   public async updateCategory(

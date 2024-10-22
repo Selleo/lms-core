@@ -4,15 +4,13 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { eq, isNotNull, and } from "drizzle-orm";
+import { and, eq, isNotNull } from "drizzle-orm";
 import type { DatabasePg, UUIDType } from "src/common";
 import { S3Service } from "src/file/s3.service";
 import {
   files,
-  lessonFiles,
-  lessonQuestions,
+  lessonItems,
   lessons,
-  lessonTextBlocks,
   questions,
   textBlocks,
 } from "src/storage/schema";
@@ -155,26 +153,12 @@ export class LessonItemsService {
 
     await this.db.transaction(async (tx) => {
       for (const item of items) {
-        switch (item.type) {
-          case "text_block":
-            await tx.insert(lessonTextBlocks).values({
-              lessonId,
-              textBlockId: item.id,
-            });
-            break;
-          case "file":
-            await tx.insert(lessonFiles).values({
-              lessonId,
-              fileId: item.id,
-            });
-            break;
-          case "question":
-            await tx.insert(lessonQuestions).values({
-              lessonId,
-              questionId: item.id,
-            });
-            break;
-        }
+        await tx.insert(lessonItems).values({
+          lessonId,
+          lessonItemId: item.id,
+          lessonItemType: item.type,
+          displayOrder: item.displayOrder,
+        });
       }
     });
   }
@@ -195,40 +179,14 @@ export class LessonItemsService {
 
     await this.db.transaction(async (tx) => {
       for (const item of items) {
-        switch (item.type) {
-          case "text_block":
-            await tx
-              .delete(lessonTextBlocks)
-              .where(
-                and(
-                  eq(lessonTextBlocks.lessonId, lessonId),
-                  eq(lessonTextBlocks.textBlockId, item.id),
-                ),
-              );
-            break;
-          case "file":
-            await tx
-              .delete(lessonFiles)
-              .where(
-                and(
-                  eq(lessonFiles.lessonId, lessonId),
-                  eq(lessonFiles.fileId, item.id),
-                ),
-              );
-            break;
-          case "question":
-            await tx
-              .delete(lessonQuestions)
-              .where(
-                and(
-                  eq(lessonQuestions.lessonId, lessonId),
-                  eq(lessonQuestions.questionId, item.id),
-                ),
-              );
-            break;
-          default:
-            throw new BadRequestException(`Unknown item type: ${item.type}.`);
-        }
+        await tx
+          .delete(lessonItems)
+          .where(
+            and(
+              eq(lessonItems.lessonId, lessonId),
+              eq(lessonItems.lessonItemId, item.id),
+            ),
+          );
       }
     });
   }

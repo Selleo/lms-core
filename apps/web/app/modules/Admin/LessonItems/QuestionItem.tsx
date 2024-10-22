@@ -194,6 +194,7 @@ export const QuestionItem: React.FC<QuestionItemProps> = ({
               optionText: "",
               position: fields.length,
               isStudentAnswer: false,
+              questionId: id,
             })
           }
         >

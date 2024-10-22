@@ -36,16 +36,17 @@ export const FillTheBlanks = ({
         sendAnswer(sortedWords);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [words]);
 
   const handleWordUpdate = (
     prevWords: Word[],
     index: number,
-    value: string,
+    value: string
   ) => {
     const trimmedValue = value.trim();
     const existingWordIndex = prevWords.findIndex(
-      (word) => word.index === index,
+      (word) => word.index === index
     );
     if (trimmedValue === "") {
       if (!prevWords?.length) return [{ index, value }];

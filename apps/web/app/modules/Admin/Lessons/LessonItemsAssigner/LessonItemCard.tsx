@@ -49,7 +49,7 @@ export function LessonItemCard({ lessonItem }: LessonCardProps) {
           <>
             <h4 className="font-medium">{lessonItem.title}</h4>
             <p className="text-sm text-gray-600">
-              File Type: {lessonItem.type}
+              File Type: {lessonItem.itemType}
             </p>
           </>
         );

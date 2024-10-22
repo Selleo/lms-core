@@ -15,7 +15,7 @@ type TProps = {
   getValues: UseFormGetValues<TQuestionsForm>;
   questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
-  isSubmitted: boolean;
+  isSubmitted?: boolean;
 };
 
 export default function LessonItemsSwitch({

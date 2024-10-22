@@ -314,7 +314,7 @@ export class CoursesService {
         id: lessons.id,
         title: lessons.title,
         type: lessons.type,
-        isSubmitted: sql<boolean>`(SELECT TRUE FROM ${studentLessonsProgress} WHERE ${studentLessonsProgress.lessonId} = ${lessons.id} AND ${studentLessonsProgress.studentId} = ${userId} AND ${studentLessonsProgress.quizCompleted})::BOOLEAN`,
+        isSubmitted: sql<boolean>`EXISTS (SELECT 1 FROM ${studentLessonsProgress} WHERE ${studentLessonsProgress.lessonId} = ${lessons.id} AND ${studentLessonsProgress.studentId} = ${userId} AND ${studentLessonsProgress.quizCompleted})::BOOLEAN`,
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
         itemsCount: sql<number>`

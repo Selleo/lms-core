@@ -26,6 +26,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
+import { CreateNewLesson } from "./CreateNewLesson";
 
 type TLesson = GetAllLessonsResponse["data"][number];
 
@@ -107,7 +108,7 @@ const Lessons = () => {
     .rows.map((row) => row.original.id);
 
   const handleDeleteLessons = () => {
-    // Implement delete functionality here
+    //TODO: Implement delete functionality here
     console.log("Deleting lessons:", selectedLessons);
   };
 
@@ -118,6 +119,7 @@ const Lessons = () => {
   return (
     <div className="flex flex-col">
       <div className="flex justify-between">
+        <CreateNewLesson />
         <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
           <p
             className={cn("text-sm", {

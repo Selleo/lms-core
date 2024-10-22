@@ -27,7 +27,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
 
       setFilteredLessons(lessonsByType);
     },
-    [lessons],
+    [lessons]
   );
 
   const lessonCards = useMemo(() => {

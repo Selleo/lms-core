@@ -29,6 +29,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
+import { CreateNewCategory } from "./CreateNewCategory";
 
 type TCategory = GetAllCategoriesResponse["data"][number];
 
@@ -121,7 +122,7 @@ const Categories = () => {
   return (
     <div className="flex flex-col">
       <div className="flex justify-between">
-        {/* <CreateNewUser /> */}
+        <CreateNewCategory />
         <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
           <p
             className={cn("text-sm", {

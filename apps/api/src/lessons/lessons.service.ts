@@ -29,7 +29,7 @@ import {
 import { isEmpty, isNull } from "lodash";
 import { Lesson } from "./schemas/lesson.schema";
 import { S3Service } from "src/file/s3.service";
-import { UpdateLessonBody } from "./schemas/lesson.schema";
+import { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
 
 @Injectable()
 export class LessonsService {
@@ -191,7 +191,12 @@ export class LessonsService {
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
         type: sql<string>`${lessons.type}`,
-        isSubmitted: sql<boolean>`(${studentLessonsProgress.quizCompleted})`,
+        isSubmitted: sql<boolean>`
+          CASE
+            WHEN ${studentLessonsProgress.quizCompleted} IS NOT NULL THEN ${studentLessonsProgress.quizCompleted}
+            ELSE FALSE
+          END
+        `,
       })
       .from(lessons)
       .leftJoin(
@@ -456,7 +461,7 @@ export class LessonsService {
 
         if (isNull(questionData)) throw new Error("Question not found");
 
-        const content = await this.processQuestionItem(
+        const processedContent = await this.processQuestionItem(
           { id, displayOrder, lessonItemType, questionData },
           userId,
           lesson.type,
@@ -467,7 +472,7 @@ export class LessonsService {
           id: item.id,
           lessonItemType: item.lessonItemType,
           displayOrder: item.displayOrder,
-          content,
+          content: processedContent,
         };
       }),
     );
@@ -538,10 +543,9 @@ export class LessonsService {
         { lessonItemType: "text_block", textBlockData: P.not(P.nullish) },
         async (item) => ({
           id: item.textBlockData.id,
-          body: item.textBlockData.body || "",
-          state: item.textBlockData.state,
+          body: item.textBlockData.body ?? "",
+          state: item.textBlockData.state ?? "",
           title: item.textBlockData.title,
-          authorId: userId,
         }),
       )
       .with(
@@ -732,6 +736,15 @@ export class LessonsService {
         return { ...lesson, imageUrl };
       }),
     );
+  }
+
+  async createLesson(body: CreateLessonBody, authorId: string) {
+    const [lesson] = await this.db
+      .insert(lessons)
+      .values({ ...body, authorId })
+      .returning();
+
+    if (!lesson) throw new NotFoundException("Lesson not found");
   }
 
   async updateLesson(id: string, body: UpdateLessonBody) {

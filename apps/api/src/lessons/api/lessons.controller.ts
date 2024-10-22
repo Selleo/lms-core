@@ -21,20 +21,22 @@ import { LessonsService } from "../lessons.service";
 import {
   AllLessonsResponse,
   allLessonsSchema,
+  CreateLessonBody,
+  createLessonSchema,
   type ShowLessonResponse,
   showLessonSchema,
   UpdateLessonBody,
   updateLessonSchema,
 } from "../schemas/lesson.schema";
 import {
-  allLessonItemsSelectSchema,
-  AllLessonItemsSelectType,
   FileInsertType,
   fileUpdateSchema,
-  lessonItemSelectSchema,
+  GetAllLessonItemsResponse,
+  GetAllLessonItemsResponseSchema,
+  GetSingleLessonItemsResponse,
+  GetSingleLessonItemsResponseSchema,
   QuestionInsertType,
   questionUpdateSchema,
-  SingleLessonItemResponse,
   TextBlockInsertType,
   textBlockUpdateSchema,
   UpdateFileBody,
@@ -97,14 +99,10 @@ export class LessonsController {
   async getLesson(
     @Query("id") id: string,
     @CurrentUser("role") userRole: UserRole,
-    @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("userId") userId: string,
   ): Promise<BaseResponse<ShowLessonResponse>> {
     return new BaseResponse(
-      await this.lessonsService.getLesson(
-        id,
-        currentUserId,
-        userRole === "admin",
-      ),
+      await this.lessonsService.getLesson(id, userId, userRole === "admin"),
     );
   }
 
@@ -118,7 +116,27 @@ export class LessonsController {
     return new BaseResponse(await this.lessonsService.getLessonById(id));
   }
 
+  @Post("create-lesson")
+  @Roles("tutor", "admin")
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: createLessonSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async createLesson(
+    @Body() createLessonBody: CreateLessonBody,
+    @CurrentUser("userId") userId: string,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.lessonsService.createLesson(createLessonBody, userId);
+    return new BaseResponse({ message: "Lesson created successfully" });
+  }
+
   @Patch("lesson")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {
@@ -237,17 +255,18 @@ export class LessonsController {
         ]),
       },
     ],
-    response: baseResponse(allLessonItemsSelectSchema),
+    response: baseResponse(GetAllLessonItemsResponseSchema),
   })
   async getAllLessonItems(
     @Query("type") type?: "text_block" | "question" | "file" | undefined,
-  ): Promise<BaseResponse<AllLessonItemsSelectType>> {
+  ): Promise<BaseResponse<GetAllLessonItemsResponse>> {
     const allLessonItems =
       await this.lessonItemsService.getAllLessonItems(type);
     return new BaseResponse(allLessonItems);
   }
 
   @Get("available-lesson-items")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {
@@ -260,10 +279,10 @@ export class LessonsController {
         ]),
       },
     ],
-    response: baseResponse(allLessonItemsSelectSchema),
+    response: baseResponse(GetAllLessonItemsResponseSchema),
   })
   async getAvailableLessonItems(): Promise<
-    BaseResponse<AllLessonItemsSelectType>
+    BaseResponse<GetAllLessonItemsResponse>
   > {
     const availableLessonItems =
       await this.lessonItemsService.getAvailableLessonItems();
@@ -272,11 +291,11 @@ export class LessonsController {
 
   @Get("lesson-items/:id")
   @Validate({
-    response: baseResponse(lessonItemSelectSchema),
+    response: baseResponse(GetSingleLessonItemsResponseSchema),
   })
   async getLessonItemById(
     @Param("id") id: string,
-  ): Promise<BaseResponse<SingleLessonItemResponse>> {
+  ): Promise<BaseResponse<GetSingleLessonItemsResponse>> {
     const lessonItem = await this.lessonItemsService.getLessonItemById(id);
     return new BaseResponse(lessonItem);
   }
@@ -358,6 +377,7 @@ export class LessonsController {
   }
 
   @Patch("text-block-item")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {
@@ -381,6 +401,7 @@ export class LessonsController {
   }
 
   @Patch("question-item")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {
@@ -404,6 +425,7 @@ export class LessonsController {
   }
 
   @Patch("file-item")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {
@@ -427,6 +449,7 @@ export class LessonsController {
   }
 
   @Post("create-text-block")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {
@@ -450,6 +473,7 @@ export class LessonsController {
   }
 
   @Post("create-question")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {
@@ -475,6 +499,7 @@ export class LessonsController {
   }
 
   @Post("create-file")
+  @Roles("tutor", "admin")
   @Validate({
     request: [
       {

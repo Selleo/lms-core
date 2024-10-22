@@ -79,15 +79,17 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
 
   useEffect(() => {
     if (allLessonItems && lesson) {
-      const lessonAssignedItemsIds = lesson.lessonItems.map(
-        (lessonItem) => lessonItem.id
+      const assignedContentIds = lesson.lessonItems.map(
+        (lessonItem) => lessonItem.content.id
       );
-      const transformedLessons = allLessonItems.map((lesson) => ({
-        ...lesson,
-        columnId: lessonAssignedItemsIds.includes(lesson.id)
+
+      const transformedLessons = allLessonItems.map((item) => ({
+        ...item,
+        columnId: assignedContentIds.includes(item.id)
           ? "column-assigned"
           : "column-unassigned",
       }));
+
       setLessonsItems(transformedLessons);
     }
   }, [allLessonItems, lesson]);
@@ -120,7 +122,7 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
       const newColumnId = isOverAColumn
         ? (over.id as string)
         : lessonItems.find((lessonItem) => lessonItem.id === over.id)
-            ?.columnId || activeLesson.columnId;
+            ?.columnId || activeLesson.columnId; // TODO: remove nested ternary
 
       if (activeLesson.columnId !== newColumnId) {
         try {
@@ -150,8 +152,6 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
         } catch (error) {
           console.error("Error updating lesson assignment:", error);
         }
-      } else {
-        console.info("Lesson did not change columns, no mutation needed");
       }
 
       setCurrentlyDraggedItem(null);
