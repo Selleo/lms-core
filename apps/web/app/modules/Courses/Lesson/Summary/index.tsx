@@ -13,7 +13,7 @@ export default function Summary() {
   const lessonItemsSummary = getSummaryItems(data);
 
   return (
-    <Card className="self-start rounded-none w-[410px] xl:block hidden pb-32 fixed right-0 top-0 h-screen border-none drop-shadow-primary">
+    <Card className="rounded-none w-[410px] flex flex-col grow border-none drop-shadow-primary">
       <CardContent className="p-8 flex flex-col">
         <div className="h6">Lesson Summary</div>
         <div className="gap-2 flex flex-col mt-4 mb-8">
