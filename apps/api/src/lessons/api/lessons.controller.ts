@@ -23,6 +23,8 @@ import {
   allLessonsSchema,
   type ShowLessonResponse,
   showLessonSchema,
+  UpdateLessonBody,
+  updateLessonSchema,
 } from "../schemas/lesson.schema";
 import {
   allLessonItemsSelectSchema,
@@ -104,6 +106,39 @@ export class LessonsController {
         userRole === "admin",
       ),
     );
+  }
+
+  @Get("lesson/:id")
+  @Validate({
+    response: baseResponse(showLessonSchema),
+  })
+  async getLessonById(
+    @Param("id") id: string,
+  ): Promise<BaseResponse<ShowLessonResponse>> {
+    return new BaseResponse(await this.lessonsService.getLessonById(id));
+  }
+
+  @Patch("lesson")
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "id",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: updateLessonSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateLesson(
+    @Query() id: UUIDType,
+    @Body() body: UpdateLessonBody,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.lessonsService.updateLesson(id, body);
+    return new BaseResponse({ message: "Text block updated successfully" });
   }
 
   @Post("add")
@@ -196,7 +231,7 @@ export class LessonsController {
         type: "query",
         name: "type",
         schema: Type.Union([
-          Type.Literal("text-block"),
+          Type.Literal("text_block"),
           Type.Literal("question"),
           Type.Literal("file"),
         ]),
@@ -205,11 +240,34 @@ export class LessonsController {
     response: baseResponse(allLessonItemsSelectSchema),
   })
   async getAllLessonItems(
-    @Query("type") type?: "text-block" | "question" | "file" | undefined,
+    @Query("type") type?: "text_block" | "question" | "file" | undefined,
   ): Promise<BaseResponse<AllLessonItemsSelectType>> {
     const allLessonItems =
       await this.lessonItemsService.getAllLessonItems(type);
     return new BaseResponse(allLessonItems);
+  }
+
+  @Get("available-lesson-items")
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "type",
+        schema: Type.Union([
+          Type.Literal("text_block"),
+          Type.Literal("question"),
+          Type.Literal("file"),
+        ]),
+      },
+    ],
+    response: baseResponse(allLessonItemsSelectSchema),
+  })
+  async getAvailableLessonItems(): Promise<
+    BaseResponse<AllLessonItemsSelectType>
+  > {
+    const availableLessonItems =
+      await this.lessonItemsService.getAvailableLessonItems();
+    return new BaseResponse(availableLessonItems);
   }
 
   @Get("lesson-items/:id")
@@ -221,6 +279,82 @@ export class LessonsController {
   ): Promise<BaseResponse<SingleLessonItemResponse>> {
     const lessonItem = await this.lessonItemsService.getLessonItemById(id);
     return new BaseResponse(lessonItem);
+  }
+
+  @Post(":lessonId/assign-items")
+  @Roles("tutor", "admin")
+  @Validate({
+    request: [
+      { type: "param", name: "lessonId", schema: UUIDSchema },
+      {
+        type: "body",
+        schema: Type.Object({
+          items: Type.Array(
+            Type.Object({
+              id: UUIDSchema,
+              type: Type.Union([
+                Type.Literal("text_block"),
+                Type.Literal("file"),
+                Type.Literal("question"),
+              ]),
+            }),
+          ),
+        }),
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async assignItemsToLesson(
+    @Param("lessonId") lessonId: string,
+    @Body()
+    body: {
+      items: Array<{
+        id: string;
+        type: "text_block" | "file" | "question";
+        displayOrder: number;
+      }>;
+    },
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.lessonItemsService.assignItemsToLesson(lessonId, body.items);
+    return new BaseResponse({
+      message: "Successfully assigned items to lesson",
+    });
+  }
+
+  @Post(":lessonId/unassign-items")
+  @Roles("tutor", "admin")
+  @Validate({
+    request: [
+      { type: "param", name: "lessonId", schema: UUIDSchema },
+      {
+        type: "body",
+        schema: Type.Object({
+          items: Type.Array(
+            Type.Object({
+              id: UUIDSchema,
+              type: Type.Union([
+                Type.Literal("text_block"),
+                Type.Literal("file"),
+                Type.Literal("question"),
+              ]),
+            }),
+          ),
+        }),
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async unassignItemsFromLesson(
+    @Param("lessonId") lessonId: string,
+    @Body()
+    body: {
+      items: Array<{ id: string; type: "text_block" | "file" | "question" }>;
+    },
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.lessonItemsService.unassignItemsFromLesson(lessonId, body.items);
+    return new BaseResponse({
+      message: "Successfully unassigned items from lesson",
+    });
   }
 
   @Patch("text-block-item")

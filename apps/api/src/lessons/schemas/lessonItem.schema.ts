@@ -4,9 +4,11 @@ import { UUIDSchema } from "src/common";
 import { files, questions, textBlocks } from "src/storage/schema";
 
 export const questionAnswerOptionsSchema = Type.Object({
+  id: Type.Optional(UUIDSchema),
   optionText: Type.String(),
   position: Type.Union([Type.Number(), Type.Null()]),
-  isCorrect: Type.Boolean(),
+  isStudentAnswer: Type.Optional(Type.Boolean()),
+  isCorrect: Type.Optional(Type.Boolean()),
   questionId: UUIDSchema,
 });
 
@@ -52,8 +54,6 @@ export const lessonItemWithContent = Type.Object({
   fileData: Type.Union([lessonItemFileSchema, Type.Null()]),
 });
 
-export const allLessonItemsSchema = Type.Array(lessonItemSchema);
-
 export const textBlockUpdateSchema = Type.Partial(
   Type.Omit(textBlockSchema, ["id"]),
 );
@@ -63,6 +63,10 @@ export const questionUpdateSchema = Type.Partial(
 export const fileUpdateSchema = Type.Partial(
   Type.Omit(lessonItemFileSchema, ["id"]),
 );
+
+export const allLessonItemsSchema = Type.Array(lessonItemSchema);
+
+export type LessonItemResponse = Static<typeof lessonItemSchema>;
 
 export const questionWithContent = Type.Object({
   ...lessonItemSchema.properties,
@@ -108,7 +112,6 @@ export const allLessonItemsResponse = Type.Array(lessonItemResponse);
 
 export type QuestionWithContent = Static<typeof questionWithContent>;
 export type LessonItemWithContentSchema = Static<typeof lessonItemWithContent>;
-export type LessonItemResponse = Static<typeof lessonItemResponse>;
 export type AllLessonItemsResponse = Static<typeof allLessonItemsResponse>;
 
 export const textBlockSelectSchema = Type.Object({
@@ -149,7 +152,7 @@ export const fileSelectSchema = Type.Object({
 export const lessonItemSelectSchema = Type.Union([
   Type.Intersect([
     textBlockSelectSchema,
-    Type.Object({ itemType: Type.Literal("text-block") }),
+    Type.Object({ itemType: Type.Literal("text_block") }),
   ]),
   Type.Intersect([
     questionSelectSchema,

@@ -344,6 +344,8 @@ export interface GetCourseResponse {
       description: string;
       itemsCount: number;
       itemsCompletedCount?: number;
+      state?: string;
+      archived?: boolean;
     }[];
     priceInCents: number;
     currency: string;
@@ -373,6 +375,8 @@ export interface GetCourseByIdResponse {
       description: string;
       itemsCount: number;
       itemsCompletedCount?: number;
+      state?: string;
+      archived?: boolean;
     }[];
     priceInCents: number;
     currency: string;
@@ -384,6 +388,7 @@ export interface CreateCourseBody {
   title: string;
   description: string;
   state: "draft" | "published";
+  imageUrl?: string;
   priceInCents: number;
   currency?: string;
   /** @format uuid */
@@ -432,6 +437,8 @@ export interface GetAllLessonsResponse {
     description: string;
     itemsCount: number;
     itemsCompletedCount?: number;
+    state?: string;
+    archived?: boolean;
   }[];
 }
 
@@ -464,6 +471,8 @@ export interface GetLessonResponse {
             questionBody: string;
             state?: string;
             questionAnswers: {
+              /** @format uuid */
+              id?: string;
               optionText: string;
               position: number | null;
               isCorrect: boolean | null;

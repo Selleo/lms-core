@@ -78,7 +78,7 @@ export const CreateNewFile = ({
   const handleFileUpload = async (file: File) => {
     setIsUploading(true);
     try {
-      await uploadFile({ file }).then((result) => {
+      await uploadFile({ file, resource: "lessonItem" }).then((result) => {
         form.setValue("url", result.fileUrl);
       });
     } catch (error) {

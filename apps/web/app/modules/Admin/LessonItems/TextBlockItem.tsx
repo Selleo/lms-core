@@ -21,7 +21,7 @@ import {
 
 type TextBlockType = Extract<
   GetLessonItemByIdResponse["data"],
-  { itemType: "text-block" }
+  { itemType: "text_block" }
 >;
 
 interface TextBlockItemProps {

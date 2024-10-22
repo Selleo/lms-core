@@ -2,27 +2,27 @@ import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../../api-client";
-import { UpdateFileItemBody } from "../../generated-api";
+import { AssignItemsToLessonBody } from "../../generated-api";
 
-type UpdateFileOptions = {
-  data: UpdateFileItemBody;
-  fileId: string;
+type AssignItemToLessonOptions = {
+  data: AssignItemsToLessonBody;
+  lessonId: string;
 };
 
-export function useUpdateFileItem() {
+export function useAssignItemToLesson() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: UpdateFileOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateFileItem(
-        options.data,
-        { id: options.fileId }
+    mutationFn: async (options: AssignItemToLessonOptions) => {
+      const response = await ApiClient.api.lessonsControllerAssignItemsToLesson(
+        options.lessonId,
+        options.data
       );
 
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "File updated successfully" });
+      toast({ description: "Successfully assigned items to lesson" });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

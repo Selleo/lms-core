@@ -73,7 +73,7 @@ const prepareQuestions = (
     (acc, question) => {
       acc[question.id] = question.questionAnswers.reduce(
         (innerAcc, item) => {
-          innerAcc[item.id] = item.isStudentAnswer ? `${item.id}` : "";
+          innerAcc[item.id ?? 0] = item.isStudentAnswer ? `${item.id}` : "";
           return innerAcc;
         },
         {} as Record<string, string>

@@ -1,8 +1,21 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq } from "drizzle-orm";
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
+import { eq, isNotNull, and } from "drizzle-orm";
 import type { DatabasePg, UUIDType } from "src/common";
 import { S3Service } from "src/file/s3.service";
-import { files, questions, textBlocks } from "src/storage/schema";
+import {
+  files,
+  lessonFiles,
+  lessonQuestions,
+  lessons,
+  lessonTextBlocks,
+  questions,
+  textBlocks,
+} from "src/storage/schema";
 import type {
   FileInsertType,
   FileSelectType,
@@ -15,6 +28,8 @@ import type {
   UpdateTextBlockBody,
 } from "./schemas/lessonItem.schema";
 
+type LessonItemType = "text_block" | "file" | "question";
+
 @Injectable()
 export class LessonItemsService {
   constructor(
@@ -22,7 +37,7 @@ export class LessonItemsService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async getAllLessonItems(type?: "text-block" | "question" | "file") {
+  async getAllLessonItems(type?: "text_block" | "question" | "file") {
     let questionItems: QuestionSelectType[] = [];
     let textItems: TextBlockSelectType[] = [];
     let fileItems: FileSelectType[] = [];
@@ -30,7 +45,7 @@ export class LessonItemsService {
     if (!type || type === "question") {
       questionItems = await this.db.select().from(questions);
     }
-    if (!type || type === "text-block") {
+    if (!type || type === "text_block") {
       textItems = await this.db.select().from(textBlocks);
     }
     if (!type || type === "file") {
@@ -44,7 +59,57 @@ export class LessonItemsService {
       })),
       ...textItems.map((item) => ({
         ...item,
-        itemType: "text-block" as const,
+        itemType: "text_block" as const,
+      })),
+      ...fileItems.map((item) => ({ ...item, itemType: "file" as const })),
+    ];
+
+    return allItems;
+  }
+
+  async getAvailableLessonItems() {
+    const questionItems = await this.db
+      .select()
+      .from(questions)
+      .where(
+        and(
+          eq(questions.state, "published"),
+          eq(questions.archived, false),
+          isNotNull(questions.id),
+        ),
+      );
+    const textItems = await this.db
+      .select()
+      .from(textBlocks)
+      .where(
+        and(
+          eq(textBlocks.state, "published"),
+          eq(textBlocks.archived, false),
+          isNotNull(textBlocks.id),
+          isNotNull(textBlocks.title),
+          isNotNull(textBlocks.body),
+        ),
+      );
+    const fileItems = await this.db
+      .select()
+      .from(files)
+      .where(
+        and(
+          eq(files.state, "published"),
+          eq(files.archived, false),
+          isNotNull(files.id),
+          isNotNull(files.title),
+        ),
+      );
+
+    const allItems = [
+      ...questionItems.map((item) => ({
+        ...item,
+        itemType: "question" as const,
+      })),
+      ...textItems.map((item) => ({
+        ...item,
+        itemType: "text_block" as const,
       })),
       ...fileItems.map((item) => ({ ...item, itemType: "file" as const })),
     ];
@@ -60,7 +125,7 @@ export class LessonItemsService {
     ]);
 
     if (textBlock.length > 0) {
-      return { ...textBlock[0], itemType: "text-block" as const };
+      return { ...textBlock[0], itemType: "text_block" as const };
     }
 
     if (question.length > 0) {
@@ -72,6 +137,100 @@ export class LessonItemsService {
     }
 
     throw new NotFoundException("Lesson item not found");
+  }
+
+  async assignItemsToLesson(
+    lessonId: string,
+    items: Array<{ id: string; type: LessonItemType; displayOrder: number }>,
+  ): Promise<void> {
+    const [lesson] = await this.db
+      .select()
+      .from(lessons)
+      .where(eq(lessons.id, lessonId));
+    if (!lesson) {
+      throw new NotFoundException("Lekcja nie została znaleziona");
+    }
+
+    await this.verifyItems(items);
+
+    await this.db.transaction(async (tx) => {
+      for (const item of items) {
+        switch (item.type) {
+          case "text_block":
+            await tx.insert(lessonTextBlocks).values({
+              lessonId,
+              textBlockId: item.id,
+            });
+            break;
+          case "file":
+            await tx.insert(lessonFiles).values({
+              lessonId,
+              fileId: item.id,
+            });
+            break;
+          case "question":
+            await tx.insert(lessonQuestions).values({
+              lessonId,
+              questionId: item.id,
+            });
+            break;
+        }
+      }
+    });
+  }
+
+  async unassignItemsFromLesson(
+    lessonId: string,
+    items: Array<{ id: string; type: LessonItemType }>,
+  ): Promise<void> {
+    const [lesson] = await this.db
+      .select({ id: lessons.id })
+      .from(lessons)
+      .where(eq(lessons.id, lessonId))
+      .limit(1);
+
+    if (!lesson) {
+      throw new NotFoundException("Lesson not found");
+    }
+
+    await this.db.transaction(async (tx) => {
+      for (const item of items) {
+        switch (item.type) {
+          case "text_block":
+            await tx
+              .delete(lessonTextBlocks)
+              .where(
+                and(
+                  eq(lessonTextBlocks.lessonId, lessonId),
+                  eq(lessonTextBlocks.textBlockId, item.id),
+                ),
+              );
+            break;
+          case "file":
+            await tx
+              .delete(lessonFiles)
+              .where(
+                and(
+                  eq(lessonFiles.lessonId, lessonId),
+                  eq(lessonFiles.fileId, item.id),
+                ),
+              );
+            break;
+          case "question":
+            await tx
+              .delete(lessonQuestions)
+              .where(
+                and(
+                  eq(lessonQuestions.lessonId, lessonId),
+                  eq(lessonQuestions.questionId, item.id),
+                ),
+              );
+            break;
+          default:
+            throw new BadRequestException(`Unknown item type: ${item.type}.`);
+        }
+      }
+    });
   }
 
   async updateTextBlockItem(id: UUIDType, body: UpdateTextBlockBody) {
@@ -178,35 +337,39 @@ export class LessonItemsService {
     return file;
   }
 
-  // async createLessonItem(
-  //   lessonItemType: LessonItemType,
-  //   content: LessonItemResponse["content"],
-  // ) {
-  //   const [lessonItem] = await this.db
-  //     .insert(lessonItems)
-  //     .values({
-  //       lessonId: content.lessonId,
-  //       lessonItemId: content.id,
-  //       lessonItemType,
-  //       displayOrder: content.displayOrder,
-  //     })
-  //     .returning();
-
-  //   if (!lessonItem) throw new NotFoundException("Lesson item not found");
-
-  //   return lessonItem;
-  // }
-
-  // private isValidItem(item: any): boolean {
-  //   switch (item.lessonItemType) {
-  //     case "question":
-  //       return !!item.questionData;
-  //     case "text_block":
-  //       return !!item.textBlockData;
-  //     case "file":
-  //       return !!item.fileData;
-  //     default:
-  //       return false;
-  //   }
-  // }
+  private async verifyItems(
+    items: Array<{ id: string; type: LessonItemType; displayOrder: number }>,
+  ): Promise<void> {
+    for (const item of items) {
+      let result;
+      switch (item.type) {
+        case "text_block":
+          result = await this.db
+            .select({ id: textBlocks.id })
+            .from(textBlocks)
+            .where(eq(textBlocks.id, item.id))
+            .limit(1);
+          break;
+        case "file":
+          result = await this.db
+            .select({ id: files.id })
+            .from(files)
+            .where(eq(files.id, item.id))
+            .limit(1);
+          break;
+        case "question":
+          result = await this.db
+            .select({ id: questions.id })
+            .from(questions)
+            .where(eq(questions.id, item.id))
+            .limit(1);
+          break;
+      }
+      if (result.length === 0) {
+        throw new BadRequestException(
+          `Element ${item.id} typu ${item.type} nie został znaleziony`,
+        );
+      }
+    }
+  }
 }

@@ -415,11 +415,7 @@ export class CoursesService {
     };
   }
 
-  async createCourse(
-    createCourseBody: CreateCourseBody,
-    authorId: string,
-    image?: Express.Multer.File,
-  ) {
+  async createCourse(createCourseBody: CreateCourseBody, authorId: string) {
     return this.db.transaction(async (tx) => {
       const [category] = await tx
         .select()
@@ -439,28 +435,12 @@ export class CoursesService {
         throw new NotFoundException("Author not found");
       }
 
-      let imageKey = null;
-      if (image) {
-        try {
-          const fileExtension = image.originalname.split(".").pop();
-          imageKey = `courses/${crypto.randomUUID()}.${fileExtension}`;
-
-          await this.s3Service.uploadFile(
-            image.buffer,
-            imageKey,
-            image.mimetype,
-          );
-        } catch (error) {
-          throw new ConflictException("Failed to upload course image");
-        }
-      }
-
       const [newCourse] = await tx
         .insert(courses)
         .values({
           title: createCourseBody.title,
           description: createCourseBody.description,
-          imageUrl: imageKey,
+          imageUrl: createCourseBody.imageUrl,
           state: createCourseBody.state || "draft",
           priceInCents: createCourseBody.priceInCents,
           currency: createCourseBody.currency || "usd",

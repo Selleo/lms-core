@@ -6,7 +6,7 @@ import {
 import { ApiClient } from "../../api-client";
 import type { GetAllLessonItemsResponse } from "../../generated-api";
 
-type LessonItemType = "text-block" | "question" | "file";
+type LessonItemType = "text_block" | "question" | "file";
 
 interface LessonItemsQueryParams {
   type?: LessonItemType;

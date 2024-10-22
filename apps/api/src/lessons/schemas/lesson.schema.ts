@@ -9,7 +9,12 @@ export const lessonSchema = Type.Object({
   description: Type.String(),
   itemsCount: Type.Number(),
   itemsCompletedCount: Type.Optional(Type.Number()),
+  state: Type.Optional(Type.String()),
+  archived: Type.Optional(Type.Boolean()),
 });
+export const updateLessonSchema = Type.Partial(
+  Type.Omit(lessonSchema, ["itemsCount", "itemsCompletedCount"]),
+);
 
 export const lesson = Type.Object({
   id: UUIDSchema,
@@ -25,10 +30,11 @@ export const showLessonSchema = Type.Object({
   ...lessonSchema.properties,
   lessonItems: Type.Array(lessonItemSchema),
   itemsCount: Type.Number(),
-  itemsCompletedCount: Type.Number(),
+  itemsCompletedCount: Type.Optional(Type.Number()),
 });
 
 export type Lesson = Static<typeof lesson>;
 export type LessonResponse = Static<typeof lessonSchema>;
 export type ShowLessonResponse = Static<typeof showLessonSchema>;
 export type AllLessonsResponse = Static<typeof allLessonsSchema>;
+export type UpdateLessonBody = Static<typeof updateLessonSchema>;

@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Body,
   ConflictException,
   Controller,
   Post,
@@ -27,6 +28,10 @@ export class S3Controller {
           type: "string",
           format: "binary",
         },
+        resource: {
+          type: "string",
+          description: "Optional resource type",
+        },
       },
     },
   })
@@ -37,6 +42,7 @@ export class S3Controller {
   })
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
+    @Body("resource") resource: string = "file",
   ): Promise<FileUploadResponse> {
     if (!file) {
       throw new BadRequestException("No file uploaded");
@@ -66,7 +72,7 @@ export class S3Controller {
 
     try {
       const fileExtension = file.originalname.split(".").pop();
-      const fileKey = `files/${crypto.randomUUID()}.${fileExtension}`;
+      const fileKey = `${resource}/${crypto.randomUUID()}.${fileExtension}`;
 
       await this.s3Service.uploadFile(file.buffer, fileKey, file.mimetype);
 

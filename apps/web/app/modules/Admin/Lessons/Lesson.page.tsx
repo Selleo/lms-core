@@ -2,24 +2,17 @@ import { useParams } from "@remix-run/react";
 import { capitalize, startCase } from "lodash-es";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { UpdateCourseBody } from "~/api/generated-api";
-import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
+import { UpdateLessonBody } from "~/api/generated-api";
+import { useUpdateLesson } from "~/api/mutations/admin/useUpdateLesson";
 import {
-  categoriesQueryOptions,
-  useCategoriesSuspense,
-} from "~/api/queries/useCategories";
-import {
-  courseQueryOptions,
-  useCourseById,
-} from "~/api/queries/admin/useCourseById";
+  lessonByIdQueryOptions,
+  useLessonById,
+} from "~/api/queries/admin/useLessonById";
 import { queryClient } from "~/api/queryClient";
-import LessonAssigner from "./LessonAssigner/LessonAssigner";
-
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
-import { Checkbox } from "~/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -27,104 +20,66 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Textarea } from "~/components/ui/textarea";
+import Loader from "~/modules/common/Loader/Loader";
+import LessonItemAssigner from "./LessonItemsAssigner/LessonItemAssigner";
 
-export const clientLoader = async () => {
-  await queryClient.prefetchQuery(categoriesQueryOptions);
-  return null;
-};
-
-const displayedFields: Array<keyof UpdateCourseBody> = [
+const displayedFields: Array<keyof UpdateLessonBody> = [
   "title",
   "description",
   "state",
-  "priceInCents",
-  "currency",
-  "categoryId",
   "archived",
 ];
 
-const Course = () => {
+const Lesson = () => {
   const { id } = useParams<{ id: string }>();
-  if (!id) throw new Error("Course ID not found");
+  if (!id) throw new Error("Lesson ID not found");
 
-  const { data: course, isLoading } = useCourseById(id);
-  const { mutateAsync: updateCourse } = useUpdateCourse();
-  const { data: categories } = useCategoriesSuspense();
+  const { data: lesson, isLoading } = useLessonById(id);
+  const { mutateAsync: updateLesson } = useUpdateLesson();
   const [isEditing, setIsEditing] = useState(false);
 
   const {
     control,
     handleSubmit,
     formState: { isDirty },
-  } = useForm<UpdateCourseBody>();
+  } = useForm<UpdateLessonBody>();
 
   if (isLoading)
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+        <Loader />
       </div>
     );
-  if (!course) throw new Error("Course not found");
+  if (!lesson) throw new Error("Lesson not found");
 
-  const onSubmit = (data: UpdateCourseBody) => {
-    updateCourse({ data, courseId: id }).then(() => {
-      queryClient.invalidateQueries(courseQueryOptions(id));
+  const onSubmit = (data: UpdateLessonBody) => {
+    updateLesson({ data, lessonId: id }).then(() => {
+      queryClient.invalidateQueries(lessonByIdQueryOptions(id));
       setIsEditing(false);
     });
   };
 
-  const CourseInfoItem: React.FC<{ name: keyof UpdateCourseBody }> = ({
+  const LessonInfoItem: React.FC<{ name: keyof UpdateLessonBody }> = ({
     name,
   }) => (
     <Controller
       name={name}
       control={control}
-      defaultValue={course[name] as UpdateCourseBody[typeof name]}
+      defaultValue={lesson[name] as UpdateLessonBody[typeof name]}
       render={({ field }) => {
         if (!isEditing) {
           if (name === "archived") {
             return (
               <span className="font-semibold capitalize">
-                {course[name] ? "Archived" : "Active"}
-              </span>
-            );
-          }
-          if (name === "currency") {
-            return (
-              <span className="font-semibold uppercase">{course[name]}</span>
-            );
-          }
-          if (name === "categoryId") {
-            return (
-              <span className="font-semibold uppercase">
-                {course["category"]}
+                {lesson[name] ? "Archived" : "Active"}
               </span>
             );
           }
           return (
             <span className="font-semibold capitalize">
-              {course[name]?.toString()}
+              {lesson[name]?.toString()}
             </span>
-          );
-        }
-
-        if (name === "categoryId") {
-          return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories?.map((category) => (
-                  <SelectItem value={category.id} key={category.id}>
-                    {category.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           );
         }
 
@@ -156,7 +111,12 @@ const Course = () => {
                 checked={field.value as boolean | undefined}
                 onCheckedChange={(checked) => field.onChange(checked)}
               />
-              <Label htmlFor="archived">Archived</Label>
+              <label
+                htmlFor="archived"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Archived
+              </label>
             </div>
           );
         }
@@ -166,8 +126,8 @@ const Course = () => {
             <Textarea
               {...field}
               value={field.value as string}
-              placeholder="Enter course description"
-              className="resize-none"
+              placeholder="Enter lesson description"
+              className="w-full rounded-md border border-neutral-300 px-2 py-1 resize-none"
             />
           );
         }
@@ -176,7 +136,7 @@ const Course = () => {
           <Input
             {...field}
             value={field.value as string}
-            type={name === "priceInCents" ? "number" : "text"}
+            className="w-full rounded-md border border-neutral-300 px-2 py-1"
             placeholder={`Enter ${startCase(name)}`}
           />
         );
@@ -186,44 +146,48 @@ const Course = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white rounded-lg h-full p-4"
+      >
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Course Information
+          <h2 className="text-2xl text-neutral-950 font-semibold mb-4">
+            Lesson Information
           </h2>
           {isEditing ? (
             <div>
               <Button type="submit" disabled={!isDirty} className="mr-2">
                 Save
               </Button>
-              <Button variant="outline" onClick={() => setIsEditing(false)}>
+              <Button type="button" onClick={() => setIsEditing(false)}>
                 Cancel
               </Button>
             </div>
           ) : (
-            <Button onClick={() => setIsEditing(true)}>Edit</Button>
+            <Button type="button" onClick={() => setIsEditing(true)}>
+              Edit
+            </Button>
           )}
         </div>
-        <div className="space-y-4">
+        <div className="space-y-4 pt-4">
           {displayedFields.map((field) => (
-            <div key={field} className="flex flex-col gap-y-1">
-              <Label htmlFor={field}>
+            <div key={field} className="flex flex-col gap-y-2">
+              <Label className="text-neutral-600 font-normal">
                 {field === "archived" ? "Status" : startCase(field)}
               </Label>
-              <CourseInfoItem name={field} />
+              <LessonInfoItem name={field} />
             </div>
           ))}
         </div>
       </form>
-
       <div className="mt-8">
         <h3 className="text-xl font-bold text-gray-900 mb-4">
-          Lesson Assignment
+          Lesson Items Assignment
         </h3>
-        <LessonAssigner courseId={id} />
+        <LessonItemAssigner lessonId={id} />
       </div>
     </div>
   );
 };
 
-export default Course;
+export default Lesson;

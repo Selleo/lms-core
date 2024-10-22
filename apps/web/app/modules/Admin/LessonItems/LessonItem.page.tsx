@@ -31,7 +31,7 @@ const LessonItem = () => {
 
   const renderLessonItem = () => {
     switch (lessonItem.itemType) {
-      case "text-block":
+      case "text_block":
         return (
           <TextBlockItem id={id} initialData={lessonItem} onUpdate={onUpdate} />
         );

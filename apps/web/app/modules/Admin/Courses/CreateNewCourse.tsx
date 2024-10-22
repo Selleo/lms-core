@@ -1,7 +1,15 @@
-import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
+import { useCreateCourse } from "~/api/mutations/useCreateCourse";
+import { allCoursesQueryOptions } from "~/api/queries";
+import {
+  categoriesQueryOptions,
+  useCategoriesSuspense,
+} from "~/api/queries/useCategories";
+import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -28,13 +36,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { useCreateCourse } from "~/api/mutations/useCreateCourse";
-import {
-  categoriesQueryOptions,
-  useCategoriesSuspense,
-} from "~/api/queries/useCategories";
-import { queryClient } from "~/api/queryClient";
-import { allCoursesQueryOptions } from "~/api/queries";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(categoriesQueryOptions);
@@ -42,23 +43,26 @@ export const clientLoader = async () => {
 };
 
 const formSchema = z.object({
-  title: z.string().min(2, "First name must be at least 3 characters."),
-  description: z.string().min(2, "Last name must be at least 3 characters."),
+  title: z.string().min(2, "Title must be at least 2 characters."),
+  description: z.string().min(2, "Description must be at least 2 characters."),
   state: z.enum(["draft", "published"], {
-    required_error: "Please select a role.",
+    required_error: "Please select a state.",
   }),
   priceInCents: z.string(),
   currency: z.string().optional().default("usd"),
   categoryId: z.string(),
   lessons: z.array(z.string()).optional(),
+  imageUrl: z.string().url("Invalid image URL").optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 export const CreateNewCourse = () => {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: createCourse } = useCreateCourse();
   const { data: categories } = useCategoriesSuspense();
+  const { mutateAsync: uploadFile } = useUploadFile();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -70,8 +74,21 @@ export const CreateNewCourse = () => {
       currency: "usd",
       categoryId: "",
       lessons: [],
+      imageUrl: "",
     },
   });
+
+  const handleImageUpload = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const result = await uploadFile({ file, resource: "course" });
+      form.setValue("imageUrl", result.fileUrl, { shouldValidate: true });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   const onSubmit = (values: FormValues) => {
     createCourse({
@@ -135,7 +152,7 @@ export const CreateNewCourse = () => {
               render={({ field }) => (
                 <FormItem>
                   <Label htmlFor="categoryId" className="text-right">
-                    State
+                    Category
                   </Label>
                   <Select
                     onValueChange={field.onChange}
@@ -214,8 +231,44 @@ export const CreateNewCourse = () => {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="imageUrl"
+              render={({ field }) => (
+                <FormItem>
+                  <Label htmlFor="imageUrl" className="text-right">
+                    Course Image
+                  </Label>
+                  <FormControl>
+                    <div className="flex items-center flex-col gap-y-2">
+                      <Input
+                        id="imageUrl"
+                        {...field}
+                        readOnly
+                        placeholder="Image URL will appear here after upload"
+                        className="w-full"
+                      />
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            handleImageUpload(file);
+                          }
+                        }}
+                        disabled={isUploading}
+                        className="w-full"
+                      />
+                    </div>
+                  </FormControl>
+                  {isUploading && <p>Uploading image...</p>}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <DialogFooter>
-              <Button type="submit" disabled={!isFormValid}>
+              <Button type="submit" disabled={!isFormValid || isUploading}>
                 Create Course
               </Button>
             </DialogFooter>

@@ -4,6 +4,7 @@ export const createCourseSchema = Type.Object({
   title: Type.String(),
   description: Type.String(),
   state: Type.Union([Type.Literal("draft"), Type.Literal("published")]),
+  imageUrl: Type.Optional(Type.String()),
   priceInCents: Type.Integer(),
   currency: Type.Optional(Type.String()),
   categoryId: Type.String({ format: "uuid" }),
