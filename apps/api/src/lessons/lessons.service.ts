@@ -21,7 +21,7 @@ import {
   textBlocks,
 } from "src/storage/schema";
 import { match, P } from "ts-pattern";
-import type {
+import {
   LessonItemResponse,
   LessonItemWithContentSchema,
   QuestionWithContent,
@@ -154,7 +154,7 @@ export class LessonsService {
       let passQuestion = true;
       item.content.questionAnswers.forEach((answer) => {
         if (
-          (answer.isStudentAnswer && answer.isCorrect === false) ||
+          answer.isStudentAnswer !== answer.isCorrect ||
           isNull(answer.isStudentAnswer)
         ) {
           passQuestion = false;
@@ -292,7 +292,7 @@ export class LessonsService {
   }
 
   private async checkLessonAssignment(lessonId: UUIDType, userId: UUIDType) {
-    return await this.db
+    return this.db
       .select({
         id: lessons.id,
         studentCourseId: studentCourses.id,
@@ -360,7 +360,7 @@ export class LessonsService {
   private async fetchLessonItemsFromDb(
     lessonId: string,
   ): Promise<LessonItemWithContentSchema[]> {
-    return await this.db
+    return this.db
       .select({
         id: lessonItems.id,
         lessonItemType: lessonItems.lessonItemType,
@@ -501,7 +501,11 @@ export class LessonsService {
         studentQuestionAnswers.answer,
       );
 
-    if (item.questionData.questionType !== "open_answer") {
+    if (
+      item.questionData.questionType !== "open_answer" &&
+      item.questionData.questionType !== "fill_in_the_blanks_text" &&
+      item.questionData.questionType !== "fill_in_the_blanks_dnd"
+    ) {
       return {
         id: item.questionData.id,
         questionType: item.questionData.questionType,
@@ -510,29 +514,69 @@ export class LessonsService {
       };
     }
 
-    const studentAnswer = await this.db
-      .select({
-        id: studentQuestionAnswers.id,
-        optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
-        isStudentAnswer: sql<boolean>`true`,
-        position: sql<number>`1`,
-        isCorrect: sql<boolean | null>`
+    if (item.questionData.questionType === "open_answer") {
+      const studentAnswer = await this.db
+        .select({
+          id: studentQuestionAnswers.id,
+          optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
+          isStudentAnswer: sql<boolean>`true`,
+          position: sql<number>`1`,
+          isCorrect: sql<boolean | null>`
           CASE
             WHEN ${lessonType} = 'quiz' AND ${lessonRated} THEN
               ${studentQuestionAnswers.isCorrect}
             ELSE null
           END
         `,
+        })
+        .from(studentQuestionAnswers)
+        .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
+        .limit(1);
+
+      return {
+        id: item.questionData.id,
+        questionType: item.questionData.questionType,
+        questionBody: item.questionData.questionBody,
+        questionAnswers: studentAnswer,
+      };
+    }
+
+    const [studentAnswers] = await this.db
+      .select({
+        id: studentQuestionAnswers.id,
+        answer: sql<JSON>`${studentQuestionAnswers.answer}`,
+        test: questionAnswerOptions.optionText,
       })
       .from(studentQuestionAnswers)
+      .innerJoin(
+        questionAnswerOptions,
+        eq(questionAnswerOptions.questionId, studentQuestionAnswers.questionId),
+      )
       .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
       .limit(1);
+
+    const result = !!studentAnswers?.answer
+      ? Object.keys(studentAnswers.answer).map((key) => {
+          const position = parseInt(key.split("_")[1]);
+          const studentAnswerText = studentAnswers.answer[
+            key as keyof typeof studentAnswers.answer
+          ] as string;
+
+          return {
+            id: studentAnswers.id,
+            optionText: studentAnswerText,
+            position: position,
+            isStudentAnswer: true,
+            isCorrect: null,
+          };
+        })
+      : [];
 
     return {
       id: item.questionData.id,
       questionType: item.questionData.questionType,
       questionBody: item.questionData.questionBody,
-      questionAnswers: studentAnswer,
+      questionAnswers: result,
     };
   }
 
@@ -563,7 +607,7 @@ export class LessonsService {
     if (isEmpty(availableLessons))
       throw new NotFoundException("No lessons found");
 
-    const lessonsWithSignedUrls = await Promise.all(
+    return await Promise.all(
       availableLessons.map(async (lesson) => {
         const imageUrl = lesson.imageUrl.startsWith("https://")
           ? lesson.imageUrl
@@ -571,8 +615,6 @@ export class LessonsService {
         return { ...lesson, imageUrl };
       }),
     );
-
-    return lessonsWithSignedUrls;
   }
 
   async addLessonToCourse(

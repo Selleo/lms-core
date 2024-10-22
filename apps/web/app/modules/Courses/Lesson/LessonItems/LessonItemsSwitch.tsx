@@ -33,12 +33,15 @@ export default function LessonItemsSwitch({
   if ("questionBody" in lessonItem.content)
     return (
       <Questions
+        id={lessonItem.id}
         isSubmitted={isSubmitted}
         content={lessonItem.content}
         getValues={getValues}
         questionsArray={questionsArray}
         register={register}
         isAdmin={isAdmin}
+        questionBody={lessonItem.content.questionBody}
+        questionType={lessonItem.content.questionType}
       />
     );
 

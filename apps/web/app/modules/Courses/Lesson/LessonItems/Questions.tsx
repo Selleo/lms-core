@@ -12,8 +12,12 @@ import type { TQuestionsForm } from "../types";
 import type { UseFormGetValues, UseFormRegister } from "react-hook-form";
 import { Icon } from "~/components/Icon";
 import type { GetLessonResponse } from "~/api/generated-api";
+import { FillTheBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheBlanks";
 
 type TProps = {
+  id: string;
+  questionType: string;
+  questionBody: string;
   content: GetLessonResponse["data"]["lessonItems"][number]["content"];
   getValues: UseFormGetValues<TQuestionsForm>;
   questionsArray: string[];
@@ -48,6 +52,9 @@ export default function Questions({
     "questionType" in content && content.questionType === "single_choice";
   const isOpenAnswer =
     "questionType" in content && content.questionType === "open_answer";
+  const isFillInTheBlanks =
+    "questionType" in content &&
+    content.questionType === "fill_in_the_blanks_text";
 
   const { sendAnswer, sendOpenAnswer } = useQuestionQuery({
     lessonId,
@@ -65,7 +72,7 @@ export default function Questions({
   }, [isSubmitted]);
 
   const handleClick = async (id: string) => {
-    markLessonItemAsCompleted({ lessonItemId: questionId, lessonId });
+    await markLessonItemAsCompleted({ lessonItemId: questionId, lessonId });
 
     if (isSingleQuestion) {
       setSelectedOption([id]);
@@ -85,7 +92,7 @@ export default function Questions({
   const handleOpenAnswerRequest = async (
     e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
-    markLessonItemAsCompleted({
+    await markLessonItemAsCompleted({
       lessonItemId: questionId,
       lessonId,
     });
@@ -102,6 +109,17 @@ export default function Questions({
               answer.isCorrect !== null),
         )
       : false;
+
+  if (isFillInTheBlanks) {
+    return (
+      <FillTheBlanks
+        questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
+        content={content.questionBody}
+        sendAnswer={sendAnswer}
+        answers={content.questionAnswers}
+      />
+    );
+  }
 
   return (
     <Card className="flex flex-col gap-2 p-8 border-none drop-shadow-primary">

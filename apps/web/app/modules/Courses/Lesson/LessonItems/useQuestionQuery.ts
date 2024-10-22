@@ -1,4 +1,5 @@
 import { useQuestionAnswer } from "~/api/mutations/useQuestion";
+import { AnswerQuestionBody } from "~/api/generated-api";
 
 type TProps = {
   lessonId: string;
@@ -16,7 +17,7 @@ export const useQuestionQuery = ({ lessonId, questionId }: TProps) => {
     });
   };
 
-  const sendAnswer = async (selectedOption: string[]) => {
+  const sendAnswer = async (selectedOption: AnswerQuestionBody["answer"]) => {
     await answerQuestion({
       lessonId,
       questionId,
