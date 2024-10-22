@@ -1,15 +1,15 @@
-import { defineConfig, devices } from "@playwright/test";
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: "./e2e",
+  testDir: './e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   use: {
     baseURL: process.env.CI
-      ? "https://staging-url.example.com"
-      : "https://app.lms.localhost",
+      ? 'https://lms.beta.selleo.app'
+      : 'https://app.lms.localhost',
     ignoreHTTPSErrors: true,
     // launchOptions: {
     //   args: [
@@ -25,12 +25,12 @@ export default defineConfig({
 
   projects: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      name: 'chromium',
+      use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      name: 'firefox',
+      use: { ...devices['Desktop Firefox'] },
     },
   ],
 });
