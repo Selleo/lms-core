@@ -15,6 +15,7 @@ type TProps = {
   getValues: UseFormGetValues<TQuestionsForm>;
   questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
+  isSubmitted: boolean;
 };
 
 export default function LessonItemsSwitch({
@@ -22,6 +23,7 @@ export default function LessonItemsSwitch({
   getValues,
   questionsArray,
   register,
+  isSubmitted,
 }: TProps) {
   const { isAdmin } = useUserRole();
 
@@ -31,6 +33,7 @@ export default function LessonItemsSwitch({
   if ("questionBody" in lessonItem.content)
     return (
       <Questions
+        isSubmitted={isSubmitted}
         content={lessonItem.content}
         getValues={getValues}
         questionsArray={questionsArray}

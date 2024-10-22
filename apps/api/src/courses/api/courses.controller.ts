@@ -33,8 +33,8 @@ import {
   createCourseSchema,
 } from "../schemas/createCourse.schema";
 import {
-  commonShowCourseSchema,
   type CommonShowCourse,
+  commonShowCourseSchema,
 } from "../schemas/showCourseCommon.schema";
 import { allCoursesValidation } from "./validations";
 import {
@@ -216,7 +216,7 @@ export class CoursesController {
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
-  async createFavouritedCourse(
+  async enrollCourse(
     @Query("id") id: string,
     @CurrentUser() currentUser: { userId: string },
   ): Promise<BaseResponse<{ message: string }>> {
@@ -230,7 +230,7 @@ export class CoursesController {
     response: nullResponse(),
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
   })
-  async deleteFavouritedCourseForUser(
+  async unenrollCourse(
     @Query("id") id: string,
     @CurrentUser() currentUser: { userId: string },
   ): Promise<null> {

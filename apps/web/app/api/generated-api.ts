@@ -339,6 +339,7 @@ export interface GetCourseResponse {
       /** @format uuid */
       id: string;
       title: string;
+      type: string;
       imageUrl: string;
       description: string;
       itemsCount: number;
@@ -414,13 +415,13 @@ export interface UpdateCourseResponse {
   };
 }
 
-export interface CreateFavouritedCourseResponse {
+export interface EnrollCourseResponse {
   data: {
     message: string;
   };
 }
 
-export type DeleteFavouritedCourseForUserResponse = null;
+export type UnenrollCourseResponse = null;
 
 export interface GetAllLessonsResponse {
   data: {
@@ -451,13 +452,10 @@ export interface GetLessonResponse {
     title: string;
     imageUrl: string;
     description: string;
+    isSubmitted: boolean;
     itemsCount: number;
     itemsCompletedCount: number;
     lessonItems: {
-      /** @format uuid */
-      id: string;
-      lessonItemType: string;
-      displayOrder: number | null;
       content:
         | {
             /** @format uuid */
@@ -469,6 +467,7 @@ export interface GetLessonResponse {
               id: string;
               optionText: string;
               position: number | null;
+              isCorrect: boolean | null;
               isStudentAnswer: boolean;
             }[];
           }
@@ -486,7 +485,12 @@ export interface GetLessonResponse {
             type: string;
             url: string;
           };
+      /** @format uuid */
+      id: string;
+      lessonItemType: string;
+      displayOrder: number | null;
     }[];
+    type: string;
   };
 }
 
@@ -505,6 +509,18 @@ export interface AddLessonToCourseResponse {
 }
 
 export interface RemoveLessonFromCourseResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface EvaluationQuizResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface ClearQuizProgressResponse {
   data: {
     message: string;
   };
@@ -571,7 +587,7 @@ export type RequestParams = Omit<
 export interface ApiConfig<SecurityDataType = unknown>
   extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
-    securityData: SecurityDataType | null
+    securityData: SecurityDataType | null,
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
   secure?: boolean;
   format?: ResponseType;
@@ -612,7 +628,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
   protected mergeRequestParams(
     params1: AxiosRequestConfig,
-    params2?: AxiosRequestConfig
+    params2?: AxiosRequestConfig,
   ): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
@@ -653,7 +669,7 @@ export class HttpClient<SecurityDataType = unknown> {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
         formData.append(
           key,
-          isFileType ? formItem : this.stringifyFormItem(formItem)
+          isFileType ? formItem : this.stringifyFormItem(formItem),
         );
       }
 
@@ -805,7 +821,7 @@ export class API<
      */
     authControllerForgotPassword: (
       data: ForgotPasswordBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<void, any>({
         path: `/api/auth/forgot-password`,
@@ -823,7 +839,7 @@ export class API<
      */
     authControllerCreatePassword: (
       data: CreatePasswordBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<void, any>({
         path: `/api/auth/create-password`,
@@ -841,7 +857,7 @@ export class API<
      */
     authControllerResetPassword: (
       data: ResetPasswordBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<void, any>({
         path: `/api/auth/reset-password`,
@@ -944,7 +960,7 @@ export class API<
      */
     usersControllerDeleteBulkUsers: (
       data: DeleteBulkUsersBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<DeleteBulkUsersResponse, any>({
         path: `/api/users`,
@@ -978,7 +994,7 @@ export class API<
     usersControllerUpdateUser: (
       id: string,
       data: UpdateUserBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<UpdateUserResponse, any>({
         path: `/api/users/${id}`,
@@ -1012,7 +1028,7 @@ export class API<
     usersControllerAdminUpdateUser: (
       id: string,
       data: AdminUpdateUserBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<AdminUpdateUserResponse, any>({
         path: `/api/users/admin/${id}`,
@@ -1032,7 +1048,7 @@ export class API<
     usersControllerChangePassword: (
       id: string,
       data: ChangePasswordBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<ChangePasswordResponse, any>({
         path: `/api/users/${id}/change-password`,
@@ -1089,7 +1105,7 @@ export class API<
           | "-createdAt"
           | "-archived";
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<GetAllCategoriesResponse, any>({
         path: `/api/categories`,
@@ -1107,7 +1123,7 @@ export class API<
      */
     categoriesControllerGetCategoryById: (
       id: string,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<GetCategoryByIdResponse, any>({
         path: `/api/categories/${id}`,
@@ -1125,7 +1141,7 @@ export class API<
     categoriesControllerUpdateCategory: (
       id: string,
       data: UpdateCategoryBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<UpdateCategoryResponse, any>({
         path: `/api/categories/${id}`,
@@ -1166,7 +1182,7 @@ export class API<
           | "-lessonsCount"
           | "-enrolledParticipantsCount";
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<GetAllCoursesResponse, any>({
         path: `/api/courses`,
@@ -1184,7 +1200,7 @@ export class API<
      */
     coursesControllerCreateCourse: (
       data: CreateCourseBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<CreateCourseResponse, any>({
         path: `/api/courses`,
@@ -1225,7 +1241,7 @@ export class API<
           | "-lessonsCount"
           | "-enrolledParticipantsCount";
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<GetStudentCoursesResponse, any>({
         path: `/api/courses/get-student-courses`,
@@ -1265,7 +1281,7 @@ export class API<
           | "-lessonsCount"
           | "-enrolledParticipantsCount";
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<GetAvailableCoursesResponse, any>({
         path: `/api/courses/available-courses`,
@@ -1286,7 +1302,7 @@ export class API<
         /** @format uuid */
         id: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<GetCourseResponse, any>({
         path: `/api/courses/course`,
@@ -1307,7 +1323,7 @@ export class API<
         /** @format uuid */
         id: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<GetCourseByIdResponse, any>({
         path: `/api/courses/course-by-id`,
@@ -1326,7 +1342,7 @@ export class API<
     coursesControllerUpdateCourse: (
       id: string,
       data: UpdateCourseBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<UpdateCourseResponse, any>({
         path: `/api/courses/${id}`,
@@ -1340,17 +1356,17 @@ export class API<
     /**
      * No description
      *
-     * @name CoursesControllerCreateFavouritedCourse
+     * @name CoursesControllerEnrollCourse
      * @request POST:/api/courses/enroll-course
      */
-    coursesControllerCreateFavouritedCourse: (
+    coursesControllerEnrollCourse: (
       query?: {
         /** @format uuid */
         id?: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
-      this.request<CreateFavouritedCourseResponse, any>({
+      this.request<EnrollCourseResponse, any>({
         path: `/api/courses/enroll-course`,
         method: "POST",
         query: query,
@@ -1361,17 +1377,17 @@ export class API<
     /**
      * No description
      *
-     * @name CoursesControllerDeleteFavouritedCourseForUser
+     * @name CoursesControllerUnenrollCourse
      * @request DELETE:/api/courses/unenroll-course
      */
-    coursesControllerDeleteFavouritedCourseForUser: (
+    coursesControllerUnenrollCourse: (
       query?: {
         /** @format uuid */
         id?: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
-      this.request<DeleteFavouritedCourseForUserResponse, any>({
+      this.request<UnenrollCourseResponse, any>({
         path: `/api/courses/unenroll-course`,
         method: "DELETE",
         query: query,
@@ -1383,11 +1399,11 @@ export class API<
      * No description
      *
      * @name LessonsControllerGetAllLessons
-     * @request GET:/api/courses/lessons
+     * @request GET:/api/lessons/lessons
      */
     lessonsControllerGetAllLessons: (params: RequestParams = {}) =>
       this.request<GetAllLessonsResponse, any>({
-        path: `/api/courses/lessons`,
+        path: `/api/lessons/lessons`,
         method: "GET",
         format: "json",
         ...params,
@@ -1397,11 +1413,11 @@ export class API<
      * No description
      *
      * @name LessonsControllerGetAvailableLessons
-     * @request GET:/api/courses/available-lessons
+     * @request GET:/api/lessons/available-lessons
      */
     lessonsControllerGetAvailableLessons: (params: RequestParams = {}) =>
       this.request<GetAvailableLessonsResponse, any>({
-        path: `/api/courses/available-lessons`,
+        path: `/api/lessons/available-lessons`,
         method: "GET",
         format: "json",
         ...params,
@@ -1411,17 +1427,17 @@ export class API<
      * No description
      *
      * @name LessonsControllerGetLesson
-     * @request GET:/api/courses/lesson
+     * @request GET:/api/lessons/lesson
      */
     lessonsControllerGetLesson: (
       query?: {
         /** @format uuid */
         id?: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<GetLessonResponse, any>({
-        path: `/api/courses/lesson`,
+        path: `/api/lessons/lesson`,
         method: "GET",
         query: query,
         format: "json",
@@ -1432,14 +1448,14 @@ export class API<
      * No description
      *
      * @name LessonsControllerAddLessonToCourse
-     * @request POST:/api/courses/add
+     * @request POST:/api/lessons/add
      */
     lessonsControllerAddLessonToCourse: (
       data: AddLessonToCourseBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<AddLessonToCourseResponse, any>({
-        path: `/api/courses/add`,
+        path: `/api/lessons/add`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -1451,16 +1467,58 @@ export class API<
      * No description
      *
      * @name LessonsControllerRemoveLessonFromCourse
-     * @request DELETE:/api/courses/{courseId}/{lessonId}
+     * @request DELETE:/api/lessons/{courseId}/{lessonId}
      */
     lessonsControllerRemoveLessonFromCourse: (
       courseId: string,
       lessonId: string,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<RemoveLessonFromCourseResponse, any>({
-        path: `/api/courses/${courseId}/${lessonId}`,
+        path: `/api/lessons/${courseId}/${lessonId}`,
         method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerEvaluationQuiz
+     * @request POST:/api/lessons/evaluation-quiz
+     */
+    lessonsControllerEvaluationQuiz: (
+      query?: {
+        /** @format uuid */
+        lessonId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<EvaluationQuizResponse, any>({
+        path: `/api/lessons/evaluation-quiz`,
+        method: "POST",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerClearQuizProgress
+     * @request DELETE:/api/lessons/clear-quiz-progress
+     */
+    lessonsControllerClearQuizProgress: (
+      query?: {
+        /** @format uuid */
+        lessonId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ClearQuizProgressResponse, any>({
+        path: `/api/lessons/clear-quiz-progress`,
+        method: "DELETE",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -1473,7 +1531,7 @@ export class API<
      */
     questionsControllerAnswerQuestion: (
       data: AnswerQuestionBody,
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<AnswerQuestionResponse, any>({
         path: `/api/questions/answer`,
@@ -1497,7 +1555,7 @@ export class API<
         /** @format uuid */
         lessonId: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<MarkLessonItemAsCompletedResponse, any>({
         path: `/api/studentCompletedLessonItems`,
@@ -1520,7 +1578,7 @@ export class API<
         customerId: string;
         courseId: string;
       },
-      params: RequestParams = {}
+      params: RequestParams = {},
     ) =>
       this.request<CreatePaymentIntentResponse, any>({
         path: `/api/stripe`,

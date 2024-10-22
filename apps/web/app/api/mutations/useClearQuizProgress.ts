@@ -3,26 +3,22 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../api-client";
 
-type EnrollCourseOptions = {
-  id: string;
+type SubmitQuizProps = {
+  handleOnSuccess: () => void;
 };
 
-export function useEnrollCourse() {
+export function useClearQuizProgress({ handleOnSuccess }: SubmitQuizProps) {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: EnrollCourseOptions) => {
-      const response = await ApiClient.api.coursesControllerEnrollCourse({
-        id: options.id,
-      });
+    mutationFn: async (answer: { lessonId: string }) => {
+      const response =
+        await ApiClient.api.lessonsControllerClearQuizProgress(answer);
 
       return response.data;
     },
-    onSuccess: ({ data }) => {
-      toast({
-        variant: "default",
-        description: data.message,
-      });
+    onSuccess: () => {
+      handleOnSuccess();
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

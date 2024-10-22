@@ -1209,7 +1209,7 @@
     },
     "/api/courses/enroll-course": {
       "post": {
-        "operationId": "CoursesController_createFavouritedCourse",
+        "operationId": "CoursesController_enrollCourse",
         "parameters": [
           {
             "name": "id",
@@ -1226,7 +1226,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateFavouritedCourseResponse"
+                  "$ref": "#/components/schemas/EnrollCourseResponse"
                 }
               }
             }
@@ -1236,7 +1236,7 @@
     },
     "/api/courses/unenroll-course": {
       "delete": {
-        "operationId": "CoursesController_deleteFavouritedCourseForUser",
+        "operationId": "CoursesController_unenrollCourse",
         "parameters": [
           {
             "name": "id",
@@ -1253,7 +1253,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteFavouritedCourseForUserResponse"
+                  "$ref": "#/components/schemas/UnenrollCourseResponse"
                 }
               }
             }
@@ -1261,7 +1261,7 @@
         }
       }
     },
-    "/api/courses/lessons": {
+    "/api/lessons/lessons": {
       "get": {
         "operationId": "LessonsController_getAllLessons",
         "parameters": [],
@@ -1278,7 +1278,7 @@
         }
       }
     },
-    "/api/courses/available-lessons": {
+    "/api/lessons/available-lessons": {
       "get": {
         "operationId": "LessonsController_getAvailableLessons",
         "parameters": [],
@@ -1295,7 +1295,7 @@
         }
       }
     },
-    "/api/courses/lesson": {
+    "/api/lessons/lesson": {
       "get": {
         "operationId": "LessonsController_getLesson",
         "parameters": [
@@ -1322,7 +1322,7 @@
         }
       }
     },
-    "/api/courses/add": {
+    "/api/lessons/add": {
       "post": {
         "operationId": "LessonsController_addLessonToCourse",
         "parameters": [],
@@ -1349,7 +1349,7 @@
         }
       }
     },
-    "/api/courses/{courseId}/{lessonId}": {
+    "/api/lessons/{courseId}/{lessonId}": {
       "delete": {
         "operationId": "LessonsController_removeLessonFromCourse",
         "parameters": [
@@ -1378,6 +1378,60 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RemoveLessonFromCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/evaluation-quiz": {
+      "post": {
+        "operationId": "LessonsController_evaluationQuiz",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EvaluationQuizResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/clear-quiz-progress": {
+      "delete": {
+        "operationId": "LessonsController_clearQuizProgress",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClearQuizProgressResponse"
                 }
               }
             }
@@ -2917,7 +2971,7 @@
           "data"
         ]
       },
-      "CreateFavouritedCourseResponse": {
+      "EnrollCourseResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -2936,7 +2990,7 @@
           "data"
         ]
       },
-      "DeleteFavouritedCourseForUserResponse": {
+      "UnenrollCourseResponse": {
         "type": "null"
       },
       "GetAllLessonsResponse": {
@@ -3065,120 +3119,12 @@
                           "type": "null"
                         }
                       ]
-                    },
-                    "content": {
-                      "anyOf": [
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "format": "uuid",
-                              "type": "string"
-                            },
-                            "questionType": {
-                              "type": "string"
-                            },
-                            "questionBody": {
-                              "type": "string"
-                            },
-                            "questionAnswers": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "format": "uuid",
-                                    "type": "string"
-                                  },
-                                  "optionText": {
-                                    "type": "string"
-                                  },
-                                  "position": {
-                                    "anyOf": [
-                                      {
-                                        "type": "number"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "isStudentAnswer": {
-                                    "type": "boolean"
-                                  }
-                                },
-                                "required": [
-                                  "id",
-                                  "optionText",
-                                  "position",
-                                  "isStudentAnswer"
-                                ]
-                              }
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "questionType",
-                            "questionBody",
-                            "questionAnswers"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "format": "uuid",
-                              "type": "string"
-                            },
-                            "title": {
-                              "type": "string"
-                            },
-                            "body": {
-                              "type": "string"
-                            },
-                            "state": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "title",
-                            "body",
-                            "state"
-                          ]
-                        },
-                        {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "format": "uuid",
-                              "type": "string"
-                            },
-                            "title": {
-                              "type": "string"
-                            },
-                            "type": {
-                              "type": "string"
-                            },
-                            "url": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "title",
-                            "type",
-                            "url"
-                          ]
-                        }
-                      ]
                     }
                   },
                   "required": [
                     "id",
                     "lessonItemType",
-                    "displayOrder",
-                    "content"
+                    "displayOrder"
                   ]
                 }
               }
@@ -3238,6 +3184,44 @@
         ]
       },
       "RemoveLessonFromCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "EvaluationQuizResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ClearQuizProgressResponse": {
         "type": "object",
         "properties": {
           "data": {

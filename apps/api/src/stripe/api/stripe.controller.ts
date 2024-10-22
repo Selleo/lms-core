@@ -91,7 +91,6 @@ export class StripeController {
   @Public()
   @Get("test")
   testRoute() {
-    console.log("Test route hit");
     return "Test successful";
   }
   @Public()
@@ -100,7 +99,6 @@ export class StripeController {
     @Headers("stripe-signature") sig: string,
     @Req() request: RequestWithRawBody,
   ) {
-    console.log("Handling webhook");
     try {
       if (!sig) {
         throw new Error("Missing stripe-signature header");
@@ -118,8 +116,6 @@ export class StripeController {
         sig,
         this.configService.get<string>("stripe.webhookSecret") || "",
       );
-
-      console.log("Event type:", event.type);
 
       if (event.type === "payment_intent.succeeded") {
         await this.stripeWebhookHandler.handlePaymentIntentSucceeded(event);
