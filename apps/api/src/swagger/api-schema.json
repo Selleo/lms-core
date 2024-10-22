@@ -3262,6 +3262,24 @@
               },
               {
                 "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "index": {
+                      "type": "number"
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "index",
+                    "value"
+                  ]
+                }
               }
             ]
           }
