@@ -46,7 +46,7 @@ export class QuestionsService {
         [QuestionType.single_choice.key]: this.handleChoiceAnswer.bind(this),
         [QuestionType.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
         [QuestionType.open_answer.key]: this.handleOpenAnswer.bind(this),
-        [QuestionType.fill_in_the_blanks.key]:
+        [QuestionType.fill_in_the_blanks_text.key]:
           this.handleFillInTheBlanksAnswer.bind(this),
       } as const;
 

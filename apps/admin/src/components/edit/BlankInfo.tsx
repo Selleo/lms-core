@@ -4,7 +4,7 @@ import { BasePropertyProps } from "adminjs";
 
 const BlankInfo: React.FC<BasePropertyProps> = ({ record, property }) => {
   const isFillInTheBlank =
-    record?.params?.question_type === "fill_in_the_blanks";
+    record?.params?.question_type === "fill_in_the_blanks_text";
   const isFillInTheBlankAnswer =
     property.resourceId === "question_answer_options";
 

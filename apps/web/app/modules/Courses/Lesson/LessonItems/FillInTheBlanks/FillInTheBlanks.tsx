@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { Card } from "~/components/ui/card";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
-import { UseFormRegister } from "react-hook-form";
 import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheTextBlanks";
 import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
 
@@ -13,8 +11,7 @@ type FillTheBlanksProps = {
     optionText: string;
     position: number | null;
   }[];
-  register: UseFormRegister<TQuestionsForm>;
-  questionId: string;
+  questionLabel: string;
 };
 
 const MAX_ANSWERS_AMOUNT = 2;
@@ -25,6 +22,7 @@ type Word = {
 };
 
 export const FillTheBlanks = ({
+  questionLabel,
   content,
   sendAnswer,
   answers,
@@ -38,7 +36,7 @@ export const FillTheBlanks = ({
         sendAnswer(sortedWords);
       }
     }
-  }, [sendAnswer, words]);
+  }, [words]);
 
   const handleWordUpdate = (
     prevWords: Word[],
@@ -76,8 +74,8 @@ export const FillTheBlanks = ({
 
   return (
     <Card className="flex flex-col gap-4 p-8 border-none drop-shadow-primary">
-      <div className="details text-primary-700 uppercase">{`question 0`}</div>
-      <div className="h6 text-neutral-950">Decerno audeo tam altus aequus.</div>
+      <div className="details text-primary-700 uppercase">{questionLabel}</div>
+      <div className="h6 text-neutral-950">Fill in the blanks.</div>
       <FillInTheTextBlanks
         content={content}
         replacement={(index) => {
