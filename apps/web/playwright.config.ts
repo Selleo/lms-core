@@ -9,16 +9,16 @@ export default defineConfig({
   use: {
     baseURL: process.env.CI ? "https://staging-url.example.com" : "https://app.lms.localhost",
     ignoreHTTPSErrors: true,
-    // launchOptions: {
-    //   args: [
-    //     "--ignore-certificate-errors",
-    //     "--ignore-certificate-errors-spki-list",
-    //     "--ignore-ssl-errors",
-    //     "--disable-web-security",
-    //     "--allow-insecure-localhost",
-    //     "--disable-features=IsolateOrigins,site-per-process",
-    //   ],
-    // },
+    launchOptions: {
+      args: [
+        "--ignore-certificate-errors",
+        "--ignore-certificate-errors-spki-list",
+        "--ignore-ssl-errors",
+        "--disable-web-security",
+        "--allow-insecure-localhost",
+        "--disable-features=IsolateOrigins,site-per-process",
+      ],
+    },
   },
 
   projects: [

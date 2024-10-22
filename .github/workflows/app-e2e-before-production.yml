@@ -1,4 +1,4 @@
-name: Frontend Pull Request Check
+name: App E2E Before Production
 
 env:
   HUSKY: 0
@@ -8,12 +8,23 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  pull_request:
+  push:
     branches:
       - '*'
-    paths:
-      - apps/web/**
 jobs:
+  prepare_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build docker images
+        run: docker compose -f e2e.docker-compose.yml run build
+      - name: Run db
+        run: docker compose -f e2e.docker-compose.yml up -d db
+      - name: migrate database
+        run: docker compose -f e2e.docker-compose.yml run migrate
+      - name: seed database
+        run: docker compose -f e2e.docker-compose.yml run seed
+      - name: Run backend
+        run: docker compose -f e2e.docker-compose.yml up -d app
   lint:
     name: Lint
     runs-on: ubuntu-latest
