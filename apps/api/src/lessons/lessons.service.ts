@@ -29,6 +29,7 @@ import {
 import { isEmpty, isNull } from "lodash";
 import { Lesson } from "./schemas/lesson.schema";
 import { S3Service } from "src/file/s3.service";
+import { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
 
 @Injectable()
 export class LessonsService {
@@ -62,6 +63,121 @@ export class LessonsService {
     );
   }
 
+  async getLessonById(id: string) {
+    const [lesson] = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
+        state: lessons.state,
+        archived: lessons.archived,
+      })
+      .from(lessons)
+      .where(eq(lessons.id, id));
+
+    if (!lesson) throw new NotFoundException("Lesson not found");
+
+    const lessonItemsList = await this.db
+      .select({
+        id: lessonItems.id,
+        lessonItemType: lessonItems.lessonItemType,
+        questionData: questions,
+        textBlockData: textBlocks,
+        fileData: files,
+        displayOrder: lessonItems.displayOrder,
+      })
+      .from(lessonItems)
+      .leftJoin(
+        questions,
+        and(
+          eq(lessonItems.lessonItemId, questions.id),
+          eq(lessonItems.lessonItemType, "question"),
+        ),
+      )
+      .leftJoin(
+        textBlocks,
+        and(
+          eq(lessonItems.lessonItemId, textBlocks.id),
+          eq(lessonItems.lessonItemType, "text_block"),
+        ),
+      )
+      .leftJoin(
+        files,
+        and(
+          eq(lessonItems.lessonItemId, files.id),
+          eq(lessonItems.lessonItemType, "file"),
+        ),
+      )
+      .where(eq(lessonItems.lessonId, id))
+      .orderBy(lessonItems.displayOrder);
+
+    const items = await Promise.all(
+      lessonItemsList.map(async (item) => {
+        const content = await match(item)
+          .returnType<Promise<LessonItemResponse["content"]>>()
+          .with(
+            { lessonItemType: "question", questionData: P.not(P.nullish) },
+            async (item) => {
+              const questionAnswers = await this.db
+                .select({
+                  id: questionAnswerOptions.id,
+                  optionText: questionAnswerOptions.optionText,
+                  position: questionAnswerOptions.position,
+                })
+                .from(questionAnswerOptions)
+                .where(
+                  eq(questionAnswerOptions.questionId, item.questionData.id),
+                );
+
+              return {
+                id: item.questionData.id,
+                questionType: item.questionData.questionType,
+                questionBody: item.questionData.questionBody,
+                questionAnswers,
+                state: item.questionData.state,
+              };
+            },
+          )
+          .with(
+            { lessonItemType: "text_block", textBlockData: P.not(P.nullish) },
+            async (item) => ({
+              id: item.textBlockData.id,
+              body: item.textBlockData.body || "",
+              state: item.textBlockData.state,
+              title: item.textBlockData.title,
+            }),
+          )
+          .with(
+            { lessonItemType: "file", fileData: P.not(P.nullish) },
+            async (item) => ({
+              id: item.fileData.id,
+              title: item.fileData.title,
+              type: item.fileData.type,
+              url: item.fileData.url,
+              state: item.fileData.state,
+            }),
+          )
+          .otherwise(() => {
+            throw new Error(`Unknown item type: ${item.lessonItemType}`);
+          });
+
+        return {
+          id: item.id,
+          lessonItemType: item.lessonItemType,
+          displayOrder: item.displayOrder,
+          content,
+        };
+      }),
+    );
+
+    return {
+      ...lesson,
+      lessonItems: items,
+      itemsCount: items.length,
+    };
+  }
+
   async getLesson(id: string, userId: string, isAdmin?: boolean) {
     const [accessCourseLessons] = await this.checkLessonAssignment(id, userId);
 
@@ -75,7 +191,12 @@ export class LessonsService {
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
         type: sql<string>`${lessons.type}`,
-        isSubmitted: sql<boolean>`(${studentLessonsProgress.quizCompleted})`,
+        isSubmitted: sql<boolean>`
+          CASE
+            WHEN ${studentLessonsProgress.quizCompleted} IS NOT NULL THEN ${studentLessonsProgress.quizCompleted}
+            ELSE FALSE
+          END
+        `,
       })
       .from(lessons)
       .leftJoin(
@@ -340,7 +461,7 @@ export class LessonsService {
 
         if (isNull(questionData)) throw new Error("Question not found");
 
-        const content = await this.processQuestionItem(
+        const processedContent = await this.processQuestionItem(
           { id, displayOrder, lessonItemType, questionData },
           userId,
           lesson.type,
@@ -351,7 +472,7 @@ export class LessonsService {
           id: item.id,
           lessonItemType: item.lessonItemType,
           displayOrder: item.displayOrder,
-          content,
+          content: processedContent,
         };
       }),
     );
@@ -422,8 +543,8 @@ export class LessonsService {
         { lessonItemType: "text_block", textBlockData: P.not(P.nullish) },
         async (item) => ({
           id: item.textBlockData.id,
-          body: item.textBlockData.body || "",
-          state: item.textBlockData.state,
+          body: item.textBlockData.body ?? "",
+          state: item.textBlockData.state ?? "",
           title: item.textBlockData.title,
         }),
       )
@@ -615,6 +736,25 @@ export class LessonsService {
         return { ...lesson, imageUrl };
       }),
     );
+  }
+
+  async createLesson(body: CreateLessonBody, authorId: string) {
+    const [lesson] = await this.db
+      .insert(lessons)
+      .values({ ...body, authorId })
+      .returning();
+
+    if (!lesson) throw new NotFoundException("Lesson not found");
+  }
+
+  async updateLesson(id: string, body: UpdateLessonBody) {
+    const [lesson] = await this.db
+      .update(lessons)
+      .set(body)
+      .where(eq(lessons.id, id))
+      .returning();
+
+    if (!lesson) throw new NotFoundException("Lesson not found");
   }
 
   async addLessonToCourse(

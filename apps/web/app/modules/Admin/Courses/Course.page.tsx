@@ -163,9 +163,9 @@ const Course = () => {
 
         if (name === "description") {
           return (
-            // @ts-expect-error - TODO: Fix the type of the textarea - the field type contains the value of the archived wchich is a boolean
             <Textarea
               {...field}
+              value={field.value as string}
               placeholder="Enter course description"
               className="resize-none"
             />
@@ -173,9 +173,9 @@ const Course = () => {
         }
 
         return (
-          // @ts-expect-error - TODO: Fix the type of the textarea - the field type contains the value of the archived wchich is a boolean
           <Input
             {...field}
+            value={field.value as string}
             type={name === "priceInCents" ? "number" : "text"}
             placeholder={`Enter ${startCase(name)}`}
           />

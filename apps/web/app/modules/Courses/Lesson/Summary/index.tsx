@@ -8,7 +8,7 @@ export default function Summary() {
   const { lessonId } = useParams();
   const { data } = useLessonSuspense(lessonId);
   const lessonItemsCount = data.itemsCount;
-  const lessonItemsCompletedCount = data.itemsCompletedCount;
+  const lessonItemsCompletedCount = data.itemsCompletedCount ?? 0;
 
   const lessonItemsSummary = getSummaryItems(data);
 

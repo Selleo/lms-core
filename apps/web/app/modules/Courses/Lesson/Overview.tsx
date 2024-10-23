@@ -10,7 +10,7 @@ export default function Overview() {
   const title = data.title;
   const description = data.description;
   const lessonItemsCount = data.itemsCount;
-  const lessonItemsCompletedCount = data.itemsCompletedCount;
+  const lessonItemsCompletedCount = data.itemsCompletedCount ?? 0;
 
   return (
     <Card className="w-full pt-6 border-none drop-shadow-primary">

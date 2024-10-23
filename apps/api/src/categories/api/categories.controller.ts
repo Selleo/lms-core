@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Patch,
+  Post,
   Query,
   UnauthorizedException,
 } from "@nestjs/common";
@@ -31,6 +32,10 @@ import {
   UpdateCategoryBody,
   updateCategorySchema,
 } from "../schemas/updateCategorySchema";
+import {
+  CreateCategoryBody,
+  createCategorySchema,
+} from "../schemas/createCategorySchema";
 
 @Controller("categories")
 export class CategoriesController {
@@ -78,6 +83,21 @@ export class CategoriesController {
     const category = await this.categoriesService.getCategoryById(id);
 
     return new BaseResponse(category);
+  }
+
+  @Post()
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: createCategorySchema,
+      },
+    ],
+  })
+  async createCategory(@Body() createCategoryBody: CreateCategoryBody) {
+    return new BaseResponse(
+      await this.categoriesService.createCategory(createCategoryBody),
+    );
   }
 
   @Patch(":id")

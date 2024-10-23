@@ -11,7 +11,7 @@ type LessonCardProps = Lesson & {
   index: number;
   isEnrolled: boolean;
   isAdmin: boolean;
-  type: string;
+  type?: string;
 };
 
 export const LessonCard = ({

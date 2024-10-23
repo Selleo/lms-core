@@ -23,7 +23,7 @@ type TProps = {
   questionsArray: string[];
   register: UseFormRegister<TQuestionsForm>;
   isAdmin: boolean;
-  isSubmitted: boolean;
+  isSubmitted?: boolean;
 };
 
 const classesMap = {
@@ -62,7 +62,7 @@ export default function Questions({
   });
 
   const [selectedOption, setSelectedOption] = useState<string[]>(() =>
-    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion }),
+    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion })
   );
 
   useEffect(() => {
@@ -90,7 +90,7 @@ export default function Questions({
   };
 
   const handleOpenAnswerRequest = async (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     await markLessonItemAsCompleted({
       lessonItemId: questionId,
@@ -106,7 +106,7 @@ export default function Questions({
             (answer.isCorrect && !answer.isStudentAnswer) ||
             (!answer.isCorrect &&
               answer.isStudentAnswer &&
-              answer.isCorrect !== null),
+              answer.isCorrect !== null)
         )
       : false;
 
@@ -198,7 +198,7 @@ export default function Questions({
                       className={cn(
                         "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
                         { "cursor-not-allowed": isFieldDisabled },
-                        classes,
+                        classes
                       )}
                     >
                       {isSingleQuestion ? (
@@ -218,7 +218,7 @@ export default function Questions({
                             type="radio"
                             value={answer.id}
                             {...register(
-                              `singleAnswerQuestions.${questionId}.${answer.id}`,
+                              `singleAnswerQuestions.${questionId}.${answer.id}`
                             )}
                           />
                           <Icon
@@ -249,7 +249,7 @@ export default function Questions({
                             type="checkbox"
                             value={answer.id}
                             {...register(
-                              `multiAnswerQuestions.${questionId}.${answer.id}`,
+                              `multiAnswerQuestions.${questionId}.${answer.id}`
                             )}
                           />
                           <Icon

@@ -19,7 +19,7 @@ const Category = () => {
   const { id } = useParams<{ id: string }>();
   if (!id) throw new Error("Category ID not found");
 
-  const { data: user, isLoading } = useCategoryById(id);
+  const { data: category, isLoading } = useCategoryById(id);
   const { mutateAsync: updateCategory } = useUpdateCategory();
   const [isEditing, setIsEditing] = useState(false);
 
@@ -35,7 +35,7 @@ const Category = () => {
         <Loader />
       </div>
     );
-  if (!user) throw new Error("User not found");
+  if (!category) throw new Error("User not found");
 
   const onSubmit = (data: UpdateCategoryBody) => {
     updateCategory({ data, categoryId: id }).then(() => {
@@ -50,19 +50,19 @@ const Category = () => {
     <Controller
       name={name}
       control={control}
-      defaultValue={user[name] as UpdateCategoryBody[typeof name]}
+      defaultValue={category[name] as UpdateCategoryBody[typeof name]}
       render={({ field }) => {
         if (!isEditing) {
           if (name === "archived") {
             return (
               <span className="font-semibold capitalize">
-                {user[name] ? "Archived" : "Active"}
+                {category[name] ? "Archived" : "Active"}
               </span>
             );
           }
           return (
             <span className="font-semibold capitalize">
-              {user[name]?.toString()}
+              {category[name]?.toString()}
             </span>
           );
         }

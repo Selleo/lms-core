@@ -5,7 +5,8 @@ type TProps = {
     id: string;
     title: string;
     body: string;
-    state: string;
+    state?: string;
+    archived?: boolean;
   };
 };
 

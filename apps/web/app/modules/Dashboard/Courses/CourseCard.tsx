@@ -40,7 +40,13 @@ const CourseCard = ({
   return (
     <Link
       to={href}
-      className="flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-full bg-white lg:bg-none"
+      className={cn(
+        "flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-auto bg-white lg:bg-none border",
+        {
+          "border-secondary-200 hover:border-secondary-500": enrolled,
+          "border-primary-200 hover:border-primary-500": !enrolled,
+        }
+      )}
     >
       <div className="relative">
         <img
@@ -62,15 +68,7 @@ const CourseCard = ({
           />
         </div>
       </div>
-      <div
-        className={cn(
-          "flex flex-col flex-grow border-x border-b rounded-b-lg p-4",
-          {
-            "border-secondary-200 hover:border-secondary-500": enrolled,
-            "border-primary-200 hover:border-primary-500": !enrolled,
-          }
-        )}
-      >
+      <div className={cn("flex flex-col flex-grow p-4")}>
         <div className="flex flex-col gap-y-3 flex-grow">
           {enrolled && typeof completedLessonCount === "number" && (
             <CourseProgress

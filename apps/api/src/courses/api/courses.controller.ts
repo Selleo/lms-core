@@ -173,21 +173,15 @@ export class CoursesController {
   }
 
   @Post()
-  @UseInterceptors(FileInterceptor("image"))
   @Validate({
     request: [{ type: "body", schema: createCourseSchema }],
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async createCourse(
     @Body() createCourseBody: CreateCourseBody,
-    @UploadedFile() image: Express.Multer.File,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.coursesService.createCourse(
-      createCourseBody,
-      currentUserId,
-      image,
-    );
+    await this.coursesService.createCourse(createCourseBody, currentUserId);
     return new BaseResponse({ message: "Course enrolled successfully" });
   }
 

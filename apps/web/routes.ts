@@ -71,6 +71,12 @@ export const routes: (
       route("categories", "modules/Admin/Categories/Categories.page.tsx");
       route("categories/:id", "modules/Admin/Categories/Category.page.tsx");
       route("lessons", "modules/Admin/Lessons/Lessons.page.tsx");
+      route("lessons/:id", "modules/Admin/Lessons/Lesson.page.tsx");
+      route("lesson-items", "modules/Admin/LessonItems/LessonItems.page.tsx");
+      route(
+        "lesson-items/:id",
+        "modules/Admin/LessonItems/LessonItem.page.tsx"
+      );
     });
   });
 };
