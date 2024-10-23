@@ -676,22 +676,41 @@ export class LessonsService {
       .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
       .limit(1);
 
-    const result = !!studentAnswers?.answer
-      ? Object.keys(studentAnswers.answer).map((key) => {
-          const position = parseInt(key.split("_")[1]);
-          const studentAnswerText = studentAnswers.answer[
-            key as keyof typeof studentAnswers.answer
-          ] as string;
+    if (item.questionData.questionType == "fill_in_the_blanks_text") {
+      const result = !!studentAnswers?.answer
+        ? Object.keys(studentAnswers.answer).map((key) => {
+            const position = parseInt(key.split("_")[1]);
+            const studentAnswerText = studentAnswers.answer[
+              key as keyof typeof studentAnswers.answer
+            ] as string;
 
-          return {
-            id: studentAnswers.id,
-            optionText: studentAnswerText,
-            position: position,
-            isStudentAnswer: true,
-            isCorrect: null,
-          };
-        })
-      : [];
+            return {
+              id: studentAnswers.id,
+              optionText: studentAnswerText,
+              position: position,
+              isStudentAnswer: true,
+              isCorrect: null,
+            };
+          })
+        : [];
+
+      return {
+        id: item.questionData.id,
+        questionType: item.questionData.questionType,
+        questionBody: item.questionData.questionBody,
+        questionAnswers: result,
+      };
+    }
+
+    const result = questionAnswers.map((answer) => {
+      return {
+        id: answer.id,
+        optionText: answer.optionText,
+        position: null,
+        isStudentAnswer: null,
+        isCorrect: null,
+      };
+    });
 
     return {
       id: item.questionData.id,
@@ -700,7 +719,6 @@ export class LessonsService {
       questionAnswers: result,
     };
   }
-
   async getAvailableLessons() {
     const availableLessons = await this.db
       .select({

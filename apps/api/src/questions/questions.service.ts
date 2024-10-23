@@ -48,6 +48,8 @@ export class QuestionsService {
         [QuestionType.open_answer.key]: this.handleOpenAnswer.bind(this),
         [QuestionType.fill_in_the_blanks_text.key]:
           this.handleFillInTheBlanksAnswer.bind(this),
+        [QuestionType.fill_in_the_blanks_dnd.key]:
+          this.handleFillInTheBlanksAnswer.bind(this),
       } as const;
 
       const handler =

@@ -6,4 +6,8 @@ export const QuestionType = {
     key: "fill_in_the_blanks_text",
     value: "Fill in the blanks",
   },
+  fill_in_the_blanks_dnd: {
+    key: "fill_in_the_blanks_dnd",
+    value: "Fill in the blanks",
+  },
 } as const;
