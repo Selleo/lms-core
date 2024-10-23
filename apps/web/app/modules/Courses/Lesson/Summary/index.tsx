@@ -11,7 +11,6 @@ export default function Summary() {
   const lessonItemsCompletedCount = data.itemsCompletedCount ?? 0;
 
   const lessonItemsSummary = getSummaryItems(data);
-
   return (
     <Card className="rounded-none w-[410px] flex flex-col grow border-none drop-shadow-primary">
       <CardContent className="p-8 flex flex-col">

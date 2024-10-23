@@ -14,8 +14,6 @@ type FillTheBlanksProps = {
   questionLabel: string;
 };
 
-const MAX_ANSWERS_AMOUNT = 2;
-
 type Word = {
   index: number;
   value: string;
@@ -29,10 +27,12 @@ export const FillTheBlanks = ({
 }: FillTheBlanksProps) => {
   const [words, setWords] = useState<Word[]>([]);
 
+  const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
+
   useEffect(() => {
-    if (words.length >= 1 && words.length <= MAX_ANSWERS_AMOUNT) {
+    if (words.length >= 1 && words.length <= maxAnswersAmount) {
       const sortedWords = words.sort((a, b) => a.index - b.index);
-      if (sortedWords.length > 0 && sortedWords.length <= MAX_ANSWERS_AMOUNT) {
+      if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
         sendAnswer(sortedWords);
       }
     }
@@ -62,7 +62,7 @@ export const FillTheBlanks = ({
       return updatedWords;
     }
 
-    if (prevWords.length < MAX_ANSWERS_AMOUNT) {
+    if (prevWords.length < maxAnswersAmount) {
       return [...prevWords, { index, value: trimmedValue }];
     }
 
