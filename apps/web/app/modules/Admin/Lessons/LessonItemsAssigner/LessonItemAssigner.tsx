@@ -19,9 +19,9 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { GetAllLessonItemsResponse } from "~/api/generated-api";
 import { useAssignItemToLesson } from "~/api/mutations/admin/useAssignItemToLesson";
 import { useUnassignItemToLesson } from "~/api/mutations/admin/useUnassignItemToLesson";
-import { useLesson } from "~/api/queries";
 import { LessonItemCard } from "./LessonItemCard";
 import { useAvailableLessonItems } from "~/api/queries/admin/useAvailableLessonItems";
+import { useLessonById } from "~/api/queries/admin/useLessonById";
 
 type TransformedLessonItem = GetAllLessonItemsResponse["data"][number] & {
   columnId: string;
@@ -65,7 +65,7 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
   const [currentlyDraggedItem, setCurrentlyDraggedItem] =
     useState<TransformedLessonItem | null>(null);
 
-  const { data: lesson } = useLesson(lessonId);
+  const { data: lesson } = useLessonById(lessonId);
   const { data: allLessonItems } = useAvailableLessonItems();
   const { mutateAsync: assignItems } = useAssignItemToLesson();
   const { mutateAsync: unassignItems } = useUnassignItemToLesson();
@@ -74,13 +74,13 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   useEffect(() => {
     if (allLessonItems && lesson) {
       const assignedContentIds = lesson.lessonItems.map(
-        (lessonItem) => lessonItem.content.id
+        (lessonItem) => lessonItem.content.id,
       );
 
       const transformedLessons = allLessonItems.map((item) => ({
@@ -98,13 +98,13 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
     (event: DragStartEvent) => {
       const { active } = event;
       const draggedLesson = lessonItems.find(
-        (lesson) => lesson.id === active.id
+        (lesson) => lesson.id === active.id,
       );
       if (draggedLesson) {
         setCurrentlyDraggedItem(draggedLesson);
       }
     },
-    [lessonItems]
+    [lessonItems],
   );
 
   const handleDragEnd = useCallback(
@@ -113,7 +113,7 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
       if (!over) return;
 
       const activeLesson = lessonItems.find(
-        (lessonItem) => lessonItem.id === active.id
+        (lessonItem) => lessonItem.id === active.id,
       );
       if (!activeLesson) return;
 
@@ -146,8 +146,8 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
             prev.map((lesson) =>
               lesson.id === activeLesson.id
                 ? { ...lesson, columnId: newColumnId }
-                : lesson
-            )
+                : lesson,
+            ),
           );
         } catch (error) {
           console.error("Error updating lesson assignment:", error);
@@ -156,14 +156,14 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
 
       setCurrentlyDraggedItem(null);
     },
-    [lessonItems, lessonId, assignItems, unassignItems]
+    [lessonItems, lessonId, assignItems, unassignItems],
   );
 
   const assignedLessons = lessonItems.filter(
-    (lesson) => lesson.columnId === "column-assigned"
+    (lesson) => lesson.columnId === "column-assigned",
   );
   const unassignedLessons = lessonItems.filter(
-    (lesson) => lesson.columnId === "column-unassigned"
+    (lesson) => lesson.columnId === "column-unassigned",
   );
 
   return (

@@ -34,7 +34,12 @@ import {
 import { Textarea } from "~/components/ui/textarea";
 
 const formSchema = z.object({
-  questionType: z.enum(["single_choice", "multiple_choice", "open_answer"]),
+  questionType: z.enum([
+    "single_choice",
+    "multiple_choice",
+    "open_answer",
+    "fill_in_the_blanks_text",
+  ]),
   questionBody: z
     .string()
     .min(10, "Question body must be at least 10 characters."),
@@ -46,7 +51,7 @@ const formSchema = z.object({
       z.object({
         optionText: z.string().min(1, "Option text is required"),
         isStudentAnswer: z.boolean(),
-      })
+      }),
     )
     .optional(),
 });
@@ -162,6 +167,9 @@ export const CreateNewQuestion = ({
                         Multiple Choice
                       </SelectItem>
                       <SelectItem value="open_answer">Open Answer</SelectItem>
+                      <SelectItem value="fill_in_the_blanks_text">
+                        Fill in the blanks
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
