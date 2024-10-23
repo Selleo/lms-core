@@ -1,6 +1,9 @@
 import { useParams } from "@remix-run/react";
 import { useLessonSuspense } from "~/api/queries/useLesson";
 import { Card, CardContent } from "~/components/ui/card";
+import { Icon } from "~/components/Icon";
+import { cn } from "~/lib/utils";
+import CourseProgress from "~/components/CourseProgress";
 
 export default function Overview() {
   const { lessonId } = useParams();
@@ -12,10 +15,37 @@ export default function Overview() {
   const lessonItemsCount = data.itemsCount;
   const lessonItemsCompletedCount = data.itemsCompletedCount ?? 0;
 
+  const isQuiz = data.type === "quiz";
+
+  const isQuizSubmitted = data.type === "quiz" && data.isSubmitted;
+
+  const renderQuizProgressBadge = () => {
+    if (isQuizSubmitted) {
+      return (
+        <>
+          <Icon name="InputRoundedMarkerSuccess" />
+          <span className="text-success-800">Completed</span>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <Icon name="NotStartedRounded" />
+        <span className="text-neutral-900">Not started</span>
+      </>
+    );
+  };
+
+  const quizBadge = renderQuizProgressBadge();
+
   return (
-    <Card className="w-full pt-6 border-none drop-shadow-primary">
+    <Card className="w-full pt-6 lg:pt-0 border-none drop-shadow-primary">
       <CardContent className="lg:p-8 flex flex-col align-center gap-6 2xl:flex-row">
-        <div className="relative self-center w-full lg:w-[320px] aspect-video">
+        <div className="relative self-center w-full lg:max-w-[320px] aspect-video">
+          <div className="absolute z-10 flex items-center body-sm-md px-2 gap-x-1 rounded-lg py-1 left-4 top-4 bg-white">
+            {isQuiz && quizBadge}
+          </div>
           <img
             src={imageUrl}
             alt={title}
@@ -23,30 +53,24 @@ export default function Overview() {
           />
         </div>
         <div className="flex flex-col w-full">
-          <div className="gap-2 flex flex-col">
-            <p className="text-neutral-600 text-xs">
-              {`Lesson progress: ${lessonItemsCompletedCount}/${lessonItemsCount}`}
-            </p>
-            <div className="flex justify-between items-center gap-px">
-              {Array.from({
-                length: lessonItemsCompletedCount,
-              }).map((_, index) => (
-                <span
-                  key={index}
-                  className="h-[5px] flex-grow bg-secondary-500 rounded-[40px]"
-                />
-              ))}
-              {Array.from({
-                length: lessonItemsCount - lessonItemsCompletedCount,
-              }).map((_, index) => (
-                <span
-                  key={index}
-                  className="h-[5px] flex-grow bg-primary-50 rounded-[40px]"
-                />
-              ))}
+          {!isQuiz && (
+            <CourseProgress
+              label="Lesson progress: "
+              completedLessonCount={lessonItemsCompletedCount}
+              courseLessonCount={lessonItemsCount}
+            />
+          )}
+          {isQuizSubmitted && (
+            <div className="bg-neutral-50 body-sm-md w-max mb-2 flex items-center gap-x-1 rounded-lg px-2 py-1">
+              <Icon name="QuizStar" />
+              <span>
+                Your Score: {data.quizScore} / {data.lessonItems.length}
+              </span>
             </div>
-          </div>
-          <h5 className="h5 mt-6">{title}</h5>
+          )}
+          <h5 className={cn("h5", { "mt-6": data.type !== "quiz" })}>
+            {title}
+          </h5>
           <div className="body-base">{description}</div>
         </div>
       </CardContent>
