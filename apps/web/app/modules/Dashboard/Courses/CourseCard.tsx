@@ -41,11 +41,11 @@ const CourseCard = ({
     <Link
       to={href}
       className={cn(
-        "flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-auto bg-white lg:bg-none border",
+        "flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-full bg-white lg:bg-none border",
         {
           "border-secondary-200 hover:border-secondary-500": enrolled,
           "border-primary-200 hover:border-primary-500": !enrolled,
-        }
+        },
       )}
     >
       <div className="relative">
