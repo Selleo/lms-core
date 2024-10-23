@@ -6,6 +6,8 @@ test.describe("register page", () => {
   });
 
   test("register user", async ({ page }) => {
+    await page.getByLabel("first name").fill("testname");
+    await page.getByLabel("last name").fill("testlastname");
     await page.getByLabel("email").fill("test@useraaaa.com");
     await page.getByLabel("password").fill("password");
 

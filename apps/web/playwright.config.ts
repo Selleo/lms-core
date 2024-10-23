@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   use: {
     baseURL: process.env.CI
-      ? "https://staging-url.example.com"
+      ? "https://lms.beta.selleo.app"
       : "https://app.lms.localhost",
     ignoreHTTPSErrors: true,
     // launchOptions: {
@@ -24,13 +24,18 @@ export default defineConfig({
   },
 
   projects: [
+    { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
       name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+      },
     },
     {
       name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      use: {
+        ...devices["Desktop Firefox"],
+      },
     },
   ],
 });
