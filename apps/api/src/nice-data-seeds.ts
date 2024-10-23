@@ -13,6 +13,7 @@ export const QuestionType = {
   single_choice: "Single Choice",
   multiple_choice: "Multiple Choice",
   fill_in_the_blanks_text: "Fill in the blanks",
+  fill_in_the_blanks_dnd: "Fill in the blanks",
 } as const;
 
 export interface NiceCourseData {
@@ -93,6 +94,13 @@ export const niceCourses: NiceCourseData[] = [
             questionType: "fill_in_the_blanks_text",
             questionBody:
               "Fill in the blanks: The <h1> tag is used for [word], while the <p> tag is used for [word].",
+            state: "published",
+          },
+          {
+            type: "question",
+            questionType: "fill_in_the_blanks_dnd",
+            questionBody:
+              "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
             state: "published",
           },
           {
