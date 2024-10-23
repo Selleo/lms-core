@@ -66,7 +66,7 @@ export default function Questions({
   });
 
   const [selectedOption, setSelectedOption] = useState<string[]>(() =>
-    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion })
+    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion }),
   );
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function Questions({
   };
 
   const handleOpenAnswerRequest = async (
-    e: React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     await markLessonItemAsCompleted({
       lessonItemId: questionId,
@@ -110,9 +110,20 @@ export default function Questions({
             (answer.isCorrect && !answer.isStudentAnswer) ||
             (!answer.isCorrect &&
               answer.isStudentAnswer &&
-              answer.isCorrect !== null)
+              answer.isCorrect !== null),
         )
       : false;
+
+  if (isTextFillInTheBlanks) {
+    return (
+      <FillTheBlanks
+        questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
+        content={content.questionBody}
+        sendAnswer={sendAnswer}
+        answers={content.questionAnswers}
+      />
+    );
+  }
 
   if (isDraggableFillInTheBlanks) {
     return (
@@ -130,23 +141,6 @@ export default function Questions({
           };
         })}
       />
-    );
-  }
-
-  if (isTextFillInTheBlanks) {
-    return (
-      <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
-        <div className="details text-primary-700 uppercase">
-          {`question ${questionsArray.indexOf(questionId) + 1}`}
-        </div>
-        <div className="h6 text-neutral-950 my-4">Fill in the blanks.</div>
-        <FillTheBlanks
-          questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
-          content={content.questionBody}
-          sendAnswer={sendAnswer}
-          answers={content.questionAnswers}
-        />
-      </div>
     );
   }
 
@@ -214,7 +208,9 @@ export default function Questions({
                       }
 
                       if (isCorrectAnswerNotSelected) {
-                        return classesMap.correctAnswerUnselected;
+                        return isSingleQuestion
+                          ? classesMap.correctAnswerSelected
+                          : classesMap.correctAnswerUnselected;
                       }
 
                       if (isWrongAnswer) {
@@ -235,7 +231,7 @@ export default function Questions({
                         className={cn(
                           "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
                           { "cursor-not-allowed": isFieldDisabled },
-                          classes
+                          classes,
                         )}
                       >
                         {isSingleQuestion ? (
@@ -245,9 +241,13 @@ export default function Questions({
                                 "not-sr-only": !isSubmitted,
                                 "sr-only":
                                   (isSubmitted &&
+                                    !answer.isStudentAnswer &&
+                                    isCorrectAnswerNotSelected) ||
+                                  (isSubmitted &&
                                     answer.isStudentAnswer &&
-                                    isWrongAnswer) ||
-                                  isCorrectAnswer,
+                                    (isCorrectAnswerNotSelected ||
+                                      isWrongAnswer ||
+                                      isCorrectAnswer)),
                               })}
                               checked={selectedOption.includes(answer.id)}
                               id={answer.id}
@@ -255,19 +255,21 @@ export default function Questions({
                               type="radio"
                               value={answer.id}
                               {...register(
-                                `singleAnswerQuestions.${questionId}.${answer.id}`
+                                `singleAnswerQuestions.${questionId}.${answer.id}`,
                               )}
                             />
                             <Icon
                               name={
-                                isCorrectAnswer
+                                isCorrectAnswer || isCorrectAnswerNotSelected
                                   ? "InputRoundedMarkerSuccess"
                                   : "InputRoundedMarkerError"
                               }
                               className={cn({
                                 "sr-only":
                                   !isSubmitted ||
-                                  (!isAnswerChecked && !answer.isStudentAnswer),
+                                  (!isCorrectAnswerNotSelected &&
+                                    !isAnswerChecked &&
+                                    !answer.isStudentAnswer),
                               })}
                             />
                           </label>
@@ -286,7 +288,7 @@ export default function Questions({
                               type="checkbox"
                               value={answer.id}
                               {...register(
-                                `multiAnswerQuestions.${questionId}.${answer.id}`
+                                `multiAnswerQuestions.${questionId}.${answer.id}`,
                               )}
                             />
                             <Icon
@@ -304,11 +306,18 @@ export default function Questions({
                           </label>
                         )}
                         <Label
-                          className="body-base font-normal text-neutral-950"
+                          className="body-base font-normal w-full flex justify-between text-start text-neutral-950"
                           htmlFor={answer.id}
                           onClick={(e) => e.stopPropagation()}
                         >
-                          {answer.optionText}
+                          <span>{answer.optionText}</span>
+                          <span className="text-error-700">
+                            {isWrongAnswer &&
+                              answer.isStudentAnswer &&
+                              isSingleQuestion &&
+                              isSubmitted &&
+                              "(Your answer)"}
+                          </span>
                         </Label>
                       </button>
                     );
