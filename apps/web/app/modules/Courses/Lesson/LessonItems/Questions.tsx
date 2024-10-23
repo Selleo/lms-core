@@ -12,6 +12,7 @@ import type { TQuestionsForm } from "../types";
 import type { UseFormGetValues, UseFormRegister } from "react-hook-form";
 import { Icon } from "~/components/Icon";
 import type { GetLessonResponse } from "~/api/generated-api";
+import { FillInTheBlanksDnd } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/dnd/FillInTheBlanksDnd";
 import { FillTheBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheBlanks";
 
 type TProps = {
@@ -52,9 +53,12 @@ export default function Questions({
     "questionType" in content && content.questionType === "single_choice";
   const isOpenAnswer =
     "questionType" in content && content.questionType === "open_answer";
-  const isFillInTheBlanks =
+  const isTextFillInTheBlanks =
     "questionType" in content &&
     content.questionType === "fill_in_the_blanks_text";
+  const isDraggableFillInTheBlanks =
+    "questionType" in content &&
+    content.questionType === "fill_in_the_blanks_dnd";
 
   const { sendAnswer, sendOpenAnswer } = useQuestionQuery({
     lessonId,
@@ -62,7 +66,7 @@ export default function Questions({
   });
 
   const [selectedOption, setSelectedOption] = useState<string[]>(() =>
-    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion })
+    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion }),
   );
 
   useEffect(() => {
@@ -90,7 +94,7 @@ export default function Questions({
   };
 
   const handleOpenAnswerRequest = async (
-    e: React.ChangeEvent<HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLTextAreaElement>,
   ) => {
     await markLessonItemAsCompleted({
       lessonItemId: questionId,
@@ -106,18 +110,43 @@ export default function Questions({
             (answer.isCorrect && !answer.isStudentAnswer) ||
             (!answer.isCorrect &&
               answer.isStudentAnswer &&
-              answer.isCorrect !== null)
+              answer.isCorrect !== null),
         )
       : false;
 
-  if (isFillInTheBlanks) {
+  if (isDraggableFillInTheBlanks) {
     return (
-      <FillTheBlanks
+      <FillInTheBlanksDnd
         questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
         content={content.questionBody}
         sendAnswer={sendAnswer}
-        answers={content.questionAnswers}
+        answers={content.questionAnswers.map(({ id, optionText }) => {
+          return {
+            id,
+            //TODO: Change static index to position once the backend is ready
+            index: 0,
+            value: optionText,
+            blankId: "blank_preset",
+          };
+        })}
       />
+    );
+  }
+
+  if (isTextFillInTheBlanks) {
+    return (
+      <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
+        <div className="details text-primary-700 uppercase">
+          {`question ${questionsArray.indexOf(questionId) + 1}`}
+        </div>
+        <div className="h6 text-neutral-950 my-4">Fill in the blanks.</div>
+        <FillTheBlanks
+          questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
+          content={content.questionBody}
+          sendAnswer={sendAnswer}
+          answers={content.questionAnswers}
+        />
+      </div>
     );
   }
 
@@ -198,7 +227,7 @@ export default function Questions({
                       className={cn(
                         "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
                         { "cursor-not-allowed": isFieldDisabled },
-                        classes
+                        classes,
                       )}
                     >
                       {isSingleQuestion ? (
@@ -218,7 +247,7 @@ export default function Questions({
                             type="radio"
                             value={answer.id}
                             {...register(
-                              `singleAnswerQuestions.${questionId}.${answer.id}`
+                              `singleAnswerQuestions.${questionId}.${answer.id}`,
                             )}
                           />
                           <Icon
@@ -249,7 +278,7 @@ export default function Questions({
                             type="checkbox"
                             value={answer.id}
                             {...register(
-                              `multiAnswerQuestions.${questionId}.${answer.id}`
+                              `multiAnswerQuestions.${questionId}.${answer.id}`,
                             )}
                           />
                           <Icon
