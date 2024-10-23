@@ -49,6 +49,7 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
         .values({
           id: crypto.randomUUID(),
           title: lessonData.title,
+          type: lessonData.type,
           description: lessonData.description,
           imageUrl: faker.image.urlPicsumPhotos(),
           authorId: adminUserId,
@@ -62,28 +63,6 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
         id: crypto.randomUUID(),
         courseId: course.id,
         lessonId: lesson.id,
-      });
-
-      const [textBlock] = await db
-        .insert(textBlocks)
-        .values({
-          id: crypto.randomUUID(),
-          title: lessonData.title,
-          body: lessonData.description,
-          archived: false,
-          state: lessonData.state,
-          authorId: adminUserId,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        })
-        .returning();
-
-      await db.insert(lessonItems).values({
-        id: crypto.randomUUID(),
-        lessonId: lesson.id,
-        lessonItemId: textBlock.id,
-        lessonItemType: "text_block",
-        displayOrder: 1,
       });
 
       for (const [index, item] of lessonData.items.entries()) {
@@ -153,12 +132,12 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             item.questionType === "multiple_choice" ||
             item.questionType === "single_choice"
           ) {
-            const mockedIsCorrect =
-              item.questionType === "single_choice"
-                ? index === 1
-                : index % 2 === 0;
-
             for (let index = 1; index < 5; index++) {
+              const mockedIsCorrect =
+                item.questionType === "single_choice"
+                  ? index === 1
+                  : index % 2 === 0;
+
               await db
                 .insert(questionAnswerOptions)
                 .values({

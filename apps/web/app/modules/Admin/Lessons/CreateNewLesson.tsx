@@ -32,6 +32,7 @@ import {
 } from "~/components/ui/select";
 
 const formSchema = z.object({
+  type: z.enum(["multimedia", "quiz"]),
   title: z.string().min(2, "Title must be at least 2 characters."),
   description: z.string().min(2, "Description must be at least 2 characters."),
   state: z.string().optional(),
@@ -49,6 +50,7 @@ export const CreateNewLesson = () => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      type: "multimedia",
       title: "",
       description: "",
       state: "draft",
@@ -93,6 +95,32 @@ export const CreateNewLesson = () => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <Label htmlFor="state" className="text-right">
+                    Type
+                  </Label>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger id="type">
+                        <SelectValue placeholder="Select lesson type" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="multimedia">Multimedia</SelectItem>
+                      <SelectItem value="quiz">Test</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="title"
