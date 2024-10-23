@@ -12,3 +12,6 @@ export { default as HamburgerMenuClose } from "./hamburger-menu-close.svg?react"
 export { default as InputRoundedMarker } from "./input-rounded-marker.svg?react";
 export { default as InputRoundedMarkerSuccess } from "./input-rounded-marker-success.svg?react";
 export { default as InputRoundedMarkerError } from "./input-rounded-marker-error.svg?react";
+export { default as InProgress } from "./in-progress.svg?react";
+export { default as QuizStar } from "./quiz-star.svg?react";
+export { default as NotStartedRounded } from "./not-startet-rounded.svg?react";

@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCreateQuestionItem } from "~/api/mutations/admin/useCreateQuestionItem";
@@ -34,6 +33,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Textarea } from "~/components/ui/textarea";
+import { useState } from "react";
 
 const questionFormSchema = z.object({
   questionType: z.enum([
@@ -41,6 +41,7 @@ const questionFormSchema = z.object({
     "multiple_choice",
     "open_answer",
     "fill_in_the_blanks_text",
+    "fill_in_the_blanks_dnd",
   ]),
   questionBody: z
     .string()
@@ -56,7 +57,7 @@ const answerOptionsSchema = z.object({
       value: z.string().min(1, "Option text is required"),
       isCorrect: z.boolean(),
       position: z.number(),
-    })
+    }),
   ),
 });
 
@@ -72,7 +73,7 @@ export const CreateNewQuestion = ({
 }) => {
   const [step, setStep] = useState<"question" | "options">("question");
   const [createdQuestionId, setCreatedQuestionId] = useState<string | null>(
-    null
+    null,
   );
 
   const { mutateAsync: createQuestion } = useCreateQuestionItem();
@@ -231,7 +232,10 @@ export const CreateNewQuestion = ({
                   </SelectItem>
                   <SelectItem value="open_answer">Open Answer</SelectItem>
                   <SelectItem value="fill_in_the_blanks_text">
-                    Fill in the blanks
+                    Fill in the blanks (text)
+                  </SelectItem>
+                  <SelectItem value="fill_in_the_blanks_dnd">
+                    Fill in the blanks (drag & drop)
                   </SelectItem>
                 </SelectContent>
               </Select>
