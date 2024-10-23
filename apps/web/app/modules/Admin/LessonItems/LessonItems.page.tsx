@@ -10,9 +10,12 @@ import {
 } from "@tanstack/react-table";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { GetAllLessonItemsResponse } from "~/api/generated-api";
-import { useAllLessonItemsSuspense } from "~/api/queries/admin/useAllLessonItems";
+import {
+  LessonItemType,
+  useAllLessonItemsSuspense,
+} from "~/api/queries/admin/useAllLessonItems";
 import SortButton from "~/components/TableSortButton/TableSortButton";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -35,17 +38,70 @@ import { cn } from "~/lib/utils";
 import { CreateNewQuestion } from "./CreateNewQuestion";
 import { CreateNewTextBlock } from "./CreateNewTextBlock";
 import { CreateNewFile } from "./CreateNewFile";
+import {
+  FilterConfig,
+  FilterValue,
+  SearchFilter,
+} from "~/modules/common/SearchFilter/SearchFilter";
+import { format } from "date-fns";
 
 type TLessonItem = GetAllLessonItemsResponse["data"][number];
 
 const LessonItems = () => {
   const navigate = useNavigate();
-  const { data } = useAllLessonItemsSuspense();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [textBlockDialogOpen, setTextBlockDialogOpen] = useState(false);
   const [questionDialogOpen, setQuestionDialogOpen] = useState(false);
   const [fileDialogOpen, setFileDialogOpen] = useState(false);
+  const [searchParams, setSearchParams] = useState<{
+    title?: string;
+    type?: LessonItemType;
+    state?: string;
+    archived?: boolean;
+  }>({});
+  const { data } = useAllLessonItemsSuspense(searchParams);
+  const [isPending, startTransition] = useTransition();
+
+  const filterConfig: FilterConfig[] = [
+    {
+      name: "title",
+      type: "text",
+      placeholder: "Search by title...",
+    },
+    {
+      name: "type",
+      type: "select",
+      placeholder: "Types",
+      options: [
+        { value: "text_block", label: "Text Block" },
+        { value: "question", label: "Question" },
+        { value: "file", label: "File" },
+      ],
+    },
+    {
+      name: "state",
+      type: "state",
+      placeholder: "States",
+      options: [
+        { value: "draft", label: "Draft" },
+        { value: "published", label: "Published" },
+      ],
+    },
+    {
+      name: "archived",
+      type: "status",
+    },
+  ];
+
+  const handleFilterChange = (name: string, value: FilterValue) => {
+    startTransition(() => {
+      setSearchParams((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    });
+  };
 
   const columns: ColumnDef<TLessonItem>[] = [
     {
@@ -89,13 +145,6 @@ const LessonItems = () => {
       ),
     },
     {
-      accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TLessonItem> column={column}>Created At</SortButton>
-      ),
-      cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString(),
-    },
-    {
       accessorKey: "state",
       header: "State",
       cell: ({ row }) => (
@@ -114,6 +163,15 @@ const LessonItems = () => {
           {row.original.archived ? "Archived" : "Active"}
         </Badge>
       ),
+    },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <SortButton<TLessonItem> column={column}>Created At</SortButton>
+      ),
+      cell: ({ row }) =>
+        row.original.createdAt &&
+        format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
 
@@ -146,7 +204,7 @@ const LessonItems = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center gap-2">
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button>Create New</Button>
@@ -163,6 +221,13 @@ const LessonItems = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <SearchFilter
+          filters={filterConfig}
+          values={searchParams}
+          onChange={handleFilterChange}
+          isLoading={isPending}
+        />
 
         <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
           <p

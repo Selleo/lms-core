@@ -1,7 +1,10 @@
-import { SortCategoryFieldsOptions } from "../schemas/categoryQuery";
+import {
+  CategoryFilterSchema,
+  SortCategoryFieldsOptions,
+} from "../schemas/categoryQuery";
 
 export type CategoriesQuery = {
-  filter?: string;
+  filters?: CategoryFilterSchema;
   page?: number;
   perPage?: number;
   sort?: SortCategoryFieldsOptions;

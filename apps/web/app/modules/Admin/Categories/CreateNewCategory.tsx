@@ -51,7 +51,7 @@ export const CreateNewCategory = () => {
       data: values,
     }).then(() => {
       setOpen(false);
-      queryClient.invalidateQueries(categoriesQueryOptions);
+      queryClient.invalidateQueries(categoriesQueryOptions());
     });
   };
 

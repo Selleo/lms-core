@@ -63,7 +63,6 @@ export class CoursesService {
 
     return await this.db.transaction(async (tx) => {
       const conditions = this.getFiltersConditions(filters, false);
-
       const queryDB = tx
         .select({
           id: courses.id,
@@ -79,6 +78,7 @@ export class CoursesService {
           currency: courses.currency,
           state: courses.state,
           archived: courses.archived,
+          createdAt: courses.createdAt,
         })
         .from(courses)
         .leftJoin(categories, eq(courses.categoryId, categories.id))
@@ -373,7 +373,7 @@ export class CoursesService {
       })
       .from(courses)
       .innerJoin(categories, eq(courses.categoryId, categories.id))
-      .where(and(eq(courses.id, id), eq(courses.archived, false)));
+      .where(and(eq(courses.id, id)));
 
     if (!course) throw new NotFoundException("Course not found");
     // TODO: if (!course.imageUrl) throw new ConflictException("Course has no image");
@@ -720,6 +720,12 @@ export class CoursesService {
       const end = new Date(endDate).toISOString();
 
       conditions.push(between(courses.createdAt, start, end));
+    }
+    if (filters.state) {
+      conditions.push(eq(courses.state, filters.state));
+    }
+    if (filters.archived) {
+      conditions.push(eq(courses.archived, filters.archived === "true"));
     }
 
     if (publishedOnly) {

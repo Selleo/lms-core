@@ -38,7 +38,7 @@ import {
 } from "~/components/ui/select";
 
 export const clientLoader = async () => {
-  await queryClient.prefetchQuery(categoriesQueryOptions);
+  await queryClient.prefetchQuery(categoriesQueryOptions());
   return null;
 };
 

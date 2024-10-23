@@ -11,7 +11,14 @@ import {
 } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
-import { baseResponse, BaseResponse, UUIDSchema, UUIDType } from "src/common";
+import {
+  baseResponse,
+  BaseResponse,
+  paginatedResponse,
+  PaginatedResponse,
+  UUIDSchema,
+  UUIDType,
+} from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
@@ -43,6 +50,11 @@ import {
   UpdateQuestionBody,
   UpdateTextBlockBody,
 } from "../schemas/lessonItem.schema";
+import {
+  LessonsFilterSchema,
+  sortLessonFieldsOptions,
+  SortLessonFieldsOptions,
+} from "../schemas/lessonQuery";
 
 @Controller("lessons")
 @UseGuards(RolesGuard)
@@ -55,10 +67,35 @@ export class LessonsController {
   @Get()
   @Roles("tutor", "admin")
   @Validate({
-    response: baseResponse(allLessonsSchema),
+    response: paginatedResponse(allLessonsSchema),
+    request: [
+      { type: "query", name: "title", schema: Type.Optional(Type.String()) },
+      { type: "query", name: "state", schema: Type.Optional(Type.String()) },
+      { type: "query", name: "sort", schema: sortLessonFieldsOptions },
+      { type: "query", name: "page", schema: Type.Number({ minimum: 1 }) },
+      { type: "query", name: "perPage", schema: Type.Number() },
+      { type: "query", name: "archived", schema: Type.Optional(Type.String()) },
+    ],
   })
-  async getAllLessons(): Promise<BaseResponse<AllLessonsResponse>> {
-    return new BaseResponse(await this.lessonsService.getAllLessons());
+  async getAllLessons(
+    @Query("title") title: string,
+    @Query("state") state: string,
+    @Query("sort") sort: SortLessonFieldsOptions,
+    @Query("page") page: number,
+    @Query("perPage") perPage: number,
+    @Query("archived") archived?: string,
+  ): Promise<PaginatedResponse<AllLessonsResponse>> {
+    const filters: LessonsFilterSchema = {
+      title,
+      state,
+      archived: archived === "true",
+    };
+
+    const query = { filters, sort, page, perPage };
+
+    return new PaginatedResponse(
+      await this.lessonsService.getAllLessons(query),
+    );
   }
 
   @Get("available-lessons")
@@ -254,15 +291,37 @@ export class LessonsController {
           Type.Literal("file"),
         ]),
       },
+      { type: "query", name: "title", schema: Type.String() },
+      { type: "query", name: "state", schema: Type.String() },
+      { type: "query", name: "archived", schema: Type.String() },
+      { type: "query", name: "sort", schema: Type.String() },
+      { type: "query", name: "page", schema: Type.Number({ minimum: 1 }) },
+      { type: "query", name: "perPage", schema: Type.Number() },
     ],
-    response: baseResponse(GetAllLessonItemsResponseSchema),
+    response: paginatedResponse(GetAllLessonItemsResponseSchema),
   })
   async getAllLessonItems(
-    @Query("type") type?: "text_block" | "question" | "file" | undefined,
-  ): Promise<BaseResponse<GetAllLessonItemsResponse>> {
+    @Query("type") type: "text_block" | "question" | "file",
+    @Query("title") title: string,
+    @Query("state") state: string,
+    @Query("archived") archived: string,
+    @Query("sort") sort: string,
+    @Query("page") page: number,
+    @Query("perPage") perPage: number,
+  ): Promise<PaginatedResponse<GetAllLessonItemsResponse>> {
+    const query = {
+      type,
+      title,
+      state,
+      archived: archived === "true",
+      sort,
+      page,
+      perPage,
+    };
+
     const allLessonItems =
-      await this.lessonItemsService.getAllLessonItems(type);
-    return new BaseResponse(allLessonItems);
+      await this.lessonItemsService.getAllLessonItems(query);
+    return new PaginatedResponse(allLessonItems);
   }
 
   @Get("available-lesson-items")

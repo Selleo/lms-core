@@ -24,7 +24,7 @@ export function useAdminUpdateUser() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(usersQueryOptions);
+      queryClient.invalidateQueries(usersQueryOptions());
       toast({ description: "User updated successfully" });
     },
     onError: (error) => {

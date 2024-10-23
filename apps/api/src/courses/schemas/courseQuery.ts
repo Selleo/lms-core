@@ -49,6 +49,8 @@ export type CoursesFilterFiled = Static<typeof coursesFilterFiled>;
 export const coursesFilterSchema = Type.Object({
   title: Type.Optional(Type.String()),
   category: Type.Optional(Type.String()),
+  state: Type.Optional(Type.String()),
+  archived: Type.Optional(Type.String()),
   creationDateRange: Type.Optional(
     Type.Tuple([
       Type.String({ format: "date-time" }),

@@ -11,31 +11,31 @@ import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
 import {
-  AllCategoriesResponse,
-  CategorySchema,
-  categorySchema,
-} from "../schemas/category.schema";
-import {
   baseResponse,
   BaseResponse,
   paginatedResponse,
   PaginatedResponse,
 } from "src/common";
-import { CategoriesService } from "../categories.service";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { UserRole } from "src/users/schemas/user-roles";
+import { CategoriesService } from "../categories.service";
+import {
+  AllCategoriesResponse,
+  CategorySchema,
+  categorySchema,
+} from "../schemas/category.schema";
 import {
   SortCategoryFieldsOptions,
   sortCategoryFieldsOptions,
 } from "../schemas/categoryQuery";
 import {
-  UpdateCategoryBody,
-  updateCategorySchema,
-} from "../schemas/updateCategorySchema";
-import {
   CreateCategoryBody,
   createCategorySchema,
 } from "../schemas/createCategorySchema";
+import {
+  UpdateCategoryBody,
+  updateCategorySchema,
+} from "../schemas/updateCategorySchema";
 
 @Controller("categories")
 export class CategoriesController {
@@ -45,20 +45,23 @@ export class CategoriesController {
   @Validate({
     response: paginatedResponse(Type.Array(categorySchema)),
     request: [
-      { type: "query", name: "filter", schema: Type.String() },
+      { type: "query", name: "title", schema: Type.String() },
+      { type: "query", name: "archived", schema: Type.String() },
       { type: "query", name: "page", schema: Type.Number({ minimum: 1 }) },
       { type: "query", name: "perPage", schema: Type.Number() },
       { type: "query", name: "sort", schema: sortCategoryFieldsOptions },
     ],
   })
   async getAllCategories(
-    @Query("filter") filter: string,
+    @Query("title") title: string,
+    @Query("archived") archived: string,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCategoryFieldsOptions,
     @CurrentUser("role") userRole: UserRole,
   ): Promise<PaginatedResponse<AllCategoriesResponse>> {
-    const query = { filter, page, perPage, sort };
+    const filters = { archived, title };
+    const query = { filters, page, perPage, sort };
 
     const data = await this.categoriesService.getCategories(query, userRole);
 

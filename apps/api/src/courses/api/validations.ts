@@ -21,6 +21,16 @@ export const allCoursesValidation = {
     },
     {
       type: "query" as const,
+      name: "state",
+      schema: Type.String(),
+    },
+    {
+      type: "query" as const,
+      name: "archived",
+      schema: Type.String(),
+    },
+    {
+      type: "query" as const,
       name: "page",
       schema: Type.Number({ minimum: 1 }),
     },

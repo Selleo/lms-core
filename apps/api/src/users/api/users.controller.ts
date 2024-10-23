@@ -5,14 +5,17 @@ import {
   ForbiddenException,
   Get,
   Patch,
+  Query,
   UseGuards,
 } from "@nestjs/common";
-import { Static } from "@sinclair/typebox";
+import { Static, Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 import {
   baseResponse,
   BaseResponse,
   nullResponse,
+  PaginatedResponse,
+  paginatedResponse,
   UUIDSchema,
 } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
@@ -40,6 +43,7 @@ import {
   UserResponse,
 } from "../schemas/user.schema";
 import { UsersService } from "../users.service";
+import { SortUserFieldsOptions, UsersFilterSchema } from "../schemas/userQuery";
 
 @Controller("users")
 @UseGuards(RolesGuard)
@@ -48,12 +52,35 @@ export class UsersController {
 
   @Get()
   @Validate({
-    response: baseResponse(allUsersSchema),
+    request: [
+      { type: "query", name: "keyword", schema: Type.String() },
+      { type: "query", name: "role", schema: Type.String() },
+      { type: "query", name: "archived", schema: Type.String() },
+      { type: "query", name: "page", schema: Type.Number({ minimum: 1 }) },
+      { type: "query", name: "perPage", schema: Type.Number() },
+      { type: "query", name: "sort", schema: Type.String() },
+    ],
+    response: paginatedResponse(allUsersSchema),
   })
-  async getUsers(): Promise<BaseResponse<AllUsersResponse>> {
-    const users = await this.usersService.getUsers();
+  async getUsers(
+    @Query("keyword") keyword: string,
+    @Query("role") role: string,
+    @Query("archived") archived: string,
+    @Query("page") page: number,
+    @Query("perPage") perPage: number,
+    @Query("sort") sort: SortUserFieldsOptions,
+  ): Promise<PaginatedResponse<AllUsersResponse>> {
+    const filters: UsersFilterSchema = {
+      keyword,
+      role,
+      archived: archived === "true",
+    };
 
-    return new BaseResponse(users);
+    const query = { filters, page, perPage, sort };
+
+    const users = await this.usersService.getUsers(query);
+
+    return new PaginatedResponse(users);
   }
 
   @Get(":id")

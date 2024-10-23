@@ -2,19 +2,33 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
 import { GetAllCategoriesResponse } from "../generated-api";
 
-export const categoriesQueryOptions = {
-  queryKey: ["categories"],
+type CategorySearchParams = {
+  title?: string;
+  archived?: boolean;
+};
+
+export const categoriesQueryOptions = (
+  searchParams?: CategorySearchParams
+) => ({
+  queryKey: ["categories", searchParams],
   queryFn: async () => {
-    const response = await ApiClient.api.categoriesControllerGetAllCategories();
+    const response = await ApiClient.api.categoriesControllerGetAllCategories({
+      page: 1,
+      perPage: 100,
+      ...(searchParams?.title && { title: searchParams.title }),
+      ...(searchParams?.archived !== undefined && {
+        archived: String(searchParams.archived),
+      }),
+    });
     return response.data;
   },
   select: (data: GetAllCategoriesResponse) => data.data,
-};
+});
 
-export function useCategories() {
-  return useQuery(categoriesQueryOptions);
+export function useCategories(searchParams?: CategorySearchParams) {
+  return useQuery(categoriesQueryOptions(searchParams));
 }
 
-export function useCategoriesSuspense() {
-  return useSuspenseQuery(categoriesQueryOptions);
+export function useCategoriesSuspense(searchParams?: CategorySearchParams) {
+  return useSuspenseQuery(categoriesQueryOptions(searchParams));
 }

@@ -5,6 +5,8 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
+    "lint-tsc-web": "pnpm run --filter=web lint-tsc",
+    "lint-tsc-api": "pnpm run --filter=api lint-tsc",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "generate:client": "pnpm run --filter=web generate:client",
     "db:generate": "pnpm run --filter=api db:generate",

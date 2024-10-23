@@ -13,10 +13,14 @@ import { queryClient } from "~/api/queryClient";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
 import { cn } from "~/lib/utils";
-import type { SortOption } from "~/types/sorting";
+import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
 import { useLayoutsStore } from "../common/Layout/LayoutsStore";
 import Loader from "../common/Loader/Loader";
-import SearchFilter from "../common/SearchFilter/SearchFilter";
+import {
+  FilterConfig,
+  FilterValue,
+  SearchFilter,
+} from "../common/SearchFilter/SearchFilter";
 import { DashboardIcon, HamburgerIcon } from "../icons/icons";
 import { CourseList } from "./Courses/CourseList";
 import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
@@ -41,7 +45,7 @@ export const meta: MetaFunction = () => {
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(allCoursesQueryOptions());
-  await queryClient.prefetchQuery(categoriesQueryOptions);
+  await queryClient.prefetchQuery(categoriesQueryOptions());
   return null;
 };
 
@@ -84,16 +88,41 @@ export default function DashboardPage() {
 
   const { courseListLayout, setCourseListLayout } = useLayoutsStore();
 
-  const handleSearchTitleChange = (title: string | undefined) => {
-    dispatch({ type: "SET_SEARCH_TITLE", payload: title });
-  };
+  const filterConfig: FilterConfig[] = [
+    {
+      name: "title",
+      type: "text",
+      placeholder: "Search by title...",
+    },
+    {
+      name: "category",
+      type: "select",
+      placeholder: "Categories",
+      options: categories?.map((cat) => ({
+        value: cat.title,
+        label: cat.title,
+      })),
+    },
+    {
+      name: "sort",
+      type: "select",
+      placeholder: "Sort",
+      options: SORT_OPTIONS,
+    },
+  ];
 
-  const handleSortChange = (sort: SortOption | undefined) => {
-    dispatch({ type: "SET_SORT", payload: sort });
-  };
-
-  const handleCategoryChange = (category: string | undefined) => {
-    dispatch({ type: "SET_CATEGORY", payload: category ?? undefined });
+  const handleFilterChange = (name: string, value: FilterValue) => {
+    switch (name) {
+      case "title":
+        dispatch({ type: "SET_SEARCH_TITLE", payload: value as string });
+        break;
+      case "category":
+        dispatch({ type: "SET_CATEGORY", payload: value as string });
+        break;
+      case "sort":
+        dispatch({ type: "SET_SORT", payload: value as string });
+        break;
+    }
   };
 
   return (
@@ -145,13 +174,13 @@ export default function DashboardPage() {
           </p>
           <div className="flex justify-between gap-2 items-center">
             <SearchFilter
-              onSearchTitleChange={handleSearchTitleChange}
-              onSortChange={handleSortChange}
-              onCategoryChange={handleCategoryChange}
-              searchValue={state.searchTitle}
-              sortValue={state.sort}
-              categoryValue={state.category}
-              categories={categories}
+              filters={filterConfig}
+              values={{
+                title: state.searchTitle,
+                category: state.category,
+                sort: state.sort,
+              }}
+              onChange={handleFilterChange}
               isLoading={isCategoriesLoading}
             />
             <ButtonGroup

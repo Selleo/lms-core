@@ -5,8 +5,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { and, count, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import { and, count, eq, ilike, inArray, isNotNull, sql } from "drizzle-orm";
+import { isEmpty, isNull } from "lodash";
 import type { DatabasePg, UUIDType } from "src/common";
+import { S3Service } from "src/file/s3.service";
 import {
   courseLessons,
   files,
@@ -22,14 +24,30 @@ import {
 } from "src/storage/schema";
 import { match, P } from "ts-pattern";
 import {
+  CreateLessonBody,
+  Lesson,
+  UpdateLessonBody,
+} from "./schemas/lesson.schema";
+import {
   LessonItemResponse,
   LessonItemWithContentSchema,
   QuestionWithContent,
 } from "./schemas/lessonItem.schema";
-import { isEmpty, isNull } from "lodash";
-import { Lesson } from "./schemas/lesson.schema";
-import { S3Service } from "src/file/s3.service";
-import { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
+import {
+  LessonsFilterSchema,
+  LessonSortField,
+  LessonSortFields,
+  SortLessonFieldsOptions,
+} from "./schemas/lessonQuery";
+import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
+import { getSortOptions } from "src/common/helpers/getSortOptions";
+
+interface LessonsQuery {
+  filters?: LessonsFilterSchema;
+  sort?: SortLessonFieldsOptions;
+  page?: number;
+  perPage?: number;
+}
 
 @Injectable()
 export class LessonsService {
@@ -38,7 +56,17 @@ export class LessonsService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async getAllLessons() {
+  async getAllLessons(query: LessonsQuery = {}) {
+    const {
+      sort = LessonSortFields.title,
+      perPage = DEFAULT_PAGE_SIZE,
+      page = 1,
+      filters = {},
+    } = query;
+
+    const { sortOrder, sortedField } = getSortOptions(sort);
+    const conditions = this.getFiltersConditions(filters);
+
     const lessonsData = await this.db
       .select({
         id: lessons.id,
@@ -48,12 +76,22 @@ export class LessonsService {
         state: lessons.state,
         archived: lessons.archived,
         itemsCount: sql<number>`CAST(COUNT(DISTINCT ${lessonItems.id}) AS INTEGER)`,
+        createdAt: lessons.createdAt,
       })
       .from(lessons)
       .leftJoin(lessonItems, eq(lessonItems.lessonId, lessons.id))
-      .groupBy(lessons.id);
+      .where(and(...conditions))
+      .groupBy(lessons.id)
+      .orderBy(
+        sortOrder(this.getColumnToSortBy(sortedField as LessonSortField)),
+      );
 
-    return Promise.all(
+    const [{ totalItems }] = await this.db
+      .select({ totalItems: count() })
+      .from(lessons)
+      .where(and(...conditions));
+
+    const lessonsWithSignedUrls = await Promise.all(
       lessonsData.map(async (lesson) => ({
         ...lesson,
         imageUrl: lesson.imageUrl.startsWith("https://")
@@ -61,6 +99,15 @@ export class LessonsService {
           : await this.s3Service.getSignedUrl(lesson.imageUrl),
       })),
     );
+
+    return {
+      data: lessonsWithSignedUrls,
+      pagination: {
+        totalItems,
+        page,
+        perPage,
+      },
+    };
   }
 
   async getLessonById(id: string) {
@@ -844,6 +891,35 @@ export class LessonsService {
         return !!item.fileData;
       default:
         return false;
+    }
+  }
+
+  private getFiltersConditions(filters: LessonsFilterSchema) {
+    const conditions = [];
+
+    if (filters.title) {
+      conditions.push(ilike(lessons.title, `%${filters.title.toLowerCase()}%`));
+    }
+    if (filters.state) {
+      conditions.push(eq(lessons.state, filters.state));
+    }
+    if (filters.archived) {
+      conditions.push(eq(lessons.archived, filters.archived));
+    }
+
+    return conditions.length ? conditions : [sql`1=1`];
+  }
+
+  private getColumnToSortBy(sort: LessonSortField) {
+    switch (sort) {
+      case LessonSortFields.createdAt:
+        return lessons.createdAt;
+      case LessonSortFields.state:
+        return lessons.state;
+      case LessonSortFields.itemsCount:
+        return sql<number>`COUNT(DISTINCT ${lessonItems.id})`;
+      default:
+        return lessons.title;
     }
   }
 }

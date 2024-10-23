@@ -1,7 +1,7 @@
 import { useParams } from "@remix-run/react";
-import { capitalize, startCase } from "lodash-es";
+import { startCase } from "lodash-es";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { UpdateLessonBody } from "~/api/generated-api";
 import { useUpdateLesson } from "~/api/mutations/admin/useUpdateLesson";
 import {
@@ -10,19 +10,10 @@ import {
 } from "~/api/queries/admin/useLessonById";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import { Textarea } from "~/components/ui/textarea";
 import Loader from "~/modules/common/Loader/Loader";
 import LessonItemAssigner from "./LessonItemsAssigner/LessonItemAssigner";
+import { LessonInfo } from "./LessonInfo";
 
 const displayedFields: Array<keyof UpdateLessonBody> = [
   "title",
@@ -60,90 +51,6 @@ const Lesson = () => {
     });
   };
 
-  const LessonInfoItem: React.FC<{ name: keyof UpdateLessonBody }> = ({
-    name,
-  }) => (
-    <Controller
-      name={name}
-      control={control}
-      defaultValue={lesson[name] as UpdateLessonBody[typeof name]}
-      render={({ field }) => {
-        if (!isEditing) {
-          if (name === "archived") {
-            return (
-              <span className="font-semibold capitalize">
-                {lesson[name] ? "Archived" : "Active"}
-              </span>
-            );
-          }
-          return (
-            <span className="font-semibold capitalize">
-              {lesson[name]?.toString()}
-            </span>
-          );
-        }
-
-        if (name === "state") {
-          return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a state" />
-              </SelectTrigger>
-              <SelectContent>
-                {["draft", "published"].map((state) => (
-                  <SelectItem value={state} key={state}>
-                    {capitalize(state)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          );
-        }
-
-        if (name === "archived") {
-          return (
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="archived"
-                checked={field.value as boolean | undefined}
-                onCheckedChange={(checked) => field.onChange(checked)}
-              />
-              <label
-                htmlFor="archived"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Archived
-              </label>
-            </div>
-          );
-        }
-
-        if (name === "description") {
-          return (
-            <Textarea
-              {...field}
-              value={field.value as string}
-              placeholder="Enter lesson description"
-              className="w-full rounded-md border border-neutral-300 px-2 py-1 resize-none"
-            />
-          );
-        }
-
-        return (
-          <Input
-            {...field}
-            value={field.value as string}
-            className="w-full rounded-md border border-neutral-300 px-2 py-1"
-            placeholder={`Enter ${startCase(name)}`}
-          />
-        );
-      }}
-    />
-  );
-
   return (
     <div className="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
       <form
@@ -175,7 +82,12 @@ const Lesson = () => {
               <Label className="text-neutral-600 font-normal">
                 {field === "archived" ? "Status" : startCase(field)}
               </Label>
-              <LessonInfoItem name={field} />
+              <LessonInfo
+                name={field}
+                control={control}
+                isEditing={isEditing}
+                lesson={lesson}
+              />
             </div>
           ))}
         </div>

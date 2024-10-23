@@ -337,7 +337,57 @@
     "/api/users": {
       "get": {
         "operationId": "UsersController_getUsers",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "keyword",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archived",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -564,7 +614,15 @@
         "operationId": "CategoriesController_getAllCategories",
         "parameters": [
           {
-            "name": "filter",
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archived",
             "required": false,
             "in": "query",
             "schema": {
@@ -599,11 +657,7 @@
                   "type": "string"
                 },
                 {
-                  "const": "createdAt",
-                  "type": "string"
-                },
-                {
-                  "const": "archived",
+                  "const": "creationDate",
                   "type": "string"
                 },
                 {
@@ -611,11 +665,7 @@
                   "type": "string"
                 },
                 {
-                  "const": "-createdAt",
-                  "type": "string"
-                },
-                {
-                  "const": "-archived",
+                  "const": "-creationDate",
                   "type": "string"
                 }
               ]
@@ -752,6 +802,22 @@
           },
           {
             "name": "creationDateRange[1]",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archived",
             "required": false,
             "in": "query",
             "schema": {
@@ -916,6 +982,22 @@
             }
           },
           {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archived",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "page",
             "required": false,
             "in": "query",
@@ -1041,6 +1123,22 @@
           },
           {
             "name": "creationDateRange[1]",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archived",
             "required": false,
             "in": "query",
             "schema": {
@@ -1283,7 +1381,90 @@
     "/api/lessons": {
       "get": {
         "operationId": "LessonsController_getAllLessons",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "title",
+                  "type": "string"
+                },
+                {
+                  "const": "createdAt",
+                  "type": "string"
+                },
+                {
+                  "const": "state",
+                  "type": "string"
+                },
+                {
+                  "const": "itemsCount",
+                  "type": "string"
+                },
+                {
+                  "const": "-title",
+                  "type": "string"
+                },
+                {
+                  "const": "-createdAt",
+                  "type": "string"
+                },
+                {
+                  "const": "-state",
+                  "type": "string"
+                },
+                {
+                  "const": "-itemsCount",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "archived",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -1569,6 +1750,55 @@
                   "type": "string"
                 }
               ]
+            }
+          },
+          {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "state",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "archived",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "perPage",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "number"
             }
           }
         ],
@@ -2462,10 +2692,30 @@
                 "archived"
               ]
             }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
           }
         },
         "required": [
-          "data"
+          "data",
+          "pagination"
         ]
       },
       "GetUserByIdResponse": {
@@ -2963,6 +3213,9 @@
                 },
                 "archived": {
                   "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
                 }
               },
               "required": [
@@ -3062,6 +3315,9 @@
                 },
                 "archived": {
                   "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
                 }
               },
               "required": [
@@ -3161,6 +3417,9 @@
                 },
                 "archived": {
                   "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
                 }
               },
               "required": [
@@ -3291,6 +3550,9 @@
                     "type": {
                       "type": "string"
                     },
+                    "createdAt": {
+                      "type": "string"
+                    },
                     "quizScore": {
                       "type": "number"
                     }
@@ -3418,6 +3680,9 @@
                       "type": "boolean"
                     },
                     "type": {
+                      "type": "string"
+                    },
+                    "createdAt": {
                       "type": "string"
                     },
                     "quizScore": {
@@ -3653,6 +3918,9 @@
                 "type": {
                   "type": "string"
                 },
+                "createdAt": {
+                  "type": "string"
+                },
                 "quizScore": {
                   "type": "number"
                 }
@@ -3665,10 +3933,30 @@
                 "itemsCount"
               ]
             }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
           }
         },
         "required": [
-          "data"
+          "data",
+          "pagination"
         ]
       },
       "GetAvailableLessonsResponse": {
@@ -3744,6 +4032,9 @@
                 "type": "boolean"
               },
               "type": {
+                "type": "string"
+              },
+              "createdAt": {
                 "type": "string"
               },
               "quizScore": {
@@ -3963,6 +4254,9 @@
               "type": {
                 "type": "string"
               },
+              "createdAt": {
+                "type": "string"
+              },
               "quizScore": {
                 "type": "number"
               },
@@ -4167,6 +4461,9 @@
           "type": {
             "type": "string"
           },
+          "createdAt": {
+            "type": "string"
+          },
           "quizScore": {
             "type": "number"
           }
@@ -4218,6 +4515,9 @@
             "type": "boolean"
           },
           "type": {
+            "type": "string"
+          },
+          "createdAt": {
             "type": "string"
           },
           "quizScore": {
@@ -4539,10 +4839,30 @@
                 }
               ]
             }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "totalItems": {
+                "type": "number"
+              },
+              "page": {
+                "type": "number"
+              },
+              "perPage": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "totalItems",
+              "page",
+              "perPage"
+            ]
           }
         },
         "required": [
-          "data"
+          "data",
+          "pagination"
         ]
       },
       "GetAvailableLessonItemsResponse": {

@@ -105,7 +105,7 @@ describe("CategoriesService", () => {
         await db
           .insert(categories)
           .values([historyCategory, biologyCategory, mathCategory]);
-        query = { filter: "ath" };
+        query = { filters: { title: "ath" } };
         const filterCategories = await categoriesServices.getCategories(
           query,
           userRole,

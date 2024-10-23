@@ -1,4 +1,4 @@
-import { and, count, eq, like } from "drizzle-orm";
+import { and, count, eq, ilike, like } from "drizzle-orm";
 import {
   Inject,
   Injectable,
@@ -11,6 +11,7 @@ import type { AllCategoriesResponse } from "./schemas/category.schema";
 import { categories } from "src/storage/schema";
 import type { CategoriesQuery } from "./api/categories.types";
 import {
+  CategoryFilterSchema,
   type CategorySortField,
   CategorySortFields,
 } from "./schemas/categoryQuery";
@@ -32,11 +33,10 @@ export class CategoriesService {
       sort = CategorySortFields.title,
       perPage = DEFAULT_PAGE_SIZE,
       page = 1,
-      filter = "",
+      filters = {},
     } = query;
 
     const { sortOrder, sortedField } = getSortOptions(sort);
-    const filterCondition = this.createLikeFilter(filter);
 
     const isAdmin = userRole === UserRoles.admin;
 
@@ -48,10 +48,11 @@ export class CategoriesService {
     };
 
     return this.db.transaction(async (tx) => {
+      const conditions = this.getFiltersConditions(filters);
       const queryDB = tx
         .select(selectedColumns)
         .from(categories)
-        .where(filterCondition)
+        .where(and(...conditions))
         .orderBy(
           sortOrder(
             this.getColumnToSortBy(sortedField as CategorySortField, isAdmin),
@@ -67,7 +68,7 @@ export class CategoriesService {
       const [{ totalItems }] = await tx
         .select({ totalItems: count() })
         .from(categories)
-        .where(and(eq(categories.archived, false), filterCondition));
+        .where(and(eq(categories.archived, false), ...conditions));
 
       return {
         data: this.serializeCategories(data, isAdmin),
@@ -127,9 +128,7 @@ export class CategoriesService {
     if (!isAdmin) return categories.title;
 
     switch (sort) {
-      case CategorySortFields.archived:
-        return categories.archived;
-      case CategorySortFields.createdAt:
+      case CategorySortFields.creationDate:
         return categories.createdAt;
       default:
         return categories.title;
@@ -145,4 +144,19 @@ export class CategoriesService {
       archived: isAdmin ? category.archived : null,
       createdAt: isAdmin ? category.createdAt : null,
     }));
+
+  private getFiltersConditions(filters: CategoryFilterSchema) {
+    const conditions = [];
+    if (filters.title) {
+      conditions.push(
+        ilike(categories.title, `%${filters.title.toLowerCase()}%`),
+      );
+    }
+
+    if (filters.archived) {
+      conditions.push(eq(categories.archived, filters.archived === "true"));
+    }
+
+    return conditions;
+  }
 }

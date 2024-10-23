@@ -18,7 +18,7 @@ export const credentialFactory = Factory.define<Credential>(() => ({
   role: "student" as const,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
-  archived: faker.datatype.boolean(0.75),
+  archived: false,
 }));
 
 class UserFactory extends Factory<UserWithCredentials> {
@@ -64,7 +64,7 @@ export const createUserFactory = (db: DatabasePg) => {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       role: "student" as const,
-      archived: faker.datatype.boolean(0.75),
+      archived: false,
     };
   });
 };
