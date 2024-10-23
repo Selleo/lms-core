@@ -866,6 +866,32 @@ export interface CreateQuestionBody {
 export interface CreateQuestionResponse {
   data: {
     message: string;
+    /** @format uuid */
+    questionId: string;
+  };
+}
+
+export interface GetQuestionAnswersResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    optionText: string;
+    isCorrect: boolean;
+    position: number;
+  }[];
+}
+
+export type UpsertQuestionOptionsBody = {
+  /** @format uuid */
+  id?: string;
+  optionText?: string;
+  isCorrect?: boolean;
+  position?: number;
+}[];
+
+export interface UpsertQuestionOptionsResponse {
+  data: {
+    message: string;
   };
 }
 
@@ -2058,6 +2084,51 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<CreateQuestionResponse, any>({
         path: `/api/lessons/create-question`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerGetQuestionAnswers
+     * @request GET:/api/lessons/question-options
+     */
+    lessonsControllerGetQuestionAnswers: (
+      query?: {
+        /** @format uuid */
+        questionId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetQuestionAnswersResponse, any>({
+        path: `/api/lessons/question-options`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerUpsertQuestionOptions
+     * @request PATCH:/api/lessons/question-options
+     */
+    lessonsControllerUpsertQuestionOptions: (
+      data: UpsertQuestionOptionsBody,
+      query?: {
+        /** @format uuid */
+        questionId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UpsertQuestionOptionsResponse, any>({
+        path: `/api/lessons/question-options`,
+        method: "PATCH",
+        query: query,
         body: data,
         type: ContentType.Json,
         format: "json",

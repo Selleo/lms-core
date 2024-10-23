@@ -4,6 +4,8 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCreateLesson } from "~/api/mutations/admin/useCreateLesson";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
+import { allLessonsQueryOptions } from "~/api/queries/admin/useAllLessons";
+import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -75,6 +77,7 @@ export const CreateNewLesson = () => {
       data: values,
     }).then(() => {
       setOpen(false);
+      queryClient.invalidateQueries(allLessonsQueryOptions);
     });
   };
 

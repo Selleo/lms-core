@@ -1889,6 +1889,68 @@
         }
       }
     },
+    "/api/lessons/question-options": {
+      "get": {
+        "operationId": "LessonsController_getQuestionAnswers",
+        "parameters": [
+          {
+            "name": "questionId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetQuestionAnswersResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "LessonsController_upsertQuestionOptions",
+        "parameters": [
+          {
+            "name": "questionId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertQuestionOptionsBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpsertQuestionOptionsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lessons/create-file": {
       "post": {
         "operationId": "LessonsController_createFile",
@@ -5234,6 +5296,86 @@
         ]
       },
       "CreateQuestionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "questionId": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "message",
+              "questionId"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetQuestionAnswersResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "optionText": {
+                  "type": "string"
+                },
+                "isCorrect": {
+                  "type": "boolean"
+                },
+                "position": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "optionText",
+                "isCorrect",
+                "position"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpsertQuestionOptionsBody": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "format": "uuid",
+              "type": "string"
+            },
+            "optionText": {
+              "type": "string"
+            },
+            "isCorrect": {
+              "type": "boolean"
+            },
+            "position": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "UpsertQuestionOptionsResponse": {
         "type": "object",
         "properties": {
           "data": {

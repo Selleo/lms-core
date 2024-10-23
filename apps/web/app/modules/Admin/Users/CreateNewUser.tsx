@@ -52,8 +52,8 @@ export const CreateNewUser = () => {
     },
   });
 
-  const onSubmit = (values: FormValues) => {
-    console.log(values);
+  const onSubmit = (_values: FormValues) => {
+    alert("not implemented");
     setOpen(false);
   };
 

@@ -487,15 +487,98 @@ export class LessonsController {
         }),
       },
     ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
+    response: baseResponse(
+      Type.Object({ message: Type.String(), questionId: UUIDSchema }),
+    ),
   })
   async createQuestion(
     @Body()
     body: QuestionInsertType,
     @CurrentUser("userId") userId: string,
+  ): Promise<BaseResponse<{ message: string; questionId: string }>> {
+    const { id } = await this.lessonItemsService.createQuestion(body, userId);
+    return new BaseResponse({
+      message: "Question created successfully",
+      questionId: id,
+    });
+  }
+
+  @Get("question-options")
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "questionId",
+        schema: UUIDSchema,
+      },
+    ],
+    response: baseResponse(
+      Type.Array(
+        Type.Object({
+          id: UUIDSchema,
+          optionText: Type.String(),
+          isCorrect: Type.Boolean(),
+          position: Type.Number(),
+        }),
+      ),
+    ),
+  })
+  async getQuestionAnswers(@Query("questionId") questionId: string): Promise<
+    BaseResponse<
+      {
+        id: string;
+        optionText: string;
+        isCorrect: boolean;
+        position: number | null;
+      }[]
+    >
+  > {
+    const options =
+      await this.lessonItemsService.getQuestionAnswers(questionId);
+    return new BaseResponse(options);
+  }
+
+  @Patch("question-options")
+  @Roles("tutor", "admin")
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "questionId",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: Type.Array(
+          Type.Partial(
+            Type.Object({
+              id: UUIDSchema,
+              optionText: Type.String(),
+              isCorrect: Type.Boolean(),
+              position: Type.Number(),
+            }),
+          ),
+        ),
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async upsertQuestionOptions(
+    @Query("questionId") questionId: string,
+    @Body()
+    options: Array<
+      Partial<{
+        id: string;
+        optionText: string;
+        isCorrect: boolean;
+        position: number;
+      }>
+    >,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.lessonItemsService.createQuestion(body, userId);
-    return new BaseResponse({ message: "Question created successfully" });
+    await this.lessonItemsService.upsertQuestionOptions(questionId, options);
+    return new BaseResponse({
+      message: "Question options updated successfully",
+    });
   }
 
   @Post("create-file")

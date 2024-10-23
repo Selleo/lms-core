@@ -66,7 +66,7 @@ export default function Questions({
   });
 
   const [selectedOption, setSelectedOption] = useState<string[]>(() =>
-    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion }),
+    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion })
   );
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function Questions({
   };
 
   const handleOpenAnswerRequest = async (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     await markLessonItemAsCompleted({
       lessonItemId: questionId,
@@ -110,7 +110,7 @@ export default function Questions({
             (answer.isCorrect && !answer.isStudentAnswer) ||
             (!answer.isCorrect &&
               answer.isStudentAnswer &&
-              answer.isCorrect !== null),
+              answer.isCorrect !== null)
         )
       : false;
 
@@ -179,132 +179,140 @@ export default function Questions({
         ) : (
           <>
             {"questionAnswers" in content
-              ? content.questionAnswers.map((answer) => {
-                  const isFieldDisabled =
-                    isAdmin || typeof answer?.isCorrect === "boolean";
-
-                  const isCorrectAnswer =
-                    answer.isCorrect && answer.isStudentAnswer;
-
-                  const isWrongAnswer =
-                    !answer.isCorrect && answer.isStudentAnswer;
-
-                  const isCorrectAnswerNotSelected =
-                    answer.isCorrect && !answer.isStudentAnswer;
-
-                  const isAnswerChecked =
-                    selectedOption.includes(answer.id) &&
-                    answer.isCorrect === null;
-
-                  const getAnswerClasses = () => {
-                    if (isAnswerChecked) return classesMap.checked;
-
-                    if (answer.isCorrect === null) return classesMap.default;
-
-                    if (isCorrectAnswer) {
-                      return classesMap.correctAnswerSelected;
+              ? content.questionAnswers
+                  .sort((a, b) => {
+                    if (a.position !== null && b.position !== null) {
+                      return a.position - b.position;
                     }
 
-                    if (isCorrectAnswerNotSelected) {
-                      return classesMap.correctAnswerUnselected;
-                    }
+                    return 0;
+                  })
+                  .map((answer) => {
+                    const isFieldDisabled =
+                      isAdmin || typeof answer?.isCorrect === "boolean";
 
-                    if (isWrongAnswer) {
-                      return classesMap.incorrectAnswerSelected;
-                    }
+                    const isCorrectAnswer =
+                      answer.isCorrect && answer.isStudentAnswer;
 
-                    return classesMap.default;
-                  };
+                    const isWrongAnswer =
+                      !answer.isCorrect && answer.isStudentAnswer;
 
-                  const classes = getAnswerClasses();
+                    const isCorrectAnswerNotSelected =
+                      answer.isCorrect && !answer.isStudentAnswer;
 
-                  return (
-                    <button
-                      {...(!isFieldDisabled && {
-                        onClick: () => handleClick(answer.id),
-                      })}
-                      key={answer.id}
-                      className={cn(
-                        "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
-                        { "cursor-not-allowed": isFieldDisabled },
-                        classes,
-                      )}
-                    >
-                      {isSingleQuestion ? (
-                        <label htmlFor={answer.id}>
-                          <Input
-                            className={cn("w-4 h-4", {
-                              "not-sr-only": !isSubmitted,
-                              "sr-only":
-                                (isSubmitted &&
-                                  answer.isStudentAnswer &&
-                                  isWrongAnswer) ||
-                                isCorrectAnswer,
-                            })}
-                            checked={selectedOption.includes(answer.id)}
-                            id={answer.id}
-                            readOnly
-                            type="radio"
-                            value={answer.id}
-                            {...register(
-                              `singleAnswerQuestions.${questionId}.${answer.id}`,
-                            )}
-                          />
-                          <Icon
-                            name={
-                              isCorrectAnswer
-                                ? "InputRoundedMarkerSuccess"
-                                : "InputRoundedMarkerError"
-                            }
-                            className={cn({
-                              "sr-only":
-                                !isSubmitted ||
-                                (!isAnswerChecked && !answer.isStudentAnswer),
-                            })}
-                          />
-                        </label>
-                      ) : (
-                        <label htmlFor={answer.id}>
-                          <Input
-                            className={cn("w-4 h-4", {
-                              "not-sr-only": !isSubmitted,
-                              "sr-only":
-                                isSubmitted &&
-                                answer.isStudentAnswer &&
-                                (isWrongAnswer || isCorrectAnswer),
-                            })}
-                            checked={selectedOption.includes(answer.id)}
-                            id={answer.id}
-                            type="checkbox"
-                            value={answer.id}
-                            {...register(
-                              `multiAnswerQuestions.${questionId}.${answer.id}`,
-                            )}
-                          />
-                          <Icon
-                            name={
-                              isCorrectAnswer
-                                ? "InputRoundedMarkerSuccess"
-                                : "InputRoundedMarkerError"
-                            }
-                            className={cn({
-                              "sr-only":
-                                !isSubmitted ||
-                                (!isAnswerChecked && !answer.isStudentAnswer),
-                            })}
-                          />
-                        </label>
-                      )}
-                      <Label
-                        className="body-base font-normal text-neutral-950"
-                        htmlFor={answer.id}
-                        onClick={(e) => e.stopPropagation()}
+                    const isAnswerChecked =
+                      selectedOption.includes(answer.id) &&
+                      answer.isCorrect === null;
+
+                    const getAnswerClasses = () => {
+                      if (isAnswerChecked) return classesMap.checked;
+
+                      if (answer.isCorrect === null) return classesMap.default;
+
+                      if (isCorrectAnswer) {
+                        return classesMap.correctAnswerSelected;
+                      }
+
+                      if (isCorrectAnswerNotSelected) {
+                        return classesMap.correctAnswerUnselected;
+                      }
+
+                      if (isWrongAnswer) {
+                        return classesMap.incorrectAnswerSelected;
+                      }
+
+                      return classesMap.default;
+                    };
+
+                    const classes = getAnswerClasses();
+
+                    return (
+                      <button
+                        {...(!isFieldDisabled && {
+                          onClick: () => handleClick(answer.id),
+                        })}
+                        key={answer.id}
+                        className={cn(
+                          "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
+                          { "cursor-not-allowed": isFieldDisabled },
+                          classes
+                        )}
                       >
-                        {answer.optionText}
-                      </Label>
-                    </button>
-                  );
-                })
+                        {isSingleQuestion ? (
+                          <label htmlFor={answer.id}>
+                            <Input
+                              className={cn("w-4 h-4", {
+                                "not-sr-only": !isSubmitted,
+                                "sr-only":
+                                  (isSubmitted &&
+                                    answer.isStudentAnswer &&
+                                    isWrongAnswer) ||
+                                  isCorrectAnswer,
+                              })}
+                              checked={selectedOption.includes(answer.id)}
+                              id={answer.id}
+                              readOnly
+                              type="radio"
+                              value={answer.id}
+                              {...register(
+                                `singleAnswerQuestions.${questionId}.${answer.id}`
+                              )}
+                            />
+                            <Icon
+                              name={
+                                isCorrectAnswer
+                                  ? "InputRoundedMarkerSuccess"
+                                  : "InputRoundedMarkerError"
+                              }
+                              className={cn({
+                                "sr-only":
+                                  !isSubmitted ||
+                                  (!isAnswerChecked && !answer.isStudentAnswer),
+                              })}
+                            />
+                          </label>
+                        ) : (
+                          <label htmlFor={answer.id}>
+                            <Input
+                              className={cn("w-4 h-4", {
+                                "not-sr-only": !isSubmitted,
+                                "sr-only":
+                                  isSubmitted &&
+                                  answer.isStudentAnswer &&
+                                  (isWrongAnswer || isCorrectAnswer),
+                              })}
+                              checked={selectedOption.includes(answer.id)}
+                              id={answer.id}
+                              type="checkbox"
+                              value={answer.id}
+                              {...register(
+                                `multiAnswerQuestions.${questionId}.${answer.id}`
+                              )}
+                            />
+                            <Icon
+                              name={
+                                isCorrectAnswer
+                                  ? "InputRoundedMarkerSuccess"
+                                  : "InputRoundedMarkerError"
+                              }
+                              className={cn({
+                                "sr-only":
+                                  !isSubmitted ||
+                                  (!isAnswerChecked && !answer.isStudentAnswer),
+                              })}
+                            />
+                          </label>
+                        )}
+                        <Label
+                          className="body-base font-normal text-neutral-950"
+                          htmlFor={answer.id}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {answer.optionText}
+                        </Label>
+                      </button>
+                    );
+                  })
               : null}
             {canRenderCorrectAnswers && (
               <div>

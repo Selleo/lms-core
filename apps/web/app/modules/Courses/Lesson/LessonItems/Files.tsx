@@ -27,7 +27,12 @@ export default function Files({ content, lessonItemId, isAdmin }: TProps) {
           isAdmin={isAdmin}
         />
       ) : (
-        <Video url={content.url} videoId={lessonItemId} isAdmin={isAdmin} />
+        <Video
+          url={content.url}
+          videoId={lessonItemId}
+          isAdmin={isAdmin}
+          type={content.type}
+        />
       )}
     </Card>
   );

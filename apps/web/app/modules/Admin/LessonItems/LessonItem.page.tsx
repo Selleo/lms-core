@@ -27,8 +27,6 @@ const LessonItem = () => {
     queryClient.invalidateQueries(lessonItemByIdQueryOptions(id));
   };
 
-  console.log({ lessonItemId: id });
-
   const renderLessonItem = () => {
     switch (lessonItem.itemType) {
       case "text_block":
