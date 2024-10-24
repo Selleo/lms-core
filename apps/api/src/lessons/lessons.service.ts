@@ -5,53 +5,37 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { and, count, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import type { DatabasePg, UUIDType } from "src/common";
 import {
-  courseLessons,
-  files,
-  lessonItems,
   lessons,
   questionAnswerOptions,
-  questions,
-  studentCompletedLessonItems,
-  studentCourses,
-  studentLessonsProgress,
   studentQuestionAnswers,
-  textBlocks,
 } from "src/storage/schema";
 import { match, P } from "ts-pattern";
 import {
   LessonItemResponse,
   LessonItemWithContentSchema,
+  QuestionAnswer,
+  QuestionResponse,
   QuestionWithContent,
 } from "./schemas/lessonItem.schema";
 import { isEmpty, isNull } from "lodash";
 import { Lesson } from "./schemas/lesson.schema";
 import { S3Service } from "src/file/s3.service";
 import { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
+import { LessonsRepository } from "./lessons.repository";
 
 @Injectable()
 export class LessonsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly s3Service: S3Service,
+    private readonly lessonsRepository: LessonsRepository,
   ) {}
 
   async getAllLessons() {
-    const lessonsData = await this.db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
-        state: lessons.state,
-        archived: lessons.archived,
-        itemsCount: sql<number>`CAST(COUNT(DISTINCT ${lessonItems.id}) AS INTEGER)`,
-      })
-      .from(lessons)
-      .leftJoin(lessonItems, eq(lessonItems.lessonId, lessons.id))
-      .groupBy(lessons.id);
+    const lessonsData = await this.lessonsRepository.getLessons();
 
     return Promise.all(
       lessonsData.map(async (lesson) => ({
@@ -64,53 +48,11 @@ export class LessonsService {
   }
 
   async getLessonById(id: string) {
-    const [lesson] = await this.db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
-        state: lessons.state,
-        archived: lessons.archived,
-      })
-      .from(lessons)
-      .where(eq(lessons.id, id));
+    const lesson = await this.lessonsRepository.getLessonById(id);
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
-    const lessonItemsList = await this.db
-      .select({
-        id: lessonItems.id,
-        lessonItemType: lessonItems.lessonItemType,
-        questionData: questions,
-        textBlockData: textBlocks,
-        fileData: files,
-        displayOrder: lessonItems.displayOrder,
-      })
-      .from(lessonItems)
-      .leftJoin(
-        questions,
-        and(
-          eq(lessonItems.lessonItemId, questions.id),
-          eq(lessonItems.lessonItemType, "question"),
-        ),
-      )
-      .leftJoin(
-        textBlocks,
-        and(
-          eq(lessonItems.lessonItemId, textBlocks.id),
-          eq(lessonItems.lessonItemType, "text_block"),
-        ),
-      )
-      .leftJoin(
-        files,
-        and(
-          eq(lessonItems.lessonItemId, files.id),
-          eq(lessonItems.lessonItemType, "file"),
-        ),
-      )
-      .where(eq(lessonItems.lessonId, id))
-      .orderBy(lessonItems.displayOrder);
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(id);
 
     const items = await Promise.all(
       lessonItemsList.map(async (item) => {
@@ -163,7 +105,7 @@ export class LessonsService {
           });
 
         return {
-          id: item.id,
+          lessonItemId: item.lessonItemId,
           lessonItemType: item.lessonItemType,
           displayOrder: item.displayOrder,
           content,
@@ -179,40 +121,13 @@ export class LessonsService {
   }
 
   async getLesson(id: string, userId: string, isAdmin?: boolean) {
-    const [accessCourseLessons] = await this.checkLessonAssignment(id, userId);
+    const [accessCourseLessons] =
+      await this.lessonsRepository.checkLessonAssignment(id, userId);
 
     if (!isAdmin && !accessCourseLessons)
       throw new UnauthorizedException("You don't have access to this lesson");
 
-    const [lesson] = await this.db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
-        type: sql<string>`${lessons.type}`,
-        isSubmitted: sql<boolean>`
-          CASE
-            WHEN ${studentLessonsProgress.quizCompleted} IS NOT NULL THEN ${studentLessonsProgress.quizCompleted}
-            ELSE FALSE
-          END
-        `,
-      })
-      .from(lessons)
-      .leftJoin(
-        studentLessonsProgress,
-        and(
-          eq(studentLessonsProgress.lessonId, id),
-          eq(studentLessonsProgress.studentId, userId),
-        ),
-      )
-      .where(
-        and(
-          eq(lessons.id, id),
-          eq(lessons.archived, false),
-          eq(lessons.state, "published"),
-        ),
-      );
+    const lesson = await this.lessonsRepository.getLessonForUser(id, userId);
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
@@ -220,12 +135,8 @@ export class LessonsService {
       ? lesson.imageUrl
       : await this.s3Service.getSignedUrl(lesson.imageUrl);
 
-    const completedLessonItems = await this.db
-      .selectDistinct({
-        lessonItemId: studentCompletedLessonItems.lessonItemId,
-      })
-      .from(studentCompletedLessonItems)
-      .where(eq(studentCompletedLessonItems.lessonId, lesson.id));
+    const completedLessonItems =
+      await this.lessonsRepository.completedLessonItem(lesson.id);
 
     if (lesson.type !== "quiz") {
       const lessonItems = await this.getLessonItems(lesson, userId);
@@ -242,168 +153,171 @@ export class LessonsService {
       };
     }
 
-    const [lessonProgress] = await this.db
-      .select({
-        quizCompleted: sql<boolean>`
-          CASE
-            WHEN ${studentLessonsProgress.quizCompleted} THEN
-              ${studentLessonsProgress.quizCompleted}
-            ELSE false
-          END`,
-      })
-      .from(studentLessonsProgress)
-      .where(
-        and(
-          eq(studentLessonsProgress.studentId, userId),
-          eq(studentLessonsProgress.lessonId, lesson.id),
-        ),
-      );
+    const lessonProgress = await this.lessonsRepository.lessonProgress(
+      lesson.id,
+      userId,
+    );
 
     if (!lessonProgress)
       throw new NotFoundException("Lesson progress not found");
 
-    const lessonItems = await this.getLessonQuestions(
+    const questionLessonItems = await this.getLessonQuestions(
       lesson,
       userId,
       lessonProgress.quizCompleted,
     );
 
-    const evaluationAnswers = lessonItems.map((item) => {
-      if (lesson.type !== "quiz" || !lessonProgress.quizCompleted)
-        return { ...item, passQuestion: null };
-
-      let passQuestion = true;
-      item.content.questionAnswers.forEach((answer) => {
-        if (
-          answer.isStudentAnswer !== answer.isCorrect ||
-          isNull(answer.isStudentAnswer)
-        ) {
-          passQuestion = false;
-        }
-      });
-      return { ...item, passQuestion };
-    });
-
     return {
       ...lesson,
       imageUrl,
-      lessonItems: evaluationAnswers,
-      itemsCount: lessonItems.length,
+      lessonItems: questionLessonItems,
+      itemsCount: questionLessonItems.length,
       itemsCompletedCount: completedLessonItems.length,
-      quizScore: evaluationAnswers.filter((item) => item.passQuestion).length,
+      quizScore: questionLessonItems.filter((item) => item.content.passQuestion)
+        .length,
     };
   }
 
   async evaluationQuiz(lessonId: UUIDType, userId: UUIDType) {
-    const [accessCourseLessons] = await this.checkLessonAssignment(
-      lessonId,
-      userId,
-    );
+    const [accessCourseLessons] =
+      await this.lessonsRepository.checkLessonAssignment(lessonId, userId);
 
     if (!accessCourseLessons)
       throw new UnauthorizedException(
         "You don't have assignment to this lesson",
       );
 
-    const [lessonItemsCount] = await this.db
-      .select({ count: count(lessonItems.id) })
-      .from(lessonItems)
-      .where(eq(lessonItems.lessonId, lessonId));
+    const lessonItemsCount =
+      await this.lessonsRepository.lessonItemCount(lessonId);
 
-    const [completedLessonItemsCount] = await this.db
-      .selectDistinct({
-        count: count(studentCompletedLessonItems.id),
-      })
-      .from(studentCompletedLessonItems)
-      .where(eq(studentCompletedLessonItems.lessonId, lessonId));
+    // do poprawy oznaczanie jako zakonczonego
+    const completedLessonItemsCount =
+      await this.lessonsRepository.completedLessonItemsCount(lessonId);
 
     if (lessonItemsCount.count !== completedLessonItemsCount.count)
       throw new ConflictException("Lesson is not completed");
 
-    await this.db
-      .insert(studentLessonsProgress)
-      .values({
-        studentId: userId,
-        lessonId: lessonId,
-        quizCompleted: true,
-      })
-      .onConflictDoUpdate({
-        target: [
-          studentLessonsProgress.studentId,
-          studentLessonsProgress.lessonId,
-        ],
-        set: {
-          quizCompleted: true,
-        },
-      });
+    const evaluationResult = await this.evaluationsQuestions(lessonId, userId);
+
+    if (!evaluationResult) return false;
+
+    const updateQuizResult = await this.lessonsRepository.completeQuiz(
+      lessonId,
+      userId,
+    );
+
+    if (!updateQuizResult) return false;
 
     return true;
   }
 
-  async clearQuizProgress(lessonId: UUIDType, userId: UUIDType) {
-    const [accessCourseLessons] = await this.checkLessonAssignment(
+  private async evaluationsQuestions(lessonId: UUIDType, userId: UUIDType) {
+    const lesson = await this.lessonsRepository.getLessonForUser(
       lessonId,
       userId,
     );
+    const questionLessonItems = await this.getLessonQuestionsToEvaluation(
+      lesson,
+      userId,
+      true,
+    );
+    try {
+      await this.db.transaction(async (trx) => {
+        await Promise.all(
+          questionLessonItems.map(async (questionLessonItem) => {
+            const answers = await this.lessonsRepository.getQuestionAnswers(
+              questionLessonItem.content.id,
+              userId,
+              lesson.type,
+              true,
+              trx,
+            );
+
+            const passQuestion = await match(
+              questionLessonItem.content.questionType,
+            )
+              .returnType<Promise<boolean>>()
+              .with(
+                P.union("fill_in_the_blanks_text", "fill_in_the_blanks_dnd"),
+                async () => {
+                  const question = questionLessonItem.content;
+                  let passQuestion = true;
+
+                  for (const answer of question.questionAnswers) {
+                    if (answer.optionText != answer.studentAnswerText) {
+                      passQuestion = false;
+                      break;
+                    }
+                  }
+
+                  return passQuestion;
+                },
+              )
+              .otherwise(async () => {
+                let passQuestion = true;
+                for (const answer of answers) {
+                  if (
+                    answer.isStudentAnswer !== answer.isCorrect ||
+                    isNull(answer.isStudentAnswer)
+                  ) {
+                    passQuestion = false;
+                    break;
+                  }
+                }
+
+                return passQuestion;
+              });
+
+            await this.lessonsRepository.setCorrectAnswerForStudentAnswer(
+              questionLessonItem.content.id,
+              userId,
+              passQuestion,
+              trx,
+            );
+          }),
+        );
+      });
+      return true;
+    } catch (error) {
+      console.log("error", error);
+      return false;
+    }
+  }
+
+  async clearQuizProgress(lessonId: UUIDType, userId: UUIDType) {
+    const [accessCourseLessons] =
+      await this.lessonsRepository.checkLessonAssignment(lessonId, userId);
 
     if (!accessCourseLessons)
       throw new UnauthorizedException(
         "You don't have assignment to this lesson",
       );
 
-    const [quizProgress] = await this.db
-      .select({ id: studentLessonsProgress.id })
-      .from(studentLessonsProgress)
-      .where(
-        and(
-          eq(studentLessonsProgress.studentId, userId),
-          eq(studentLessonsProgress.lessonId, lessonId),
-        ),
-      );
+    const quizProgress = await this.lessonsRepository.lessonProgress(
+      lessonId,
+      userId,
+    );
 
     if (!quizProgress) throw new NotFoundException("Lesson progress not found");
 
     try {
       return await this.db.transaction(async (trx) => {
-        const questionIds = await this.db
-          .select({
-            questionId: studentQuestionAnswers.questionId,
-          })
-          .from(studentQuestionAnswers)
-          .leftJoin(
-            lessonItems,
-            eq(studentQuestionAnswers.questionId, lessonItems.lessonItemId),
-          )
-          .where(eq(lessonItems.lessonId, lessonId));
+        const questionIds =
+          await this.lessonsRepository.getQuestionsIdsByLessonId(lessonId);
 
-        await trx
-          .update(studentLessonsProgress)
-          .set({ quizCompleted: false })
-          .where(
-            and(
-              eq(studentLessonsProgress.studentId, userId),
-              eq(studentLessonsProgress.lessonId, lessonId),
-            ),
-          );
+        await this.lessonsRepository.retireQuizProgress(lessonId, userId, trx);
 
-        await trx.delete(studentQuestionAnswers).where(
-          and(
-            eq(studentQuestionAnswers.studentId, userId),
-            inArray(
-              studentQuestionAnswers.questionId,
-              questionIds.map((q) => q.questionId),
-            ),
-          ),
+        await this.lessonsRepository.removeQuestionsAnswer(
+          questionIds,
+          userId,
+          trx,
         );
 
-        await trx
-          .delete(studentCompletedLessonItems)
-          .where(
-            and(
-              eq(studentCompletedLessonItems.studentId, userId),
-              eq(studentCompletedLessonItems.lessonId, lessonId),
-            ),
-          );
+        await this.lessonsRepository.removeStudentCompletedLessonItems(
+          lessonId,
+          userId,
+          trx,
+        );
 
         return true;
       });
@@ -412,32 +326,10 @@ export class LessonsService {
     }
   }
 
-  private async checkLessonAssignment(lessonId: UUIDType, userId: UUIDType) {
-    return this.db
-      .select({
-        id: lessons.id,
-        studentCourseId: studentCourses.id,
-      })
-      .from(lessons)
-      .leftJoin(courseLessons, eq(courseLessons.id, lessons.id))
-      .leftJoin(
-        studentCourses,
-        and(
-          eq(studentCourses.courseId, courseLessons.id),
-          eq(studentCourses.studentId, userId),
-        ),
-      )
-      .where(
-        and(
-          eq(lessons.archived, false),
-          eq(lessons.id, lessonId),
-          eq(lessons.state, "published"),
-        ),
-      );
-  }
-
   private async getLessonItems(lesson: Lesson, userId: string) {
-    const lessonItemsList = await this.fetchLessonItemsFromDb(lesson.id);
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(
+      lesson.id,
+    );
     const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
 
     return await Promise.all(
@@ -452,72 +344,77 @@ export class LessonsService {
     userId: string,
     quizCompleted: boolean,
   ) {
-    const lessonItemsList = await this.fetchLessonItemsFromDb(lesson.id);
-    const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
+    const questionItemsForLesson =
+      await this.lessonsRepository.getQuestionItems(
+        lesson.id,
+        userId,
+        lesson.type,
+        quizCompleted,
+      );
 
     return await Promise.all(
-      validLessonItemsList.map(async (item) => {
-        const { questionData, lessonItemType, id, displayOrder } = item;
+      questionItemsForLesson.map(async (item) => {
+        const {
+          lessonItemId,
+          questionData,
+          lessonItemType,
+          displayOrder,
+          passQuestion,
+        } = item;
 
         if (isNull(questionData)) throw new Error("Question not found");
 
-        const processedContent = await this.processQuestionItem(
-          { id, displayOrder, lessonItemType, questionData },
+        const content = await this.processQuestionItem(
+          { lessonItemId, displayOrder, lessonItemType, questionData },
           userId,
           lesson.type,
           quizCompleted,
+          passQuestion,
         );
 
         return {
-          id: item.id,
+          lessonItemId: item.lessonItemId,
           lessonItemType: item.lessonItemType,
           displayOrder: item.displayOrder,
-          content: processedContent,
+          content,
         };
       }),
     );
   }
 
-  private async fetchLessonItemsFromDb(
-    lessonId: string,
-  ): Promise<LessonItemWithContentSchema[]> {
-    return this.db
-      .select({
-        id: lessonItems.id,
-        lessonItemType: lessonItems.lessonItemType,
-        lessonItemId: lessonItems.id,
-        questionData: questions,
-        textBlockData: textBlocks,
-        fileData: files,
-        displayOrder: lessonItems.displayOrder,
-      })
-      .from(lessonItems)
-      .leftJoin(
-        questions,
-        and(
-          eq(lessonItems.lessonItemId, questions.id),
-          eq(lessonItems.lessonItemType, "question"),
-          eq(questions.state, "published"),
-        ),
-      )
-      .leftJoin(
-        textBlocks,
-        and(
-          eq(lessonItems.lessonItemId, textBlocks.id),
-          eq(lessonItems.lessonItemType, "text_block"),
-          eq(textBlocks.state, "published"),
-        ),
-      )
-      .leftJoin(
-        files,
-        and(
-          eq(lessonItems.lessonItemId, files.id),
-          eq(lessonItems.lessonItemType, "file"),
-          eq(files.state, "published"),
-        ),
-      )
-      .where(eq(lessonItems.lessonId, lessonId))
-      .orderBy(lessonItems.displayOrder);
+  private async getLessonQuestionsToEvaluation(
+    lesson: Lesson,
+    userId: string,
+    quizCompleted: boolean,
+  ) {
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(
+      lesson.id,
+    );
+    const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
+
+    return await Promise.all(
+      validLessonItemsList.map(async (item) => {
+        const { lessonItemId, questionData, lessonItemType, displayOrder } =
+          item;
+
+        if (isNull(questionData)) throw new Error("Question not found");
+
+        const content = await this.processQuestionItem(
+          { lessonItemId, displayOrder, lessonItemType, questionData },
+          userId,
+          lesson.type,
+          quizCompleted,
+          null,
+        );
+
+        return {
+          lessonItemId: item.lessonItemId,
+          lessonItemType: item.lessonItemType,
+          displayOrder: item.displayOrder,
+          content,
+        };
+      }),
+    );
   }
 
   private async processLessonItem(
@@ -530,12 +427,14 @@ export class LessonsService {
       .with(
         { lessonItemType: "question", questionData: P.not(P.nullish) },
         async (item) => {
-          const { questionData, lessonItemType, id, displayOrder } = item;
+          const { lessonItemId, questionData, lessonItemType, displayOrder } =
+            item;
           return this.processQuestionItem(
-            { id, displayOrder, lessonItemType, questionData },
+            { lessonItemId, displayOrder, lessonItemType, questionData },
             userId,
             lessonType,
             false,
+            null,
           );
         },
       )
@@ -564,7 +463,7 @@ export class LessonsService {
       });
 
     return {
-      id: item.id,
+      lessonItemId: item.lessonItemId,
       lessonItemType: item.lessonItemType,
       displayOrder: item.displayOrder,
       content,
@@ -576,50 +475,14 @@ export class LessonsService {
     userId: string,
     lessonType: string,
     lessonRated: boolean,
-  ) {
-    const questionAnswers = await this.db
-      .select({
-        id: questionAnswerOptions.id,
-        optionText: questionAnswerOptions.optionText,
-        position: questionAnswerOptions.position,
-        isStudentAnswer: sql<boolean | null>`
-        CASE
-          WHEN ${studentQuestionAnswers.id} IS NULL THEN null
-          WHEN EXISTS (
-              SELECT 1
-              FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-              WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(${questionAnswerOptions.optionText})
-            )
-          THEN true
-          ELSE false
-        END
-        `,
-        isCorrect: sql<boolean | null>`
-        CASE
-          WHEN ${lessonType} = 'quiz' AND ${lessonRated} THEN
-            ${questionAnswerOptions.isCorrect}
-          ELSE null
-        END
-      `,
-      })
-      .from(questionAnswerOptions)
-      .leftJoin(
-        studentQuestionAnswers,
-        and(
-          eq(
-            studentQuestionAnswers.questionId,
-            questionAnswerOptions.questionId,
-          ),
-          eq(studentQuestionAnswers.studentId, userId),
-        ),
-      )
-      .where(eq(questionAnswerOptions.questionId, item.questionData.id))
-      .groupBy(
-        questionAnswerOptions.id,
-        questionAnswerOptions.optionText,
-        questionAnswerOptions.position,
-        studentQuestionAnswers.id,
-        studentQuestionAnswers.answer,
+    passQuestion: boolean | null,
+  ): Promise<QuestionResponse> {
+    const questionAnswers: QuestionAnswer[] =
+      await this.lessonsRepository.getQuestionAnswers(
+        item.questionData.id,
+        userId,
+        lessonType,
+        lessonRated,
       );
 
     if (
@@ -632,6 +495,7 @@ export class LessonsService {
         questionType: item.questionData.questionType,
         questionBody: item.questionData.questionBody,
         questionAnswers,
+        passQuestion,
       };
     }
 
@@ -659,6 +523,7 @@ export class LessonsService {
         questionType: item.questionData.questionType,
         questionBody: item.questionData.questionBody,
         questionAnswers: studentAnswer,
+        passQuestion,
       };
     }
 
@@ -666,13 +531,9 @@ export class LessonsService {
       .select({
         id: studentQuestionAnswers.id,
         answer: sql<JSON>`${studentQuestionAnswers.answer}`,
-        test: questionAnswerOptions.optionText,
+        isCorrect: studentQuestionAnswers.isCorrect,
       })
       .from(studentQuestionAnswers)
-      .innerJoin(
-        questionAnswerOptions,
-        eq(questionAnswerOptions.questionId, studentQuestionAnswers.questionId),
-      )
       .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
       .limit(1);
 
@@ -684,12 +545,23 @@ export class LessonsService {
               key as keyof typeof studentAnswers.answer
             ] as string;
 
+            const correctAnswerToStudentAnswer = questionAnswers.find(
+              (answer) => answer.position === position,
+            );
+            const isCorrect = correctAnswerToStudentAnswer
+              ? correctAnswerToStudentAnswer.isCorrect
+              : false;
+
+            const isStudentAnswer =
+              correctAnswerToStudentAnswer?.optionText === studentAnswerText;
+
             return {
               id: studentAnswers.id,
-              optionText: studentAnswerText,
+              optionText: correctAnswerToStudentAnswer?.optionText ?? "",
               position: position,
-              isStudentAnswer: true,
-              isCorrect: null,
+              isStudentAnswer,
+              studentAnswerText,
+              isCorrect,
             };
           })
         : [];
@@ -699,6 +571,7 @@ export class LessonsService {
         questionType: item.questionData.questionType,
         questionBody: item.questionData.questionBody,
         questionAnswers: result,
+        passQuestion,
       };
     }
 
@@ -708,6 +581,7 @@ export class LessonsService {
         optionText: answer.optionText,
         position: null,
         isStudentAnswer: null,
+        studentAnswerText: "",
         isCorrect: null,
       };
     });
@@ -717,31 +591,12 @@ export class LessonsService {
       questionType: item.questionData.questionType,
       questionBody: item.questionData.questionBody,
       questionAnswers: result,
+      passQuestion,
     };
   }
+
   async getAvailableLessons() {
-    const availableLessons = await this.db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
-        itemsCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${lessonItems}
-          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
-      })
-      .from(lessons)
-      .where(
-        and(
-          eq(lessons.archived, false),
-          eq(lessons.state, "published"),
-          isNotNull(lessons.id),
-          isNotNull(lessons.title),
-          isNotNull(lessons.description),
-          isNotNull(lessons.imageUrl),
-        ),
-      );
+    const availableLessons = await this.lessonsRepository.getAvailableLessons();
 
     if (isEmpty(availableLessons))
       throw new NotFoundException("No lessons found");
@@ -782,19 +637,17 @@ export class LessonsService {
   ) {
     try {
       if (displayOrder === undefined) {
-        const [maxOrderResult] = await this.db
-          .select({ maxOrder: sql<number>`MAX(${courseLessons.displayOrder})` })
-          .from(courseLessons)
-          .where(eq(courseLessons.courseId, courseId));
+        const maxOrderResult =
+          await this.lessonsRepository.getMaxOrderLessonsInCourse(courseId);
 
-        displayOrder = (maxOrderResult?.maxOrder ?? 0) + 1;
+        displayOrder = maxOrderResult + 1;
       }
 
-      await this.db.insert(courseLessons).values({
+      await this.lessonsRepository.assignLessonToCourse(
         courseId,
         lessonId,
         displayOrder,
-      });
+      );
     } catch (error) {
       if (error.code === "23505") {
         // postgres uniq error code
@@ -807,31 +660,19 @@ export class LessonsService {
   }
 
   async removeLessonFromCourse(courseId: string, lessonId: string) {
-    const result = await this.db
-      .delete(courseLessons)
-      .where(
-        and(
-          eq(courseLessons.courseId, courseId),
-          eq(courseLessons.lessonId, lessonId),
-        ),
-      )
-      .returning();
+    const result = await this.lessonsRepository.removeCourseLesson(
+      courseId,
+      lessonId,
+    );
 
     if (result.length === 0) {
       throw new NotFoundException("Lesson not found in this course");
     }
 
-    await this.db.execute(sql`
-      UPDATE ${courseLessons}
-      SET display_order = display_order - 1
-      WHERE course_id = ${courseId}
-        AND display_order > (
-          SELECT display_order
-          FROM ${courseLessons}
-          WHERE course_id = ${courseId}
-            AND lesson_id = ${lessonId}
-        )
-    `);
+    await this.lessonsRepository.updateDisplayOrderLessonsInCourse(
+      courseId,
+      lessonId,
+    );
   }
 
   private isValidItem(item: any): boolean {
