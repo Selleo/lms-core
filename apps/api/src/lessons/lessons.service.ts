@@ -39,6 +39,7 @@ export class LessonsService {
   ) {}
 
   async getAllLessons() {
+    //Todo: add pagination
     const lessonsData = await this.db
       .select({
         id: lessons.id,
