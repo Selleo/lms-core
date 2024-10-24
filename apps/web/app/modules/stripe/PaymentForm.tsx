@@ -58,7 +58,6 @@ export const PaymentForm = ({
         onPaymentSuccess();
       }, 4000);
     } else {
-      console.log("Payment status:", result.paymentIntent?.status);
       setProcessing(false);
     }
   };

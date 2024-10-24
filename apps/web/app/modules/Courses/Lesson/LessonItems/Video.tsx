@@ -1,14 +1,16 @@
 import { useParams } from "@remix-run/react";
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
 import { useCompletedLessonItemsStore } from "./LessonItemStore";
+import ReactPlayer from "react-player";
 
 type VideoProps = {
   url: string;
   videoId: string;
   isAdmin: boolean;
+  type: string;
 };
 
-export default function Video({ url, videoId, isAdmin }: VideoProps) {
+export default function Video({ url, videoId, isAdmin, type }: VideoProps) {
   const { lessonId } = useParams<{ lessonId: string }>();
   const { mutate: markLessonItemAsCompleted } = useMarkLessonItemAsCompleted();
   const {
@@ -24,25 +26,24 @@ export default function Video({ url, videoId, isAdmin }: VideoProps) {
     markLessonItemAsCompleted({ id: videoId, lessonId });
   };
 
-  const isDev = process.env.NODE_ENV === "development";
-
-  //TODO: add some demo video for local dev or load it from the file
-  const src = isDev
-    ? "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-    : url;
+  const isExternalVideo = type === "external_video";
 
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <video
-        width="100%"
-        height="auto"
-        controls
-        className="rounded-lg"
-        {...(!isAdmin && { onEnded: handleMarkLessonItemAsCompleted })}
-      >
-        <source src={src} />
-        <track kind="captions" />
-      </video>
+      {isExternalVideo ? (
+        <ReactPlayer url={url} controls />
+      ) : (
+        <video
+          width="100%"
+          height="auto"
+          controls
+          className="rounded-lg"
+          {...(!isAdmin && { onEnded: handleMarkLessonItemAsCompleted })}
+        >
+          <source src={url} />
+          <track kind="captions" />
+        </video>
+      )}
     </div>
   );
 }

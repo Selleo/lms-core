@@ -52,7 +52,6 @@ export const TextBlockItem: React.FC<TextBlockItemProps> = ({
   });
 
   const onSubmit = (data: UpdateTextBlockItemBody) => {
-    console.log({ textBlockId: id });
     updateTextBlockItem({
       data,
       textBlockId: id,

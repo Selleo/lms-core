@@ -4,13 +4,14 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { and, eq, isNotNull } from "drizzle-orm";
+import { and, eq, inArray, isNotNull } from "drizzle-orm";
 import type { DatabasePg, UUIDType } from "src/common";
 import { S3Service } from "src/file/s3.service";
 import {
   files,
   lessonItems,
   lessons,
+  questionAnswerOptions,
   questions,
   textBlocks,
 } from "src/storage/schema";
@@ -276,6 +277,84 @@ export class LessonItemsService {
     if (!question) throw new NotFoundException("Question not found");
 
     return question;
+  }
+
+  async getQuestionAnswers(questionId: UUIDType) {
+    const answers = await this.db
+      .select({
+        id: questionAnswerOptions.id,
+        optionText: questionAnswerOptions.optionText,
+        isCorrect: questionAnswerOptions.isCorrect,
+        position: questionAnswerOptions.position,
+      })
+      .from(questionAnswerOptions)
+      .where(eq(questionAnswerOptions.questionId, questionId));
+
+    return answers;
+  }
+
+  async upsertQuestionOptions(
+    questionId: UUIDType,
+    options: Array<
+      Partial<{
+        id: string;
+        optionText: string;
+        isCorrect: boolean;
+        position: number;
+      }>
+    >,
+  ) {
+    await this.db.transaction(async (trx) => {
+      const existingOptions = await trx
+        .select()
+        .from(questionAnswerOptions)
+        .where(eq(questionAnswerOptions.questionId, questionId));
+
+      const existingIds = new Set(existingOptions.map((opt) => opt.id));
+
+      const optionsWithIds = options.filter((opt) => opt.id);
+      const idsToKeep = new Set(optionsWithIds.map((opt) => opt.id));
+      const idsToDelete = [...existingIds].filter((id) => !idsToKeep.has(id));
+
+      if (idsToDelete.length > 0) {
+        await trx
+          .delete(questionAnswerOptions)
+          .where(
+            and(
+              eq(questionAnswerOptions.questionId, questionId),
+              inArray(questionAnswerOptions.id, idsToDelete),
+            ),
+          );
+      }
+
+      for (const option of options) {
+        if (
+          option.optionText === undefined ||
+          option.isCorrect === undefined ||
+          option.position === undefined
+        ) {
+          continue;
+        }
+
+        await trx
+          .insert(questionAnswerOptions)
+          .values({
+            id: option.id,
+            questionId,
+            optionText: option.optionText,
+            isCorrect: option.isCorrect,
+            position: option.position,
+          })
+          .onConflictDoUpdate({
+            target: questionAnswerOptions.id,
+            set: {
+              optionText: option.optionText,
+              isCorrect: option.isCorrect,
+              position: option.position,
+            },
+          });
+      }
+    });
   }
 
   async createFile(content: FileInsertType, userId: UUIDType) {

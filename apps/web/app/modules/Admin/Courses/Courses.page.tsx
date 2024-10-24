@@ -134,7 +134,7 @@ const Courses = () => {
 
   const handleDeleteCourses = () => {
     // TODO: Implement archive functionality
-    console.log("Deleting courses:", selectedCourses);
+    alert("not implemented");
     table.resetRowSelection();
     queryClient.invalidateQueries(allCoursesQueryOptions());
   };

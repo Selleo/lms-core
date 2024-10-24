@@ -50,7 +50,6 @@ const User = () => {
   if (!user) throw new Error("User not found");
 
   const onSubmit = (data: UpdateUserBody) => {
-    console.log(data);
     updateUser({ data, userId: id });
     setIsEditing(false);
   };

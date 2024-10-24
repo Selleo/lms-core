@@ -1,45 +1,29 @@
-import React, { useState, useEffect } from "react";
-import { Controller, useForm, useFieldArray } from "react-hook-form";
-import { capitalize, startCase } from "lodash-es";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
-import { Checkbox } from "~/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
+import { isEqual, startCase } from "lodash-es";
+import { useEffect, useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
 import { useUpdateQuestionItem } from "~/api/mutations/admin/useUpdateQuestionItem";
+import { useUpdateQuestionOptions } from "~/api/mutations/admin/useUpdateQuestionOptions";
+import {
+  questionOptions as questionQueryOptions,
+  useQuestionOptions,
+} from "~/api/queries/admin/useQuestionOptions";
+import { queryClient } from "~/api/queryClient";
+import { Button } from "~/components/ui/button";
+import { Label } from "~/components/ui/label";
+import { QuestionItemProps } from "./question/types";
 import { UpdateQuestionItemBody } from "~/api/generated-api";
+import { QuestionField } from "./question/QuestionField";
+import { AnswerOptions } from "./question/AnswerOptions";
 
-interface QuestionItemProps {
-  id: string;
-  initialData: {
-    questionType: string;
-    questionBody: string;
-    state: string;
-    questionAnswers?: {
-      id: string;
-      optionText: string;
-      position: number | null;
-      isStudentAnswer: boolean;
-    }[];
-    solutionExplanation: string | null;
-  };
-  onUpdate: () => void;
-}
-
-export const QuestionItem: React.FC<QuestionItemProps> = ({
+export const QuestionItem = ({
   id,
   initialData,
   onUpdate,
-}) => {
+}: QuestionItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const { mutateAsync: updateQuestionItem } = useUpdateQuestionItem();
+  const { mutateAsync: updateAnswerOptions } = useUpdateQuestionOptions();
+  const { data: questionOptions } = useQuestionOptions(id);
 
   const {
     control,
@@ -47,10 +31,13 @@ export const QuestionItem: React.FC<QuestionItemProps> = ({
     watch,
     formState: { isDirty },
   } = useForm<UpdateQuestionItemBody>({
-    defaultValues: initialData,
+    defaultValues: {
+      ...initialData,
+      questionAnswers: [],
+    },
   });
 
-  const { fields, append, remove } = useFieldArray({
+  const fieldArray = useFieldArray({
     control,
     name: "questionAnswers",
   });
@@ -58,150 +45,56 @@ export const QuestionItem: React.FC<QuestionItemProps> = ({
   const questionType = watch("questionType");
 
   useEffect(() => {
+    if (questionOptions && !isEditing) {
+      const sortedOptions = questionOptions
+        .sort((a, b) => a.position - b.position)
+        .map((option) => ({
+          id: option.id,
+          optionText: option.optionText,
+          isCorrect: option.isCorrect,
+          position: option.position,
+          questionId: id,
+        }));
+
+      if (!isEqual(sortedOptions, fieldArray.fields)) {
+        fieldArray.replace(sortedOptions);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionOptions, id, isEditing, fieldArray.replace]);
+
+  useEffect(() => {
     if (questionType === "open_answer") {
-      remove();
+      fieldArray.replace([]);
     }
-  }, [questionType, remove]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questionType, fieldArray.replace]);
 
-  const onSubmit = (data: UpdateQuestionItemBody) => {
-    console.log({ data });
-    updateQuestionItem({ data, questionId: id }).then(() => {
+  const onSubmit = async (data: UpdateQuestionItemBody) => {
+    try {
+      await updateQuestionItem({ data, questionId: id });
+
+      if (data.questionAnswers && questionType !== "open_answer") {
+        const options = data.questionAnswers.map((option, index) => ({
+          ...(option.id && { id: option.id }),
+          questionId: id,
+          optionText: option.optionText,
+          isCorrect: option.isCorrect,
+          position: index,
+        }));
+
+        await updateAnswerOptions({
+          data: options,
+          questionId: id,
+        });
+      }
+
       onUpdate();
+      queryClient.invalidateQueries(questionQueryOptions(id));
       setIsEditing(false);
-    });
-  };
-
-  const renderField = (name: keyof UpdateQuestionItemBody) => (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => {
-        if (!isEditing) {
-          if (name === "questionType") {
-            return (
-              <span className="font-semibold">
-                {capitalize(startCase(field.value as string))}
-              </span>
-            );
-          }
-          return <span className="font-semibold">{field.value as string}</span>;
-        }
-
-        if (name === "questionType") {
-          return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a question type" />
-              </SelectTrigger>
-              <SelectContent>
-                {["single_choice", "multiple_choice", "open_answer"].map(
-                  (type) => (
-                    <SelectItem value={type} key={type}>
-                      {capitalize(startCase(type))}
-                    </SelectItem>
-                  )
-                )}
-              </SelectContent>
-            </Select>
-          );
-        }
-
-        if (name === "state") {
-          return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a state" />
-              </SelectTrigger>
-              <SelectContent>
-                {["draft", "published"].map((state) => (
-                  <SelectItem value={state} key={state}>
-                    {capitalize(state)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          );
-        }
-
-        if (name === "questionBody" || name === "solutionExplanation") {
-          return (
-            <Textarea
-              {...field}
-              value={field.value as string}
-              placeholder={`Enter ${startCase(name)}`}
-              className="resize-none"
-            />
-          );
-        }
-
-        return (
-          <Input
-            {...field}
-            value={field.value as string}
-            type="text"
-            placeholder={`Enter ${startCase(name)}`}
-          />
-        );
-      }}
-    />
-  );
-
-  const renderAnswerOptions = () => {
-    if (
-      questionType !== "single_choice" &&
-      questionType !== "multiple_choice"
-    ) {
-      return null;
+    } catch (error) {
+      console.error("Error updating question:", error);
     }
-
-    return (
-      <div className="space-y-4">
-        <Label>Answer Options</Label>
-        {fields.map((field, index) => (
-          <div key={field.id} className="flex items-center space-x-2">
-            <Controller
-              name={`questionAnswers.${index}.optionText`}
-              control={control}
-              render={({ field }) => (
-                <Input {...field} placeholder="Enter answer option" />
-              )}
-            />
-            <Controller
-              name={`questionAnswers.${index}.isStudentAnswer`}
-              control={control}
-              render={({ field }) => (
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              )}
-            />
-            <Button type="button" onClick={() => remove(index)}>
-              Remove
-            </Button>
-          </div>
-        ))}
-        <Button
-          type="button"
-          onClick={() =>
-            append({
-              optionText: "",
-              position: fields.length,
-              isStudentAnswer: false,
-              questionId: id,
-            })
-          }
-        >
-          Add Option
-        </Button>
-      </div>
-    );
   };
 
   return (
@@ -228,14 +121,27 @@ export const QuestionItem: React.FC<QuestionItemProps> = ({
             "questionBody",
             "state",
             "solutionExplanation",
+            "archived",
           ] as const
         ).map((field) => (
           <div key={field} className="flex flex-col gap-y-1">
-            <Label htmlFor={field}>{startCase(field)}</Label>
-            {renderField(field)}
+            <Label htmlFor={field}>
+              {field === "archived" ? "Status" : startCase(field)}
+            </Label>
+            <QuestionField
+              name={field}
+              control={control}
+              isEditing={isEditing}
+            />
           </div>
         ))}
-        {isEditing && renderAnswerOptions()}
+        <AnswerOptions
+          questionType={questionType}
+          isEditing={isEditing}
+          control={control}
+          fieldArray={fieldArray}
+          id={id}
+        />
       </div>
     </form>
   );

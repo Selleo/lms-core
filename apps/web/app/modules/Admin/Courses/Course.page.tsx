@@ -67,7 +67,10 @@ const Course = () => {
   if (!course) throw new Error("Course not found");
 
   const onSubmit = (data: UpdateCourseBody) => {
-    updateCourse({ data, courseId: id }).then(() => {
+    updateCourse({
+      data: { ...data, priceInCents: Number(data.priceInCents) },
+      courseId: id,
+    }).then(() => {
       queryClient.invalidateQueries(courseQueryOptions(id));
       setIsEditing(false);
     });
@@ -175,7 +178,7 @@ const Course = () => {
         return (
           <Input
             {...field}
-            value={field.value as string}
+            value={field.value as number}
             type={name === "priceInCents" ? "number" : "text"}
             placeholder={`Enter ${startCase(name)}`}
           />
