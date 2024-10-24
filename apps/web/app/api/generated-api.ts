@@ -351,6 +351,7 @@ export interface GetCourseResponse {
       archived?: boolean;
       isSubmitted?: boolean;
       type?: string;
+      quizScore?: number;
     }[];
     priceInCents: number;
     currency: string;
@@ -384,6 +385,7 @@ export interface GetCourseByIdResponse {
       archived?: boolean;
       isSubmitted?: boolean;
       type?: string;
+      quizScore?: number;
     }[];
     priceInCents: number;
     currency: string;
@@ -448,6 +450,7 @@ export interface GetAllLessonsResponse {
     archived?: boolean;
     isSubmitted?: boolean;
     type?: string;
+    quizScore?: number;
   }[];
 }
 
@@ -474,6 +477,7 @@ export interface GetLessonResponse {
     archived?: boolean;
     isSubmitted?: boolean;
     type?: string;
+    quizScore?: number;
     lessonItems: {
       /** @format uuid */
       id: string;
@@ -526,6 +530,7 @@ export interface GetLessonByIdResponse {
     archived?: boolean;
     isSubmitted?: boolean;
     type?: string;
+    quizScore?: number;
     lessonItems: {
       /** @format uuid */
       id: string;
@@ -573,6 +578,7 @@ export interface CreateLessonBody {
   archived?: boolean;
   isSubmitted?: boolean;
   type?: string;
+  quizScore?: number;
 }
 
 export interface CreateLessonResponse {
@@ -589,6 +595,7 @@ export interface UpdateLessonBody {
   archived?: boolean;
   isSubmitted?: boolean;
   type?: string;
+  quizScore?: number;
 }
 
 export interface UpdateLessonResponse {

@@ -128,6 +128,35 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             })
             .returning();
 
+          if (item.questionType === "fill_in_the_blanks_dnd") {
+            const words = [
+              "HTML",
+              "interactivity",
+              "styles",
+              "functions",
+              "content",
+              "elements",
+              "animations",
+              "design",
+              "databases",
+              "forms",
+              "structure",
+              "validation",
+            ];
+
+            for (let index = 0; index < words.length; index++) {
+              await db.insert(questionAnswerOptions).values({
+                id: crypto.randomUUID(),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                questionId,
+                optionText: words[index],
+                isCorrect: index < 2,
+                position: 0,
+              });
+            }
+          }
+
           if (
             item.questionType === "multiple_choice" ||
             item.questionType === "single_choice"

@@ -24,7 +24,7 @@ export const WordBank = ({ words }: WordBankProps) => {
     >
       <div className="mt-5">
         Answers:
-        <div className="flex items-center h-12 rounded-lg min-w-20 gap-2 min-h-10">
+        <div className="flex items-center flex-wrap min-h-12 rounded-lg min-w-20 gap-2">
           {draggableWords}
         </div>
       </div>

@@ -15,6 +15,8 @@ import { allCoursesQueryOptions } from "~/api/queries/useCourses";
 import { useCourseSuspense } from "~/api/queries/useCourse";
 import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
 import { useClearQuizProgress } from "~/api/mutations/useClearQuizProgress";
+import { useState } from "react";
+import { QuizSummaryModal } from "~/modules/Courses/Lesson/QuizSummaryModal";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Lesson" }];
@@ -40,7 +42,12 @@ export default function LessonPage() {
     defaultValues: getUserAnswers(data),
   });
 
-  const submitQuiz = useSubmitQuiz({ handleOnSuccess: refetch });
+  const submitQuiz = useSubmitQuiz({
+    handleOnSuccess: () => {
+      refetch();
+      setIsOpen(true);
+    },
+  });
   const clearQuizProgress = useClearQuizProgress({
     handleOnSuccess: async () => {
       reset();
@@ -66,9 +73,25 @@ export default function LessonPage() {
       : null;
 
   const isQuiz = data?.type === "quiz";
+  const [isOpen, setIsOpen] = useState(false);
+
+  const getScorePercentage = () => {
+    if (!data.quizScore || data.quizScore === 0 || !data.lessonItems.length)
+      return "0%";
+
+    return `${(data.quizScore / data.lessonItems.length) * 100}%`;
+  };
+
+  const scorePercentage = getScorePercentage();
 
   return (
     <>
+      <QuizSummaryModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        scoreLabel={scorePercentage}
+        courseId={courseId ?? ""}
+      />
       {orderedLessonsItems.map((lessonItem) => {
         return (
           <LessonItemsSwitch
@@ -85,11 +108,18 @@ export default function LessonPage() {
         <Button
           className="w-min self-end"
           variant="outline"
-          onClick={
-            data?.isSubmitted
-              ? () => clearQuizProgress.mutate({ lessonId })
-              : () => submitQuiz.mutate({ lessonId })
-          }
+          onClick={() => {
+            switch (data?.isSubmitted) {
+              case true:
+                clearQuizProgress.mutate({ lessonId });
+                break;
+              case false:
+                submitQuiz.mutate({ lessonId });
+                break;
+              default:
+                break;
+            }
+          }}
         >
           {data?.isSubmitted ? "Clear progress" : "Check answers"}
         </Button>
