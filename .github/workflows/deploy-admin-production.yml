@@ -6,7 +6,7 @@ env:
 on:
   push:
     branches:
-      - "deploy-production/**"
+      - production
     paths:
       - apps/admin/**
       - .github/workflows/deploy-admin-production.yml
