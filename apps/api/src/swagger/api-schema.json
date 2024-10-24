@@ -3754,7 +3754,7 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "id": {
+                    "lessonItemId": {
                       "format": "uuid",
                       "type": "string"
                     },
@@ -3835,6 +3835,9 @@
                                         "type": "null"
                                       }
                                     ]
+                                  },
+                                  "studentAnswerText": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -3843,6 +3846,16 @@
                                   "position"
                                 ]
                               }
+                            },
+                            "passQuestion": {
+                              "anyOf": [
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
                             }
                           },
                           "required": [
@@ -3904,7 +3917,7 @@
                     }
                   },
                   "required": [
-                    "id",
+                    "lessonItemId",
                     "lessonItemType",
                     "displayOrder",
                     "content"
@@ -3971,7 +3984,7 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "id": {
+                    "lessonItemId": {
                       "format": "uuid",
                       "type": "string"
                     },
@@ -4052,6 +4065,9 @@
                                         "type": "null"
                                       }
                                     ]
+                                  },
+                                  "studentAnswerText": {
+                                    "type": "string"
                                   }
                                 },
                                 "required": [
@@ -4060,6 +4076,16 @@
                                   "position"
                                 ]
                               }
+                            },
+                            "passQuestion": {
+                              "anyOf": [
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
                             }
                           },
                           "required": [
@@ -4121,7 +4147,7 @@
                     }
                   },
                   "required": [
-                    "id",
+                    "lessonItemId",
                     "lessonItemType",
                     "displayOrder",
                     "content"
@@ -5126,6 +5152,16 @@
           "questionBody": {
             "type": "string"
           },
+          "solutionExplanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "state": {
             "type": "string"
           },
@@ -5168,16 +5204,6 @@
                 "questionId"
               ]
             }
-          },
-          "solutionExplanation": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
           },
           "archived": {
             "type": "boolean"

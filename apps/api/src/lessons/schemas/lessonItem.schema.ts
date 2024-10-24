@@ -16,9 +16,9 @@ export const questionSchema = Type.Object({
   id: UUIDSchema,
   questionType: Type.String(),
   questionBody: Type.String(),
+  solutionExplanation: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   state: Type.Optional(Type.String()),
   questionAnswers: Type.Optional(Type.Array(questionAnswerOptionsSchema)),
-  solutionExplanation: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   archived: Type.Optional(Type.Boolean()),
 });
 
@@ -42,9 +42,24 @@ export const lessonItemFileSchema = Type.Object({
 });
 
 export const lessonItemSchema = Type.Object({
-  id: UUIDSchema,
+  lessonItemId: UUIDSchema,
   lessonItemType: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
+});
+
+export const lessonItemWithContent = Type.Object({
+  ...lessonItemSchema.properties,
+  questionData: Type.Union([questionSchema, Type.Null()]),
+  textBlockData: Type.Union([textBlockSchema, Type.Null()]),
+  fileData: Type.Union([lessonItemFileSchema, Type.Null()]),
+});
+
+export const questionAnswer = Type.Object({
+  id: UUIDSchema,
+  optionText: Type.String(),
+  position: Type.Union([Type.Number(), Type.Null()]),
+  isStudentAnswer: Type.Union([Type.Boolean(), Type.Null()]),
+  isCorrect: Type.Union([Type.Boolean(), Type.Null()]),
 });
 
 export const questionAnswerOptionsResponse = Type.Object({
@@ -53,6 +68,15 @@ export const questionAnswerOptionsResponse = Type.Object({
   position: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   isCorrect: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
+  studentAnswerText: Type.Optional(Type.String()),
+});
+
+export const questionResponse = Type.Object({
+  id: UUIDSchema,
+  questionType: Type.String(),
+  questionBody: Type.String(),
+  questionAnswers: Type.Array(questionAnswerOptionsResponse),
+  passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
 });
 
 export const questionContentResponse = Type.Object({
@@ -60,6 +84,7 @@ export const questionContentResponse = Type.Object({
   questionType: Type.String(),
   questionBody: Type.String(),
   questionAnswers: Type.Array(questionAnswerOptionsResponse),
+  passQuestion: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
 });
 
 export const textBlockContentResponse = Type.Object({
@@ -76,13 +101,6 @@ export const fileContentResponse = Type.Object({
   url: Type.String(),
 });
 
-export const lessonItemWithContent = Type.Object({
-  ...lessonItemSchema.properties,
-  questionData: Type.Union([questionSchema, Type.Null()]),
-  textBlockData: Type.Union([textBlockSchema, Type.Null()]),
-  fileData: Type.Union([lessonItemFileSchema, Type.Null()]),
-});
-
 export const textBlockUpdateSchema = Type.Partial(
   Type.Omit(textBlockSchema, ["id"]),
 );
@@ -93,8 +111,27 @@ export const fileUpdateSchema = Type.Partial(
   Type.Omit(lessonItemFileSchema, ["id"]),
 );
 
+export const lessonItemResponse = Type.Object({
+  lessonItemId: UUIDSchema,
+  lessonItemType: Type.String(),
+  displayOrder: Type.Union([Type.Number(), Type.Null()]),
+  passQuestion: Type.Optional(Type.Union([Type.Null(), Type.Boolean()])),
+  content: Type.Union([
+    questionContentResponse,
+    textBlockContentResponse,
+    fileContentResponse,
+  ]),
+});
+
+export const questionWithContent = Type.Object({
+  ...lessonItemSchema.properties,
+  questionData: questionSchema,
+});
+
+export const allLessonItemsResponse = Type.Array(lessonItemResponse);
+
 export const lessonItemSelectSchema = Type.Object({
-  id: UUIDSchema,
+  lessonItemId: UUIDSchema,
   lessonItemType: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   passQuestion: Type.Optional(Type.Union([Type.Null(), Type.Unknown()])),
@@ -105,17 +142,9 @@ export const lessonItemSelectSchema = Type.Object({
   ]),
 });
 
-export const allLessonItemsSchema = Type.Array(lessonItemSelectSchema);
-
 export type LessonItemResponse = Static<typeof lessonItemSelectSchema>;
-
-export const questionWithContent = Type.Object({
-  ...lessonItemSchema.properties,
-  questionData: questionSchema,
-});
-
-export const allLessonItemsResponse = Type.Array(lessonItemSelectSchema);
-
+export type QuestionAnswer = Static<typeof questionAnswer>;
+export type QuestionResponse = Static<typeof questionResponse>;
 export type QuestionWithContent = Static<typeof questionWithContent>;
 export type LessonItemWithContentSchema = Static<typeof lessonItemWithContent>;
 export type AllLessonItemsResponse = Static<typeof allLessonItemsResponse>;
