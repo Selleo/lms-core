@@ -42,7 +42,12 @@ export default function LessonPage() {
     defaultValues: getUserAnswers(data),
   });
 
-  const submitQuiz = useSubmitQuiz({ handleOnSuccess: refetch });
+  const submitQuiz = useSubmitQuiz({
+    handleOnSuccess: () => {
+      refetch();
+      setIsOpen(true);
+    },
+  });
   const clearQuizProgress = useClearQuizProgress({
     handleOnSuccess: async () => {
       reset();
@@ -110,7 +115,6 @@ export default function LessonPage() {
                 break;
               case false:
                 submitQuiz.mutate({ lessonId });
-                setIsOpen(true);
                 break;
               default:
                 break;
