@@ -497,7 +497,7 @@ export interface GetLessonResponse {
     quizScore?: number;
     lessonItems: {
       /** @format uuid */
-      id: string;
+      lessonItemId: string;
       lessonItemType: string;
       displayOrder: number | null;
       passQuestion?: null;
@@ -514,7 +514,9 @@ export interface GetLessonResponse {
               position: number | null;
               isStudentAnswer?: boolean | null;
               isCorrect?: boolean | null;
+              studentAnswerText?: string;
             }[];
+            passQuestion?: boolean | null;
           }
         | {
             /** @format uuid */
@@ -551,7 +553,7 @@ export interface GetLessonByIdResponse {
     quizScore?: number;
     lessonItems: {
       /** @format uuid */
-      id: string;
+      lessonItemId: string;
       lessonItemType: string;
       displayOrder: number | null;
       passQuestion?: null;
@@ -568,7 +570,9 @@ export interface GetLessonByIdResponse {
               position: number | null;
               isStudentAnswer?: boolean | null;
               isCorrect?: boolean | null;
+              studentAnswerText?: string;
             }[];
+            passQuestion?: boolean | null;
           }
         | {
             /** @format uuid */
@@ -835,6 +839,7 @@ export interface UpdateTextBlockItemResponse {
 export interface UpdateQuestionItemBody {
   questionType?: string;
   questionBody?: string;
+  solutionExplanation?: string | null;
   state?: string;
   questionAnswers?: {
     /** @format uuid */
@@ -846,7 +851,6 @@ export interface UpdateQuestionItemBody {
     /** @format uuid */
     questionId: string;
   }[];
-  solutionExplanation?: string | null;
   archived?: boolean;
 }
 
