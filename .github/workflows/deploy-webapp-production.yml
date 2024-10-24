@@ -1,0 +1,59 @@
+name: PRODUCTION - Deploy WEBAPP
+
+env:
+  HUSKY: 0
+
+on:
+  push:
+    branches:
+      - "deploy-production/**"
+    paths:
+      - apps/web/**
+      - .github/workflows/deploy-webapp-production.yml
+
+jobs:
+  build-web:
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ secrets.AWS_ECR_REGISTRY_WEB }}
+          IMAGE_TAG: ${{ github.sha }}
+          VITE_STRIPE_PUBLISHABLE_KEY: ${{secrets.VITE_STRIPE_PUBLISHABLE_KEY}}
+        run: |
+          docker build -f ./web.Dockerfile --build-arg VERSION=$IMAGE_TAG --build-arg VITE_STRIPE_PUBLISHABLE_KEY=$VITE_STRIPE_PUBLISHABLE_KEY -t $ECR_REGISTRY:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY:$IMAGE_TAG $ECR_REGISTRY:latest
+          docker push $ECR_REGISTRY:$IMAGE_TAG
+          docker push $ECR_REGISTRY:latest
+
+      - name: Install Selleo CLI
+        uses: jaxxstorm/action-install-gh-release@v1.5.0
+        with:
+          repo: selleo/cli
+          tag: v0.26.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: ECS Deployment
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECS_CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
+          ECS_SERVICE: ${{ secrets.AWS_ECS_SERVICE_WEB }}
+          DOCKER_IMAGE: ${{ secrets.AWS_ECR_REGISTRY_WEB }}:${{ github.sha }}
+        run: selleo aws ecs deploy --region $AWS_REGION --cluster $ECS_CLUSTER --service $ECS_SERVICE --docker-image $DOCKER_IMAGE
