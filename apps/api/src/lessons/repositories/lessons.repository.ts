@@ -1,21 +1,21 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, sql, count, inArray } from "drizzle-orm";
+import { and, count, eq, inArray, sql } from "drizzle-orm";
 import * as schema from "src/storage/schema";
+import {
+  courseLessons,
+  files,
+  lessonItems,
+  lessons,
+  questionAnswerOptions,
+  questions,
+  studentCompletedLessonItems,
+  studentCourses,
+  studentLessonsProgress,
+  studentQuestionAnswers,
+  textBlocks,
+} from "src/storage/schema";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { DatabasePg, UUIDType } from "src/common";
-import {
-  lessons,
-  studentCourses,
-  courseLessons,
-  studentLessonsProgress,
-  studentCompletedLessonItems,
-  lessonItems,
-  studentQuestionAnswers,
-  questions,
-  questionAnswerOptions,
-  textBlocks,
-  files,
-} from "src/storage/schema";
 
 @Injectable()
 export class LessonsRepository {
@@ -341,7 +341,7 @@ export class LessonsRepository {
     return await this.db
       .select({
         id: studentQuestionAnswers.id,
-        answer: sql<JSON>`${studentQuestionAnswers.answer}`,
+        answer: sql<Record<string, string>>`${studentQuestionAnswers.answer}`,
         isCorrect: studentQuestionAnswers.isCorrect,
       })
       .from(studentQuestionAnswers)

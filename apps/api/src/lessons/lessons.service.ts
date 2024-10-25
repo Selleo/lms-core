@@ -51,6 +51,7 @@ export class LessonsService {
       const completableLessonItems = lessonItems.filter(
         (item) => item.lessonItemType !== "text_block",
       );
+
       return {
         ...lesson,
         imageUrl,
@@ -433,7 +434,7 @@ export class LessonsService {
     if (item.questionData.questionType == "fill_in_the_blanks_text") {
       const result = !!studentAnswers?.answer
         ? Object.keys(studentAnswers.answer).map((key) => {
-            const position = parseInt(key.split("_")[1]);
+            const position = parseInt(key);
             const studentAnswerText = studentAnswers.answer[
               key as keyof typeof studentAnswers.answer
             ] as string;
@@ -468,14 +469,22 @@ export class LessonsService {
       };
     }
 
+    console.log({ studentAnswers });
+
     const result = questionAnswers.map((answer) => {
+      console.log(answer.position);
+
       return {
         id: answer.id,
         optionText: answer.optionText,
-        position: null,
-        isStudentAnswer: null,
-        studentAnswerText: "",
-        isCorrect: null,
+        position: lessonRated && answer.isCorrect ? answer.position : null,
+        isStudentAnswer: lessonRated ? answer.isStudentAnswer : null,
+        // studentAnswerText: null,
+        studentAnswerText:
+          lessonRated && typeof answer.position === "number"
+            ? studentAnswers.answer[answer.position]
+            : null,
+        isCorrect: lessonRated ? answer.isCorrect : null,
       };
     });
 

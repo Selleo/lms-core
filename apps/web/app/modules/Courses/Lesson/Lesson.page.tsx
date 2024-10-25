@@ -1,13 +1,12 @@
 import { Button } from "~/components/ui/button";
 import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
 import {
   type ClientLoaderFunctionArgs,
   Link,
   useParams,
 } from "@remix-run/react";
-import LessonItemsSwitch from "./LessonItems/LessonItemsSwitch";
 import type { TQuestionsForm } from "./types";
 import type { MetaFunction } from "@remix-run/node";
 import { queryClient } from "~/api/queryClient";
@@ -17,6 +16,7 @@ import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
 import { useClearQuizProgress } from "~/api/mutations/useClearQuizProgress";
 import { useState } from "react";
 import { QuizSummaryModal } from "~/modules/Courses/Lesson/QuizSummaryModal";
+import { LessonItems } from "~/modules/Courses/Lesson/LessonItems/LessonItems";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Lesson" }];
@@ -37,7 +37,7 @@ export default function LessonPage() {
     data: { lessons },
   } = useCourseSuspense(courseId ?? "");
 
-  const { getValues, register, reset } = useForm<TQuestionsForm>({
+  const methods = useForm<TQuestionsForm>({
     mode: "onChange",
     defaultValues: getUserAnswers(data),
   });
@@ -50,7 +50,7 @@ export default function LessonPage() {
   });
   const clearQuizProgress = useClearQuizProgress({
     handleOnSuccess: async () => {
-      reset();
+      methods.reset();
       await refetch();
     },
   });
@@ -79,47 +79,39 @@ export default function LessonPage() {
     if (!data.quizScore || data.quizScore === 0 || !data.lessonItems.length)
       return "0%";
 
-    return `${(data.quizScore / data.lessonItems.length) * 100}%`;
+    return `${((data.quizScore / data.lessonItems.length) * 100)?.toFixed(0)}%`;
   };
 
   const scorePercentage = getScorePercentage();
 
   return (
     <>
-      <QuizSummaryModal
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        scoreLabel={scorePercentage}
-        courseId={courseId ?? ""}
-      />
-      {orderedLessonsItems.map((lessonItem) => {
-        return (
-          <LessonItemsSwitch
-            isSubmitted={data?.isSubmitted}
-            getValues={getValues}
-            key={lessonItem.content.id}
-            lessonItem={lessonItem}
-            questionsArray={questionsArray}
-            register={register}
+      {isQuiz && (
+        <QuizSummaryModal
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          scoreLabel={scorePercentage}
+          courseId={courseId ?? ""}
+        />
+      )}
+      <FormProvider {...methods}>
+        <form className="flex flex-col gap-8">
+          <LessonItems
+            isSubmitted={!!data?.isSubmitted}
+            questions={questionsArray}
+            lessonItems={orderedLessonsItems}
           />
-        );
-      })}
+        </form>
+      </FormProvider>
       {isQuiz && (
         <Button
           className="w-min self-end"
           variant="outline"
-          onClick={() => {
-            switch (data?.isSubmitted) {
-              case true:
-                clearQuizProgress.mutate({ lessonId });
-                break;
-              case false:
-                submitQuiz.mutate({ lessonId });
-                break;
-              default:
-                break;
-            }
-          }}
+          onClick={
+            data?.isSubmitted
+              ? () => clearQuizProgress.mutate({ lessonId })
+              : () => submitQuiz.mutate({ lessonId })
+          }
         >
           {data?.isSubmitted ? "Clear progress" : "Check answers"}
         </Button>
