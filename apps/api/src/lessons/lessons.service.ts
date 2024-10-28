@@ -5,13 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { eq, sql } from "drizzle-orm";
 import type { DatabasePg, UUIDType } from "src/common";
-import {
-  lessons,
-  questionAnswerOptions,
-  studentQuestionAnswers,
-} from "src/storage/schema";
 import { match, P } from "ts-pattern";
 import {
   LessonItemResponse,
@@ -20,11 +14,10 @@ import {
   QuestionResponse,
   QuestionWithContent,
 } from "./schemas/lessonItem.schema";
-import { isEmpty, isNull } from "lodash";
+import { isNull } from "lodash";
 import { Lesson } from "./schemas/lesson.schema";
 import { S3Service } from "src/file/s3.service";
-import { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
-import { LessonsRepository } from "./lessons.repository";
+import { LessonsRepository } from "./repositories/lessons.repository";
 
 @Injectable()
 export class LessonsService {
@@ -33,92 +26,6 @@ export class LessonsService {
     private readonly s3Service: S3Service,
     private readonly lessonsRepository: LessonsRepository,
   ) {}
-
-  async getAllLessons() {
-    const lessonsData = await this.lessonsRepository.getLessons();
-
-    return Promise.all(
-      lessonsData.map(async (lesson) => ({
-        ...lesson,
-        imageUrl: lesson.imageUrl.startsWith("https://")
-          ? lesson.imageUrl
-          : await this.s3Service.getSignedUrl(lesson.imageUrl),
-      })),
-    );
-  }
-
-  async getLessonById(id: string) {
-    const lesson = await this.lessonsRepository.getLessonById(id);
-
-    if (!lesson) throw new NotFoundException("Lesson not found");
-
-    const lessonItemsList = await this.lessonsRepository.getLessonItems(id);
-
-    const items = await Promise.all(
-      lessonItemsList.map(async (item) => {
-        const content = await match(item)
-          .returnType<Promise<LessonItemResponse["content"]>>()
-          .with(
-            { lessonItemType: "question", questionData: P.not(P.nullish) },
-            async (item) => {
-              const questionAnswers = await this.db
-                .select({
-                  id: questionAnswerOptions.id,
-                  optionText: questionAnswerOptions.optionText,
-                  position: questionAnswerOptions.position,
-                })
-                .from(questionAnswerOptions)
-                .where(
-                  eq(questionAnswerOptions.questionId, item.questionData.id),
-                );
-
-              return {
-                id: item.questionData.id,
-                questionType: item.questionData.questionType,
-                questionBody: item.questionData.questionBody,
-                questionAnswers,
-                state: item.questionData.state,
-              };
-            },
-          )
-          .with(
-            { lessonItemType: "text_block", textBlockData: P.not(P.nullish) },
-            async (item) => ({
-              id: item.textBlockData.id,
-              body: item.textBlockData.body || "",
-              state: item.textBlockData.state,
-              title: item.textBlockData.title,
-            }),
-          )
-          .with(
-            { lessonItemType: "file", fileData: P.not(P.nullish) },
-            async (item) => ({
-              id: item.fileData.id,
-              title: item.fileData.title,
-              type: item.fileData.type,
-              url: item.fileData.url,
-              state: item.fileData.state,
-            }),
-          )
-          .otherwise(() => {
-            throw new Error(`Unknown item type: ${item.lessonItemType}`);
-          });
-
-        return {
-          lessonItemId: item.lessonItemId,
-          lessonItemType: item.lessonItemType,
-          displayOrder: item.displayOrder,
-          content,
-        };
-      }),
-    );
-
-    return {
-      ...lesson,
-      lessonItems: items,
-      itemsCount: items.length,
-    };
-  }
 
   async getLesson(id: string, userId: string, isAdmin?: boolean) {
     const [accessCourseLessons] =
@@ -500,23 +407,13 @@ export class LessonsService {
     }
 
     if (item.questionData.questionType === "open_answer") {
-      const studentAnswer = await this.db
-        .select({
-          id: studentQuestionAnswers.id,
-          optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
-          isStudentAnswer: sql<boolean>`true`,
-          position: sql<number>`1`,
-          isCorrect: sql<boolean | null>`
-          CASE
-            WHEN ${lessonType} = 'quiz' AND ${lessonRated} THEN
-              ${studentQuestionAnswers.isCorrect}
-            ELSE null
-          END
-        `,
-        })
-        .from(studentQuestionAnswers)
-        .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
-        .limit(1);
+      const studentAnswer =
+        await this.lessonsRepository.getOpenQuestionStudentAnswer(
+          userId,
+          item.questionData.id,
+          lessonType,
+          lessonRated,
+        );
 
       return {
         id: item.questionData.id,
@@ -527,16 +424,12 @@ export class LessonsService {
       };
     }
 
-    const [studentAnswers] = await this.db
-      .select({
-        id: studentQuestionAnswers.id,
-        answer: sql<JSON>`${studentQuestionAnswers.answer}`,
-        isCorrect: studentQuestionAnswers.isCorrect,
-      })
-      .from(studentQuestionAnswers)
-      .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
-      .limit(1);
-
+    const [studentAnswers] =
+      await this.lessonsRepository.getFillInTheBlanksStudentAnswers(
+        userId,
+        item.questionData.id,
+      );
+    // TODO: refactor DB query
     if (item.questionData.questionType == "fill_in_the_blanks_text") {
       const result = !!studentAnswers?.answer
         ? Object.keys(studentAnswers.answer).map((key) => {
@@ -593,86 +486,6 @@ export class LessonsService {
       questionAnswers: result,
       passQuestion,
     };
-  }
-
-  async getAvailableLessons() {
-    const availableLessons = await this.lessonsRepository.getAvailableLessons();
-
-    if (isEmpty(availableLessons))
-      throw new NotFoundException("No lessons found");
-
-    return await Promise.all(
-      availableLessons.map(async (lesson) => {
-        const imageUrl = lesson.imageUrl.startsWith("https://")
-          ? lesson.imageUrl
-          : await this.s3Service.getSignedUrl(lesson.imageUrl);
-        return { ...lesson, imageUrl };
-      }),
-    );
-  }
-
-  async createLesson(body: CreateLessonBody, authorId: string) {
-    const [lesson] = await this.db
-      .insert(lessons)
-      .values({ ...body, authorId })
-      .returning();
-
-    if (!lesson) throw new NotFoundException("Lesson not found");
-  }
-
-  async updateLesson(id: string, body: UpdateLessonBody) {
-    const [lesson] = await this.db
-      .update(lessons)
-      .set(body)
-      .where(eq(lessons.id, id))
-      .returning();
-
-    if (!lesson) throw new NotFoundException("Lesson not found");
-  }
-
-  async addLessonToCourse(
-    courseId: string,
-    lessonId: string,
-    displayOrder?: number,
-  ) {
-    try {
-      if (displayOrder === undefined) {
-        const maxOrderResult =
-          await this.lessonsRepository.getMaxOrderLessonsInCourse(courseId);
-
-        displayOrder = maxOrderResult + 1;
-      }
-
-      await this.lessonsRepository.assignLessonToCourse(
-        courseId,
-        lessonId,
-        displayOrder,
-      );
-    } catch (error) {
-      if (error.code === "23505") {
-        // postgres uniq error code
-        throw new ConflictException(
-          "This lesson is already added to the course",
-        );
-      }
-      throw error;
-    }
-  }
-
-  async removeLessonFromCourse(courseId: string, lessonId: string) {
-    const result = await this.lessonsRepository.removeCourseLesson(
-      courseId,
-      lessonId,
-    );
-
-    if (result.length === 0) {
-      throw new NotFoundException("Lesson not found in this course");
-    }
-
-    await this.lessonsRepository.updateDisplayOrderLessonsInCourse(
-      courseId,
-      lessonId,
-    );
   }
 
   private isValidItem(item: any): boolean {

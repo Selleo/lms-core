@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, sql, count, inArray, isNotNull } from "drizzle-orm";
+import { eq, and, sql, count, inArray } from "drizzle-orm";
 import * as schema from "src/storage/schema";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { DatabasePg, UUIDType } from "src/common";
@@ -12,30 +12,14 @@ import {
   lessonItems,
   studentQuestionAnswers,
   questions,
+  questionAnswerOptions,
   textBlocks,
   files,
-  questionAnswerOptions,
 } from "src/storage/schema";
 
 @Injectable()
 export class LessonsRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
-
-  async getLessons() {
-    return await this.db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
-        state: lessons.state,
-        archived: lessons.archived,
-        itemsCount: sql<number>`CAST(COUNT(DISTINCT ${lessonItems.id}) AS INTEGER)`,
-      })
-      .from(lessons)
-      .leftJoin(lessonItems, eq(lessonItems.lessonId, lessons.id))
-      .groupBy(lessons.id);
-  }
 
   async getLessonForUser(lessonId: UUIDType, userId: UUIDType) {
     const [lesson] = await this.db
@@ -69,61 +53,6 @@ export class LessonsRepository {
       );
 
     return lesson;
-  }
-
-  async getLessonById(lessonId: UUIDType) {
-    const [lesson] = await this.db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
-        state: lessons.state,
-        archived: lessons.archived,
-      })
-      .from(lessons)
-      .where(eq(lessons.id, lessonId));
-
-    return lesson;
-  }
-
-  async getLessonItems(lessonId: UUIDType) {
-    return await this.db
-      .select({
-        lessonItemType: lessonItems.lessonItemType,
-        lessonItemId: lessonItems.id,
-        questionData: questions,
-        textBlockData: textBlocks,
-        fileData: files,
-        displayOrder: lessonItems.displayOrder,
-      })
-      .from(lessonItems)
-      .leftJoin(
-        questions,
-        and(
-          eq(lessonItems.lessonItemId, questions.id),
-          eq(lessonItems.lessonItemType, "question"),
-          eq(questions.state, "published"),
-        ),
-      )
-      .leftJoin(
-        textBlocks,
-        and(
-          eq(lessonItems.lessonItemId, textBlocks.id),
-          eq(lessonItems.lessonItemType, "text_block"),
-          eq(textBlocks.state, "published"),
-        ),
-      )
-      .leftJoin(
-        files,
-        and(
-          eq(lessonItems.lessonItemId, files.id),
-          eq(lessonItems.lessonItemType, "file"),
-          eq(files.state, "published"),
-        ),
-      )
-      .where(eq(lessonItems.lessonId, lessonId))
-      .orderBy(lessonItems.displayOrder);
   }
 
   async getQuestionItems(
@@ -160,6 +89,45 @@ export class LessonsRepository {
         and(
           eq(studentQuestionAnswers.questionId, questions.id),
           eq(studentQuestionAnswers.studentId, studentId),
+        ),
+      )
+      .where(eq(lessonItems.lessonId, lessonId))
+      .orderBy(lessonItems.displayOrder);
+  }
+
+  async getLessonItems(lessonId: UUIDType) {
+    return await this.db
+      .select({
+        lessonItemType: lessonItems.lessonItemType,
+        lessonItemId: lessonItems.id,
+        questionData: questions,
+        textBlockData: textBlocks,
+        fileData: files,
+        displayOrder: lessonItems.displayOrder,
+      })
+      .from(lessonItems)
+      .leftJoin(
+        questions,
+        and(
+          eq(lessonItems.lessonItemId, questions.id),
+          eq(lessonItems.lessonItemType, "question"),
+          eq(questions.state, "published"),
+        ),
+      )
+      .leftJoin(
+        textBlocks,
+        and(
+          eq(lessonItems.lessonItemId, textBlocks.id),
+          eq(lessonItems.lessonItemType, "text_block"),
+          eq(textBlocks.state, "published"),
+        ),
+      )
+      .leftJoin(
+        files,
+        and(
+          eq(lessonItems.lessonItemId, files.id),
+          eq(lessonItems.lessonItemType, "file"),
+          eq(files.state, "published"),
         ),
       )
       .where(eq(lessonItems.lessonId, lessonId))
@@ -335,6 +303,57 @@ export class LessonsRepository {
     return questionIds;
   }
 
+  async getOpenQuestionStudentAnswer(
+    userId: UUIDType,
+    questionId: UUIDType,
+    lessonType: string,
+    lessonRated: boolean,
+  ) {
+    return await this.db
+      .select({
+        id: studentQuestionAnswers.id,
+        optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
+        isStudentAnswer: sql<boolean>`true`,
+        position: sql<number>`1`,
+        isCorrect: sql<boolean | null>`
+          CASE
+            WHEN ${lessonType} = 'quiz' AND ${lessonRated} THEN
+              ${studentQuestionAnswers.isCorrect}
+            ELSE null
+          END
+        `,
+      })
+      .from(studentQuestionAnswers)
+      .where(
+        and(
+          eq(studentQuestionAnswers.questionId, questionId),
+          eq(studentQuestionAnswers.studentId, userId),
+        ),
+      )
+
+      .limit(1);
+  }
+
+  async getFillInTheBlanksStudentAnswers(
+    userId: UUIDType,
+    questionId: UUIDType,
+  ) {
+    return await this.db
+      .select({
+        id: studentQuestionAnswers.id,
+        answer: sql<JSON>`${studentQuestionAnswers.answer}`,
+        isCorrect: studentQuestionAnswers.isCorrect,
+      })
+      .from(studentQuestionAnswers)
+      .where(
+        and(
+          eq(studentQuestionAnswers.questionId, questionId),
+          eq(studentQuestionAnswers.studentId, userId),
+        ),
+      )
+      .limit(1);
+  }
+
   async removeQuestionsAnswer(
     questionIds: { questionId: string }[],
     userId: UUIDType,
@@ -405,81 +424,6 @@ export class LessonsRepository {
         and(
           eq(studentCompletedLessonItems.studentId, userId),
           eq(studentCompletedLessonItems.lessonId, lessonId),
-        ),
-      );
-  }
-
-  async removeCourseLesson(courseId: string, lessonId: string) {
-    return await this.db
-      .delete(courseLessons)
-      .where(
-        and(
-          eq(courseLessons.courseId, courseId),
-          eq(courseLessons.lessonId, lessonId),
-        ),
-      )
-      .returning();
-  }
-
-  async updateDisplayOrderLessonsInCourse(
-    courseId: UUIDType,
-    lessonId: UUIDType,
-  ) {
-    await this.db.execute(sql`
-      UPDATE ${courseLessons}
-      SET display_order = display_order - 1
-      WHERE course_id = ${courseId}
-        AND display_order > (
-          SELECT display_order
-          FROM ${courseLessons}
-          WHERE course_id = ${courseId}
-            AND lesson_id = ${lessonId}
-        )
-    `);
-  }
-
-  async getMaxOrderLessonsInCourse(courseId: UUIDType) {
-    const [maxOrderResult] = await this.db
-      .select({ maxOrder: sql<number>`MAX(${courseLessons.displayOrder})` })
-      .from(courseLessons)
-      .where(eq(courseLessons.courseId, courseId));
-
-    return maxOrderResult?.maxOrder ?? 0;
-  }
-
-  async assignLessonToCourse(
-    courseId: UUIDType,
-    lessonId: UUIDType,
-    displayOrder: number,
-  ) {
-    return await this.db.insert(courseLessons).values({
-      courseId,
-      lessonId,
-      displayOrder,
-    });
-  }
-
-  async getAvailableLessons() {
-    return await this.db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
-        itemsCount: sql<number>`
-        (SELECT COUNT(*)
-        FROM ${lessonItems}
-        WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
-      })
-      .from(lessons)
-      .where(
-        and(
-          eq(lessons.archived, false),
-          eq(lessons.state, "published"),
-          isNotNull(lessons.id),
-          isNotNull(lessons.title),
-          isNotNull(lessons.description),
-          isNotNull(lessons.imageUrl),
         ),
       );
   }

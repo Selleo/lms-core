@@ -43,12 +43,14 @@ import {
   UpdateQuestionBody,
   UpdateTextBlockBody,
 } from "../schemas/lessonItem.schema";
+import { AdminLessonsService } from "../adminLessons.service";
 
 @Controller("lessons")
 @UseGuards(RolesGuard)
 export class LessonsController {
   constructor(
     private readonly lessonsService: LessonsService,
+    private readonly adminLessonsService: AdminLessonsService,
     private readonly lessonItemsService: LessonItemsService,
   ) {}
 
@@ -58,7 +60,7 @@ export class LessonsController {
     response: baseResponse(allLessonsSchema),
   })
   async getAllLessons(): Promise<BaseResponse<AllLessonsResponse>> {
-    return new BaseResponse(await this.lessonsService.getAllLessons());
+    return new BaseResponse(await this.adminLessonsService.getAllLessons());
   }
 
   @Get("available-lessons")
@@ -87,7 +89,8 @@ export class LessonsController {
       }>
     >
   > {
-    const availableLessons = await this.lessonsService.getAvailableLessons();
+    const availableLessons =
+      await this.adminLessonsService.getAvailableLessons();
     return new BaseResponse(availableLessons);
   }
 
@@ -113,7 +116,7 @@ export class LessonsController {
   async getLessonById(
     @Param("id") id: string,
   ): Promise<BaseResponse<ShowLessonResponse>> {
-    return new BaseResponse(await this.lessonsService.getLessonById(id));
+    return new BaseResponse(await this.adminLessonsService.getLessonById(id));
   }
 
   @Post("create-lesson")
@@ -131,7 +134,7 @@ export class LessonsController {
     @Body() createLessonBody: CreateLessonBody,
     @CurrentUser("userId") userId: string,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.lessonsService.createLesson(createLessonBody, userId);
+    await this.adminLessonsService.createLesson(createLessonBody, userId);
     return new BaseResponse({ message: "Lesson created successfully" });
   }
 
@@ -155,7 +158,7 @@ export class LessonsController {
     @Query() id: UUIDType,
     @Body() body: UpdateLessonBody,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.lessonsService.updateLesson(id, body);
+    await this.adminLessonsService.updateLesson(id, body);
     return new BaseResponse({ message: "Text block updated successfully" });
   }
 
@@ -177,7 +180,7 @@ export class LessonsController {
   async addLessonToCourse(
     @Body() body: { courseId: string; lessonId: string; displayOrder?: number },
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.lessonsService.addLessonToCourse(
+    await this.adminLessonsService.addLessonToCourse(
       body.courseId,
       body.lessonId,
       body.displayOrder,
@@ -198,7 +201,7 @@ export class LessonsController {
     @Param("courseId") courseId: string,
     @Param("lessonId") lessonId: string,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.lessonsService.removeLessonFromCourse(courseId, lessonId);
+    await this.adminLessonsService.removeLessonFromCourse(courseId, lessonId);
     return new BaseResponse({
       message: "Lesson removed from course successfully",
     });
