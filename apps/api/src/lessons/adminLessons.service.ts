@@ -4,9 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { eq } from "drizzle-orm";
 import type { DatabasePg } from "src/common";
-import { lessons, questionAnswerOptions } from "src/storage/schema";
 import { match, P } from "ts-pattern";
 import { LessonItemResponse } from "./schemas/lessonItem.schema";
 import { isEmpty } from "lodash";
