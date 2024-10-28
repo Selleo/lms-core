@@ -5,21 +5,9 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import { and, count, eq, ilike, inArray, isNotNull, sql } from "drizzle-orm";
-import { isEmpty, isNull } from "lodash";
 import type { DatabasePg, UUIDType } from "src/common";
-import { S3Service } from "src/file/s3.service";
-import {
-  lessons,
-  questionAnswerOptions,
-  studentQuestionAnswers,
-} from "src/storage/schema";
 import { match, P } from "ts-pattern";
-import {
-  CreateLessonBody,
-  Lesson,
-  UpdateLessonBody,
-} from "./schemas/lesson.schema";
+import { Lesson } from "./schemas/lesson.schema";
 import {
   LessonItemResponse,
   LessonItemWithContentSchema,
@@ -27,21 +15,9 @@ import {
   QuestionResponse,
   QuestionWithContent,
 } from "./schemas/lessonItem.schema";
-import {
-  LessonsFilterSchema,
-  LessonSortField,
-  LessonSortFields,
-  SortLessonFieldsOptions,
-} from "./schemas/lessonQuery";
-import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import { getSortOptions } from "src/common/helpers/getSortOptions";
-
-interface LessonsQuery {
-  filters?: LessonsFilterSchema;
-  sort?: SortLessonFieldsOptions;
-  page?: number;
-  perPage?: number;
-}
+import { isNull } from "lodash";
+import { S3Service } from "src/file/s3.service";
+import { LessonsRepository } from "./repositories/lessons.repository";
 
 @Injectable()
 export class LessonsService {
@@ -50,133 +26,6 @@ export class LessonsService {
     private readonly s3Service: S3Service,
     private readonly lessonsRepository: LessonsRepository,
   ) {}
-
-  async getAllLessons(query: LessonsQuery = {}) {
-    const {
-      sort = LessonSortFields.title,
-      perPage = DEFAULT_PAGE_SIZE,
-      page = 1,
-      filters = {},
-    } = query;
-
-    const { sortOrder, sortedField } = getSortOptions(sort);
-    const conditions = this.getFiltersConditions(filters);
-
-    const lessonsData = await this.db
-      .select({
-        id: lessons.id,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
-        state: lessons.state,
-        archived: lessons.archived,
-        itemsCount: sql<number>`CAST(COUNT(DISTINCT ${lessonItems.id}) AS INTEGER)`,
-        createdAt: lessons.createdAt,
-      })
-      .from(lessons)
-      .leftJoin(lessonItems, eq(lessonItems.lessonId, lessons.id))
-      .where(and(...conditions))
-      .groupBy(lessons.id)
-      .orderBy(
-        sortOrder(this.getColumnToSortBy(sortedField as LessonSortField)),
-      );
-
-    const [{ totalItems }] = await this.db
-      .select({ totalItems: count() })
-      .from(lessons)
-      .where(and(...conditions));
-
-    const lessonsWithSignedUrls = await Promise.all(
-      lessonsData.map(async (lesson) => ({
-        ...lesson,
-        imageUrl: lesson.imageUrl.startsWith("https://")
-          ? lesson.imageUrl
-          : await this.s3Service.getSignedUrl(lesson.imageUrl),
-      })),
-    );
-
-    return {
-      data: lessonsWithSignedUrls,
-      pagination: {
-        totalItems,
-        page,
-        perPage,
-      },
-    };
-  }
-
-  async getLessonById(id: string) {
-    const lesson = await this.lessonsRepository.getLessonById(id);
-
-    if (!lesson) throw new NotFoundException("Lesson not found");
-
-    const lessonItemsList = await this.lessonsRepository.getLessonItems(id);
-
-    const items = await Promise.all(
-      lessonItemsList.map(async (item) => {
-        const content = await match(item)
-          .returnType<Promise<LessonItemResponse["content"]>>()
-          .with(
-            { lessonItemType: "question", questionData: P.not(P.nullish) },
-            async (item) => {
-              const questionAnswers = await this.db
-                .select({
-                  id: questionAnswerOptions.id,
-                  optionText: questionAnswerOptions.optionText,
-                  position: questionAnswerOptions.position,
-                })
-                .from(questionAnswerOptions)
-                .where(
-                  eq(questionAnswerOptions.questionId, item.questionData.id),
-                );
-
-              return {
-                id: item.questionData.id,
-                questionType: item.questionData.questionType,
-                questionBody: item.questionData.questionBody,
-                questionAnswers,
-                state: item.questionData.state,
-              };
-            },
-          )
-          .with(
-            { lessonItemType: "text_block", textBlockData: P.not(P.nullish) },
-            async (item) => ({
-              id: item.textBlockData.id,
-              body: item.textBlockData.body || "",
-              state: item.textBlockData.state,
-              title: item.textBlockData.title,
-            }),
-          )
-          .with(
-            { lessonItemType: "file", fileData: P.not(P.nullish) },
-            async (item) => ({
-              id: item.fileData.id,
-              title: item.fileData.title,
-              type: item.fileData.type,
-              url: item.fileData.url,
-              state: item.fileData.state,
-            }),
-          )
-          .otherwise(() => {
-            throw new Error(`Unknown item type: ${item.lessonItemType}`);
-          });
-
-        return {
-          lessonItemId: item.lessonItemId,
-          lessonItemType: item.lessonItemType,
-          displayOrder: item.displayOrder,
-          content,
-        };
-      }),
-    );
-
-    return {
-      ...lesson,
-      lessonItems: items,
-      itemsCount: items.length,
-    };
-  }
 
   async getLesson(id: string, userId: string, isAdmin?: boolean) {
     const [accessCourseLessons] =
@@ -558,23 +407,13 @@ export class LessonsService {
     }
 
     if (item.questionData.questionType === "open_answer") {
-      const studentAnswer = await this.db
-        .select({
-          id: studentQuestionAnswers.id,
-          optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
-          isStudentAnswer: sql<boolean>`true`,
-          position: sql<number>`1`,
-          isCorrect: sql<boolean | null>`
-          CASE
-            WHEN ${lessonType} = 'quiz' AND ${lessonRated} THEN
-              ${studentQuestionAnswers.isCorrect}
-            ELSE null
-          END
-        `,
-        })
-        .from(studentQuestionAnswers)
-        .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
-        .limit(1);
+      const studentAnswer =
+        await this.lessonsRepository.getOpenQuestionStudentAnswer(
+          userId,
+          item.questionData.id,
+          lessonType,
+          lessonRated,
+        );
 
       return {
         id: item.questionData.id,
@@ -585,16 +424,12 @@ export class LessonsService {
       };
     }
 
-    const [studentAnswers] = await this.db
-      .select({
-        id: studentQuestionAnswers.id,
-        answer: sql<JSON>`${studentQuestionAnswers.answer}`,
-        isCorrect: studentQuestionAnswers.isCorrect,
-      })
-      .from(studentQuestionAnswers)
-      .where(eq(studentQuestionAnswers.questionId, item.questionData.id))
-      .limit(1);
-
+    const [studentAnswers] =
+      await this.lessonsRepository.getFillInTheBlanksStudentAnswers(
+        userId,
+        item.questionData.id,
+      );
+    // TODO: refactor DB query
     if (item.questionData.questionType == "fill_in_the_blanks_text") {
       const result = !!studentAnswers?.answer
         ? Object.keys(studentAnswers.answer).map((key) => {
@@ -653,86 +488,6 @@ export class LessonsService {
     };
   }
 
-  async getAvailableLessons() {
-    const availableLessons = await this.lessonsRepository.getAvailableLessons();
-
-    if (isEmpty(availableLessons))
-      throw new NotFoundException("No lessons found");
-
-    return await Promise.all(
-      availableLessons.map(async (lesson) => {
-        const imageUrl = lesson.imageUrl.startsWith("https://")
-          ? lesson.imageUrl
-          : await this.s3Service.getSignedUrl(lesson.imageUrl);
-        return { ...lesson, imageUrl };
-      }),
-    );
-  }
-
-  async createLesson(body: CreateLessonBody, authorId: string) {
-    const [lesson] = await this.db
-      .insert(lessons)
-      .values({ ...body, authorId })
-      .returning();
-
-    if (!lesson) throw new NotFoundException("Lesson not found");
-  }
-
-  async updateLesson(id: string, body: UpdateLessonBody) {
-    const [lesson] = await this.db
-      .update(lessons)
-      .set(body)
-      .where(eq(lessons.id, id))
-      .returning();
-
-    if (!lesson) throw new NotFoundException("Lesson not found");
-  }
-
-  async addLessonToCourse(
-    courseId: string,
-    lessonId: string,
-    displayOrder?: number,
-  ) {
-    try {
-      if (displayOrder === undefined) {
-        const maxOrderResult =
-          await this.lessonsRepository.getMaxOrderLessonsInCourse(courseId);
-
-        displayOrder = maxOrderResult + 1;
-      }
-
-      await this.lessonsRepository.assignLessonToCourse(
-        courseId,
-        lessonId,
-        displayOrder,
-      );
-    } catch (error) {
-      if (error.code === "23505") {
-        // postgres uniq error code
-        throw new ConflictException(
-          "This lesson is already added to the course",
-        );
-      }
-      throw error;
-    }
-  }
-
-  async removeLessonFromCourse(courseId: string, lessonId: string) {
-    const result = await this.lessonsRepository.removeCourseLesson(
-      courseId,
-      lessonId,
-    );
-
-    if (result.length === 0) {
-      throw new NotFoundException("Lesson not found in this course");
-    }
-
-    await this.lessonsRepository.updateDisplayOrderLessonsInCourse(
-      courseId,
-      lessonId,
-    );
-  }
-
   private isValidItem(item: any): boolean {
     switch (item.lessonItemType) {
       case "question":
@@ -743,35 +498,6 @@ export class LessonsService {
         return !!item.fileData;
       default:
         return false;
-    }
-  }
-
-  private getFiltersConditions(filters: LessonsFilterSchema) {
-    const conditions = [];
-
-    if (filters.title) {
-      conditions.push(ilike(lessons.title, `%${filters.title.toLowerCase()}%`));
-    }
-    if (filters.state) {
-      conditions.push(eq(lessons.state, filters.state));
-    }
-    if (filters.archived) {
-      conditions.push(eq(lessons.archived, filters.archived));
-    }
-
-    return conditions.length ? conditions : [sql`1=1`];
-  }
-
-  private getColumnToSortBy(sort: LessonSortField) {
-    switch (sort) {
-      case LessonSortFields.createdAt:
-        return lessons.createdAt;
-      case LessonSortFields.state:
-        return lessons.state;
-      case LessonSortFields.itemsCount:
-        return sql<number>`COUNT(DISTINCT ${lessonItems.id})`;
-      default:
-        return lessons.title;
     }
   }
 }
