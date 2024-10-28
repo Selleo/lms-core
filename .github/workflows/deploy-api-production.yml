@@ -7,9 +7,6 @@ on:
   push:
     tags:
       - "*"
-    paths:
-      - apps/api/**
-      - .github/workflows/deploy-api-production.yml
 
 jobs:
   build-api:
