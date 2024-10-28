@@ -1,35 +1,26 @@
 import { useParams } from "@remix-run/react";
-import { capitalize, startCase } from "lodash-es";
+import { startCase } from "lodash-es";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { UpdateCourseBody } from "~/api/generated-api";
 import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
-import {
-  categoriesQueryOptions,
-  useCategoriesSuspense,
-} from "~/api/queries/useCategories";
 import {
   courseQueryOptions,
   useCourseById,
 } from "~/api/queries/admin/useCourseById";
+import {
+  categoriesQueryOptions,
+  useCategoriesSuspense,
+} from "~/api/queries/useCategories";
 import { queryClient } from "~/api/queryClient";
 import LessonAssigner from "./LessonAssigner/LessonAssigner";
 
 import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
-import { Checkbox } from "~/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
+import { CourseInfo } from "./CourseInfo";
 
 export const clientLoader = async () => {
-  await queryClient.prefetchQuery(categoriesQueryOptions);
+  await queryClient.prefetchQuery(categoriesQueryOptions());
   return null;
 };
 
@@ -76,117 +67,6 @@ const Course = () => {
     });
   };
 
-  const CourseInfoItem: React.FC<{ name: keyof UpdateCourseBody }> = ({
-    name,
-  }) => (
-    <Controller
-      name={name}
-      control={control}
-      defaultValue={course[name] as UpdateCourseBody[typeof name]}
-      render={({ field }) => {
-        if (!isEditing) {
-          if (name === "archived") {
-            return (
-              <span className="font-semibold capitalize">
-                {course[name] ? "Archived" : "Active"}
-              </span>
-            );
-          }
-          if (name === "currency") {
-            return (
-              <span className="font-semibold uppercase">{course[name]}</span>
-            );
-          }
-          if (name === "categoryId") {
-            return (
-              <span className="font-semibold uppercase">
-                {course["category"]}
-              </span>
-            );
-          }
-          return (
-            <span className="font-semibold capitalize">
-              {course[name]?.toString()}
-            </span>
-          );
-        }
-
-        if (name === "categoryId") {
-          return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a category" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories?.map((category) => (
-                  <SelectItem value={category.id} key={category.id}>
-                    {category.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          );
-        }
-
-        if (name === "state") {
-          return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a state" />
-              </SelectTrigger>
-              <SelectContent>
-                {["draft", "published"].map((state) => (
-                  <SelectItem value={state} key={state}>
-                    {capitalize(state)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          );
-        }
-
-        if (name === "archived") {
-          return (
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="archived"
-                checked={field.value as boolean | undefined}
-                onCheckedChange={(checked) => field.onChange(checked)}
-              />
-              <Label htmlFor="archived">Archived</Label>
-            </div>
-          );
-        }
-
-        if (name === "description") {
-          return (
-            <Textarea
-              {...field}
-              value={field.value as string}
-              placeholder="Enter course description"
-              className="resize-none"
-            />
-          );
-        }
-
-        return (
-          <Input
-            {...field}
-            value={field.value as number}
-            type={name === "priceInCents" ? "number" : "text"}
-            placeholder={`Enter ${startCase(name)}`}
-          />
-        );
-      }}
-    />
-  );
-
   return (
     <div className="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -213,7 +93,13 @@ const Course = () => {
               <Label htmlFor={field}>
                 {field === "archived" ? "Status" : startCase(field)}
               </Label>
-              <CourseInfoItem name={field} />
+              <CourseInfo
+                name={field}
+                control={control}
+                isEditing={isEditing}
+                categories={categories}
+                course={course}
+              />
             </div>
           ))}
         </div>

@@ -25,7 +25,7 @@ const SortButton = <T,>({ column, children }: SortButtonProps<T>) => {
     <Button
       variant="ghost"
       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      className="flex items-center"
+      className="flex items-center p-0 hover:bg-transparent hover:text-primary-600"
     >
       {children}
       {renderSortIcon()}

@@ -29,20 +29,65 @@ import {
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
 import { CreateNewUser } from "./CreateNewUser";
+import {
+  FilterConfig,
+  FilterValue,
+  SearchFilter,
+} from "~/modules/common/SearchFilter/SearchFilter";
+import { format } from "date-fns";
 
 type TUser = GetUsersResponse["data"][number];
 
 export const clientLoader = async () => {
-  queryClient.prefetchQuery(usersQueryOptions);
+  queryClient.prefetchQuery(usersQueryOptions());
   return null;
 };
 
 const Users = () => {
   const navigate = useNavigate();
-  const { data } = useAllUsersSuspense();
+  const [searchParams, setSearchParams] = React.useState<{
+    keyword?: string;
+    role?: string;
+    archived?: boolean;
+    status?: string;
+  }>({});
+  const [isPending, startTransition] = React.useTransition();
+
+  const { data } = useAllUsersSuspense(searchParams);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const { mutateAsync: deleteUsers } = useBulkDeleteUsers();
+
+  const filterConfig: FilterConfig[] = [
+    {
+      name: "keyword",
+      type: "text",
+      placeholder: "Search by keyword...",
+    },
+    {
+      name: "role",
+      type: "select",
+      placeholder: "Roles",
+      options: [
+        { value: "admin", label: "Admin" },
+        { value: "student", label: "Student" },
+        { value: "tutor", label: "Tutor" },
+      ],
+    },
+    {
+      name: "archived",
+      type: "status",
+    },
+  ];
+
+  const handleFilterChange = (name: string, value: FilterValue) => {
+    startTransition(() => {
+      setSearchParams((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    });
+  };
 
   const columns: ColumnDef<TUser>[] = [
     {
@@ -98,6 +143,15 @@ const Users = () => {
         );
       },
     },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <SortButton<TUser> column={column}>Created At</SortButton>
+      ),
+      cell: ({ row }) =>
+        row.original.createdAt &&
+        format(new Date(row.original.createdAt), "PPpp"),
+    },
   ];
 
   const table = useReactTable({
@@ -121,7 +175,7 @@ const Users = () => {
     console.log(selectedUsers);
     deleteUsers({ data: { userIds: selectedUsers } }).then(() => {
       table.resetRowSelection();
-      queryClient.invalidateQueries(usersQueryOptions);
+      queryClient.invalidateQueries(usersQueryOptions());
     });
   };
 
@@ -131,8 +185,14 @@ const Users = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center gap-2">
         <CreateNewUser />
+        <SearchFilter
+          filters={filterConfig}
+          values={searchParams}
+          onChange={handleFilterChange}
+          isLoading={isPending}
+        />
         <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
           <p
             className={cn("text-sm", {

@@ -13,7 +13,7 @@ import {
 } from "~/components/ui/table";
 
 export const clientLoader = async () => {
-  await queryClient.prefetchQuery(usersQueryOptions);
+  await queryClient.prefetchQuery(usersQueryOptions());
   return null;
 };
 

@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { and, eq, inArray, isNotNull } from "drizzle-orm";
+import { and, eq, ilike, inArray, isNotNull } from "drizzle-orm";
 import type { DatabasePg, UUIDType } from "src/common";
 import { S3Service } from "src/file/s3.service";
 import {
@@ -20,14 +20,25 @@ import type {
   FileSelectType,
   QuestionInsertType,
   QuestionSelectType,
+  SingleLessonItemResponse,
   TextBlockInsertType,
   TextBlockSelectType,
   UpdateFileBody,
   UpdateQuestionBody,
   UpdateTextBlockBody,
 } from "./schemas/lessonItem.schema";
+import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 
 type LessonItemType = "text_block" | "file" | "question";
+type GetLessonItemsQuery = {
+  type?: LessonItemType;
+  title?: string;
+  state?: string;
+  archived?: boolean;
+  sort?: string;
+  page?: number;
+  perPage?: number;
+};
 
 @Injectable()
 export class LessonItemsService {
@@ -36,19 +47,58 @@ export class LessonItemsService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async getAllLessonItems(type?: "text_block" | "question" | "file") {
+  async getAllLessonItems(query: GetLessonItemsQuery = {}) {
+    const {
+      type,
+      title,
+      state,
+      archived,
+      sort = "title",
+      page = 1,
+      perPage = DEFAULT_PAGE_SIZE,
+    } = query;
+
     let questionItems: QuestionSelectType[] = [];
     let textItems: TextBlockSelectType[] = [];
     let fileItems: FileSelectType[] = [];
 
+    const questionConditions = [
+      ...(title
+        ? [ilike(questions.questionBody, `%${title.toLowerCase()}%`)]
+        : []),
+      ...(state ? [eq(questions.state, state)] : []),
+      ...(archived !== undefined ? [eq(questions.archived, archived)] : []),
+    ];
+
+    const textBlockConditions = [
+      ...(title ? [ilike(textBlocks.title, `%${title.toLowerCase()}%`)] : []),
+      ...(state ? [eq(textBlocks.state, state)] : []),
+      ...(archived !== undefined ? [eq(textBlocks.archived, archived)] : []),
+    ];
+
+    const fileConditions = [
+      ...(title ? [ilike(files.title, `%${title.toLowerCase()}%`)] : []),
+      ...(state ? [eq(files.state, state)] : []),
+      ...(archived !== undefined ? [eq(files.archived, archived)] : []),
+    ];
+
     if (!type || type === "question") {
-      questionItems = await this.db.select().from(questions);
+      questionItems = await this.db
+        .select()
+        .from(questions)
+        .where(and(...questionConditions));
     }
     if (!type || type === "text_block") {
-      textItems = await this.db.select().from(textBlocks);
+      textItems = await this.db
+        .select()
+        .from(textBlocks)
+        .where(and(...textBlockConditions));
     }
     if (!type || type === "file") {
-      fileItems = await this.db.select().from(files);
+      fileItems = await this.db
+        .select()
+        .from(files)
+        .where(and(...fileConditions));
     }
 
     const allItems = [
@@ -60,10 +110,39 @@ export class LessonItemsService {
         ...item,
         itemType: "text_block" as const,
       })),
-      ...fileItems.map((item) => ({ ...item, itemType: "file" as const })),
+      ...fileItems.map((item) => ({
+        ...item,
+        itemType: "file" as const,
+      })),
     ];
 
-    return allItems;
+    const sortedItems = sort
+      ? allItems.sort((a, b) => {
+          const aValue = this.getSortValue(
+            a,
+            sort.startsWith("-") ? sort.slice(1) : sort,
+          );
+          const bValue = this.getSortValue(
+            b,
+            sort.startsWith("-") ? sort.slice(1) : sort,
+          );
+
+          const comparison = aValue > bValue ? 1 : -1;
+          return sort.startsWith("-") ? -comparison : comparison;
+        })
+      : allItems;
+
+    const start = (page - 1) * perPage;
+    const paginatedItems = sortedItems.slice(start, start + perPage);
+
+    return {
+      data: paginatedItems,
+      pagination: {
+        page,
+        perPage,
+        totalItems: sortedItems.length,
+      },
+    };
   }
 
   async getAvailableLessonItems() {
@@ -408,5 +487,20 @@ export class LessonItemsService {
         );
       }
     }
+  }
+
+  private getSortValue(item: SingleLessonItemResponse, field: string) {
+    if (field === "title") {
+      if (item.itemType === "question") {
+        return item.questionBody;
+      }
+      return item.title;
+    }
+
+    if (field === "createdAt") return item.createdAt;
+    if (field === "state") return item.state;
+    if (field === "archived") return item.archived;
+
+    return "";
   }
 }

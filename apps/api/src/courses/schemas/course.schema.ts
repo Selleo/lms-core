@@ -17,6 +17,7 @@ export const allCoursesSchema = Type.Array(
     currency: Type.String(),
     state: Type.Optional(Type.String()),
     archived: Type.Optional(Type.Boolean()),
+    createdAt: Type.Optional(Type.String()),
   }),
 );
 

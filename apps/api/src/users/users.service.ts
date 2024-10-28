@@ -5,20 +5,61 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
-import { eq, inArray } from "drizzle-orm";
+import { and, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import hashPassword from "src/common/helpers/hashPassword";
 import { credentials, users } from "../storage/schema";
 import { UserRole } from "./schemas/user-roles";
+import {
+  SortUserFieldsOptions,
+  UsersFilterSchema,
+  UserSortField,
+  UserSortFields,
+} from "./schemas/userQuery";
+import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
+import { getSortOptions } from "src/common/helpers/getSortOptions";
+
+type UsersQuery = {
+  filters?: UsersFilterSchema;
+  page?: number;
+  perPage?: number;
+  sort?: SortUserFieldsOptions;
+};
 
 @Injectable()
 export class UsersService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  public async getUsers() {
-    const allUsers = await this.db.select().from(users);
+  public async getUsers(query: UsersQuery = {}) {
+    const {
+      sort = UserSortFields.title,
+      perPage = DEFAULT_PAGE_SIZE,
+      page = 1,
+      filters = {},
+    } = query;
 
-    return allUsers;
+    const { sortOrder, sortedField } = getSortOptions(sort);
+    const conditions = this.getFiltersConditions(filters);
+
+    const usersData = await this.db
+      .select()
+      .from(users)
+      .where(and(...conditions))
+      .orderBy(sortOrder(this.getColumnToSortBy(sortedField as UserSortField)));
+
+    const [{ totalItems }] = await this.db
+      .select({ totalItems: count() })
+      .from(users)
+      .where(and(...conditions));
+
+    return {
+      data: usersData,
+      pagination: {
+        totalItems,
+        page,
+        perPage,
+      },
+    };
   }
 
   public async getUserById(id: string) {
@@ -151,6 +192,39 @@ export class UsersService {
 
     if (deletedUsers.length !== ids.length) {
       throw new NotFoundException("Users not found");
+    }
+  }
+
+  private getFiltersConditions(filters: UsersFilterSchema) {
+    const conditions = [];
+
+    if (filters.keyword) {
+      conditions.push(
+        or(
+          ilike(users.firstName, `%${filters.keyword.toLowerCase()}%`),
+          ilike(users.lastName, `%${filters.keyword.toLowerCase()}%`),
+          ilike(users.email, `%${filters.keyword.toLowerCase()}%`),
+        ),
+      );
+    }
+    if (filters.archived !== undefined) {
+      conditions.push(eq(users.archived, filters.archived));
+    }
+    if (filters.role) {
+      conditions.push(eq(users.role, filters.role));
+    }
+
+    return conditions.length ? conditions : [sql`1=1`];
+  }
+
+  private getColumnToSortBy(sort: UserSortField) {
+    switch (sort) {
+      case UserSortFields.createdAt:
+        return users.createdAt;
+      case UserSortFields.role:
+        return users.role;
+      default:
+        return users.firstName;
     }
   }
 }

@@ -77,7 +77,7 @@ export const CreateNewLesson = () => {
       data: values,
     }).then(() => {
       setOpen(false);
-      queryClient.invalidateQueries(allLessonsQueryOptions);
+      queryClient.invalidateQueries(allLessonsQueryOptions());
     });
   };
 
@@ -86,7 +86,7 @@ export const CreateNewLesson = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Create New Lesson</Button>
+        <Button variant="outline">Create New</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>

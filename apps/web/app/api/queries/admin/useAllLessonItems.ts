@@ -6,20 +6,34 @@ import {
 import { ApiClient } from "../../api-client";
 import type { GetAllLessonItemsResponse } from "../../generated-api";
 
-type LessonItemType = "text_block" | "question" | "file";
+export type LessonItemType = "text_block" | "question" | "file";
 
-interface LessonItemsQueryParams {
+type LessonItemsQueryParams = {
   type?: LessonItemType;
-}
+  title?: string;
+  state?: string;
+  archived?: boolean;
+  sort?: string;
+  page?: number;
+  perPage?: number;
+};
 
 export const allLessonItemsQueryOptions = (
   searchParams?: LessonItemsQueryParams
 ) =>
   queryOptions({
-    queryKey: ["lesson-items", "admin", searchParams?.type],
+    queryKey: ["lesson-items", "admin", searchParams],
     queryFn: async () => {
       const response = await ApiClient.api.lessonsControllerGetAllLessonItems({
+        page: 1,
+        perPage: 100,
         ...(searchParams?.type && { type: searchParams.type }),
+        ...(searchParams?.title && { title: searchParams.title }),
+        ...(searchParams?.state && { state: searchParams.state }),
+        ...(searchParams?.archived !== undefined && {
+          archived: String(searchParams.archived),
+        }),
+        ...(searchParams?.sort && { sort: searchParams.sort }),
       });
       return response.data;
     },

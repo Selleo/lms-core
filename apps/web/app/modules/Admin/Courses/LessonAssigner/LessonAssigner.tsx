@@ -19,9 +19,9 @@ import { FC, useCallback, useEffect, useState } from "react";
 import { GetAllLessonsResponse } from "~/api/generated-api";
 import { useAddLessonToCourse } from "~/api/mutations/admin/useAddLessonToCourse";
 import { useRemoveLessonFromCourse } from "~/api/mutations/admin/useRemoveLessonFromCourse";
-import { useCourse } from "~/api/queries";
 import { useAvailableLessons } from "~/api/queries/useAvailableLessons";
 import { LessonCard } from "./LessonCard";
+import { useCourseById } from "~/api/queries/admin/useCourseById";
 
 type TransformedLesson = GetAllLessonsResponse["data"][number] & {
   columnId: string;
@@ -65,7 +65,7 @@ const LessonAssigner: FC<LessonAssignerProps> = ({ courseId }) => {
   const [currentlyDraggedItem, setCurrentlyDraggedItem] =
     useState<TransformedLesson | null>(null);
 
-  const { data: course } = useCourse(courseId);
+  const { data: course } = useCourseById(courseId);
   const { data: allLessons } = useAvailableLessons();
   const { mutateAsync: addLessonToCourse } = useAddLessonToCourse();
   const { mutateAsync: removeLessonFromCourse } = useRemoveLessonFromCourse();

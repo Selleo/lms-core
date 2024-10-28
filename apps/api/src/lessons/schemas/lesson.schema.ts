@@ -13,6 +13,7 @@ export const lessonSchema = Type.Object({
   archived: Type.Optional(Type.Boolean()),
   isSubmitted: Type.Optional(Type.Boolean()),
   type: Type.Optional(Type.String()),
+  createdAt: Type.Optional(Type.String()),
   quizScore: Type.Optional(Type.Number()),
 });
 

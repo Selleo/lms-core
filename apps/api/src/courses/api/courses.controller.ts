@@ -57,6 +57,8 @@ export class CoursesController {
     @Query("author") author: string,
     @Query("creationDateRange[0]") creationDateRangeStart: string,
     @Query("creationDateRange[1]") creationDateRangeEnd: string,
+    @Query("state") state: string,
+    @Query("archived") archived: string,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
@@ -66,12 +68,21 @@ export class CoursesController {
       title,
       category,
       author,
+      state,
+      archived,
       creationDateRange:
         creationDateRangeStart && creationDateRangeEnd
           ? [creationDateRangeStart, creationDateRangeEnd]
           : undefined,
     };
-    const query = { filters, page, perPage, sort, currentUserId };
+
+    const query = {
+      filters,
+      page,
+      perPage,
+      sort,
+      currentUserId,
+    };
 
     const data = await this.coursesService.getAllCourses(query);
 
@@ -86,6 +97,8 @@ export class CoursesController {
     @Query("author") author: string,
     @Query("creationDateRange[0]") creationDateRangeStart: string,
     @Query("creationDateRange[1]") creationDateRangeEnd: string,
+    @Query("state") state: string,
+    @Query("archived") archived: string,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
@@ -118,6 +131,8 @@ export class CoursesController {
     @Query("author") author: string,
     @Query("creationDateRange[0]") creationDateRangeStart: string,
     @Query("creationDateRange[1]") creationDateRangeEnd: string,
+    @Query("state") state: string,
+    @Query("archived") archived: string,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,

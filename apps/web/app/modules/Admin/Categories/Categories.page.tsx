@@ -12,7 +12,6 @@ import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
 import { GetAllCategoriesResponse } from "~/api/generated-api";
-import { useBulkDeleteUsers } from "~/api/mutations/admin/useBulkDeleteUsers";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
 import { usersQueryOptions } from "~/api/queries/useUsers";
 import { queryClient } from "~/api/queryClient";
@@ -29,21 +28,52 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
+import {
+  FilterConfig,
+  FilterValue,
+  SearchFilter,
+} from "~/modules/common/SearchFilter/SearchFilter";
 import { CreateNewCategory } from "./CreateNewCategory";
+import { format } from "date-fns";
 
 type TCategory = GetAllCategoriesResponse["data"][number];
 
 export const clientLoader = async () => {
-  queryClient.prefetchQuery(usersQueryOptions);
+  queryClient.prefetchQuery(usersQueryOptions());
   return null;
 };
 
 const Categories = () => {
   const navigate = useNavigate();
-  const { data } = useCategoriesSuspense();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const { mutateAsync: deleteUsers } = useBulkDeleteUsers();
+  const [searchParams, setSearchParams] = React.useState<{
+    title?: string;
+    archived?: boolean;
+  }>({});
+  const [isPending, startTransition] = React.useTransition();
+  const { data } = useCategoriesSuspense(searchParams);
+
+  const filterConfig: FilterConfig[] = [
+    {
+      name: "title",
+      type: "text",
+      placeholder: "Search by title...",
+    },
+    {
+      name: "archived",
+      type: "status",
+    },
+  ];
+
+  const handleFilterChange = (name: string, value: FilterValue) => {
+    startTransition(() => {
+      setSearchParams((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    });
+  };
 
   const columns: ColumnDef<TCategory>[] = [
     {
@@ -72,12 +102,6 @@ const Categories = () => {
       ),
     },
     {
-      accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TCategory> column={column}>Created At</SortButton>
-      ),
-    },
-    {
       accessorKey: "archived",
       header: "Status",
       cell: ({ row }) => {
@@ -88,6 +112,15 @@ const Categories = () => {
           </Badge>
         );
       },
+    },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <SortButton<TCategory> column={column}>Created At</SortButton>
+      ),
+      cell: ({ row }) =>
+        row.original.createdAt &&
+        format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
 
@@ -104,15 +137,12 @@ const Categories = () => {
     },
   });
 
-  const selectedUsers = table
+  const selectedCategories = table
     .getSelectedRowModel()
     .rows.map((row) => row.original.id);
 
-  const handleDeleteUsers = () => {
-    deleteUsers({ data: { userIds: selectedUsers } }).then(() => {
-      table.resetRowSelection();
-      queryClient.invalidateQueries(usersQueryOptions);
-    });
+  const handleDelete = () => {
+    alert("Not implemented");
   };
 
   const handleRowClick = (userId: string) => {
@@ -121,22 +151,28 @@ const Categories = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center gap-2">
         <CreateNewCategory />
+        <SearchFilter
+          filters={filterConfig}
+          values={searchParams}
+          onChange={handleFilterChange}
+          isLoading={isPending}
+        />
         <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
           <p
             className={cn("text-sm", {
-              "text-neutral-900": !isEmpty(selectedUsers),
-              "text-neutral-500": isEmpty(selectedUsers),
+              "text-neutral-900": !isEmpty(selectedCategories),
+              "text-neutral-500": isEmpty(selectedCategories),
             })}
           >
-            Selected ({selectedUsers.length})
+            Selected ({selectedCategories.length})
           </p>
           <Button
-            onClick={handleDeleteUsers}
+            onClick={handleDelete}
             size="sm"
             className="flex items-center gap-x-2"
-            disabled={isEmpty(selectedUsers)}
+            disabled={isEmpty(selectedCategories)}
           >
             <Trash className="w-3 h-3" />
             <span className="text-xs">Delete selected</span>

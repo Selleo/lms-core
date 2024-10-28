@@ -1,7 +1,6 @@
 import { debounce } from "lodash-es";
 import { Search } from "lucide-react";
 import React, { useRef } from "react";
-import { GetAllCategoriesResponse } from "~/api/generated-api";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -11,103 +10,160 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { SORT_OPTIONS, SortOption } from "~/types/sorting";
 
-type SearchFilterProps = {
-  searchValue: string | undefined;
-  sortValue: SortOption | undefined;
-  categoryValue: string | undefined;
-  onSearchTitleChange: (title: string | undefined) => void;
-  onSortChange: (sort: SortOption | undefined) => void;
-  onCategoryChange: (category: string | undefined) => void;
-  categories: GetAllCategoriesResponse["data"];
-  isLoading: boolean;
+export type FilterType = "text" | "select" | "state" | "status";
+
+export type TextFilterValue = string | undefined;
+export type SelectFilterValue = string | undefined;
+export type StatusFilterValue = boolean | undefined;
+
+export type FilterValue =
+  | TextFilterValue
+  | SelectFilterValue
+  | StatusFilterValue;
+
+export type FilterOption = {
+  value: string;
+  label: string;
 };
 
-const SearchFilter: React.FC<SearchFilterProps> = ({
-  onSearchTitleChange,
-  onSortChange,
-  onCategoryChange,
-  categories,
-  searchValue,
-  sortValue,
-  categoryValue,
+export type BaseFilterConfig = {
+  name: string;
+  placeholder?: string;
+};
+
+export type TextFilterConfig = BaseFilterConfig & {
+  type: "text";
+};
+
+export type SelectFilterConfig = BaseFilterConfig & {
+  type: "select" | "state";
+  options: FilterOption[] | undefined;
+};
+
+export type StatusFilterConfig = BaseFilterConfig & {
+  type: "status";
+};
+
+export type FilterConfig =
+  | TextFilterConfig
+  | SelectFilterConfig
+  | StatusFilterConfig;
+
+export type FilterValues = Partial<{
+  [key: string]: FilterValue;
+}>;
+
+interface SearchFilterProps {
+  filters: FilterConfig[];
+  values: FilterValues;
+  onChange: (name: string, value: FilterValue) => void;
+  isLoading?: boolean;
+}
+
+export const SearchFilter: React.FC<SearchFilterProps> = ({
+  filters,
+  values,
+  onChange,
   isLoading,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const debouncedSearchTitle = debounce(onSearchTitleChange, 300);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    debouncedSearchTitle(newValue);
+  const debouncedSearchTitle = debounce(onChange, 300);
+
+  const handleChange = (name: string, value: FilterValue) => {
+    if (filters.find((filter) => filter.type === "status")?.name === name) {
+      onChange(name, value === "all" ? undefined : value === "archived");
+    } else {
+      onChange(name, value === "all" ? undefined : (value as string));
+    }
   };
 
-  const handleCategoryChange = (value: string) => {
-    onCategoryChange(value === "all" ? undefined : value);
-  };
-
-  const handleSortChange = (value: string) => {
-    onSortChange(value === "default" ? undefined : (value as SortOption));
+  const handleTextChange = (name: string, value: string) => {
+    debouncedSearchTitle(name, value || undefined);
   };
 
   const handleClearAll = () => {
     if (inputRef.current) {
       inputRef.current.value = "";
     }
-    onSearchTitleChange("");
-    onCategoryChange("");
-    onSortChange("");
+    filters.forEach((filter) => {
+      onChange(filter.name, undefined);
+    });
   };
 
-  const isAnyFilterApplied = !!searchValue || !!categoryValue || !!sortValue;
+  const isAnyFilterApplied = Object.values(values).some((v) => v !== undefined);
 
   return (
     <div className="flex flex-wrap gap-2 items-center py-6 grow">
-      <div className="relative flex-grow max-w-2xl">
-        <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-neutral-800 w-5 h-5" />
-        <Input
-          ref={inputRef}
-          type="text"
-          placeholder="Search by name or keyword..."
-          className="pl-8 pr-4 py-2 max-w-[320px] md:max-w-none w-full border border-neutral-300"
-          onChange={handleSearchChange}
-        />
-      </div>
+      {filters.map((filter) => {
+        if (filter.type === "text") {
+          return (
+            <div key={filter.name} className="relative flex-grow max-w-2xl">
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-neutral-800 w-5 h-5" />
+              <Input
+                ref={inputRef}
+                type="text"
+                placeholder={filter.placeholder || "Search..."}
+                className="pl-8 pr-4 py-2 max-w-[320px] md:max-w-none w-full border border-neutral-300"
+                onChange={(e) => handleTextChange(filter.name, e.target.value)}
+                defaultValue={values[filter.name] as string}
+              />
+            </div>
+          );
+        }
 
-      <Select
-        value={categoryValue ?? "all"}
-        onValueChange={handleCategoryChange}
-        disabled={isLoading}
-      >
-        <SelectTrigger className="w-full max-w-[320px] sm:w-[180px] border border-neutral-300">
-          <SelectValue placeholder="All Categories" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value={"all"}>All Categories</SelectItem>
-          {categories.map(({ title, id }) => (
-            <SelectItem key={id} value={title}>
-              {title}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        if (filter.type === "select" || filter.type === "state") {
+          const value = values[filter.name];
+          return (
+            <Select
+              key={filter.name}
+              value={(value as string) ?? "all"}
+              onValueChange={(value) => handleChange(filter.name, value)}
+              disabled={isLoading}
+            >
+              <SelectTrigger className="w-full max-w-[320px] sm:w-[180px] border border-neutral-300">
+                <SelectValue placeholder={filter.placeholder || "All"} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All {filter.placeholder}</SelectItem>
+                {filter.options?.map(({ value, label }) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          );
+        }
 
-      <Select
-        value={sortValue}
-        onValueChange={handleSortChange}
-        disabled={isLoading}
-      >
-        <SelectTrigger className="w-full max-w-[320px] sm:w-[180px] border border-neutral-300">
-          <SelectValue placeholder="Sort" />
-        </SelectTrigger>
-        <SelectContent>
-          {SORT_OPTIONS.map(({ value, label }) => (
-            <SelectItem key={value} value={value}>
-              {label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+        if (filter.type === "status") {
+          return (
+            <Select
+              key={filter.name}
+              value={
+                values[filter.name] === undefined
+                  ? "all"
+                  : values[filter.name] === true
+                    ? "archived"
+                    : "active"
+              }
+              onValueChange={(value) => handleChange(filter.name, value)}
+              disabled={isLoading}
+            >
+              <SelectTrigger className="w-full max-w-[320px] sm:w-[180px] border border-neutral-300">
+                <SelectValue placeholder="All Statuses" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
+                <SelectItem value="archived">Archived</SelectItem>
+              </SelectContent>
+            </Select>
+          );
+        }
+      })}
+
       {isAnyFilterApplied && (
         <Button
           className="border border-primary-500 bg-transparent text-primary-700"
@@ -120,5 +176,3 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
     </div>
   );
 };
-
-export default SearchFilter;

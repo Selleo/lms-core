@@ -27,14 +27,56 @@ import {
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
 import { CreateNewLesson } from "./CreateNewLesson";
+import {
+  FilterConfig,
+  FilterValue,
+  SearchFilter,
+} from "~/modules/common/SearchFilter/SearchFilter";
+import { format } from "date-fns";
 
 type TLesson = GetAllLessonsResponse["data"][number];
 
 const Lessons = () => {
   const navigate = useNavigate();
-  const { data: lessons } = useAllLessonsSuspense();
+  const [searchParams, setSearchParams] = React.useState<{
+    title?: string;
+    state?: string;
+    archived?: boolean;
+  }>({});
+  const [isPending, startTransition] = React.useTransition();
+  const { data: lessons } = useAllLessonsSuspense(searchParams);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+
+  const filterConfig: FilterConfig[] = [
+    {
+      name: "title",
+      type: "text",
+      placeholder: "Search by title...",
+    },
+    {
+      name: "state",
+      type: "state",
+      placeholder: "States",
+      options: [
+        { value: "draft", label: "Draft" },
+        { value: "published", label: "Published" },
+      ],
+    },
+    {
+      name: "archived",
+      type: "status",
+    },
+  ];
+
+  const handleFilterChange = (name: string, value: FilterValue) => {
+    startTransition(() => {
+      setSearchParams((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    });
+  };
 
   const columns: ColumnDef<TLesson>[] = [
     {
@@ -88,6 +130,15 @@ const Lessons = () => {
         </Badge>
       ),
     },
+    {
+      accessorKey: "createdAt",
+      header: ({ column }) => (
+        <SortButton<TLesson> column={column}>Created At</SortButton>
+      ),
+      cell: ({ row }) =>
+        row.original.createdAt &&
+        format(new Date(row.original.createdAt), "PPpp"),
+    },
   ];
 
   const table = useReactTable({
@@ -118,8 +169,14 @@ const Lessons = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between">
+      <div className="flex justify-between items-center gap-2">
         <CreateNewLesson />
+        <SearchFilter
+          filters={filterConfig}
+          values={searchParams}
+          onChange={handleFilterChange}
+          isLoading={isPending}
+        />
         <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
           <p
             className={cn("text-sm", {
