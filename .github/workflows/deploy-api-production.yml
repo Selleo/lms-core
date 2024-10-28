@@ -5,8 +5,8 @@ env:
 
 on:
   push:
-    branches:
-      - "deploy-production/**"
+    tags:
+      - "*"
     paths:
       - apps/api/**
       - .github/workflows/deploy-api-production.yml
