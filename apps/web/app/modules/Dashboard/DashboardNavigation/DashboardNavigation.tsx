@@ -67,7 +67,7 @@ export function DashboardNavigation({
     menuItems: menuItemsOverwrite ?? menuItems,
     userRole: role,
   });
-  const isAdminRoute = pathname.startsWith("/new-admin");
+  const isAdminRoute = pathname.startsWith("/admin");
 
   if (isEmpty(authorizedMenuItems)) {
     return null;
@@ -81,7 +81,7 @@ export function DashboardNavigation({
           "fixed top-6 lg:sr-only right-6 bg-white z-10 drop-shadow rounded-lg p-2 grid place-items-center",
           {
             "sr-only": isOpen,
-          }
+          },
         )}
         onClick={() => setIsOpen((prev) => !prev)}
       >
@@ -93,7 +93,7 @@ export function DashboardNavigation({
           {
             "translate-x-full lg:translate-x-0": !isOpen,
             "translate-x-0 lg:translate-x-0": isOpen,
-          }
+          },
         )}
       >
         <div className="lg:sr-only">
@@ -141,9 +141,7 @@ export function DashboardNavigation({
             <Button
               className="w-full justify-start gap-2"
               variant="outline"
-              onClick={() =>
-                navigate(isAdminRoute ? "/" : "/new-admin/courses")
-              }
+              onClick={() => navigate(isAdminRoute ? "/" : "/admin/courses")}
             >
               {`Go to ${isAdminRoute ? "Dashboard" : "Admin"}`}
               <ArrowRight className="w-4 h-4 inline-block text-primary-700" />
