@@ -4128,7 +4128,14 @@
                                     ]
                                   },
                                   "studentAnswerText": {
-                                    "type": "string"
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
                                   }
                                 },
                                 "required": [
@@ -4361,7 +4368,14 @@
                                     ]
                                   },
                                   "studentAnswerText": {
-                                    "type": "string"
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
                                   }
                                 },
                                 "required": [

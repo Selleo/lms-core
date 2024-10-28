@@ -60,13 +60,17 @@ export const QuestionField = ({
                 <SelectValue placeholder="Select a question type" />
               </SelectTrigger>
               <SelectContent>
-                {["single_choice", "multiple_choice", "open_answer"].map(
-                  (type) => (
-                    <SelectItem value={type} key={type}>
-                      {capitalize(startCase(type))}
-                    </SelectItem>
-                  )
-                )}
+                {[
+                  "single_choice",
+                  "multiple_choice",
+                  "open_answer",
+                  "fill_in_the_blanks_text",
+                  "fill_in_the_blanks_dnd",
+                ].map((type) => (
+                  <SelectItem value={type} key={type}>
+                    {capitalize(startCase(type))}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           );

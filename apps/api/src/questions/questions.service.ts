@@ -174,7 +174,7 @@ export class QuestionsService {
       throw new NotFoundException("Answers not found");
 
     const studentAnswer = answers.reduce((acc, answer, index) => {
-      acc.push(`'answer_${index + 1}'`, `'${answer.answer}'`);
+      acc.push(`'${index}'`, `'${answer.answer}'`);
       return acc;
     }, [] as string[]);
 
@@ -201,7 +201,7 @@ export class QuestionsService {
     const studentAnswer = answerQuestion.answer.reduce((acc, answer) => {
       if (typeof answer === "string") return acc;
 
-      acc.push(`'answer_${answer.index}'`, `'${answer.value}'`);
+      acc.push(`'${answer.index}'`, `'${answer.value}'`);
       return acc;
     }, [] as string[]);
 
@@ -234,7 +234,7 @@ export class QuestionsService {
         .where(eq(studentQuestionAnswers.id, lastAnswerId));
     }
 
-    const studentAnswer = [`'answer_1'`, `'${answerQuestion.answer}'`];
+    const studentAnswer = [`'1'`, `'${answerQuestion.answer}'`];
 
     await this.upsertAnswer(
       trx,
@@ -269,6 +269,4 @@ export class QuestionsService {
       studentId: userId,
     });
   }
-
-  private async createFillInTheBlanksAnswers() {}
 }

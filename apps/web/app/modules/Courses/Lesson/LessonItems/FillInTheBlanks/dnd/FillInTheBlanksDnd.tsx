@@ -19,6 +19,7 @@ import { DraggableWord } from "./DraggableWord";
 import { WordBank } from "./WordBank";
 
 type FillInTheBlanksDndProps = {
+  isQuiz: boolean;
   questionLabel: string;
   content: string;
   sendAnswer: (
@@ -28,6 +29,7 @@ type FillInTheBlanksDndProps = {
 };
 
 export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
+  isQuiz = false,
   questionLabel,
   content,
   sendAnswer,
@@ -43,6 +45,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
+
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const { id: activeId } = active;
@@ -134,7 +139,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
 
         const wordsWithUpdatedBlankId = [firstWord, secondWord];
 
-        return [
+        const updatedWords2 = [
           ...new Set([
             ...arrayMove(
               wordsWithUpdatedBlankId,
@@ -144,13 +149,55 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
             ...prev,
           ]),
         ];
+
+        const filteredWords = updatedWords2
+          .filter(({ blankId }) => blankId !== "blank_preset")
+          .map((item) => {
+            const newIndex = parseInt(
+              item.blankId.match(/\d+$/)?.[0] ?? "0",
+              10,
+            );
+            return {
+              ...item,
+              index: newIndex,
+            };
+          });
+
+        if (
+          filteredWords.length >= 1 &&
+          filteredWords.length <= maxAnswersAmount
+        ) {
+          const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
+          if (
+            sortedWords.length > 0 &&
+            sortedWords.length <= maxAnswersAmount
+          ) {
+            sendAnswer(sortedWords);
+          }
+        }
+
+        return updatedWords2;
       }
 
-      const wordsPreparedForAnswer = updatedWords.map(({ value, index }) => {
-        return { index, value };
-      });
+      const filteredWords = updatedWords
+        .filter(({ blankId }) => blankId !== "blank_preset")
+        .map((item) => {
+          const newIndex = parseInt(item.blankId.match(/\d+$/)?.[0] ?? "0", 10);
+          return {
+            ...item,
+            index: newIndex,
+          };
+        });
 
-      sendAnswer(wordsPreparedForAnswer);
+      if (
+        filteredWords.length >= 1 &&
+        filteredWords.length <= maxAnswersAmount
+      ) {
+        const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
+        if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
+          sendAnswer(sortedWords);
+        }
+      }
 
       return updatedWords;
     });
@@ -175,20 +222,33 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
       >
         <DragOverlay>
           {currentlyDraggedWord && (
-            <DraggableWord word={currentlyDraggedWord} isOverlay />
+            <DraggableWord
+              isQuiz={isQuiz}
+              word={currentlyDraggedWord}
+              isOverlay
+            />
           )}
         </DragOverlay>
         <SentenceBuilder
           content={content}
           replacement={(index) => {
-            const blankPosition = index + 1;
-            const blankId = `blank_${blankPosition}`;
+            const blankId = `blank_${index}`;
 
             const wordsInBlank = words.filter(
               (word) => word.blankId === blankId,
             );
 
-            return <DndBlank blankId={blankId} words={wordsInBlank} />;
+            return (
+              <DndBlank
+                isQuiz={isQuiz}
+                blankId={blankId}
+                words={wordsInBlank}
+                isCorrect={wordsInBlank.some(({ isCorrect }) => !!isCorrect)}
+                isStudentAnswer={wordsInBlank.some(
+                  ({ isStudentAnswer }) => !!isStudentAnswer,
+                )}
+              />
+            );
           }}
         />
         <WordBank words={wordBankWords} />

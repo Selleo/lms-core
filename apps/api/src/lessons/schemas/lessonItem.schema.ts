@@ -68,7 +68,7 @@ export const questionAnswerOptionsResponse = Type.Object({
   position: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   isCorrect: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-  studentAnswerText: Type.Optional(Type.String()),
+  studentAnswerText: Type.Optional(Type.Union([Type.String(), Type.Null()])),
 });
 
 export const questionResponse = Type.Object({

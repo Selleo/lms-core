@@ -4,11 +4,20 @@ import { DraggableWord } from "./DraggableWord";
 import type { DndWord } from "./types";
 
 type DndBlankProps = {
+  isQuiz: boolean;
   words: DndWord[];
   blankId: string;
+  isCorrect?: boolean | null;
+  isStudentAnswer?: boolean;
 };
 
-export const DndBlank = ({ words, blankId }: DndBlankProps) => {
+export const DndBlank = ({
+  isQuiz,
+  words,
+  blankId,
+  isCorrect,
+  isStudentAnswer,
+}: DndBlankProps) => {
   const { setNodeRef } = useDroppable({
     id: blankId,
   });
@@ -17,10 +26,16 @@ export const DndBlank = ({ words, blankId }: DndBlankProps) => {
     <SortableContext id={blankId} items={words} strategy={rectSwappingStrategy}>
       <div
         ref={setNodeRef}
-        className="w-52 h-9 mx-2 bg-white overflow-hidden border rounded-md"
+        className="w-32 h-9 mx-2 bg-white overflow-hidden border rounded-md"
       >
         {words.map((word) => (
-          <DraggableWord key={word.id} word={word} />
+          <DraggableWord
+            isQuiz={isQuiz}
+            key={word.id}
+            word={word}
+            isCorrect={isCorrect}
+            isStudentAnswer={isStudentAnswer}
+          />
         ))}
       </div>
     </SortableContext>

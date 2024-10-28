@@ -4,12 +4,16 @@ import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillIn
 import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
 
 type FillTheBlanksProps = {
+  isQuiz: boolean;
   content: string;
   sendAnswer: (selectedOption: Word[]) => Promise<void>;
   answers: {
     id: string;
     optionText: string;
     position: number | null;
+    isStudentAnswer?: boolean | null;
+    isCorrect?: boolean | null;
+    studentAnswerText?: string;
   }[];
   questionLabel: string;
 };
@@ -20,13 +24,18 @@ type Word = {
 };
 
 export const FillTheBlanks = ({
+  isQuiz = false,
   questionLabel,
   content,
   sendAnswer,
   answers,
 }: FillTheBlanksProps) => {
-  const [words, setWords] = useState<Word[]>([]);
-
+  const [words, setWords] = useState<Word[]>(
+    answers.map(({ position, studentAnswerText }) => ({
+      index: position ?? 0,
+      value: studentAnswerText ?? "",
+    })),
+  );
   const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
 
   useEffect(() => {
@@ -42,11 +51,11 @@ export const FillTheBlanks = ({
   const handleWordUpdate = (
     prevWords: Word[],
     index: number,
-    value: string
+    value: string,
   ) => {
     const trimmedValue = value.trim();
     const existingWordIndex = prevWords.findIndex(
-      (word) => word.index === index
+      (word) => word.index === index,
     );
     if (trimmedValue === "") {
       if (!prevWords?.length) return [{ index, value }];
@@ -70,7 +79,7 @@ export const FillTheBlanks = ({
   };
 
   const handleOnBlur = (value: string, index: number) => {
-    setWords((prev) => handleWordUpdate(prev, index + 1, value));
+    setWords((prev) => handleWordUpdate(prev, index, value));
   };
 
   return (
@@ -82,7 +91,8 @@ export const FillTheBlanks = ({
         replacement={(index) => {
           return (
             <TextBlank
-              studentAnswer={answers[index]?.optionText}
+              isQuiz={isQuiz}
+              studentAnswer={answers[index]}
               index={index}
               handleOnBlur={handleOnBlur}
             />
