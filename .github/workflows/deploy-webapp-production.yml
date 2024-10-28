@@ -7,9 +7,6 @@ on:
   push:
     tags:
       - "*"
-    paths:
-      - apps/web/**
-      - .github/workflows/deploy-webapp-production.yml
 
 jobs:
   build-web:
