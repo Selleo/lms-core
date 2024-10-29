@@ -14,12 +14,10 @@ type SelectAnswerOptionQuizProps = {
   isWrongAnswer: boolean;
   isChecked: boolean;
   isStudentAnswer: boolean;
-  isQuiz: boolean;
   isQuizSubmitted: boolean;
   questionId: string;
   handleOnClick: (value: string) => void;
   isCorrectAnswerNotSelected?: boolean | null;
-  isCorrectAnswerSelected: boolean;
   isMultiAnswer: boolean;
 };
 
@@ -32,10 +30,8 @@ export const SelectAnswerOptionQuiz = ({
   isChecked,
   isStudentAnswer,
   isCorrectAnswerNotSelected,
-  isQuiz = false,
   isQuizSubmitted,
   answer,
-  isCorrectAnswerSelected,
   isMultiAnswer,
   handleOnClick,
 }: SelectAnswerOptionQuizProps) => {
@@ -103,7 +99,11 @@ export const SelectAnswerOptionQuiz = ({
           readOnly
           type="radio"
           value={answerId}
-          {...register(`singleAnswerQuestions.${questionId}.${answerId}`)}
+          {...register(
+            isMultiAnswer
+              ? `multiAnswerQuestions.${questionId}.${answerId}`
+              : `singleAnswerQuestions.${questionId}.${answerId}`,
+          )}
         />
         <Icon
           name={

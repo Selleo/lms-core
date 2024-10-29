@@ -49,7 +49,8 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   );
 
   useEffect(() => {
-    setWords(answers);
+    if (isQuiz) setWords(answers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isQuizSubmitted]);
 
   const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
@@ -145,7 +146,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
 
         const wordsWithUpdatedBlankId = [firstWord, secondWord];
 
-        const updatedWords2 = [
+        const updatedWordsWithUpdatedBlankId = [
           ...new Set([
             ...arrayMove(
               wordsWithUpdatedBlankId,
@@ -156,7 +157,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           ]),
         ];
 
-        const filteredWords = updatedWords2
+        const filteredWords = updatedWordsWithUpdatedBlankId
           .filter(({ blankId }) => blankId !== "blank_preset")
           .map((item) => {
             const newIndex = parseInt(
@@ -182,7 +183,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           }
         }
 
-        return updatedWords2;
+        return updatedWordsWithUpdatedBlankId;
       }
 
       const filteredWords = updatedWords

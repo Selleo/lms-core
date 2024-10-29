@@ -21,6 +21,7 @@ export const SelectAnswerOption = ({
   answer,
   isChecked,
   handleOnClick,
+  isMultiAnswer,
 }: SelectAnswerOption) => {
   const { register } = useFormContext<TQuestionsForm>();
 
@@ -43,7 +44,11 @@ export const SelectAnswerOption = ({
         readOnly
         type="radio"
         value={answerId}
-        {...register(`singleAnswerQuestions.${questionId}.${answerId}`)}
+        {...register(
+          isMultiAnswer
+            ? `multiAnswerQuestions.${questionId}.${answerId}`
+            : `singleAnswerQuestions.${questionId}.${answerId}`,
+        )}
       />
       <Label
         className="body-base font-normal w-full h-full flex justify-between text-start text-neutral-950"

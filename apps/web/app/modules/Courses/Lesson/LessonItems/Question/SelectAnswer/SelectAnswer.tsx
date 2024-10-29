@@ -64,13 +64,12 @@ export const SelectAnswer = ({
             answerId={id}
             handleOnClick={handleClick}
             isQuizSubmitted={!!isSubmitted}
-            isQuiz
             questionId={questionId}
             {...config}
           />
         );
       }
-
+      console.log({ selectedOption });
       return (
         <SelectAnswerOption
           key={id}
@@ -79,6 +78,7 @@ export const SelectAnswer = ({
           handleOnClick={handleClick}
           questionId={questionId}
           {...config}
+          isChecked={selectedOption.includes(id)}
         />
       );
     });

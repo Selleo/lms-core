@@ -34,7 +34,7 @@ export const FillTheBlanks = ({
   answers,
   isQuizSubmitted,
 }: FillTheBlanksProps) => {
-  const [words, setWords] = useState<Word[]>(
+  const [_words, setWords] = useState<Word[]>(
     answers.map(({ position, studentAnswerText }) => ({
       index: position ?? 0,
       value: studentAnswerText ?? "",

@@ -29,8 +29,13 @@ export const TextBlank = ({
     if (!inputRef?.current) return;
 
     if (isQuiz) {
-      inputRef.current.value = studentAnswer?.studentAnswerText ?? "";
+      if (isQuizSubmitted) {
+        inputRef.current.value = studentAnswer?.studentAnswerText ?? "";
+      } else {
+        inputRef.current.value = "";
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isQuiz, isQuizSubmitted]);
 
   const isCorrectAnswer =
@@ -42,7 +47,7 @@ export const TextBlank = ({
       "border-b-success-500 text-success-500":
         isQuiz && isCorrectAnswer && studentAnswer?.isStudentAnswer,
       "border-b-error-500 text-error-500":
-        isQuiz && !isCorrectAnswer && studentAnswer?.isStudentAnswer,
+        isQuiz && studentAnswer?.isCorrect && !studentAnswer?.isStudentAnswer,
     },
   );
 
@@ -58,6 +63,7 @@ export const TextBlank = ({
       type="text"
       className={textBlankClasses}
       disabled={!!isDisabled}
+      {...(!isQuiz && { defaultValue: studentAnswer?.studentAnswerText ?? "" })}
       {...(!isDisabled && {
         onBlur: (e) => {
           const value = e.target.value;

@@ -374,7 +374,7 @@ export class LessonsRepository {
     return await this.db
       .select({
         id: studentQuestionAnswers.id,
-        optionText: sql<string>`${studentQuestionAnswers.answer}->'answer_1'`,
+        optionText: sql<string>`${studentQuestionAnswers.answer}->'1'`,
         isStudentAnswer: sql<boolean>`true`,
         position: sql<number>`1`,
         isCorrect: sql<boolean | null>`
@@ -400,6 +400,7 @@ export class LessonsRepository {
   async getFillInTheBlanksStudentAnswers(
     userId: UUIDType,
     questionId: UUIDType,
+    lessonId: UUIDType,
   ) {
     return await this.db
       .select({
@@ -410,6 +411,7 @@ export class LessonsRepository {
       .from(studentQuestionAnswers)
       .where(
         and(
+          eq(studentQuestionAnswers.lessonId, lessonId),
           eq(studentQuestionAnswers.questionId, questionId),
           eq(studentQuestionAnswers.studentId, userId),
         ),

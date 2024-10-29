@@ -16,6 +16,7 @@ export default function Summary() {
   const lessonItemsCompletedCount = data.itemsCompletedCount ?? 0;
 
   const lessonItemsSummary = getSummaryItems(data);
+
   return (
     <Card className="sr-only lg:not-sr-only rounded-none max-w-[383px] w-full flex flex-col grow border-none drop-shadow-primary">
       {isQuiz && <QuizSummary data={data} lessonId={lessonId ?? ""} />}

@@ -64,10 +64,10 @@ export const Question = ({
   );
 
   useEffect(() => {
-    if (!isSubmitted) {
+    if (isQuiz && !isSubmitted) {
       setSelectedOption([]);
     }
-  }, [isSubmitted]);
+  }, [isQuiz, isSubmitted]);
 
   const handleClick = async (id: string) => {
     await markLessonItemAsCompleted({ lessonItemId: questionId, lessonId });

@@ -460,15 +460,18 @@ export class LessonsService {
       await this.lessonsRepository.getFillInTheBlanksStudentAnswers(
         userId,
         item.questionData.id,
+        lessonId,
       );
     // TODO: refactor DB query
     if (item.questionData.questionType == "fill_in_the_blanks_text") {
       const result = !!studentAnswers?.answer
         ? Object.keys(studentAnswers.answer).map((key) => {
             const position = parseInt(key);
-            const studentAnswerText = studentAnswers.answer[
-              key as keyof typeof studentAnswers.answer
-            ] as string;
+            const studentAnswerText = lessonRated
+              ? (studentAnswers.answer[
+                  key as keyof typeof studentAnswers.answer
+                ] as string)
+              : null;
 
             const correctAnswerToStudentAnswer = questionAnswers.find(
               (answer) => answer.position === position,
@@ -507,8 +510,8 @@ export class LessonsService {
         position: lessonRated && answer.isCorrect ? answer.position : null,
         isStudentAnswer: lessonRated ? answer.isStudentAnswer : null,
         studentAnswerText:
-          lessonRated && typeof answer.position === "number"
-            ? studentAnswers.answer[answer.position]
+          typeof answer?.position === "number"
+            ? studentAnswers?.answer[answer.position]
             : null,
         isCorrect: lessonRated ? answer.isCorrect : null,
       };
