@@ -1,13 +1,30 @@
-import { MetaFunction, Outlet, useNavigate } from "@remix-run/react";
-import { DashboardNavigation } from "../Dashboard/DashboardNavigation/DashboardNavigation";
+import { MetaFunction, Outlet, redirect, useNavigate } from "@remix-run/react";
+import { Suspense, useLayoutEffect } from "react";
+import { currentUserQueryOptions } from "~/api/queries";
+import { queryClient } from "~/api/queryClient";
 import { useUserRole } from "~/hooks/useUserRole";
-import { useLayoutEffect } from "react";
+import { DashboardNavigation } from "../Dashboard/DashboardNavigation/DashboardNavigation";
+import Loader from "../common/Loader/Loader";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Admin" }];
 };
 
-const AdminLayout = () => {
+export const clientLoader = async () => {
+  try {
+    const user = await queryClient.ensureQueryData(currentUserQueryOptions);
+
+    if (!user) {
+      throw redirect("/auth/login");
+    }
+  } catch (error) {
+    throw redirect("/auth/login");
+  }
+
+  return null;
+};
+
+const AdminGuard = ({ children }: { children: React.ReactNode }) => {
   const { isAdmin } = useUserRole();
   const navigate = useNavigate();
 
@@ -17,6 +34,12 @@ const AdminLayout = () => {
     }
   }, [isAdmin, navigate]);
 
+  if (!isAdmin) return null;
+
+  return <>{children}</>;
+};
+
+const AdminLayout = () => {
   return (
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 overflow-hidden">
@@ -55,7 +78,11 @@ const AdminLayout = () => {
           ]}
         />
         <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
-          {isAdmin && <Outlet />}
+          <Suspense fallback={<Loader />}>
+            <AdminGuard>
+              <Outlet />
+            </AdminGuard>
+          </Suspense>
         </main>
       </div>
     </div>

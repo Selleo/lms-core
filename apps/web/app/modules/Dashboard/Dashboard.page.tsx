@@ -7,11 +7,12 @@ import {
   categoriesQueryOptions,
   useCategoriesSuspense,
 } from "~/api/queries/useCategories";
-import { allCoursesQueryOptions } from "~/api/queries/useCourses";
+import { allCoursesQueryOptions, useCourses } from "~/api/queries/useCourses";
 import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
+import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
 import { useLayoutsStore } from "../common/Layout/LayoutsStore";
@@ -67,6 +68,7 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function DashboardPage() {
+  const { isAdmin } = useUserRole();
   const [state, dispatch] = useReducer(reducer, {
     searchTitle: undefined,
     sort: undefined,
@@ -76,12 +78,28 @@ export default function DashboardPage() {
   const { data: studentCourses, isLoading: isStudentCoursesLoading } =
     useStudentCourses();
 
-  const { data: availableCourses, isLoading: isAvailableCoursesLoading } =
+  const { data: userAvailableCourses, isLoading: isAvailableCoursesLoading } =
     useAvailableCourses({
       title: state.searchTitle,
       category: state.category,
       sort: state.sort,
     });
+
+  const { data: allCourses, isLoading: isAllCoursesLoading } = useCourses({
+    title: state.searchTitle,
+    category: state.category,
+    sort: state.sort,
+  });
+
+  const availableCourses = match(isAdmin)
+    .with(true, () => allCourses ?? [])
+    .with(false, () => userAvailableCourses ?? [])
+    .exhaustive();
+
+  const isCoursesLoading = match(isAdmin)
+    .with(true, () => isAllCoursesLoading)
+    .with(false, () => isAvailableCoursesLoading)
+    .exhaustive();
 
   const { data: categories, isLoading: isCategoriesLoading } =
     useCategoriesSuspense();
@@ -232,7 +250,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             ))}
-          {isAvailableCoursesLoading && (
+          {isCoursesLoading && (
             <div className="flex justify-center items-center h-full">
               <Loader />
             </div>

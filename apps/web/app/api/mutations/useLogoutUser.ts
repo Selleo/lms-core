@@ -4,10 +4,13 @@ import { ApiClient } from "../api-client";
 import { useToast } from "~/components/ui/use-toast";
 import { AxiosError } from "axios";
 import { queryClient } from "../queryClient";
+import { useNavigate } from "@remix-run/react";
 
 export function useLogoutUser() {
   const { toast } = useToast();
   const { setLoggedIn } = useAuthStore();
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: async () => {
       const response = await ApiClient.api.authControllerLogout();
@@ -16,6 +19,7 @@ export function useLogoutUser() {
     },
     onSuccess: () => {
       queryClient.clear();
+      navigate("/");
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
