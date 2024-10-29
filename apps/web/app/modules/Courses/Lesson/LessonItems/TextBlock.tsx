@@ -1,7 +1,7 @@
 import Viewer from "~/components/RichText/Viever";
 import { Card } from "~/components/ui/card";
 
-type TProps = {
+type TextBlockProps = {
   content: {
     id: string;
     title: string;
@@ -11,11 +11,11 @@ type TProps = {
   };
 };
 
-export default function TextBlock({ content }: TProps) {
+export const TextBlock = ({ content: { title, body } }: TextBlockProps) => {
   return (
     <Card className="flex flex-col gap-4 p-8 border-none drop-shadow-primary">
-      <div className="h6 text-neutral-950">{content.title}</div>
-      <Viewer content={content.body} style="prose" />
+      <div className="h6 text-neutral-950">{title}</div>
+      <Viewer content={body} />
     </Card>
   );
-}
+};

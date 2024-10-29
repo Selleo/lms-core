@@ -149,29 +149,27 @@ export const questionAnswerOptions = pgTable("question_answer_options", {
   position: integer("position"),
 });
 
-export const studentQuestionAnswers = pgTable("student_question_answers", {
-  ...id,
-  ...timestamps,
-  questionId: uuid("question_id")
-    .references(() => questions.id)
-    .notNull(),
-  studentId: uuid("student_id")
-    .references(() => users.id)
-    .notNull(),
-  answer: jsonb("answer").default({}),
-  isCorrect: boolean("is_correct"),
-});
-
-export const lessonQuestions = pgTable("lesson_questions", {
-  ...id,
-  ...timestamps,
-  lessonId: uuid("lesson_id")
-    .references(() => lessons.id)
-    .notNull(),
-  questionId: uuid("question_id")
-    .references(() => questions.id)
-    .notNull(),
-});
+export const studentQuestionAnswers = pgTable(
+  "student_question_answers",
+  {
+    ...id,
+    ...timestamps,
+    lessonId: uuid("lesson_id")
+      .references(() => lessons.id)
+      .notNull(),
+    questionId: uuid("question_id")
+      .references(() => questions.id)
+      .notNull(),
+    studentId: uuid("student_id")
+      .references(() => users.id)
+      .notNull(),
+    answer: jsonb("answer").default({}),
+    isCorrect: boolean("is_correct"),
+  },
+  (table) => ({
+    unq: unique().on(table.lessonId, table.questionId, table.studentId),
+  }),
+);
 
 export const files = pgTable("files", {
   ...id,
@@ -186,17 +184,6 @@ export const files = pgTable("files", {
   archived,
 });
 
-export const lessonFiles = pgTable("lesson_files", {
-  ...id,
-  ...timestamps,
-  lessonId: uuid("lesson_id")
-    .references(() => lessons.id)
-    .notNull(),
-  fileId: uuid("file_id")
-    .references(() => files.id)
-    .notNull(),
-});
-
 export const textBlocks = pgTable("text_blocks", {
   ...id,
   ...timestamps,
@@ -207,17 +194,6 @@ export const textBlocks = pgTable("text_blocks", {
     .references(() => users.id)
     .notNull(),
   archived,
-});
-
-export const lessonTextBlocks = pgTable("lesson_text_blocks", {
-  ...id,
-  ...timestamps,
-  lessonId: uuid("lesson_id")
-    .references(() => lessons.id)
-    .notNull(),
-  textBlockId: uuid("text_block_id")
-    .references(() => textBlocks.id)
-    .notNull(),
 });
 
 export const lessonItems = pgTable("lesson_items", {
@@ -333,6 +309,9 @@ export const studentLessonsProgress = pgTable(
       .references(() => lessons.id)
       .notNull(),
     quizCompleted: boolean("quiz_completed"),
+    lessonItemCount: integer("lesson_item_count").notNull(),
+    completedLessonItemCount: integer("completed_lesson_item_count").notNull(),
+    quizScore: integer("quiz_score").notNull().default(0),
   },
   (table) => ({
     unq: unique().on(table.studentId, table.lessonId),

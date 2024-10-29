@@ -1,6 +1,6 @@
 import { useParams } from "@remix-run/react";
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
-import { useCompletedLessonItemsStore } from "./LessonItemStore";
+import { useCompletedLessonItemsStore } from "../LessonItemStore";
 import ReactPlayer from "react-player";
 
 type VideoProps = {

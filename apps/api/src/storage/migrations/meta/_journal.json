@@ -22,6 +22,27 @@
       "when": 1729173914932,
       "tag": "0002_create_student_lessons_progress",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1730162235166,
+      "tag": "0003_add_count_items_to_student_lessons_progress",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1730202719083,
+      "tag": "0004_drop_unused_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1730202829826,
+      "tag": "0005_add_lesson_id_to_student_question_answers",
+      "breakpoints": true
     }
   ]
 }

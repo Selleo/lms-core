@@ -1,8 +1,9 @@
 import { Card } from "~/components/ui/card";
 import Presentation from "./Presentation";
 import Video from "./Video";
+import { useUserRole } from "~/hooks/useUserRole";
 
-type TProps = {
+type FileProps = {
   lessonItemId: string;
   content: {
     id: string;
@@ -10,10 +11,11 @@ type TProps = {
     type: string;
     url: string;
   };
-  isAdmin: boolean;
 };
 
-export default function Files({ content, lessonItemId, isAdmin }: TProps) {
+export const File = ({ content, lessonItemId }: FileProps) => {
+  const { isAdmin } = useUserRole();
+
   const isPresentation =
     content.type === "presentation" || content.type === "external_presentation";
 
@@ -36,4 +38,4 @@ export default function Files({ content, lessonItemId, isAdmin }: TProps) {
       )}
     </Card>
   );
-}
+};

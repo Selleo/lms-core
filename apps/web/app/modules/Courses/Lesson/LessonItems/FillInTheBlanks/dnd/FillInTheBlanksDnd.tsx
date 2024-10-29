@@ -1,4 +1,4 @@
-import { type FC, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import {
   closestCorners,
   DndContext,
@@ -19,19 +19,23 @@ import { DraggableWord } from "./DraggableWord";
 import { WordBank } from "./WordBank";
 
 type FillInTheBlanksDndProps = {
+  isQuiz: boolean;
   questionLabel: string;
   content: string;
   sendAnswer: (
     selectedOption: { value: string; index: number }[],
   ) => Promise<void>;
   answers: DndWord[];
+  isQuizSubmitted?: boolean;
 };
 
 export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
+  isQuiz = false,
   questionLabel,
   content,
   sendAnswer,
   answers,
+  isQuizSubmitted,
 }) => {
   const [words, setWords] = useState<DndWord[]>(answers);
   const [currentlyDraggedWord, setCurrentlyDraggedWord] =
@@ -43,6 +47,14 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  useEffect(() => {
+    if (isQuiz) setWords(answers);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isQuizSubmitted]);
+
+  const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
+
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event;
     const { id: activeId } = active;
@@ -134,7 +146,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
 
         const wordsWithUpdatedBlankId = [firstWord, secondWord];
 
-        return [
+        const updatedWordsWithUpdatedBlankId = [
           ...new Set([
             ...arrayMove(
               wordsWithUpdatedBlankId,
@@ -144,13 +156,55 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
             ...prev,
           ]),
         ];
+
+        const filteredWords = updatedWordsWithUpdatedBlankId
+          .filter(({ blankId }) => blankId !== "blank_preset")
+          .map((item) => {
+            const newIndex = parseInt(
+              item.blankId.match(/\d+$/)?.[0] ?? "0",
+              10,
+            );
+            return {
+              ...item,
+              index: newIndex,
+            };
+          });
+
+        if (
+          filteredWords.length >= 1 &&
+          filteredWords.length <= maxAnswersAmount
+        ) {
+          const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
+          if (
+            sortedWords.length > 0 &&
+            sortedWords.length <= maxAnswersAmount
+          ) {
+            sendAnswer(sortedWords);
+          }
+        }
+
+        return updatedWordsWithUpdatedBlankId;
       }
 
-      const wordsPreparedForAnswer = updatedWords.map(({ value, index }) => {
-        return { index, value };
-      });
+      const filteredWords = updatedWords
+        .filter(({ blankId }) => blankId !== "blank_preset")
+        .map((item) => {
+          const newIndex = parseInt(item.blankId.match(/\d+$/)?.[0] ?? "0", 10);
+          return {
+            ...item,
+            index: newIndex,
+          };
+        });
 
-      sendAnswer(wordsPreparedForAnswer);
+      if (
+        filteredWords.length >= 1 &&
+        filteredWords.length <= maxAnswersAmount
+      ) {
+        const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
+        if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
+          sendAnswer(sortedWords);
+        }
+      }
 
       return updatedWords;
     });
@@ -175,20 +229,31 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
       >
         <DragOverlay>
           {currentlyDraggedWord && (
-            <DraggableWord word={currentlyDraggedWord} isOverlay />
+            <DraggableWord
+              isQuiz={isQuiz}
+              word={currentlyDraggedWord}
+              isOverlay
+            />
           )}
         </DragOverlay>
         <SentenceBuilder
           content={content}
           replacement={(index) => {
-            const blankPosition = index + 1;
-            const blankId = `blank_${blankPosition}`;
+            const blankId = `blank_${index}`;
 
             const wordsInBlank = words.filter(
               (word) => word.blankId === blankId,
             );
 
-            return <DndBlank blankId={blankId} words={wordsInBlank} />;
+            return (
+              <DndBlank
+                isQuiz={isQuiz}
+                blankId={blankId}
+                words={wordsInBlank}
+                isCorrect={wordsInBlank[0]?.isCorrect}
+                isStudentAnswer={!!wordsInBlank[0]?.isStudentAnswer}
+              />
+            );
           }}
         />
         <WordBank words={wordBankWords} />

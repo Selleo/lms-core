@@ -11,7 +11,7 @@ export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
         return {
           title: lessonItem.content.title,
           displayOrder: lessonItem.displayOrder,
-          id: lessonItem.id,
+          id: lessonItem.lessonItemId,
         };
       } else {
         return {
@@ -26,33 +26,33 @@ export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
 
 export const getOrderedLessons = (lesson: GetLessonResponse["data"]) =>
   lesson.lessonItems.sort(
-    (a, b) => a.displayOrder || 0 - (b.displayOrder || 0)
+    (a, b) => a.displayOrder || 0 - (b.displayOrder || 0),
   );
 
 export const getQuestionsArray = (
-  lesson: GetLessonResponse["data"]["lessonItems"]
+  lesson: GetLessonResponse["data"]["lessonItems"],
 ) =>
   lesson
     .filter((lesson) => lesson.lessonItemType === "question")
     .map((item) => item.content.id);
 
 export const getUserAnswers = (
-  lesson: GetLessonResponse["data"]
+  lesson: GetLessonResponse["data"],
 ): TQuestionsForm => {
   const allQuestions = lesson.lessonItems
     .filter((lesson) => lesson.lessonItemType === "question")
     .map((item) => item.content) as QuestionContent[];
 
   const singleQuestionsFromApi = allQuestions.filter(
-    (question) => question.questionType === "single_choice"
+    (question) => question.questionType === "single_choice",
   );
 
   const multiQuestionsFromApi = allQuestions.filter(
-    (question) => question.questionType === "multiple_choice"
+    (question) => question.questionType === "multiple_choice",
   );
 
   const openQuestionsFromApi = allQuestions.filter(
-    (question) => question.questionType === "open_answer"
+    (question) => question.questionType === "open_answer",
   );
 
   const singleAnswerQuestions = prepareQuestions(singleQuestionsFromApi);
@@ -67,7 +67,7 @@ export const getUserAnswers = (
 };
 
 const prepareQuestions = (
-  questions: QuestionContent[]
+  questions: QuestionContent[],
 ): Record<string, Record<string, string>> =>
   questions.reduce(
     (acc, question) => {
@@ -76,11 +76,11 @@ const prepareQuestions = (
           innerAcc[item.id ?? 0] = item.isStudentAnswer ? `${item.id}` : "";
           return innerAcc;
         },
-        {} as Record<string, string>
+        {} as Record<string, string>,
       );
       return acc;
     },
-    {} as Record<string, Record<string, string>>
+    {} as Record<string, Record<string, string>>,
   );
 
 const prepareOpenQuestions = (questions: QuestionContent[]) =>
@@ -93,5 +93,5 @@ const prepareOpenQuestions = (questions: QuestionContent[]) =>
         : "";
       return acc;
     },
-    {} as Record<string, string>
+    {} as Record<string, string>,
   );

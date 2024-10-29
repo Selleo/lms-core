@@ -11,6 +11,7 @@ import {
   countDistinct,
   eq,
   ilike,
+  inArray,
   isNotNull,
   isNull,
   like,
@@ -29,6 +30,7 @@ import {
   studentCompletedLessonItems,
   studentCourses,
   studentLessonsProgress,
+  studentQuestionAnswers,
   users,
 } from "../storage/schema";
 import type { CoursesQuery } from "./api/courses.types";
@@ -575,9 +577,13 @@ export class CoursesService {
       if (!enrolledCourse) throw new ConflictException("Course not enrolled");
 
       const quizLessons = await trx
-        .select({ id: lessons.id })
+        .select({
+          id: lessons.id,
+          itemCount: sql<number>`count(${lessonItems.id})`,
+        })
         .from(courseLessons)
         .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+        .leftJoin(lessonItems, eq(lessons.id, lessonItems.lessonId))
         .where(
           and(
             eq(courseLessons.courseId, course.id),
@@ -585,7 +591,8 @@ export class CoursesService {
             eq(lessons.state, "published"),
             eq(lessons.type, "quiz"),
           ),
-        );
+        )
+        .groupBy(lessons.id);
 
       if (quizLessons.length > 0) {
         await trx.insert(studentLessonsProgress).values(
@@ -593,6 +600,8 @@ export class CoursesService {
             studentId: userId,
             lessonId: lesson.id,
             quizCompleted: false,
+            lessonItemCount: lesson.itemCount,
+            completedLessonItemCount: 0,
           })),
         );
       }
@@ -631,6 +640,43 @@ export class CoursesService {
         .returning();
 
       if (!deletedCourse) throw new ConflictException("Course not unenrolled");
+
+      const courseLessonList = await trx
+        .select({ id: courseLessons.lessonId })
+        .from(courseLessons)
+        .where(eq(courseLessons.courseId, id));
+
+      const courseLessonsIds = courseLessonList.map((l) => l.id);
+
+      await trx
+        .delete(studentLessonsProgress)
+        .where(
+          and(
+            inArray(studentLessonsProgress.lessonId, courseLessonsIds),
+            eq(studentLessonsProgress.studentId, userId),
+          ),
+        )
+        .returning();
+
+      await trx
+        .delete(studentQuestionAnswers)
+        .where(
+          and(
+            inArray(studentQuestionAnswers.lessonId, courseLessonsIds),
+            eq(studentQuestionAnswers.studentId, userId),
+          ),
+        )
+        .returning();
+
+      await trx
+        .delete(studentCompletedLessonItems)
+        .where(
+          and(
+            inArray(studentCompletedLessonItems.lessonId, courseLessonsIds),
+            eq(studentCompletedLessonItems.studentId, userId),
+          ),
+        )
+        .returning();
     });
   }
 

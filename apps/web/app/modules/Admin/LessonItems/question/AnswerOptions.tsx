@@ -1,11 +1,11 @@
 import {
-  DndContext,
   closestCenter,
+  DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  DragEndEvent,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -38,7 +38,7 @@ export const AnswerOptions = ({
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event: DragEndEvent) => {
@@ -52,7 +52,7 @@ export const AnswerOptions = ({
         (field, index) => ({
           ...field,
           position: index,
-        })
+        }),
       );
 
       replace(newFields);
@@ -62,7 +62,8 @@ export const AnswerOptions = ({
   if (
     questionType !== "single_choice" &&
     questionType !== "multiple_choice" &&
-    questionType !== "fill_in_the_blanks_text"
+    questionType !== "fill_in_the_blanks_text" &&
+    questionType !== "fill_in_the_blanks_dnd"
   ) {
     return null;
   }

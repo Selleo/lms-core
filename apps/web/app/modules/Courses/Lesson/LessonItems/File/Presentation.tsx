@@ -4,7 +4,7 @@ import { useParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useIntersection } from "react-use";
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
-import { useCompletedLessonItemsStore } from "./LessonItemStore";
+import { useCompletedLessonItemsStore } from "../LessonItemStore";
 
 type PresentationProps = {
   url: string;
