@@ -12,6 +12,7 @@ import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
+import { SpeechToText } from "~/components/LSTT";
 import { cn } from "~/lib/utils";
 import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
 import { useLayoutsStore } from "../common/Layout/LayoutsStore";
@@ -127,6 +128,7 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-1 flex-col gap-y-12 h-auto">
+      <SpeechToText />
       <div className="flex flex-col gap-y-6">
         <div className="flex flex-col px-6">
           <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
