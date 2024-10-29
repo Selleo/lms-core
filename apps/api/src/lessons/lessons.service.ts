@@ -467,19 +467,16 @@ export class LessonsService {
       const result = !!studentAnswers?.answer
         ? Object.keys(studentAnswers.answer).map((key) => {
             const position = parseInt(key);
-            const studentAnswerText = lessonRated
-              ? (studentAnswers.answer[
-                  key as keyof typeof studentAnswers.answer
-                ] as string)
-              : null;
 
+            const studentAnswerText = studentAnswers.answer[
+              key as keyof typeof studentAnswers.answer
+            ] as string;
             const correctAnswerToStudentAnswer = questionAnswers.find(
               (answer) => answer.position === position,
             );
             const isCorrect = correctAnswerToStudentAnswer
               ? correctAnswerToStudentAnswer.isCorrect
               : false;
-
             const isStudentAnswer =
               correctAnswerToStudentAnswer?.optionText === studentAnswerText;
 
@@ -488,7 +485,10 @@ export class LessonsService {
               optionText: correctAnswerToStudentAnswer?.optionText ?? "",
               position: position,
               isStudentAnswer,
-              studentAnswerText,
+              studentAnswerText:
+                (lessonRated && lessonType === "quiz") || lessonType !== "quiz"
+                  ? studentAnswerText
+                  : null,
               isCorrect,
             };
           })
@@ -507,7 +507,10 @@ export class LessonsService {
       return {
         id: answer.id,
         optionText: answer.optionText,
-        position: lessonRated && answer.isCorrect ? answer.position : null,
+        position:
+          (lessonRated && answer.isCorrect) || lessonType !== "quiz"
+            ? answer.position
+            : null,
         isStudentAnswer: lessonRated ? answer.isStudentAnswer : null,
         studentAnswerText:
           typeof answer?.position === "number"
