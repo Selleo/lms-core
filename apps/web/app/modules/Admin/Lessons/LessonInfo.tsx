@@ -2,6 +2,8 @@ import { capitalize, startCase } from "lodash-es";
 import { memo } from "react";
 import { Control, Controller } from "react-hook-form";
 import { GetLessonByIdResponse, UpdateLessonBody } from "~/api/generated-api";
+import Editor from "~/components/RichText/Editor";
+import Viewer from "~/components/RichText/Viever";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import {
@@ -11,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Textarea } from "~/components/ui/textarea";
 
 export const LessonInfo = memo<{
   name: keyof UpdateLessonBody;
@@ -31,6 +32,9 @@ export const LessonInfo = memo<{
               {lesson[name] ? "Archived" : "Active"}
             </span>
           );
+        }
+        if (name === "description") {
+          return <Viewer content={field.value as string} style="prose" />;
         }
         return (
           <span className="font-semibold capitalize">
@@ -79,11 +83,10 @@ export const LessonInfo = memo<{
 
       if (name === "description") {
         return (
-          <Textarea
+          <Editor
+            content={field.value as string}
+            className="h-32 w-full"
             {...field}
-            value={field.value as string}
-            placeholder="Enter lesson description"
-            className="w-full rounded-md border border-neutral-300 px-2 py-1 resize-none"
           />
         );
       }

@@ -3,8 +3,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCreateTextBlockItem } from "~/api/mutations/admin/useCreateTextBlockItem";
 import { useCurrentUserSuspense } from "~/api/queries";
-import { allLessonItemsQueryOptions } from "~/api/queries/admin/useAllLessonItems";
+import { ALL_LESSON_ITEMS_QUERY_KEY } from "~/api/queries/admin/useAllLessonItems";
 import { queryClient } from "~/api/queryClient";
+import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -30,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Textarea } from "~/components/ui/textarea";
 
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),
@@ -66,7 +66,7 @@ export const CreateNewTextBlock = ({
   const onSubmit = (data: FormValues) => {
     createTextBlock({ data }).then(() => {
       onOpenChange(false);
-      queryClient.invalidateQueries(allLessonItemsQueryOptions());
+      queryClient.invalidateQueries({ queryKey: ALL_LESSON_ITEMS_QUERY_KEY });
     });
   };
 
@@ -74,7 +74,7 @@ export const CreateNewTextBlock = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="min-w-[750px]">
         <DialogHeader>
           <DialogTitle>Create New Text Block</DialogTitle>
           <DialogDescription>
@@ -104,7 +104,12 @@ export const CreateNewTextBlock = ({
                 <FormItem>
                   <Label htmlFor="body">Body</Label>
                   <FormControl>
-                    <Textarea id="body" {...field} />
+                    <Editor
+                      id="body"
+                      content={field.value}
+                      className="h-32 w-full"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

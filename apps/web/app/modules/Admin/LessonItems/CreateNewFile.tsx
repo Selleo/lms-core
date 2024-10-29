@@ -6,7 +6,7 @@ import * as z from "zod";
 import { useCreateFileItem } from "~/api/mutations/admin/useCreteFileItem";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCurrentUserSuspense } from "~/api/queries";
-import { allLessonItemsQueryOptions } from "~/api/queries/admin/useAllLessonItems";
+import { ALL_LESSON_ITEMS_QUERY_KEY } from "~/api/queries/admin/useAllLessonItems";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import {
@@ -92,7 +92,7 @@ export const CreateNewFile = ({
       await createFile({ data: values });
       onOpenChange(false);
       form.reset();
-      queryClient.invalidateQueries(allLessonItemsQueryOptions());
+      queryClient.invalidateQueries({ queryKey: ALL_LESSON_ITEMS_QUERY_KEY });
     } catch (error) {
       console.error("Error creating file:", error);
     }

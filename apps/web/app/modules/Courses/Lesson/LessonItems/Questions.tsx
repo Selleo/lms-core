@@ -14,6 +14,7 @@ import { Icon } from "~/components/Icon";
 import type { GetLessonResponse } from "~/api/generated-api";
 import { FillInTheBlanksDnd } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/dnd/FillInTheBlanksDnd";
 import { FillTheBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheBlanks";
+import Viewer from "~/components/RichText/Viever";
 
 type TProps = {
   id: string;
@@ -66,7 +67,7 @@ export default function Questions({
   });
 
   const [selectedOption, setSelectedOption] = useState<string[]>(() =>
-    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion }),
+    getQuestionDefaultValue({ getValues, questionId, isSingleQuestion })
   );
 
   useEffect(() => {
@@ -94,7 +95,7 @@ export default function Questions({
   };
 
   const handleOpenAnswerRequest = async (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
+    e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     await markLessonItemAsCompleted({
       lessonItemId: questionId,
@@ -110,7 +111,7 @@ export default function Questions({
             (answer.isCorrect && !answer.isStudentAnswer) ||
             (!answer.isCorrect &&
               answer.isStudentAnswer &&
-              answer.isCorrect !== null),
+              answer.isCorrect !== null)
         )
       : false;
 
@@ -149,7 +150,7 @@ export default function Questions({
       <div className="details text-primary-700 uppercase">{`question ${questionsArray.indexOf(questionId) + 1}`}</div>
       <div className="h6 text-neutral-950">
         {"questionBody" in content ? (
-          <div dangerouslySetInnerHTML={{ __html: content.questionBody }} />
+          <Viewer content={content.questionBody} style="prose" />
         ) : (
           <div>{content.title}</div> // Fall back to the title field if questionBody doesn't exist
         )}
@@ -231,7 +232,7 @@ export default function Questions({
                         className={cn(
                           "flex items-center space-x-3 border border-primary-200 rounded-lg py-3 px-4",
                           { "cursor-not-allowed": isFieldDisabled },
-                          classes,
+                          classes
                         )}
                       >
                         {isSingleQuestion ? (
@@ -255,7 +256,7 @@ export default function Questions({
                               type="radio"
                               value={answer.id}
                               {...register(
-                                `singleAnswerQuestions.${questionId}.${answer.id}`,
+                                `singleAnswerQuestions.${questionId}.${answer.id}`
                               )}
                             />
                             <Icon
@@ -288,7 +289,7 @@ export default function Questions({
                               type="checkbox"
                               value={answer.id}
                               {...register(
-                                `multiAnswerQuestions.${questionId}.${answer.id}`,
+                                `multiAnswerQuestions.${questionId}.${answer.id}`
                               )}
                             />
                             <Icon

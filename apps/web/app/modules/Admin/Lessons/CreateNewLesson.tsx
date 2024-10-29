@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCreateLesson } from "~/api/mutations/admin/useCreateLesson";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
-import { allLessonsQueryOptions } from "~/api/queries/admin/useAllLessons";
+import { ALL_LESSONS_QUERY_KEY } from "~/api/queries/admin/useAllLessons";
 import { queryClient } from "~/api/queryClient";
+import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -77,7 +78,7 @@ export const CreateNewLesson = () => {
       data: values,
     }).then(() => {
       setOpen(false);
-      queryClient.invalidateQueries(allLessonsQueryOptions());
+      queryClient.invalidateQueries({ queryKey: ALL_LESSONS_QUERY_KEY });
     });
   };
 
@@ -88,7 +89,7 @@ export const CreateNewLesson = () => {
       <DialogTrigger asChild>
         <Button variant="outline">Create New</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="min-w-[750px]">
         <DialogHeader>
           <DialogTitle>Create New Lesson</DialogTitle>
           <DialogDescription>
@@ -148,7 +149,12 @@ export const CreateNewLesson = () => {
                     Description
                   </Label>
                   <FormControl>
-                    <Input id="description" {...field} />
+                    <Editor
+                      id="description"
+                      content={field.value}
+                      className="h-32 w-full"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

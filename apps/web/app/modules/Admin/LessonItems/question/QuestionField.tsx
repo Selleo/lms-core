@@ -1,6 +1,10 @@
 import { capitalize, startCase } from "lodash-es";
-import { Controller, Control } from "react-hook-form";
-
+import { Control, Controller } from "react-hook-form";
+import { UpdateQuestionItemBody } from "~/api/generated-api";
+import Editor from "~/components/RichText/Editor";
+import Viewer from "~/components/RichText/Viever";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -8,10 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Textarea } from "~/components/ui/textarea";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/input";
-import { UpdateQuestionItemBody } from "~/api/generated-api";
 
 interface QuestionFieldProps {
   name: keyof UpdateQuestionItemBody;
@@ -45,11 +45,7 @@ export const QuestionField = ({
             );
           }
           if (name === "questionBody" || name === "solutionExplanation") {
-            return (
-              <p className="whitespace-pre-wrap font-semibold">
-                {field.value as string}
-              </p>
-            );
+            return <Viewer content={field.value as string} style="prose" />;
           }
           return <span className="font-semibold">{field.value as string}</span>;
         }
@@ -98,11 +94,10 @@ export const QuestionField = ({
 
         if (name === "questionBody" || name === "solutionExplanation") {
           return (
-            <Textarea
+            <Editor
+              className="h-32"
+              content={field.value as string}
               {...field}
-              value={field.value as string}
-              placeholder={`Enter ${startCase(name)}`}
-              className="resize-none"
             />
           );
         }

@@ -33,6 +33,7 @@ import {
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
 import { format } from "date-fns";
+import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 
 type TLesson = GetAllLessonsResponse["data"][number];
 
@@ -102,6 +103,11 @@ const Lessons = () => {
       accessorKey: "title",
       header: ({ column }) => (
         <SortButton<TLesson> column={column}>Title</SortButton>
+      ),
+      cell: ({ row }) => (
+        <div className="max-w-md truncate">
+          {formatHtmlString(row.original.title)}
+        </div>
       ),
     },
     {

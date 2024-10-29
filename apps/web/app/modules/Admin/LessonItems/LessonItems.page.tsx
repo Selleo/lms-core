@@ -8,6 +8,7 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -34,16 +35,16 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 import { cn } from "~/lib/utils";
-import { CreateNewQuestion } from "./CreateNewQuestion";
-import { CreateNewTextBlock } from "./CreateNewTextBlock";
-import { CreateNewFile } from "./CreateNewFile";
 import {
   FilterConfig,
   FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
-import { format } from "date-fns";
+import { CreateNewFile } from "./CreateNewFile";
+import { CreateNewQuestion } from "./CreateNewQuestion";
+import { CreateNewTextBlock } from "./CreateNewTextBlock";
 
 type TLessonItem = GetAllLessonItemsResponse["data"][number];
 
@@ -135,7 +136,9 @@ const LessonItems = () => {
           row.original.itemType === "question"
             ? row.original.questionBody
             : row.original.title;
-        return <div className="max-w-md truncate">{content}</div>;
+        return (
+          <div className="max-w-md truncate">{formatHtmlString(content)}</div>
+        );
       },
     },
     {
