@@ -13,7 +13,7 @@ type FillTheBlanksProps = {
     position: number | null;
     isStudentAnswer?: boolean | null;
     isCorrect?: boolean | null;
-    studentAnswerText?: string;
+    studentAnswerText?: string | null;
   }[];
   questionLabel: string;
 };

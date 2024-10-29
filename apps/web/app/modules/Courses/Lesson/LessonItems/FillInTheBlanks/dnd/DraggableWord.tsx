@@ -4,7 +4,7 @@ import { cn } from "~/lib/utils";
 import type { DndWord } from "./types";
 
 type DraggableWordProps = {
-  isQuiz: boolean;
+  isQuiz?: boolean;
   word: DndWord;
   isOverlay?: boolean;
   isCorrect?: boolean | null;
@@ -12,7 +12,7 @@ type DraggableWordProps = {
 };
 
 export const DraggableWord = ({
-  isQuiz,
+  isQuiz = false,
   word,
   isOverlay,
   isCorrect,

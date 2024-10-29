@@ -9,7 +9,7 @@ type TextBlankProps = {
     position: number | null;
     isStudentAnswer?: boolean | null;
     isCorrect?: boolean | null;
-    studentAnswerText?: string;
+    studentAnswerText?: string | null;
   };
   handleOnBlur: (value: string, index: number) => void;
 };
@@ -42,7 +42,9 @@ export const TextBlank = ({
   return (
     <input
       key={index}
-      defaultValue={studentAnswer?.studentAnswerText}
+      {...(studentAnswer?.studentAnswerText && {
+        defaultValue: studentAnswer.studentAnswerText,
+      })}
       {...(!isDisabled && {
         onBlur: (e) => {
           const value = e.target.value;
