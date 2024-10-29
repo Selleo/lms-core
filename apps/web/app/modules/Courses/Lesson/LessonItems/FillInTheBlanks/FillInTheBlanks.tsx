@@ -1,21 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card } from "~/components/ui/card";
 import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheTextBlanks";
 import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
+
+type Answer = {
+  id: string;
+  optionText: string;
+  position: number | null;
+  isStudentAnswer?: boolean | null;
+  isCorrect?: boolean | null;
+  studentAnswerText?: string | null;
+};
 
 type FillTheBlanksProps = {
   isQuiz: boolean;
   content: string;
   sendAnswer: (selectedOption: Word[]) => Promise<void>;
-  answers: {
-    id: string;
-    optionText: string;
-    position: number | null;
-    isStudentAnswer?: boolean | null;
-    isCorrect?: boolean | null;
-    studentAnswerText?: string | null;
-  }[];
+  answers: Answer[];
   questionLabel: string;
+  isQuizSubmitted?: boolean;
 };
 
 type Word = {
@@ -29,6 +32,7 @@ export const FillTheBlanks = ({
   content,
   sendAnswer,
   answers,
+  isQuizSubmitted,
 }: FillTheBlanksProps) => {
   const [words, setWords] = useState<Word[]>(
     answers.map(({ position, studentAnswerText }) => ({
@@ -36,17 +40,8 @@ export const FillTheBlanks = ({
       value: studentAnswerText ?? "",
     })),
   );
-  const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
 
-  useEffect(() => {
-    if (words.length >= 1 && words.length <= maxAnswersAmount) {
-      const sortedWords = words.sort((a, b) => a.index - b.index);
-      if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
-        sendAnswer(sortedWords);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [words]);
+  const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
 
   const handleWordUpdate = (
     prevWords: Word[],
@@ -57,25 +52,28 @@ export const FillTheBlanks = ({
     const existingWordIndex = prevWords.findIndex(
       (word) => word.index === index,
     );
+
+    let updatedWords = prevWords;
+
     if (trimmedValue === "") {
-      if (!prevWords?.length) return [{ index, value }];
-
-      return existingWordIndex !== -1
-        ? prevWords.filter((word) => word.index !== index)
-        : prevWords;
-    }
-
-    if (existingWordIndex !== -1) {
-      const updatedWords = [...prevWords];
+      updatedWords =
+        existingWordIndex !== -1
+          ? prevWords.filter((word) => word.index !== index)
+          : prevWords;
+    } else if (existingWordIndex !== -1) {
+      updatedWords = [...prevWords];
       updatedWords[existingWordIndex] = { index, value: trimmedValue };
-      return updatedWords;
+    } else if (prevWords.length < maxAnswersAmount) {
+      updatedWords = [...prevWords, { index, value: trimmedValue }];
     }
 
-    if (prevWords.length < maxAnswersAmount) {
-      return [...prevWords, { index, value: trimmedValue }];
+    const sortedWords = updatedWords.sort((a, b) => a.index - b.index);
+
+    if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
+      sendAnswer(sortedWords);
     }
 
-    return prevWords;
+    return updatedWords;
   };
 
   const handleOnBlur = (value: string, index: number) => {
@@ -95,6 +93,7 @@ export const FillTheBlanks = ({
               studentAnswer={answers[index]}
               index={index}
               handleOnBlur={handleOnBlur}
+              isQuizSubmitted={isQuizSubmitted}
             />
           );
         }}

@@ -1,4 +1,5 @@
 import { cn } from "~/lib/utils";
+import { useEffect, useRef } from "react";
 
 type TextBlankProps = {
   isQuiz: boolean;
@@ -12,6 +13,7 @@ type TextBlankProps = {
     studentAnswerText?: string | null;
   };
   handleOnBlur: (value: string, index: number) => void;
+  isQuizSubmitted?: boolean;
 };
 
 export const TextBlank = ({
@@ -19,7 +21,18 @@ export const TextBlank = ({
   index,
   studentAnswer,
   handleOnBlur,
+  isQuizSubmitted,
 }: TextBlankProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!inputRef?.current) return;
+
+    if (isQuiz) {
+      inputRef.current.value = studentAnswer?.studentAnswerText ?? "";
+    }
+  }, [isQuiz, isQuizSubmitted]);
+
   const isCorrectAnswer =
     studentAnswer?.isCorrect && studentAnswer.isStudentAnswer;
 
@@ -35,16 +48,16 @@ export const TextBlank = ({
 
   const isDisabled =
     isQuiz &&
-    (!!studentAnswer?.isCorrect ||
-      !!studentAnswer?.isStudentAnswer ||
-      !!studentAnswer?.optionText);
+    studentAnswer?.isCorrect &&
+    (!!studentAnswer?.isStudentAnswer || !!studentAnswer?.optionText);
 
   return (
     <input
+      ref={inputRef}
       key={index}
-      {...(studentAnswer?.studentAnswerText && {
-        defaultValue: studentAnswer.studentAnswerText,
-      })}
+      type="text"
+      className={textBlankClasses}
+      disabled={!!isDisabled}
       {...(!isDisabled && {
         onBlur: (e) => {
           const value = e.target.value;
@@ -52,9 +65,6 @@ export const TextBlank = ({
           handleOnBlur(value, index);
         },
       })}
-      type="text"
-      className={textBlankClasses}
-      disabled={isDisabled}
     />
   );
 };

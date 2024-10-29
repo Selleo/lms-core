@@ -40,7 +40,7 @@ export const SelectAnswerOptionQuiz = ({
   handleOnClick,
 }: SelectAnswerOptionQuizProps) => {
   const { register } = useFormContext<TQuestionsForm>();
-  console.log(isCorrectAnswerNotSelected);
+
   const getAnswerClasses = () => {
     if (isChecked) return SELECT_OPTION_VARIANTS.checked;
 

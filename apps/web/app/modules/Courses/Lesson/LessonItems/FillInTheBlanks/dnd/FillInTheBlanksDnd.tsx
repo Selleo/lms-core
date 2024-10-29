@@ -1,4 +1,4 @@
-import { type FC, useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import {
   closestCorners,
   DndContext,
@@ -26,6 +26,7 @@ type FillInTheBlanksDndProps = {
     selectedOption: { value: string; index: number }[],
   ) => Promise<void>;
   answers: DndWord[];
+  isQuizSubmitted?: boolean;
 };
 
 export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
@@ -34,6 +35,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   content,
   sendAnswer,
   answers,
+  isQuizSubmitted,
 }) => {
   const [words, setWords] = useState<DndWord[]>(answers);
   const [currentlyDraggedWord, setCurrentlyDraggedWord] =
@@ -45,6 +47,10 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  useEffect(() => {
+    setWords(answers);
+  }, [isQuizSubmitted]);
 
   const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
 
@@ -243,10 +249,8 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
                 isQuiz={isQuiz}
                 blankId={blankId}
                 words={wordsInBlank}
-                isCorrect={wordsInBlank.some(({ isCorrect }) => !!isCorrect)}
-                isStudentAnswer={wordsInBlank.some(
-                  ({ isStudentAnswer }) => !!isStudentAnswer,
-                )}
+                isCorrect={wordsInBlank[0]?.isCorrect}
+                isStudentAnswer={!!wordsInBlank[0]?.isStudentAnswer}
               />
             );
           }}

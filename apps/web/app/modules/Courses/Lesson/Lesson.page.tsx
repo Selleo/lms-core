@@ -32,6 +32,7 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 
 export default function LessonPage() {
   const { lessonId, courseId } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
   const { data, refetch } = useLessonSuspense(lessonId);
   const {
     data: { lessons },
@@ -63,6 +64,7 @@ export default function LessonPage() {
   }
 
   const orderedLessonsItems = getOrderedLessons(data);
+
   const questionsArray = getQuestionsArray(orderedLessonsItems);
 
   const previousLessonId =
@@ -73,7 +75,6 @@ export default function LessonPage() {
       : null;
 
   const isQuiz = data?.type === "quiz";
-  const [isOpen, setIsOpen] = useState(false);
 
   const getScorePercentage = () => {
     if (!data.quizScore || data.quizScore === 0 || !data.lessonItems.length)

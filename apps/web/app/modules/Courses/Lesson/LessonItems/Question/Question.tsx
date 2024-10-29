@@ -15,6 +15,7 @@ import { QuestionCard } from "./QuestionCard";
 import { useUserRole } from "~/hooks/useUserRole";
 import { SelectAnswer } from "./SelectAnswer";
 import { useLesson } from "~/api/queries";
+import type { DndWord } from "../FillInTheBlanks/dnd/types";
 
 type QuestionProps = {
   id: string;
@@ -109,6 +110,57 @@ export const Question = ({
 
   const questionNumber = questionsArray.indexOf(questionId) + 1;
 
+  const getFillInTheBlanksDndAnswers = () => {
+    if ("questionAnswers" in content && isDraggableFillInTheBlanks) {
+      const items: DndWord[] = [];
+
+      for (const {
+        id,
+        optionText,
+        position,
+        isStudentAnswer,
+        isCorrect,
+        studentAnswerText,
+      } of content.questionAnswers) {
+        if (studentAnswerText && studentAnswerText !== optionText) {
+          items.push({
+            id,
+            index: null,
+            value: optionText,
+            blankId: "blank_preset",
+            isCorrect,
+            isStudentAnswer,
+          });
+        }
+
+        items.push({
+          id,
+          index: position,
+          value: optionText,
+          studentAnswerText,
+          blankId:
+            typeof position === "number" ? `blank_${position}` : "blank_preset",
+          isCorrect,
+          isStudentAnswer,
+        });
+      }
+
+      const studentAnswers = items.reduce<string[]>((acc, item) => {
+        if (item?.studentAnswerText && item.studentAnswerText !== item.value) {
+          acc.push(item.studentAnswerText);
+        }
+
+        return acc;
+      }, []);
+
+      return items.filter(({ value }) => !studentAnswers.includes(value));
+    }
+
+    return [] as DndWord[];
+  };
+
+  const fillInTheBlanksDndData = getFillInTheBlanksDndAnswers();
+
   switch (true) {
     case isOpenAnswer:
       return (
@@ -137,6 +189,7 @@ export const Question = ({
           content={content.questionBody}
           sendAnswer={sendAnswer}
           answers={content.questionAnswers}
+          isQuizSubmitted={lesson?.isSubmitted}
         />
       );
 
@@ -147,31 +200,11 @@ export const Question = ({
           questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
           content={content.questionBody}
           sendAnswer={sendAnswer}
-          answers={content.questionAnswers.map(
-            ({
-              id,
-              optionText,
-              position,
-              isStudentAnswer,
-              isCorrect,
-              studentAnswerText,
-            }) => {
-              return {
-                id,
-                index: position,
-                value: optionText,
-                studentAnswerText,
-                blankId:
-                  typeof position === "number"
-                    ? `blank_${position}`
-                    : "blank_preset",
-                isCorrect,
-                isStudentAnswer,
-              };
-            },
-          )}
+          answers={fillInTheBlanksDndData}
+          isQuizSubmitted={lesson?.isSubmitted}
         />
       );
+
     case isSingleQuestion || isMultiQuestion:
       return (
         <QuestionCard
