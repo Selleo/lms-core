@@ -160,6 +160,20 @@ export const niceCourses: NiceCourseData[] = [
               "Which of the following attributes are commonly used with the <img> tag? (Select all that apply)",
             state: "published",
           },
+          {
+            type: "question",
+            questionType: "fill_in_the_blanks_text",
+            questionBody:
+              "Fill in the blanks: The <h1> tag is used for [word], while the <p> tag is used for [word].",
+            state: "published",
+          },
+          {
+            type: "question",
+            questionType: "fill_in_the_blanks_dnd",
+            questionBody:
+              "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
+            state: "published",
+          },
         ],
       },
     ],

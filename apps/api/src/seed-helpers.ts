@@ -128,6 +128,22 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             })
             .returning();
 
+          if (item.questionType === "fill_in_the_blanks_text") {
+            const words = ["headings", "paragraphs"];
+
+            for (let index = 0; index < words.length; index++) {
+              await db.insert(questionAnswerOptions).values({
+                id: crypto.randomUUID(),
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                questionId,
+                optionText: words[index],
+                isCorrect: true,
+                position: index,
+              });
+            }
+          }
+
           if (item.questionType === "fill_in_the_blanks_dnd") {
             const words = [
               "HTML",
@@ -152,7 +168,7 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
                 questionId,
                 optionText: words[index],
                 isCorrect: index < 2,
-                position: 0,
+                position: index < 2 ? index : null,
               });
             }
           }
