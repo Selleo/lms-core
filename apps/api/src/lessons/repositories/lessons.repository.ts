@@ -231,6 +231,10 @@ export class LessonsRepository {
               ${studentLessonsProgress.quizCompleted}
             ELSE false
           END`,
+        lessonItemCount: studentLessonsProgress.lessonItemCount,
+        completedLessonItemCount:
+          studentLessonsProgress.completedLessonItemCount,
+        quizScore: studentLessonsProgress.quizScore,
       })
       .from(studentLessonsProgress)
       .where(
@@ -243,7 +247,7 @@ export class LessonsRepository {
     return lessonProgress;
   }
 
-  async lessonItemCount(lessonId: UUIDType) {
+  async getLessonItemCount(lessonId: UUIDType) {
     const [lessonItemCount] = await this.db
       .select({ count: count(lessonItems.id) })
       .from(lessonItems)
@@ -263,13 +267,47 @@ export class LessonsRepository {
     return completedLessonItemsCount;
   }
 
-  async completeQuiz(lessonId: UUIDType, userId: UUIDType) {
+  async getQuizScore(lessonId: UUIDType, userId: UUIDType) {
+    const questions = await this.db
+      .select({
+        questionId: lessonItems.lessonItemId,
+      })
+      .from(lessonItems)
+      .where(eq(lessonItems.lessonId, lessonId));
+
+    const questionIds = questions.map((question) => question.questionId);
+
+    const [quizScore] = await this.db
+      .select({
+        quizScore: sql<number>`sum(case when ${studentQuestionAnswers.isCorrect} then 1 else 0 end)`,
+      })
+      .from(studentQuestionAnswers)
+      .where(
+        and(
+          eq(studentQuestionAnswers.studentId, userId),
+          inArray(studentQuestionAnswers.questionId, questionIds),
+        ),
+      )
+      .groupBy(studentQuestionAnswers.studentId);
+
+    return quizScore.quizScore;
+  }
+
+  async completeQuiz(
+    lessonId: UUIDType,
+    userId: UUIDType,
+    completedLessonItemCount: number,
+    quizScore: number,
+  ) {
     return await this.db
       .insert(studentLessonsProgress)
       .values({
         studentId: userId,
         lessonId: lessonId,
         quizCompleted: true,
+        lessonItemCount: completedLessonItemCount,
+        completedLessonItemCount,
+        quizScore,
       })
       .onConflictDoUpdate({
         target: [
@@ -278,9 +316,32 @@ export class LessonsRepository {
         ],
         set: {
           quizCompleted: true,
+          completedLessonItemCount,
+          quizScore,
         },
       })
       .returning();
+  }
+
+  async getQuizProgress(lessonId: UUIDType, userId: UUIDType) {
+    const [quizProgress] = await this.db
+      .select({
+        quizCompleted: sql<boolean>`
+          CASE
+            WHEN ${studentLessonsProgress.quizCompleted} THEN
+              ${studentLessonsProgress.quizCompleted}
+            ELSE false
+          END`,
+      })
+      .from(studentLessonsProgress)
+      .where(
+        and(
+          eq(studentLessonsProgress.studentId, userId),
+          eq(studentLessonsProgress.lessonId, lessonId),
+        ),
+      );
+
+    return quizProgress;
   }
 
   async getQuestionsIdsByLessonId(

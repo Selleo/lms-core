@@ -333,6 +333,9 @@ export const studentLessonsProgress = pgTable(
       .references(() => lessons.id)
       .notNull(),
     quizCompleted: boolean("quiz_completed"),
+    lessonItemCount: integer("lesson_item_count").notNull(),
+    completedLessonItemCount: integer("completed_lesson_item_count").notNull(),
+    quizScore: integer("quiz_score").notNull().default(0),
   },
   (table) => ({
     unq: unique().on(table.studentId, table.lessonId),

@@ -575,9 +575,13 @@ export class CoursesService {
       if (!enrolledCourse) throw new ConflictException("Course not enrolled");
 
       const quizLessons = await trx
-        .select({ id: lessons.id })
+        .select({
+          id: lessons.id,
+          itemCount: sql<number>`count(${lessonItems.id})`,
+        })
         .from(courseLessons)
         .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+        .leftJoin(lessonItems, eq(lessons.id, lessonItems.lessonId))
         .where(
           and(
             eq(courseLessons.courseId, course.id),
@@ -585,7 +589,8 @@ export class CoursesService {
             eq(lessons.state, "published"),
             eq(lessons.type, "quiz"),
           ),
-        );
+        )
+        .groupBy(lessons.id);
 
       if (quizLessons.length > 0) {
         await trx.insert(studentLessonsProgress).values(
@@ -593,6 +598,8 @@ export class CoursesService {
             studentId: userId,
             lessonId: lesson.id,
             quizCompleted: false,
+            lessonItemCount: lesson.itemCount,
+            completedLessonItemCount: 0,
           })),
         );
       }

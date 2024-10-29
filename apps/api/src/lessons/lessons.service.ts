@@ -79,10 +79,9 @@ export class LessonsService {
       ...lesson,
       imageUrl,
       lessonItems: questionLessonItems,
-      itemsCount: questionLessonItems.length,
-      itemsCompletedCount: completedLessonItems.length,
-      quizScore: questionLessonItems.filter((item) => item.content.passQuestion)
-        .length,
+      itemsCount: lessonProgress.lessonItemCount,
+      itemsCompletedCount: lessonProgress.completedLessonItemCount,
+      quizScore: lessonProgress.quizScore,
     };
   }
 
@@ -95,10 +94,17 @@ export class LessonsService {
         "You don't have assignment to this lesson",
       );
 
-    const lessonItemsCount =
-      await this.lessonsRepository.lessonItemCount(lessonId);
+    const quizProgress = await this.lessonsRepository.getQuizProgress(
+      lessonId,
+      userId,
+    );
 
-    // do poprawy oznaczanie jako zakonczonego
+    if (quizProgress.quizCompleted)
+      throw new ConflictException("Quiz already completed");
+
+    const lessonItemsCount =
+      await this.lessonsRepository.getLessonItemCount(lessonId);
+
     const completedLessonItemsCount =
       await this.lessonsRepository.completedLessonItemsCount(lessonId);
 
@@ -109,9 +115,16 @@ export class LessonsService {
 
     if (!evaluationResult) return false;
 
+    const quizScore = await this.lessonsRepository.getQuizScore(
+      lessonId,
+      userId,
+    );
+
     const updateQuizResult = await this.lessonsRepository.completeQuiz(
       lessonId,
       userId,
+      completedLessonItemsCount.count,
+      quizScore,
     );
 
     if (!updateQuizResult) return false;
@@ -145,22 +158,32 @@ export class LessonsService {
               questionLessonItem.content.questionType,
             )
               .returnType<Promise<boolean>>()
-              .with(
-                P.union("fill_in_the_blanks_text", "fill_in_the_blanks_dnd"),
-                async () => {
-                  const question = questionLessonItem.content;
-                  let passQuestion = true;
+              .with("fill_in_the_blanks_text", async () => {
+                const question = questionLessonItem.content;
+                let passQuestion = true;
 
-                  for (const answer of question.questionAnswers) {
-                    if (answer.optionText != answer.studentAnswerText) {
-                      passQuestion = false;
-                      break;
-                    }
+                for (const answer of question.questionAnswers) {
+                  if (answer.optionText != answer.studentAnswerText) {
+                    passQuestion = false;
+                    break;
                   }
+                }
 
-                  return passQuestion;
-                },
-              )
+                return passQuestion;
+              })
+              .with("fill_in_the_blanks_dnd", async () => {
+                const question = questionLessonItem.content;
+                let passQuestion = true;
+
+                for (const answer of question.questionAnswers) {
+                  if (answer.isStudentAnswer != answer.isCorrect) {
+                    passQuestion = false;
+                    break;
+                  }
+                }
+
+                return passQuestion;
+              })
               .otherwise(async () => {
                 let passQuestion = true;
                 for (const answer of answers) {
@@ -469,17 +492,12 @@ export class LessonsService {
       };
     }
 
-    console.log({ studentAnswers });
-
     const result = questionAnswers.map((answer) => {
-      console.log(answer.position);
-
       return {
         id: answer.id,
         optionText: answer.optionText,
         position: lessonRated && answer.isCorrect ? answer.position : null,
         isStudentAnswer: lessonRated ? answer.isStudentAnswer : null,
-        // studentAnswerText: null,
         studentAnswerText:
           lessonRated && typeof answer.position === "number"
             ? studentAnswers.answer[answer.position]

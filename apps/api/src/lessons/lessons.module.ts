@@ -18,6 +18,6 @@ import { AdminLessonsService } from "./adminLessons.service";
     LessonsRepository,
     AdminLessonsRepository,
   ],
-  exports: [],
+  exports: [LessonsRepository],
 })
 export class LessonsModule {}

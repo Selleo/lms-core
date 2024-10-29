@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   NotAcceptableException,
@@ -17,12 +18,14 @@ import {
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { QuestionType } from "./schema/questionsSchema";
 import { StudentCompletedLessonItemsService } from "src/studentCompletedLessonItem/studentCompletedLessonItems.service";
+import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
 
 @Injectable()
 export class QuestionsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly studentCompletedLessonItemsService: StudentCompletedLessonItemsService,
+    private readonly lessonsRepository: LessonsRepository,
   ) {}
 
   async questionAnswer(answerQuestion: AnswerQuestionSchema, userId: string) {
@@ -35,6 +38,14 @@ export class QuestionsService {
       if (!questionData || !questionData.questionId) {
         throw new NotFoundException("Question not found");
       }
+
+      const quizProgress = await this.lessonsRepository.getQuizProgress(
+        answerQuestion.lessonId,
+        userId,
+      );
+
+      if (quizProgress.quizCompleted)
+        throw new ConflictException("Quiz already completed");
 
       const lastAnswerId = await this.findExistingAnswer(
         trx,
