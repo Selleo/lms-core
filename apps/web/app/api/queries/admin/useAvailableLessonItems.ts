@@ -7,7 +7,7 @@ import { ApiClient } from "~/api/api-client";
 import { GetAvailableLessonItemsResponse } from "~/api/generated-api";
 
 export const availableLessonItems = queryOptions({
-  queryKey: ["available-lesson-items"],
+  queryKey: ["available-lesson-items", "admin"],
   queryFn: async () => {
     const response =
       await ApiClient.api.lessonsControllerGetAvailableLessonItems();

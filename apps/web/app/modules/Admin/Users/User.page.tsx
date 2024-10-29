@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { UpdateUserBody } from "~/api/generated-api";
 import { useAdminUpdateUser } from "~/api/mutations/admin/useAdminUpdateUser";
-import { useUserById } from "~/api/queries/admin/useUserById";
+import { userQueryOptions, useUserById } from "~/api/queries/admin/useUserById";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import Loader from "~/modules/common/Loader/Loader";
 import { UserInfo } from "./UserInfo";
+import { queryClient } from "~/api/queryClient";
 
 const displayedFields: Array<keyof UpdateUserBody> = [
   "firstName",
@@ -41,7 +42,10 @@ const User = () => {
   if (!user) throw new Error("User not found");
 
   const onSubmit = (data: UpdateUserBody) => {
-    updateUser({ data, userId: id });
+    updateUser({ data, userId: id }).then(() => {
+      queryClient.invalidateQueries(userQueryOptions(id));
+      setIsEditing(false);
+    });
     setIsEditing(false);
   };
 

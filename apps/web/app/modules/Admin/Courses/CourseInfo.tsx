@@ -6,6 +6,8 @@ import {
   GetCourseByIdResponse,
   UpdateCourseBody,
 } from "~/api/generated-api";
+import Editor from "~/components/RichText/Editor";
+import Viewer from "~/components/RichText/Viever";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -16,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Textarea } from "~/components/ui/textarea";
 
 export const CourseInfo = memo<{
   name: keyof UpdateCourseBody;
@@ -32,6 +33,9 @@ export const CourseInfo = memo<{
       defaultValue={course[name] as UpdateCourseBody[typeof name]}
       render={({ field }) => {
         if (!isEditing) {
+          if (name === "description") {
+            return <Viewer content={field.value as string} style="prose" />;
+          }
           if (name === "archived") {
             return (
               <span className="font-semibold capitalize">
@@ -113,11 +117,11 @@ export const CourseInfo = memo<{
 
         if (name === "description") {
           return (
-            <Textarea
+            <Editor
+              id="solutionExplanation"
+              content={field.value as string}
+              className="h-32 w-full"
               {...field}
-              value={field.value as string}
-              placeholder="Enter course description"
-              className="resize-none"
             />
           );
         }

@@ -35,6 +35,7 @@ import {
 } from "~/modules/common/SearchFilter/SearchFilter";
 import { CreateNewCategory } from "./CreateNewCategory";
 import { format } from "date-fns";
+import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 
 type TCategory = GetAllCategoriesResponse["data"][number];
 
@@ -99,6 +100,11 @@ const Categories = () => {
       accessorKey: "title",
       header: ({ column }) => (
         <SortButton<TCategory> column={column}>Title</SortButton>
+      ),
+      cell: ({ row }) => (
+        <div className="max-w-md truncate">
+          {formatHtmlString(row.original.title)}
+        </div>
       ),
     },
     {

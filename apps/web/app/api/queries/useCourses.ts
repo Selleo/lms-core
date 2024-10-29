@@ -12,8 +12,10 @@ type CourseParams = {
   userId?: string;
 };
 
+export const ALL_COURSES_QUERY_KEY = ["courses"];
+
 export const allCoursesQueryOptions = (searchParams?: CourseParams) => ({
-  queryKey: ["courses", searchParams],
+  queryKey: [...ALL_COURSES_QUERY_KEY, searchParams],
   queryFn: async () => {
     const response = await ApiClient.api.coursesControllerGetAllCourses({
       page: 1,

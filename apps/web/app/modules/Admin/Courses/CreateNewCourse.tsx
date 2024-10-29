@@ -4,12 +4,13 @@ import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCreateCourse } from "~/api/mutations/useCreateCourse";
-import { allCoursesQueryOptions } from "~/api/queries";
 import {
   categoriesQueryOptions,
   useCategoriesSuspense,
 } from "~/api/queries/useCategories";
+import { ALL_COURSES_QUERY_KEY } from "~/api/queries/useCourses";
 import { queryClient } from "~/api/queryClient";
+import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -95,7 +96,7 @@ export const CreateNewCourse = () => {
       data: { ...values, priceInCents: Number(values.priceInCents) },
     }).then(() => {
       setOpen(false);
-      queryClient.invalidateQueries(allCoursesQueryOptions());
+      queryClient.invalidateQueries({ queryKey: ALL_COURSES_QUERY_KEY });
     });
   };
 
@@ -106,7 +107,7 @@ export const CreateNewCourse = () => {
       <DialogTrigger asChild>
         <Button variant="outline">Create New</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="min-w-[750px]">
         <DialogHeader>
           <DialogTitle>Create New Course</DialogTitle>
           <DialogDescription>
@@ -140,7 +141,12 @@ export const CreateNewCourse = () => {
                     Description
                   </Label>
                   <FormControl>
-                    <Input id="description" {...field} />
+                    <Editor
+                      id="description"
+                      content={field.value}
+                      className="h-32 w-full"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

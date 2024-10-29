@@ -2,7 +2,7 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { ApiClient } from "../../api-client";
 import { GetUserByIdResponse } from "../../generated-api";
 
-export const createUserQueryOptions = (id: string) => ({
+export const userQueryOptions = (id: string) => ({
   queryKey: ["users", "admin", { id }],
   queryFn: async () => {
     const response = await ApiClient.api.usersControllerGetUserById(id);
@@ -12,9 +12,9 @@ export const createUserQueryOptions = (id: string) => ({
 });
 
 export function useUserById(id: string) {
-  return useQuery(createUserQueryOptions(id));
+  return useQuery(userQueryOptions(id));
 }
 
 export function useUserByIdSuspense(id: string) {
-  return useSuspenseQuery(createUserQueryOptions(id));
+  return useSuspenseQuery(userQueryOptions(id));
 }

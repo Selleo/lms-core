@@ -23,9 +23,11 @@ type LessonParams = {
   sort?: LessonSortOption;
 };
 
+export const ALL_LESSONS_QUERY_KEY = ["lessons", "admin"];
+
 export const allLessonsQueryOptions = (searchParams?: LessonParams) =>
   queryOptions({
-    queryKey: ["lessons", "admin", searchParams],
+    queryKey: [...ALL_LESSONS_QUERY_KEY, searchParams],
     queryFn: async () => {
       const response = await ApiClient.api.lessonsControllerGetAllLessons({
         page: 1,

@@ -8,11 +8,14 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React, { startTransition } from "react";
 import { GetAllCoursesResponse } from "~/api/generated-api";
+import { useCategories } from "~/api/queries";
 import {
+  ALL_COURSES_QUERY_KEY,
   allCoursesQueryOptions,
   useCoursesSuspense,
 } from "~/api/queries/useCourses";
@@ -29,16 +32,15 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 import { formatPrice } from "~/lib/formatters/priceFormatter";
 import { cn } from "~/lib/utils";
-import { CreateNewCourse } from "./CreateNewCourse";
-import { useCategories } from "~/api/queries";
 import {
   FilterConfig,
   FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
-import { format } from "date-fns";
+import { CreateNewCourse } from "./CreateNewCourse";
 
 type TCourse = GetAllCoursesResponse["data"][number];
 
@@ -124,6 +126,11 @@ const Courses = () => {
       header: ({ column }) => (
         <SortButton<TCourse> column={column}>Title</SortButton>
       ),
+      cell: ({ row }) => (
+        <div className="max-w-md truncate">
+          {formatHtmlString(row.original.title)}
+        </div>
+      ),
     },
     {
       accessorKey: "author",
@@ -198,7 +205,7 @@ const Courses = () => {
     // TODO: Implement archive functionality
     alert("Not implemented");
     table.resetRowSelection();
-    queryClient.invalidateQueries(allCoursesQueryOptions());
+    queryClient.invalidateQueries({ queryKey: ALL_COURSES_QUERY_KEY });
   };
 
   const handleRowClick = (courseId: string) => {

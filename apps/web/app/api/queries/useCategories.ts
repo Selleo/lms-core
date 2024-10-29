@@ -7,10 +7,12 @@ type CategorySearchParams = {
   archived?: boolean;
 };
 
+export const CATEGORIES_QUERY_KEY = ["categories"];
+
 export const categoriesQueryOptions = (
   searchParams?: CategorySearchParams
 ) => ({
-  queryKey: ["categories", searchParams],
+  queryKey: [...CATEGORIES_QUERY_KEY, searchParams],
   queryFn: async () => {
     const response = await ApiClient.api.categoriesControllerGetAllCategories({
       page: 1,

@@ -4,7 +4,7 @@ import * as z from "zod";
 import { useCreateQuestionItem } from "~/api/mutations/admin/useCreateQuestionItem";
 import { useUpdateQuestionOptions } from "~/api/mutations/admin/useUpdateQuestionOptions";
 import { useCurrentUserSuspense } from "~/api/queries";
-import { allLessonItemsQueryOptions } from "~/api/queries/admin/useAllLessonItems";
+import { ALL_LESSON_ITEMS_QUERY_KEY } from "~/api/queries/admin/useAllLessonItems";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -32,8 +32,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Textarea } from "~/components/ui/textarea";
 import { useState } from "react";
+import Editor from "~/components/RichText/Editor";
 
 const questionFormSchema = z.object({
   questionType: z.enum([
@@ -57,7 +57,7 @@ const answerOptionsSchema = z.object({
       value: z.string().min(1, "Option text is required"),
       isCorrect: z.boolean(),
       position: z.number(),
-    }),
+    })
   ),
 });
 
@@ -73,7 +73,7 @@ export const CreateNewQuestion = ({
 }) => {
   const [step, setStep] = useState<"question" | "options">("question");
   const [createdQuestionId, setCreatedQuestionId] = useState<string | null>(
-    null,
+    null
   );
 
   const { mutateAsync: createQuestion } = useCreateQuestionItem();
@@ -111,7 +111,7 @@ export const CreateNewQuestion = ({
 
       if (values.questionType === "open_answer") {
         onOpenChange(false);
-        queryClient.invalidateQueries(allLessonItemsQueryOptions());
+        queryClient.invalidateQueries({ queryKey: ALL_LESSON_ITEMS_QUERY_KEY });
       } else {
         setStep("options");
       }
@@ -137,7 +137,9 @@ export const CreateNewQuestion = ({
       });
 
       onOpenChange(false);
-      queryClient.invalidateQueries(allLessonItemsQueryOptions());
+      await queryClient.invalidateQueries({
+        queryKey: ALL_LESSON_ITEMS_QUERY_KEY,
+      });
       setStep("question");
       questionForm.reset();
       answerOptionsForm.reset();
@@ -250,7 +252,12 @@ export const CreateNewQuestion = ({
             <FormItem>
               <Label htmlFor="questionBody">Question Body</Label>
               <FormControl>
-                <Textarea id="questionBody" {...field} />
+                <Editor
+                  id="questionBody"
+                  content={field.value}
+                  className="h-32"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -265,7 +272,12 @@ export const CreateNewQuestion = ({
                 Solution Explanation (Optional)
               </Label>
               <FormControl>
-                <Textarea id="solutionExplanation" {...field} />
+                <Editor
+                  id="solutionExplanation"
+                  content={field.value}
+                  className="h-32 w-full"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -301,7 +313,7 @@ export const CreateNewQuestion = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="min-w-[750px]">
         <DialogHeader>
           <DialogTitle>
             {step === "question" ? "Create New Question" : "Add Answer Options"}

@@ -18,11 +18,13 @@ type LessonItemsQueryParams = {
   perPage?: number;
 };
 
+export const ALL_LESSON_ITEMS_QUERY_KEY = ["lesson-items", "admin"];
+
 export const allLessonItemsQueryOptions = (
   searchParams?: LessonItemsQueryParams
 ) =>
   queryOptions({
-    queryKey: ["lesson-items", "admin", searchParams],
+    queryKey: [...ALL_LESSON_ITEMS_QUERY_KEY, searchParams],
     queryFn: async () => {
       const response = await ApiClient.api.lessonsControllerGetAllLessonItems({
         page: 1,

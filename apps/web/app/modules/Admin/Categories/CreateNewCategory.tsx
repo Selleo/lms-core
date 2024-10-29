@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useCreateCategory } from "~/api/mutations/admin/useCreteCategory";
-import { categoriesQueryOptions } from "~/api/queries";
+import { CATEGORIES_QUERY_KEY } from "~/api/queries/useCategories";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import {
@@ -51,7 +51,7 @@ export const CreateNewCategory = () => {
       data: values,
     }).then(() => {
       setOpen(false);
-      queryClient.invalidateQueries(categoriesQueryOptions());
+      queryClient.invalidateQueries({ queryKey: CATEGORIES_QUERY_KEY });
     });
   };
 

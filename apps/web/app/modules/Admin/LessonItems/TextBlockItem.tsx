@@ -1,11 +1,17 @@
+import { capitalize, startCase } from "lodash-es";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { capitalize, startCase } from "lodash-es";
+import {
+  GetLessonItemByIdResponse,
+  UpdateTextBlockItemBody,
+} from "~/api/generated-api";
+import { useUpdateTextBlockItem } from "~/api/mutations/admin/useUpdateTextBlockItem";
+import Editor from "~/components/RichText/Editor";
+import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Textarea } from "~/components/ui/textarea";
-import { Checkbox } from "~/components/ui/checkbox";
 import {
   Select,
   SelectContent,
@@ -13,11 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { useUpdateTextBlockItem } from "~/api/mutations/admin/useUpdateTextBlockItem";
-import {
-  GetLessonItemByIdResponse,
-  UpdateTextBlockItemBody,
-} from "~/api/generated-api";
 
 type TextBlockType = Extract<
   GetLessonItemByIdResponse["data"],
@@ -74,6 +75,9 @@ export const TextBlockItem: React.FC<TextBlockItemProps> = ({
               </span>
             );
           }
+          if (name === "body") {
+            return <Viewer content={field.value as string} style="prose" />;
+          }
           return <span className="font-semibold">{field.value as string}</span>;
         }
 
@@ -99,11 +103,11 @@ export const TextBlockItem: React.FC<TextBlockItemProps> = ({
 
         if (name === "body") {
           return (
-            <Textarea
+            <Editor
+              id="solutionExplanation"
+              content={field.value as string}
+              className="h-32 w-full"
               {...field}
-              value={field.value as string}
-              placeholder={`Enter ${startCase(name)}`}
-              className="resize-none"
             />
           );
         }
