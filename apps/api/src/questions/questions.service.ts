@@ -6,7 +6,7 @@ import {
   NotAcceptableException,
   NotFoundException,
 } from "@nestjs/common";
-import { DatabasePg } from "src/common";
+import { DatabasePg, UUIDType } from "src/common";
 import { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
 import {
   lessonItems,
@@ -44,13 +44,19 @@ export class QuestionsService {
         userId,
       );
 
-      if (quizProgress.quizCompleted)
+      const [lesson] = await trx
+        .select({ lessonType: lessons.type })
+        .from(lessons)
+        .where(eq(lessons.id, answerQuestion.lessonId));
+
+      if (lesson.lessonType === "quiz" && quizProgress.quizCompleted)
         throw new ConflictException("Quiz already completed");
 
       const lastAnswerId = await this.findExistingAnswer(
         trx,
         userId,
         questionData.questionId,
+        questionData.lessonId,
       );
 
       const questionTypeHandlers = {
@@ -122,8 +128,9 @@ export class QuestionsService {
 
   private async findExistingAnswer(
     trx: any,
-    userId: string,
-    questionId: string,
+    userId: UUIDType,
+    questionId: UUIDType,
+    lessonId: UUIDType,
   ): Promise<string | null> {
     const [existingAnswer] = await trx
       .select({
@@ -134,6 +141,7 @@ export class QuestionsService {
         and(
           eq(studentQuestionAnswers.studentId, userId),
           eq(studentQuestionAnswers.questionId, questionId),
+          eq(studentQuestionAnswers.lessonId, lessonId),
         ),
       );
 
@@ -154,10 +162,11 @@ export class QuestionsService {
     if (answerQuestion.answer.length < 1)
       return await this.upsertAnswer(
         trx,
+        questionData.lessonId,
         questionData.questionId,
-        [],
         userId,
         lastAnswerId,
+        [],
       );
 
     const answers: { answer: string }[] = await trx
@@ -191,10 +200,11 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      questionData.lessonId,
       questionData.questionId,
-      studentAnswer,
       userId,
       lastAnswerId,
+      studentAnswer,
     );
   }
 
@@ -218,10 +228,11 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      questionData.lessonId,
       questionData.questionId,
-      studentAnswer,
       userId,
       lastAnswerId,
+      studentAnswer,
     );
   }
 
@@ -249,19 +260,21 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      questionData.lessonId,
       questionData.questionId,
-      studentAnswer,
       userId,
       lastAnswerId,
+      studentAnswer,
     );
   }
 
   private async upsertAnswer(
     trx: any,
-    questionId: string,
+    lessonId: UUIDType,
+    questionId: UUIDType,
+    userId: UUIDType,
+    answerId: UUIDType | null,
     answer: string[],
-    userId: string,
-    answerId: string | null,
   ): Promise<void> {
     const jsonBuildObjectArgs = answer.join(",");
     if (answerId) {
@@ -278,6 +291,7 @@ export class QuestionsService {
       questionId,
       answer: sql`json_build_object(${sql.raw(jsonBuildObjectArgs)})`,
       studentId: userId,
+      lessonId,
     });
   }
 }

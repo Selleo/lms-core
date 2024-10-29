@@ -27,7 +27,7 @@ export class LessonsService {
     private readonly lessonsRepository: LessonsRepository,
   ) {}
 
-  async getLesson(id: string, userId: string, isAdmin?: boolean) {
+  async getLesson(id: UUIDType, userId: UUIDType, isAdmin?: boolean) {
     const [accessCourseLessons] =
       await this.lessonsRepository.checkLessonAssignment(id, userId);
 
@@ -239,6 +239,7 @@ export class LessonsService {
         await this.lessonsRepository.retireQuizProgress(lessonId, userId, trx);
 
         await this.lessonsRepository.removeQuestionsAnswer(
+          lessonId,
           questionIds,
           userId,
           trx,
@@ -257,7 +258,7 @@ export class LessonsService {
     }
   }
 
-  private async getLessonItems(lesson: Lesson, userId: string) {
+  private async getLessonItems(lesson: Lesson, userId: UUIDType) {
     const lessonItemsList = await this.lessonsRepository.getLessonItems(
       lesson.id,
     );
@@ -265,14 +266,15 @@ export class LessonsService {
 
     return await Promise.all(
       validLessonItemsList.map(
-        async (item) => await this.processLessonItem(item, userId, lesson.type),
+        async (item) =>
+          await this.processLessonItem(item, userId, lesson.id, lesson.type),
       ),
     );
   }
 
   private async getLessonQuestions(
     lesson: Lesson,
-    userId: string,
+    userId: UUIDType,
     quizCompleted: boolean,
   ) {
     const questionItemsForLesson =
@@ -299,6 +301,7 @@ export class LessonsService {
           { lessonItemId, displayOrder, lessonItemType, questionData },
           userId,
           lesson.type,
+          lesson.id,
           quizCompleted,
           passQuestion,
         );
@@ -315,7 +318,7 @@ export class LessonsService {
 
   private async getLessonQuestionsToEvaluation(
     lesson: Lesson,
-    userId: string,
+    userId: UUIDType,
     quizCompleted: boolean,
   ) {
     const lessonItemsList = await this.lessonsRepository.getLessonItems(
@@ -334,6 +337,7 @@ export class LessonsService {
           { lessonItemId, displayOrder, lessonItemType, questionData },
           userId,
           lesson.type,
+          lesson.id,
           quizCompleted,
           null,
         );
@@ -350,7 +354,8 @@ export class LessonsService {
 
   private async processLessonItem(
     item: LessonItemWithContentSchema,
-    userId: string,
+    userId: UUIDType,
+    lessonId: UUIDType,
     lessonType: string,
   ): Promise<LessonItemResponse> {
     const content = await match(item)
@@ -364,6 +369,7 @@ export class LessonsService {
             { lessonItemId, displayOrder, lessonItemType, questionData },
             userId,
             lessonType,
+            lessonId,
             false,
             null,
           );
@@ -403,8 +409,9 @@ export class LessonsService {
 
   private async processQuestionItem(
     item: QuestionWithContent,
-    userId: string,
+    userId: UUIDType,
     lessonType: string,
+    lessonId: UUIDType,
     lessonRated: boolean,
     passQuestion: boolean | null,
   ): Promise<QuestionResponse> {
@@ -433,8 +440,9 @@ export class LessonsService {
     if (item.questionData.questionType === "open_answer") {
       const studentAnswer =
         await this.lessonsRepository.getOpenQuestionStudentAnswer(
-          userId,
+          lessonId,
           item.questionData.id,
+          userId,
           lessonType,
           lessonRated,
         );

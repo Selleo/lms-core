@@ -11,6 +11,7 @@ import {
   countDistinct,
   eq,
   ilike,
+  inArray,
   isNotNull,
   isNull,
   like,
@@ -29,6 +30,7 @@ import {
   studentCompletedLessonItems,
   studentCourses,
   studentLessonsProgress,
+  studentQuestionAnswers,
   users,
 } from "../storage/schema";
 import type { CoursesQuery } from "./api/courses.types";
@@ -638,6 +640,43 @@ export class CoursesService {
         .returning();
 
       if (!deletedCourse) throw new ConflictException("Course not unenrolled");
+
+      const courseLessonList = await trx
+        .select({ id: courseLessons.lessonId })
+        .from(courseLessons)
+        .where(eq(courseLessons.courseId, id));
+
+      const courseLessonsIds = courseLessonList.map((l) => l.id);
+
+      await trx
+        .delete(studentLessonsProgress)
+        .where(
+          and(
+            inArray(studentLessonsProgress.lessonId, courseLessonsIds),
+            eq(studentLessonsProgress.studentId, userId),
+          ),
+        )
+        .returning();
+
+      await trx
+        .delete(studentQuestionAnswers)
+        .where(
+          and(
+            inArray(studentQuestionAnswers.lessonId, courseLessonsIds),
+            eq(studentQuestionAnswers.studentId, userId),
+          ),
+        )
+        .returning();
+
+      await trx
+        .delete(studentCompletedLessonItems)
+        .where(
+          and(
+            inArray(studentCompletedLessonItems.lessonId, courseLessonsIds),
+            eq(studentCompletedLessonItems.studentId, userId),
+          ),
+        )
+        .returning();
     });
   }
 

@@ -365,8 +365,9 @@ export class LessonsRepository {
   }
 
   async getOpenQuestionStudentAnswer(
-    userId: UUIDType,
+    lessonId: UUIDType,
     questionId: UUIDType,
+    userId: UUIDType,
     lessonType: string,
     lessonRated: boolean,
   ) {
@@ -387,6 +388,7 @@ export class LessonsRepository {
       .from(studentQuestionAnswers)
       .where(
         and(
+          eq(studentQuestionAnswers.lessonId, lessonId),
           eq(studentQuestionAnswers.questionId, questionId),
           eq(studentQuestionAnswers.studentId, userId),
         ),
@@ -416,6 +418,7 @@ export class LessonsRepository {
   }
 
   async removeQuestionsAnswer(
+    lessonId: UUIDType,
     questionIds: { questionId: string }[],
     userId: UUIDType,
     trx?: PostgresJsDatabase<typeof schema>,
@@ -424,6 +427,7 @@ export class LessonsRepository {
 
     return await dbInstance.delete(studentQuestionAnswers).where(
       and(
+        eq(studentQuestionAnswers.lessonId, lessonId),
         eq(studentQuestionAnswers.studentId, userId),
         inArray(
           studentQuestionAnswers.questionId,
