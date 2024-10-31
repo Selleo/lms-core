@@ -170,6 +170,8 @@ export class AdminLessonsService {
     );
 
     if (!lesson) throw new NotFoundException("Lesson not found");
+
+    return { id: lesson.id };
   }
 
   async updateLesson(id: string, body: UpdateLessonBody) {
