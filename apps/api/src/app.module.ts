@@ -4,7 +4,6 @@ import { ConditionalModule, ConfigModule, ConfigService } from "@nestjs/config";
 import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
 import { JwtModule } from "@nestjs/jwt";
 import { Module } from "@nestjs/common";
-import { UsersModule } from "./users/users.module";
 import * as schema from "./storage/schema";
 import database from "./common/configuration/database";
 import jwtConfig from "./common/configuration/jwt";
@@ -25,6 +24,7 @@ import { QuestionsModule } from "./questions/questions.module";
 import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/studentCompletedLessonItems.module";
 import { S3Module } from "./file/s3.module";
 import { StripeModule } from "./stripe/stripe.module";
+import { UsersModule } from "src/users/users.module";
 
 @Module({
   imports: [

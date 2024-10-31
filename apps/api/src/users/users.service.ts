@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -6,18 +7,22 @@ import {
 } from "@nestjs/common";
 import * as bcrypt from "bcrypt";
 import { and, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
-import { DatabasePg } from "src/common";
+import type { DatabasePg } from "src/common";
 import hashPassword from "src/common/helpers/hashPassword";
-import { credentials, users } from "../storage/schema";
-import { UserRole } from "./schemas/user-roles";
+import { createTokens, credentials, users } from "../storage/schema";
+import type { UserRole } from "./schemas/user-roles";
 import {
-  SortUserFieldsOptions,
-  UsersFilterSchema,
-  UserSortField,
+  type SortUserFieldsOptions,
+  type UsersFilterSchema,
+  type UserSortField,
   UserSortFields,
 } from "./schemas/userQuery";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
+import type { CreateUserBody } from "src/users/schemas/create-user.schema";
+import { nanoid } from "nanoid";
+import { CreatePasswordEmail } from "@repo/email-templates";
+import { EmailService } from "src/common/emails/emails.service";
 
 type UsersQuery = {
   filters?: UsersFilterSchema;
@@ -28,7 +33,10 @@ type UsersQuery = {
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private emailService: EmailService,
+  ) {}
 
   public async getUsers(query: UsersQuery = {}) {
     const {
@@ -193,6 +201,49 @@ export class UsersService {
     if (deletedUsers.length !== ids.length) {
       throw new NotFoundException("Users not found");
     }
+  }
+
+  public async createUser(data: CreateUserBody) {
+    const [existingUser] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.email, data.email));
+
+    if (existingUser) {
+      throw new ConflictException("User already exists");
+    }
+
+    return await this.db.transaction(async (trx) => {
+      const [createdUser] = await trx.insert(users).values(data).returning();
+
+      const token = nanoid(64);
+      const expiryDate = new Date();
+      expiryDate.setHours(expiryDate.getHours() + 24);
+
+      await trx.insert(createTokens).values({
+        userId: createdUser.id,
+        createToken: token,
+        expiryDate,
+      });
+
+      const url = `${process.env.CORS_ORIGIN}/auth/create-new-password?createToken=${token}&email=${createdUser.email}`;
+
+      const { text, html } = new CreatePasswordEmail({
+        name: createdUser.firstName,
+        role: createdUser.role,
+        createPasswordLink: url,
+      });
+
+      await this.emailService.sendEmail({
+        to: createdUser.email,
+        subject: "Welcome to the Platform!",
+        text,
+        html,
+        from: "godfather@selleo.com",
+      });
+
+      return createdUser;
+    });
   }
 
   private getFiltersConditions(filters: UsersFilterSchema) {

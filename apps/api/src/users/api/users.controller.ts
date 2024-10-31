@@ -5,10 +5,11 @@ import {
   ForbiddenException,
   Get,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { Static, Type } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 import {
   baseResponse,
@@ -17,33 +18,41 @@ import {
   PaginatedResponse,
   paginatedResponse,
   UUIDSchema,
+  type UUIDType,
 } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import {
-  CommonUser,
+  type CommonUser,
   commonUserSchema,
 } from "src/common/schemas/common-user.schema";
 import {
-  ChangePasswordBody,
+  type ChangePasswordBody,
   changePasswordSchema,
 } from "../schemas/change-password.schema";
 import {
   deleteUsersSchema,
-  DeleteUsersSchema,
+  type DeleteUsersSchema,
 } from "../schemas/delete-users.schema";
 import {
-  UpdateUserBody,
+  type UpdateUserBody,
   updateUserSchema,
 } from "../schemas/update-user.schema";
 import {
-  AllUsersResponse,
+  type AllUsersResponse,
   allUsersSchema,
-  UserResponse,
+  type UserResponse,
 } from "../schemas/user.schema";
 import { UsersService } from "../users.service";
-import { SortUserFieldsOptions, UsersFilterSchema } from "../schemas/userQuery";
+import type {
+  SortUserFieldsOptions,
+  UsersFilterSchema,
+} from "../schemas/userQuery";
+import {
+  type CreateUserBody,
+  createUserSchema,
+} from "src/users/schemas/create-user.schema";
 
 @Controller("users")
 @UseGuards(RolesGuard)
@@ -191,5 +200,23 @@ export class UsersController {
     await this.usersService.deleteBulkUsers(data.userIds);
 
     return null;
+  }
+
+  @Post("create")
+  @Validate({
+    response: baseResponse(
+      Type.Object({ id: UUIDSchema, message: Type.String() }),
+    ),
+    request: [{ type: "body", schema: createUserSchema }],
+  })
+  async createUser(
+    @Body() data: CreateUserBody,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.usersService.createUser(data);
+
+    return new BaseResponse({
+      id,
+      message: "User created successfully",
+    });
   }
 }
