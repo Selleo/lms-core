@@ -1,19 +1,18 @@
 import { useParams } from "@remix-run/react";
 import { startCase } from "lodash-es";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { UpdateLessonBody } from "~/api/generated-api";
+import type { UpdateLessonBody } from "~/api/generated-api";
 import { useUpdateLesson } from "~/api/mutations/admin/useUpdateLesson";
 import {
   lessonByIdQueryOptions,
   useLessonById,
 } from "~/api/queries/admin/useLessonById";
 import { queryClient } from "~/api/queryClient";
-import { Button } from "~/components/ui/button";
-import { Label } from "~/components/ui/label";
 import Loader from "~/modules/common/Loader/Loader";
 import LessonItemAssigner from "./LessonItemsAssigner/LessonItemAssigner";
-import { LessonInfo } from "./LessonInfo";
+import { LessonDetails } from "./LessonDetails";
+import { Button } from "~/components/ui/button";
+import { Label } from "~/components/ui/label";
 
 const displayedFields: Array<keyof UpdateLessonBody> = [
   "title",
@@ -23,12 +22,12 @@ const displayedFields: Array<keyof UpdateLessonBody> = [
 ];
 
 const Lesson = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams();
+
   if (!id) throw new Error("Lesson ID not found");
 
   const { data: lesson, isLoading } = useLessonById(id);
   const { mutateAsync: updateLesson } = useUpdateLesson();
-  const [isEditing, setIsEditing] = useState(false);
 
   const {
     control,
@@ -36,45 +35,32 @@ const Lesson = () => {
     formState: { isDirty },
   } = useForm<UpdateLessonBody>();
 
-  if (isLoading)
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <Loader />
       </div>
     );
+  }
+
   if (!lesson) throw new Error("Lesson not found");
 
   const onSubmit = (data: UpdateLessonBody) => {
     updateLesson({ data, lessonId: id }).then(() => {
       queryClient.invalidateQueries(lessonByIdQueryOptions(id));
-      setIsEditing(false);
     });
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white rounded-lg h-full p-4"
-      >
+    <div className="flex flex-col">
+      <form onSubmit={handleSubmit(onSubmit)} className="rounded-lg h-full">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl text-neutral-950 font-semibold mb-4">
             Lesson Information
           </h2>
-          {isEditing ? (
-            <div>
-              <Button type="submit" disabled={!isDirty} className="mr-2">
-                Save
-              </Button>
-              <Button type="button" onClick={() => setIsEditing(false)}>
-                Cancel
-              </Button>
-            </div>
-          ) : (
-            <Button type="button" onClick={() => setIsEditing(true)}>
-              Edit
-            </Button>
-          )}
+          <Button type="submit" disabled={!isDirty} className="mr-2">
+            Save
+          </Button>
         </div>
         <div className="space-y-4 pt-4">
           {displayedFields.map((field) => (
@@ -82,12 +68,7 @@ const Lesson = () => {
               <Label className="text-neutral-600 font-normal">
                 {field === "archived" ? "Status" : startCase(field)}
               </Label>
-              <LessonInfo
-                name={field}
-                control={control}
-                isEditing={isEditing}
-                lesson={lesson}
-              />
+              <LessonDetails name={field} control={control} lesson={lesson} />
             </div>
           ))}
         </div>

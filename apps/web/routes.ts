@@ -76,6 +76,7 @@ export const routes: (
       );
       route("lessons", "modules/Admin/Lessons/Lessons.page.tsx");
       route("lessons/:id", "modules/Admin/Lessons/Lesson.page.tsx");
+      route("lessons/new", "modules/Admin/Lessons/CreateNewLesson.page.tsx");
       route("lesson-items", "modules/Admin/LessonItems/LessonItems.page.tsx");
       route(
         "lesson-items/:id",

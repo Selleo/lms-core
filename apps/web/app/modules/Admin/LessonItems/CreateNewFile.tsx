@@ -3,7 +3,7 @@ import { capitalize, startCase } from "lodash-es";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { useCreateFileItem } from "~/api/mutations/admin/useCreteFileItem";
+import { useCreateFileItem } from "~/api/mutations/admin/useCreateFileItem";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCurrentUserSuspense } from "~/api/queries";
 import { ALL_LESSON_ITEMS_QUERY_KEY } from "~/api/queries/admin/useAllLessonItems";

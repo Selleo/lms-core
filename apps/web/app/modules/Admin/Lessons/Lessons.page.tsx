@@ -1,22 +1,30 @@
-import { useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  RowSelectionState,
-  SortingState,
+  type RowSelectionState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
-import { GetAllLessonsResponse } from "~/api/generated-api";
+import type { GetAllLessonsResponse } from "~/api/generated-api";
 import { useAllLessonsSuspense } from "~/api/queries/admin/useAllLessons";
 import SortButton from "~/components/TableSortButton/TableSortButton";
+import { cn } from "~/lib/utils";
+import {
+  type FilterConfig,
+  type FilterValue,
+  SearchFilter,
+} from "~/modules/common/SearchFilter/SearchFilter";
+import { format } from "date-fns";
+import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -25,15 +33,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { cn } from "~/lib/utils";
-import { CreateNewLesson } from "./CreateNewLesson";
-import {
-  FilterConfig,
-  FilterValue,
-  SearchFilter,
-} from "~/modules/common/SearchFilter/SearchFilter";
-import { format } from "date-fns";
-import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 
 type TLesson = GetAllLessonsResponse["data"][number];
 
@@ -176,7 +175,9 @@ const Lessons = () => {
   return (
     <div className="flex flex-col">
       <div className="flex justify-between items-center gap-2">
-        <CreateNewLesson />
+        <Link to="new">
+          <Button variant="outline">Create New</Button>
+        </Link>
         <SearchFilter
           filters={filterConfig}
           values={searchParams}
@@ -211,7 +212,7 @@ const Lessons = () => {
                 <TableHead key={header.id}>
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableHead>
               ))}
