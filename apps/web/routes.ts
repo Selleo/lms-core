@@ -1,4 +1,4 @@
-import {
+import type {
   DefineRouteFunction,
   RouteManifest,
 } from "@remix-run/dev/dist/config/routes";
@@ -65,6 +65,7 @@ export const routes: (
       route("courses", "modules/Admin/Courses/Courses.page.tsx", {
         index: true,
       });
+      route("courses/new", "modules/Admin/Courses/CreateNewCourse.page.tsx");
       route("courses/:id", "modules/Admin/Courses/Course.page.tsx");
       route("users", "modules/Admin/Users/Users.page.tsx");
       route("users/:id", "modules/Admin/Users/User.page.tsx");

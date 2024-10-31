@@ -1,16 +1,12 @@
 import { capitalize, startCase } from "lodash-es";
 import { memo } from "react";
-import { Control, Controller } from "react-hook-form";
-import {
+import { type Control, Controller } from "react-hook-form";
+import type {
   GetAllCategoriesResponse,
   GetCourseByIdResponse,
   UpdateCourseBody,
 } from "~/api/generated-api";
 import Editor from "~/components/RichText/Editor";
-import Viewer from "~/components/RichText/Viever";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -18,50 +14,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Label } from "~/components/ui/label";
+import { Input } from "~/components/ui/input";
 
-export const CourseInfo = memo<{
+export const CourseDetails = memo<{
   name: keyof UpdateCourseBody;
   control: Control<UpdateCourseBody>;
-  isEditing: boolean;
   course: GetCourseByIdResponse["data"];
   categories: GetAllCategoriesResponse["data"];
-}>(({ name, control, isEditing, course, categories }) => {
+}>(({ name, control, course, categories }) => {
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={course[name] as UpdateCourseBody[typeof name]}
       render={({ field }) => {
-        if (!isEditing) {
-          if (name === "description") {
-            return <Viewer content={field.value as string} style="prose" />;
-          }
-          if (name === "archived") {
-            return (
-              <span className="font-semibold capitalize">
-                {course[name] ? "Archived" : "Active"}
-              </span>
-            );
-          }
-          if (name === "currency") {
-            return (
-              <span className="font-semibold uppercase">{course[name]}</span>
-            );
-          }
-          if (name === "categoryId") {
-            return (
-              <span className="font-semibold uppercase">
-                {course["category"]}
-              </span>
-            );
-          }
-          return (
-            <span className="font-semibold capitalize">
-              {course[name]?.toString()}
-            </span>
-          );
-        }
-
         if (name === "categoryId") {
           return (
             <Select

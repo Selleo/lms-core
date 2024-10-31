@@ -1,18 +1,18 @@
-import { useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  RowSelectionState,
-  SortingState,
+  type RowSelectionState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React, { startTransition } from "react";
-import { GetAllCoursesResponse } from "~/api/generated-api";
+import type { GetAllCoursesResponse } from "~/api/generated-api";
 import { useCategories } from "~/api/queries";
 import {
   ALL_COURSES_QUERY_KEY,
@@ -40,12 +40,12 @@ import {
   FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
-import { CreateNewCourse } from "./CreateNewCourse";
 
 type TCourse = GetAllCoursesResponse["data"][number];
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(allCoursesQueryOptions());
+
   return null;
 };
 
@@ -215,7 +215,9 @@ const Courses = () => {
   return (
     <div className="flex flex-col">
       <div className="flex justify-between items-center gap-2">
-        <CreateNewCourse />
+        <Link to="new">
+          <Button variant="outline">Create New</Button>
+        </Link>
         <SearchFilter
           filters={filterConfig}
           values={searchParams}
@@ -250,7 +252,7 @@ const Courses = () => {
                 <TableHead key={header.id}>
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableHead>
               ))}
