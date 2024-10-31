@@ -698,8 +698,14 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCategoryResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -3093,6 +3099,30 @@
         },
         "required": [
           "title"
+        ]
+      },
+      "CreateCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "UpdateCategoryBody": {

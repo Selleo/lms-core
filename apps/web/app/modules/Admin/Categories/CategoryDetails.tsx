@@ -1,39 +1,23 @@
 import { memo } from "react";
-import { Control, Controller } from "react-hook-form";
-import {
+import { type Control, Controller } from "react-hook-form";
+import type {
   GetCategoryByIdResponse,
   UpdateCategoryBody,
 } from "~/api/generated-api";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 
-export const CategoryInfo = memo<{
+export const CategoryDetails = memo<{
   name: keyof UpdateCategoryBody;
   control: Control<UpdateCategoryBody>;
-  isEditing: boolean;
   category: GetCategoryByIdResponse["data"];
-}>(({ name, control, isEditing, category }) => {
+}>(({ name, control, category }) => {
   return (
     <Controller
       name={name}
       control={control}
       defaultValue={category[name] as UpdateCategoryBody[typeof name]}
       render={({ field }) => {
-        if (!isEditing) {
-          if (name === "archived") {
-            return (
-              <span className="font-semibold capitalize">
-                {category[name] ? "Archived" : "Active"}
-              </span>
-            );
-          }
-          return (
-            <span className="font-semibold capitalize">
-              {category[name]?.toString()}
-            </span>
-          );
-        }
-
         if (name === "archived") {
           return (
             <div className="flex items-center space-x-2">
