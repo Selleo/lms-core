@@ -20,6 +20,7 @@ import {
   nullResponse,
   PaginatedResponse,
   UUIDSchema,
+  type UUIDType,
 } from "src/common";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { CoursesService } from "../courses.service";
@@ -29,7 +30,7 @@ import {
   type SortCourseFieldsOptions,
 } from "../schemas/courseQuery";
 import {
-  CreateCourseBody,
+  type CreateCourseBody,
   createCourseSchema,
 } from "../schemas/createCourse.schema";
 import {
@@ -38,7 +39,7 @@ import {
 } from "../schemas/showCourseCommon.schema";
 import { allCoursesValidation } from "./validations";
 import {
-  UpdateCourseBody,
+  type UpdateCourseBody,
   updateCourseSchema,
 } from "../schemas/updateCourse.schema";
 import { RolesGuard } from "src/common/guards/roles.guard";
@@ -190,14 +191,20 @@ export class CoursesController {
   @Post()
   @Validate({
     request: [{ type: "body", schema: createCourseSchema }],
-    response: baseResponse(Type.Object({ message: Type.String() })),
+    response: baseResponse(
+      Type.Object({ id: UUIDSchema, message: Type.String() }),
+    ),
   })
   async createCourse(
     @Body() createCourseBody: CreateCourseBody,
     @CurrentUser("userId") currentUserId: string,
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.coursesService.createCourse(createCourseBody, currentUserId);
-    return new BaseResponse({ message: "Course enrolled successfully" });
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.coursesService.createCourse(
+      createCourseBody,
+      currentUserId,
+    );
+
+    return new BaseResponse({ id, message: "Course created successfully" });
   }
 
   @Patch(":id")

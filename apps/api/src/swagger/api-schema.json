@@ -3812,11 +3812,16 @@
           "data": {
             "type": "object",
             "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
               "message": {
                 "type": "string"
               }
             },
             "required": [
+              "id",
               "message"
             ]
           }
