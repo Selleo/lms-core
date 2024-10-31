@@ -27,4 +27,8 @@ export {
   useStudentCourses,
   useStudentCoursesSuspense,
 } from "./useStudentCourses";
-export { useAllUsers, useAllUsersSuspense } from "./useUsers";
+export {
+  useAllUsers,
+  useAllUsersSuspense,
+  usersQueryOptions,
+} from "./useUsers";
