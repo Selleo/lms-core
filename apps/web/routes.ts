@@ -69,6 +69,7 @@ export const routes: (
       route("courses/:id", "modules/Admin/Courses/Course.page.tsx");
       route("users", "modules/Admin/Users/Users.page.tsx");
       route("users/:id", "modules/Admin/Users/User.page.tsx");
+      route("users/new", "modules/Admin/Users/CreateNewUser.page.tsx");
       route("categories", "modules/Admin/Categories/Categories.page.tsx");
       route("categories/:id", "modules/Admin/Categories/Category.page.tsx");
       route(

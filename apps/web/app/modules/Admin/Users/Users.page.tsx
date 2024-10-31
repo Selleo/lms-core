@@ -1,17 +1,17 @@
-import { useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  RowSelectionState,
-  SortingState,
+  type RowSelectionState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
-import { GetUsersResponse } from "~/api/generated-api";
+import type { GetUsersResponse } from "~/api/generated-api";
 import { useBulkDeleteUsers } from "~/api/mutations/admin/useBulkDeleteUsers";
 import { useAllUsersSuspense, usersQueryOptions } from "~/api/queries/useUsers";
 import { queryClient } from "~/api/queryClient";
@@ -28,10 +28,9 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { cn } from "~/lib/utils";
-import { CreateNewUser } from "./CreateNewUser";
 import {
-  FilterConfig,
-  FilterValue,
+  type FilterConfig,
+  type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
 import { format } from "date-fns";
@@ -186,7 +185,9 @@ const Users = () => {
   return (
     <div className="flex flex-col">
       <div className="flex justify-between items-center gap-2">
-        <CreateNewUser />
+        <Link to="new">
+          <Button variant="outline">Create new</Button>
+        </Link>
         <SearchFilter
           filters={filterConfig}
           values={searchParams}
@@ -221,7 +222,7 @@ const Users = () => {
                 <TableHead key={header.id}>
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableHead>
               ))}
