@@ -2,7 +2,7 @@ export { useChangePassword } from "./useChangePassword";
 export { useClearQuizProgress } from "./useClearQuizProgress";
 export { useCreateCourse } from "./useCreateCourse";
 export { useCreateNewPassword } from "./useCreateNewPassword";
-export { useCreateUser } from "./useCreateUser";
+export { useCreateUser } from "./admin/useCreateUser";
 export { useDeleteLessonItem } from "./useDeleteLessonItem";
 export { useEnrollCourse } from "./useEnrollCourse";
 export { useLoginUser } from "./useLoginUser";

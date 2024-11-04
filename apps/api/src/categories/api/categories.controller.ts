@@ -19,23 +19,23 @@ import {
   type UUIDType,
 } from "src/common";
 import { CurrentUser } from "src/common/decorators/user.decorator";
-import { UserRole } from "src/users/schemas/user-roles";
+import type { UserRole } from "src/users/schemas/user-roles";
 import { CategoriesService } from "../categories.service";
 import {
-  AllCategoriesResponse,
-  CategorySchema,
+  type AllCategoriesResponse,
+  type CategorySchema,
   categorySchema,
 } from "../schemas/category.schema";
 import {
-  SortCategoryFieldsOptions,
+  type SortCategoryFieldsOptions,
   sortCategoryFieldsOptions,
 } from "../schemas/categoryQuery";
 import {
-  CreateCategoryBody,
+  type CreateCategoryBody,
   createCategorySchema,
 } from "../schemas/createCategorySchema";
 import {
-  UpdateCategoryBody,
+  type UpdateCategoryBody,
   updateCategorySchema,
 } from "../schemas/updateCategorySchema";
 
@@ -108,7 +108,7 @@ export class CategoriesController {
     const { id } =
       await this.categoriesService.createCategory(createCategoryBody);
 
-    return new BaseResponse({ id: id, message: "Category created" });
+    return new BaseResponse({ id, message: "Category created" });
   }
 
   @Patch(":id")

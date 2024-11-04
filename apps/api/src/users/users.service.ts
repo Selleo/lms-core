@@ -239,7 +239,7 @@ export class UsersService {
         subject: "Welcome to the Platform!",
         text,
         html,
-        from: "godfather@selleo.com",
+        from: process.env.SES_EMAIL || "",
       });
 
       return createdUser;

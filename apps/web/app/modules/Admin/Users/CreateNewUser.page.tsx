@@ -22,7 +22,7 @@ import {
 import { CreatePageHeader } from "~/modules/Admin/components";
 import { queryClient } from "~/api/queryClient";
 import { ALL_COURSES_QUERY_KEY } from "~/api/queries/useCourses";
-import { useCreateUser } from "~/api/mutations/useCreateUser";
+import { useCreateUser } from "~/api/mutations/admin/useCreateUser";
 import { useNavigate } from "@remix-run/react";
 
 const formSchema = z.object({

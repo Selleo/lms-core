@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GetAllLessonsResponse } from "~/api/generated-api";
+import Viewer from "~/components/RichText/Viever";
 
 type TransformedLesson = GetAllLessonsResponse["data"][number] & {
   columnId: string;
@@ -30,9 +31,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
       <img src={lesson.imageUrl} alt="" className="w-16 h-16 rounded-md" />
       <div>
         <h4 className="font-medium">{lesson.title}</h4>
-        <p className="text-sm text-gray-600 line-clamp-4">
-          {lesson.description}
-        </p>
+        <Viewer content={lesson.description} />
       </div>
     </div>
   );

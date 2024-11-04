@@ -203,6 +203,7 @@ export class UsersController {
   }
 
   @Post("create")
+  @Roles("admin")
   @Validate({
     response: baseResponse(
       Type.Object({ id: UUIDSchema, message: Type.String() }),
