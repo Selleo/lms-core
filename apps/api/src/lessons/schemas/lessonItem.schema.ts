@@ -2,17 +2,17 @@ import { Static, Type } from "@sinclair/typebox";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { UUIDSchema } from "src/common";
 import { files, questions, textBlocks } from "src/storage/schema";
-import { LESSON_ITEM_TYPES } from "../const/lessonItems.const";
+import { LESSON_ITEM_TYPES } from "../lessonItems.type";
 
 export const lessonItemToAdd = Type.Object({
   id: UUIDSchema,
-  type: Type.String({ pattern: `^(${LESSON_ITEM_TYPES.join("|")})$` }),
+  type: Type.Union(LESSON_ITEM_TYPES.map((type) => Type.Literal(type))),
   displayOrder: Type.Number(),
 });
 
 export const lessonItemToRemove = Type.Object({
   id: UUIDSchema,
-  type: Type.String({ pattern: `^(${LESSON_ITEM_TYPES.join("|")})$` }),
+  type: Type.Union(LESSON_ITEM_TYPES.map((type) => Type.Literal(type))),
 });
 
 export const questionAnswerOptionsSchema = Type.Object({

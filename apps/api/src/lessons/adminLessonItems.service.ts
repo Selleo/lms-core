@@ -26,7 +26,7 @@ import type {
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { AdminLessonItemsRepository } from "./repositories/adminLessonItems.repository";
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
-import { LessonItemType } from "./const/lessonItems.const";
+import { LessonItemType } from "./lessonItems.type";
 
 type GetLessonItemsQuery = {
   type?: LessonItemType;
