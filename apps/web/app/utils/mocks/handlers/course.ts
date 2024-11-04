@@ -57,6 +57,7 @@ const availableCoursesHandler = withSearchParams(
 );
 
 export const handlers = [
+  http.get("/api/courses", availableCoursesHandler),
   http.get("/api/courses/available-courses", availableCoursesHandler),
   http.get("/api/courses/get-student-courses", () => {
     return HttpResponse.json(studentCourses);

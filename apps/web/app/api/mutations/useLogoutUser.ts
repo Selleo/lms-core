@@ -1,6 +1,6 @@
 import { useAuthStore } from "./../../modules/Auth/authStore";
 import { useMutation } from "@tanstack/react-query";
-import { ApiClient } from "../api-client";
+import { requestManager, ApiClient } from "../api-client";
 import { useToast } from "~/components/ui/use-toast";
 import { AxiosError } from "axios";
 import { queryClient } from "../queryClient";
@@ -13,13 +13,15 @@ export function useLogoutUser() {
 
   return useMutation({
     mutationFn: async () => {
+      requestManager.abortAll();
+
       const response = await ApiClient.api.authControllerLogout();
       setLoggedIn(false);
       return response.data;
     },
     onSuccess: () => {
       queryClient.clear();
-      navigate("/");
+      navigate("/auth/login");
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
