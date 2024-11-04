@@ -42,13 +42,13 @@ export const TextBlank = ({
     studentAnswer?.isCorrect && studentAnswer.isStudentAnswer;
 
   const textBlankClasses = cn(
-    "bg-transparent border-dashed border-b mx-1.5 w-20 border-b-black focus:ring-0 focus:outline-none",
+    "bg-transparent border-dashed border-b mx-1.5 w-20 focus:ring-0 focus:outline-none text-primary-700 border-b-primary-700",
     {
       "border-b-success-500 text-success-500":
         isQuiz && isCorrectAnswer && studentAnswer?.isStudentAnswer,
       "border-b-error-500 text-error-500":
         isQuiz && studentAnswer?.isCorrect && !studentAnswer?.isStudentAnswer,
-    },
+    }
   );
 
   const isDisabled =
