@@ -1,11 +1,12 @@
 import { QueryClient } from "@tanstack/react-query";
-import { isAxiosError, isCancel } from "axios";
+import { isAxiosError } from "axios";
+import { isSilentError } from "./types";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry(failureCount, error: unknown) {
-        if (isCancel(error)) return false;
+        if (isSilentError(error)) return false;
 
         if (isAxiosError(error)) {
           if (error.response?.status === 401) return false;
@@ -18,7 +19,7 @@ export const queryClient = new QueryClient({
     },
     mutations: {
       retry(failureCount, error: unknown) {
-        if (isCancel(error)) return false;
+        if (isSilentError(error)) return false;
 
         if (isAxiosError(error)) {
           if (error.response?.status === 401) return false;

@@ -1,7 +1,6 @@
 import { useAuthStore } from "~/modules/Auth/authStore";
 import { API } from "./generated-api";
-
-const isTestEnv = process.env.NODE_ENV === "test";
+import { AuthenticationError } from "./types";
 
 export const ApiClient = new API({
   baseURL: import.meta.env.VITE_API_URL,
@@ -15,10 +14,8 @@ ApiClient.instance.interceptors.request.use((config) => {
     config.url?.includes("/refresh") ||
     config.url?.includes("/register");
 
-  if (!isTestEnv && !isAuthEndpoint && !useAuthStore.getState().isLoggedIn) {
-    const controller = new AbortController();
-    controller.abort();
-    config.signal = controller.signal;
+  if (!isAuthEndpoint && !useAuthStore.getState().isLoggedIn) {
+    throw new AuthenticationError("User not authenticated", "unauthenticated");
   }
 
   return config;
@@ -34,6 +31,7 @@ ApiClient.instance.interceptors.response.use(
         return ApiClient.instance(error.config);
       } catch {
         useAuthStore.getState().setLoggedIn(false);
+        throw new AuthenticationError("Session expired", "unauthorized");
       }
     }
     return Promise.reject(error);
