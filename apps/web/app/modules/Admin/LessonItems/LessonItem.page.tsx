@@ -46,11 +46,7 @@ const LessonItem = () => {
     }
   };
 
-  return (
-    <div className="bg-white rounded-lg shadow-md p-6 max-w-4xl mx-auto">
-      {renderLessonItem()}
-    </div>
-  );
+  return <div className="p-6 mx-auto">{renderLessonItem()}</div>;
 };
 
 export default LessonItem;

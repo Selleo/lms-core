@@ -81,6 +81,18 @@ export const routes: (
       route("lessons/new", "modules/Admin/Lessons/CreateNewLesson.page.tsx");
       route("lesson-items", "modules/Admin/LessonItems/LessonItems.page.tsx");
       route(
+        "lesson-items/new-file",
+        "modules/Admin/LessonItems/CreateNewFile.page.tsx",
+      );
+      route(
+        "lesson-items/new-text-block",
+        "modules/Admin/LessonItems/CreateNewTextBlock.page.tsx",
+      );
+      route(
+        "lesson-items/new-question",
+        "modules/Admin/LessonItems/CreateNewQuestion.page.tsx",
+      );
+      route(
         "lesson-items/:id",
         "modules/Admin/LessonItems/LessonItem.page.tsx",
       );

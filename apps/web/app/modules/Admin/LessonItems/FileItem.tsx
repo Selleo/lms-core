@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { capitalize, startCase } from "lodash-es";
 import { Button } from "~/components/ui/button";
@@ -12,7 +11,8 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { useUpdateFileItem } from "~/api/mutations/admin/useUpdateFileItem";
-import { UpdateFileItemBody } from "~/api/generated-api";
+import type { UpdateFileItemBody } from "~/api/generated-api";
+import type { FC } from "react";
 
 interface FileItemProps {
   id: string;
@@ -25,12 +25,7 @@ interface FileItemProps {
   onUpdate: () => void;
 }
 
-export const FileItem: React.FC<FileItemProps> = ({
-  id,
-  initialData,
-  onUpdate,
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
+export const FileItem: FC<FileItemProps> = ({ id, initialData, onUpdate }) => {
   const { mutateAsync: updateFileItem } = useUpdateFileItem();
 
   const {
@@ -44,7 +39,6 @@ export const FileItem: React.FC<FileItemProps> = ({
   const onSubmit = (data: UpdateFileItemBody) => {
     updateFileItem({ data, fileId: id }).then(() => {
       onUpdate();
-      setIsEditing(false);
     });
   };
 
@@ -53,14 +47,6 @@ export const FileItem: React.FC<FileItemProps> = ({
       name={name}
       control={control}
       render={({ field }) => {
-        if (!isEditing) {
-          if (name === "url")
-            return (
-              <span className="font-semibold line-clamp-1">{field.value}</span>
-            );
-          return <span className="font-semibold">{field.value}</span>;
-        }
-
         if (name === "state") {
           return (
             <Select
@@ -97,18 +83,9 @@ export const FileItem: React.FC<FileItemProps> = ({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">File Item</h2>
-        {isEditing ? (
-          <div>
-            <Button type="submit" disabled={!isDirty} className="mr-2">
-              Save
-            </Button>
-            <Button variant="outline" onClick={() => setIsEditing(false)}>
-              Cancel
-            </Button>
-          </div>
-        ) : (
-          <Button onClick={() => setIsEditing(true)}>Edit</Button>
-        )}
+        <Button type="submit" disabled={!isDirty} className="mr-2">
+          Save
+        </Button>
       </div>
       <div className="space-y-4">
         {(["title", "type", "url", "state"] as const).map((field) => (

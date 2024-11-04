@@ -519,6 +519,7 @@ export class LessonsController {
     @Body() body: UpdateFileBody,
   ): Promise<BaseResponse<{ message: string }>> {
     await this.adminLessonItemsService.updateFileItem(id, body);
+
     return new BaseResponse({ message: "File updated successfully" });
   }
 
@@ -543,9 +544,13 @@ export class LessonsController {
   async createTextBlock(
     @Body() body: TextBlockInsertType,
     @CurrentUser("userId") userId: string,
-  ): Promise<BaseResponse<{id: UUIDType; message: string }>> {
-    const { id } = await this.adminLessonItemsService.createTextBlock(body, userId);
-    return new BaseResponse({id, message: "Text block created successfully" });
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonItemsService.createTextBlock(
+      body,
+      userId,
+    );
+
+    return new BaseResponse({ id, message: "Text block created successfully" });
   }
 
   @Post("create-question")

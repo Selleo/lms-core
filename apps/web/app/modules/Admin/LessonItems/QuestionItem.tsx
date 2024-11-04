@@ -1,6 +1,6 @@
 import { isEqual, startCase } from "lodash-es";
-import { useEffect, useState } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useEffect } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { useUpdateQuestionItem } from "~/api/mutations/admin/useUpdateQuestionItem";
 import { useUpdateQuestionOptions } from "~/api/mutations/admin/useUpdateQuestionOptions";
 import {
@@ -10,8 +10,8 @@ import {
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
-import { QuestionItemProps } from "./question/types";
-import { UpdateQuestionItemBody } from "~/api/generated-api";
+import type { QuestionItemProps } from "./question/types";
+import type { UpdateQuestionItemBody } from "~/api/generated-api";
 import { QuestionField } from "./question/QuestionField";
 import { AnswerOptions } from "./question/AnswerOptions";
 
@@ -20,7 +20,6 @@ export const QuestionItem = ({
   initialData,
   onUpdate,
 }: QuestionItemProps) => {
-  const [isEditing, setIsEditing] = useState(false);
   const { mutateAsync: updateQuestionItem } = useUpdateQuestionItem();
   const { mutateAsync: updateAnswerOptions } = useUpdateQuestionOptions();
   const { data: questionOptions } = useQuestionOptions(id);
@@ -45,7 +44,7 @@ export const QuestionItem = ({
   const questionType = watch("questionType");
 
   useEffect(() => {
-    if (questionOptions && !isEditing) {
+    if (questionOptions) {
       const sortedOptions = questionOptions
         .sort((a, b) => a.position - b.position)
         .map((option) => ({
@@ -61,7 +60,7 @@ export const QuestionItem = ({
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questionOptions, id, isEditing, fieldArray.replace]);
+  }, [questionOptions, id, fieldArray.replace]);
 
   useEffect(() => {
     if (questionType === "open_answer") {
@@ -91,7 +90,6 @@ export const QuestionItem = ({
 
       onUpdate();
       queryClient.invalidateQueries(questionQueryOptions(id));
-      setIsEditing(false);
     } catch (error) {
       console.error("Error updating question:", error);
     }
@@ -101,18 +99,9 @@ export const QuestionItem = ({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">Question Item</h2>
-        {isEditing ? (
-          <div>
-            <Button type="submit" disabled={!isDirty} className="mr-2">
-              Save
-            </Button>
-            <Button variant="outline" onClick={() => setIsEditing(false)}>
-              Cancel
-            </Button>
-          </div>
-        ) : (
-          <Button onClick={() => setIsEditing(true)}>Edit</Button>
-        )}
+        <Button type="submit" disabled={!isDirty} className="mr-2">
+          Save
+        </Button>
       </div>
       <div className="space-y-4">
         {(
@@ -128,16 +117,12 @@ export const QuestionItem = ({
             <Label htmlFor={field}>
               {field === "archived" ? "Status" : startCase(field)}
             </Label>
-            <QuestionField
-              name={field}
-              control={control}
-              isEditing={isEditing}
-            />
+            <QuestionField name={field} control={control} isEditing />
           </div>
         ))}
         <AnswerOptions
           questionType={questionType}
-          isEditing={isEditing}
+          isEditing
           control={control}
           fieldArray={fieldArray}
           id={id}

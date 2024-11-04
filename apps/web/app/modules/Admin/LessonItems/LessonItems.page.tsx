@@ -1,11 +1,11 @@
-import { useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  RowSelectionState,
-  SortingState,
+  type RowSelectionState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns";
@@ -14,7 +14,7 @@ import { Trash } from "lucide-react";
 import { useState, useTransition } from "react";
 import { GetAllLessonItemsResponse } from "~/api/generated-api";
 import {
-  LessonItemType,
+  type LessonItemType,
   useAllLessonItemsSuspense,
 } from "~/api/queries/admin/useAllLessonItems";
 import SortButton from "~/components/TableSortButton/TableSortButton";
@@ -38,13 +38,10 @@ import {
 import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 import { cn } from "~/lib/utils";
 import {
-  FilterConfig,
-  FilterValue,
+  type FilterConfig,
+  type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
-import { CreateNewFile } from "./CreateNewFile";
-import { CreateNewQuestion } from "./CreateNewQuestion";
-import { CreateNewTextBlock } from "./CreateNewTextBlock";
 
 type TLessonItem = GetAllLessonItemsResponse["data"][number];
 
@@ -52,9 +49,6 @@ const LessonItems = () => {
   const navigate = useNavigate();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [textBlockDialogOpen, setTextBlockDialogOpen] = useState(false);
-  const [questionDialogOpen, setQuestionDialogOpen] = useState(false);
-  const [fileDialogOpen, setFileDialogOpen] = useState(false);
   const [searchParams, setSearchParams] = useState<{
     title?: string;
     type?: LessonItemType;
@@ -213,15 +207,15 @@ const LessonItems = () => {
             <Button>Create New</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem onSelect={() => setTextBlockDialogOpen(true)}>
-              Text Block
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setQuestionDialogOpen(true)}>
-              Question
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={() => setFileDialogOpen(true)}>
-              File
-            </DropdownMenuItem>
+            <Link to="new-text-block">
+              <DropdownMenuItem>Text Block</DropdownMenuItem>
+            </Link>
+            <Link to="new-question">
+              <DropdownMenuItem>Question</DropdownMenuItem>
+            </Link>
+            <Link to="new-file">
+              <DropdownMenuItem>File</DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
 
@@ -260,7 +254,7 @@ const LessonItems = () => {
                 <TableHead key={header.id}>
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableHead>
               ))}
@@ -284,21 +278,6 @@ const LessonItems = () => {
           ))}
         </TableBody>
       </Table>
-      {textBlockDialogOpen && (
-        <CreateNewTextBlock
-          open={textBlockDialogOpen}
-          onOpenChange={setTextBlockDialogOpen}
-        />
-      )}
-      {questionDialogOpen && (
-        <CreateNewQuestion
-          open={questionDialogOpen}
-          onOpenChange={setQuestionDialogOpen}
-        />
-      )}
-      {fileDialogOpen && (
-        <CreateNewFile open={fileDialogOpen} onOpenChange={setFileDialogOpen} />
-      )}
     </div>
   );
 };
