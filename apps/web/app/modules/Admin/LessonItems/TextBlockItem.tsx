@@ -1,13 +1,11 @@
 import { capitalize, startCase } from "lodash-es";
-import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
+import type {
   GetLessonItemByIdResponse,
   UpdateTextBlockItemBody,
 } from "~/api/generated-api";
 import { useUpdateTextBlockItem } from "~/api/mutations/admin/useUpdateTextBlockItem";
 import Editor from "~/components/RichText/Editor";
-import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
@@ -19,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import type { FC } from "react";
 
 type TextBlockType = Extract<
   GetLessonItemByIdResponse["data"],
@@ -31,12 +30,11 @@ interface TextBlockItemProps {
   onUpdate: () => void;
 }
 
-export const TextBlockItem: React.FC<TextBlockItemProps> = ({
+export const TextBlockItem: FC<TextBlockItemProps> = ({
   id,
   initialData,
   onUpdate,
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
   const { mutateAsync: updateTextBlockItem } = useUpdateTextBlockItem();
 
   const {
@@ -58,7 +56,6 @@ export const TextBlockItem: React.FC<TextBlockItemProps> = ({
       textBlockId: id,
     }).then(() => {
       onUpdate();
-      setIsEditing(false);
     });
   };
 
@@ -67,20 +64,6 @@ export const TextBlockItem: React.FC<TextBlockItemProps> = ({
       name={name}
       control={control}
       render={({ field }) => {
-        if (!isEditing) {
-          if (name === "archived") {
-            return (
-              <span className="font-semibold">
-                {field.value ? "Archived" : "Active"}
-              </span>
-            );
-          }
-          if (name === "body") {
-            return <Viewer content={field.value as string} style="prose" />;
-          }
-          return <span className="font-semibold">{field.value as string}</span>;
-        }
-
         if (name === "state") {
           return (
             <Select
@@ -146,18 +129,9 @@ export const TextBlockItem: React.FC<TextBlockItemProps> = ({
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-gray-900">Text Block Item</h2>
-        {isEditing ? (
-          <div>
-            <Button type="submit" disabled={!isDirty} className="mr-2">
-              Save
-            </Button>
-            <Button variant="outline" onClick={() => setIsEditing(false)}>
-              Cancel
-            </Button>
-          </div>
-        ) : (
-          <Button onClick={() => setIsEditing(true)}>Edit</Button>
-        )}
+        <Button type="submit" disabled={!isDirty} className="mr-2">
+          Save
+        </Button>
       </div>
       <div className="space-y-4">
         {(["title", "body", "state", "archived"] as const).map((field) => (

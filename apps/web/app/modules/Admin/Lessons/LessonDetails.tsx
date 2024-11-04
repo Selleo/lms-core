@@ -1,11 +1,11 @@
 import { capitalize, startCase } from "lodash-es";
 import { memo } from "react";
-import { Control, Controller } from "react-hook-form";
-import { GetLessonByIdResponse, UpdateLessonBody } from "~/api/generated-api";
+import { type Control, Controller } from "react-hook-form";
+import type {
+  GetLessonByIdResponse,
+  UpdateLessonBody,
+} from "~/api/generated-api";
 import Editor from "~/components/RichText/Editor";
-import Viewer from "~/components/RichText/Viever";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -13,36 +13,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
 
-export const LessonInfo = memo<{
+export const LessonDetails = memo<{
   name: keyof UpdateLessonBody;
   control: Control<UpdateLessonBody>;
-  isEditing: boolean;
   lesson: GetLessonByIdResponse["data"];
-}>(({ name, control, isEditing, lesson }) => (
+}>(({ name, control, lesson }) => (
   <Controller
     name={name}
     control={control}
     defaultValue={lesson[name] as UpdateLessonBody[typeof name]}
     render={({ field }) => {
-      if (!isEditing) {
-        if (name === "archived") {
-          return (
-            <span className="font-semibold capitalize">
-              {lesson[name] ? "Archived" : "Active"}
-            </span>
-          );
-        }
-        if (name === "description") {
-          return <Viewer content={field.value as string} style="prose" />;
-        }
-        return (
-          <span className="font-semibold capitalize">
-            {lesson[name]?.toString()}
-          </span>
-        );
-      }
-
       if (name === "state") {
         return (
           <Select

@@ -17,7 +17,7 @@ import {
   paginatedResponse,
   PaginatedResponse,
   UUIDSchema,
-  UUIDType,
+  type UUIDType,
 } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
@@ -26,34 +26,34 @@ import type { UserRole } from "src/users/schemas/user-roles";
 import { AdminLessonItemsService } from "../adminLessonItems.service";
 import { LessonsService } from "../lessons.service";
 import {
-  AllLessonsResponse,
+  type AllLessonsResponse,
   allLessonsSchema,
-  CreateLessonBody,
+  type CreateLessonBody,
   createLessonSchema,
   type ShowLessonResponse,
   showLessonSchema,
-  UpdateLessonBody,
+  type UpdateLessonBody,
   updateLessonSchema,
 } from "../schemas/lesson.schema";
 import {
-  FileInsertType,
+  type FileInsertType,
   fileUpdateSchema,
-  GetAllLessonItemsResponse,
+  type GetAllLessonItemsResponse,
   GetAllLessonItemsResponseSchema,
-  GetSingleLessonItemsResponse,
+  type GetSingleLessonItemsResponse,
   GetSingleLessonItemsResponseSchema,
-  QuestionInsertType,
+  type QuestionInsertType,
   questionUpdateSchema,
-  TextBlockInsertType,
+  type TextBlockInsertType,
   textBlockUpdateSchema,
-  UpdateFileBody,
-  UpdateQuestionBody,
-  UpdateTextBlockBody,
+  type UpdateFileBody,
+  type UpdateQuestionBody,
+  type UpdateTextBlockBody,
 } from "../schemas/lessonItem.schema";
 import {
-  LessonsFilterSchema,
+  type LessonsFilterSchema,
   sortLessonFieldsOptions,
-  SortLessonFieldsOptions,
+  type SortLessonFieldsOptions,
 } from "../schemas/lessonQuery";
 import { AdminLessonsService } from "../adminLessons.service";
 
@@ -165,14 +165,20 @@ export class LessonsController {
         schema: createLessonSchema,
       },
     ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
+    response: baseResponse(
+      Type.Object({ id: UUIDSchema, message: Type.String() }),
+    ),
   })
   async createLesson(
     @Body() createLessonBody: CreateLessonBody,
     @CurrentUser("userId") userId: string,
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonsService.createLesson(createLessonBody, userId);
-    return new BaseResponse({ message: "Lesson created successfully" });
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonsService.createLesson(
+      createLessonBody,
+      userId,
+    );
+
+    return new BaseResponse({ id, message: "Lesson created successfully" });
   }
 
   @Patch("lesson")
@@ -513,6 +519,7 @@ export class LessonsController {
     @Body() body: UpdateFileBody,
   ): Promise<BaseResponse<{ message: string }>> {
     await this.adminLessonItemsService.updateFileItem(id, body);
+
     return new BaseResponse({ message: "File updated successfully" });
   }
 
@@ -530,14 +537,20 @@ export class LessonsController {
         }),
       },
     ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
+    response: baseResponse(
+      Type.Object({ id: UUIDSchema, message: Type.String() }),
+    ),
   })
   async createTextBlock(
     @Body() body: TextBlockInsertType,
     @CurrentUser("userId") userId: string,
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonItemsService.createTextBlock(body, userId);
-    return new BaseResponse({ message: "Text block created successfully" });
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonItemsService.createTextBlock(
+      body,
+      userId,
+    );
+
+    return new BaseResponse({ id, message: "Text block created successfully" });
   }
 
   @Post("create-question")
@@ -568,9 +581,10 @@ export class LessonsController {
       body,
       userId,
     );
+
     return new BaseResponse({
-      message: "Question created successfully",
       questionId: id,
+      message: "Question created successfully",
     });
   }
 
@@ -670,13 +684,16 @@ export class LessonsController {
         }),
       },
     ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
+    response: baseResponse(
+      Type.Object({ id: UUIDSchema, message: Type.String() }),
+    ),
   })
   async createFile(
     @Body() body: FileInsertType,
     @CurrentUser("userId") userId: string,
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonItemsService.createFile(body, userId);
-    return new BaseResponse({ message: "File created successfully" });
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonItemsService.createFile(body, userId);
+
+    return new BaseResponse({ id, message: "File created successfully" });
   }
 }

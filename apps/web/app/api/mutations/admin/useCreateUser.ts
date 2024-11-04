@@ -1,21 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import type { CreateUserBody } from "~/api/generated-api";
 import { useToast } from "~/components/ui/use-toast";
-import { ApiClient } from "../api-client";
-import type { CreateCourseBody } from "../generated-api";
+import { ApiClient } from "~/api/api-client";
+import { queryClient } from "~/api/queryClient";
 import { currentUserQueryOptions } from "~/api/queries";
-import { queryClient } from "../queryClient";
 
-type CreateCourseOptions = {
-  data: CreateCourseBody;
+type CreateUserOptions = {
+  data: CreateUserBody;
 };
 
-export function useCreateCourse() {
+export function useCreateUser() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: CreateCourseOptions) => {
-      const response = await ApiClient.api.coursesControllerCreateCourse(
+    mutationFn: async (options: CreateUserOptions) => {
+      const response = await ApiClient.api.usersControllerCreateUser(
         options.data,
       );
 
@@ -23,7 +23,7 @@ export function useCreateCourse() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: "Course created successfully" });
+      toast({ description: "User created successfully" });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

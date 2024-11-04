@@ -15,3 +15,8 @@ export { default as InputRoundedMarkerError } from "./input-rounded-marker-error
 export { default as InProgress } from "./in-progress.svg?react";
 export { default as QuizStar } from "./quiz-star.svg?react";
 export { default as NotStartedRounded } from "./not-startet-rounded.svg?react";
+export { default as User } from "./user.svg?react";
+export { default as Course } from "./course.svg?react";
+export { default as Category } from "./category.svg?react";
+export { default as Lesson } from "./lesson.svg?react";
+export { default as LessonContent } from "./lesson-content.svg?react";

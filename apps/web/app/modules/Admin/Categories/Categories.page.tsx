@@ -1,21 +1,29 @@
-import { useNavigate } from "@remix-run/react";
+import { Link, useNavigate } from "@remix-run/react";
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
-  RowSelectionState,
-  SortingState,
+  type RowSelectionState,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
-import { GetAllCategoriesResponse } from "~/api/generated-api";
-import { useCategoriesSuspense } from "~/api/queries/useCategories";
-import { usersQueryOptions } from "~/api/queries/useUsers";
+import type { GetAllCategoriesResponse } from "~/api/generated-api";
+import { useCategoriesSuspense, usersQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
 import SortButton from "~/components/TableSortButton/TableSortButton";
+
+import { cn } from "~/lib/utils";
+import {
+  type FilterConfig,
+  type FilterValue,
+  SearchFilter,
+} from "~/modules/common/SearchFilter/SearchFilter";
+import { format } from "date-fns";
+import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -27,20 +35,12 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { cn } from "~/lib/utils";
-import {
-  FilterConfig,
-  FilterValue,
-  SearchFilter,
-} from "~/modules/common/SearchFilter/SearchFilter";
-import { CreateNewCategory } from "./CreateNewCategory";
-import { format } from "date-fns";
-import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 
 type TCategory = GetAllCategoriesResponse["data"][number];
 
 export const clientLoader = async () => {
-  queryClient.prefetchQuery(usersQueryOptions());
+  await queryClient.prefetchQuery(usersQueryOptions());
+
   return null;
 };
 
@@ -158,7 +158,9 @@ const Categories = () => {
   return (
     <div className="flex flex-col">
       <div className="flex justify-between items-center gap-2">
-        <CreateNewCategory />
+        <Link to="new">
+          <Button variant="outline">Create New</Button>
+        </Link>
         <SearchFilter
           filters={filterConfig}
           values={searchParams}
@@ -168,8 +170,8 @@ const Categories = () => {
         <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
           <p
             className={cn("text-sm", {
-              "text-neutral-900": !isEmpty(selectedCategories),
               "text-neutral-500": isEmpty(selectedCategories),
+              "text-neutral-900": !isEmpty(selectedCategories),
             })}
           >
             Selected ({selectedCategories.length})
@@ -193,7 +195,7 @@ const Categories = () => {
                 <TableHead key={header.id}>
                   {flexRender(
                     header.column.columnDef.header,
-                    header.getContext()
+                    header.getContext(),
                   )}
                 </TableHead>
               ))}

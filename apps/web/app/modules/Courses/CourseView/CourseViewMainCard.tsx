@@ -18,6 +18,7 @@ import { cn } from "~/lib/utils";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 import { PaymentModal } from "~/modules/stripe/PaymentModal";
 import CourseProgress from "~/components/CourseProgress";
+import Viewer from "~/components/RichText/Viever";
 
 export const CourseViewMainCard = ({
   course,
@@ -52,7 +53,7 @@ export const CourseViewMainCard = ({
 
   const firstUncompletedLesson =
     course.lessons.find(
-      (lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount
+      (lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount,
     )?.id ?? last(course.lessons)?.id;
 
   const handleEnroll = () => {
@@ -90,9 +91,7 @@ export const CourseViewMainCard = ({
           {title}
         </h4>
         <div className="min-h-0 scrollbar-thin overflow-auto">
-          <p className="mt-4 text-neutral-900 leading-7 font-normal">
-            {description}
-          </p>
+          <Viewer content={description} />
         </div>
         <div className="mt-auto">
           {!isAdmin && isEnrolled && (
@@ -125,7 +124,7 @@ export const CourseViewMainCard = ({
                 {
                   "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
                     isEnrolled,
-                }
+                },
               )}
               onClick={handleUnenroll}
             >

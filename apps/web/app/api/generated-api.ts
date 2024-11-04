@@ -209,6 +209,30 @@ export interface DeleteBulkUsersBody {
 
 export type DeleteBulkUsersResponse = null;
 
+export interface CreateUserBody {
+  /** @format email */
+  email: string;
+  /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  firstName: string;
+  /**
+   * @minLength 1
+   * @maxLength 64
+   */
+  lastName: string;
+  role: "admin" | "student" | "tutor";
+}
+
+export interface CreateUserResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    message: string;
+  };
+}
+
 export interface GetAllCategoriesResponse {
   data: {
     /** @format uuid */
@@ -236,6 +260,14 @@ export interface GetCategoryByIdResponse {
 
 export interface CreateCategoryBody {
   title: string;
+}
+
+export interface CreateCategoryResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    message: string;
+  };
 }
 
 export interface UpdateCategoryBody {
@@ -417,6 +449,8 @@ export interface CreateCourseBody {
 
 export interface CreateCourseResponse {
   data: {
+    /** @format uuid */
+    id: string;
     message: string;
   };
 }
@@ -606,6 +640,8 @@ export interface CreateLessonBody {
 
 export interface CreateLessonResponse {
   data: {
+    /** @format uuid */
+    id: string;
     message: string;
   };
 }
@@ -886,6 +922,8 @@ export interface CreateTextBlockBody {
 
 export interface CreateTextBlockResponse {
   data: {
+    /** @format uuid */
+    id: string;
     message: string;
   };
 }
@@ -942,6 +980,8 @@ export interface CreateFileBody {
 
 export interface CreateFileResponse {
   data: {
+    /** @format uuid */
+    id: string;
     message: string;
   };
 }
@@ -1437,6 +1477,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name UsersControllerCreateUser
+     * @request POST:/api/users/create
+     */
+    usersControllerCreateUser: (data: CreateUserBody, params: RequestParams = {}) =>
+      this.request<CreateUserResponse, any>({
+        path: `/api/users/create`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name TestConfigControllerSetup
      * @request POST:/api/test-config/setup
      */
@@ -1492,11 +1548,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/categories
      */
     categoriesControllerCreateCategory: (data: CreateCategoryBody, params: RequestParams = {}) =>
-      this.request<void, any>({
+      this.request<CreateCategoryResponse, any>({
         path: `/api/categories`,
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 

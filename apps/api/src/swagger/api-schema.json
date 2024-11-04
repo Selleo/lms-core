@@ -587,6 +587,33 @@
         }
       }
     },
+    "/api/users/create": {
+      "post": {
+        "operationId": "UsersController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/test-config/setup": {
       "post": {
         "operationId": "TestConfigController_setup",
@@ -698,8 +725,14 @@
           }
         },
         "responses": {
-          "201": {
-            "description": ""
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCategoryResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -2969,6 +3002,71 @@
       "DeleteBulkUsersResponse": {
         "type": "null"
       },
+      "CreateUserBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "format": "email",
+            "type": "string"
+          },
+          "firstName": {
+            "minLength": 1,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "lastName": {
+            "minLength": 1,
+            "maxLength": 64,
+            "type": "string"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "const": "admin",
+                "type": "string"
+              },
+              {
+                "const": "student",
+                "type": "string"
+              },
+              {
+                "const": "tutor",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "email",
+          "firstName",
+          "lastName",
+          "role"
+        ]
+      },
+      "CreateUserResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "GetAllCategoriesResponse": {
         "type": "object",
         "properties": {
@@ -3093,6 +3191,30 @@
         },
         "required": [
           "title"
+        ]
+      },
+      "CreateCategoryResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "UpdateCategoryBody": {
@@ -3782,11 +3904,16 @@
           "data": {
             "type": "object",
             "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
               "message": {
                 "type": "string"
               }
             },
             "required": [
+              "id",
               "message"
             ]
           }
@@ -4520,11 +4647,16 @@
           "data": {
             "type": "object",
             "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
               "message": {
                 "type": "string"
               }
             },
             "required": [
+              "id",
               "message"
             ]
           }
@@ -5636,11 +5768,16 @@
           "data": {
             "type": "object",
             "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
               "message": {
                 "type": "string"
               }
             },
             "required": [
+              "id",
               "message"
             ]
           }
@@ -5809,11 +5946,16 @@
           "data": {
             "type": "object",
             "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
               "message": {
                 "type": "string"
               }
             },
             "required": [
+              "id",
               "message"
             ]
           }
