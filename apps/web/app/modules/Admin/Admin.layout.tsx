@@ -49,31 +49,31 @@ const AdminLayout = () => {
               label: "courses",
               link: "courses",
               roles: ["admin"],
-              iconName: "CaretRight",
+              iconName: "Course",
             },
             {
               label: "categories",
               link: "categories",
               roles: ["admin"],
-              iconName: "CaretRight",
+              iconName: "Category",
             },
             {
               label: "lessons",
               link: "lessons",
               roles: ["admin"],
-              iconName: "CaretRight",
+              iconName: "Lesson",
             },
             {
               label: "users",
               link: "users",
               roles: ["admin"],
-              iconName: "CaretRight",
+              iconName: "User",
             },
             {
-              label: "Lesson Items",
+              label: "Lesson Content",
               link: "lesson-items",
               roles: ["admin"],
-              iconName: "CaretRight",
+              iconName: "LessonContent",
             },
           ]}
         />
