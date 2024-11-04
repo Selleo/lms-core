@@ -82,7 +82,7 @@ export class AuthService {
         subject: "Welcome to our platform",
         text: emailTemplate.text,
         html: emailTemplate.html,
-        from: "godfather@selleo.com",
+        from: process.env.SES_EMAIL || "",
       });
 
       return newUser;

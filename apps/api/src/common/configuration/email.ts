@@ -16,7 +16,7 @@ const schema = Type.Object({
 
 export type EmailConfigSchema = Static<typeof schema>;
 
-const valdateEmailConfig = configValidator(schema);
+const validateEmailConfig = configValidator(schema);
 
 export default registerAs("email", (): EmailConfigSchema => {
   const values = {
@@ -27,5 +27,5 @@ export default registerAs("email", (): EmailConfigSchema => {
     EMAIL_ADAPTER: process.env.EMAIL_ADAPTER,
   };
 
-  return valdateEmailConfig(values);
+  return validateEmailConfig(values);
 });

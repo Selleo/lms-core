@@ -10,7 +10,7 @@ const schema = Type.Object({
 
 type JWTConfig = Static<typeof schema>;
 
-const valdateJWTConfig = configValidator(schema);
+const validateJWTConfig = configValidator(schema);
 
 export default registerAs("jwt", (): JWTConfig => {
   const values = {
@@ -19,5 +19,5 @@ export default registerAs("jwt", (): JWTConfig => {
     expirationTime: process.env.JWT_EXPIRATION_TIME,
   };
 
-  return valdateJWTConfig(values);
+  return validateJWTConfig(values);
 });
