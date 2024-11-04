@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -208,6 +209,19 @@ export class AdminLessonItemsService {
       throw new NotFoundException("Lesson not found");
     }
 
+    if (lesson.type == "quiz") {
+      const lessonStudentAnswers =
+        await this.adminLessonItemsRepository.getLessonStudentAnswers(
+          lesson.id,
+        );
+
+      if (lessonStudentAnswers.length > 0) {
+        throw new ConflictException(
+          "Lesson already answered, you can't add more items",
+        );
+      }
+    }
+
     await this.verifyItems(items);
 
     await this.adminLessonItemsRepository.addLessonItemToLesson(
@@ -224,6 +238,19 @@ export class AdminLessonItemsService {
 
     if (!lesson) {
       throw new NotFoundException("Lesson not found");
+    }
+
+    if (lesson.type == "quiz") {
+      const lessonStudentAnswers =
+        await this.adminLessonItemsRepository.getLessonStudentAnswers(
+          lesson.id,
+        );
+
+      if (lessonStudentAnswers.length > 0) {
+        throw new ConflictException(
+          "Lesson already answered, you can't add more items",
+        );
+      }
     }
 
     await this.adminLessonItemsRepository.removeLessonItemFromLesson(
@@ -251,6 +278,16 @@ export class AdminLessonItemsService {
     ]);
 
     if (!question) throw new NotFoundException("Question not found");
+
+    // TODO: this check may need to be changed
+    const questionStudentAnswers =
+      await this.adminLessonItemsRepository.getQuestionStudentAnswers(
+        question.id,
+      );
+
+    if (questionStudentAnswers.length > 0) {
+      throw new ConflictException("Question already answered");
+    }
 
     return await this.adminLessonItemsRepository.updateQuestionItem(id, body);
   }
@@ -303,6 +340,16 @@ export class AdminLessonItemsService {
     >,
   ) {
     await this.db.transaction(async (trx) => {
+      const questionStudentAnswers =
+        await this.adminLessonItemsRepository.getQuestionStudentAnswers(
+          questionId,
+          trx,
+        );
+
+      if (questionStudentAnswers.length > 0) {
+        throw new ConflictException("Question already answered");
+      }
+
       const existingOptions =
         await this.adminLessonItemsRepository.getQuestionAnswers(
           questionId,

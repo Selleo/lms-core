@@ -8,6 +8,7 @@ import {
   questions,
   textBlocks,
   questionAnswerOptions,
+  studentQuestionAnswers,
 } from "src/storage/schema";
 import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import {
@@ -56,6 +57,25 @@ export class AdminLessonItemsRepository {
       .select()
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));
+  }
+
+  async getQuestionStudentAnswers(
+    questionId: UUIDType,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
+    const dbInstance = trx ?? this.db;
+
+    return await dbInstance
+      .select()
+      .from(studentQuestionAnswers)
+      .where(eq(studentQuestionAnswers.questionId, questionId));
+  }
+
+  async getLessonStudentAnswers(lessonId: UUIDType) {
+    return await this.db
+      .select()
+      .from(studentQuestionAnswers)
+      .where(eq(studentQuestionAnswers.lessonId, lessonId));
   }
 
   async getTextBlocks(conditions: any[]) {

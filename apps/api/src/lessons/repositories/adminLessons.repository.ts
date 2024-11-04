@@ -44,6 +44,7 @@ export class AdminLessonsRepository {
         imageUrl: sql<string>`${lessons.imageUrl}`,
         state: lessons.state,
         archived: lessons.archived,
+        type: lessons.type,
       })
       .from(lessons)
       .where(eq(lessons.id, lessonId));

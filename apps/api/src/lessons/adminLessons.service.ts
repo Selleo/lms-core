@@ -151,7 +151,7 @@ export class AdminLessonsService {
       await this.adminLessonsRepository.getAvailableLessons();
 
     if (isEmpty(availableLessons))
-      throw new NotFoundException("No lessons found");
+      throw new NotFoundException("Lessons not found");
 
     return await Promise.all(
       availableLessons.map(async (lesson) => {
