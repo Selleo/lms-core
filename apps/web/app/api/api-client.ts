@@ -1,6 +1,13 @@
 import { useAuthStore } from "~/modules/Auth/authStore";
 import { API } from "./generated-api";
-import { AuthenticationError } from "./types";
+
+export const requestManager = {
+  controller: new AbortController(),
+
+  abortAll() {
+    this.controller.abort();
+  },
+};
 
 export const ApiClient = new API({
   baseURL: import.meta.env.VITE_API_URL,
