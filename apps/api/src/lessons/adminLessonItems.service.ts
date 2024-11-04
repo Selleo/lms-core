@@ -1,23 +1,19 @@
 import {
   BadRequestException,
+  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { and, eq, ilike, inArray, isNotNull } from "drizzle-orm";
+import { eq, ilike, isNotNull } from "drizzle-orm";
 import type { DatabasePg, UUIDType } from "src/common";
 import { S3Service } from "src/file/s3.service";
-import {
-  files,
-  lessonItems,
-  lessons,
-  questionAnswerOptions,
-  questions,
-  textBlocks,
-} from "src/storage/schema";
+import { files, questions, textBlocks } from "src/storage/schema";
 import type {
   FileInsertType,
   FileSelectType,
+  LessonItemToAdd,
+  LessonItemToRemove,
   QuestionInsertType,
   QuestionSelectType,
   SingleLessonItemResponse,
@@ -28,8 +24,10 @@ import type {
   UpdateTextBlockBody,
 } from "./schemas/lessonItem.schema";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
+import { AdminLessonItemsRepository } from "./repositories/adminLessonItems.repository";
+import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
+import { LessonItemType } from "./lessonItems.type";
 
-type LessonItemType = "text_block" | "file" | "question";
 type GetLessonItemsQuery = {
   type?: LessonItemType;
   title?: string;
@@ -41,10 +39,12 @@ type GetLessonItemsQuery = {
 };
 
 @Injectable()
-export class LessonItemsService {
+export class AdminLessonItemsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly s3Service: S3Service,
+    private readonly adminLessonItemsRepository: AdminLessonItemsRepository,
+    private readonly adminLessonsRepository: AdminLessonsRepository,
   ) {}
 
   async getAllLessonItems(query: GetLessonItemsQuery = {}) {
@@ -83,22 +83,18 @@ export class LessonItemsService {
     ];
 
     if (!type || type === "question") {
-      questionItems = await this.db
-        .select()
-        .from(questions)
-        .where(and(...questionConditions));
+      questionItems =
+        await this.adminLessonItemsRepository.getQuestions(questionConditions);
     }
     if (!type || type === "text_block") {
-      textItems = await this.db
-        .select()
-        .from(textBlocks)
-        .where(and(...textBlockConditions));
+      textItems =
+        await this.adminLessonItemsRepository.getTextBlocks(
+          textBlockConditions,
+        );
     }
     if (!type || type === "file") {
-      fileItems = await this.db
-        .select()
-        .from(files)
-        .where(and(...fileConditions));
+      fileItems =
+        await this.adminLessonItemsRepository.getFiles(fileConditions);
     }
 
     const allItems = [
@@ -146,39 +142,25 @@ export class LessonItemsService {
   }
 
   async getAvailableLessonItems() {
-    const questionItems = await this.db
-      .select()
-      .from(questions)
-      .where(
-        and(
-          eq(questions.state, "published"),
-          eq(questions.archived, false),
-          isNotNull(questions.id),
-        ),
-      );
-    const textItems = await this.db
-      .select()
-      .from(textBlocks)
-      .where(
-        and(
-          eq(textBlocks.state, "published"),
-          eq(textBlocks.archived, false),
-          isNotNull(textBlocks.id),
-          isNotNull(textBlocks.title),
-          isNotNull(textBlocks.body),
-        ),
-      );
-    const fileItems = await this.db
-      .select()
-      .from(files)
-      .where(
-        and(
-          eq(files.state, "published"),
-          eq(files.archived, false),
-          isNotNull(files.id),
-          isNotNull(files.title),
-        ),
-      );
+    const questionItems = await this.adminLessonItemsRepository.getQuestions([
+      eq(questions.state, "published"),
+      eq(questions.archived, false),
+      isNotNull(questions.id),
+    ]);
+    const textItems = await this.adminLessonItemsRepository.getTextBlocks([
+      eq(textBlocks.state, "published"),
+      eq(textBlocks.archived, false),
+      isNotNull(textBlocks.id),
+      isNotNull(textBlocks.title),
+      isNotNull(textBlocks.body),
+    ]);
+
+    const fileItems = await this.adminLessonItemsRepository.getFiles([
+      eq(files.state, "published"),
+      eq(files.archived, false),
+      isNotNull(files.id),
+      isNotNull(files.title),
+    ]);
 
     const allItems = [
       ...questionItems.map((item) => ({
@@ -197,9 +179,9 @@ export class LessonItemsService {
 
   async getLessonItemById(id: UUIDType) {
     const [textBlock, question, file] = await Promise.all([
-      this.db.select().from(textBlocks).where(eq(textBlocks.id, id)).limit(1),
-      this.db.select().from(questions).where(eq(questions.id, id)).limit(1),
-      this.db.select().from(files).where(eq(files.id, id)).limit(1),
+      this.adminLessonItemsRepository.getTextBlocks([eq(textBlocks.id, id)]),
+      this.adminLessonItemsRepository.getQuestions([eq(questions.id, id)]),
+      this.adminLessonItemsRepository.getFiles([eq(files.id, id)]),
     ]);
 
     if (textBlock.length > 0) {
@@ -219,122 +201,112 @@ export class LessonItemsService {
 
   async assignItemsToLesson(
     lessonId: string,
-    items: Array<{ id: string; type: LessonItemType; displayOrder: number }>,
+    items: LessonItemToAdd[],
   ): Promise<void> {
-    const [lesson] = await this.db
-      .select()
-      .from(lessons)
-      .where(eq(lessons.id, lessonId));
-    if (!lesson) {
-      throw new NotFoundException("Lekcja nie została znaleziona");
-    }
-
-    await this.verifyItems(items);
-
-    await this.db.transaction(async (tx) => {
-      for (const item of items) {
-        await tx.insert(lessonItems).values({
-          lessonId,
-          lessonItemId: item.id,
-          lessonItemType: item.type,
-          displayOrder: item.displayOrder,
-        });
-      }
-    });
-  }
-
-  async unassignItemsFromLesson(
-    lessonId: string,
-    items: Array<{ id: string; type: LessonItemType }>,
-  ): Promise<void> {
-    const [lesson] = await this.db
-      .select({ id: lessons.id })
-      .from(lessons)
-      .where(eq(lessons.id, lessonId))
-      .limit(1);
+    const lesson = await this.adminLessonsRepository.getLessonById(lessonId);
 
     if (!lesson) {
       throw new NotFoundException("Lesson not found");
     }
 
-    await this.db.transaction(async (tx) => {
-      for (const item of items) {
-        await tx
-          .delete(lessonItems)
-          .where(
-            and(
-              eq(lessonItems.lessonId, lessonId),
-              eq(lessonItems.lessonItemId, item.id),
-            ),
-          );
+    if (lesson.type == "quiz") {
+      const lessonStudentAnswers =
+        await this.adminLessonItemsRepository.getLessonStudentAnswers(
+          lesson.id,
+        );
+
+      if (lessonStudentAnswers.length > 0) {
+        throw new ConflictException(
+          "Lesson already answered, you can't add more items",
+        );
       }
-    });
+    }
+
+    await this.verifyItems(items);
+
+    await this.adminLessonItemsRepository.addLessonItemToLesson(
+      lessonId,
+      items,
+    );
+  }
+
+  async unassignItemsFromLesson(
+    lessonId: string,
+    items: LessonItemToRemove[],
+  ): Promise<void> {
+    const lesson = await this.adminLessonsRepository.getLessonById(lessonId);
+
+    if (!lesson) {
+      throw new NotFoundException("Lesson not found");
+    }
+
+    if (lesson.type == "quiz") {
+      const lessonStudentAnswers =
+        await this.adminLessonItemsRepository.getLessonStudentAnswers(
+          lesson.id,
+        );
+
+      if (lessonStudentAnswers.length > 0) {
+        throw new ConflictException(
+          "Lesson already answered, you can't add more items",
+        );
+      }
+    }
+
+    await this.adminLessonItemsRepository.removeLessonItemFromLesson(
+      lessonId,
+      items,
+    );
   }
 
   async updateTextBlockItem(id: UUIDType, body: UpdateTextBlockBody) {
-    const [existingTextBlock] = await this.db
-      .select()
-      .from(textBlocks)
-      .where(eq(textBlocks.id, id));
+    const [existingTextBlock] =
+      await this.adminLessonItemsRepository.getTextBlocks([
+        eq(textBlocks.id, id),
+      ]);
 
     if (!existingTextBlock) {
       throw new NotFoundException("Text block not found");
     }
 
-    const [updatedTextBlock] = await this.db
-      .update(textBlocks)
-      .set({
-        title: body.title,
-        body: body.body,
-        state: body.state,
-        archived: body.archived,
-      })
-      .where(eq(textBlocks.id, id))
-      .returning();
-
-    return updatedTextBlock;
+    return await this.adminLessonItemsRepository.updateTextBlockItem(id, body);
   }
 
   async updateQuestionItem(id: UUIDType, body: UpdateQuestionBody) {
-    const [question] = await this.db
-      .update(questions)
-      .set({
-        questionType: body.questionType,
-        questionBody: body.questionBody,
-        solutionExplanation: body.solutionExplanation,
-        state: body.state,
-      })
-      .where(eq(questions.id, id))
-      .returning();
+    const [question] = await this.adminLessonItemsRepository.getQuestions([
+      eq(questions.id, id),
+    ]);
 
     if (!question) throw new NotFoundException("Question not found");
+
+    // TODO: this check may need to be changed
+    const questionStudentAnswers =
+      await this.adminLessonItemsRepository.getQuestionStudentAnswers(
+        question.id,
+      );
+
+    if (questionStudentAnswers.length > 0) {
+      throw new ConflictException("Question already answered");
+    }
+
+    return await this.adminLessonItemsRepository.updateQuestionItem(id, body);
   }
 
   async updateFileItem(id: UUIDType, body: UpdateFileBody) {
-    const [file] = await this.db
-      .update(files)
-      .set({
-        title: body.title,
-        type: body.type,
-        url: body.url,
-        state: body.state,
-      })
-      .where(eq(files.id, id))
-      .returning();
+    const [file] = await this.adminLessonItemsRepository.getFiles([
+      eq(files.id, id),
+    ]);
 
     if (!file) throw new NotFoundException("File not found");
+
+    return await this.adminLessonItemsRepository.updateFileItem(id, body);
   }
 
   async createTextBlock(content: TextBlockInsertType, userId: UUIDType) {
-    const [textBlock] = await this.db
-      .insert(textBlocks)
-      .values({
-        title: content.title,
-        body: content.body,
-        state: content.state,
-        authorId: userId,
-      })
-      .returning();
+    const textBlock = await this.adminLessonItemsRepository.createTextBlock(
+      content,
+      userId,
+    );
 
     if (!textBlock) throw new NotFoundException("Text block not found");
 
@@ -342,16 +314,10 @@ export class LessonItemsService {
   }
 
   async createQuestion(content: QuestionInsertType, userId: UUIDType) {
-    const [question] = await this.db
-      .insert(questions)
-      .values({
-        questionType: content.questionType,
-        questionBody: content.questionBody,
-        solutionExplanation: content.solutionExplanation,
-        state: content.state,
-        authorId: userId,
-      })
-      .returning();
+    const question = await this.adminLessonItemsRepository.createQuestion(
+      content,
+      userId,
+    );
 
     if (!question) throw new NotFoundException("Question not found");
 
@@ -359,17 +325,7 @@ export class LessonItemsService {
   }
 
   async getQuestionAnswers(questionId: UUIDType) {
-    const answers = await this.db
-      .select({
-        id: questionAnswerOptions.id,
-        optionText: questionAnswerOptions.optionText,
-        isCorrect: questionAnswerOptions.isCorrect,
-        position: questionAnswerOptions.position,
-      })
-      .from(questionAnswerOptions)
-      .where(eq(questionAnswerOptions.questionId, questionId));
-
-    return answers;
+    return await this.adminLessonItemsRepository.getQuestionAnswers(questionId);
   }
 
   async upsertQuestionOptions(
@@ -384,10 +340,21 @@ export class LessonItemsService {
     >,
   ) {
     await this.db.transaction(async (trx) => {
-      const existingOptions = await trx
-        .select()
-        .from(questionAnswerOptions)
-        .where(eq(questionAnswerOptions.questionId, questionId));
+      const questionStudentAnswers =
+        await this.adminLessonItemsRepository.getQuestionStudentAnswers(
+          questionId,
+          trx,
+        );
+
+      if (questionStudentAnswers.length > 0) {
+        throw new ConflictException("Question already answered");
+      }
+
+      const existingOptions =
+        await this.adminLessonItemsRepository.getQuestionAnswers(
+          questionId,
+          trx,
+        );
 
       const existingIds = new Set(existingOptions.map((opt) => opt.id));
 
@@ -396,18 +363,16 @@ export class LessonItemsService {
       const idsToDelete = [...existingIds].filter((id) => !idsToKeep.has(id));
 
       if (idsToDelete.length > 0) {
-        await trx
-          .delete(questionAnswerOptions)
-          .where(
-            and(
-              eq(questionAnswerOptions.questionId, questionId),
-              inArray(questionAnswerOptions.id, idsToDelete),
-            ),
-          );
+        await this.adminLessonItemsRepository.removeQuestionAnswerOptions(
+          questionId,
+          idsToDelete,
+          trx,
+        );
       }
 
       for (const option of options) {
         if (
+          option.id === undefined ||
           option.optionText === undefined ||
           option.isCorrect === undefined ||
           option.position === undefined
@@ -415,38 +380,25 @@ export class LessonItemsService {
           continue;
         }
 
-        await trx
-          .insert(questionAnswerOptions)
-          .values({
+        await this.adminLessonItemsRepository.upsertQuestionAnswerOptions(
+          questionId,
+          {
             id: option.id,
-            questionId,
             optionText: option.optionText,
             isCorrect: option.isCorrect,
             position: option.position,
-          })
-          .onConflictDoUpdate({
-            target: questionAnswerOptions.id,
-            set: {
-              optionText: option.optionText,
-              isCorrect: option.isCorrect,
-              position: option.position,
-            },
-          });
+          },
+          trx,
+        );
       }
     });
   }
 
   async createFile(content: FileInsertType, userId: UUIDType) {
-    const [file] = await this.db
-      .insert(files)
-      .values({
-        title: content.title,
-        type: content.type,
-        url: content.url,
-        state: content.state,
-        authorId: userId,
-      })
-      .returning();
+    const file = await this.adminLessonItemsRepository.createFile(
+      content,
+      userId,
+    );
 
     if (!file) throw new NotFoundException("File not found");
 
@@ -457,33 +409,28 @@ export class LessonItemsService {
     items: Array<{ id: string; type: LessonItemType; displayOrder: number }>,
   ): Promise<void> {
     for (const item of items) {
-      let result;
+      let result: any[] = [];
       switch (item.type) {
         case "text_block":
-          result = await this.db
-            .select({ id: textBlocks.id })
-            .from(textBlocks)
-            .where(eq(textBlocks.id, item.id))
-            .limit(1);
+          result = await this.adminLessonItemsRepository.getTextBlocks([
+            eq(textBlocks.id, item.id),
+          ]);
           break;
         case "file":
-          result = await this.db
-            .select({ id: files.id })
-            .from(files)
-            .where(eq(files.id, item.id))
-            .limit(1);
+          result = await this.adminLessonItemsRepository.getFiles([
+            eq(files.id, item.id),
+          ]);
           break;
         case "question":
-          result = await this.db
-            .select({ id: questions.id })
-            .from(questions)
-            .where(eq(questions.id, item.id))
-            .limit(1);
+          result = await this.adminLessonItemsRepository.getQuestions([
+            eq(questions.id, item.id),
+          ]);
           break;
       }
+
       if (result.length === 0) {
         throw new BadRequestException(
-          `Element ${item.id} typu ${item.type} nie został znaleziony`,
+          `Element ${item.id} type of ${item.type} not found`,
         );
       }
     }

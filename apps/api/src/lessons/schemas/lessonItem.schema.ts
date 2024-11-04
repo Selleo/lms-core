@@ -2,6 +2,18 @@ import { Static, Type } from "@sinclair/typebox";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { UUIDSchema } from "src/common";
 import { files, questions, textBlocks } from "src/storage/schema";
+import { LESSON_ITEM_TYPES } from "../lessonItems.type";
+
+export const lessonItemToAdd = Type.Object({
+  id: UUIDSchema,
+  type: Type.Union(LESSON_ITEM_TYPES.map((type) => Type.Literal(type))),
+  displayOrder: Type.Number(),
+});
+
+export const lessonItemToRemove = Type.Object({
+  id: UUIDSchema,
+  type: Type.Union(LESSON_ITEM_TYPES.map((type) => Type.Literal(type))),
+});
 
 export const questionAnswerOptionsSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
@@ -142,6 +154,8 @@ export const lessonItemSelectSchema = Type.Object({
   ]),
 });
 
+export type LessonItemToAdd = Static<typeof lessonItemToAdd>;
+export type LessonItemToRemove = Static<typeof lessonItemToRemove>;
 export type LessonItemResponse = Static<typeof lessonItemSelectSchema>;
 export type QuestionAnswer = Static<typeof questionAnswer>;
 export type QuestionResponse = Static<typeof questionResponse>;
