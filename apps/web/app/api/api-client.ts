@@ -22,7 +22,7 @@ ApiClient.instance.interceptors.request.use((config) => {
     config.url?.includes("/register");
 
   if (!isAuthEndpoint && !useAuthStore.getState().isLoggedIn) {
-    throw new AuthenticationError("User not authenticated", "unauthenticated");
+    config.signal = requestManager.controller.signal;
   }
 
   return config;
@@ -31,14 +31,22 @@ ApiClient.instance.interceptors.request.use((config) => {
 ApiClient.instance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401 && !error.config._retry) {
+    if (error.config?.url?.includes("/logout")) {
+      return Promise.reject(error);
+    }
+
+    if (
+      error.response?.status === 401 &&
+      !error.config._retry &&
+      useAuthStore.getState().isLoggedIn
+    ) {
       error.config._retry = true;
       try {
         await ApiClient.api.authControllerRefreshTokens();
         return ApiClient.instance(error.config);
       } catch {
-        useAuthStore.getState().setLoggedIn(false);
-        throw new AuthenticationError("Session expired", "unauthorized");
+        requestManager.abortAll();
+        return Promise.reject(error);
       }
     }
     return Promise.reject(error);
