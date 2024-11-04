@@ -34,4 +34,10 @@ export const handlers = [
   http.get("/api/auth/current-user", () => {
     return HttpResponse.json(currentUser);
   }),
+  http.post("/api/auth/refresh", () => {
+    return HttpResponse.json({
+      accessToken: "mock-access-token",
+      refreshToken: "mock-refresh-token",
+    });
+  }),
 ];

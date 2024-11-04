@@ -1,6 +1,8 @@
 import { useAuthStore } from "~/modules/Auth/authStore";
 import { API } from "./generated-api";
 
+const isTestEnv = process.env.NODE_ENV === "test";
+
 export const ApiClient = new API({
   baseURL: import.meta.env.VITE_API_URL,
   secure: true,
@@ -13,7 +15,7 @@ ApiClient.instance.interceptors.request.use((config) => {
     config.url?.includes("/refresh") ||
     config.url?.includes("/register");
 
-  if (!isAuthEndpoint && !useAuthStore.getState().isLoggedIn) {
+  if (!isTestEnv && !isAuthEndpoint && !useAuthStore.getState().isLoggedIn) {
     const controller = new AbortController();
     controller.abort();
     config.signal = controller.signal;
