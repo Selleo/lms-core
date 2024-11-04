@@ -536,14 +536,16 @@ export class LessonsController {
         }),
       },
     ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
+    response: baseResponse(
+      Type.Object({ id: UUIDSchema, message: Type.String() }),
+    ),
   })
   async createTextBlock(
     @Body() body: TextBlockInsertType,
     @CurrentUser("userId") userId: string,
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonItemsService.createTextBlock(body, userId);
-    return new BaseResponse({ message: "Text block created successfully" });
+  ): Promise<BaseResponse<{id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonItemsService.createTextBlock(body, userId);
+    return new BaseResponse({id, message: "Text block created successfully" });
   }
 
   @Post("create-question")
@@ -574,9 +576,10 @@ export class LessonsController {
       body,
       userId,
     );
+
     return new BaseResponse({
-      message: "Question created successfully",
       questionId: id,
+      message: "Question created successfully",
     });
   }
 
@@ -676,13 +679,16 @@ export class LessonsController {
         }),
       },
     ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
+    response: baseResponse(
+      Type.Object({ id: UUIDSchema, message: Type.String() }),
+    ),
   })
   async createFile(
     @Body() body: FileInsertType,
     @CurrentUser("userId") userId: string,
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonItemsService.createFile(body, userId);
-    return new BaseResponse({ message: "File created successfully" });
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonItemsService.createFile(body, userId);
+
+    return new BaseResponse({ id, message: "File created successfully" });
   }
 }
