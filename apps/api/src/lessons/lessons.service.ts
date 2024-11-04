@@ -508,7 +508,10 @@ export class LessonsService {
         id: answer.id,
         optionText: answer.optionText,
         position:
-          (lessonRated && answer.isCorrect) || lessonType !== "quiz"
+          (lessonRated && answer.isCorrect) ||
+          (lessonType !== "quiz" &&
+            typeof answer?.position === "number" &&
+            studentAnswers?.answer[answer.position])
             ? answer.position
             : null,
         isStudentAnswer: lessonRated ? answer.isStudentAnswer : null,
