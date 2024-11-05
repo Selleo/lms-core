@@ -38,11 +38,11 @@ export const SelectAnswerOption = ({
       )}
     >
       <Input
-        className={cn("w-4 h-4")}
+        className="w-4 h-4"
         checked={isChecked}
         id={answerId}
         readOnly
-        type="radio"
+        type={isMultiAnswer ? "checkbox" : "radio"}
         value={answerId}
         {...register(
           isMultiAnswer

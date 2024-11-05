@@ -69,7 +69,7 @@ export const SelectAnswer = ({
           />
         );
       }
-      console.log({ selectedOption });
+
       return (
         <SelectAnswerOption
           key={id}
