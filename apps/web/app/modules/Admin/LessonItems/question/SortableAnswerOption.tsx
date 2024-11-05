@@ -23,7 +23,9 @@ export const SortableAnswerOption = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({
+    id,
+  });
 
   const questionAnswers = useWatch({
     control,
@@ -73,9 +75,7 @@ export const SortableAnswerOption = ({
               />
             </span>
             <span
-              className={`text-sm ${
-                isCorrect ? "text-green-600" : "text-red-600"
-              }`}
+              className={`text-sm ${isCorrect ? "text-green-600" : "text-red-600"}`}
             >
               {isCorrect ? "Correct" : "Incorrect"}
             </span>

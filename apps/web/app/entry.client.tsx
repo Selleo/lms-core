@@ -16,6 +16,6 @@ startTransition(() => {
       <Providers>
         <RemixBrowser />
       </Providers>
-    </StrictMode>
+    </StrictMode>,
   );
 });

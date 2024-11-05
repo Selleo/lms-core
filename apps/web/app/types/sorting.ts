@@ -13,7 +13,7 @@ export const getFieldLabel = (field: SortableField): string =>
 
 export const createSortOption = (
   field: SortableField,
-  order: "asc" | "desc"
+  order: "asc" | "desc",
 ): { value: SortOption; label: string } => ({
   value: order === "asc" ? field : `-${field}`,
   label: `${getFieldLabel(field)} ${order === "asc" ? "A-Z" : "Z-A"}`,

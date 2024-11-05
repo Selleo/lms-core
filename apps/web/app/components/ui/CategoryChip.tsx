@@ -18,7 +18,7 @@ export const CategoryChip = ({
     <div
       className={cn(
         "max-w-fit bg-white px-2 py-1 rounded-lg items-center flex gap-2",
-        className
+        className,
       )}
     >
       <Dot

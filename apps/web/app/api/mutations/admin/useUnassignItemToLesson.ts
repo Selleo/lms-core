@@ -17,7 +17,7 @@ export function useUnassignItemToLesson() {
       const response =
         await ApiClient.api.lessonsControllerUnassignItemsFromLesson(
           options.lessonId,
-          options.data
+          options.data,
         );
 
       return response.data;

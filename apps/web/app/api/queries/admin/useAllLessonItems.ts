@@ -21,7 +21,7 @@ type LessonItemsQueryParams = {
 export const ALL_LESSON_ITEMS_QUERY_KEY = ["lesson-items", "admin"];
 
 export const allLessonItemsQueryOptions = (
-  searchParams?: LessonItemsQueryParams
+  searchParams?: LessonItemsQueryParams,
 ) =>
   queryOptions({
     queryKey: [...ALL_LESSON_ITEMS_QUERY_KEY, searchParams],
@@ -47,7 +47,7 @@ export function useAllLessonItems(searchParams?: LessonItemsQueryParams) {
 }
 
 export function useAllLessonItemsSuspense(
-  searchParams?: LessonItemsQueryParams
+  searchParams?: LessonItemsQueryParams,
 ) {
   return useSuspenseQuery(allLessonItemsQueryOptions(searchParams));
 }

@@ -16,7 +16,9 @@ export function useUpdateTextBlockItem() {
     mutationFn: async (options: UpdateTextBlockOptions) => {
       const response = await ApiClient.api.lessonsControllerUpdateTextBlockItem(
         options.data,
-        { id: options.textBlockId }
+        {
+          id: options.textBlockId,
+        },
       );
 
       return response.data;

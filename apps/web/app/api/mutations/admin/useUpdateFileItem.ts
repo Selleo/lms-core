@@ -16,7 +16,9 @@ export function useUpdateFileItem() {
     mutationFn: async (options: UpdateFileOptions) => {
       const response = await ApiClient.api.lessonsControllerUpdateFileItem(
         options.data,
-        { id: options.fileId }
+        {
+          id: options.fileId,
+        },
       );
 
       return response.data;

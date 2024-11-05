@@ -57,7 +57,7 @@ export function useStripePaymentIntent() {
       setClientSecret(null);
       await mutation.mutateAsync(options);
     },
-    [mutation]
+    [mutation],
   );
 
   const resetClientSecret = useCallback(() => {

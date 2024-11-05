@@ -225,7 +225,7 @@ export default function DashboardPage() {
             {
               "flex flex-wrap": courseListLayout === "card",
               block: courseListLayout === "table",
-            }
+            },
           )}
         >
           {availableCourses && !isEmpty(availableCourses) && (

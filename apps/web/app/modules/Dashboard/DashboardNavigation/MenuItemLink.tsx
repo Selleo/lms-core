@@ -20,9 +20,7 @@ export const MenuItemLink = memo(({ label, link, iconName }: LeafMenuItem) => (
   >
     <>
       <Icon name={iconName} className="w-4 h-4 mr-2" />
-      <span className="capitalize subtle text-md">
-        {label}
-      </span>
+      <span className="capitalize subtle text-md">{label}</span>
     </>
   </NavLink>
 ));

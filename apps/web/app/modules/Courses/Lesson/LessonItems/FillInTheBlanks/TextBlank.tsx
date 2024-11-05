@@ -48,7 +48,7 @@ export const TextBlank = ({
         isQuiz && isCorrectAnswer && studentAnswer?.isStudentAnswer,
       "border-b-error-500 text-error-500":
         isQuiz && studentAnswer?.isCorrect && !studentAnswer?.isStudentAnswer,
-    }
+    },
   );
 
   const isDisabled =

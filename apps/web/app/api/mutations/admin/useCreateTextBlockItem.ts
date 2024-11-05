@@ -14,7 +14,7 @@ export function useCreateTextBlockItem() {
   return useMutation({
     mutationFn: async (options: CreateTextBlockOptions) => {
       const response = await ApiClient.api.lessonsControllerCreateTextBlock(
-        options.data
+        options.data,
       );
 
       return response.data;

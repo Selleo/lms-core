@@ -8,7 +8,10 @@ export const useMarkLessonItemAsCompleted = () => {
     mutationFn: async ({ id, lessonId }: { id: string; lessonId: string }) => {
       const response =
         await ApiClient.api.studentCompletedLessonItemsControllerMarkLessonItemAsCompleted(
-          { id, lessonId }
+          {
+            id,
+            lessonId,
+          },
         );
 
       return response.data;

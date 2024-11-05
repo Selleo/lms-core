@@ -14,7 +14,7 @@ export function useCreateQuestionItem() {
   return useMutation({
     mutationFn: async (options: CreateQuestonOptions) => {
       const response = await ApiClient.api.lessonsControllerCreateQuestion(
-        options.data
+        options.data,
       );
 
       return response.data;

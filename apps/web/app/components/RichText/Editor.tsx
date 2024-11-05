@@ -41,7 +41,7 @@ const Editor = ({
       <div
         className={cn(
           "min-h-[200px] max-h-[600px] overflow-auto resize-y relative [&_.ProseMirror]:min-h-full [&_.ProseMirror]:max-h-full",
-          className
+          className,
         )}
       >
         <EditorContent

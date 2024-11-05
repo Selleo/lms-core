@@ -37,7 +37,7 @@ describe("Dashboard page", () => {
       const enrolledCoursesSection =
         await screen.findByTestId("enrolled-courses");
       const courseCards = await within(enrolledCoursesSection).findAllByRole(
-        "link"
+        "link",
       );
 
       expect(courseCards).toHaveLength(studentCourses.data.length);
@@ -62,7 +62,7 @@ describe("Dashboard page", () => {
       const unenrolledCoursesSection =
         await screen.findByTestId("unenrolled-courses");
       const courseCards = await within(unenrolledCoursesSection).findAllByRole(
-        "link"
+        "link",
       );
 
       expect(courseCards).toHaveLength(availableCourses.data.length);
@@ -93,12 +93,12 @@ describe("Dashboard page", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByRole("button", { name: "Clear All" })
+          screen.getByRole("button", { name: "Clear All" }),
         ).toBeInTheDocument();
       });
 
       const courseCards = await within(unenrolledCoursesSection).findAllByRole(
-        "link"
+        "link",
       );
 
       expect(courseCards).toHaveLength(1);
@@ -126,7 +126,7 @@ describe("Dashboard page", () => {
       const unenrolledCoursesSection =
         await screen.findByTestId("unenrolled-courses");
       const courseCards = await within(unenrolledCoursesSection).findAllByRole(
-        "link"
+        "link",
       );
 
       expect(courseCards).toHaveLength(1);
@@ -143,14 +143,14 @@ describe("Dashboard page", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText("We could not find any courses")
+          screen.getByText("We could not find any courses"),
         ).toBeInTheDocument();
       });
     });
 
     it("display sorted courses when sort value is changed", async () => {
       const reversedCourseData = [...availableCourses.data].sort((a, b) =>
-        b.title.localeCompare(a.title)
+        b.title.localeCompare(a.title),
       );
 
       renderWith({ withQuery: true }).render(<RemixStub />);
@@ -162,7 +162,7 @@ describe("Dashboard page", () => {
 
       const sortDropdown = await screen.findByRole("listbox");
       userEvent.click(
-        within(sortDropdown).getByRole("option", { name: "Course Name Z-A" })
+        within(sortDropdown).getByRole("option", { name: "Course Name Z-A" }),
       );
 
       await waitFor(() => {
@@ -174,10 +174,10 @@ describe("Dashboard page", () => {
 
       await waitFor(() => {
         const courseCards = within(unenrolledCoursesSection).getAllByRole(
-          "link"
+          "link",
         );
         const renderedTitles = courseCards.map(
-          (card) => within(card).getByRole("heading").textContent
+          (card) => within(card).getByRole("heading").textContent,
         );
         const expectedTitles = reversedCourseData.map((course) => course.title);
 
@@ -203,12 +203,12 @@ describe("Dashboard page", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByRole("option", { name: "Software Development" })
+          screen.getByRole("option", { name: "Software Development" }),
         ).toBeInTheDocument();
       });
 
       await user.click(
-        screen.getByRole("option", { name: "Software Development" })
+        screen.getByRole("option", { name: "Software Development" }),
       );
 
       await waitFor(() => {
@@ -219,7 +219,7 @@ describe("Dashboard page", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByRole("option", { name: "Category A-Z" })
+          screen.getByRole("option", { name: "Category A-Z" }),
         ).toBeInTheDocument();
       });
 
@@ -233,7 +233,7 @@ describe("Dashboard page", () => {
 
       await waitFor(() => {
         expect(
-          screen.queryByRole("button", { name: "Clear All" })
+          screen.queryByRole("button", { name: "Clear All" }),
         ).not.toBeInTheDocument();
         expect(searchInput).toHaveValue("");
         expect(categoriesSelect).toHaveTextContent("All Categories");

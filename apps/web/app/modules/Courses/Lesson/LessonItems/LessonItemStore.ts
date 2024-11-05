@@ -51,13 +51,13 @@ export const useCompletedLessonItemsStore =
             } else if (rehydratedState) {
               if (!Array.isArray(rehydratedState.completedLessonItems)) {
                 console.warn(
-                  "Rehydrated completedLessonItems is not an array, resetting to empty array"
+                  "Rehydrated completedLessonItems is not an array, resetting to empty array",
                 );
                 rehydratedState.completedLessonItems = [];
               }
             }
           };
         },
-      }
-    )
+      },
+    ),
   );

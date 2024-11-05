@@ -16,7 +16,7 @@ export function useAssignItemToLesson() {
     mutationFn: async (options: AssignItemToLessonOptions) => {
       const response = await ApiClient.api.lessonsControllerAssignItemsToLesson(
         options.lessonId,
-        options.data
+        options.data,
       );
 
       return response.data;

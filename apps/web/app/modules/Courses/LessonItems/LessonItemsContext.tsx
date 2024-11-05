@@ -15,7 +15,7 @@ interface LessonItemsContextType {
 }
 
 const LessonItemsContext = createContext<LessonItemsContextType | undefined>(
-  undefined
+  undefined,
 );
 const initialLessonItems: LessonItem[] = [
   {
@@ -194,7 +194,9 @@ const LessonItemsProvider = ({ children }: { children: ReactNode }) => {
 
   const updateLessonItem = (updatedItem: LessonItem) => {
     setLessonItems((prevItems: LessonItem[]) =>
-      prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item))
+      prevItems.map((item) =>
+        item.id === updatedItem.id ? updatedItem : item,
+      ),
     );
   };
 

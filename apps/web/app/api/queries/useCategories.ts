@@ -10,7 +10,7 @@ type CategorySearchParams = {
 export const CATEGORIES_QUERY_KEY = ["categories"];
 
 export const categoriesQueryOptions = (
-  searchParams?: CategorySearchParams
+  searchParams?: CategorySearchParams,
 ) => ({
   queryKey: [...CATEGORIES_QUERY_KEY, searchParams],
   queryFn: async () => {

@@ -14,7 +14,7 @@ export function useCreateFileItem() {
   return useMutation({
     mutationFn: async (options: CreateFileOptions) => {
       const response = await ApiClient.api.lessonsControllerCreateFile(
-        options.data
+        options.data,
       );
 
       return response.data;

@@ -17,7 +17,9 @@ export function useUpdateQuestionOptions() {
       const response =
         await ApiClient.api.lessonsControllerUpsertQuestionOptions(
           options.data,
-          { questionId: options.questionId }
+          {
+            questionId: options.questionId,
+          },
         );
 
       return response.data;

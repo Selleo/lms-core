@@ -43,7 +43,7 @@ export default function LessonItemsEditPage() {
   };
 
   const onSubmit: SubmitHandler<z.infer<typeof lessonItemFormSchema>> = (
-    data
+    data,
   ) => {
     console.log(data);
   };

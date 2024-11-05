@@ -16,7 +16,9 @@ export function useUpdateLesson() {
     mutationFn: async (options: UpdateLessonOptions) => {
       const response = await ApiClient.api.lessonsControllerUpdateLesson(
         options.data,
-        { id: options.lessonId }
+        {
+          id: options.lessonId,
+        },
       );
 
       return response.data;

@@ -15,7 +15,7 @@ export function useAddLessonToCourse() {
   return useMutation({
     mutationFn: async (options: UpdateCourseOptions) => {
       const response = await ApiClient.api.lessonsControllerAddLessonToCourse(
-        options.data
+        options.data,
       );
 
       return response.data;

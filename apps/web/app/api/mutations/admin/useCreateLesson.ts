@@ -14,7 +14,7 @@ export function useCreateLesson() {
   return useMutation({
     mutationFn: async (options: CreateLessonOptions) => {
       const response = await ApiClient.api.lessonsControllerCreateLesson(
-        options.data
+        options.data,
       );
 
       return response.data;

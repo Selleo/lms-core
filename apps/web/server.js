@@ -12,7 +12,7 @@ const viteDevServer =
     : await import("vite").then((vite) =>
         vite.createServer({
           server: { middlewareMode: true },
-        })
+        }),
       );
 
 const remixHandler = createRequestHandler({
@@ -35,7 +35,7 @@ if (viteDevServer) {
   // Vite fingerprints its assets so we can cache forever.
   app.use(
     "/assets",
-    express.static("build/client/assets", { immutable: true, maxAge: "1y" })
+    express.static("build/client/assets", { immutable: true, maxAge: "1y" }),
   );
 }
 
@@ -50,5 +50,5 @@ app.all("*", remixHandler);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () =>
-  console.log(`Express server listening at http://localhost:${port}`)
+  console.log(`Express server listening at http://localhost:${port}`),
 );

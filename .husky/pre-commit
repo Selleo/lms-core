@@ -1,0 +1,3 @@
+pnpm format:check
+pnpm lint-tsc-web
+pnpm lint-tsc-api

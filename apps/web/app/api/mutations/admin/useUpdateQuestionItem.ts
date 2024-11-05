@@ -16,7 +16,9 @@ export function useUpdateQuestionItem() {
     mutationFn: async (options: UpdateQuestionOptions) => {
       const response = await ApiClient.api.lessonsControllerUpdateQuestionItem(
         options.data,
-        { id: options.questionId }
+        {
+          id: options.questionId,
+        },
       );
 
       return response.data;

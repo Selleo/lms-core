@@ -1,5 +1,2 @@
-pnpm lint-tsc-web
-pnpm lint-tsc-api
-
 pnpm run test:web
 pnpm run test:api

@@ -26,7 +26,7 @@ const LessonItemsAddVideoLayout = () => {
   };
 
   const onSubmit: SubmitHandler<z.infer<typeof videoLessonItemSchema>> = (
-    data
+    data,
   ) => {
     console.log(data);
   };

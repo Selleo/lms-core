@@ -38,7 +38,7 @@ class TestRenderer {
           (acc, Provider) => (
             <Provider>{acc}</Provider>
           ),
-          children
+          children,
         )}
       </>
     );

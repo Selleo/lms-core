@@ -11,13 +11,13 @@ const filterAndSortCourses = (searchParams: URLSearchParams) => {
 
   if (title) {
     filteredCourses = filteredCourses.filter((course) =>
-      course.title.toLowerCase().includes(title.toLowerCase())
+      course.title.toLowerCase().includes(title.toLowerCase()),
     );
   }
 
   if (category) {
     filteredCourses = filteredCourses.filter(
-      (course) => course.category === category
+      (course) => course.category === category,
     );
   }
 
@@ -53,7 +53,7 @@ const availableCoursesHandler = withSearchParams(
       ...availableCourses,
       data: filteredCourses,
     });
-  }
+  },
 );
 
 export const handlers = [

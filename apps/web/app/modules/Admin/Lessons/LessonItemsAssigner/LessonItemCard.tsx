@@ -15,7 +15,9 @@ interface LessonCardProps {
 
 export function LessonItemCard({ lessonItem }: LessonCardProps) {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: lessonItem.id });
+    useSortable({
+      id: lessonItem.id,
+    });
 
   const style = {
     transform: CSS.Transform.toString(transform),

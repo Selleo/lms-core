@@ -18,6 +18,6 @@ export const useLayoutsStore = create<ILayoutsStore>()(
       partialize: (state) => ({
         courseListLayout: state.courseListLayout,
       }),
-    }
-  )
+    },
+  ),
 );

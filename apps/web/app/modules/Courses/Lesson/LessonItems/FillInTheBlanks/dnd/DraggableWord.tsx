@@ -18,8 +18,10 @@ export const DraggableWord = ({
   isCorrect,
   isStudentAnswer,
 }: DraggableWordProps) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useSortable({ id: word.id, disabled: isQuiz && !!isStudentAnswer });
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
+    id: word.id,
+    disabled: isQuiz && !!isStudentAnswer,
+  });
 
   const wordStyle = {
     transform: CSS.Transform?.toString(transform),
@@ -29,8 +31,7 @@ export const DraggableWord = ({
     "bg-primary-200": (!isCorrect && !isStudentAnswer) || !isQuiz,
     "bg-success-200": isCorrect && isStudentAnswer && isQuiz,
     "bg-error-200":
-      (!isCorrect && isStudentAnswer && isQuiz) ||
-      (isCorrect && !isStudentAnswer && isQuiz),
+      (!isCorrect && isStudentAnswer && isQuiz) || (isCorrect && !isStudentAnswer && isQuiz),
   });
 
   return (
@@ -43,7 +44,7 @@ export const DraggableWord = ({
         !isDragging
           ? quizWordStyle
           : "px-2 py-1 bg-gray-100 text-neutral-700 rounded-md blur-[0.3px]",
-        { "-rotate-[6deg] w-min": isOverlay }
+        { "-rotate-[6deg] w-min": isOverlay },
       )}
     >
       {word?.studentAnswerText ? word?.studentAnswerText : word.value}

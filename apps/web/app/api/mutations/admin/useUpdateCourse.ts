@@ -16,7 +16,7 @@ export function useUpdateCourse() {
     mutationFn: async (options: UpdateCourseOptions) => {
       const response = await ApiClient.api.coursesControllerUpdateCourse(
         options.courseId,
-        options.data
+        options.data,
       );
 
       return response.data;

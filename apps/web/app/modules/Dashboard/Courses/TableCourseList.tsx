@@ -87,7 +87,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
                 </Link>
               </TableCell>
             </TableRow>
-          )
+          ),
         )}
       </TableBody>
     </Table>

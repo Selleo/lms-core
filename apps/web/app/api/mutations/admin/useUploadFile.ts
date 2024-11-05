@@ -23,7 +23,7 @@ export function useUploadFile() {
           transformRequest: () => {
             return formData;
           },
-        }
+        },
       );
 
       return response.data;

@@ -16,7 +16,7 @@ export function useRemoveLessonFromCourse() {
       const response =
         await ApiClient.api.lessonsControllerRemoveLessonFromCourse(
           options.courseId,
-          options.lessonId
+          options.lessonId,
         );
 
       return response.data;
