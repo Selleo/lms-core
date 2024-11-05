@@ -567,6 +567,8 @@ export interface GetLessonResponse {
             url: string;
           };
     }[];
+    /** @pattern (not_started|in_progress|completed) */
+    lessonProgress?: string;
   };
 }
 
@@ -623,6 +625,8 @@ export interface GetLessonByIdResponse {
             url: string;
           };
     }[];
+    /** @pattern (not_started|in_progress|completed) */
+    lessonProgress?: string;
   };
 }
 
@@ -951,7 +955,7 @@ export interface GetQuestionAnswersResponse {
     id: string;
     optionText: string;
     isCorrect: boolean;
-    position: number;
+    position: number | null;
   }[];
 }
 

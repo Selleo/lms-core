@@ -44,7 +44,7 @@ export const StudentCoursesCarousel = ({
       <CarouselContent className="flex lg:bg-white w-full rounded-lg ">
         {carouselItems}
       </CarouselContent>
-      <div className="lg:absolute lg:-right-8 lg:-top-[96px] sr-only">
+      <div className="lg:absolute lg:-right-8 lg:-top-[96px] sr-only lg:not-sr-only">
         <CarouselPrevious className="rounded-full" />
         <CarouselNext className="rounded-full" />
       </div>
