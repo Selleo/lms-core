@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Card } from "~/components/ui/card";
 import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheTextBlanks";
 import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
+import Viewer from "~/components/RichText/Viever";
 
 type Answer = {
   id: string;
@@ -19,6 +20,8 @@ type FillTheBlanksProps = {
   answers: Answer[];
   questionLabel: string;
   isQuizSubmitted?: boolean;
+  solutionExplanation: string | null;
+  isPassed: boolean | null;
 };
 
 type Word = {
@@ -33,6 +36,8 @@ export const FillTheBlanks = ({
   sendAnswer,
   answers,
   isQuizSubmitted,
+  solutionExplanation,
+  isPassed,
 }: FillTheBlanksProps) => {
   const [_words, setWords] = useState<Word[]>(
     answers.map(({ position, studentAnswerText }) => ({
@@ -98,6 +103,12 @@ export const FillTheBlanks = ({
           );
         }}
       />
+      {solutionExplanation && !isPassed && (
+        <div>
+          <span className="body-base-md text-error-700">Correct sentence:</span>
+          <Viewer content={solutionExplanation} />
+        </div>
+      )}
     </Card>
   );
 };
