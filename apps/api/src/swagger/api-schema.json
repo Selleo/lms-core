@@ -4348,6 +4348,10 @@
                     "content"
                   ]
                 }
+              },
+              "lessonProgress": {
+                "pattern": "(not_started|in_progress|completed)",
+                "type": "string"
               }
             },
             "required": [
@@ -4588,6 +4592,10 @@
                     "content"
                   ]
                 }
+              },
+              "lessonProgress": {
+                "pattern": "(not_started|in_progress|completed)",
+                "type": "string"
               }
             },
             "required": [
@@ -5856,7 +5864,14 @@
                   "type": "boolean"
                 },
                 "position": {
-                  "type": "number"
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [

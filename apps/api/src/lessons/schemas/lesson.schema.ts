@@ -1,6 +1,7 @@
 import { type Static, Type } from "@sinclair/typebox";
 import { UUIDSchema } from "src/common";
 import { lessonItemSelectSchema } from "./lessonItem.schema";
+import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
 export const lessonSchema = Type.Object({
   id: UUIDSchema,
@@ -38,6 +39,11 @@ export const allLessonsSchema = Type.Array(lessonSchema);
 export const showLessonSchema = Type.Object({
   ...lessonSchema.properties,
   lessonItems: Type.Array(lessonItemSelectSchema),
+  lessonProgress: Type.Optional(
+    Type.String({
+      pattern: `(${LessonProgress.notStarted}|${LessonProgress.inProgress}|${LessonProgress.completed})`,
+    }),
+  ),
   itemsCount: Type.Number(),
   itemsCompletedCount: Type.Optional(Type.Number()),
 });

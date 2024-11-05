@@ -18,6 +18,7 @@ import {
 import { isNull } from "lodash";
 import { S3Service } from "src/file/s3.service";
 import { LessonsRepository } from "./repositories/lessons.repository";
+import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
 @Injectable()
 export class LessonsService {
@@ -57,6 +58,12 @@ export class LessonsService {
         imageUrl,
         lessonItems: lessonItems,
         itemsCount: completableLessonItems.length,
+        lessonProgress:
+          completableLessonItems.length === 0
+            ? LessonProgress.notStarted
+            : completableLessonItems.length > 0
+              ? LessonProgress.inProgress
+              : LessonProgress.completed,
         itemsCompletedCount: completedLessonItems.length,
       };
     }
@@ -66,8 +73,9 @@ export class LessonsService {
       userId,
     );
 
-    if (!lessonProgress)
+    if (!lessonProgress) {
       throw new NotFoundException("Lesson progress not found");
+    }
 
     const questionLessonItems = await this.getLessonQuestions(
       lesson,
@@ -82,6 +90,11 @@ export class LessonsService {
       itemsCount: lessonProgress.lessonItemCount,
       itemsCompletedCount: lessonProgress.completedLessonItemCount,
       quizScore: lessonProgress.quizScore,
+      lessonProgress: (lessonProgress.completedLessonItemCount === 0
+        ? LessonProgress.notStarted
+        : lessonProgress.completedLessonItemCount > 0
+          ? LessonProgress.inProgress
+          : LessonProgress.completed) as keyof typeof LessonProgress,
     };
   }
 
@@ -494,10 +507,16 @@ export class LessonsService {
           })
         : [];
 
+      const canShowSolutionExplanation =
+        !!studentAnswers?.answer && lessonRated && lessonType === "quiz";
+
       return {
         id: item.questionData.id,
         questionType: item.questionData.questionType,
         questionBody: item.questionData.questionBody,
+        solutionExplanation: canShowSolutionExplanation
+          ? item.questionData.solutionExplanation
+          : null,
         questionAnswers: result,
         passQuestion,
       };
@@ -523,11 +542,17 @@ export class LessonsService {
       };
     });
 
+    const canShowSolutionExplanation =
+      !!studentAnswers?.answer && lessonRated && lessonType === "quiz";
+
     return {
       id: item.questionData.id,
       questionType: item.questionData.questionType,
       questionBody: item.questionData.questionBody,
       questionAnswers: result,
+      solutionExplanation: canShowSolutionExplanation
+        ? item.questionData.solutionExplanation
+        : null,
       passQuestion,
     };
   }

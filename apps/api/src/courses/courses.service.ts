@@ -40,8 +40,9 @@ import {
   type CourseSortField,
   CourseSortFields,
 } from "./schemas/courseQuery";
-import { CreateCourseBody } from "./schemas/createCourse.schema";
-import { UpdateCourseBody } from "./schemas/updateCourse.schema";
+import type { CreateCourseBody } from "./schemas/createCourse.schema";
+import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
+import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
 @Injectable()
 export class CoursesService {
@@ -328,6 +329,30 @@ export class CoursesService {
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
           AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
+        lessonProgress: sql<string>`
+          (CASE
+            WHEN (
+              SELECT COUNT(*)
+              FROM ${lessonItems}
+              WHERE ${lessonItems.lessonId} = ${lessons.id} 
+                AND ${lessonItems.lessonItemType} != 'text_block'
+            ) = (
+              SELECT COUNT(*)
+              FROM ${studentCompletedLessonItems}
+              WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.studentId} = ${userId}
+            )
+            THEN ${LessonProgress.completed}
+            WHEN (
+              SELECT COUNT(*)
+              FROM ${studentCompletedLessonItems}
+              WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.studentId} = ${userId}
+            ) > 0
+            THEN ${LessonProgress.inProgress}
+            ELSE ${LessonProgress.notStarted}
+          END)
+        `,
       })
       .from(courseLessons)
       .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))

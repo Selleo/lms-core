@@ -87,6 +87,7 @@ export const questionResponse = Type.Object({
   id: UUIDSchema,
   questionType: Type.String(),
   questionBody: Type.String(),
+  solutionExplanation: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   questionAnswers: Type.Array(questionAnswerOptionsResponse),
   passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
 });
