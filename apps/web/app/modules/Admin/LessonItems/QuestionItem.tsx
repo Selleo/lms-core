@@ -117,7 +117,7 @@ export const QuestionItem = ({
             <Label htmlFor={field}>
               {field === "archived" ? "Status" : startCase(field)}
             </Label>
-            <QuestionField name={field} control={control} isEditing />
+            <QuestionField name={field} control={control} />
           </div>
         ))}
         <AnswerOptions

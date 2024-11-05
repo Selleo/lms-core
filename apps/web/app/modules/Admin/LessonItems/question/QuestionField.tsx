@@ -16,13 +16,13 @@ import {
 interface QuestionFieldProps {
   name: keyof UpdateQuestionItemBody;
   control: Control<UpdateQuestionItemBody>;
-  isEditing: boolean;
+  isEditing?: boolean;
 }
 
 export const QuestionField = ({
   name,
   control,
-  isEditing,
+  isEditing = true,
 }: QuestionFieldProps) => {
   return (
     <Controller
