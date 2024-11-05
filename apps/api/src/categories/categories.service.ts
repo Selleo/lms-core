@@ -55,7 +55,11 @@ export class CategoriesService {
         .select(selectedColumns)
         .from(categories)
         .where(and(...conditions))
-        .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CategorySortField, isAdmin)));
+        .orderBy(
+          sortOrder(
+            this.getColumnToSortBy(sortedField as CategorySortField, isAdmin),
+          ),
+        );
 
       const dynamicQuery = queryDB.$dynamic();
 
@@ -76,21 +80,34 @@ export class CategoriesService {
   }
 
   public async getCategoryById(id: string) {
-    const [category] = await this.db.select().from(categories).where(eq(categories.id, id));
+    const [category] = await this.db
+      .select()
+      .from(categories)
+      .where(eq(categories.id, id));
 
     return category;
   }
 
   public async createCategory(createCategoryBody: CreateCategoryBody) {
-    const [newCategory] = await this.db.insert(categories).values(createCategoryBody).returning();
+    const [newCategory] = await this.db
+      .insert(categories)
+      .values(createCategoryBody)
+      .returning();
 
-    if (!newCategory) throw new UnprocessableEntityException("Category not created");
+    if (!newCategory)
+      throw new UnprocessableEntityException("Category not created");
 
     return newCategory;
   }
 
-  public async updateCategory(id: string, updateCategoryBody: UpdateCategoryBody) {
-    const [existingCategory] = await this.db.select().from(categories).where(eq(categories.id, id));
+  public async updateCategory(
+    id: string,
+    updateCategoryBody: UpdateCategoryBody,
+  ) {
+    const [existingCategory] = await this.db
+      .select()
+      .from(categories)
+      .where(eq(categories.id, id));
 
     if (!existingCategory) {
       throw new NotFoundException("Category not found");
@@ -120,7 +137,10 @@ export class CategoriesService {
     }
   }
 
-  private serializeCategories = (data: AllCategoriesResponse, isAdmin: boolean) =>
+  private serializeCategories = (
+    data: AllCategoriesResponse,
+    isAdmin: boolean,
+  ) =>
     data.map((category) => ({
       ...category,
       archived: isAdmin ? category.archived : null,
@@ -130,7 +150,9 @@ export class CategoriesService {
   private getFiltersConditions(filters: CategoryFilterSchema) {
     const conditions = [];
     if (filters.title) {
-      conditions.push(ilike(categories.title, `%${filters.title.toLowerCase()}%`));
+      conditions.push(
+        ilike(categories.title, `%${filters.title.toLowerCase()}%`),
+      );
     }
 
     if (filters.archived) {

@@ -1,7 +1,8 @@
-import { type Static, Type } from "@sinclair/typebox";
+import { Type } from "@sinclair/typebox";
+import { InferInsertModel } from "drizzle-orm";
+import { categories } from "src/storage/schema";
 
-export const createCategorySchema = Type.Object({
+export const categoryCreateSchema = Type.Object({
   title: Type.String(),
 });
-
-export type CreateCategoryBody = Static<typeof createCategorySchema>;
+export type CategoryInsert = InferInsertModel<typeof categories>;

@@ -11,6 +11,7 @@ export const answerQuestionSchema = Type.Object({
     Type.Array(Type.Object({ index: Type.Number(), value: Type.String() })),
   ]),
 });
+
 export const questionSchema = Type.Object({
   lessonId: UUIDSchema,
   questionId: UUIDSchema,
