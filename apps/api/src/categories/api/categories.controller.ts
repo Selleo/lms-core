@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Post,
-  Query,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Body, Controller, Get, Patch, Post, Query, UnauthorizedException } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -31,14 +23,8 @@ import {
   type SortCategoryFieldsOptions,
   sortCategoryFieldsOptions,
 } from "../schemas/categoryQuery";
-import {
-  type CreateCategoryBody,
-  createCategorySchema,
-} from "../schemas/createCategorySchema";
-import {
-  type UpdateCategoryBody,
-  updateCategorySchema,
-} from "../schemas/updateCategorySchema";
+import { categoryCreateSchema, CategoryInsert } from "../schemas/createCategorySchema";
+import { categoryUpdateSchema, CategoryUpdateBody } from "../schemas/updateCategorySchema";
 
 @Controller("categories")
 export class CategoriesController {
@@ -81,9 +67,7 @@ export class CategoriesController {
     @CurrentUser() currentUser: { role: string },
   ): Promise<BaseResponse<CategorySchema>> {
     if (currentUser.role !== "admin") {
-      throw new UnauthorizedException(
-        "You don't have permission to get category",
-      );
+      throw new UnauthorizedException("You don't have permission to get category");
     }
 
     const category = await this.categoriesService.getCategoryById(id);
@@ -99,15 +83,12 @@ export class CategoriesController {
         schema: categoryCreateSchema,
       },
     ],
-    response: baseResponse(
-      Type.Object({ id: UUIDSchema, message: Type.String() }),
-    ),
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
   })
   async createCategory(
     @Body() createCategoryBody: CategoryInsert,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
-    const { id } =
-      await this.categoriesService.createCategory(createCategoryBody);
+    const { id } = await this.categoriesService.createCategory(createCategoryBody);
 
     return new BaseResponse({ id, message: "Category created" });
   }
@@ -126,15 +107,10 @@ export class CategoriesController {
     @CurrentUser() currentUser: { role: string },
   ): Promise<BaseResponse<CategorySchema>> {
     if (currentUser.role !== "admin") {
-      throw new UnauthorizedException(
-        "You don't have permission to update category",
-      );
+      throw new UnauthorizedException("You don't have permission to update category");
     }
 
-    const category = await this.categoriesService.updateCategory(
-      id,
-      updateCategoryBody,
-    );
+    const category = await this.categoriesService.updateCategory(id, updateCategoryBody);
 
     return new BaseResponse(category);
   }

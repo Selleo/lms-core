@@ -1,16 +1,8 @@
 import { faker } from "@faker-js/faker";
-import { STATUS } from "../schema/utils";
-import {
-  QUESTION_TYPE,
-  QUESTION_TYPE_KEYS,
-} from "../../questions/schema/questions.types";
-import {
-  LESSON_FILE_TYPE,
-  LESSON_ITEM_TYPE,
-  LESSON_TYPE,
-} from "../../lessons/lessonFileType";
+import { Type } from "@sinclair/typebox";
+
 import { baseCourseSchema } from "src/courses/schemas/createCourse.schema";
-import { Static, Type } from "@sinclair/typebox";
+import { LESSON_FILE_TYPE, LESSON_ITEM_TYPE, LESSON_TYPE } from "src/lessons/lesson.type";
 import { lesson } from "src/lessons/schemas/lesson.schema";
 import {
   lessonItemFileSchema,
@@ -19,44 +11,12 @@ import {
   textBlockSchema,
 } from "src/lessons/schemas/lessonItem.schema";
 
-export interface NiceCourseData {
-  title: string;
-  description: string;
-  imageUrl?: string;
-  state: keyof typeof STATUS;
-  priceInCents: number;
-  category: string;
-  lessons: {
-    type: keyof typeof LESSON_TYPE;
-    title: string;
-    description: string;
-    state: keyof typeof STATUS;
-    items: Array<
-      | {
-          type: typeof LESSON_ITEM_TYPE.text_block.key;
-          title: string;
-          body: string;
-          state: keyof typeof STATUS;
-        }
-      | {
-          type: typeof LESSON_ITEM_TYPE.file.key;
-          title: string;
-          fileType: keyof typeof LESSON_FILE_TYPE;
-          url: string;
-          state: keyof typeof STATUS;
-        }
-      | {
-          type: typeof LESSON_ITEM_TYPE.question.key;
-          questionType: keyof typeof QUESTION_TYPE_KEYS;
-          questionBody: string;
-          state: keyof typeof STATUS;
-          solutionExplanation?: string;
-        }
-    >;
-  }[];
-}
+import { QUESTION_TYPE } from "../../questions/schema/questions.types";
+import { STATUS } from "../schema/utils";
 
-const niceCourseTest = Type.Intersect([
+import type { Static } from "@sinclair/typebox";
+
+const niceCourseData = Type.Intersect([
   Type.Omit(baseCourseSchema, ["categoryId"]),
   Type.Object({
     category: Type.String(),
@@ -64,10 +24,7 @@ const niceCourseTest = Type.Intersect([
       Type.Intersect([
         Type.Omit(lesson, ["id"]),
         Type.Object({
-          state: Type.Union([
-            Type.Literal(STATUS.draft.key),
-            Type.Literal(STATUS.published.key),
-          ]),
+          state: Type.Union([Type.Literal(STATUS.draft.key), Type.Literal(STATUS.published.key)]),
           items: Type.Array(
             Type.Union([
               Type.Intersect([
@@ -83,21 +40,11 @@ const niceCourseTest = Type.Intersect([
                 }),
               ]),
               Type.Intersect([
-                Type.Omit(questionSchema, [
-                  "id",
-                  "archived",
-                  "authorId",
-                  "questionAnswers",
-                ]),
+                Type.Omit(questionSchema, ["id", "archived", "authorId", "questionAnswers"]),
                 Type.Object({
                   itemType: Type.Literal(LESSON_ITEM_TYPE.question.key),
                   questionAnswers: Type.Optional(
-                    Type.Array(
-                      Type.Omit(questionAnswerOptionsSchema, [
-                        "id",
-                        "questionId",
-                      ]),
-                    ),
+                    Type.Array(Type.Omit(questionAnswerOptionsSchema, ["id", "questionId"])),
                   ),
                 }),
               ]),
@@ -109,9 +56,9 @@ const niceCourseTest = Type.Intersect([
   }),
 ]);
 
-type NiceCourseTest = Static<typeof niceCourseTest>;
+type NiceCourseData = Static<typeof niceCourseData>;
 
-export const niceCourses: NiceCourseTest[] = [
+export const niceCourses: NiceCourseData[] = [
   {
     title: "Introduction to Web Development: Building Your First Website",
     description:
@@ -354,8 +301,7 @@ export const niceCourses: NiceCourseTest[] = [
           {
             itemType: LESSON_ITEM_TYPE.question.key,
             questionType: QUESTION_TYPE.single_choice.key,
-            questionBody:
-              "Which of the following HTML tags is used to create an image?",
+            questionBody: "Which of the following HTML tags is used to create an image?",
             state: STATUS.published.key,
             questionAnswers: [
               {

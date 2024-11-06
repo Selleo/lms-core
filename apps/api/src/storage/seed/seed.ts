@@ -2,7 +2,13 @@ import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
+import { sampleSize } from "lodash";
 import postgres from "postgres";
+
+import hashPassword from "../../common/helpers/hashPassword";
+import { STATES } from "../../common/states";
+import { LESSON_ITEM_TYPE } from "../../lessons/lesson.type";
+import { USER_ROLES } from "../../users/schemas/user-roles";
 import {
   categories,
   courseLessons,
@@ -17,14 +23,11 @@ import {
   textBlocks,
   users,
 } from "../schema";
-import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
-import { DatabasePg, UUIDType } from "../../common";
-import hashPassword from "../../common/helpers/hashPassword";
-import { USER_ROLES } from "../../users/schemas/user-roles";
 import { STATUS } from "../schema/utils";
-import { STATES } from "../../common/states";
-import { LESSON_ITEM_TYPE } from "../../lessons/lessonFileType";
-import { sampleSize } from "lodash";
+
+import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
+
+import type { DatabasePg, UUIDType } from "../../common";
 
 dotenv.config({ path: "./.env" });
 
@@ -36,15 +39,8 @@ const connectionString = process.env.DATABASE_URL!;
 const sql = postgres(connectionString);
 const db = drizzle(sql) as DatabasePg;
 
-async function createOrFindUser(
-  email: string,
-  password: string,
-  userData: any,
-) {
-  const [existingUser] = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email));
+async function createOrFindUser(email: string, password: string, userData: any) {
+  const [existingUser] = await db.select().from(users).where(eq(users.email, email));
   if (existingUser) return existingUser;
 
   const [newUser] = await db.insert(users).values(userData).returning();
@@ -82,11 +78,7 @@ async function createUsers(count: number) {
   );
 }
 
-async function createEntities(
-  table: any,
-  count: number,
-  dataGenerator: () => any,
-) {
+async function createEntities(table: any, count: number, dataGenerator: () => any) {
   const entities = Array.from({ length: count }, dataGenerator);
   return db.insert(table).values(entities).returning();
 }
@@ -141,12 +133,7 @@ async function createCoursesWithLessons(
 
         // Create published lesson items for published lessons
         lessonItemsData.push(
-          ...createLessonItems(
-            lessonId,
-            existingFiles,
-            existingTextBlocks,
-            existingQuestions,
-          ),
+          ...createLessonItems(lessonId, existingFiles, existingTextBlocks, existingQuestions),
         );
       }
       courseToLessonsMap.set(courseId, courseLessons);
@@ -169,22 +156,14 @@ async function createCoursesWithLessons(
         courseLessons.push(lessonId);
 
         lessonItemsData.push(
-          ...createLessonItems(
-            lessonId,
-            existingFiles,
-            existingTextBlocks,
-            existingQuestions,
-          ),
+          ...createLessonItems(lessonId, existingFiles, existingTextBlocks, existingQuestions),
         );
       }
       courseToLessonsMap.set(courseId, courseLessons);
     }
   }
 
-  const createdCourses = await db
-    .insert(courses)
-    .values(coursesData)
-    .returning();
+  const createdCourses = await db.insert(courses).values(coursesData).returning();
   await db.insert(lessons).values(lessonsData).returning();
   await db.insert(lessonItems).values(lessonItemsData);
 
@@ -204,12 +183,7 @@ async function createCoursesWithLessons(
   return createdCourses;
 }
 
-function createLessonItems(
-  lessonId: string,
-  files: any[],
-  textBlocks: any[],
-  questions: any[],
-) {
+function createLessonItems(lessonId: string, files: any[], textBlocks: any[], questions: any[]) {
   return [
     {
       id: faker.string.uuid(),
@@ -327,10 +301,7 @@ async function seed() {
         let index = 0;
         return () => ({
           id: faker.string.uuid(),
-          questionType: faker.helpers.arrayElement([
-            "single_choice",
-            "multiple_choice",
-          ]),
+          questionType: faker.helpers.arrayElement(["single_choice", "multiple_choice"]),
           questionBody: faker.lorem.paragraph(3),
           solutionExplanation: faker.lorem.paragraph(3),
           state: index++ % 2 === 0 ? STATES.published : STATES.draft,
@@ -359,16 +330,9 @@ async function seed() {
     const createdFiles = await createEntities(files, 10, () => ({
       id: faker.string.uuid(),
       title: faker.lorem.sentence(3),
-      type: faker.helpers.arrayElement([
-        "presentation",
-        "external_presentation",
-        "video",
-      ]),
+      type: faker.helpers.arrayElement(["presentation", "external_presentation", "video"]),
       url: faker.internet.url(),
-      state: faker.helpers.arrayElement([
-        STATUS.draft.key,
-        STATUS.published.key,
-      ]),
+      state: faker.helpers.arrayElement([STATUS.draft.key, STATUS.published.key]),
       authorId: adminUser.id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

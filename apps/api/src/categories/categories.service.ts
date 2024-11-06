@@ -6,22 +6,23 @@ import {
 } from "@nestjs/common";
 import { and, count, eq, ilike, like } from "drizzle-orm";
 
-import { DatabasePg, type Pagination } from "src/common";
+import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";
-import { UserRoles, type UserRole } from "src/users/schemas/user-roles";
+import { type UserRole, USER_ROLES } from "src/users/schemas/user-roles";
 
 import {
   type CategoryFilterSchema,
   type CategorySortField,
   CategorySortFields,
 } from "./schemas/categoryQuery";
-import type { DatabasePg, Pagination } from "src/common";
-import { type UserRole, USER_ROLES } from "src/users/schemas/user-roles";
-import { getSortOptions } from "src/common/helpers/getSortOptions";
-import { CategoryInsert } from "./schemas/createCategorySchema";
-import { CategoryUpdateBody } from "./schemas/updateCategorySchema";
+
+import type { CategoriesQuery } from "./api/categories.types";
+import type { AllCategoriesResponse } from "./schemas/category.schema";
+import type { CategoryInsert } from "./schemas/createCategorySchema";
+import type { CategoryUpdateBody } from "./schemas/updateCategorySchema";
+import type { Pagination } from "src/common";
 
 @Injectable()
 export class CategoriesService {
@@ -55,11 +56,7 @@ export class CategoriesService {
         .select(selectedColumns)
         .from(categories)
         .where(and(...conditions))
-        .orderBy(
-          sortOrder(
-            this.getColumnToSortBy(sortedField as CategorySortField, isAdmin),
-          ),
-        );
+        .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CategorySortField, isAdmin)));
 
       const dynamicQuery = queryDB.$dynamic();
 
@@ -80,34 +77,21 @@ export class CategoriesService {
   }
 
   public async getCategoryById(id: string) {
-    const [category] = await this.db
-      .select()
-      .from(categories)
-      .where(eq(categories.id, id));
+    const [category] = await this.db.select().from(categories).where(eq(categories.id, id));
 
     return category;
   }
 
-  public async createCategory(createCategoryBody: CreateCategoryBody) {
-    const [newCategory] = await this.db
-      .insert(categories)
-      .values(createCategoryBody)
-      .returning();
+  public async createCategory(createCategoryBody: CategoryInsert) {
+    const [newCategory] = await this.db.insert(categories).values(createCategoryBody).returning();
 
-    if (!newCategory)
-      throw new UnprocessableEntityException("Category not created");
+    if (!newCategory) throw new UnprocessableEntityException("Category not created");
 
     return newCategory;
   }
 
-  public async updateCategory(
-    id: string,
-    updateCategoryBody: UpdateCategoryBody,
-  ) {
-    const [existingCategory] = await this.db
-      .select()
-      .from(categories)
-      .where(eq(categories.id, id));
+  public async updateCategory(id: string, updateCategoryBody: CategoryUpdateBody) {
+    const [existingCategory] = await this.db.select().from(categories).where(eq(categories.id, id));
 
     if (!existingCategory) {
       throw new NotFoundException("Category not found");
@@ -137,10 +121,7 @@ export class CategoriesService {
     }
   }
 
-  private serializeCategories = (
-    data: AllCategoriesResponse,
-    isAdmin: boolean,
-  ) =>
+  private serializeCategories = (data: AllCategoriesResponse, isAdmin: boolean) =>
     data.map((category) => ({
       ...category,
       archived: isAdmin ? category.archived : null,
@@ -150,9 +131,7 @@ export class CategoriesService {
   private getFiltersConditions(filters: CategoryFilterSchema) {
     const conditions = [];
     if (filters.title) {
-      conditions.push(
-        ilike(categories.title, `%${filters.title.toLowerCase()}%`),
-      );
+      conditions.push(ilike(categories.title, `%${filters.title.toLowerCase()}%`));
     }
 
     if (filters.archived) {

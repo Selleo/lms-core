@@ -1,4 +1,6 @@
 import { faker } from "@faker-js/faker";
+import { sql, eq } from "drizzle-orm/sql";
+
 import {
   categories,
   courseLessons,
@@ -10,9 +12,10 @@ import {
   questions,
   textBlocks,
 } from "src/storage/schema";
-import { DatabasePg } from "../../common";
+
 import { niceCourses } from "./nice-data-seeds";
-import { sql, eq } from "drizzle-orm/sql";
+
+import type { DatabasePg } from "../../common";
 
 export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
   for (const courseData of niceCourses) {
@@ -137,8 +140,7 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
               questionType: item.questionType,
               questionBody: item.questionBody,
               solutionExplanation:
-                item.solutionExplanation ||
-                "Explanation will be provided after answering.",
+                item.solutionExplanation || "Explanation will be provided after answering.",
               state: item.state,
               authorId: adminUserId,
               createdAt: new Date().toISOString(),

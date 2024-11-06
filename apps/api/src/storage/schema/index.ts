@@ -11,6 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { USER_ROLES } from "src/users/schemas/user-roles";
+
 import { archived, id, timestamps } from "./utils";
 
 export const users = pgTable("users", {

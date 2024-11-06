@@ -1,7 +1,8 @@
 import { Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
-import { CategoryInsert } from "./createCategorySchema";
+
+import type { CategoryInsert } from "./createCategorySchema";
 
 export const categoryUpdateSchema = Type.Partial(
   Type.Object({
@@ -11,6 +12,4 @@ export const categoryUpdateSchema = Type.Partial(
   }),
 );
 
-export type CategoryUpdateBody = Partial<
-  Pick<CategoryInsert, "title" | "archived">
->;
+export type CategoryUpdateBody = Partial<Pick<CategoryInsert, "title" | "archived">>;

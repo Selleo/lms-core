@@ -3,10 +3,12 @@ import * as dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { credentials, users } from "../schema";
-import { DatabasePg } from "../../common";
+
 import hashPassword from "../../common/helpers/hashPassword";
 import { USER_ROLES } from "../../users/schemas/user-roles";
+import { credentials, users } from "../schema";
+
+import type { DatabasePg } from "../../common";
 
 dotenv.config({ path: "./.env" });
 
@@ -18,15 +20,8 @@ const connectionString = process.env.DATABASE_URL!;
 const sql = postgres(connectionString);
 const db = drizzle(sql) as DatabasePg;
 
-async function createOrFindUser(
-  email: string,
-  password: string,
-  userData: any,
-) {
-  const [existingUser] = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email));
+async function createOrFindUser(email: string, password: string, userData: any) {
+  const [existingUser] = await db.select().from(users).where(eq(users.email, email));
   if (existingUser) return existingUser;
 
   const [newUser] = await db.insert(users).values(userData).returning();
