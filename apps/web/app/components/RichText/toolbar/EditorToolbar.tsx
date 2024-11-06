@@ -21,6 +21,15 @@ type EditorToolbarProps = {
 };
 
 const EditorToolbar = ({ editor }: EditorToolbarProps) => {
+  const checkIsWordSelected = () => {
+    const { from, to } = editor.state.selection;
+    const selectedText = editor.state.doc.textBetween(from, to);
+
+    return selectedText === "[word]";
+  };
+
+  const isWordSelected = checkIsWordSelected();
+
   return (
     <Toolbar
       className="m-0 flex items-center justify-between p-2"
@@ -110,6 +119,24 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           <Minus className="h-4 w-4" />
         </Toggle>
 
+        <Toggle
+          size="sm"
+          className="mr-1"
+          onPressedChange={() => {
+            const { from, to } = editor.state.selection;
+
+            if (from !== to) {
+              editor
+                .chain()
+                .focus()
+                .insertContentAt({ from, to }, "[word]")
+                .run();
+            }
+          }}
+          pressed={isWordSelected}
+        >
+          [w]
+        </Toggle>
         <FormatType editor={editor} />
       </ToggleGroup>
 
