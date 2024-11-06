@@ -2,9 +2,12 @@ import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
+import { sampleSize } from "lodash";
 import postgres from "postgres";
 
 import hashPassword from "./common/helpers/hashPassword";
+import { STATES } from "./common/states";
+import { LESSON_ITEM_TYPE } from "./lessons/lessonFileType";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
   categories,
@@ -20,8 +23,10 @@ import {
   textBlocks,
   users,
 } from "./storage/schema";
+import { STATUS } from "./storage/schema/utils";
+import { USER_ROLES } from "./users/schemas/user-roles";
 
-import type { DatabasePg } from "./common";
+import type { DatabasePg, UUIDType } from "./common";
 
 dotenv.config({ path: "./.env" });
 
@@ -33,8 +38,15 @@ const connectionString = process.env.DATABASE_URL!;
 const sql = postgres(connectionString);
 const db = drizzle(sql) as DatabasePg;
 
-async function createOrFindUser(email: string, password: string, userData: any) {
-  const [existingUser] = await db.select().from(users).where(eq(users.email, email));
+async function createOrFindUser(
+  email: string,
+  password: string,
+  userData: any,
+) {
+  const [existingUser] = await db
+    .select()
+    .from(users)
+    .where(eq(users.email, email));
   if (existingUser) return existingUser;
 
   const [newUser] = await db.insert(users).values(userData).returning();
@@ -72,52 +84,157 @@ async function createUsers(count: number) {
   );
 }
 
-async function createEntities(table: any, count: number, dataGenerator: () => any) {
+async function createEntities(
+  table: any,
+  count: number,
+  dataGenerator: () => any,
+) {
   const entities = Array.from({ length: count }, dataGenerator);
   return db.insert(table).values(entities).returning();
 }
 
-async function createLessonItems(
-  lessons: any[],
+async function createCoursesWithLessons(
+  adminUserId: string,
+  categories: any[],
+  existingFiles: any[],
+  existingTextBlocks: any[],
+  existingQuestions: any[],
+) {
+  const coursesData = [];
+  const lessonsData = [];
+  const lessonItemsData = [];
+  const courseToLessonsMap = new Map<UUIDType, UUIDType[]>();
+
+  for (let i = 0; i < 10; i++) {
+    const courseId = faker.string.uuid();
+    const isPublished = i < 6; // First 6 courses will be published, rest will be drafts
+
+    const course = {
+      id: courseId,
+      title: faker.lorem.sentence(3),
+      description: faker.lorem.paragraph(3),
+      imageUrl: faker.image.urlPicsumPhotos(),
+      state: isPublished ? STATUS.published.key : STATUS.draft.key,
+      priceInCents: i % 3 === 0 ? faker.number.int({ min: 0, max: 1000 }) : 0,
+      authorId: adminUserId,
+      categoryId: faker.helpers.arrayElement(categories).id,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    coursesData.push(course);
+
+    if (isPublished) {
+      const courseLessons = [];
+      for (let j = 0; j < 3; j++) {
+        const lessonId = faker.string.uuid();
+        const lesson = {
+          id: lessonId,
+          title: faker.lorem.sentence(3),
+          description: faker.lorem.paragraph(3),
+          imageUrl: faker.image.urlPicsumPhotos(),
+          authorId: adminUserId,
+          state: STATUS.published.key,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        lessonsData.push(lesson);
+        courseLessons.push(lessonId);
+
+        // Create published lesson items for published lessons
+        lessonItemsData.push(
+          ...createLessonItems(
+            lessonId,
+            existingFiles,
+            existingTextBlocks,
+            existingQuestions,
+          ),
+        );
+      }
+      courseToLessonsMap.set(courseId, courseLessons);
+    } else {
+      // For draft courses, create a mix of draft and published lessons
+      const courseLessons = [];
+      for (let j = 0; j < 2; j++) {
+        const lessonId = faker.string.uuid();
+        const lesson = {
+          id: lessonId,
+          title: faker.lorem.sentence(3),
+          description: faker.lorem.paragraph(3),
+          imageUrl: faker.image.urlPicsumPhotos(),
+          authorId: adminUserId,
+          state: STATUS.published.key,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        lessonsData.push(lesson);
+        courseLessons.push(lessonId);
+
+        lessonItemsData.push(
+          ...createLessonItems(
+            lessonId,
+            existingFiles,
+            existingTextBlocks,
+            existingQuestions,
+          ),
+        );
+      }
+      courseToLessonsMap.set(courseId, courseLessons);
+    }
+  }
+
+  const createdCourses = await db
+    .insert(courses)
+    .values(coursesData)
+    .returning();
+  await db.insert(lessons).values(lessonsData).returning();
+  await db.insert(lessonItems).values(lessonItemsData);
+
+  // Create course-lesson associations
+  const courseLessonsData = [];
+  for (const [courseId, lessonIds] of courseToLessonsMap.entries()) {
+    courseLessonsData.push(
+      ...lessonIds.map((lessonId) => ({
+        id: faker.string.uuid(),
+        courseId,
+        lessonId,
+      })),
+    );
+  }
+  await db.insert(courseLessons).values(courseLessonsData);
+
+  return createdCourses;
+}
+
+function createLessonItems(
+  lessonId: string,
   files: any[],
   textBlocks: any[],
   questions: any[],
 ) {
-  const createdLessonItems = lessons.flatMap((lesson, index) => [
+  return [
     {
       id: faker.string.uuid(),
-      lessonId: lesson.id,
-      lessonItemId: files[index % files.length].id,
-      lessonItemType: "file",
+      lessonId: lessonId,
+      lessonItemId: faker.helpers.arrayElement(files).id,
+      lessonItemType: LESSON_ITEM_TYPE.file.key,
       displayOrder: 1,
     },
     {
       id: faker.string.uuid(),
-      lessonId: lesson.id,
-      lessonItemId: textBlocks[index % textBlocks.length].id,
-      lessonItemType: "text_block",
+      lessonId: lessonId,
+      lessonItemId: faker.helpers.arrayElement(textBlocks).id,
+      lessonItemType: LESSON_ITEM_TYPE.text_block.key,
       displayOrder: 2,
     },
     {
       id: faker.string.uuid(),
-      lessonId: lesson.id,
-      lessonItemId: questions[index % questions.length].id,
-      lessonItemType: "question",
+      lessonId: lessonId,
+      lessonItemId: faker.helpers.arrayElement(questions).id,
+      lessonItemType: LESSON_ITEM_TYPE.question.key,
       displayOrder: 3,
     },
-  ]);
-  return db.insert(lessonItems).values(createdLessonItems).returning();
-}
-
-async function createCourseLessons(courses: any[], lessons: any[]) {
-  const courseLessonsList = courses.flatMap((course) =>
-    lessons.slice(0, 3).map((lesson) => ({
-      id: faker.string.uuid(),
-      courseId: course.id,
-      lessonId: lesson.id,
-    })),
-  );
-  return db.insert(courseLessons).values(courseLessonsList).returning();
+  ];
 }
 
 async function createStudentCourses(courses: any[], studentId: string) {
@@ -145,17 +262,17 @@ async function seed() {
       lastName: "User",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: "admin",
+      role: USER_ROLES.admin,
     });
 
-    const studentUser = await createOrFindUser("user@example.com", "studentpassword", {
+    const studentUser = await createOrFindUser("user@example.com", "password", {
       id: faker.string.uuid(),
       email: "user@example.com",
       firstName: "Student",
       lastName: "User",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: "student",
+      role: USER_ROLES.student,
     });
 
     console.log("Created or found admin user:", adminUser);
@@ -167,37 +284,67 @@ async function seed() {
     await createNiceCourses(adminUser.id, db);
     console.log("✨✨✨Created created nice courses✨✨✨");
 
-    const createdCategories = await createEntities(categories, 6, () => ({
-      id: faker.string.uuid(),
-      title: faker.lorem.sentence(3),
-      archived: faker.datatype.boolean(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }));
+    const createdCategories = await createEntities(
+      categories,
+      8,
+      (() => {
+        let index = 0;
+        return () => ({
+          id: faker.string.uuid(),
+          title: faker.lorem.sentence(3),
+          archived: index++ % 2 === 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
+      })(),
+    );
     console.log("Created categories");
 
-    const createdTextBlocks = await createEntities(textBlocks, 6, () => ({
-      id: faker.string.uuid(),
-      title: faker.lorem.words(4),
-      body: faker.lorem.paragraph(3),
-      archived: faker.datatype.boolean(),
-      state: faker.helpers.arrayElement(["draft", "published"]),
-      authorId: adminUser.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }));
+    const createdTextBlocks = await createEntities(
+      textBlocks,
+      10,
+      (() => {
+        let index = 0;
+        return () => ({
+          id: faker.string.uuid(),
+          title: faker.lorem.words(4),
+          body: faker.lorem.paragraph(3),
+          archived: index++ % 3 === 0,
+          state: index % 2 === 0 ? STATES.published : STATES.draft,
+          authorId: adminUser.id,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
+      })(),
+    );
+    const createdTextBlocksStatePublished = createdTextBlocks.filter(
+      (textBlock) => textBlock.state === STATES.published,
+    );
     console.log("Created text blocks");
 
-    const createdQuestions = await createEntities(questions, 5, () => ({
-      id: faker.string.uuid(),
-      questionType: faker.helpers.arrayElement(["single_choice", "multiple_choice"]),
-      questionBody: faker.lorem.paragraph(3),
-      solutionExplanation: faker.lorem.paragraph(3),
-      state: faker.helpers.arrayElement(["draft", "published"]),
-      authorId: adminUser.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }));
+    const createdQuestions = await createEntities(
+      questions,
+      10,
+      (() => {
+        let index = 0;
+        return () => ({
+          id: faker.string.uuid(),
+          questionType: faker.helpers.arrayElement([
+            "single_choice",
+            "multiple_choice",
+          ]),
+          questionBody: faker.lorem.paragraph(3),
+          solutionExplanation: faker.lorem.paragraph(3),
+          state: index++ % 2 === 0 ? STATES.published : STATES.draft,
+          authorId: adminUser.id,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        });
+      })(),
+    );
+    const createdQuestionsStatePublished = createdQuestions.filter(
+      (question) => question.state === STATES.published,
+    );
     console.log("Created questions");
 
     for (const question of createdQuestions) {
@@ -211,51 +358,41 @@ async function seed() {
     }
     console.log("Created question answer options");
 
-    const createdFiles = await createEntities(files, 6, () => ({
+    const createdFiles = await createEntities(files, 10, () => ({
       id: faker.string.uuid(),
       title: faker.lorem.sentence(3),
-      type: faker.helpers.arrayElement(["presentation", "external_presentation", "video"]),
+      type: faker.helpers.arrayElement([
+        "presentation",
+        "external_presentation",
+        "video",
+      ]),
       url: faker.internet.url(),
-      state: faker.helpers.arrayElement(["draft", "published"]),
+      state: faker.helpers.arrayElement([
+        STATUS.draft.key,
+        STATUS.published.key,
+      ]),
       authorId: adminUser.id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }));
+    const createdFilesStatePublished = createdFiles.filter(
+      (file) => file.state === STATES.published,
+    );
     console.log("Created files");
 
-    const createdLessons = await createEntities(lessons, 16, () => ({
-      id: faker.string.uuid(),
-      title: faker.lorem.sentence(3),
-      description: faker.lorem.paragraph(3),
-      imageUrl: faker.image.urlPicsumPhotos(),
-      authorId: adminUser.id,
-      state: faker.helpers.arrayElement(["draft", "published"]),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }));
-    console.log("Created lessons");
+    const createdCourses = await createCoursesWithLessons(
+      adminUser.id,
+      createdCategories,
+      createdFilesStatePublished,
+      createdTextBlocksStatePublished,
+      createdQuestionsStatePublished,
+    );
+    console.log("Created courses with lessons and lesson items");
 
-    await createLessonItems(createdLessons, createdFiles, createdTextBlocks, createdQuestions);
-    console.log("Created lesson items");
-
-    const createdCourses = await createEntities(courses, 5, () => ({
-      id: faker.string.uuid(),
-      title: faker.lorem.sentence(3),
-      description: faker.lorem.paragraph(3),
-      imageUrl: faker.image.urlPicsumPhotos(),
-      state: faker.helpers.arrayElement(["draft", "published"]),
-      priceInCents: faker.number.int({ min: 0, max: 1000 }),
-      authorId: adminUser.id,
-      categoryId: faker.helpers.arrayElement(createdCategories).id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }));
-    console.log("Created courses");
-
-    await createCourseLessons(createdCourses, createdLessons);
-    console.log("Created course lessons");
-
-    await createStudentCourses(createdCourses, studentUser.id);
+    const courseCount = Math.floor(createdCourses.length * 0.7);
+    const selectedCourses = sampleSize(createdCourses, courseCount);
+    console.log("Selected random courses for student from createdCourses");
+    await createStudentCourses(selectedCourses, studentUser.id);
     console.log("Created student courses");
 
     console.log("Seeding completed successfully");

@@ -10,8 +10,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { UserRoles } from "src/users/schemas/user-roles";
-
+import { USER_ROLES } from "src/users/schemas/user-roles";
 import { archived, id, timestamps } from "./utils";
 
 export const users = pgTable("users", {
@@ -20,7 +19,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
-  role: text("role").notNull().default(UserRoles.student),
+  role: text("role").notNull().default(USER_ROLES.student),
   archived,
 });
 

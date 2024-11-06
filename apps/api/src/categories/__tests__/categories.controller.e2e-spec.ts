@@ -5,10 +5,14 @@ import { UserRoles } from "src/users/schemas/user-roles";
 import { createE2ETest } from "../../../test/create-e2e-test";
 import { createCategoryFactory } from "../../../test/factory/category.factory";
 import { createUserFactory } from "../../../test/factory/user.factory";
-import { cookieFor, truncateAllTables } from "../../../test/helpers/test-helpers";
-
-import type { INestApplication } from "@nestjs/common";
-import type { DatabasePg } from "src/common";
+import { DatabasePg } from "src/common";
+import { INestApplication } from "@nestjs/common";
+import {
+  cookieFor,
+  truncateAllTables,
+} from "../../../test/helpers/test-helpers";
+import { USER_ROLES } from "src/users/schemas/user-roles";
+import request from "supertest";
 
 const CATEGORIES_COUNT = 10;
 
@@ -38,7 +42,7 @@ describe("CategoriesController (e2e)", () => {
       it("returns archived and createdAt equal to null", async () => {
         const user = await userFactory
           .withCredentials({ password })
-          .create({ role: UserRoles.student });
+          .create({ role: USER_ROLES.student });
 
         const response = await request(app.getHttpServer())
           .get("/api/categories")
@@ -58,7 +62,7 @@ describe("CategoriesController (e2e)", () => {
       it("returns all filled category columns", async () => {
         const user = await userFactory
           .withCredentials({ password })
-          .create({ role: UserRoles.admin });
+          .create({ role: USER_ROLES.admin });
 
         const response = await request(app.getHttpServer())
           .get("/api/categories")
@@ -81,7 +85,7 @@ describe("CategoriesController (e2e)", () => {
         let page = 1;
         const user = await userFactory
           .withCredentials({ password })
-          .create({ role: UserRoles.student });
+          .create({ role: USER_ROLES.student });
 
         const response = await request(app.getHttpServer())
           .get(`/api/categories?perPage=${perPage}&page=${page}`)

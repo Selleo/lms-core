@@ -18,7 +18,7 @@ import {
   studentQuestionAnswers,
 } from "src/storage/schema";
 import { and, eq, inArray, sql } from "drizzle-orm";
-import { QuestionType } from "./schema/questions.types";
+import { QUESTION_TYPE } from "./schema/questions.types";
 import { StudentCompletedLessonItemsService } from "src/studentCompletedLessonItem/studentCompletedLessonItems.service";
 
 import { QuestionType } from "./schema/questionsSchema";
@@ -68,12 +68,12 @@ export class QuestionsService {
       );
 
       const questionTypeHandlers = {
-        [QuestionType.single_choice.key]: this.handleChoiceAnswer.bind(this),
-        [QuestionType.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
-        [QuestionType.open_answer.key]: this.handleOpenAnswer.bind(this),
-        [QuestionType.fill_in_the_blanks_text.key]:
+        [QUESTION_TYPE.single_choice.key]: this.handleChoiceAnswer.bind(this),
+        [QUESTION_TYPE.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
+        [QUESTION_TYPE.open_answer.key]: this.handleOpenAnswer.bind(this),
+        [QUESTION_TYPE.fill_in_the_blanks_text.key]:
           this.handleFillInTheBlanksAnswer.bind(this),
-        [QuestionType.fill_in_the_blanks_dnd.key]:
+        [QUESTION_TYPE.fill_in_the_blanks_dnd.key]:
           this.handleFillInTheBlanksAnswer.bind(this),
       } as const;
 

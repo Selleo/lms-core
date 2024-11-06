@@ -15,7 +15,7 @@ import {
 
 import { niceCourses } from "./nice-data-seeds";
 
-import type { DatabasePg } from "./common";
+import type { DatabasePg, eq } from "./common";
 
 export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
   for (const courseData of niceCourses) {
@@ -114,6 +114,23 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             displayOrder: index + 2,
           });
         } else if (item.type === "question") {
+          const [questionExists] = await db
+            .select()
+            .from(questions)
+            .where(eq(questions.questionBody, item.questionBody));
+
+          if (questionExists) {
+            await db.insert(lessonItems).values({
+              id: crypto.randomUUID(),
+              lessonId: lesson.id,
+              lessonItemId: questionExists.id,
+              lessonItemType: "question",
+              displayOrder: index + 2,
+            });
+
+            continue;
+          }
+
           const questionId = crypto.randomUUID();
 
           const [question] = await db
@@ -122,7 +139,8 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
               id: questionId,
               questionType: item.questionType,
               questionBody: item.questionBody,
-              solutionExplanation: "Explanation will be provided after answering.",
+              solutionExplanation:
+                "Explanation will be provided after answering.",
               state: item.state,
               authorId: adminUserId,
               createdAt: new Date().toISOString(),
@@ -175,10 +193,15 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             }
           }
 
-          if (item.questionType === "multiple_choice" || item.questionType === "single_choice") {
+          if (
+            item.questionType === "multiple_choice" ||
+            item.questionType === "single_choice"
+          ) {
             for (let index = 1; index < 5; index++) {
               const mockedIsCorrect =
-                item.questionType === "single_choice" ? index === 1 : index % 2 === 0;
+                item.questionType === "single_choice"
+                  ? index === 1
+                  : index % 2 === 0;
 
               await db
                 .insert(questionAnswerOptions)

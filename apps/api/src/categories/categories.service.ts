@@ -17,11 +17,11 @@ import {
   type CategorySortField,
   CategorySortFields,
 } from "./schemas/categoryQuery";
-
-import type { CategoriesQuery } from "./api/categories.types";
-import type { AllCategoriesResponse } from "./schemas/category.schema";
-import type { CreateCategoryBody } from "./schemas/createCategorySchema";
-import type { UpdateCategoryBody } from "./schemas/updateCategorySchema";
+import type { DatabasePg, Pagination } from "src/common";
+import { type UserRole, USER_ROLES } from "src/users/schemas/user-roles";
+import { getSortOptions } from "src/common/helpers/getSortOptions";
+import { CategoryInsert } from "./schemas/createCategorySchema";
+import { CategoryUpdateBody } from "./schemas/updateCategorySchema";
 
 @Injectable()
 export class CategoriesService {
@@ -40,7 +40,7 @@ export class CategoriesService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    const isAdmin = userRole === UserRoles.admin;
+    const isAdmin = userRole === USER_ROLES.admin;
 
     const selectedColumns = {
       id: categories.id,

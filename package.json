@@ -12,6 +12,7 @@
     "generate:client": "pnpm run --filter=web generate:client",
     "db:generate": "pnpm run --filter=api db:generate",
     "db:migrate": "pnpm run --filter=api db:migrate",
+    "db:seed": "pnpm run --filter=api db:seed",
     "test:web": "pnpm run --filter=web test",
     "test:api": "pnpm run --filter=api test",
     "test:web:e2e": "pnpm run --filter=web test:e2e",

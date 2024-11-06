@@ -1,4 +1,9 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import {
   and,
   between,
@@ -102,7 +107,9 @@ export class CoursesService {
           courses.state,
           courses.archived,
         )
-        .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
+        .orderBy(
+          sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)),
+        );
 
       const data = await queryDB;
 
@@ -156,7 +163,9 @@ export class CoursesService {
           studentCourses.studentId,
           categories.title,
         )
-        .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
+        .orderBy(
+          sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)),
+        );
 
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
@@ -168,7 +177,13 @@ export class CoursesService {
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
-        .where(and(...conditions, eq(courses.state, "published"), eq(courses.archived, false)));
+        .where(
+          and(
+            ...conditions,
+            eq(courses.state, "published"),
+            eq(courses.archived, false),
+          ),
+        );
 
       const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
 
@@ -221,7 +236,9 @@ export class CoursesService {
           studentCourses.studentId,
           categories.title,
         )
-        .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
+        .orderBy(
+          sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)),
+        );
 
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
@@ -290,7 +307,10 @@ export class CoursesService {
       .innerJoin(users, eq(courses.authorId, users.id))
       .leftJoin(
         studentCourses,
-        and(eq(courses.id, studentCourses.courseId), eq(studentCourses.studentId, userId)),
+        and(
+          eq(courses.id, studentCourses.courseId),
+          eq(studentCourses.studentId, userId),
+        ),
       )
       .where(and(eq(courses.id, id), eq(courses.archived, false)));
 
@@ -302,18 +322,26 @@ export class CoursesService {
         id: lessons.id,
         title: lessons.title,
         type: lessons.type,
-        isSubmitted: sql<boolean>`EXISTS (SELECT 1 FROM ${studentLessonsProgress} WHERE ${studentLessonsProgress.lessonId} = ${lessons.id} AND ${studentLessonsProgress.studentId} = ${userId} AND ${studentLessonsProgress.quizCompleted})::BOOLEAN`,
+        isSubmitted: sql<boolean>`
+          EXISTS (
+            SELECT 1
+            FROM ${studentLessonsProgress}
+            WHERE ${studentLessonsProgress.lessonId} = ${lessons.id}
+              AND ${studentLessonsProgress.studentId} = ${userId}
+              AND ${studentLessonsProgress.quizCompleted}
+          )::BOOLEAN`,
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
         itemsCount: sql<number>`
           (SELECT COUNT(*)
           FROM ${lessonItems}
-          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+          WHERE ${lessonItems.lessonId} = ${lessons.id}
+            AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
         itemsCompletedCount: sql<number>`
           (SELECT COUNT(*)
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-          AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
+            AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
         lessonProgress: sql<"completed" | "in_progress" | "not_started">`
           (CASE
             WHEN (
@@ -438,7 +466,10 @@ export class CoursesService {
         throw new NotFoundException("Category not found");
       }
 
-      const [author] = await tx.select().from(users).where(eq(users.id, authorId));
+      const [author] = await tx
+        .select()
+        .from(users)
+        .where(eq(users.id, authorId));
 
       if (!author) {
         throw new NotFoundException("Author not found");
@@ -463,24 +494,32 @@ export class CoursesService {
       }
 
       if (createCourseBody.lessons && createCourseBody.lessons.length > 0) {
-        const courseLessonsData = createCourseBody.lessons.map((lessonId, index) => ({
-          courseId: newCourse.id,
-          lessonId: lessonId,
-          displayOrder: index + 1,
-        }));
+        const courseLessonsData = createCourseBody.lessons.map(
+          (lessonId, index) => ({
+            courseId: newCourse.id,
+            lessonId: lessonId,
+            displayOrder: index + 1,
+          }),
+        );
 
         await tx.insert(courseLessons).values(courseLessonsData);
       }
 
       if (newCourse.imageUrl) {
-        newCourse.imageUrl = await this.s3Service.getSignedUrl(newCourse.imageUrl);
+        newCourse.imageUrl = await this.s3Service.getSignedUrl(
+          newCourse.imageUrl,
+        );
       }
 
       return newCourse;
     });
   }
 
-  async updateCourse(id: string, updateCourseBody: UpdateCourseBody, image?: Express.Multer.File) {
+  async updateCourse(
+    id: string,
+    updateCourseBody: UpdateCourseBody,
+    image?: Express.Multer.File,
+  ) {
     return this.db.transaction(async (tx) => {
       if (updateCourseBody.categoryId) {
         const [category] = await tx
@@ -498,13 +537,20 @@ export class CoursesService {
         try {
           const fileExtension = image.originalname.split(".").pop();
           imageKey = `courses/${crypto.randomUUID()}.${fileExtension}`;
-          await this.s3Service.uploadFile(image.buffer, imageKey, image.mimetype);
+          await this.s3Service.uploadFile(
+            image.buffer,
+            imageKey,
+            image.mimetype,
+          );
         } catch (error) {
           throw new ConflictException("Failed to upload course image");
         }
       }
 
-      const [existingCourse] = await tx.select().from(courses).where(eq(courses.id, id));
+      const [existingCourse] = await tx
+        .select()
+        .from(courses)
+        .where(eq(courses.id, id));
 
       if (!existingCourse) {
         throw new NotFoundException("Course not found");
@@ -530,7 +576,9 @@ export class CoursesService {
       // }
 
       if (updatedCourse.imageUrl) {
-        updatedCourse.imageUrl = await this.s3Service.getSignedUrl(updatedCourse.imageUrl);
+        updatedCourse.imageUrl = await this.s3Service.getSignedUrl(
+          updatedCourse.imageUrl,
+        );
       }
 
       return updatedCourse;
@@ -546,13 +594,17 @@ export class CoursesService {
       .from(courses)
       .leftJoin(
         studentCourses,
-        and(eq(courses.id, studentCourses.courseId), eq(studentCourses.studentId, userId)),
+        and(
+          eq(courses.id, studentCourses.courseId),
+          eq(studentCourses.studentId, userId),
+        ),
       )
       .where(and(eq(courses.id, id), eq(courses.archived, false)));
 
     if (!course) throw new NotFoundException("Course not found");
 
-    if (course.enrolled) throw new ConflictException("Course is already enrolled");
+    if (course.enrolled)
+      throw new ConflictException("Course is already enrolled");
 
     await this.db.transaction(async (trx) => {
       const [enrolledCourse] = await trx
@@ -603,7 +655,10 @@ export class CoursesService {
       .from(courses)
       .leftJoin(
         studentCourses,
-        and(eq(courses.id, studentCourses.courseId), eq(studentCourses.studentId, userId)),
+        and(
+          eq(courses.id, studentCourses.courseId),
+          eq(studentCourses.studentId, userId),
+        ),
       )
       .where(and(eq(courses.id, id), eq(courses.archived, false)));
 
@@ -614,7 +669,12 @@ export class CoursesService {
     await this.db.transaction(async (trx) => {
       const [deletedCourse] = await trx
         .delete(studentCourses)
-        .where(and(eq(studentCourses.courseId, id), eq(studentCourses.studentId, userId)))
+        .where(
+          and(
+            eq(studentCourses.courseId, id),
+            eq(studentCourses.studentId, userId),
+          ),
+        )
         .returning();
 
       if (!deletedCourse) throw new ConflictException("Course not unenrolled");
@@ -658,7 +718,9 @@ export class CoursesService {
     });
   }
 
-  private async addS3SignedUrls(data: AllCoursesResponse): Promise<AllCoursesResponse> {
+  private async addS3SignedUrls(
+    data: AllCoursesResponse,
+  ): Promise<AllCoursesResponse> {
     return Promise.all(
       data.map(async (item) => {
         if (item.imageUrl) {
@@ -668,7 +730,10 @@ export class CoursesService {
             const signedUrl = await this.s3Service.getSignedUrl(item.imageUrl);
             return { ...item, imageUrl: signedUrl };
           } catch (error) {
-            console.error(`Failed to get signed URL for ${item.imageUrl}:`, error);
+            console.error(
+              `Failed to get signed URL for ${item.imageUrl}:`,
+              error,
+            );
             return item;
           }
         }
@@ -718,7 +783,10 @@ export class CoursesService {
     };
   }
 
-  private getFiltersConditions(filters: CoursesFilterSchema, publishedOnly = true) {
+  private getFiltersConditions(
+    filters: CoursesFilterSchema,
+    publishedOnly = true,
+  ) {
     const conditions = [];
     if (filters.title) {
       conditions.push(ilike(courses.title, `%${filters.title.toLowerCase()}%`));
