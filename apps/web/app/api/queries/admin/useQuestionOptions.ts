@@ -13,6 +13,7 @@ export const questionOptions = (id: string) =>
       const response = await ApiClient.api.lessonsControllerGetQuestionAnswers({
         questionId: id,
       });
+
       return response.data;
     },
     select: (data: GetQuestionAnswersResponse) => data.data,

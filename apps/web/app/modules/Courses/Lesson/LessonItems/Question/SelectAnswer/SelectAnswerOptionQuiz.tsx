@@ -97,7 +97,7 @@ export const SelectAnswerOptionQuiz = ({
           checked={isChecked}
           id={answerId}
           readOnly
-          type="radio"
+          type={isMultiAnswer ? "checkbox" : "radio"}
           value={answerId}
           {...register(
             isMultiAnswer

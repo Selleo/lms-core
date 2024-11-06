@@ -46,7 +46,7 @@ export const QuestionItem = ({
   useEffect(() => {
     if (questionOptions) {
       const sortedOptions = questionOptions
-        .sort((a, b) => a.position - b.position)
+        .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
         .map((option) => ({
           id: option.id,
           optionText: option.optionText,
@@ -117,7 +117,7 @@ export const QuestionItem = ({
             <Label htmlFor={field}>
               {field === "archived" ? "Status" : startCase(field)}
             </Label>
-            <QuestionField name={field} control={control} isEditing />
+            <QuestionField name={field} control={control} />
           </div>
         ))}
         <AnswerOptions

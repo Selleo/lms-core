@@ -43,9 +43,11 @@ export default function Overview() {
     <Card className="w-full pt-6 lg:pt-0 border-none drop-shadow-primary">
       <CardContent className="lg:p-8 flex flex-col align-center gap-6 2xl:flex-row">
         <div className="relative self-center w-full lg:max-w-[320px] aspect-video">
-          <div className="absolute z-10 flex items-center body-sm-md px-2 gap-x-1 rounded-lg py-1 left-4 top-4 bg-white">
-            {isQuiz && quizBadge}
-          </div>
+          {isQuiz && (
+            <div className="absolute z-10 flex items-center body-sm-md px-2 gap-x-1 rounded-lg py-1 left-4 top-4 bg-white">
+              {quizBadge}
+            </div>
+          )}
           <img
             src={imageUrl}
             alt={title}

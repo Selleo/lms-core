@@ -603,7 +603,7 @@ export class LessonsController {
           id: UUIDSchema,
           optionText: Type.String(),
           isCorrect: Type.Boolean(),
-          position: Type.Number(),
+          position: Type.Union([Type.Number(), Type.Null()]),
         }),
       ),
     ),

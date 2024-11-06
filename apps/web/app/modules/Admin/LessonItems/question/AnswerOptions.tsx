@@ -21,7 +21,7 @@ import { UpdateQuestionItemBody } from "~/api/generated-api";
 
 interface AnswerOptionsProps {
   questionType?: string;
-  isEditing: boolean;
+  isEditing?: boolean;
   control: Control<UpdateQuestionItemBody>;
   fieldArray: UseFieldArrayReturn<UpdateQuestionItemBody, "questionAnswers">;
   id: string;
@@ -29,7 +29,7 @@ interface AnswerOptionsProps {
 
 export const AnswerOptions = ({
   questionType,
-  isEditing,
+  isEditing = true,
   control,
   fieldArray: { fields, append, remove, replace },
   id,

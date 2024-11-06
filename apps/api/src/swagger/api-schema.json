@@ -3660,6 +3660,22 @@
                     "itemsCompletedCount": {
                       "type": "number"
                     },
+                    "lessonProgress": {
+                      "anyOf": [
+                        {
+                          "const": "completed",
+                          "type": "string"
+                        },
+                        {
+                          "const": "in_progress",
+                          "type": "string"
+                        },
+                        {
+                          "const": "not_started",
+                          "type": "string"
+                        }
+                      ]
+                    },
                     "state": {
                       "type": "string"
                     },
@@ -3791,6 +3807,22 @@
                     },
                     "itemsCompletedCount": {
                       "type": "number"
+                    },
+                    "lessonProgress": {
+                      "anyOf": [
+                        {
+                          "const": "completed",
+                          "type": "string"
+                        },
+                        {
+                          "const": "in_progress",
+                          "type": "string"
+                        },
+                        {
+                          "const": "not_started",
+                          "type": "string"
+                        }
+                      ]
                     },
                     "state": {
                       "type": "string"
@@ -4033,6 +4065,22 @@
                 "itemsCompletedCount": {
                   "type": "number"
                 },
+                "lessonProgress": {
+                  "anyOf": [
+                    {
+                      "const": "completed",
+                      "type": "string"
+                    },
+                    {
+                      "const": "in_progress",
+                      "type": "string"
+                    },
+                    {
+                      "const": "not_started",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "state": {
                   "type": "string"
                 },
@@ -4148,6 +4196,22 @@
               },
               "itemsCompletedCount": {
                 "type": "number"
+              },
+              "lessonProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
               },
               "state": {
                 "type": "string"
@@ -4271,6 +4335,16 @@
                                   "position"
                                 ]
                               }
+                            },
+                            "solutionExplanation": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
                             },
                             "passQuestion": {
                               "anyOf": [
@@ -4389,6 +4463,22 @@
               "itemsCompletedCount": {
                 "type": "number"
               },
+              "lessonProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
+              },
               "state": {
                 "type": "string"
               },
@@ -4512,6 +4602,16 @@
                                 ]
                               }
                             },
+                            "solutionExplanation": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "passQuestion": {
                               "anyOf": [
                                 {
@@ -4616,6 +4716,22 @@
           "description": {
             "type": "string"
           },
+          "lessonProgress": {
+            "anyOf": [
+              {
+                "const": "completed",
+                "type": "string"
+              },
+              {
+                "const": "in_progress",
+                "type": "string"
+              },
+              {
+                "const": "not_started",
+                "type": "string"
+              }
+            ]
+          },
           "state": {
             "type": "string"
           },
@@ -4676,6 +4792,22 @@
           },
           "description": {
             "type": "string"
+          },
+          "lessonProgress": {
+            "anyOf": [
+              {
+                "const": "completed",
+                "type": "string"
+              },
+              {
+                "const": "in_progress",
+                "type": "string"
+              },
+              {
+                "const": "not_started",
+                "type": "string"
+              }
+            ]
           },
           "state": {
             "type": "string"
@@ -5856,7 +5988,14 @@
                   "type": "boolean"
                 },
                 "position": {
-                  "type": "number"
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
                 }
               },
               "required": [

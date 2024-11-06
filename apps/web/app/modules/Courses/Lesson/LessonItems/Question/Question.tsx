@@ -190,6 +190,12 @@ export const Question = ({
           sendAnswer={sendAnswer}
           answers={content.questionAnswers}
           isQuizSubmitted={lesson?.isSubmitted}
+          solutionExplanation={
+            "solutionExplanation" in content
+              ? content.solutionExplanation
+              : null
+          }
+          isPassed={!!content.passQuestion}
         />
       );
 
@@ -202,6 +208,12 @@ export const Question = ({
           sendAnswer={sendAnswer}
           answers={fillInTheBlanksDndData}
           isQuizSubmitted={lesson?.isSubmitted}
+          solutionExplanation={
+            "solutionExplanation" in content
+              ? content.solutionExplanation
+              : null
+          }
+          isPassed={!!content.passQuestion}
         />
       );
 

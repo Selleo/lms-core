@@ -87,6 +87,7 @@ export const questionResponse = Type.Object({
   id: UUIDSchema,
   questionType: Type.String(),
   questionBody: Type.String(),
+  solutionExplanation: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   questionAnswers: Type.Array(questionAnswerOptionsResponse),
   passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
 });
@@ -96,6 +97,7 @@ export const questionContentResponse = Type.Object({
   questionType: Type.String(),
   questionBody: Type.String(),
   questionAnswers: Type.Array(questionAnswerOptionsResponse),
+  solutionExplanation: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   passQuestion: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
 });
 

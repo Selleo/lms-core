@@ -17,6 +17,7 @@ import { DndBlank } from "./DndBlank";
 import type { DndWord } from "./types";
 import { DraggableWord } from "./DraggableWord";
 import { WordBank } from "./WordBank";
+import Viewer from "~/components/RichText/Viever";
 
 type FillInTheBlanksDndProps = {
   isQuiz: boolean;
@@ -27,6 +28,8 @@ type FillInTheBlanksDndProps = {
   ) => Promise<void>;
   answers: DndWord[];
   isQuizSubmitted?: boolean;
+  solutionExplanation?: string | null;
+  isPassed: boolean | null;
 };
 
 export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
@@ -36,6 +39,8 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   sendAnswer,
   answers,
   isQuizSubmitted,
+  solutionExplanation,
+  isPassed,
 }) => {
   const [words, setWords] = useState<DndWord[]>(answers);
   const [currentlyDraggedWord, setCurrentlyDraggedWord] =
@@ -270,6 +275,14 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           }}
         />
         <WordBank words={wordBankWords} />
+        {solutionExplanation && !isPassed && (
+          <div className="mt-4">
+            <span className="body-base-md text-error-700">
+              Correct sentence:
+            </span>
+            <Viewer content={solutionExplanation} />
+          </div>
+        )}
       </DndContext>
     </div>
   );
