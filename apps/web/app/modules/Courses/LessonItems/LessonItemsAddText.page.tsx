@@ -2,10 +2,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { isObject } from "lodash-es";
 import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { type z } from "zod";
 
 import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
 import { lessonItemFormSchema } from "./LessonItemsForms/zodFormType";
+
+import type { z } from "zod";
 
 const LessonItemsAddTextLayout = () => {
   const [videoFile, setVideoFile] = useState<File | null | string>(null);

@@ -1,7 +1,8 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { ApiClient } from "../api-client";
-import { type GetAllCategoriesResponse } from "../generated-api";
+
+import type { GetAllCategoriesResponse } from "../generated-api";
 
 type CategorySearchParams = {
   title?: string;

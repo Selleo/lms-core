@@ -1,7 +1,6 @@
 import {
   closestCenter,
   DndContext,
-  type DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -13,13 +12,15 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { type Control, type UseFieldArrayReturn } from "react-hook-form";
 
-import { type UpdateQuestionItemBody } from "~/api/generated-api";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 
 import { SortableAnswerOption } from "./SortableAnswerOption";
+
+import type { DragEndEvent } from "@dnd-kit/core";
+import type { Control, UseFieldArrayReturn } from "react-hook-form";
+import type { UpdateQuestionItemBody } from "~/api/generated-api";
 
 interface AnswerOptionsProps {
   questionType?: string;

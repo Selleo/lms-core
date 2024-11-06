@@ -1,4 +1,3 @@
-import { type Editor } from "@tiptap/react";
 import {
   Bold,
   Code,
@@ -16,6 +15,8 @@ import { Toggle } from "~/components/ui/toggle";
 import { ToggleGroup, Toolbar } from "~/components/ui/toolbar";
 
 import { FormatType } from "./FormatType";
+
+import type { Editor } from "@tiptap/react";
 
 type EditorToolbarProps = {
   editor: Editor;

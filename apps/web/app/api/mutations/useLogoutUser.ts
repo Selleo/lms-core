@@ -4,9 +4,10 @@ import { AxiosError } from "axios";
 
 import { useToast } from "~/components/ui/use-toast";
 
-import { useAuthStore } from "./../../modules/Auth/authStore";
 import { requestManager, ApiClient } from "../api-client";
 import { queryClient } from "../queryClient";
+
+import { useAuthStore } from "./../../modules/Auth/authStore";
 
 export function useLogoutUser() {
   const { toast } = useToast();

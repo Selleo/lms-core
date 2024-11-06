@@ -5,8 +5,9 @@ import { migrate } from "drizzle-orm/postgres-js/migrator";
 import postgres from "postgres";
 import { GenericContainer, type StartedTestContainer } from "testcontainers";
 
-import { type DatabasePg } from "../src/common";
 import * as schema from "../src/storage/schema";
+
+import type { DatabasePg } from "../src/common";
 
 let container: StartedTestContainer;
 let sql: ReturnType<typeof postgres>;

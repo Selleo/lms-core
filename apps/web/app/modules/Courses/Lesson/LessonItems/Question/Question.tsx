@@ -2,23 +2,24 @@ import { useParams } from "@remix-run/react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import type { GetLessonResponse } from "~/api/generated-api";
 import { useLesson } from "~/api/queries";
 import { Textarea } from "~/components/ui/textarea";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
-import { QuestionCard } from "./QuestionCard";
-import { QuestionCorrectAnswers } from "./QuestionCorrectAnswers";
-import { SelectAnswer } from "./SelectAnswer";
 import { FillInTheBlanksDnd } from "../FillInTheBlanks/dnd/FillInTheBlanksDnd";
 import { FillTheBlanks } from "../FillInTheBlanks/FillInTheBlanks";
 import { useCompletedLessonItemsStore } from "../LessonItemStore";
 import { useQuestionQuery } from "../useQuestionQuery";
 import { getQuestionDefaultValue } from "../utils";
 
+import { QuestionCard } from "./QuestionCard";
+import { QuestionCorrectAnswers } from "./QuestionCorrectAnswers";
+import { SelectAnswer } from "./SelectAnswer";
+
 import type { DndWord } from "../FillInTheBlanks/dnd/types";
+import type { GetLessonResponse } from "~/api/generated-api";
+import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type QuestionProps = {
   id: string;

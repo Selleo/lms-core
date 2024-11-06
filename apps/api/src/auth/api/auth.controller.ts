@@ -9,9 +9,9 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { type Static } from "@sinclair/typebox";
 import { type Request, Response } from "express";
 import { Validate } from "nestjs-typebox";
+
 import { baseResponse, BaseResponse, nullResponse, type UUIDType } from "src/common";
 import { Public } from "src/common/decorators/public.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
@@ -29,6 +29,8 @@ import {
   resetPasswordSchema,
 } from "../schemas/reset-password.schema";
 import { TokenService } from "../token.service";
+
+import type { Static } from "@sinclair/typebox";
 
 @Controller("auth")
 export class AuthController {

@@ -1,10 +1,10 @@
-import { type INestApplication } from "@nestjs/common";
-import { type JwtService } from "@nestjs/jwt";
 import { sql } from "drizzle-orm";
 import request from "supertest";
-import { type UserWithCredentials } from "test/factory/user.factory";
 
-import { type DatabasePg } from "../../src/common";
+import type { DatabasePg } from "../../src/common";
+import type { INestApplication } from "@nestjs/common";
+import type { JwtService } from "@nestjs/jwt";
+import type { UserWithCredentials } from "test/factory/user.factory";
 
 type CamelToSnake<T extends string, P extends string = ""> = string extends T
   ? string

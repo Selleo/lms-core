@@ -3,8 +3,9 @@ import { AxiosError } from "axios";
 
 import { useToast } from "~/components/ui/use-toast";
 
-import { type CreateTextBlockBody } from "./../../generated-api";
 import { ApiClient } from "../../api-client";
+
+import type { CreateTextBlockBody } from "./../../generated-api";
 
 type CreateTextBlockOptions = {
   data: CreateTextBlockBody;

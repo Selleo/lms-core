@@ -13,8 +13,6 @@ import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
 
-import { CourseList } from "./Courses/CourseList";
-import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
 import { useLayoutsStore } from "../common/Layout/LayoutsStore";
 import Loader from "../common/Loader/Loader";
 import {
@@ -23,6 +21,9 @@ import {
   SearchFilter,
 } from "../common/SearchFilter/SearchFilter";
 import { DashboardIcon, HamburgerIcon } from "../icons/icons";
+
+import { CourseList } from "./Courses/CourseList";
+import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
 
 import type { MetaFunction } from "@remix-run/node";
 

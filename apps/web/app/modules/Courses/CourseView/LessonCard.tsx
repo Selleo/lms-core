@@ -1,14 +1,14 @@
 import { Link } from "@remix-run/react";
-
 import { cva } from "class-variance-authority";
 import { startCase } from "lodash-es";
 
-import type { GetCourseResponse } from "~/api/generated-api";
 import { CaretRight } from "~/assets/svgs";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
 import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
+
+import type { GetCourseResponse } from "~/api/generated-api";
 
 type Lesson = GetCourseResponse["data"]["lessons"][number];
 

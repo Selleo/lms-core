@@ -16,16 +16,19 @@ import {
 import * as bcrypt from "bcrypt";
 import { and, eq, isNull, lte, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
+
 import { CORS_ORIGIN } from "src/auth/consts";
 import { DatabasePg, type UUIDType } from "src/common";
 import { EmailService } from "src/common/emails/emails.service";
 import hashPassword from "src/common/helpers/hashPassword";
-import { type CommonUser } from "src/common/schemas/common-user.schema";
+
+import { createTokens, credentials, resetTokens, users } from "../storage/schema";
+import { UsersService } from "../users/users.service";
 
 import { CreatePasswordService } from "./create-password.service";
 import { ResetPasswordService } from "./reset-password.service";
-import { createTokens, credentials, resetTokens, users } from "../storage/schema";
-import { UsersService } from "../users/users.service";
+
+import type { CommonUser } from "src/common/schemas/common-user.schema";
 
 @Injectable()
 export class AuthService {

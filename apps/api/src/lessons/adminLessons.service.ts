@@ -1,22 +1,24 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { eq, ilike, sql } from "drizzle-orm";
 import { isEmpty } from "lodash";
+import { match, P } from "ts-pattern";
+
 import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { S3Service } from "src/file/s3.service";
 import { lessonItems, lessons } from "src/storage/schema";
-import { match, P } from "ts-pattern";
 
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
-import { type CreateLessonBody, type UpdateLessonBody } from "./schemas/lesson.schema";
-import { type LessonItemResponse } from "./schemas/lessonItem.schema";
 import {
   type LessonsFilterSchema,
   type LessonSortField,
   LessonSortFields,
   type SortLessonFieldsOptions,
 } from "./schemas/lessonQuery";
+
+import type { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
+import type { LessonItemResponse } from "./schemas/lessonItem.schema";
 
 interface LessonsQuery {
   filters?: LessonsFilterSchema;

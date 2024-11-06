@@ -1,6 +1,6 @@
-import { type PropsWithChildren, type ReactNode } from "react";
-
 import { SheetContent, SheetHeader, SheetDescription, Sheet, SheetTitle } from "../ui/sheet";
+
+import type { PropsWithChildren, ReactNode } from "react";
 
 type SheetMenuProps = {
   isSheetOpen: boolean;

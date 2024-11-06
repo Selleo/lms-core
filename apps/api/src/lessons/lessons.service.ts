@@ -6,21 +6,22 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { isNull } from "lodash";
+import { match, P } from "ts-pattern";
+
 import { DatabasePg } from "src/common";
 import { S3Service } from "src/file/s3.service";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
-import { match, P } from "ts-pattern";
 
 import { LessonsRepository } from "./repositories/lessons.repository";
-import { type Lesson } from "./schemas/lesson.schema";
-import {
-  type LessonItemResponse,
-  type LessonItemWithContentSchema,
-  type QuestionAnswer,
-  type QuestionResponse,
-  type QuestionWithContent,
-} from "./schemas/lessonItem.schema";
 
+import type { Lesson } from "./schemas/lesson.schema";
+import type {
+  LessonItemResponse,
+  LessonItemWithContentSchema,
+  QuestionAnswer,
+  QuestionResponse,
+  QuestionWithContent,
+} from "./schemas/lessonItem.schema";
 import type { UUIDType } from "src/common";
 
 @Injectable()

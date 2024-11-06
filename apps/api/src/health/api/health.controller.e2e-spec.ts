@@ -1,7 +1,8 @@
-import { type INestApplication } from "@nestjs/common";
 import request from "supertest";
 
 import { createE2ETest } from "../../../test/create-e2e-test";
+
+import type { INestApplication } from "@nestjs/common";
 
 describe("HealthController (e2e)", () => {
   let app: INestApplication;

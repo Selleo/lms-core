@@ -1,6 +1,8 @@
 import { StripeWebhookHandler as StripeWebhookHandlerDecorator } from "@golevelup/nestjs-stripe";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, sql } from "drizzle-orm";
+import Stripe from "stripe";
+
 import { DatabasePg } from "src/common";
 import {
   courseLessons,
@@ -11,7 +13,6 @@ import {
   studentLessonsProgress,
   users,
 } from "src/storage/schema";
-import Stripe from "stripe";
 
 @Injectable()
 export class StripeWebhookHandler {

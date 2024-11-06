@@ -4,8 +4,9 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../api-client";
-import { type ChangePasswordBody } from "../generated-api";
 import { useCurrentUserSuspense } from "../queries/useCurrentUser";
+
+import type { ChangePasswordBody } from "../generated-api";
 
 type ChangePasswordOptions = {
   data: ChangePasswordBody;

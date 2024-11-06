@@ -4,7 +4,8 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../api-client";
-import { type AnswerQuestionBody } from "../generated-api";
+
+import type { AnswerQuestionBody } from "../generated-api";
 
 export function useQuestionAnswer() {
   const { toast } = useToast();

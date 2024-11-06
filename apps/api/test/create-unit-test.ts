@@ -1,12 +1,15 @@
-import { type Provider } from "@nestjs/common";
 import { Test, type TestingModule } from "@nestjs/testing";
+
 import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
-import { type StartedTestContainer } from "testcontainers";
+
+import { AppModule } from "../src/app.module";
 
 import { EmailTestingAdapter } from "./helpers/test-email.adapter";
 import { setupTestDatabase } from "./test-database";
-import { AppModule } from "../src/app.module";
-import { type DatabasePg } from "../src/common";
+
+import type { DatabasePg } from "../src/common";
+import type { Provider } from "@nestjs/common";
+import type { StartedTestContainer } from "testcontainers";
 
 export interface TestContext {
   module: TestingModule;

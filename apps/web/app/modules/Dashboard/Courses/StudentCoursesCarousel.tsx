@@ -1,4 +1,3 @@
-import type { GetAllCoursesResponse } from "~/api/generated-api";
 import {
   Carousel,
   CarouselContent,
@@ -7,6 +6,8 @@ import {
   CarouselPrevious,
 } from "~/components/ui/carousel";
 import CourseCard from "~/modules/Dashboard/Courses/CourseCard";
+
+import type { GetAllCoursesResponse } from "~/api/generated-api";
 
 type StudentCoursesCarouselProps = {
   studentCourses?: GetAllCoursesResponse["data"];

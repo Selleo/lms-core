@@ -4,16 +4,18 @@ import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
 import { omit } from "lodash";
 import { nanoid } from "nanoid";
+
 import { AuthService } from "src/auth/auth.service";
-import { type DatabasePg } from "src/common";
 import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
 import hashPassword from "src/common/helpers/hashPassword";
 import { createUnitTest, type TestContext } from "test/create-unit-test";
 import { createUserFactory } from "test/factory/user.factory";
-import { type EmailTestingAdapter } from "test/helpers/test-email.adapter";
 import { truncateAllTables } from "test/helpers/test-helpers";
 
 import { credentials, resetTokens, users } from "../../storage/schema";
+
+import type { DatabasePg } from "src/common";
+import type { EmailTestingAdapter } from "test/helpers/test-email.adapter";
 
 describe("AuthService", () => {
   let testContext: TestContext;

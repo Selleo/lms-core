@@ -1,7 +1,8 @@
 import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { ApiClient } from "~/api/api-client";
-import { type GetAvailableLessonItemsResponse } from "~/api/generated-api";
+
+import type { GetAvailableLessonItemsResponse } from "~/api/generated-api";
 
 export const availableLessonItems = queryOptions({
   queryKey: ["available-lesson-items", "admin"],

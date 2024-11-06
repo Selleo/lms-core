@@ -13,7 +13,6 @@ import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React, { startTransition } from "react";
 
-import type { GetAllCoursesResponse } from "~/api/generated-api";
 import { useCategories } from "~/api/queries";
 import {
   ALL_COURSES_QUERY_KEY,
@@ -41,6 +40,8 @@ import {
   type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
+
+import type { GetAllCoursesResponse } from "~/api/generated-api";
 
 type TCourse = GetAllCoursesResponse["data"][number];
 

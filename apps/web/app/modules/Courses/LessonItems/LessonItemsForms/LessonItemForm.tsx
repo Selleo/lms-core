@@ -1,6 +1,4 @@
 import { useNavigate } from "@remix-run/react";
-import { type UseFormReturn } from "react-hook-form";
-import { type z } from "zod";
 
 import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
@@ -8,7 +6,10 @@ import { Form } from "~/components/ui/form";
 import { LessonItemFormFile } from "./LessonItemFormFile.js";
 import { LessonItemFormInput } from "./LessonItemFormInput.js";
 import { LessonItemFormTextarea } from "./LessonItemFormTextarea.js";
-import { type lessonItemFormSchema } from "./zodFormType.js";
+
+import type { lessonItemFormSchema } from "./zodFormType.js";
+import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 interface LessonItemForm {
   isVideoRequired: boolean;

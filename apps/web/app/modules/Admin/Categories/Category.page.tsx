@@ -2,7 +2,6 @@ import { useParams } from "@remix-run/react";
 import { startCase } from "lodash-es";
 import { useForm } from "react-hook-form";
 
-import type { UpdateCategoryBody } from "~/api/generated-api";
 import { useUpdateCategory } from "~/api/mutations/admin/useUpdateCategory";
 import { categoryByIdQueryOptions, useCategoryById } from "~/api/queries/admin/useCategoryById";
 import { queryClient } from "~/api/queryClient";
@@ -11,6 +10,8 @@ import { Label } from "~/components/ui/label";
 import Loader from "~/modules/common/Loader/Loader";
 
 import { CategoryDetails } from "./CategoryDetails";
+
+import type { UpdateCategoryBody } from "~/api/generated-api";
 
 const displayedFields: Array<keyof UpdateCategoryBody> = ["title", "archived"];
 

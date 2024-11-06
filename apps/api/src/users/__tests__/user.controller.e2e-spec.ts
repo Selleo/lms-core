@@ -1,11 +1,12 @@
-import { type INestApplication } from "@nestjs/common";
 import { castArray, omit } from "lodash";
 import request from "supertest";
 
 import { AuthService } from "../../../src/auth/auth.service";
-import { type DatabasePg } from "../../../src/common";
 import { createE2ETest } from "../../../test/create-e2e-test";
 import { createUserFactory, type UserWithCredentials } from "../../../test/factory/user.factory";
+
+import type { DatabasePg } from "../../../src/common";
+import type { INestApplication } from "@nestjs/common";
 
 describe("UsersController (e2e)", () => {
   let app: INestApplication;

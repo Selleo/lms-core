@@ -2,7 +2,6 @@ import { useParams } from "@remix-run/react";
 import { startCase } from "lodash-es";
 import { useForm } from "react-hook-form";
 
-import type { UpdateCourseBody } from "~/api/generated-api";
 import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
 import { courseQueryOptions, useCourseById } from "~/api/queries/admin/useCourseById";
 import { categoriesQueryOptions, useCategoriesSuspense } from "~/api/queries/useCategories";
@@ -12,6 +11,8 @@ import { Label } from "~/components/ui/label";
 
 import { CourseDetails } from "./CourseDetails";
 import LessonAssigner from "./LessonAssigner/LessonAssigner";
+
+import type { UpdateCourseBody } from "~/api/generated-api";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(categoriesQueryOptions());

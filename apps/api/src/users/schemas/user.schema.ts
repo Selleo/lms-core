@@ -1,4 +1,5 @@
 import { Type, type Static } from "@sinclair/typebox";
+
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
 
 export const allUsersSchema = Type.Array(commonUserSchema);

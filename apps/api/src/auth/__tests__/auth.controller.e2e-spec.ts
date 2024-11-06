@@ -1,12 +1,13 @@
-import { type INestApplication } from "@nestjs/common";
 import * as cookie from "cookie";
 import { isArray, omit } from "lodash";
 import request from "supertest";
 
 import { createE2ETest } from "../../../test/create-e2e-test";
 import { createUserFactory } from "../../../test/factory/user.factory";
-import { type DatabasePg } from "../../common/index";
 import { AuthService } from "../auth.service";
+
+import type { DatabasePg } from "../../common/index";
+import type { INestApplication } from "@nestjs/common";
 
 describe("AuthController (e2e)", () => {
   let app: INestApplication;

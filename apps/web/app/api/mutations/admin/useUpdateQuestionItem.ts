@@ -4,7 +4,8 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
-import { type UpdateQuestionItemBody } from "../../generated-api";
+
+import type { UpdateQuestionItemBody } from "../../generated-api";
 
 type UpdateQuestionOptions = {
   data: UpdateQuestionItemBody;

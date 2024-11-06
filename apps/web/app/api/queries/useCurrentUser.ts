@@ -1,7 +1,8 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { ApiClient } from "../api-client";
-import { type CurrentUserResponse } from "../generated-api";
+
+import type { CurrentUserResponse } from "../generated-api";
 
 export const currentUserQueryOptions = {
   queryKey: ["currentUser"],

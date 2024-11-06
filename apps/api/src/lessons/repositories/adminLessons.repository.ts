@@ -1,5 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { eq, and, sql, isNotNull, count } from "drizzle-orm";
+
 import { DatabasePg, type UUIDType } from "src/common";
 import {
   lessons,
@@ -11,7 +12,7 @@ import {
   questionAnswerOptions,
 } from "src/storage/schema";
 
-import { type CreateLessonBody, type UpdateLessonBody } from "../schemas/lesson.schema";
+import type { CreateLessonBody, UpdateLessonBody } from "../schemas/lesson.schema";
 
 @Injectable()
 export class AdminLessonsRepository {

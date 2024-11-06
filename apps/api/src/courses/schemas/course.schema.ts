@@ -1,4 +1,5 @@
 import { type Static, Type } from "@sinclair/typebox";
+
 import { UUIDSchema } from "src/common";
 
 export const allCoursesSchema = Type.Array(

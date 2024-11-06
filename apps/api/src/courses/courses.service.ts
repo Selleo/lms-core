@@ -12,17 +12,12 @@ import {
   like,
   sql,
 } from "drizzle-orm";
+
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { S3Service } from "src/file/s3.service";
-
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
-import {
-  type CoursesFilterSchema,
-  type CourseSortField,
-  CourseSortFields,
-} from "./schemas/courseQuery";
 import { getSortOptions } from "../common/helpers/getSortOptions";
 import {
   categories,
@@ -36,6 +31,12 @@ import {
   studentQuestionAnswers,
   users,
 } from "../storage/schema";
+
+import {
+  type CoursesFilterSchema,
+  type CourseSortField,
+  CourseSortFields,
+} from "./schemas/courseQuery";
 
 import type { CoursesQuery } from "./api/courses.types";
 import type { AllCoursesResponse } from "./schemas/course.schema";

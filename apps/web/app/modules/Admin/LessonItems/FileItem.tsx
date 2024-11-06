@@ -1,7 +1,6 @@
 import { capitalize, startCase } from "lodash-es";
 import { Controller, useForm } from "react-hook-form";
 
-import type { UpdateFileItemBody } from "~/api/generated-api";
 import { useUpdateFileItem } from "~/api/mutations/admin/useUpdateFileItem";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -15,6 +14,7 @@ import {
 } from "~/components/ui/select";
 
 import type { FC } from "react";
+import type { UpdateFileItemBody } from "~/api/generated-api";
 
 interface FileItemProps {
   id: string;

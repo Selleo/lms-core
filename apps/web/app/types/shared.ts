@@ -1,6 +1,5 @@
-import type * as icons from "~/assets/svgs";
-
 import type { SVGProps } from "react";
+import type * as icons from "~/assets/svgs";
 
 export type SVGComponentProps = SVGProps<SVGSVGElement>;
 

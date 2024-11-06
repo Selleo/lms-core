@@ -3,13 +3,14 @@ import { Link } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import type { ForgotPasswordBody } from "~/api/generated-api";
 import { usePasswordRecovery } from "~/api/mutations/useRecoverPassword";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { useToast } from "~/components/ui/use-toast";
 import { cn } from "~/lib/utils";
+
+import type { ForgotPasswordBody } from "~/api/generated-api";
 
 const passwordRecoverySchema = z.object({
   email: z.string().email({ message: "Invalid email" }),

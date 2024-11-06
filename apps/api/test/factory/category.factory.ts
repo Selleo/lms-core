@@ -1,9 +1,10 @@
 import { faker } from "@faker-js/faker";
-import { type InferInsertModel } from "drizzle-orm";
 import { Factory } from "fishery";
-import { type DatabasePg } from "src/common";
 
 import { categories } from "../../src/storage/schema";
+
+import type { InferInsertModel } from "drizzle-orm";
+import type { DatabasePg } from "src/common";
 
 type Category = InferInsertModel<typeof categories>;
 

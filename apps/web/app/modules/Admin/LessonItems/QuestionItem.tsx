@@ -2,7 +2,6 @@ import { isEqual, startCase } from "lodash-es";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
-import type { UpdateQuestionItemBody } from "~/api/generated-api";
 import { useUpdateQuestionItem } from "~/api/mutations/admin/useUpdateQuestionItem";
 import { useUpdateQuestionOptions } from "~/api/mutations/admin/useUpdateQuestionOptions";
 import {
@@ -17,6 +16,7 @@ import { AnswerOptions } from "./question/AnswerOptions";
 import { QuestionField } from "./question/QuestionField";
 
 import type { QuestionItemProps } from "./question/types";
+import type { UpdateQuestionItemBody } from "~/api/generated-api";
 
 export const QuestionItem = ({ id, initialData, onUpdate }: QuestionItemProps) => {
   const { mutateAsync: updateQuestionItem } = useUpdateQuestionItem();

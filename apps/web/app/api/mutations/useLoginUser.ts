@@ -5,7 +5,8 @@ import { useToast } from "~/components/ui/use-toast";
 import { useAuthStore } from "~/modules/Auth/authStore";
 
 import { ApiClient } from "../api-client";
-import { type LoginBody } from "../generated-api";
+
+import type { LoginBody } from "../generated-api";
 
 type LoginUserOptions = {
   data: LoginBody;

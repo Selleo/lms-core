@@ -2,7 +2,6 @@ import { useParams } from "@remix-run/react";
 import { startCase } from "lodash-es";
 import { useForm } from "react-hook-form";
 
-import type { UpdateLessonBody } from "~/api/generated-api";
 import { useUpdateLesson } from "~/api/mutations/admin/useUpdateLesson";
 import { lessonByIdQueryOptions, useLessonById } from "~/api/queries/admin/useLessonById";
 import { queryClient } from "~/api/queryClient";
@@ -12,6 +11,8 @@ import Loader from "~/modules/common/Loader/Loader";
 
 import { LessonDetails } from "./LessonDetails";
 import LessonItemAssigner from "./LessonItemsAssigner/LessonItemAssigner";
+
+import type { UpdateLessonBody } from "~/api/generated-api";
 
 const displayedFields: Array<keyof UpdateLessonBody> = [
   "title",

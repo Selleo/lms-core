@@ -1,4 +1,4 @@
-import { type ControllerRenderProps } from "react-hook-form";
+import type { ControllerRenderProps } from "react-hook-form";
 
 export interface UploadMethod {
   text: string;

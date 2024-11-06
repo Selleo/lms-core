@@ -2,7 +2,6 @@ import { useParams } from "@remix-run/react";
 import { startCase } from "lodash-es";
 import { useForm } from "react-hook-form";
 
-import type { UpdateUserBody } from "~/api/generated-api";
 import { useAdminUpdateUser } from "~/api/mutations/admin/useAdminUpdateUser";
 import { userQueryOptions, useUserById } from "~/api/queries/admin/useUserById";
 import { queryClient } from "~/api/queryClient";
@@ -11,6 +10,8 @@ import { Label } from "~/components/ui/label";
 import Loader from "~/modules/common/Loader/Loader";
 
 import { UserInfo } from "./UserInfo";
+
+import type { UpdateUserBody } from "~/api/generated-api";
 
 const displayedFields: Array<keyof UpdateUserBody> = [
   "firstName",

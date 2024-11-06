@@ -1,4 +1,4 @@
-import { type CoursesFilterSchema, type SortCourseFieldsOptions } from "../schemas/courseQuery";
+import type { CoursesFilterSchema, SortCourseFieldsOptions } from "../schemas/courseQuery";
 
 export type CoursesQuery = {
   filters?: CoursesFilterSchema;

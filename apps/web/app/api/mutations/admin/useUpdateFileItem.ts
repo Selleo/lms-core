@@ -4,7 +4,8 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
-import { type UpdateFileItemBody } from "../../generated-api";
+
+import type { UpdateFileItemBody } from "../../generated-api";
 
 type UpdateFileOptions = {
   data: UpdateFileItemBody;

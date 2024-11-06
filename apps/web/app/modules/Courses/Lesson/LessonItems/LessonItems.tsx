@@ -1,6 +1,6 @@
-import type { GetLessonResponse } from "~/api/generated-api";
-
 import { LessonItem } from "./LessonItem";
+
+import type { GetLessonResponse } from "~/api/generated-api";
 
 type LessonItemsProps = {
   lessonItems: GetLessonResponse["data"]["lessonItems"];

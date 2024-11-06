@@ -1,7 +1,7 @@
-import type { GetLessonResponse } from "~/api/generated-api";
-
 import { SelectAnswerOption } from "./SelectAnswerOption";
 import { SelectAnswerOptionQuiz } from "./SelectAnswerOptionQuiz";
+
+import type { GetLessonResponse } from "~/api/generated-api";
 
 type SingleSelectQuestionProps = {
   questionId: string;

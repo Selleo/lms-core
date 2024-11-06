@@ -1,5 +1,6 @@
-import { type Static, type TObject } from "@sinclair/typebox";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
+
+import type { Static, TObject } from "@sinclair/typebox";
 
 export function configValidator<T extends TObject>(schema: T) {
   type ConfigSchema = Static<T>;

@@ -4,18 +4,20 @@ import { isEmpty } from "lodash-es";
 import { ArrowRight } from "lucide-react";
 import { Suspense, useState } from "react";
 
-import type { GetUsersResponse } from "~/api/generated-api";
 import { SelleoLogo } from "~/assets/svgs";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { useUserRole } from "~/hooks/useUserRole";
 import Loader from "~/modules/common/Loader/Loader";
 import { MenuItem } from "~/modules/Dashboard/DashboardNavigation/MenuItem";
-import type { IconName } from "~/types/shared";
+
+import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
 
 import { LogoutButton } from "./LogoutButton";
 import { UserProfile } from "./UserProfile";
-import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
+
+import type { GetUsersResponse } from "~/api/generated-api";
+import type { IconName } from "~/types/shared";
 
 export type Role = GetUsersResponse["data"][number]["role"];
 

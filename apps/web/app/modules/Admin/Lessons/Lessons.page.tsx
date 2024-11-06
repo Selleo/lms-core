@@ -13,7 +13,6 @@ import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
 
-import type { GetAllLessonsResponse } from "~/api/generated-api";
 import { useAllLessonsSuspense } from "~/api/queries/admin/useAllLessons";
 import SortButton from "~/components/TableSortButton/TableSortButton";
 import { Badge } from "~/components/ui/badge";
@@ -34,6 +33,8 @@ import {
   type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
+
+import type { GetAllLessonsResponse } from "~/api/generated-api";
 
 type TLesson = GetAllLessonsResponse["data"][number];
 

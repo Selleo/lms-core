@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { PassportModule } from "@nestjs/passport";
+
 import { ResendVerificationMailCron } from "src/auth/resend-verification-mail-cron";
 import { EmailModule } from "src/common/emails/emails.module";
 import { UsersService } from "src/users/users.service";

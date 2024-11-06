@@ -4,7 +4,8 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
-import { type UnassignItemsFromLessonBody } from "../../generated-api";
+
+import type { UnassignItemsFromLessonBody } from "../../generated-api";
 
 type UnassignItemToLessonOptions = {
   data: UnassignItemsFromLessonBody;

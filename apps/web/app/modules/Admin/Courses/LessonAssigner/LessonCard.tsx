@@ -1,8 +1,9 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { type GetAllLessonsResponse } from "~/api/generated-api";
 import Viewer from "~/components/RichText/Viever";
+
+import type { GetAllLessonsResponse } from "~/api/generated-api";
 
 type TransformedLesson = GetAllLessonsResponse["data"][number] & {
   columnId: string;

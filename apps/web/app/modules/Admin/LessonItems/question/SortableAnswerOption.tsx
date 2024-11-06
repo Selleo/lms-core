@@ -3,13 +3,13 @@ import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { Controller, useWatch } from "react-hook-form";
 
-import { type UpdateQuestionItemBody } from "~/api/generated-api";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
-import { type SortableAnswerOptionProps } from "./types";
+import type { SortableAnswerOptionProps } from "./types";
+import type { UpdateQuestionItemBody } from "~/api/generated-api";
 
 export const SortableAnswerOption = ({
   id,

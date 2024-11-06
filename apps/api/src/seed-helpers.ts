@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { sql } from "drizzle-orm/sql";
+
 import {
   categories,
   courseLessons,
@@ -12,8 +13,9 @@ import {
   textBlocks,
 } from "src/storage/schema";
 
-import { type DatabasePg } from "./common";
 import { niceCourses } from "./nice-data-seeds";
+
+import type { DatabasePg } from "./common";
 
 export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
   for (const courseData of niceCourses) {

@@ -13,7 +13,6 @@ import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import { useState, useTransition } from "react";
 
-import { type GetAllLessonItemsResponse } from "~/api/generated-api";
 import {
   type LessonItemType,
   useAllLessonItemsSuspense,
@@ -43,6 +42,8 @@ import {
   type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
+
+import type { GetAllLessonItemsResponse } from "~/api/generated-api";
 
 type TLessonItem = GetAllLessonItemsResponse["data"][number];
 

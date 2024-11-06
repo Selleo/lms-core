@@ -14,8 +14,7 @@ import {
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
-import { type UploadAlertDialogProps, type UploadFileProps } from "../LessonItemsForms/types";
-
+import type { UploadAlertDialogProps, UploadFileProps } from "../LessonItemsForms/types";
 import type React from "react";
 
 export const UploadFromInternetDialog = ({

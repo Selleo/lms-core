@@ -1,8 +1,6 @@
 import { isObject } from "lodash-es";
 import { useState } from "react";
-import { type Control } from "react-hook-form";
 import ReactPlayer from "react-player";
-import { type z } from "zod";
 
 import { Button } from "~/components/ui/button";
 import {
@@ -12,11 +10,15 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 
-import { RenderDialogForm } from "./RenderDialogForm";
-import { type UploadMethod } from "./types.js";
-import { type lessonItemFormSchema } from "./zodFormType.js";
 import { UploadFile } from "../UploadLessonVideo/UploadFile";
 import { UploadFromInternet } from "../UploadLessonVideo/UploadFromInternet";
+
+import { RenderDialogForm } from "./RenderDialogForm";
+
+import type { UploadMethod } from "./types.js";
+import type { lessonItemFormSchema } from "./zodFormType.js";
+import type { Control } from "react-hook-form";
+import type { z } from "zod";
 
 interface LessonItemFormFileInterface {
   control: Control<z.infer<typeof lessonItemFormSchema>>;

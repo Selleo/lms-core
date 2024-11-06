@@ -1,5 +1,4 @@
 import { Elements } from "@stripe/react-stripe-js";
-import { type Appearance } from "@stripe/stripe-js";
 import { useState } from "react";
 
 import { useStripePaymentIntent } from "~/api/mutations/useStripePaymentIntent";
@@ -18,6 +17,8 @@ import { formatPrice } from "~/lib/formatters/priceFormatter";
 
 import { useStripePromise } from "./hooks/useStripePromise";
 import { PaymentForm } from "./PaymentForm";
+
+import type { Appearance } from "@stripe/stripe-js";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(currentUserQueryOptions);

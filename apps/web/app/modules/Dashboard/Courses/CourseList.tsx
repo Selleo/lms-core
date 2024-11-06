@@ -1,10 +1,10 @@
 import { match } from "ts-pattern";
 
-import { type GetAllCoursesResponse } from "~/api/generated-api";
-import { type CourseListLayout } from "~/types/shared";
-
 import { CardCourseList } from "./CardCourseList";
 import { TableCourseList } from "./TableCourseList";
+
+import type { GetAllCoursesResponse } from "~/api/generated-api";
+import type { CourseListLayout } from "~/types/shared";
 
 export const CourseList: React.FC<{
   availableCourses: GetAllCoursesResponse["data"];

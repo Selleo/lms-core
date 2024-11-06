@@ -2,7 +2,6 @@ import { capitalize, startCase } from "lodash-es";
 import { memo } from "react";
 import { type Control, Controller } from "react-hook-form";
 
-import type { GetLessonByIdResponse, UpdateLessonBody } from "~/api/generated-api";
 import Editor from "~/components/RichText/Editor";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
@@ -13,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+
+import type { GetLessonByIdResponse, UpdateLessonBody } from "~/api/generated-api";
 
 export const LessonDetails = memo<{
   name: keyof UpdateLessonBody;

@@ -3,7 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
 import { EmailAdapter } from "./email.adapter";
-import { type Email } from "../email.interface";
+
+import type { Email } from "../email.interface";
 
 @Injectable()
 export class AWSSESAdapter extends EmailAdapter {

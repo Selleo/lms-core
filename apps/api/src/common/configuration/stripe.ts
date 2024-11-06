@@ -1,5 +1,6 @@
 import { registerAs } from "@nestjs/config";
 import { type Static, Type } from "@sinclair/typebox";
+
 import { configValidator } from "src/utils/configValidator";
 
 const schema = Type.Object({

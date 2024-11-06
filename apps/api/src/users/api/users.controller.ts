@@ -9,8 +9,9 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { type Static, Type } from "@sinclair/typebox";
+import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
+
 import {
   baseResponse,
   BaseResponse,
@@ -34,6 +35,7 @@ import { SortUserFieldsOptions } from "../schemas/userQuery";
 import { UsersService } from "../users.service";
 
 import type { UsersFilterSchema } from "../schemas/userQuery";
+import type { Static } from "@sinclair/typebox";
 
 @Controller("users")
 @UseGuards(RolesGuard)

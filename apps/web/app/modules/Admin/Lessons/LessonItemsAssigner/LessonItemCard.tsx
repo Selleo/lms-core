@@ -2,7 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { startCase } from "lodash-es";
 
-import { type GetAllLessonItemsResponse } from "~/api/generated-api";
+import type { GetAllLessonItemsResponse } from "~/api/generated-api";
 
 type LessonItem = GetAllLessonItemsResponse["data"][number];
 

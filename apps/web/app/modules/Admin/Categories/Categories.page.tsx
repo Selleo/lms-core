@@ -13,7 +13,6 @@ import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
 
-import type { GetAllCategoriesResponse } from "~/api/generated-api";
 import { useCategoriesSuspense, usersQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
 import SortButton from "~/components/TableSortButton/TableSortButton";
@@ -35,6 +34,8 @@ import {
   type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
+
+import type { GetAllCategoriesResponse } from "~/api/generated-api";
 
 type TCategory = GetAllCategoriesResponse["data"][number];
 

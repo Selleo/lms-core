@@ -1,6 +1,6 @@
 import { type Static, Type } from "@sinclair/typebox";
-import { UUIDSchema } from "src/common";
 
+import { UUIDSchema } from "src/common";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
 import { lessonItemSelectSchema } from "./lessonItem.schema";

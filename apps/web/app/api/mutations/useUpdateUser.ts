@@ -4,9 +4,10 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../api-client";
-import { type UpdateUserBody } from "../generated-api";
 import { currentUserQueryOptions, useCurrentUserSuspense } from "../queries/useCurrentUser";
 import { queryClient } from "../queryClient";
+
+import type { UpdateUserBody } from "../generated-api";
 
 type UpdateUserOptions = {
   data: UpdateUserBody;

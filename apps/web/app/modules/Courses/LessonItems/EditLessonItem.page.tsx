@@ -4,12 +4,13 @@ import { isObject } from "lodash-es";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
 import { type SubmitHandler, useForm } from "react-hook-form";
-import { type z } from "zod";
 
 import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
 import { lessonItemFormSchema } from "./LessonItemsForms/zodFormType";
+
+import type { z } from "zod";
 
 export default function LessonItemsEditPage() {
   const [videoFile, setVideoFile] = useState<File | null | string>(null);

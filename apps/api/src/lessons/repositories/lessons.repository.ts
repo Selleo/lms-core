@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
-import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+
 import { DatabasePg, type UUIDType } from "src/common";
 import {
   courseLessons,
@@ -16,6 +16,7 @@ import {
   textBlocks,
 } from "src/storage/schema";
 
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
 @Injectable()

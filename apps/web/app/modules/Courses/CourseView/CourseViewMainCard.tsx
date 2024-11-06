@@ -1,7 +1,6 @@
 import { isRouteErrorResponse, Link, useParams, useRouteError } from "@remix-run/react";
 import { last } from "lodash-es";
 
-import type { GetCourseResponse } from "~/api/generated-api";
 import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
 import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { courseQueryOptions } from "~/api/queries/useCourse";
@@ -15,6 +14,8 @@ import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 import { PaymentModal } from "~/modules/stripe/PaymentModal";
+
+import type { GetCourseResponse } from "~/api/generated-api";
 
 export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data"] }) => {
   const {

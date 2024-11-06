@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 
-import { type Status } from "./storage/schema/utils";
+import type { Status } from "./storage/schema/utils";
 
 export const LessonFileType = {
   presentation: "Presentation",

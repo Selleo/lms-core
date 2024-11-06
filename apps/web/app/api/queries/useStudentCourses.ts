@@ -1,10 +1,9 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
-import type { SortOption } from "~/types/sorting";
-
 import { ApiClient } from "../api-client";
 
 import type { GetAllCoursesResponse } from "../generated-api";
+import type { SortOption } from "~/types/sorting";
 
 type CourseParams = {
   title?: string;

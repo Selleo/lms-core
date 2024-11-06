@@ -1,7 +1,8 @@
 import { InjectStripeClient } from "@golevelup/nestjs-stripe";
 import { Inject, Injectable } from "@nestjs/common";
-import { DatabasePg } from "src/common";
 import Stripe from "stripe";
+
+import { DatabasePg } from "src/common";
 
 @Injectable()
 export class StripeService {

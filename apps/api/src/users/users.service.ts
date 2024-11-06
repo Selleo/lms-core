@@ -9,11 +9,14 @@ import { CreatePasswordEmail } from "@repo/email-templates";
 import * as bcrypt from "bcrypt";
 import { and, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
+
 import { DatabasePg } from "src/common";
 import { EmailService } from "src/common/emails/emails.service";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import hashPassword from "src/common/helpers/hashPassword";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
+
+import { createTokens, credentials, users } from "../storage/schema";
 
 import {
   type SortUserFieldsOptions,
@@ -21,7 +24,6 @@ import {
   type UserSortField,
   UserSortFields,
 } from "./schemas/userQuery";
-import { createTokens, credentials, users } from "../storage/schema";
 
 import type { UserRole } from "./schemas/user-roles";
 import type { CreateUserBody } from "src/users/schemas/create-user.schema";

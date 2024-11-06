@@ -1,6 +1,5 @@
 import { Link } from "@remix-run/react";
 
-import type { GetAvailableCoursesResponse } from "~/api/generated-api";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import {
   Table,
@@ -13,6 +12,8 @@ import {
 import { useUserRole } from "~/hooks/useUserRole";
 
 import CourseCardButton from "./CourseCardButton";
+
+import type { GetAvailableCoursesResponse } from "~/api/generated-api";
 
 type CardCourseListProps = {
   availableCourses?: GetAvailableCoursesResponse["data"];

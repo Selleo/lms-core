@@ -14,6 +14,7 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
+
 import {
   baseResponse,
   BaseResponse,
@@ -26,13 +27,16 @@ import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 
-import { allCoursesValidation } from "./validations";
 import { CoursesService } from "../courses.service";
-import { type AllCoursesResponse } from "../schemas/course.schema";
-import { type CoursesFilterSchema, type SortCourseFieldsOptions } from "../schemas/courseQuery";
+import { SortCourseFieldsOptions } from "../schemas/courseQuery";
 import { type CreateCourseBody, createCourseSchema } from "../schemas/createCourse.schema";
 import { type CommonShowCourse, commonShowCourseSchema } from "../schemas/showCourseCommon.schema";
 import { type UpdateCourseBody, updateCourseSchema } from "../schemas/updateCourse.schema";
+
+import { allCoursesValidation } from "./validations";
+
+import type { AllCoursesResponse } from "../schemas/course.schema";
+import type { CoursesFilterSchema } from "../schemas/courseQuery";
 
 @Controller("courses")
 @UseGuards(RolesGuard)

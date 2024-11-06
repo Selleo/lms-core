@@ -3,7 +3,8 @@ import { ConfigService } from "@nestjs/config";
 import * as nodemailer from "nodemailer";
 
 import { EmailAdapter } from "./email.adapter";
-import { type Email } from "../email.interface";
+
+import type { Email } from "../email.interface";
 
 @Injectable()
 export class SmtpAdapter extends EmailAdapter {

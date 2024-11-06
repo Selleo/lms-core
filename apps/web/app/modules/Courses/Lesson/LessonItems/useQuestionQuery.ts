@@ -1,5 +1,6 @@
-import { type AnswerQuestionBody } from "~/api/generated-api";
 import { useQuestionAnswer } from "~/api/mutations/useQuestion";
+
+import type { AnswerQuestionBody } from "~/api/generated-api";
 
 type TProps = {
   lessonId: string;

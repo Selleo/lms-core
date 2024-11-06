@@ -7,6 +7,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { and, eq, inArray, sql } from "drizzle-orm";
+
 import { DatabasePg, type UUIDType } from "src/common";
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
 import {
@@ -18,8 +19,9 @@ import {
 } from "src/storage/schema";
 import { StudentCompletedLessonItemsService } from "src/studentCompletedLessonItem/studentCompletedLessonItems.service";
 
-import { type AnswerQuestionSchema, type QuestionSchema } from "./schema/question.schema";
 import { QuestionType } from "./schema/questionsSchema";
+
+import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
 
 @Injectable()
 export class QuestionsService {

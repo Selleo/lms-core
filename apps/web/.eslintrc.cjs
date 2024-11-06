@@ -49,33 +49,38 @@ module.exports = {
         },
       },
       rules: {
-        "react/prop-types": "off",
-        "react/display-name": "off",
-        "@typescript-eslint/consistent-type-imports": [
-          "error",
-          {
-            fixStyle: "inline-type-imports",
-            disallowTypeAnnotations: false,
-            prefer: "type-imports",
-          },
-        ],
+        "import/no-duplicates": "error",
         "import/order": [
           "error",
           {
-            groups: ["builtin", "external", "internal", ["sibling", "parent"], "index", "type"],
-            pathGroups: [
-              {
-                pattern: "~/**",
-                group: "internal",
-              },
+            groups: [
+              "builtin",
+              "external",
+              "internal",
+              "parent",
+              "sibling",
+              "index",
+              "object",
+              "type",
             ],
-            "newlines-between": "always-and-inside-groups",
+            "newlines-between": "always",
             alphabetize: {
               order: "asc",
               caseInsensitive: true,
             },
           },
         ],
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          {
+            prefer: "type-imports",
+            fixStyle: "separate-type-imports",
+            disallowTypeAnnotations: false,
+          },
+        ],
+        "@typescript-eslint/no-import-type-side-effects": "error",
+        "react/prop-types": "off",
+        "react/display-name": "off",
       },
     },
 

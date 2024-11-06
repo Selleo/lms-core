@@ -2,7 +2,6 @@ import { capitalize } from "lodash-es";
 import { memo } from "react";
 import { type Control, Controller } from "react-hook-form";
 
-import { type GetUserByIdResponse, type UpdateUserBody } from "~/api/generated-api";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import {
@@ -13,6 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+
+import type { GetUserByIdResponse, UpdateUserBody } from "~/api/generated-api";
 
 export const UserInfo = memo<{
   name: keyof UpdateUserBody;

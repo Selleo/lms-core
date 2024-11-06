@@ -4,7 +4,8 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
-import { type AddLessonToCourseBody } from "../../generated-api";
+
+import type { AddLessonToCourseBody } from "../../generated-api";
 
 type UpdateCourseOptions = {
   data: AddLessonToCourseBody;

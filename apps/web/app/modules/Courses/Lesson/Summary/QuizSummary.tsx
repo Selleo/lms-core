@@ -1,10 +1,11 @@
-import type { GetLessonResponse } from "~/api/generated-api";
 import { useClearQuizProgress } from "~/api/mutations/useClearQuizProgress";
 import { lessonQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
 import CourseNotStartedImage from "~/assets/course-not-started.png";
 import CourseStartedImage from "~/assets/course-started.png";
 import { Button } from "~/components/ui/button";
+
+import type { GetLessonResponse } from "~/api/generated-api";
 
 type QuizSummaryProps = {
   lessonId: string;

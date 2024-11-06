@@ -5,23 +5,23 @@ import {
   UnprocessableEntityException,
 } from "@nestjs/common";
 import { and, count, eq, ilike, like } from "drizzle-orm";
-import { DatabasePg } from "src/common";
+
+import { DatabasePg, type Pagination } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";
-import { type UserRole, UserRoles } from "src/users/schemas/user-roles";
+import { UserRoles, type UserRole } from "src/users/schemas/user-roles";
 
 import {
   type CategoryFilterSchema,
   type CategorySortField,
   CategorySortFields,
 } from "./schemas/categoryQuery";
-import { type CreateCategoryBody } from "./schemas/createCategorySchema";
-import { type UpdateCategoryBody } from "./schemas/updateCategorySchema";
 
 import type { CategoriesQuery } from "./api/categories.types";
 import type { AllCategoriesResponse } from "./schemas/category.schema";
-import type { Pagination } from "src/common";
+import type { CreateCategoryBody } from "./schemas/createCategorySchema";
+import type { UpdateCategoryBody } from "./schemas/updateCategorySchema";
 
 @Injectable()
 export class CategoriesService {

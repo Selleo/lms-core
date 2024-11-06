@@ -1,5 +1,6 @@
-import { type PropsWithChildren } from "react";
 import { vi } from "vitest";
+
+import type { PropsWithChildren } from "react";
 
 export const mockedUseNavigate = vi.fn();
 

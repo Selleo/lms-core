@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useState } from "react";
 
-import type { GetCourseResponse } from "~/api/generated-api";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { useUserRole } from "~/hooks/useUserRole";
 import { LessonCard } from "~/modules/Courses/CourseView/LessonCard";
+
+import type { GetCourseResponse } from "~/api/generated-api";
 
 type LessonsListProps = {
   lessons: GetCourseResponse["data"]["lessons"];

@@ -4,7 +4,6 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import { type DatabasePg } from "./common";
 import hashPassword from "./common/helpers/hashPassword";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
@@ -21,6 +20,8 @@ import {
   textBlocks,
   users,
 } from "./storage/schema";
+
+import type { DatabasePg } from "./common";
 
 dotenv.config({ path: "./.env" });
 

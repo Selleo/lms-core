@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+
 import { EmailModule } from "src/common/emails/emails.module";
 
 import { UsersController } from "./api/users.controller";

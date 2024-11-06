@@ -1,7 +1,6 @@
 import { capitalize, startCase } from "lodash-es";
 import { Controller, useForm } from "react-hook-form";
 
-import type { GetLessonItemByIdResponse, UpdateTextBlockItemBody } from "~/api/generated-api";
 import { useUpdateTextBlockItem } from "~/api/mutations/admin/useUpdateTextBlockItem";
 import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
@@ -17,6 +16,7 @@ import {
 } from "~/components/ui/select";
 
 import type { FC } from "react";
+import type { GetLessonItemByIdResponse, UpdateTextBlockItemBody } from "~/api/generated-api";
 
 type TextBlockType = Extract<GetLessonItemByIdResponse["data"], { itemType: "text_block" }>;
 

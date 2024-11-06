@@ -1,4 +1,3 @@
-import { type DatabasePg } from "src/common";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";
 import { type UserRole, UserRoles } from "src/users/schemas/user-roles";
@@ -6,8 +5,10 @@ import { createUnitTest, type TestContext } from "test/create-unit-test";
 import { createCategoryFactory } from "test/factory/category.factory";
 import { truncateAllTables } from "test/helpers/test-helpers";
 
-import { type CategoriesQuery } from "../api/categories.types";
 import { CategoriesService } from "../categories.service";
+
+import type { CategoriesQuery } from "../api/categories.types";
+import type { DatabasePg } from "src/common";
 
 const CATEGORIES_COUNT = 20;
 

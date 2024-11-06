@@ -17,13 +17,14 @@ import {
 } from "@dnd-kit/sortable";
 import { type FC, useCallback, useEffect, useState } from "react";
 
-import { type GetAllLessonItemsResponse } from "~/api/generated-api";
 import { useAssignItemToLesson } from "~/api/mutations/admin/useAssignItemToLesson";
 import { useUnassignItemToLesson } from "~/api/mutations/admin/useUnassignItemToLesson";
 import { useAvailableLessonItems } from "~/api/queries/admin/useAvailableLessonItems";
 import { useLessonById } from "~/api/queries/admin/useLessonById";
 
 import { LessonItemCard } from "./LessonItemCard";
+
+import type { GetAllLessonItemsResponse } from "~/api/generated-api";
 
 type TransformedLessonItem = GetAllLessonItemsResponse["data"][number] & {
   columnId: string;

@@ -1,4 +1,5 @@
 import { Type } from "@sinclair/typebox";
+
 import { paginatedResponse } from "src/common";
 import { allCoursesSchema } from "src/courses/schemas/course.schema";
 import { sortCourseFieldsOptions } from "src/courses/schemas/courseQuery";

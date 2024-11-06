@@ -13,7 +13,6 @@ import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
 
-import type { GetUsersResponse } from "~/api/generated-api";
 import { useBulkDeleteUsers } from "~/api/mutations/admin/useBulkDeleteUsers";
 import { useAllUsersSuspense, usersQueryOptions } from "~/api/queries/useUsers";
 import { queryClient } from "~/api/queryClient";
@@ -35,6 +34,8 @@ import {
   type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
+
+import type { GetUsersResponse } from "~/api/generated-api";
 
 type TUser = GetUsersResponse["data"][number];
 

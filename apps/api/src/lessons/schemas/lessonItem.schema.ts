@@ -1,9 +1,11 @@
 import { type Static, Type } from "@sinclair/typebox";
-import { type InferInsertModel, type InferSelectModel } from "drizzle-orm";
+
 import { UUIDSchema } from "src/common";
-import { type files, type questions, type textBlocks } from "src/storage/schema";
 
 import { LESSON_ITEM_TYPES } from "../lessonItems.type";
+
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { files, questions, textBlocks } from "src/storage/schema";
 
 export const lessonItemToAdd = Type.Object({
   id: UUIDSchema,
