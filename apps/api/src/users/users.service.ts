@@ -5,24 +5,28 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
+import { CreatePasswordEmail } from "@repo/email-templates";
 import * as bcrypt from "bcrypt";
 import { and, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
-import type { DatabasePg } from "src/common";
+import { nanoid } from "nanoid";
+
+import { DatabasePg } from "src/common";
+import { EmailService } from "src/common/emails/emails.service";
+import { getSortOptions } from "src/common/helpers/getSortOptions";
 import hashPassword from "src/common/helpers/hashPassword";
+import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
+
 import { createTokens, credentials, users } from "../storage/schema";
-import type { UserRole } from "./schemas/user-roles";
+
 import {
   type SortUserFieldsOptions,
   type UsersFilterSchema,
   type UserSortField,
   UserSortFields,
 } from "./schemas/userQuery";
-import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import { getSortOptions } from "src/common/helpers/getSortOptions";
+
+import type { UserRole } from "./schemas/user-roles";
 import type { CreateUserBody } from "src/users/schemas/create-user.schema";
-import { nanoid } from "nanoid";
-import { CreatePasswordEmail } from "@repo/email-templates";
-import { EmailService } from "src/common/emails/emails.service";
 
 type UsersQuery = {
   filters?: UsersFilterSchema;
@@ -81,10 +85,7 @@ export class UsersService {
   }
 
   public async getUserByEmail(email: string) {
-    const [user] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const [user] = await this.db.select().from(users).where(eq(users.email, email));
 
     if (!user) {
       throw new NotFoundException("User not found");
@@ -103,29 +104,19 @@ export class UsersService {
       role?: UserRole;
     },
   ) {
-    const [existingUser] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.id, id));
+    const [existingUser] = await this.db.select().from(users).where(eq(users.id, id));
 
     if (!existingUser) {
       throw new NotFoundException("User not found");
     }
 
-    const [updatedUser] = await this.db
-      .update(users)
-      .set(data)
-      .where(eq(users.id, id))
-      .returning();
+    const [updatedUser] = await this.db.update(users).set(data).where(eq(users.id, id)).returning();
 
     return updatedUser;
   }
 
   async changePassword(id: string, oldPassword: string, newPassword: string) {
-    const [existingUser] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.id, id));
+    const [existingUser] = await this.db.select().from(users).where(eq(users.id, id));
 
     if (!existingUser) {
       throw new NotFoundException("User not found");
@@ -140,10 +131,7 @@ export class UsersService {
       throw new NotFoundException("User credentials not found");
     }
 
-    const isOldPasswordValid = await bcrypt.compare(
-      oldPassword,
-      userCredentials.password,
-    );
+    const isOldPasswordValid = await bcrypt.compare(oldPassword, userCredentials.password);
     if (!isOldPasswordValid) {
       throw new UnauthorizedException("Invalid old password");
     }
@@ -156,10 +144,7 @@ export class UsersService {
   }
 
   async resetPassword(id: string, newPassword: string) {
-    const [existingUser] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.id, id));
+    const [existingUser] = await this.db.select().from(users).where(eq(users.id, id));
 
     if (!existingUser) {
       throw new NotFoundException("User not found");
@@ -182,10 +167,7 @@ export class UsersService {
   }
 
   public async deleteUser(id: string) {
-    const [deletedUser] = await this.db
-      .delete(users)
-      .where(eq(users.id, id))
-      .returning();
+    const [deletedUser] = await this.db.delete(users).where(eq(users.id, id)).returning();
 
     if (!deletedUser) {
       throw new NotFoundException("User not found");
@@ -193,10 +175,7 @@ export class UsersService {
   }
 
   public async deleteBulkUsers(ids: string[]) {
-    const deletedUsers = await this.db
-      .delete(users)
-      .where(inArray(users.id, ids))
-      .returning();
+    const deletedUsers = await this.db.delete(users).where(inArray(users.id, ids)).returning();
 
     if (deletedUsers.length !== ids.length) {
       throw new NotFoundException("Users not found");
@@ -204,10 +183,7 @@ export class UsersService {
   }
 
   public async createUser(data: CreateUserBody) {
-    const [existingUser] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.email, data.email));
+    const [existingUser] = await this.db.select().from(users).where(eq(users.email, data.email));
 
     if (existingUser) {
       throw new ConflictException("User already exists");

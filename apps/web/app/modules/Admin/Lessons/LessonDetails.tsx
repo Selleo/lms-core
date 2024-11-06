@@ -1,11 +1,10 @@
 import { capitalize, startCase } from "lodash-es";
 import { memo } from "react";
 import { type Control, Controller } from "react-hook-form";
-import type {
-  GetLessonByIdResponse,
-  UpdateLessonBody,
-} from "~/api/generated-api";
+
 import Editor from "~/components/RichText/Editor";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -13,8 +12,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/input";
+
+import type { GetLessonByIdResponse, UpdateLessonBody } from "~/api/generated-api";
 
 export const LessonDetails = memo<{
   name: keyof UpdateLessonBody;
@@ -28,10 +27,7 @@ export const LessonDetails = memo<{
     render={({ field }) => {
       if (name === "state") {
         return (
-          <Select
-            onValueChange={field.onChange}
-            defaultValue={field.value as string}
-          >
+          <Select onValueChange={field.onChange} defaultValue={field.value as string}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a state" />
             </SelectTrigger>
@@ -65,13 +61,7 @@ export const LessonDetails = memo<{
       }
 
       if (name === "description") {
-        return (
-          <Editor
-            content={field.value as string}
-            className="h-32 w-full"
-            {...field}
-          />
-        );
+        return <Editor content={field.value as string} className="h-32 w-full" {...field} />;
       }
 
       return (

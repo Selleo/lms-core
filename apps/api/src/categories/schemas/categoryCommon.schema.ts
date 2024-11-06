@@ -1,6 +1,8 @@
-import { categories } from "src/storage/schema";
 import { createSelectSchema } from "drizzle-typebox";
-import { Static } from "@sinclair/typebox";
+
+import { categories } from "src/storage/schema";
+
+import type { Static } from "@sinclair/typebox";
 
 export const commonCategorySchema = createSelectSchema(categories);
 

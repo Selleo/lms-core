@@ -1,5 +1,6 @@
 import { Controller, Get } from "@nestjs/common";
 import { HealthCheckService, HealthCheck } from "@nestjs/terminus";
+
 import { Public } from "src/common/decorators/public.decorator";
 
 @Controller("healthcheck")

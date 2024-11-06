@@ -1,0 +1,61 @@
+# Build outputs
+**/dist
+**/build
+**/.next
+**/.cache
+**/out
+**/storybook-static
+
+# Package managers
+**/node_modules
+**/pnpm-lock.yaml
+**/package-lock.json
+**/yarn.lock
+.pnpm-store
+
+# Generated files
+**/coverage
+**/*.generated.*
+**/generated
+**/api/src/swagger/*
+**/.docusaurus
+**/*.d.ts
+**/public
+packages/email-templates/**/index.ts
+apps/api/src/storage/migrations/**
+
+
+# Cache
+**/.turbo
+.cache
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# Misc
+**/.DS_Store
+.git
+.github
+.husky
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Logs
+**/logs
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# Environment
+**/.env
+**/.env.*
+!**/.env.example
+
+# Test files
+**/test-results
+**/playwright-report

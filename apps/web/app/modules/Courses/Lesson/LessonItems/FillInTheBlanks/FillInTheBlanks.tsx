@@ -1,8 +1,9 @@
 import { useState } from "react";
+
+import Viewer from "~/components/RichText/Viever";
 import { Card } from "~/components/ui/card";
 import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheTextBlanks";
 import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
-import Viewer from "~/components/RichText/Viever";
 
 type Answer = {
   id: string;
@@ -48,23 +49,15 @@ export const FillTheBlanks = ({
 
   const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
 
-  const handleWordUpdate = (
-    prevWords: Word[],
-    index: number,
-    value: string,
-  ) => {
+  const handleWordUpdate = (prevWords: Word[], index: number, value: string) => {
     const trimmedValue = value.trim();
-    const existingWordIndex = prevWords.findIndex(
-      (word) => word.index === index,
-    );
+    const existingWordIndex = prevWords.findIndex((word) => word.index === index);
 
     let updatedWords = prevWords;
 
     if (trimmedValue === "") {
       updatedWords =
-        existingWordIndex !== -1
-          ? prevWords.filter((word) => word.index !== index)
-          : prevWords;
+        existingWordIndex !== -1 ? prevWords.filter((word) => word.index !== index) : prevWords;
     } else if (existingWordIndex !== -1) {
       updatedWords = [...prevWords];
       updatedWords[existingWordIndex] = { index, value: trimmedValue };

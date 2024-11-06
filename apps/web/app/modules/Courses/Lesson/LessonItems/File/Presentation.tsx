@@ -3,7 +3,9 @@ import "@cyntler/react-doc-viewer/dist/index.css";
 import { useParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
 import { useIntersection } from "react-use";
+
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
+
 import { useCompletedLessonItemsStore } from "../LessonItemStore";
 
 type PresentationProps = {
@@ -12,11 +14,7 @@ type PresentationProps = {
   isAdmin: boolean;
 };
 
-export default function Presentation({
-  url,
-  presentationId,
-  isAdmin,
-}: PresentationProps) {
+export default function Presentation({ url, presentationId, isAdmin }: PresentationProps) {
   const intersectionRef = useRef<HTMLDivElement>(null);
   const { lessonId } = useParams<{ lessonId: string }>();
   const {
@@ -63,10 +61,7 @@ export default function Presentation({
   ];
 
   return (
-    <div
-      className="w-full h-full flex justify-center items-center"
-      ref={intersectionRef}
-    >
+    <div className="w-full h-full flex justify-center items-center" ref={intersectionRef}>
       <DocViewer
         documents={docs}
         pluginRenderers={DocViewerRenderers}

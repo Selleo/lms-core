@@ -1,11 +1,9 @@
+import { StripeModule as StripeModuleConfig, StripeWebhookService } from "@golevelup/nestjs-stripe";
 import { Module } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+
 import { StripeController } from "./api/stripe.controller";
 import { StripeService } from "./stripe.service";
-import { ConfigService } from "@nestjs/config";
-import {
-  StripeModule as StripeModuleConfig,
-  StripeWebhookService,
-} from "@golevelup/nestjs-stripe";
 import { StripeWebhookHandler } from "./stripeWebhook.handler";
 
 @Module({

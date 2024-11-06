@@ -1,21 +1,25 @@
-import { cn } from "~/lib/utils";
-import { Textarea } from "~/components/ui/textarea";
 import { useParams } from "@remix-run/react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import type { GetLessonResponse } from "~/api/generated-api";
+
+import { useLesson } from "~/api/queries";
+import { Textarea } from "~/components/ui/textarea";
+import { useUserRole } from "~/hooks/useUserRole";
+import { cn } from "~/lib/utils";
+
 import { FillInTheBlanksDnd } from "../FillInTheBlanks/dnd/FillInTheBlanksDnd";
 import { FillTheBlanks } from "../FillInTheBlanks/FillInTheBlanks";
-import { QuestionCorrectAnswers } from "./QuestionCorrectAnswers";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 import { useCompletedLessonItemsStore } from "../LessonItemStore";
 import { useQuestionQuery } from "../useQuestionQuery";
 import { getQuestionDefaultValue } from "../utils";
+
 import { QuestionCard } from "./QuestionCard";
-import { useUserRole } from "~/hooks/useUserRole";
+import { QuestionCorrectAnswers } from "./QuestionCorrectAnswers";
 import { SelectAnswer } from "./SelectAnswer";
-import { useLesson } from "~/api/queries";
+
 import type { DndWord } from "../FillInTheBlanks/dnd/types";
+import type { GetLessonResponse } from "~/api/generated-api";
+import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type QuestionProps = {
   id: string;
@@ -24,11 +28,7 @@ type QuestionProps = {
   isSubmitted?: boolean;
 };
 
-export const Question = ({
-  isSubmitted,
-  content,
-  questionsArray,
-}: QuestionProps) => {
+export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps) => {
   const { lessonId } = useParams();
   const { register, getValues } = useFormContext<TQuestionsForm>();
   const { isAdmin } = useUserRole();
@@ -41,18 +41,13 @@ export const Question = ({
   const { markLessonItemAsCompleted } = useCompletedLessonItemsStore();
 
   const questionId = content.id;
-  const isSingleQuestion =
-    "questionType" in content && content.questionType === "single_choice";
-  const isMultiQuestion =
-    "questionType" in content && content.questionType === "multiple_choice";
-  const isOpenAnswer =
-    "questionType" in content && content.questionType === "open_answer";
+  const isSingleQuestion = "questionType" in content && content.questionType === "single_choice";
+  const isMultiQuestion = "questionType" in content && content.questionType === "multiple_choice";
+  const isOpenAnswer = "questionType" in content && content.questionType === "open_answer";
   const isTextFillInTheBlanks =
-    "questionType" in content &&
-    content.questionType === "fill_in_the_blanks_text";
+    "questionType" in content && content.questionType === "fill_in_the_blanks_text";
   const isDraggableFillInTheBlanks =
-    "questionType" in content &&
-    content.questionType === "fill_in_the_blanks_dnd";
+    "questionType" in content && content.questionType === "fill_in_the_blanks_dnd";
 
   const { sendAnswer, sendOpenAnswer } = useQuestionQuery({
     lessonId,
@@ -89,9 +84,7 @@ export const Question = ({
     }
   };
 
-  const handleOpenAnswerRequest = async (
-    e: ChangeEvent<HTMLTextAreaElement>,
-  ) => {
+  const handleOpenAnswerRequest = async (e: ChangeEvent<HTMLTextAreaElement>) => {
     await markLessonItemAsCompleted({
       lessonItemId: questionId,
       lessonId,
@@ -138,8 +131,7 @@ export const Question = ({
           index: position,
           value: optionText,
           studentAnswerText,
-          blankId:
-            typeof position === "number" ? `blank_${position}` : "blank_preset",
+          blankId: typeof position === "number" ? `blank_${position}` : "blank_preset",
           isCorrect,
           isStudentAnswer,
         });
@@ -191,9 +183,7 @@ export const Question = ({
           answers={content.questionAnswers}
           isQuizSubmitted={lesson?.isSubmitted}
           solutionExplanation={
-            "solutionExplanation" in content
-              ? content.solutionExplanation
-              : null
+            "solutionExplanation" in content ? content.solutionExplanation : null
           }
           isPassed={!!content.passQuestion}
         />
@@ -209,9 +199,7 @@ export const Question = ({
           answers={fillInTheBlanksDndData}
           isQuizSubmitted={lesson?.isSubmitted}
           solutionExplanation={
-            "solutionExplanation" in content
-              ? content.solutionExplanation
-              : null
+            "solutionExplanation" in content ? content.solutionExplanation : null
           }
           isPassed={!!content.passQuestion}
         />

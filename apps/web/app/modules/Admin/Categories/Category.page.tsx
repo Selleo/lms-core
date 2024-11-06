@@ -3,15 +3,14 @@ import { startCase } from "lodash-es";
 import { useForm } from "react-hook-form";
 
 import { useUpdateCategory } from "~/api/mutations/admin/useUpdateCategory";
-import {
-  categoryByIdQueryOptions,
-  useCategoryById,
-} from "~/api/queries/admin/useCategoryById";
+import { categoryByIdQueryOptions, useCategoryById } from "~/api/queries/admin/useCategoryById";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
 import Loader from "~/modules/common/Loader/Loader";
+
 import { CategoryDetails } from "./CategoryDetails";
+
 import type { UpdateCategoryBody } from "~/api/generated-api";
 
 const displayedFields: Array<keyof UpdateCategoryBody> = ["title", "archived"];
@@ -62,9 +61,7 @@ const Category = () => {
     <div className="flex flex-col">
       <form onSubmit={handleSubmit(onSubmit)} className="rounded-lg h-full">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl text-neutral-950 font-semibold mb-4">
-            Category Information
-          </h2>
+          <h2 className="text-2xl text-neutral-950 font-semibold mb-4">Category Information</h2>
           <Button type="submit" disabled={!isDirty} className="mr-2">
             Save
           </Button>

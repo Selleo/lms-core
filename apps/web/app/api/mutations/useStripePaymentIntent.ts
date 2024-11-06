@@ -1,7 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useState, useCallback } from "react";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../api-client";
 
 type StripeClientPaymentIntent = {
@@ -19,11 +21,7 @@ export function useStripePaymentIntent() {
   const { toast } = useToast();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 
-  const mutation = useMutation<
-    StripePaymentIntentResult,
-    Error,
-    StripeClientPaymentIntent
-  >({
+  const mutation = useMutation<StripePaymentIntentResult, Error, StripeClientPaymentIntent>({
     mutationFn: async (options: StripeClientPaymentIntent) => {
       const response = await ApiClient.api.stripeControllerCreatePaymentIntent({
         amount: options.amount,
@@ -40,8 +38,7 @@ export function useStripePaymentIntent() {
       if (error instanceof AxiosError) {
         toast({
           variant: "destructive",
-          description:
-            error.response?.data.message || "Failed to create payment intent",
+          description: error.response?.data.message || "Failed to create payment intent",
         });
       } else {
         toast({
@@ -57,7 +54,7 @@ export function useStripePaymentIntent() {
       setClientSecret(null);
       await mutation.mutateAsync(options);
     },
-    [mutation]
+    [mutation],
   );
 
   const resetClientSecret = useCallback(() => {

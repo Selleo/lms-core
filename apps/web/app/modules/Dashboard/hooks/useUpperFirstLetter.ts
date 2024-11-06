@@ -8,9 +8,6 @@ export const upperFirstLetter = (array: string[]): string => {
     return "";
   }
   return array
-    .map(
-      (string) =>
-        string!.charAt(0).toUpperCase() + string!.slice(1).toLowerCase()
-    )
+    .map((string) => string!.charAt(0).toUpperCase() + string!.slice(1).toLowerCase())
     .join(" ");
 };

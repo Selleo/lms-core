@@ -1,8 +1,10 @@
 import { NavLink } from "@remix-run/react";
-import { cn } from "~/lib/utils";
 import { memo } from "react";
-import type { LeafMenuItem } from "./DashboardNavigation";
+
 import { Icon } from "~/components/Icon";
+import { cn } from "~/lib/utils";
+
+import type { LeafMenuItem } from "./DashboardNavigation";
 
 export const MenuItemLink = memo(({ label, link, iconName }: LeafMenuItem) => (
   <NavLink
@@ -20,9 +22,7 @@ export const MenuItemLink = memo(({ label, link, iconName }: LeafMenuItem) => (
   >
     <>
       <Icon name={iconName} className="w-4 h-4 mr-2" />
-      <span className="capitalize subtle text-md">
-        {label}
-      </span>
+      <span className="capitalize subtle text-md">{label}</span>
     </>
   </NavLink>
 ));

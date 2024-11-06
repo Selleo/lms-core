@@ -1,12 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { EmailConfigSchema } from "src/common/configuration/email";
-import { match, P } from "ts-pattern";
-import { EmailAdapter } from "../adapters/email.adapter";
-import { LocalAdapter } from "../adapters/local.adapter";
-import { SmtpAdapter } from "../adapters/smtp.adapter";
-import { AWSSESAdapter } from "../adapters/ses.adapter";
 import { ModuleRef } from "@nestjs/core";
+import { match, P } from "ts-pattern";
+
+import { LocalAdapter } from "../adapters/local.adapter";
+import { AWSSESAdapter } from "../adapters/ses.adapter";
+import { SmtpAdapter } from "../adapters/smtp.adapter";
+
+import type { EmailAdapter } from "../adapters/email.adapter";
+import type { EmailConfigSchema } from "src/common/configuration/email";
 
 type AdapterType = EmailConfigSchema["EMAIL_ADAPTER"];
 

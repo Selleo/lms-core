@@ -1,22 +1,21 @@
-import { Button } from "~/components/ui/button";
-import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
+import { type ClientLoaderFunctionArgs, Link, useParams } from "@remix-run/react";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+
+import { useClearQuizProgress } from "~/api/mutations/useClearQuizProgress";
+import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
+import { useCourseSuspense } from "~/api/queries/useCourse";
+import { allCoursesQueryOptions } from "~/api/queries/useCourses";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
-import {
-  type ClientLoaderFunctionArgs,
-  Link,
-  useParams,
-} from "@remix-run/react";
+import { queryClient } from "~/api/queryClient";
+import { Button } from "~/components/ui/button";
+import { LessonItems } from "~/modules/Courses/Lesson/LessonItems/LessonItems";
+import { QuizSummaryModal } from "~/modules/Courses/Lesson/QuizSummaryModal";
+
+import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
+
 import type { TQuestionsForm } from "./types";
 import type { MetaFunction } from "@remix-run/node";
-import { queryClient } from "~/api/queryClient";
-import { allCoursesQueryOptions } from "~/api/queries/useCourses";
-import { useCourseSuspense } from "~/api/queries/useCourse";
-import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
-import { useClearQuizProgress } from "~/api/mutations/useClearQuizProgress";
-import { useState } from "react";
-import { QuizSummaryModal } from "~/modules/Courses/Lesson/QuizSummaryModal";
-import { LessonItems } from "~/modules/Courses/Lesson/LessonItems/LessonItems";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Lesson" }];
@@ -67,18 +66,14 @@ export default function LessonPage() {
 
   const questionsArray = getQuestionsArray(orderedLessonsItems);
 
-  const previousLessonId =
-    currentLessonIndex > 0 ? lessonsIds[currentLessonIndex - 1] : null;
+  const previousLessonId = currentLessonIndex > 0 ? lessonsIds[currentLessonIndex - 1] : null;
   const nextLessonId =
-    currentLessonIndex < lessonsIds.length - 1
-      ? lessonsIds[currentLessonIndex + 1]
-      : null;
+    currentLessonIndex < lessonsIds.length - 1 ? lessonsIds[currentLessonIndex + 1] : null;
 
   const isQuiz = data?.type === "quiz";
 
   const getScorePercentage = () => {
-    if (!data.quizScore || data.quizScore === 0 || !data.lessonItems.length)
-      return "0%";
+    if (!data.quizScore || data.quizScore === 0 || !data.lessonItems.length) return "0%";
 
     return `${((data.quizScore / data.lessonItems.length) * 100)?.toFixed(0)}%`;
   };
@@ -119,20 +114,12 @@ export default function LessonPage() {
       )}
       <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
         <Link
-          to={
-            previousLessonId
-              ? `/course/${courseId}/lesson/${previousLessonId}`
-              : "#"
-          }
+          to={previousLessonId ? `/course/${courseId}/lesson/${previousLessonId}` : "#"}
           onClick={(e) => !previousLessonId && e.preventDefault()}
           reloadDocument
           replace
         >
-          <Button
-            variant="outline"
-            className="w-full sm:w-[180px]"
-            disabled={!previousLessonId}
-          >
+          <Button variant="outline" className="w-full sm:w-[180px]" disabled={!previousLessonId}>
             Previous lesson
           </Button>
         </Link>

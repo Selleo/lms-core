@@ -1,11 +1,6 @@
 import { z } from "zod";
 const fileSchema = z.instanceof(File);
-const videoSchema = z.union([
-  z.string(),
-  fileSchema,
-  z.array(fileSchema),
-  z.null(),
-]);
+const videoSchema = z.union([z.string(), fileSchema, z.array(fileSchema), z.null()]);
 
 const lessonItemFormVideoSchema = z.union([
   z.string(),

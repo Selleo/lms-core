@@ -1,5 +1,3 @@
-import { Editor } from "@tiptap/react";
-
 import {
   Select,
   SelectContent,
@@ -8,6 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+
+import type { Editor } from "@tiptap/react";
 
 type FormatTypeProps = {
   editor: Editor;

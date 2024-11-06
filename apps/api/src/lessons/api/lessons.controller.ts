@@ -11,6 +11,7 @@ import {
 } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
+
 import {
   baseResponse,
   BaseResponse,
@@ -22,8 +23,10 @@ import {
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import type { UserRole } from "src/users/schemas/user-roles";
+import { UserRole } from "src/users/schemas/user-roles";
+
 import { AdminLessonItemsService } from "../adminLessonItems.service";
+import { AdminLessonsService } from "../adminLessons.service";
 import { LessonsService } from "../lessons.service";
 import {
   type AllLessonsResponse,
@@ -55,7 +58,6 @@ import {
   sortLessonFieldsOptions,
   type SortLessonFieldsOptions,
 } from "../schemas/lessonQuery";
-import { AdminLessonsService } from "../adminLessons.service";
 
 @Controller("lessons")
 @UseGuards(RolesGuard)
@@ -95,9 +97,7 @@ export class LessonsController {
 
     const query = { filters, sort, page, perPage };
 
-    return new PaginatedResponse(
-      await this.adminLessonsService.getAllLessons(query),
-    );
+    return new PaginatedResponse(await this.adminLessonsService.getAllLessons(query));
   }
 
   @Get("available-lessons")
@@ -126,8 +126,7 @@ export class LessonsController {
       }>
     >
   > {
-    const availableLessons =
-      await this.adminLessonsService.getAvailableLessons();
+    const availableLessons = await this.adminLessonsService.getAvailableLessons();
     return new BaseResponse(availableLessons);
   }
 
@@ -141,18 +140,14 @@ export class LessonsController {
     @CurrentUser("role") userRole: UserRole,
     @CurrentUser("userId") userId: string,
   ): Promise<BaseResponse<ShowLessonResponse>> {
-    return new BaseResponse(
-      await this.lessonsService.getLesson(id, userId, userRole === "admin"),
-    );
+    return new BaseResponse(await this.lessonsService.getLesson(id, userId, userRole === "admin"));
   }
 
   @Get("lesson/:id")
   @Validate({
     response: baseResponse(showLessonSchema),
   })
-  async getLessonById(
-    @Param("id") id: string,
-  ): Promise<BaseResponse<ShowLessonResponse>> {
+  async getLessonById(@Param("id") id: string): Promise<BaseResponse<ShowLessonResponse>> {
     return new BaseResponse(await this.adminLessonsService.getLessonById(id));
   }
 
@@ -165,18 +160,13 @@ export class LessonsController {
         schema: createLessonSchema,
       },
     ],
-    response: baseResponse(
-      Type.Object({ id: UUIDSchema, message: Type.String() }),
-    ),
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
   })
   async createLesson(
     @Body() createLessonBody: CreateLessonBody,
     @CurrentUser("userId") userId: string,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
-    const { id } = await this.adminLessonsService.createLesson(
-      createLessonBody,
-      userId,
-    );
+    const { id } = await this.adminLessonsService.createLesson(createLessonBody, userId);
 
     return new BaseResponse({ id, message: "Lesson created successfully" });
   }
@@ -274,10 +264,7 @@ export class LessonsController {
     @Query("lessonId") lessonId: string,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<{ message: string }>> {
-    const result = await this.lessonsService.clearQuizProgress(
-      lessonId,
-      currentUserId,
-    );
+    const result = await this.lessonsService.clearQuizProgress(lessonId, currentUserId);
     if (result)
       return new BaseResponse({
         message: "Evaluation quiz successfully",
@@ -328,8 +315,7 @@ export class LessonsController {
       perPage,
     };
 
-    const allLessonItems =
-      await this.adminLessonItemsService.getAllLessonItems(query);
+    const allLessonItems = await this.adminLessonItemsService.getAllLessonItems(query);
     return new PaginatedResponse(allLessonItems);
   }
 
@@ -349,11 +335,8 @@ export class LessonsController {
     ],
     response: baseResponse(GetAllLessonItemsResponseSchema),
   })
-  async getAvailableLessonItems(): Promise<
-    BaseResponse<GetAllLessonItemsResponse>
-  > {
-    const availableLessonItems =
-      await this.adminLessonItemsService.getAvailableLessonItems();
+  async getAvailableLessonItems(): Promise<BaseResponse<GetAllLessonItemsResponse>> {
+    const availableLessonItems = await this.adminLessonItemsService.getAvailableLessonItems();
     return new BaseResponse(availableLessonItems);
   }
 
@@ -402,10 +385,7 @@ export class LessonsController {
       }>;
     },
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonItemsService.assignItemsToLesson(
-      lessonId,
-      body.items,
-    );
+    await this.adminLessonItemsService.assignItemsToLesson(lessonId, body.items);
     return new BaseResponse({
       message: "Successfully assigned items to lesson",
     });
@@ -441,10 +421,7 @@ export class LessonsController {
       items: Array<{ id: string; type: "text_block" | "file" | "question" }>;
     },
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonItemsService.unassignItemsFromLesson(
-      lessonId,
-      body.items,
-    );
+    await this.adminLessonItemsService.unassignItemsFromLesson(lessonId, body.items);
     return new BaseResponse({
       message: "Successfully unassigned items from lesson",
     });
@@ -537,18 +514,13 @@ export class LessonsController {
         }),
       },
     ],
-    response: baseResponse(
-      Type.Object({ id: UUIDSchema, message: Type.String() }),
-    ),
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
   })
   async createTextBlock(
     @Body() body: TextBlockInsertType,
     @CurrentUser("userId") userId: string,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
-    const { id } = await this.adminLessonItemsService.createTextBlock(
-      body,
-      userId,
-    );
+    const { id } = await this.adminLessonItemsService.createTextBlock(body, userId);
 
     return new BaseResponse({ id, message: "Text block created successfully" });
   }
@@ -568,19 +540,14 @@ export class LessonsController {
         }),
       },
     ],
-    response: baseResponse(
-      Type.Object({ message: Type.String(), questionId: UUIDSchema }),
-    ),
+    response: baseResponse(Type.Object({ message: Type.String(), questionId: UUIDSchema })),
   })
   async createQuestion(
     @Body()
     body: QuestionInsertType,
     @CurrentUser("userId") userId: string,
   ): Promise<BaseResponse<{ message: string; questionId: string }>> {
-    const { id } = await this.adminLessonItemsService.createQuestion(
-      body,
-      userId,
-    );
+    const { id } = await this.adminLessonItemsService.createQuestion(body, userId);
 
     return new BaseResponse({
       questionId: id,
@@ -618,8 +585,7 @@ export class LessonsController {
       }[]
     >
   > {
-    const options =
-      await this.adminLessonItemsService.getQuestionAnswers(questionId);
+    const options = await this.adminLessonItemsService.getQuestionAnswers(questionId);
     return new BaseResponse(options);
   }
 
@@ -660,10 +626,7 @@ export class LessonsController {
       }>
     >,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonItemsService.upsertQuestionOptions(
-      questionId,
-      options,
-    );
+    await this.adminLessonItemsService.upsertQuestionOptions(questionId, options);
     return new BaseResponse({
       message: "Question options updated successfully",
     });
@@ -684,9 +647,7 @@ export class LessonsController {
         }),
       },
     ],
-    response: baseResponse(
-      Type.Object({ id: UUIDSchema, message: Type.String() }),
-    ),
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
   })
   async createFile(
     @Body() body: FileInsertType,

@@ -1,8 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
-import { UpdateLessonBody } from "../../generated-api";
+
+import type { UpdateLessonBody } from "../../generated-api";
 
 type UpdateLessonOptions = {
   data: UpdateLessonBody;
@@ -14,10 +17,9 @@ export function useUpdateLesson() {
 
   return useMutation({
     mutationFn: async (options: UpdateLessonOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateLesson(
-        options.data,
-        { id: options.lessonId }
-      );
+      const response = await ApiClient.api.lessonsControllerUpdateLesson(options.data, {
+        id: options.lessonId,
+      });
 
       return response.data;
     },

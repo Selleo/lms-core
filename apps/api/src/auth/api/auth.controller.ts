@@ -9,36 +9,28 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
-import { Static } from "@sinclair/typebox";
-import { Request, Response } from "express";
+import { type Request, Response } from "express";
 import { Validate } from "nestjs-typebox";
-import {
-  baseResponse,
-  BaseResponse,
-  nullResponse,
-  type UUIDType,
-} from "src/common";
+
+import { baseResponse, BaseResponse, nullResponse, type UUIDType } from "src/common";
 import { Public } from "src/common/decorators/public.decorator";
+import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RefreshTokenGuard } from "src/common/guards/refresh-token.guard";
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
+
 import { AuthService } from "../auth.service";
-import {
-  CreateAccountBody,
-  createAccountSchema,
-} from "../schemas/create-account.schema";
+import { CreateAccountBody, createAccountSchema } from "../schemas/create-account.schema";
+import { type CreatePasswordBody, createPasswordSchema } from "../schemas/create-password.schema";
 import { LoginBody, loginSchema } from "../schemas/login.schema";
-import { TokenService } from "../token.service";
-import { CurrentUser } from "src/common/decorators/user.decorator";
 import {
   ForgotPasswordBody,
   forgotPasswordSchema,
   ResetPasswordBody,
   resetPasswordSchema,
 } from "../schemas/reset-password.schema";
-import {
-  type CreatePasswordBody,
-  createPasswordSchema,
-} from "../schemas/create-password.schema";
+import { TokenService } from "../token.service";
+
+import type { Static } from "@sinclair/typebox";
 
 @Controller("auth")
 export class AuthController {
@@ -53,9 +45,7 @@ export class AuthController {
     request: [{ type: "body", schema: createAccountSchema }],
     response: baseResponse(commonUserSchema),
   })
-  async register(
-    data: CreateAccountBody,
-  ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
+  async register(data: CreateAccountBody): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     const account = await this.authService.register(data);
 
     return new BaseResponse(account);
@@ -72,15 +62,9 @@ export class AuthController {
     @Body() data: LoginBody,
     @Res({ passthrough: true }) response: Response,
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
-    const { accessToken, refreshToken, ...account } =
-      await this.authService.login(data);
+    const { accessToken, refreshToken, ...account } = await this.authService.login(data);
 
-    this.tokenService.setTokenCookies(
-      response,
-      accessToken,
-      refreshToken,
-      data?.rememberMe,
-    );
+    this.tokenService.setTokenCookies(response, accessToken, refreshToken, data?.rememberMe);
 
     return new BaseResponse(account);
   }
@@ -160,9 +144,7 @@ export class AuthController {
   @Validate({
     request: [{ type: "body", schema: resetPasswordSchema }],
   })
-  async resetPassword(
-    @Body() data: ResetPasswordBody,
-  ): Promise<BaseResponse<{ message: string }>> {
+  async resetPassword(@Body() data: ResetPasswordBody): Promise<BaseResponse<{ message: string }>> {
     await this.authService.resetPassword(data.resetToken, data.newPassword);
     return new BaseResponse({ message: "Password reset successfully" });
   }

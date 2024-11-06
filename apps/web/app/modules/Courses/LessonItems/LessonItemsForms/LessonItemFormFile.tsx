@@ -1,26 +1,24 @@
+import { isObject } from "lodash-es";
 import { useState } from "react";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "~/components/ui/form";
-import { Control } from "react-hook-form";
-import { z } from "zod";
-import { lessonItemFormSchema } from "./zodFormType.js";
+import ReactPlayer from "react-player";
 
+import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { Button } from "~/components/ui/button";
-import ReactPlayer from "react-player";
-import { isObject } from "lodash-es";
-import { RenderDialogForm } from "./RenderDialogForm";
-import { UploadMethod } from "./types.js";
+import { FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
+
 import { UploadFile } from "../UploadLessonVideo/UploadFile";
 import { UploadFromInternet } from "../UploadLessonVideo/UploadFromInternet";
+
+import { RenderDialogForm } from "./RenderDialogForm";
+
+import type { UploadMethod } from "./types.js";
+import type { lessonItemFormSchema } from "./zodFormType.js";
+import type { Control } from "react-hook-form";
+import type { z } from "zod";
 
 interface LessonItemFormFileInterface {
   control: Control<z.infer<typeof lessonItemFormSchema>>;
@@ -51,16 +49,8 @@ const VideoFilePlayer = ({ file }: { file: File }) => {
   return (
     <div className="w-full" key={file.name}>
       <video controls className="w-full">
-        <source
-          src={videoURL}
-          type={file.type === "video/quicktime" ? "video/mp4" : file.type}
-        />
-        <track
-          src="./vtt/captions_en.vtt"
-          kind="captions"
-          srcLang="en"
-          label="English captions"
-        />
+        <source src={videoURL} type={file.type === "video/quicktime" ? "video/mp4" : file.type} />
+        <track src="./vtt/captions_en.vtt" kind="captions" srcLang="en" label="English captions" />
       </video>
       <p className="mt-2">{file.name}</p>
     </div>

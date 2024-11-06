@@ -1,10 +1,7 @@
-import {
-  PaymentElement,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
+import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Loader } from "lucide-react";
 import { useState } from "react";
+
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
@@ -17,12 +14,7 @@ type PaymentForm = {
   onPaymentSuccess: () => void;
 };
 
-export const PaymentForm = ({
-  price,
-  currency,
-  onPaymentSuccess,
-  courseId,
-}: PaymentForm) => {
+export const PaymentForm = ({ price, currency, onPaymentSuccess, courseId }: PaymentForm) => {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState<string>();
@@ -48,10 +40,7 @@ export const PaymentForm = ({
     if (result.error) {
       setError(result.error.message);
       setProcessing(false);
-    } else if (
-      result.paymentIntent &&
-      result.paymentIntent.status === "succeeded"
-    ) {
+    } else if (result.paymentIntent && result.paymentIntent.status === "succeeded") {
       setTimeout(() => {
         queryClient.invalidateQueries(courseQueryOptions(courseId));
         setProcessing(false);

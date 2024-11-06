@@ -1,8 +1,10 @@
 import { Injectable } from "@nestjs/common";
-import * as nodemailer from "nodemailer";
 import { ConfigService } from "@nestjs/config";
-import { Email } from "../email.interface";
+import * as nodemailer from "nodemailer";
+
 import { EmailAdapter } from "./email.adapter";
+
+import type { Email } from "../email.interface";
 
 @Injectable()
 export class LocalAdapter extends EmailAdapter {

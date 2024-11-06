@@ -1,8 +1,8 @@
 import { InjectStripeClient } from "@golevelup/nestjs-stripe";
 import { Inject, Injectable } from "@nestjs/common";
-
-import type { DatabasePg } from "src/common";
 import Stripe from "stripe";
+
+import { DatabasePg } from "src/common";
 
 @Injectable()
 export class StripeService {
@@ -11,12 +11,7 @@ export class StripeService {
     @InjectStripeClient() private readonly stripeClient: Stripe,
   ) {}
 
-  async payment(
-    amount: number,
-    currency: string,
-    customerId: string,
-    courseId: string,
-  ) {
+  async payment(amount: number, currency: string, customerId: string, courseId: string) {
     const { client_secret } = await this.stripeClient.paymentIntents.create({
       amount,
       currency,

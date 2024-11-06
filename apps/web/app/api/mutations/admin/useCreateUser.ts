@@ -1,10 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import type { CreateUserBody } from "~/api/generated-api";
-import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "~/api/api-client";
-import { queryClient } from "~/api/queryClient";
 import { currentUserQueryOptions } from "~/api/queries";
+import { queryClient } from "~/api/queryClient";
+import { useToast } from "~/components/ui/use-toast";
+
+import type { CreateUserBody } from "~/api/generated-api";
 
 type CreateUserOptions = {
   data: CreateUserBody;
@@ -15,9 +17,7 @@ export function useCreateUser() {
 
   return useMutation({
     mutationFn: async (options: CreateUserOptions) => {
-      const response = await ApiClient.api.usersControllerCreateUser(
-        options.data,
-      );
+      const response = await ApiClient.api.usersControllerCreateUser(options.data);
 
       return response.data;
     },

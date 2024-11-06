@@ -1,3 +1,5 @@
+import * as crypto from "crypto";
+
 import {
   BadRequestException,
   Body,
@@ -8,11 +10,11 @@ import {
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import * as crypto from "crypto";
+import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
+
 import { S3Service } from "../s3.service";
 import { FileUploadResponse } from "../schemas/file.schema";
 
-import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
 @Controller("upload")
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}

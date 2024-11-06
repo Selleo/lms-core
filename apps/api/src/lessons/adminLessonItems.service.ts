@@ -6,9 +6,16 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { eq, ilike, isNotNull } from "drizzle-orm";
-import type { DatabasePg, UUIDType } from "src/common";
+
+import { DatabasePg } from "src/common";
+import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { S3Service } from "src/file/s3.service";
 import { files, questions, textBlocks } from "src/storage/schema";
+
+import { AdminLessonItemsRepository } from "./repositories/adminLessonItems.repository";
+import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
+
+import type { LessonItemType } from "./lessonItems.type";
 import type {
   FileInsertType,
   FileSelectType,
@@ -23,10 +30,7 @@ import type {
   UpdateQuestionBody,
   UpdateTextBlockBody,
 } from "./schemas/lessonItem.schema";
-import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import { AdminLessonItemsRepository } from "./repositories/adminLessonItems.repository";
-import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
-import { LessonItemType } from "./lessonItems.type";
+import type { UUIDType } from "src/common";
 
 type GetLessonItemsQuery = {
   type?: LessonItemType;
@@ -63,9 +67,7 @@ export class AdminLessonItemsService {
     let fileItems: FileSelectType[] = [];
 
     const questionConditions = [
-      ...(title
-        ? [ilike(questions.questionBody, `%${title.toLowerCase()}%`)]
-        : []),
+      ...(title ? [ilike(questions.questionBody, `%${title.toLowerCase()}%`)] : []),
       ...(state ? [eq(questions.state, state)] : []),
       ...(archived !== undefined ? [eq(questions.archived, archived)] : []),
     ];
@@ -83,18 +85,13 @@ export class AdminLessonItemsService {
     ];
 
     if (!type || type === "question") {
-      questionItems =
-        await this.adminLessonItemsRepository.getQuestions(questionConditions);
+      questionItems = await this.adminLessonItemsRepository.getQuestions(questionConditions);
     }
     if (!type || type === "text_block") {
-      textItems =
-        await this.adminLessonItemsRepository.getTextBlocks(
-          textBlockConditions,
-        );
+      textItems = await this.adminLessonItemsRepository.getTextBlocks(textBlockConditions);
     }
     if (!type || type === "file") {
-      fileItems =
-        await this.adminLessonItemsRepository.getFiles(fileConditions);
+      fileItems = await this.adminLessonItemsRepository.getFiles(fileConditions);
     }
 
     const allItems = [
@@ -114,14 +111,8 @@ export class AdminLessonItemsService {
 
     const sortedItems = sort
       ? allItems.sort((a, b) => {
-          const aValue = this.getSortValue(
-            a,
-            sort.startsWith("-") ? sort.slice(1) : sort,
-          );
-          const bValue = this.getSortValue(
-            b,
-            sort.startsWith("-") ? sort.slice(1) : sort,
-          );
+          const aValue = this.getSortValue(a, sort.startsWith("-") ? sort.slice(1) : sort);
+          const bValue = this.getSortValue(b, sort.startsWith("-") ? sort.slice(1) : sort);
 
           const comparison = aValue > bValue ? 1 : -1;
           return sort.startsWith("-") ? -comparison : comparison;
@@ -199,10 +190,7 @@ export class AdminLessonItemsService {
     throw new NotFoundException("Lesson item not found");
   }
 
-  async assignItemsToLesson(
-    lessonId: string,
-    items: LessonItemToAdd[],
-  ): Promise<void> {
+  async assignItemsToLesson(lessonId: string, items: LessonItemToAdd[]): Promise<void> {
     const lesson = await this.adminLessonsRepository.getLessonById(lessonId);
 
     if (!lesson) {
@@ -210,30 +198,21 @@ export class AdminLessonItemsService {
     }
 
     if (lesson.type == "quiz") {
-      const lessonStudentAnswers =
-        await this.adminLessonItemsRepository.getLessonStudentAnswers(
-          lesson.id,
-        );
+      const lessonStudentAnswers = await this.adminLessonItemsRepository.getLessonStudentAnswers(
+        lesson.id,
+      );
 
       if (lessonStudentAnswers.length > 0) {
-        throw new ConflictException(
-          "Lesson already answered, you can't add more items",
-        );
+        throw new ConflictException("Lesson already answered, you can't add more items");
       }
     }
 
     await this.verifyItems(items);
 
-    await this.adminLessonItemsRepository.addLessonItemToLesson(
-      lessonId,
-      items,
-    );
+    await this.adminLessonItemsRepository.addLessonItemToLesson(lessonId, items);
   }
 
-  async unassignItemsFromLesson(
-    lessonId: string,
-    items: LessonItemToRemove[],
-  ): Promise<void> {
+  async unassignItemsFromLesson(lessonId: string, items: LessonItemToRemove[]): Promise<void> {
     const lesson = await this.adminLessonsRepository.getLessonById(lessonId);
 
     if (!lesson) {
@@ -241,29 +220,22 @@ export class AdminLessonItemsService {
     }
 
     if (lesson.type == "quiz") {
-      const lessonStudentAnswers =
-        await this.adminLessonItemsRepository.getLessonStudentAnswers(
-          lesson.id,
-        );
+      const lessonStudentAnswers = await this.adminLessonItemsRepository.getLessonStudentAnswers(
+        lesson.id,
+      );
 
       if (lessonStudentAnswers.length > 0) {
-        throw new ConflictException(
-          "Lesson already answered, you can't add more items",
-        );
+        throw new ConflictException("Lesson already answered, you can't add more items");
       }
     }
 
-    await this.adminLessonItemsRepository.removeLessonItemFromLesson(
-      lessonId,
-      items,
-    );
+    await this.adminLessonItemsRepository.removeLessonItemFromLesson(lessonId, items);
   }
 
   async updateTextBlockItem(id: UUIDType, body: UpdateTextBlockBody) {
-    const [existingTextBlock] =
-      await this.adminLessonItemsRepository.getTextBlocks([
-        eq(textBlocks.id, id),
-      ]);
+    const [existingTextBlock] = await this.adminLessonItemsRepository.getTextBlocks([
+      eq(textBlocks.id, id),
+    ]);
 
     if (!existingTextBlock) {
       throw new NotFoundException("Text block not found");
@@ -273,17 +245,14 @@ export class AdminLessonItemsService {
   }
 
   async updateQuestionItem(id: UUIDType, body: UpdateQuestionBody) {
-    const [question] = await this.adminLessonItemsRepository.getQuestions([
-      eq(questions.id, id),
-    ]);
+    const [question] = await this.adminLessonItemsRepository.getQuestions([eq(questions.id, id)]);
 
     if (!question) throw new NotFoundException("Question not found");
 
     // TODO: this check may need to be changed
-    const questionStudentAnswers =
-      await this.adminLessonItemsRepository.getQuestionStudentAnswers(
-        question.id,
-      );
+    const questionStudentAnswers = await this.adminLessonItemsRepository.getQuestionStudentAnswers(
+      question.id,
+    );
 
     if (questionStudentAnswers.length > 0) {
       throw new ConflictException("Question already answered");
@@ -293,9 +262,7 @@ export class AdminLessonItemsService {
   }
 
   async updateFileItem(id: UUIDType, body: UpdateFileBody) {
-    const [file] = await this.adminLessonItemsRepository.getFiles([
-      eq(files.id, id),
-    ]);
+    const [file] = await this.adminLessonItemsRepository.getFiles([eq(files.id, id)]);
 
     if (!file) throw new NotFoundException("File not found");
 
@@ -303,10 +270,7 @@ export class AdminLessonItemsService {
   }
 
   async createTextBlock(content: TextBlockInsertType, userId: UUIDType) {
-    const textBlock = await this.adminLessonItemsRepository.createTextBlock(
-      content,
-      userId,
-    );
+    const textBlock = await this.adminLessonItemsRepository.createTextBlock(content, userId);
 
     if (!textBlock) throw new NotFoundException("Text block not found");
 
@@ -314,10 +278,7 @@ export class AdminLessonItemsService {
   }
 
   async createQuestion(content: QuestionInsertType, userId: UUIDType) {
-    const question = await this.adminLessonItemsRepository.createQuestion(
-      content,
-      userId,
-    );
+    const question = await this.adminLessonItemsRepository.createQuestion(content, userId);
 
     if (!question) throw new NotFoundException("Question not found");
 
@@ -341,20 +302,16 @@ export class AdminLessonItemsService {
   ) {
     await this.db.transaction(async (trx) => {
       const questionStudentAnswers =
-        await this.adminLessonItemsRepository.getQuestionStudentAnswers(
-          questionId,
-          trx,
-        );
+        await this.adminLessonItemsRepository.getQuestionStudentAnswers(questionId, trx);
 
       if (questionStudentAnswers.length > 0) {
         throw new ConflictException("Question already answered");
       }
 
-      const existingOptions =
-        await this.adminLessonItemsRepository.getQuestionAnswers(
-          questionId,
-          trx,
-        );
+      const existingOptions = await this.adminLessonItemsRepository.getQuestionAnswers(
+        questionId,
+        trx,
+      );
 
       const existingIds = new Set(existingOptions.map((opt) => opt.id));
 
@@ -395,10 +352,7 @@ export class AdminLessonItemsService {
   }
 
   async createFile(content: FileInsertType, userId: UUIDType) {
-    const file = await this.adminLessonItemsRepository.createFile(
-      content,
-      userId,
-    );
+    const file = await this.adminLessonItemsRepository.createFile(content, userId);
 
     if (!file) throw new NotFoundException("File not found");
 
@@ -417,21 +371,15 @@ export class AdminLessonItemsService {
           ]);
           break;
         case "file":
-          result = await this.adminLessonItemsRepository.getFiles([
-            eq(files.id, item.id),
-          ]);
+          result = await this.adminLessonItemsRepository.getFiles([eq(files.id, item.id)]);
           break;
         case "question":
-          result = await this.adminLessonItemsRepository.getQuestions([
-            eq(questions.id, item.id),
-          ]);
+          result = await this.adminLessonItemsRepository.getQuestions([eq(questions.id, item.id)]);
           break;
       }
 
       if (result.length === 0) {
-        throw new BadRequestException(
-          `Element ${item.id} type of ${item.type} not found`,
-        );
+        throw new BadRequestException(`Element ${item.id} type of ${item.type} not found`);
       }
     }
   }

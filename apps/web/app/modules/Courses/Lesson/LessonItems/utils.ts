@@ -1,5 +1,5 @@
-import type { UseFormGetValues } from "react-hook-form";
 import type { TQuestionsForm } from "../types";
+import type { UseFormGetValues } from "react-hook-form";
 
 type TProps = {
   getValues: UseFormGetValues<TQuestionsForm>;
@@ -13,7 +13,7 @@ export const getQuestionDefaultValue = ({
   questionId,
 }: TProps): string[] => {
   const defaultValues = getValues(
-    `${isSingleQuestion ? "singleAnswerQuestions" : "multiAnswerQuestions"}.${questionId}`
+    `${isSingleQuestion ? "singleAnswerQuestions" : "multiAnswerQuestions"}.${questionId}`,
   );
 
   return Object.values(defaultValues || {}).filter(Boolean) as string[];

@@ -1,11 +1,14 @@
 import { Link } from "@remix-run/react";
-import type { GetAllCoursesResponse } from "~/api/generated-api";
+
 import CourseProgress from "~/components/CourseProgress";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
+
 import { CourseCardTitle } from "./CourseCardTitle";
+
+import type { GetAllCoursesResponse } from "~/api/generated-api";
 
 type CourseType = GetAllCoursesResponse["data"][number];
 type CourseCardProps = Pick<
@@ -54,8 +57,7 @@ const CourseCard = ({
           alt="Course"
           className="w-full aspect-video object-cover rounded-t-lg"
           onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              "https://picsum.photos/500/300";
+            (e.target as HTMLImageElement).src = "https://picsum.photos/500/300";
           }}
         />
         <div className="absolute top-4 left-4 right-4">

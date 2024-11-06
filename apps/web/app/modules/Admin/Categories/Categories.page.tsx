@@ -8,22 +8,14 @@ import {
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
-import type { GetAllCategoriesResponse } from "~/api/generated-api";
+
 import { useCategoriesSuspense, usersQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
 import SortButton from "~/components/TableSortButton/TableSortButton";
-
-import { cn } from "~/lib/utils";
-import {
-  type FilterConfig,
-  type FilterValue,
-  SearchFilter,
-} from "~/modules/common/SearchFilter/SearchFilter";
-import { format } from "date-fns";
-import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -35,6 +27,15 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
+import { cn } from "~/lib/utils";
+import {
+  type FilterConfig,
+  type FilterValue,
+  SearchFilter,
+} from "~/modules/common/SearchFilter/SearchFilter";
+
+import type { GetAllCategoriesResponse } from "~/api/generated-api";
 
 type TCategory = GetAllCategoriesResponse["data"][number];
 
@@ -98,13 +99,9 @@ const Categories = () => {
     },
     {
       accessorKey: "title",
-      header: ({ column }) => (
-        <SortButton<TCategory> column={column}>Title</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCategory> column={column}>Title</SortButton>,
       cell: ({ row }) => (
-        <div className="max-w-md truncate">
-          {formatHtmlString(row.original.title)}
-        </div>
+        <div className="max-w-md truncate">{formatHtmlString(row.original.title)}</div>
       ),
     },
     {
@@ -121,12 +118,8 @@ const Categories = () => {
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TCategory> column={column}>Created At</SortButton>
-      ),
-      cell: ({ row }) =>
-        row.original.createdAt &&
-        format(new Date(row.original.createdAt), "PPpp"),
+      header: ({ column }) => <SortButton<TCategory> column={column}>Created At</SortButton>,
+      cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
 
@@ -143,9 +136,7 @@ const Categories = () => {
     },
   });
 
-  const selectedCategories = table
-    .getSelectedRowModel()
-    .rows.map((row) => row.original.id);
+  const selectedCategories = table.getSelectedRowModel().rows.map((row) => row.original.id);
 
   const handleDelete = () => {
     alert("Not implemented");
@@ -193,10 +184,7 @@ const Categories = () => {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </TableRow>

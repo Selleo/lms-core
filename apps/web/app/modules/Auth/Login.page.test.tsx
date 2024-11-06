@@ -2,11 +2,10 @@ import { createRemixStub } from "@remix-run/testing";
 import { screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import {
-  mockedUseNavigate,
-  mockRemixReact,
-} from "~/utils/mocks/remix-run-mock";
+
+import { mockedUseNavigate, mockRemixReact } from "~/utils/mocks/remix-run-mock";
 import { renderWith } from "~/utils/testUtils";
+
 import LoginPage from "./Login.page";
 
 vi.mock("../../../api/api-client");

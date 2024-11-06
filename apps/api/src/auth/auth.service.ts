@@ -8,28 +8,27 @@ import {
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
-import { and, eq, isNull, lte, sql } from "drizzle-orm";
-import { DatabasePg, UUIDType } from "src/common";
-import {
-  createTokens,
-  credentials,
-  resetTokens,
-  users,
-} from "../storage/schema";
-import { UsersService } from "../users/users.service";
-import hashPassword from "src/common/helpers/hashPassword";
-import { EmailService } from "src/common/emails/emails.service";
 import {
   CreatePasswordReminderEmail,
   PasswordRecoveryEmail,
   WelcomeEmail,
 } from "@repo/email-templates";
+import * as bcrypt from "bcrypt";
+import { and, eq, isNull, lte, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { ResetPasswordService } from "./reset-password.service";
-import { CreatePasswordService } from "./create-password.service";
+
 import { CORS_ORIGIN } from "src/auth/consts";
-import { CommonUser } from "src/common/schemas/common-user.schema";
+import { DatabasePg, type UUIDType } from "src/common";
+import { EmailService } from "src/common/emails/emails.service";
+import hashPassword from "src/common/helpers/hashPassword";
+
+import { createTokens, credentials, resetTokens, users } from "../storage/schema";
+import { UsersService } from "../users/users.service";
+
+import { CreatePasswordService } from "./create-password.service";
+import { ResetPasswordService } from "./reset-password.service";
+
+import type { CommonUser } from "src/common/schemas/common-user.schema";
 
 @Injectable()
 export class AuthService {
@@ -54,10 +53,7 @@ export class AuthService {
     lastName: string;
     password: string;
   }) {
-    const [existingUser] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const [existingUser] = await this.db.select().from(users).where(eq(users.email, email));
 
     if (existingUser) {
       throw new ConflictException("User already exists");
@@ -66,14 +62,9 @@ export class AuthService {
     const hashedPassword = await hashPassword(password);
 
     return this.db.transaction(async (trx) => {
-      const [newUser] = await trx
-        .insert(users)
-        .values({ email, firstName, lastName })
-        .returning();
+      const [newUser] = await trx.insert(users).values({ email, firstName, lastName }).returning();
 
-      await trx
-        .insert(credentials)
-        .values({ userId: newUser.id, password: hashedPassword });
+      await trx.insert(credentials).values({ userId: newUser.id, password: hashedPassword });
 
       const emailTemplate = new WelcomeEmail({ email, name: email });
 
@@ -152,10 +143,7 @@ export class AuthService {
 
     if (!userWithCredentials || !userWithCredentials.password) return null;
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      userWithCredentials.password,
-    );
+    const isPasswordValid = await bcrypt.compare(password, userWithCredentials.password);
 
     if (!isPasswordValid) return null;
 
@@ -293,9 +281,7 @@ export class AuthService {
           from: "godfather@selleo.com",
         });
 
-        await transaction
-          .delete(createTokens)
-          .where(eq(createTokens.createToken, oldCreateToken));
+        await transaction.delete(createTokens).where(eq(createTokens.createToken, oldCreateToken));
       } catch (error) {
         transaction.rollback();
 
@@ -311,8 +297,7 @@ export class AuthService {
     expiryDate.setHours(expiryDate.getHours() + 24);
 
     expiryTokens.map(async ({ userId, email, oldCreateToken }) => {
-      const { createToken, emailTemplate } =
-        this.generateNewTokenAndEmail(email);
+      const { createToken, emailTemplate } = this.generateNewTokenAndEmail(email);
 
       await this.sendEmailAndUpdateDatabase(
         userId,

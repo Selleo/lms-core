@@ -1,14 +1,16 @@
-import { Label } from "~/components/ui/label";
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
-import { Link } from "@remix-run/react";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import type { ForgotPasswordBody } from "~/api/generated-api";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { cn } from "~/lib/utils";
+import { Link } from "@remix-run/react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
 import { usePasswordRecovery } from "~/api/mutations/useRecoverPassword";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { useToast } from "~/components/ui/use-toast";
+import { cn } from "~/lib/utils";
+
+import type { ForgotPasswordBody } from "~/api/generated-api";
 
 const passwordRecoverySchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -28,8 +30,7 @@ export default function PasswordRecoveryPage() {
   const onSubmit = (data: ForgotPasswordBody) => {
     recoverPassword({ data }).then(() => {
       toast({
-        description:
-          "A link to reset your password has been sent to your email.",
+        description: "A link to reset your password has been sent to your email.",
       });
     });
   };
@@ -42,15 +43,11 @@ export default function PasswordRecoveryPage() {
             Forgot your password?
           </h2>
           <p className="mt-2 text-center text-sm text-muted-foreground">
-            Enter the email address associated with your account and we&apos;ll
-            send you a link to reset your password.
+            Enter the email address associated with your account and we&apos;ll send you a link to
+            reset your password.
           </p>
         </div>
-        <form
-          className="space-y-6"
-          action="#"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form className="space-y-6" action="#" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-2">
             <Label htmlFor="email">Email address</Label>
             <Input
@@ -61,19 +58,14 @@ export default function PasswordRecoveryPage() {
               className={cn({ "border-red-500": errors.email })}
               {...register("email")}
             />
-            {errors.email && (
-              <div className="text-red-500 text-sm">{errors.email.message}</div>
-            )}
+            {errors.email && <div className="text-red-500 text-sm">{errors.email.message}</div>}
           </div>
           <Button type="submit" className="w-full">
             Reset password
           </Button>
         </form>
         <div className="flex justify-center">
-          <Link
-            to="/auth/login"
-            className="text-sm font-medium text-muted-foreground"
-          >
+          <Link to="/auth/login" className="text-sm font-medium text-muted-foreground">
             Back to login
           </Link>
         </div>

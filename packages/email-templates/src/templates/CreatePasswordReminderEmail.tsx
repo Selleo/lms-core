@@ -13,14 +13,10 @@ export const CreatePasswordReminderEmail = ({
       <Text>
         This is a friendly reminder that your account is not yet fully set up.
         <br />
-        To complete your account setup, please create your password by clicking
-        the button below.
+        To complete your account setup, please create your password by clicking the button below.
       </Text>
       <Button href={createPasswordLink}>Create your password</Button>
-      <Text>
-        If you have already created your password, please disregard this
-        reminder.
-      </Text>
+      <Text>If you have already created your password, please disregard this reminder.</Text>
     </Html>
   );
 };

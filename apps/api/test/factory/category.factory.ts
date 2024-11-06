@@ -1,18 +1,17 @@
-import { categories } from "../../src/storage/schema";
-import { DatabasePg } from "src/common";
-import { Factory } from "fishery";
 import { faker } from "@faker-js/faker";
-import { InferInsertModel } from "drizzle-orm";
+import { Factory } from "fishery";
+
+import { categories } from "../../src/storage/schema";
+
+import type { InferInsertModel } from "drizzle-orm";
+import type { DatabasePg } from "src/common";
 
 type Category = InferInsertModel<typeof categories>;
 
 export const createCategoryFactory = (db: DatabasePg) => {
   return Factory.define<Category>(({ onCreate }) => {
     onCreate(async (category) => {
-      const [inserted] = await db
-        .insert(categories)
-        .values(category)
-        .returning();
+      const [inserted] = await db.insert(categories).values(category).returning();
       return inserted;
     });
 

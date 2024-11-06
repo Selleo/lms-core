@@ -1,16 +1,19 @@
-import type { MetaFunction } from "@remix-run/node";
-import { courseQueryOptions, useCourseSuspense } from "~/api/queries";
-import { CourseViewMainCard } from "./CourseViewMainCard";
-import { LessonsList } from "./LessonsList";
 import {
   type ClientLoaderFunctionArgs,
   isRouteErrorResponse,
   useParams,
   useRouteError,
 } from "@remix-run/react";
+
+import { courseQueryOptions, useCourseSuspense } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
-import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 import { useUserRole } from "~/hooks/useUserRole";
+import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
+
+import { CourseViewMainCard } from "./CourseViewMainCard";
+import { LessonsList } from "./LessonsList";
+
+import type { MetaFunction } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Courses" }, { name: "description", content: "Courses" }];
@@ -41,10 +44,7 @@ export default function CoursesViewPage() {
     <div className="h-full">
       <div className="flex flex-col md:flex-row h-full gap-6 px-6">
         <CourseViewMainCard course={course} />
-        <LessonsList
-          lessons={course.lessons}
-          isEnrolled={course.enrolled || isAdmin}
-        />
+        <LessonsList lessons={course.lessons} isEnrolled={course.enrolled || isAdmin} />
       </div>
     </div>
   );

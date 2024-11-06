@@ -1,11 +1,13 @@
+import path from "path";
+
 import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
-import { routes } from "./routes";
-import path from "path";
-import svgr from "vite-plugin-svgr";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 import { cjsInterop } from "vite-plugin-cjs-interop";
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import svgr from "vite-plugin-svgr";
+import tsconfigPaths from "vite-tsconfig-paths";
+
+import { routes } from "./routes";
 
 export default defineConfig({
   plugins: [

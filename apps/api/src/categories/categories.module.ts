@@ -1,6 +1,7 @@
+import { Module } from "@nestjs/common";
+
 import { CategoriesController } from "./api/categories.controller";
 import { CategoriesService } from "./categories.service";
-import { Module } from "@nestjs/common";
 
 @Module({
   imports: [],

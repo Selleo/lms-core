@@ -1,4 +1,3 @@
-import { type FC, useEffect, useState } from "react";
 import {
   closestCorners,
   DndContext,
@@ -12,20 +11,22 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { SentenceBuilder } from "./SentenceBuilder";
-import { DndBlank } from "./DndBlank";
-import type { DndWord } from "./types";
-import { DraggableWord } from "./DraggableWord";
-import { WordBank } from "./WordBank";
+import { type FC, useEffect, useState } from "react";
+
 import Viewer from "~/components/RichText/Viever";
+
+import { DndBlank } from "./DndBlank";
+import { DraggableWord } from "./DraggableWord";
+import { SentenceBuilder } from "./SentenceBuilder";
+import { WordBank } from "./WordBank";
+
+import type { DndWord } from "./types";
 
 type FillInTheBlanksDndProps = {
   isQuiz: boolean;
   questionLabel: string;
   content: string;
-  sendAnswer: (
-    selectedOption: { value: string; index: number }[]
-  ) => Promise<void>;
+  sendAnswer: (selectedOption: { value: string; index: number }[]) => Promise<void>;
   answers: DndWord[];
   isQuizSubmitted?: boolean;
   solutionExplanation?: string | null;
@@ -43,8 +44,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   isPassed,
 }) => {
   const [words, setWords] = useState<DndWord[]>(answers);
-  const [currentlyDraggedWord, setCurrentlyDraggedWord] =
-    useState<DndWord | null>(null);
+  const [currentlyDraggedWord, setCurrentlyDraggedWord] = useState<DndWord | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -59,7 +59,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         cancel: ["Escape"],
         end: ["Space"],
       },
-    })
+    }),
   );
 
   useEffect(() => {
@@ -97,9 +97,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
     }
 
     setWords((prev) => {
-      const activeWords = prev.filter(
-        ({ blankId }) => blankId === activeBlankId
-      );
+      const activeWords = prev.filter(({ blankId }) => blankId === activeBlankId);
       const activeWord = activeWords.find(({ id }) => id === activeId);
       const updatedWord = prev.find(({ id }) => id === activeWord?.id);
 
@@ -127,9 +125,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
     }
 
     setWords((prev) => {
-      const activeWords = prev.filter(
-        ({ blankId }) => blankId === activeBlankId
-      );
+      const activeWords = prev.filter(({ blankId }) => blankId === activeBlankId);
 
       const overWords = prev.filter(({ blankId }) => blankId === overBlankId);
 
@@ -143,7 +139,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           ...arrayMove(
             overWords,
             activeWords.indexOf(activeWord),
-            overWord ? overWords.indexOf(overWord) : 0
+            overWord ? overWords.indexOf(overWord) : 0,
           ),
           ...prev,
         ]),
@@ -153,8 +149,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         const [firstWord, secondWord] = activeWords;
 
         const isChangedPositionInWordsBank =
-          firstWord.blankId === "blank_preset" &&
-          secondWord.blankId === "blank_preset";
+          firstWord.blankId === "blank_preset" && secondWord.blankId === "blank_preset";
 
         if (isChangedPositionInWordsBank) {
           return updatedWords;
@@ -169,7 +164,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
             ...arrayMove(
               wordsWithUpdatedBlankId,
               activeWords.indexOf(firstWord),
-              overWord ? wordsWithUpdatedBlankId.indexOf(secondWord) : 0
+              overWord ? wordsWithUpdatedBlankId.indexOf(secondWord) : 0,
             ),
             ...prev,
           ]),
@@ -178,25 +173,16 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         const filteredWords = updatedWordsWithUpdatedBlankId
           .filter(({ blankId }) => blankId !== "blank_preset")
           .map((item) => {
-            const newIndex = parseInt(
-              item.blankId.match(/\d+$/)?.[0] ?? "0",
-              10
-            );
+            const newIndex = parseInt(item.blankId.match(/\d+$/)?.[0] ?? "0", 10);
             return {
               ...item,
               index: newIndex,
             };
           });
 
-        if (
-          filteredWords.length >= 1 &&
-          filteredWords.length <= maxAnswersAmount
-        ) {
+        if (filteredWords.length >= 1 && filteredWords.length <= maxAnswersAmount) {
           const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
-          if (
-            sortedWords.length > 0 &&
-            sortedWords.length <= maxAnswersAmount
-          ) {
+          if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
             sendAnswer(sortedWords);
           }
         }
@@ -214,10 +200,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           };
         });
 
-      if (
-        filteredWords.length >= 1 &&
-        filteredWords.length <= maxAnswersAmount
-      ) {
+      if (filteredWords.length >= 1 && filteredWords.length <= maxAnswersAmount) {
         const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
         if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
           sendAnswer(sortedWords);
@@ -230,9 +213,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
     setCurrentlyDraggedWord(null);
   }
 
-  const wordBankWords = words.filter(
-    ({ blankId }) => blankId === "blank_preset"
-  );
+  const wordBankWords = words.filter(({ blankId }) => blankId === "blank_preset");
 
   return (
     <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
@@ -247,11 +228,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
       >
         <DragOverlay>
           {currentlyDraggedWord && (
-            <DraggableWord
-              isQuiz={isQuiz}
-              word={currentlyDraggedWord}
-              isOverlay
-            />
+            <DraggableWord isQuiz={isQuiz} word={currentlyDraggedWord} isOverlay />
           )}
         </DragOverlay>
         <SentenceBuilder
@@ -259,9 +236,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           replacement={(index) => {
             const blankId = `blank_${index}`;
 
-            const wordsInBlank = words.filter(
-              (word) => word.blankId === blankId
-            );
+            const wordsInBlank = words.filter((word) => word.blankId === blankId);
 
             return (
               <DndBlank
@@ -277,9 +252,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         <WordBank words={wordBankWords} />
         {solutionExplanation && !isPassed && (
           <div className="mt-4">
-            <span className="body-base-md text-error-700">
-              Correct sentence:
-            </span>
+            <span className="body-base-md text-error-700">Correct sentence:</span>
             <Viewer content={solutionExplanation} />
           </div>
         )}

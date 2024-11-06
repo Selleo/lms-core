@@ -1,17 +1,14 @@
-import {
-  queryOptions,
-  useQuery,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
 import { ApiClient } from "../../api-client";
-import { GetCategoryByIdResponse } from "../../generated-api";
+
+import type { GetCategoryByIdResponse } from "../../generated-api";
 
 export const categoryByIdQueryOptions = (id: string) =>
   queryOptions({
     queryKey: ["category", "admin", { id }],
     queryFn: async () => {
-      const response =
-        await ApiClient.api.categoriesControllerGetCategoryById(id);
+      const response = await ApiClient.api.categoriesControllerGetCategoryById(id);
       return response.data;
     },
     select: (data: GetCategoryByIdResponse) => data.data,

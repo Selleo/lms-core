@@ -1,4 +1,5 @@
 import { useParams } from "@remix-run/react";
+
 import { useCourseSuspense } from "~/api/queries/useCourse";
 import { useLessonSuspense } from "~/api/queries/useLesson";
 import {
@@ -32,14 +33,10 @@ export default function Breadcrumb() {
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/course/${courseId}`}>
-            {courseTitle}
-          </BreadcrumbLink>
+          <BreadcrumbLink href={`/course/${courseId}`}>{courseTitle}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbItem className="text-neutral-950">
-          {lessonTitle}
-        </BreadcrumbItem>
+        <BreadcrumbItem className="text-neutral-950">{lessonTitle}</BreadcrumbItem>
       </BreadcrumbList>
     </div>
   );

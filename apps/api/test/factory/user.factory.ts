@@ -1,9 +1,11 @@
 import { faker } from "@faker-js/faker";
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { Factory } from "fishery";
-import { DatabasePg } from "src/common";
+
 import hashPassword from "../../src/common/helpers/hashPassword";
 import { credentials, users } from "../../src/storage/schema";
+
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { DatabasePg } from "src/common";
 
 type User = InferSelectModel<typeof users>;
 export type UserWithCredentials = User & { credentials?: Credential };

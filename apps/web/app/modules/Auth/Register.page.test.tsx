@@ -2,11 +2,10 @@ import { createRemixStub } from "@remix-run/testing";
 import { screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import {
-  mockedUseNavigate,
-  mockRemixReact,
-} from "~/utils/mocks/remix-run-mock";
+
+import { mockedUseNavigate, mockRemixReact } from "~/utils/mocks/remix-run-mock";
 import { renderWith } from "~/utils/testUtils";
+
 import RegisterPage from "./Register.page";
 
 vi.mock("../../../api/api-client");
@@ -28,9 +27,7 @@ describe("Register page", () => {
   it("renders without crashing", () => {
     renderWith({ withQuery: true }).render(<RemixStub />);
 
-    expect(
-      screen.getByRole("heading", { name: "Sign Up" }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Sign Up" })).toBeInTheDocument();
   });
 
   it("submits the form with valid data", async () => {
@@ -59,9 +56,7 @@ describe("Register page", () => {
     expect(screen.getByText("First name is required")).toBeInTheDocument();
     expect(screen.getByText("Last name is required")).toBeInTheDocument();
     expect(screen.getByText("Invalid email")).toBeInTheDocument();
-    expect(
-      screen.getByText("Password must be at least 8 characters"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Password must be at least 8 characters")).toBeInTheDocument();
   });
 
   it("navigates to login page when 'Sign in' link is clicked", async () => {

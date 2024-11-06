@@ -1,13 +1,12 @@
-import { Static, TObject } from "@sinclair/typebox";
 import { TypeCompiler } from "@sinclair/typebox/compiler";
+
+import type { Static, TObject } from "@sinclair/typebox";
 
 export function configValidator<T extends TObject>(schema: T) {
   type ConfigSchema = Static<T>;
   const validator = TypeCompiler.Compile(schema);
 
-  return function validateConfig(
-    values: Record<string, unknown>,
-  ): ConfigSchema {
+  return function validateConfig(values: Record<string, unknown>): ConfigSchema {
     if (validator.Check(values)) {
       return values;
     } else {

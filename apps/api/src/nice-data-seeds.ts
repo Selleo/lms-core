@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { Status } from "./storage/schema/utils";
+
+import type { Status } from "./storage/schema/utils";
 
 export const LessonFileType = {
   presentation: "Presentation",
@@ -113,8 +114,7 @@ export const niceCourses: NiceCourseData[] = [
           {
             type: "question",
             questionType: "single_choice",
-            questionBody:
-              "Which of the following HTML tags is used to create a hyperlink?",
+            questionBody: "Which of the following HTML tags is used to create a hyperlink?",
             state: "published",
           },
           {
@@ -136,8 +136,7 @@ export const niceCourses: NiceCourseData[] = [
           {
             type: "question",
             questionType: "single_choice",
-            questionBody:
-              "Which of the following HTML tags is used to create an image?",
+            questionBody: "Which of the following HTML tags is used to create an image?",
             state: "published",
           },
           {

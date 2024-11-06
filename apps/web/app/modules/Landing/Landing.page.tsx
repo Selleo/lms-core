@@ -1,14 +1,14 @@
-import type { MetaFunction } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+
 import SheetMenu from "~/components/SheetMenu/SheetMenu";
 import { useLandingStore } from "~/modules/Landing/landingStore";
+
 import { BrandIcon } from "../icons/icons";
 
+import type { MetaFunction } from "@remix-run/node";
+
 export const meta: MetaFunction = () => {
-  return [
-    { title: "Selleo Remix" },
-    { name: "description", content: "Welcome to the Selleo!" },
-  ];
+  return [{ title: "Selleo Remix" }, { name: "description", content: "Welcome to the Selleo!" }];
 };
 
 export const clientLoader = async () => {

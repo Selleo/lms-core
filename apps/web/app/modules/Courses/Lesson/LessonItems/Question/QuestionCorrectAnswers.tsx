@@ -22,8 +22,7 @@ export const QuestionCorrectAnswers = ({
 
   return (
     <div>
-      <span className="body-base-md text-error-700">Correct answers:</span>{" "}
-      {answersString}
+      <span className="body-base-md text-error-700">Correct answers:</span> {answersString}
     </div>
   );
 };

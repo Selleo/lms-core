@@ -1,8 +1,8 @@
-import { describe, expect, it } from "vitest";
 import { screen, fireEvent } from "@testing-library/react";
+import { describe, expect, it } from "vitest";
 
-import ThemeToggle from "../ThemeToggle";
 import { renderWith } from "../../../utils/testUtils";
+import ThemeToggle from "../ThemeToggle";
 
 describe("ThemeToggle", () => {
   it("renders without crashing", () => {

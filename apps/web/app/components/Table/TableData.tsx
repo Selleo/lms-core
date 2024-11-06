@@ -1,9 +1,10 @@
 import {
-  ColumnDef,
+  type ColumnDef,
   getCoreRowModel,
   useReactTable,
   getPaginationRowModel,
 } from "@tanstack/react-table";
+
 import { TableDisplay } from "./TableDisplay";
 import { PaginationControls } from "./TablePaginationControls";
 
@@ -12,10 +13,7 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
 }
 
-export function TableData<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
+export function TableData<TData, TValue>({ columns, data }: DataTableProps<TData, TValue>) {
   const table = useReactTable<TData>({
     data,
     columns,
@@ -37,11 +35,7 @@ export function TableData<TData, TValue>({
   return (
     <>
       <TableDisplay table={table} columns={columns} />
-      <PaginationControls
-        table={table}
-        pageIndex={pageIndex}
-        pagesToShow={pagesToShow}
-      />
+      <PaginationControls table={table} pageIndex={pageIndex} pagesToShow={pagesToShow} />
     </>
   );
 }

@@ -1,9 +1,7 @@
-import {
-  queryOptions,
-  useQuery,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
 import { ApiClient } from "../../api-client";
+
 import type { GetAllLessonItemsResponse } from "../../generated-api";
 
 export type LessonItemType = "text_block" | "question" | "file";
@@ -20,9 +18,7 @@ type LessonItemsQueryParams = {
 
 export const ALL_LESSON_ITEMS_QUERY_KEY = ["lesson-items", "admin"];
 
-export const allLessonItemsQueryOptions = (
-  searchParams?: LessonItemsQueryParams
-) =>
+export const allLessonItemsQueryOptions = (searchParams?: LessonItemsQueryParams) =>
   queryOptions({
     queryKey: [...ALL_LESSON_ITEMS_QUERY_KEY, searchParams],
     queryFn: async () => {
@@ -46,8 +42,6 @@ export function useAllLessonItems(searchParams?: LessonItemsQueryParams) {
   return useQuery(allLessonItemsQueryOptions(searchParams));
 }
 
-export function useAllLessonItemsSuspense(
-  searchParams?: LessonItemsQueryParams
-) {
+export function useAllLessonItemsSuspense(searchParams?: LessonItemsQueryParams) {
   return useSuspenseQuery(allLessonItemsQueryOptions(searchParams));
 }

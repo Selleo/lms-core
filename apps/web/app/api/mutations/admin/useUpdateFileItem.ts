@@ -1,8 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
-import { UpdateFileItemBody } from "../../generated-api";
+
+import type { UpdateFileItemBody } from "../../generated-api";
 
 type UpdateFileOptions = {
   data: UpdateFileItemBody;
@@ -14,10 +17,9 @@ export function useUpdateFileItem() {
 
   return useMutation({
     mutationFn: async (options: UpdateFileOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateFileItem(
-        options.data,
-        { id: options.fileId }
-      );
+      const response = await ApiClient.api.lessonsControllerUpdateFileItem(options.data, {
+        id: options.fileId,
+      });
 
       return response.data;
     },

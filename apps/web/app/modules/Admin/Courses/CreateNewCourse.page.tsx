@@ -1,28 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCreateCourse } from "~/api/mutations/useCreateCourse";
-import {
-  categoriesQueryOptions,
-  useCategoriesSuspense,
-} from "~/api/queries/useCategories";
+import { categoriesQueryOptions, useCategoriesSuspense } from "~/api/queries/useCategories";
 import { ALL_COURSES_QUERY_KEY } from "~/api/queries/useCourses";
 import { queryClient } from "~/api/queryClient";
 import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "~/components/ui/form";
-import { useNavigate } from "@remix-run/react";
-import { CreatePageHeader } from "~/modules/Admin/components";
-import { Label } from "~/components/ui/label";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -30,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { CreatePageHeader } from "~/modules/Admin/components";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(categoriesQueryOptions());
@@ -147,10 +139,7 @@ export default function CreateNewCourse() {
                 <Label htmlFor="categoryId" className="text-right">
                   Category
                 </Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger id="categoryId">
                       <SelectValue placeholder="Select category" />
@@ -206,10 +195,7 @@ export default function CreateNewCourse() {
                 <Label htmlFor="state" className="text-right">
                   State
                 </Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger id="state">
                       <SelectValue placeholder="Select a course state" />

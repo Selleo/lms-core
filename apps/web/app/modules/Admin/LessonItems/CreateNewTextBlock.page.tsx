@@ -1,6 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
 import { useCreateTextBlockItem } from "~/api/mutations/admin/useCreateTextBlockItem";
 import { useCurrentUserSuspense } from "~/api/queries";
 import { ALL_LESSON_ITEMS_QUERY_KEY } from "~/api/queries/admin/useAllLessonItems";
@@ -8,13 +10,7 @@ import { queryClient } from "~/api/queryClient";
 import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import { DialogFooter } from "~/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "~/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
@@ -25,7 +21,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { CreatePageHeader } from "~/modules/Admin/components";
-import { useNavigate } from "@remix-run/react";
 
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),
@@ -93,12 +88,7 @@ export default function CreateNewTextBlockPage() {
               <FormItem>
                 <Label htmlFor="body">Body</Label>
                 <FormControl>
-                  <Editor
-                    id="body"
-                    content={field.value}
-                    className="h-32 w-full"
-                    {...field}
-                  />
+                  <Editor id="body" content={field.value} className="h-32 w-full" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -110,10 +100,7 @@ export default function CreateNewTextBlockPage() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="state">State</Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger id="state">
                       <SelectValue placeholder="Select a state" />

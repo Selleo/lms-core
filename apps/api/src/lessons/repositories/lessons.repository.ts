@@ -1,6 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
-import * as schema from "src/storage/schema";
+
+import { DatabasePg, type UUIDType } from "src/common";
 import {
   courseLessons,
   files,
@@ -14,8 +15,9 @@ import {
   studentQuestionAnswers,
   textBlocks,
 } from "src/storage/schema";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import { DatabasePg, UUIDType } from "src/common";
+
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class LessonsRepository {
@@ -45,11 +47,7 @@ export class LessonsRepository {
         ),
       )
       .where(
-        and(
-          eq(lessons.id, lessonId),
-          eq(lessons.archived, false),
-          eq(lessons.state, "published"),
-        ),
+        and(eq(lessons.id, lessonId), eq(lessons.archived, false), eq(lessons.state, "published")),
       );
 
     return lesson;
@@ -172,10 +170,7 @@ export class LessonsRepository {
       .leftJoin(
         studentQuestionAnswers,
         and(
-          eq(
-            studentQuestionAnswers.questionId,
-            questionAnswerOptions.questionId,
-          ),
+          eq(studentQuestionAnswers.questionId, questionAnswerOptions.questionId),
           eq(studentQuestionAnswers.studentId, userId),
         ),
       )
@@ -199,17 +194,10 @@ export class LessonsRepository {
       .leftJoin(courseLessons, eq(courseLessons.id, lessons.id))
       .leftJoin(
         studentCourses,
-        and(
-          eq(studentCourses.courseId, courseLessons.id),
-          eq(studentCourses.studentId, userId),
-        ),
+        and(eq(studentCourses.courseId, courseLessons.id), eq(studentCourses.studentId, userId)),
       )
       .where(
-        and(
-          eq(lessons.archived, false),
-          eq(lessons.id, lessonId),
-          eq(lessons.state, "published"),
-        ),
+        and(eq(lessons.archived, false), eq(lessons.id, lessonId), eq(lessons.state, "published")),
       );
   }
 
@@ -232,8 +220,7 @@ export class LessonsRepository {
             ELSE false
           END`,
         lessonItemCount: studentLessonsProgress.lessonItemCount,
-        completedLessonItemCount:
-          studentLessonsProgress.completedLessonItemCount,
+        completedLessonItemCount: studentLessonsProgress.completedLessonItemCount,
         quizScore: studentLessonsProgress.quizScore,
       })
       .from(studentLessonsProgress)
@@ -310,10 +297,7 @@ export class LessonsRepository {
         quizScore,
       })
       .onConflictDoUpdate({
-        target: [
-          studentLessonsProgress.studentId,
-          studentLessonsProgress.lessonId,
-        ],
+        target: [studentLessonsProgress.studentId, studentLessonsProgress.lessonId],
         set: {
           quizCompleted: true,
           completedLessonItemCount,
@@ -344,10 +328,7 @@ export class LessonsRepository {
     return quizProgress;
   }
 
-  async getQuestionsIdsByLessonId(
-    lessonId: UUIDType,
-    trx?: PostgresJsDatabase<typeof schema>,
-  ) {
+  async getQuestionsIdsByLessonId(lessonId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
     const questionIds = await dbInstance
@@ -355,10 +336,7 @@ export class LessonsRepository {
         questionId: studentQuestionAnswers.questionId,
       })
       .from(studentQuestionAnswers)
-      .leftJoin(
-        lessonItems,
-        eq(studentQuestionAnswers.questionId, lessonItems.lessonItemId),
-      )
+      .leftJoin(lessonItems, eq(studentQuestionAnswers.questionId, lessonItems.lessonItemId))
       .where(eq(lessonItems.lessonId, lessonId));
 
     return questionIds;

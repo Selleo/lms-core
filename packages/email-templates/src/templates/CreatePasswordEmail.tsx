@@ -17,8 +17,7 @@ export const CreatePasswordEmail = ({
       <Text>
         Welcome to the platform! Your role is set as <strong>{role}</strong>.
         <br />
-        Please click the button below to set up your new password and complete
-        your account setup.
+        Please click the button below to set up your new password and complete your account setup.
       </Text>
       <Button href={createPasswordLink}>Create your password</Button>
       <Text>If you did not request this email, please ignore it.</Text>

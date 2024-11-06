@@ -1,20 +1,23 @@
-import { isEmpty } from "lodash-es";
-import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
-
 import { useLocation, useNavigate } from "@remix-run/react";
 import { cx } from "class-variance-authority";
+import { isEmpty } from "lodash-es";
 import { ArrowRight } from "lucide-react";
 import { Suspense, useState } from "react";
-import type { GetUsersResponse } from "~/api/generated-api";
+
 import { SelleoLogo } from "~/assets/svgs";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { useUserRole } from "~/hooks/useUserRole";
+import Loader from "~/modules/common/Loader/Loader";
 import { MenuItem } from "~/modules/Dashboard/DashboardNavigation/MenuItem";
-import type { IconName } from "~/types/shared";
+
+import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
+
 import { LogoutButton } from "./LogoutButton";
 import { UserProfile } from "./UserProfile";
-import Loader from "~/modules/common/Loader/Loader";
+
+import type { GetUsersResponse } from "~/api/generated-api";
+import type { IconName } from "~/types/shared";
 
 export type Role = GetUsersResponse["data"][number]["role"];
 
@@ -78,7 +81,7 @@ export function DashboardNavigation({
           "fixed top-6 lg:sr-only right-6 bg-white z-10 drop-shadow rounded-lg p-2 grid place-items-center",
           {
             "sr-only": isOpen,
-          }
+          },
         )}
         onClick={() => setIsOpen((prev) => !prev)}
       >
@@ -90,7 +93,7 @@ export function DashboardNavigation({
           {
             "translate-x-full lg:translate-x-0": !isOpen,
             "translate-x-0 lg:translate-x-0": isOpen,
-          }
+          },
         )}
       >
         <div className="lg:sr-only">

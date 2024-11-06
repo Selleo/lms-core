@@ -1,7 +1,8 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { startCase } from "lodash-es";
-import { GetAllLessonItemsResponse } from "~/api/generated-api";
+
+import type { GetAllLessonItemsResponse } from "~/api/generated-api";
 
 type LessonItem = GetAllLessonItemsResponse["data"][number];
 
@@ -14,8 +15,9 @@ interface LessonCardProps {
 }
 
 export function LessonItemCard({ lessonItem }: LessonCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: lessonItem.id });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: lessonItem.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -28,29 +30,21 @@ export function LessonItemCard({ lessonItem }: LessonCardProps) {
         return (
           <>
             <h4 className="font-medium">{lessonItem.title}</h4>
-            <p className="text-sm text-gray-600 line-clamp-4">
-              {lessonItem.body}
-            </p>
+            <p className="text-sm text-gray-600 line-clamp-4">{lessonItem.body}</p>
           </>
         );
       case "question":
         return (
           <>
-            <h4 className="font-medium">
-              Question: {startCase(lessonItem.questionType)}
-            </h4>
-            <p className="text-sm text-gray-600 line-clamp-4">
-              {lessonItem.questionBody}
-            </p>
+            <h4 className="font-medium">Question: {startCase(lessonItem.questionType)}</h4>
+            <p className="text-sm text-gray-600 line-clamp-4">{lessonItem.questionBody}</p>
           </>
         );
       case "file":
         return (
           <>
             <h4 className="font-medium">{lessonItem.title}</h4>
-            <p className="text-sm text-gray-600">
-              File Type: {lessonItem.itemType}
-            </p>
+            <p className="text-sm text-gray-600">File Type: {lessonItem.itemType}</p>
           </>
         );
       default:

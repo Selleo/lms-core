@@ -1,5 +1,5 @@
-import type { GetLessonResponse } from "~/api/generated-api";
 import type { QuestionContent, TQuestionsForm } from "./types";
+import type { GetLessonResponse } from "~/api/generated-api";
 
 export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
   const lessonItems = lesson.lessonItems;
@@ -25,20 +25,12 @@ export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
 };
 
 export const getOrderedLessons = (lesson: GetLessonResponse["data"]) =>
-  lesson.lessonItems.sort(
-    (a, b) => a.displayOrder || 0 - (b.displayOrder || 0),
-  );
+  lesson.lessonItems.sort((a, b) => a.displayOrder || 0 - (b.displayOrder || 0));
 
-export const getQuestionsArray = (
-  lesson: GetLessonResponse["data"]["lessonItems"],
-) =>
-  lesson
-    .filter((lesson) => lesson.lessonItemType === "question")
-    .map((item) => item.content.id);
+export const getQuestionsArray = (lesson: GetLessonResponse["data"]["lessonItems"]) =>
+  lesson.filter((lesson) => lesson.lessonItemType === "question").map((item) => item.content.id);
 
-export const getUserAnswers = (
-  lesson: GetLessonResponse["data"],
-): TQuestionsForm => {
+export const getUserAnswers = (lesson: GetLessonResponse["data"]): TQuestionsForm => {
   const allQuestions = lesson.lessonItems
     .filter((lesson) => lesson.lessonItemType === "question")
     .map((item) => item.content) as QuestionContent[];
@@ -66,9 +58,7 @@ export const getUserAnswers = (
   };
 };
 
-const prepareQuestions = (
-  questions: QuestionContent[],
-): Record<string, Record<string, string>> =>
+const prepareQuestions = (questions: QuestionContent[]): Record<string, Record<string, string>> =>
   questions.reduce(
     (acc, question) => {
       acc[question.id] = question.questionAnswers.reduce(
@@ -88,9 +78,7 @@ const prepareOpenQuestions = (questions: QuestionContent[]) =>
     (acc, question) => {
       const studentAnswer = question.questionAnswers?.[0]?.optionText;
       const isStudentAnswer = question.questionAnswers?.[0]?.isStudentAnswer;
-      acc[question.id] = isStudentAnswer
-        ? (studentAnswer as unknown as string)
-        : "";
+      acc[question.id] = isStudentAnswer ? (studentAnswer as unknown as string) : "";
       return acc;
     },
     {} as Record<string, string>,

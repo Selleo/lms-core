@@ -1,4 +1,4 @@
-import { GetLessonResponse } from "~/api/generated-api";
+import type { GetLessonResponse } from "~/api/generated-api";
 
 export type TQuestionsForm = {
   openQuestions: {

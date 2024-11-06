@@ -1,9 +1,6 @@
 import { capitalize, startCase } from "lodash-es";
 import { Controller, useForm } from "react-hook-form";
-import type {
-  GetLessonItemByIdResponse,
-  UpdateTextBlockItemBody,
-} from "~/api/generated-api";
+
 import { useUpdateTextBlockItem } from "~/api/mutations/admin/useUpdateTextBlockItem";
 import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
@@ -17,12 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import type { FC } from "react";
 
-type TextBlockType = Extract<
-  GetLessonItemByIdResponse["data"],
-  { itemType: "text_block" }
->;
+import type { FC } from "react";
+import type { GetLessonItemByIdResponse, UpdateTextBlockItemBody } from "~/api/generated-api";
+
+type TextBlockType = Extract<GetLessonItemByIdResponse["data"], { itemType: "text_block" }>;
 
 interface TextBlockItemProps {
   id: string;
@@ -30,11 +26,7 @@ interface TextBlockItemProps {
   onUpdate: () => void;
 }
 
-export const TextBlockItem: FC<TextBlockItemProps> = ({
-  id,
-  initialData,
-  onUpdate,
-}) => {
+export const TextBlockItem: FC<TextBlockItemProps> = ({ id, initialData, onUpdate }) => {
   const { mutateAsync: updateTextBlockItem } = useUpdateTextBlockItem();
 
   const {
@@ -66,10 +58,7 @@ export const TextBlockItem: FC<TextBlockItemProps> = ({
       render={({ field }) => {
         if (name === "state") {
           return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string | undefined}
-            >
+            <Select onValueChange={field.onChange} defaultValue={field.value as string | undefined}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a state" />
               </SelectTrigger>
@@ -136,9 +125,7 @@ export const TextBlockItem: FC<TextBlockItemProps> = ({
       <div className="space-y-4">
         {(["title", "body", "state", "archived"] as const).map((field) => (
           <div key={field} className="flex flex-col gap-y-1">
-            <Label htmlFor={field}>
-              {field === "archived" ? "Status" : startCase(field)}
-            </Label>
+            <Label htmlFor={field}>{field === "archived" ? "Status" : startCase(field)}</Label>
             {renderField(field)}
           </div>
         ))}

@@ -14,6 +14,7 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
+
 import {
   baseResponse,
   BaseResponse,
@@ -22,28 +23,20 @@ import {
   UUIDSchema,
   type UUIDType,
 } from "src/common";
-import { CurrentUser } from "src/common/decorators/user.decorator";
-import { CoursesService } from "../courses.service";
-import { type AllCoursesResponse } from "../schemas/course.schema";
-import {
-  type CoursesFilterSchema,
-  type SortCourseFieldsOptions,
-} from "../schemas/courseQuery";
-import {
-  type CreateCourseBody,
-  createCourseSchema,
-} from "../schemas/createCourse.schema";
-import {
-  type CommonShowCourse,
-  commonShowCourseSchema,
-} from "../schemas/showCourseCommon.schema";
-import { allCoursesValidation } from "./validations";
-import {
-  type UpdateCourseBody,
-  updateCourseSchema,
-} from "../schemas/updateCourse.schema";
-import { RolesGuard } from "src/common/guards/roles.guard";
 import { Roles } from "src/common/decorators/roles.decorator";
+import { CurrentUser } from "src/common/decorators/user.decorator";
+import { RolesGuard } from "src/common/guards/roles.guard";
+
+import { CoursesService } from "../courses.service";
+import { SortCourseFieldsOptions } from "../schemas/courseQuery";
+import { type CreateCourseBody, createCourseSchema } from "../schemas/createCourse.schema";
+import { type CommonShowCourse, commonShowCourseSchema } from "../schemas/showCourseCommon.schema";
+import { type UpdateCourseBody, updateCourseSchema } from "../schemas/updateCourse.schema";
+
+import { allCoursesValidation } from "./validations";
+
+import type { AllCoursesResponse } from "../schemas/course.schema";
+import type { CoursesFilterSchema } from "../schemas/courseQuery";
 
 @Controller("courses")
 @UseGuards(RolesGuard)
@@ -116,10 +109,7 @@ export class CoursesController {
     };
     const query = { filters, page, perPage, sort };
 
-    const data = await this.coursesService.getCoursesForUser(
-      query,
-      currentUserId,
-    );
+    const data = await this.coursesService.getCoursesForUser(query, currentUserId);
 
     return new PaginatedResponse(data);
   }
@@ -150,59 +140,43 @@ export class CoursesController {
     };
     const query = { filters, page, perPage, sort };
 
-    const data = await this.coursesService.getAvailableCourses(
-      query,
-      currentUserId,
-    );
+    const data = await this.coursesService.getAvailableCourses(query, currentUserId);
 
     return new PaginatedResponse(data);
   }
 
   @Get("course")
   @Validate({
-    request: [
-      { type: "query", name: "id", schema: UUIDSchema, required: true },
-    ],
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
   })
   async getCourse(
     @Query("id") id: string,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<CommonShowCourse>> {
-    return new BaseResponse(
-      await this.coursesService.getCourse(id, currentUserId),
-    );
+    return new BaseResponse(await this.coursesService.getCourse(id, currentUserId));
   }
 
   @Get("course-by-id")
   @Roles("tutor", "admin")
   @Validate({
-    request: [
-      { type: "query", name: "id", schema: UUIDSchema, required: true },
-    ],
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
   })
-  async getCourseById(
-    @Query("id") id: string,
-  ): Promise<BaseResponse<CommonShowCourse>> {
+  async getCourseById(@Query("id") id: string): Promise<BaseResponse<CommonShowCourse>> {
     return new BaseResponse(await this.coursesService.getCourseById(id));
   }
 
   @Post()
   @Validate({
     request: [{ type: "body", schema: createCourseSchema }],
-    response: baseResponse(
-      Type.Object({ id: UUIDSchema, message: Type.String() }),
-    ),
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
   })
   async createCourse(
     @Body() createCourseBody: CreateCourseBody,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
-    const { id } = await this.coursesService.createCourse(
-      createCourseBody,
-      currentUserId,
-    );
+    const { id } = await this.coursesService.createCourse(createCourseBody, currentUserId);
 
     return new BaseResponse({ id, message: "Course created successfully" });
   }

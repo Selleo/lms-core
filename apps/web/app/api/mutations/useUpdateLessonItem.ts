@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+
+import { useToast } from "~/components/ui/use-toast";
+
 import { currentLessonItemsQueryOptions } from "../queries/useCurrentLessonItem";
 import { queryClient } from "../queryClient";
-import { useToast } from "~/components/ui/use-toast";
-import { AxiosError } from "axios";
 
 //TODO: Connect to the database when the backend is completed
 

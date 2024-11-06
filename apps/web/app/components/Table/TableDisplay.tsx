@@ -1,8 +1,9 @@
 import {
-  ColumnDef,
+  type ColumnDef,
   flexRender,
-  Table as ReactTableInstance,
+  type Table as ReactTableInstance,
 } from "@tanstack/react-table";
+
 import {
   Table,
   TableBody,
@@ -17,10 +18,7 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
 }
 
-export function TableDisplay<TData, TValue>({
-  table,
-  columns,
-}: DataTableProps<TData, TValue>) {
+export function TableDisplay<TData, TValue>({ table, columns }: DataTableProps<TData, TValue>) {
   return (
     <div className="rounded-md border">
       <Table>
@@ -31,10 +29,7 @@ export function TableDisplay<TData, TValue>({
                 <TableHead key={header.id}>
                   {header.isPlaceholder
                     ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                    : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </TableRow>
@@ -43,10 +38,7 @@ export function TableDisplay<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
+              <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}

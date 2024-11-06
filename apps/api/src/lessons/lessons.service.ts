@@ -5,20 +5,24 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
-import type { DatabasePg, UUIDType } from "src/common";
+import { isNull } from "lodash";
 import { match, P } from "ts-pattern";
-import { Lesson } from "./schemas/lesson.schema";
-import {
+
+import { DatabasePg } from "src/common";
+import { S3Service } from "src/file/s3.service";
+import { LessonProgress } from "src/lessons/schemas/lesson.types";
+
+import { LessonsRepository } from "./repositories/lessons.repository";
+
+import type { Lesson } from "./schemas/lesson.schema";
+import type {
   LessonItemResponse,
   LessonItemWithContentSchema,
   QuestionAnswer,
   QuestionResponse,
   QuestionWithContent,
 } from "./schemas/lessonItem.schema";
-import { isNull } from "lodash";
-import { S3Service } from "src/file/s3.service";
-import { LessonsRepository } from "./repositories/lessons.repository";
-import { LessonProgress } from "src/lessons/schemas/lesson.types";
+import type { UUIDType } from "src/common";
 
 @Injectable()
 export class LessonsService {
@@ -29,8 +33,7 @@ export class LessonsService {
   ) {}
 
   async getLesson(id: UUIDType, userId: UUIDType, isAdmin?: boolean) {
-    const [accessCourseLessons] =
-      await this.lessonsRepository.checkLessonAssignment(id, userId);
+    const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(id, userId);
 
     if (!isAdmin && !accessCourseLessons)
       throw new UnauthorizedException("You don't have access to this lesson");
@@ -43,8 +46,7 @@ export class LessonsService {
       ? lesson.imageUrl
       : await this.s3Service.getSignedUrl(lesson.imageUrl);
 
-    const completedLessonItems =
-      await this.lessonsRepository.completedLessonItem(lesson.id);
+    const completedLessonItems = await this.lessonsRepository.completedLessonItem(lesson.id);
 
     if (lesson.type !== "quiz") {
       const lessonItems = await this.getLessonItems(lesson, userId);
@@ -68,14 +70,9 @@ export class LessonsService {
       };
     }
 
-    const lessonProgress = await this.lessonsRepository.lessonProgress(
-      lesson.id,
-      userId,
-    );
+    const lessonProgress = await this.lessonsRepository.lessonProgress(lesson.id, userId);
 
-    if (!lessonProgress) {
-      throw new NotFoundException("Lesson progress not found");
-    }
+    if (!lessonProgress) throw new NotFoundException("Lesson progress not found");
 
     const questionLessonItems = await this.getLessonQuestions(
       lesson,
@@ -100,24 +97,19 @@ export class LessonsService {
   }
 
   async evaluationQuiz(lessonId: UUIDType, userId: UUIDType) {
-    const [accessCourseLessons] =
-      await this.lessonsRepository.checkLessonAssignment(lessonId, userId);
-
-    if (!accessCourseLessons)
-      throw new UnauthorizedException(
-        "You don't have assignment to this lesson",
-      );
-
-    const quizProgress = await this.lessonsRepository.getQuizProgress(
+    const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(
       lessonId,
       userId,
     );
 
-    if (quizProgress.quizCompleted)
-      throw new ConflictException("Quiz already completed");
+    if (!accessCourseLessons)
+      throw new UnauthorizedException("You don't have assignment to this lesson");
 
-    const lessonItemsCount =
-      await this.lessonsRepository.getLessonItemCount(lessonId);
+    const quizProgress = await this.lessonsRepository.getQuizProgress(lessonId, userId);
+
+    if (quizProgress.quizCompleted) throw new ConflictException("Quiz already completed");
+
+    const lessonItemsCount = await this.lessonsRepository.getLessonItemCount(lessonId);
 
     const completedLessonItemsCount =
       await this.lessonsRepository.completedLessonItemsCount(lessonId);
@@ -129,10 +121,7 @@ export class LessonsService {
 
     if (!evaluationResult) return false;
 
-    const quizScore = await this.lessonsRepository.getQuizScore(
-      lessonId,
-      userId,
-    );
+    const quizScore = await this.lessonsRepository.getQuizScore(lessonId, userId);
 
     const updateQuizResult = await this.lessonsRepository.completeQuiz(
       lessonId,
@@ -147,15 +136,8 @@ export class LessonsService {
   }
 
   private async evaluationsQuestions(lessonId: UUIDType, userId: UUIDType) {
-    const lesson = await this.lessonsRepository.getLessonForUser(
-      lessonId,
-      userId,
-    );
-    const questionLessonItems = await this.getLessonQuestionsToEvaluation(
-      lesson,
-      userId,
-      true,
-    );
+    const lesson = await this.lessonsRepository.getLessonForUser(lessonId, userId);
+    const questionLessonItems = await this.getLessonQuestionsToEvaluation(lesson, userId, true);
     try {
       await this.db.transaction(async (trx) => {
         await Promise.all(
@@ -168,9 +150,7 @@ export class LessonsService {
               trx,
             );
 
-            const passQuestion = await match(
-              questionLessonItem.content.questionType,
-            )
+            const passQuestion = await match(questionLessonItem.content.questionType)
               .returnType<Promise<boolean>>()
               .with("fill_in_the_blanks_text", async () => {
                 const question = questionLessonItem.content;
@@ -230,40 +210,27 @@ export class LessonsService {
   }
 
   async clearQuizProgress(lessonId: UUIDType, userId: UUIDType) {
-    const [accessCourseLessons] =
-      await this.lessonsRepository.checkLessonAssignment(lessonId, userId);
-
-    if (!accessCourseLessons)
-      throw new UnauthorizedException(
-        "You don't have assignment to this lesson",
-      );
-
-    const quizProgress = await this.lessonsRepository.lessonProgress(
+    const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(
       lessonId,
       userId,
     );
+
+    if (!accessCourseLessons)
+      throw new UnauthorizedException("You don't have assignment to this lesson");
+
+    const quizProgress = await this.lessonsRepository.lessonProgress(lessonId, userId);
 
     if (!quizProgress) throw new NotFoundException("Lesson progress not found");
 
     try {
       return await this.db.transaction(async (trx) => {
-        const questionIds =
-          await this.lessonsRepository.getQuestionsIdsByLessonId(lessonId);
+        const questionIds = await this.lessonsRepository.getQuestionsIdsByLessonId(lessonId);
 
         await this.lessonsRepository.retireQuizProgress(lessonId, userId, trx);
 
-        await this.lessonsRepository.removeQuestionsAnswer(
-          lessonId,
-          questionIds,
-          userId,
-          trx,
-        );
+        await this.lessonsRepository.removeQuestionsAnswer(lessonId, questionIds, userId, trx);
 
-        await this.lessonsRepository.removeStudentCompletedLessonItems(
-          lessonId,
-          userId,
-          trx,
-        );
+        await this.lessonsRepository.removeStudentCompletedLessonItems(lessonId, userId, trx);
 
         return true;
       });
@@ -273,41 +240,27 @@ export class LessonsService {
   }
 
   private async getLessonItems(lesson: Lesson, userId: UUIDType) {
-    const lessonItemsList = await this.lessonsRepository.getLessonItems(
-      lesson.id,
-    );
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id);
     const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
 
     return await Promise.all(
       validLessonItemsList.map(
-        async (item) =>
-          await this.processLessonItem(item, userId, lesson.id, lesson.type),
+        async (item) => await this.processLessonItem(item, userId, lesson.id, lesson.type),
       ),
     );
   }
 
-  private async getLessonQuestions(
-    lesson: Lesson,
-    userId: UUIDType,
-    quizCompleted: boolean,
-  ) {
-    const questionItemsForLesson =
-      await this.lessonsRepository.getQuestionItems(
-        lesson.id,
-        userId,
-        lesson.type,
-        quizCompleted,
-      );
+  private async getLessonQuestions(lesson: Lesson, userId: UUIDType, quizCompleted: boolean) {
+    const questionItemsForLesson = await this.lessonsRepository.getQuestionItems(
+      lesson.id,
+      userId,
+      lesson.type,
+      quizCompleted,
+    );
 
     return await Promise.all(
       questionItemsForLesson.map(async (item) => {
-        const {
-          lessonItemId,
-          questionData,
-          lessonItemType,
-          displayOrder,
-          passQuestion,
-        } = item;
+        const { lessonItemId, questionData, lessonItemType, displayOrder, passQuestion } = item;
 
         if (isNull(questionData)) throw new Error("Question not found");
 
@@ -335,15 +288,12 @@ export class LessonsService {
     userId: UUIDType,
     quizCompleted: boolean,
   ) {
-    const lessonItemsList = await this.lessonsRepository.getLessonItems(
-      lesson.id,
-    );
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id);
     const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
 
     return await Promise.all(
       validLessonItemsList.map(async (item) => {
-        const { lessonItemId, questionData, lessonItemType, displayOrder } =
-          item;
+        const { lessonItemId, questionData, lessonItemType, displayOrder } = item;
 
         if (isNull(questionData)) throw new Error("Question not found");
 
@@ -374,41 +324,31 @@ export class LessonsService {
   ): Promise<LessonItemResponse> {
     const content = await match(item)
       .returnType<Promise<LessonItemResponse["content"]>>()
-      .with(
-        { lessonItemType: "question", questionData: P.not(P.nullish) },
-        async (item) => {
-          const { lessonItemId, questionData, lessonItemType, displayOrder } =
-            item;
-          return this.processQuestionItem(
-            { lessonItemId, displayOrder, lessonItemType, questionData },
-            userId,
-            lessonType,
-            lessonId,
-            false,
-            null,
-          );
-        },
-      )
-      .with(
-        { lessonItemType: "text_block", textBlockData: P.not(P.nullish) },
-        async (item) => ({
-          id: item.textBlockData.id,
-          body: item.textBlockData.body ?? "",
-          state: item.textBlockData.state ?? "",
-          title: item.textBlockData.title,
-        }),
-      )
-      .with(
-        { lessonItemType: "file", fileData: P.not(P.nullish) },
-        async (item) => ({
-          id: item.fileData.id,
-          title: item.fileData.title,
-          type: item.fileData.type,
-          url: (item.fileData.url as string).startsWith("https://")
-            ? item.fileData.url
-            : await this.s3Service.getSignedUrl(item.fileData.url),
-        }),
-      )
+      .with({ lessonItemType: "question", questionData: P.not(P.nullish) }, async (item) => {
+        const { lessonItemId, questionData, lessonItemType, displayOrder } = item;
+        return this.processQuestionItem(
+          { lessonItemId, displayOrder, lessonItemType, questionData },
+          userId,
+          lessonType,
+          lessonId,
+          false,
+          null,
+        );
+      })
+      .with({ lessonItemType: "text_block", textBlockData: P.not(P.nullish) }, async (item) => ({
+        id: item.textBlockData.id,
+        body: item.textBlockData.body ?? "",
+        state: item.textBlockData.state ?? "",
+        title: item.textBlockData.title,
+      }))
+      .with({ lessonItemType: "file", fileData: P.not(P.nullish) }, async (item) => ({
+        id: item.fileData.id,
+        title: item.fileData.title,
+        type: item.fileData.type,
+        url: (item.fileData.url as string).startsWith("https://")
+          ? item.fileData.url
+          : await this.s3Service.getSignedUrl(item.fileData.url),
+      }))
       .otherwise(() => {
         throw new Error(`Unknown item type: ${item.lessonItemType}`);
       });
@@ -429,13 +369,12 @@ export class LessonsService {
     lessonRated: boolean,
     passQuestion: boolean | null,
   ): Promise<QuestionResponse> {
-    const questionAnswers: QuestionAnswer[] =
-      await this.lessonsRepository.getQuestionAnswers(
-        item.questionData.id,
-        userId,
-        lessonType,
-        lessonRated,
-      );
+    const questionAnswers: QuestionAnswer[] = await this.lessonsRepository.getQuestionAnswers(
+      item.questionData.id,
+      userId,
+      lessonType,
+      lessonRated,
+    );
 
     if (
       item.questionData.questionType !== "open_answer" &&
@@ -452,14 +391,13 @@ export class LessonsService {
     }
 
     if (item.questionData.questionType === "open_answer") {
-      const studentAnswer =
-        await this.lessonsRepository.getOpenQuestionStudentAnswer(
-          lessonId,
-          item.questionData.id,
-          userId,
-          lessonType,
-          lessonRated,
-        );
+      const studentAnswer = await this.lessonsRepository.getOpenQuestionStudentAnswer(
+        lessonId,
+        item.questionData.id,
+        userId,
+        lessonType,
+        lessonRated,
+      );
 
       return {
         id: item.questionData.id,
@@ -470,12 +408,11 @@ export class LessonsService {
       };
     }
 
-    const [studentAnswers] =
-      await this.lessonsRepository.getFillInTheBlanksStudentAnswers(
-        userId,
-        item.questionData.id,
-        lessonId,
-      );
+    const [studentAnswers] = await this.lessonsRepository.getFillInTheBlanksStudentAnswers(
+      userId,
+      item.questionData.id,
+      lessonId,
+    );
     // TODO: refactor DB query
     if (item.questionData.questionType == "fill_in_the_blanks_text") {
       const result = !!studentAnswers?.answer
@@ -491,8 +428,7 @@ export class LessonsService {
             const isCorrect = correctAnswerToStudentAnswer
               ? correctAnswerToStudentAnswer.isCorrect
               : false;
-            const isStudentAnswer =
-              correctAnswerToStudentAnswer?.optionText === studentAnswerText;
+            const isStudentAnswer = correctAnswerToStudentAnswer?.optionText === studentAnswerText;
 
             return {
               id: studentAnswers.id,
@@ -536,9 +472,7 @@ export class LessonsService {
             : null,
         isStudentAnswer: lessonRated ? answer.isStudentAnswer : null,
         studentAnswerText:
-          typeof answer?.position === "number"
-            ? studentAnswers?.answer[answer.position]
-            : null,
+          typeof answer?.position === "number" ? studentAnswers?.answer[answer.position] : null,
         isCorrect: lessonRated ? answer.isCorrect : null,
       };
     });

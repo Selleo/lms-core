@@ -1,9 +1,9 @@
 import {
   closestCorners,
   DndContext,
-  DragEndEvent,
+  type DragEndEvent,
   DragOverlay,
-  DragStartEvent,
+  type DragStartEvent,
   KeyboardSensor,
   PointerSensor,
   useDroppable,
@@ -15,13 +15,16 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { FC, useCallback, useEffect, useState } from "react";
-import { GetAllLessonItemsResponse } from "~/api/generated-api";
+import { type FC, useCallback, useEffect, useState } from "react";
+
 import { useAssignItemToLesson } from "~/api/mutations/admin/useAssignItemToLesson";
 import { useUnassignItemToLesson } from "~/api/mutations/admin/useUnassignItemToLesson";
-import { LessonItemCard } from "./LessonItemCard";
 import { useAvailableLessonItems } from "~/api/queries/admin/useAvailableLessonItems";
 import { useLessonById } from "~/api/queries/admin/useLessonById";
+
+import { LessonItemCard } from "./LessonItemCard";
+
+import type { GetAllLessonItemsResponse } from "~/api/generated-api";
 
 type TransformedLessonItem = GetAllLessonItemsResponse["data"][number] & {
   columnId: string;
@@ -37,11 +40,7 @@ interface LessonsColumnProps {
   columnId: string;
 }
 
-const LessonsColumn: FC<LessonsColumnProps> = ({
-  lessons,
-  columnTitle,
-  columnId,
-}) => {
+const LessonsColumn: FC<LessonsColumnProps> = ({ lessons, columnTitle, columnId }) => {
   const { setNodeRef } = useDroppable({ id: columnId });
 
   return (
@@ -62,8 +61,9 @@ const LessonsColumn: FC<LessonsColumnProps> = ({
 
 const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
   const [lessonItems, setLessonsItems] = useState<TransformedLessonItem[]>([]);
-  const [currentlyDraggedItem, setCurrentlyDraggedItem] =
-    useState<TransformedLessonItem | null>(null);
+  const [currentlyDraggedItem, setCurrentlyDraggedItem] = useState<TransformedLessonItem | null>(
+    null,
+  );
 
   const { data: lesson } = useLessonById(lessonId);
   const { data: allLessonItems } = useAvailableLessonItems();
@@ -79,15 +79,11 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
 
   useEffect(() => {
     if (allLessonItems && lesson) {
-      const assignedContentIds = lesson.lessonItems.map(
-        (lessonItem) => lessonItem.content.id,
-      );
+      const assignedContentIds = lesson.lessonItems.map((lessonItem) => lessonItem.content.id);
 
       const transformedLessons = allLessonItems.map((item) => ({
         ...item,
-        columnId: assignedContentIds.includes(item.id)
-          ? "column-assigned"
-          : "column-unassigned",
+        columnId: assignedContentIds.includes(item.id) ? "column-assigned" : "column-unassigned",
       }));
 
       setLessonsItems(transformedLessons);
@@ -97,9 +93,7 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
   const handleDragStart = useCallback(
     (event: DragStartEvent) => {
       const { active } = event;
-      const draggedLesson = lessonItems.find(
-        (lesson) => lesson.id === active.id,
-      );
+      const draggedLesson = lessonItems.find((lesson) => lesson.id === active.id);
       if (draggedLesson) {
         setCurrentlyDraggedItem(draggedLesson);
       }
@@ -112,17 +106,14 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
       const { active, over } = event;
       if (!over) return;
 
-      const activeLesson = lessonItems.find(
-        (lessonItem) => lessonItem.id === active.id,
-      );
+      const activeLesson = lessonItems.find((lessonItem) => lessonItem.id === active.id);
       if (!activeLesson) return;
 
-      const isOverAColumn =
-        over.id === "column-assigned" || over.id === "column-unassigned";
+      const isOverAColumn = over.id === "column-assigned" || over.id === "column-unassigned";
       const newColumnId = isOverAColumn
         ? (over.id as string)
-        : lessonItems.find((lessonItem) => lessonItem.id === over.id)
-            ?.columnId || activeLesson.columnId; // TODO: remove nested ternary
+        : lessonItems.find((lessonItem) => lessonItem.id === over.id)?.columnId ||
+          activeLesson.columnId; // TODO: remove nested ternary
 
       if (activeLesson.columnId !== newColumnId) {
         try {
@@ -144,9 +135,7 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
 
           setLessonsItems((prev) =>
             prev.map((lesson) =>
-              lesson.id === activeLesson.id
-                ? { ...lesson, columnId: newColumnId }
-                : lesson,
+              lesson.id === activeLesson.id ? { ...lesson, columnId: newColumnId } : lesson,
             ),
           );
         } catch (error) {
@@ -159,12 +148,8 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
     [lessonItems, lessonId, assignItems, unassignItems],
   );
 
-  const assignedLessons = lessonItems.filter(
-    (lesson) => lesson.columnId === "column-assigned",
-  );
-  const unassignedLessons = lessonItems.filter(
-    (lesson) => lesson.columnId === "column-unassigned",
-  );
+  const assignedLessons = lessonItems.filter((lesson) => lesson.columnId === "column-assigned");
+  const unassignedLessons = lessonItems.filter((lesson) => lesson.columnId === "column-unassigned");
 
   return (
     <DndContext
@@ -186,9 +171,7 @@ const LessonItemAssigner: FC<LessonItemAssignerProps> = ({ lessonId }) => {
         />
       </div>
       <DragOverlay>
-        {currentlyDraggedItem && (
-          <LessonItemCard lessonItem={currentlyDraggedItem} />
-        )}
+        {currentlyDraggedItem && <LessonItemCard lessonItem={currentlyDraggedItem} />}
       </DragOverlay>
     </DndContext>
   );

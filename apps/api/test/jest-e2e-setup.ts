@@ -1,5 +1,7 @@
 import { applyFormats } from "nestjs-typebox";
+
 import { setupValidation } from "../src/utils/setup-validation";
+
 import { closeTestDatabase } from "./test-database";
 
 beforeAll(async () => {

@@ -1,12 +1,15 @@
-import { z } from "zod";
-import { UseFormReturn } from "react-hook-form";
+import { useNavigate } from "@remix-run/react";
+
 import { Button } from "~/components/ui/button";
 import { Form } from "~/components/ui/form";
+
 import { LessonItemFormFile } from "./LessonItemFormFile.js";
-import { LessonItemFormTextarea } from "./LessonItemFormTextarea.js";
 import { LessonItemFormInput } from "./LessonItemFormInput.js";
-import { lessonItemFormSchema } from "./zodFormType.js";
-import { useNavigate } from "@remix-run/react";
+import { LessonItemFormTextarea } from "./LessonItemFormTextarea.js";
+
+import type { lessonItemFormSchema } from "./zodFormType.js";
+import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 interface LessonItemForm {
   isVideoRequired: boolean;
@@ -30,10 +33,7 @@ export const LessonItemForm = ({
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="mx-auto px-12 md:w-3/5 w-4/5"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto px-12 md:w-3/5 w-4/5">
         <div className="grid md:grid-cols-2 gap-6 grid-cols-1">
           {isVideoRequired && (
             <div className="md:col-span-2 col-span-1">
@@ -45,12 +45,7 @@ export const LessonItemForm = ({
               />
             </div>
           )}
-          <LessonItemFormInput
-            control={form.control}
-            name="name"
-            label="Name"
-            placeholder="Name"
-          />
+          <LessonItemFormInput control={form.control} name="name" label="Name" placeholder="Name" />
           <LessonItemFormInput
             control={form.control}
             name="displayName"

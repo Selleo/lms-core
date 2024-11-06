@@ -11,8 +11,6 @@ export function getSortOptions<T extends string = string>(
 } {
   return {
     sortOrder: sort.startsWith("-") ? desc : asc,
-    sortedField: (sort.startsWith("-")
-      ? sort.slice(1)
-      : sort) as RemoveDescSign<T>,
+    sortedField: (sort.startsWith("-") ? sort.slice(1) : sort) as RemoveDescSign<T>,
   };
 }

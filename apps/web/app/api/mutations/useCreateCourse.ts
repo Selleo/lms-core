@@ -1,10 +1,13 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useToast } from "~/components/ui/use-toast";
-import { ApiClient } from "../api-client";
-import type { CreateCourseBody } from "../generated-api";
+
 import { currentUserQueryOptions } from "~/api/queries";
+import { useToast } from "~/components/ui/use-toast";
+
+import { ApiClient } from "../api-client";
 import { queryClient } from "../queryClient";
+
+import type { CreateCourseBody } from "../generated-api";
 
 type CreateCourseOptions = {
   data: CreateCourseBody;
@@ -15,9 +18,7 @@ export function useCreateCourse() {
 
   return useMutation({
     mutationFn: async (options: CreateCourseOptions) => {
-      const response = await ApiClient.api.coursesControllerCreateCourse(
-        options.data,
-      );
+      const response = await ApiClient.api.coursesControllerCreateCourse(options.data);
 
       return response.data;
     },

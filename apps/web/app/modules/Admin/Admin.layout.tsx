@@ -1,10 +1,12 @@
-import { MetaFunction, Outlet, redirect, useNavigate } from "@remix-run/react";
+import { type MetaFunction, Outlet, redirect, useNavigate } from "@remix-run/react";
 import { Suspense, useLayoutEffect } from "react";
+
 import { currentUserQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
 import { useUserRole } from "~/hooks/useUserRole";
-import { DashboardNavigation } from "../Dashboard/DashboardNavigation/DashboardNavigation";
+
 import Loader from "../common/Loader/Loader";
+import { DashboardNavigation } from "../Dashboard/DashboardNavigation/DashboardNavigation";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Admin" }];

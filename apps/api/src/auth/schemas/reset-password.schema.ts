@@ -1,4 +1,4 @@
-import { Static, Type } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
 
 export const forgotPasswordSchema = Type.Object({
   email: Type.String({ format: "email", minLength: 1 }),

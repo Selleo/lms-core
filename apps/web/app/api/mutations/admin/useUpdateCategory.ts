@@ -1,8 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
-import { UpdateCategoryBody } from "../../generated-api";
+
+import type { UpdateCategoryBody } from "../../generated-api";
 
 type UpdateCategoryOptions = {
   data: UpdateCategoryBody;
@@ -16,7 +19,7 @@ export function useUpdateCategory() {
     mutationFn: async (options: UpdateCategoryOptions) => {
       const response = await ApiClient.api.categoriesControllerUpdateCategory(
         options.categoryId,
-        options.data
+        options.data,
       );
 
       return response.data;

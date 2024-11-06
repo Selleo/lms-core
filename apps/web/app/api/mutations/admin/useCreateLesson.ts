@@ -1,8 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
-import { CreateLessonBody } from "../../generated-api";
+
+import type { CreateLessonBody } from "../../generated-api";
 
 type CreateLessonOptions = {
   data: CreateLessonBody;
@@ -13,9 +16,7 @@ export function useCreateLesson() {
 
   return useMutation({
     mutationFn: async (options: CreateLessonOptions) => {
-      const response = await ApiClient.api.lessonsControllerCreateLesson(
-        options.data
-      );
+      const response = await ApiClient.api.lessonsControllerCreateLesson(options.data);
 
       return response.data;
     },

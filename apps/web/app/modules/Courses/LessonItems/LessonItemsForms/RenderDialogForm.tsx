@@ -1,7 +1,8 @@
-import { ControllerRenderProps } from "react-hook-form";
 import { UploadFileDialog } from "../UploadLessonVideo/UploadFile.js";
 import { UploadFromInternetDialog } from "../UploadLessonVideo/UploadFromInternet.js";
-import { UploadMethod } from "./types.js";
+
+import type { UploadMethod } from "./types.js";
+import type { ControllerRenderProps } from "react-hook-form";
 // import { RenderDialogFormInterface } from "./types.js";RenderDialogFormInterface
 
 interface RenderDialogFormInterface {

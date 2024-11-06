@@ -1,10 +1,13 @@
-import { useAuthStore } from "./../../modules/Auth/authStore";
-import { useMutation } from "@tanstack/react-query";
-import { requestManager, ApiClient } from "../api-client";
-import { useToast } from "~/components/ui/use-toast";
-import { AxiosError } from "axios";
-import { queryClient } from "../queryClient";
 import { useNavigate } from "@remix-run/react";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+
+import { useToast } from "~/components/ui/use-toast";
+
+import { requestManager, ApiClient } from "../api-client";
+import { queryClient } from "../queryClient";
+
+import { useAuthStore } from "./../../modules/Auth/authStore";
 
 export function useLogoutUser() {
   const { toast } = useToast();

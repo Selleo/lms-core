@@ -1,4 +1,5 @@
-import { Type, Static } from "@sinclair/typebox";
+import { Type, type Static } from "@sinclair/typebox";
+
 import { UUIDSchema } from "src/common";
 
 export const categorySchema = Type.Object({

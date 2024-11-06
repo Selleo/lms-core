@@ -1,4 +1,3 @@
-import { EyeIcon } from "~/modules/icons/icons";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,6 +8,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import { EyeIcon } from "~/modules/icons/icons";
 
 export const TableButtonPreview = ({
   displayName,

@@ -1,6 +1,8 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
 import { ApiClient } from "../api-client";
-import { GetAllCategoriesResponse } from "../generated-api";
+
+import type { GetAllCategoriesResponse } from "../generated-api";
 
 type CategorySearchParams = {
   title?: string;
@@ -9,9 +11,7 @@ type CategorySearchParams = {
 
 export const CATEGORIES_QUERY_KEY = ["categories"];
 
-export const categoriesQueryOptions = (
-  searchParams?: CategorySearchParams
-) => ({
+export const categoriesQueryOptions = (searchParams?: CategorySearchParams) => ({
   queryKey: [...CATEGORIES_QUERY_KEY, searchParams],
   queryFn: async () => {
     const response = await ApiClient.api.categoriesControllerGetAllCategories({

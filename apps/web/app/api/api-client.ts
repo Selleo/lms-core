@@ -1,4 +1,5 @@
 import { useAuthStore } from "~/modules/Auth/authStore";
+
 import { API } from "./generated-api";
 
 export const requestManager = {
@@ -50,5 +51,5 @@ ApiClient.instance.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );

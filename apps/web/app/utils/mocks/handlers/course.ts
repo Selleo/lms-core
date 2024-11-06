@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+
 import { availableCourses, studentCourses } from "../data/courses";
 import { withSearchParams } from "../resolvers/withSearchParams";
 
@@ -11,14 +12,12 @@ const filterAndSortCourses = (searchParams: URLSearchParams) => {
 
   if (title) {
     filteredCourses = filteredCourses.filter((course) =>
-      course.title.toLowerCase().includes(title.toLowerCase())
+      course.title.toLowerCase().includes(title.toLowerCase()),
     );
   }
 
   if (category) {
-    filteredCourses = filteredCourses.filter(
-      (course) => course.category === category
-    );
+    filteredCourses = filteredCourses.filter((course) => course.category === category);
   }
 
   if (sort) {
@@ -32,9 +31,7 @@ const filterAndSortCourses = (searchParams: URLSearchParams) => {
 
     filteredCourses.sort((a, b) => {
       if (field === "title") {
-        return order === "desc"
-          ? b.title.localeCompare(a.title)
-          : a.title.localeCompare(b.title);
+        return order === "desc" ? b.title.localeCompare(a.title) : a.title.localeCompare(b.title);
       }
       return 0;
     });
@@ -53,7 +50,7 @@ const availableCoursesHandler = withSearchParams(
       ...availableCourses,
       data: filteredCourses,
     });
-  }
+  },
 );
 
 export const handlers = [

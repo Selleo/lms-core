@@ -1,5 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { eq, and, gte } from "drizzle-orm";
+
 import { DatabasePg } from "src/common";
 import { users, resetTokens } from "src/storage/schema";
 
@@ -17,12 +18,7 @@ export class ResetPasswordService {
     const [resetToken] = await this.db
       .select()
       .from(resetTokens)
-      .where(
-        and(
-          eq(resetTokens.resetToken, token),
-          gte(resetTokens.expiryDate, new Date()),
-        ),
-      );
+      .where(and(eq(resetTokens.resetToken, token), gte(resetTokens.expiryDate, new Date())));
 
     if (!resetToken) throw new NotFoundException("Invalid token");
 

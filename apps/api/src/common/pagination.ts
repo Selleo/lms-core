@@ -1,4 +1,4 @@
-import { PgSelect } from "drizzle-orm/pg-core";
+import type { PgSelect } from "drizzle-orm/pg-core";
 
 export const DEFAULT_PAGE_SIZE = 20;
 

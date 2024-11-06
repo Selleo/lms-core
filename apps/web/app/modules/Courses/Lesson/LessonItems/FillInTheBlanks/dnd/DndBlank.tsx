@@ -1,6 +1,8 @@
-import { rectSwappingStrategy, SortableContext } from "@dnd-kit/sortable";
 import { useDroppable } from "@dnd-kit/core";
+import { rectSwappingStrategy, SortableContext } from "@dnd-kit/sortable";
+
 import { DraggableWord } from "./DraggableWord";
+
 import type { DndWord } from "./types";
 
 type DndBlankProps = {
@@ -11,23 +13,14 @@ type DndBlankProps = {
   isStudentAnswer?: boolean;
 };
 
-export const DndBlank = ({
-  isQuiz,
-  words,
-  blankId,
-  isCorrect,
-  isStudentAnswer,
-}: DndBlankProps) => {
+export const DndBlank = ({ isQuiz, words, blankId, isCorrect, isStudentAnswer }: DndBlankProps) => {
   const { setNodeRef } = useDroppable({
     id: blankId,
   });
 
   return (
     <SortableContext id={blankId} items={words} strategy={rectSwappingStrategy}>
-      <div
-        ref={setNodeRef}
-        className="w-32 h-9 mx-2 bg-white overflow-hidden border rounded-md"
-      >
+      <div ref={setNodeRef} className="w-32 h-9 mx-2 bg-white overflow-hidden border rounded-md">
         {words.map((word) => (
           <DraggableWord
             isQuiz={isQuiz}

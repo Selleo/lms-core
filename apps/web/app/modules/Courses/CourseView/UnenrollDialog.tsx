@@ -1,4 +1,3 @@
-import { Button } from "~/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
+import { Button } from "~/components/ui/button";
 
 export default function UnenrollAlertDialog({
   setIsEnrolled,
@@ -36,10 +36,7 @@ export default function UnenrollAlertDialog({
         </AlertDialogHeader>
         <AlertDialogFooter className="sm:justify-start">
           <AlertDialogAction asChild>
-            <Button
-              className="bg-destructive"
-              onClick={() => setIsEnrolled(false)}
-            >
+            <Button className="bg-destructive" onClick={() => setIsEnrolled(false)}>
               Unenroll
             </Button>
           </AlertDialogAction>

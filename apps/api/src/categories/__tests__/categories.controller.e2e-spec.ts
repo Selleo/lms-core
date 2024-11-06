@@ -1,14 +1,14 @@
-import { createCategoryFactory } from "../../../test/factory/category.factory";
-import { createE2ETest } from "../../../test/create-e2e-test";
-import { createUserFactory } from "../../../test/factory/user.factory";
-import { DatabasePg } from "src/common";
-import { INestApplication } from "@nestjs/common";
-import {
-  cookieFor,
-  truncateAllTables,
-} from "../../../test/helpers/test-helpers";
-import { UserRoles } from "src/users/schemas/user-roles";
 import request from "supertest";
+
+import { UserRoles } from "src/users/schemas/user-roles";
+
+import { createE2ETest } from "../../../test/create-e2e-test";
+import { createCategoryFactory } from "../../../test/factory/category.factory";
+import { createUserFactory } from "../../../test/factory/user.factory";
+import { cookieFor, truncateAllTables } from "../../../test/helpers/test-helpers";
+
+import type { INestApplication } from "@nestjs/common";
+import type { DatabasePg } from "src/common";
 
 const CATEGORIES_COUNT = 10;
 

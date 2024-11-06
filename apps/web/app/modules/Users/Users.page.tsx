@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { EllipsisVertical } from "lucide-react";
+
 import { useAllUsersSuspense, usersQueryOptions } from "~/api/queries/useUsers";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
@@ -40,9 +41,7 @@ export default function UsersPage() {
               <TableCell>
                 <div className="font-medium">{user.email}</div>
               </TableCell>
-              <TableCell className="hidden sm:table-cell">
-                {user.role}
-              </TableCell>
+              <TableCell className="hidden sm:table-cell">{user.role}</TableCell>
               <TableCell className="hidden md:table-cell">
                 {format(user.createdAt, "dd/MM/yyyy")}
               </TableCell>

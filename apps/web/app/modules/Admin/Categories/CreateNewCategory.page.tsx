@@ -1,22 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
 import { useCreateCategory } from "~/api/mutations/admin/useCreateCategory";
 import { CATEGORIES_QUERY_KEY } from "~/api/queries/useCategories";
 import { queryClient } from "~/api/queryClient";
-import { DialogFooter } from "~/components/ui/dialog";
-import { useNavigate } from "@remix-run/react";
-import { CreatePageHeader } from "~/modules/Admin/components";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "~/components/ui/form";
-import { Label } from "~/components/ui/label";
-import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
+import { DialogFooter } from "~/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { CreatePageHeader } from "~/modules/Admin/components";
 
 const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),

@@ -1032,12 +1032,19 @@ export interface CreatePaymentIntentResponse {
   };
 }
 
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from "axios";
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  HeadersDefaults,
+  ResponseType,
+} from "axios";
 import axios from "axios";
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
+export interface FullRequestParams
+  extends Omit<AxiosRequestConfig, "data" | "params" | "url" | "responseType"> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -1054,7 +1061,8 @@ export interface FullRequestParams extends Omit<AxiosRequestConfig, "data" | "pa
 
 export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
 
-export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
+export interface ApiConfig<SecurityDataType = unknown>
+  extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
   securityWorker?: (
     securityData: SecurityDataType | null,
   ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
@@ -1076,7 +1084,12 @@ export class HttpClient<SecurityDataType = unknown> {
   private secure?: boolean;
   private format?: ResponseType;
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
+  constructor({
+    securityWorker,
+    secure,
+    format,
+    ...axiosConfig
+  }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || "" });
     this.secure = secure;
     this.format = format;
@@ -1087,7 +1100,10 @@ export class HttpClient<SecurityDataType = unknown> {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
+  protected mergeRequestParams(
+    params1: AxiosRequestConfig,
+    params2?: AxiosRequestConfig,
+  ): AxiosRequestConfig {
     const method = params1.method || (params2 && params2.method);
 
     return {
@@ -1095,7 +1111,9 @@ export class HttpClient<SecurityDataType = unknown> {
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
+        ...((method &&
+          this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) ||
+          {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
@@ -1457,7 +1475,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UsersControllerAdminUpdateUser
      * @request PATCH:/api/users/admin/{id}
      */
-    usersControllerAdminUpdateUser: (id: string, data: AdminUpdateUserBody, params: RequestParams = {}) =>
+    usersControllerAdminUpdateUser: (
+      id: string,
+      data: AdminUpdateUserBody,
+      params: RequestParams = {},
+    ) =>
       this.request<AdminUpdateUserResponse, any>({
         path: `/api/users/admin/${id}`,
         method: "PATCH",
@@ -1473,7 +1495,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name UsersControllerChangePassword
      * @request PATCH:/api/users/{id}/change-password
      */
-    usersControllerChangePassword: (id: string, data: ChangePasswordBody, params: RequestParams = {}) =>
+    usersControllerChangePassword: (
+      id: string,
+      data: ChangePasswordBody,
+      params: RequestParams = {},
+    ) =>
       this.request<ChangePasswordResponse, any>({
         path: `/api/users/${id}/change-password`,
         method: "PATCH",
@@ -1586,7 +1612,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name CategoriesControllerUpdateCategory
      * @request PATCH:/api/categories/{id}
      */
-    categoriesControllerUpdateCategory: (id: string, data: UpdateCategoryBody, params: RequestParams = {}) =>
+    categoriesControllerUpdateCategory: (
+      id: string,
+      data: UpdateCategoryBody,
+      params: RequestParams = {},
+    ) =>
       this.request<UpdateCategoryResponse, any>({
         path: `/api/categories/${id}`,
         method: "PATCH",
@@ -1786,7 +1816,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name CoursesControllerUpdateCourse
      * @request PATCH:/api/courses/{id}
      */
-    coursesControllerUpdateCourse: (id: string, data: UpdateCourseBody, params: RequestParams = {}) =>
+    coursesControllerUpdateCourse: (
+      id: string,
+      data: UpdateCourseBody,
+      params: RequestParams = {},
+    ) =>
       this.request<UpdateCourseResponse, any>({
         path: `/api/courses/${id}`,
         method: "PATCH",
@@ -1848,7 +1882,15 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: {
         title?: string;
         state?: string;
-        sort?: "title" | "createdAt" | "state" | "itemsCount" | "-title" | "-createdAt" | "-state" | "-itemsCount";
+        sort?:
+          | "title"
+          | "createdAt"
+          | "state"
+          | "itemsCount"
+          | "-title"
+          | "-createdAt"
+          | "-state"
+          | "-itemsCount";
         /** @min 1 */
         page?: number;
         perPage?: number;
@@ -1975,7 +2017,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name LessonsControllerRemoveLessonFromCourse
      * @request DELETE:/api/lessons/{courseId}/{lessonId}
      */
-    lessonsControllerRemoveLessonFromCourse: (courseId: string, lessonId: string, params: RequestParams = {}) =>
+    lessonsControllerRemoveLessonFromCourse: (
+      courseId: string,
+      lessonId: string,
+      params: RequestParams = {},
+    ) =>
       this.request<RemoveLessonFromCourseResponse, any>({
         path: `/api/lessons/${courseId}/${lessonId}`,
         method: "DELETE",

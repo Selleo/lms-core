@@ -1,5 +1,5 @@
-import { Control } from "react-hook-form";
-import { UpdateQuestionItemBody } from "~/api/generated-api";
+import type { Control } from "react-hook-form";
+import type { UpdateQuestionItemBody } from "~/api/generated-api";
 
 export interface QuestionItemProps {
   id: string;

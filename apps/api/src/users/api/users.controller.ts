@@ -9,8 +9,9 @@ import {
   Query,
   UseGuards,
 } from "@nestjs/common";
-import { type Static, Type } from "@sinclair/typebox";
+import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
+
 import {
   baseResponse,
   BaseResponse,
@@ -23,36 +24,18 @@ import {
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import {
-  type CommonUser,
-  commonUserSchema,
-} from "src/common/schemas/common-user.schema";
-import {
-  type ChangePasswordBody,
-  changePasswordSchema,
-} from "../schemas/change-password.schema";
-import {
-  deleteUsersSchema,
-  type DeleteUsersSchema,
-} from "../schemas/delete-users.schema";
-import {
-  type UpdateUserBody,
-  updateUserSchema,
-} from "../schemas/update-user.schema";
-import {
-  type AllUsersResponse,
-  allUsersSchema,
-  type UserResponse,
-} from "../schemas/user.schema";
+import { type CommonUser, commonUserSchema } from "src/common/schemas/common-user.schema";
+import { type CreateUserBody, createUserSchema } from "src/users/schemas/create-user.schema";
+
+import { type ChangePasswordBody, changePasswordSchema } from "../schemas/change-password.schema";
+import { deleteUsersSchema, type DeleteUsersSchema } from "../schemas/delete-users.schema";
+import { type UpdateUserBody, updateUserSchema } from "../schemas/update-user.schema";
+import { type AllUsersResponse, allUsersSchema, type UserResponse } from "../schemas/user.schema";
+import { SortUserFieldsOptions } from "../schemas/userQuery";
 import { UsersService } from "../users.service";
-import type {
-  SortUserFieldsOptions,
-  UsersFilterSchema,
-} from "../schemas/userQuery";
-import {
-  type CreateUserBody,
-  createUserSchema,
-} from "src/users/schemas/create-user.schema";
+
+import type { UsersFilterSchema } from "../schemas/userQuery";
+import type { Static } from "@sinclair/typebox";
 
 @Controller("users")
 @UseGuards(RolesGuard)
@@ -163,11 +146,7 @@ export class UsersController {
     if (currentUser.userId !== id) {
       throw new ForbiddenException("You can only update your own account");
     }
-    await this.usersService.changePassword(
-      id,
-      data.oldPassword,
-      data.newPassword,
-    );
+    await this.usersService.changePassword(id, data.oldPassword, data.newPassword);
 
     return null;
   }
@@ -177,10 +156,7 @@ export class UsersController {
     response: nullResponse(),
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
   })
-  async deleteUser(
-    id: string,
-    @CurrentUser() currentUser: { userId: string },
-  ): Promise<null> {
+  async deleteUser(id: string, @CurrentUser() currentUser: { userId: string }): Promise<null> {
     if (currentUser.userId !== id) {
       throw new ForbiddenException("You can only delete your own account");
     }
@@ -205,9 +181,7 @@ export class UsersController {
   @Post("create")
   @Roles("admin")
   @Validate({
-    response: baseResponse(
-      Type.Object({ id: UUIDSchema, message: Type.String() }),
-    ),
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
     request: [{ type: "body", schema: createUserSchema }],
   })
   async createUser(

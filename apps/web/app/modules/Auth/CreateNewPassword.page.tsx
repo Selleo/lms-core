@@ -1,39 +1,29 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate, useSearchParams } from "@remix-run/react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { useCreateNewPassword } from "~/api/mutations/useCreateNewPassword";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { useForm } from "react-hook-form";
-import { cn } from "~/lib/utils";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { ResetPasswordBody } from "~/api/generated-api";
-import { useCreateNewPassword } from "~/api/mutations/useCreateNewPassword";
-import { useNavigate, useSearchParams } from "@remix-run/react";
 import { useToast } from "~/components/ui/use-toast";
+import { cn } from "~/lib/utils";
+
+import type { ResetPasswordBody } from "~/api/generated-api";
 
 const createNewPasswordSchema = z
   .object({
-    newPassword: z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters" }),
+    newPassword: z.string().min(8, { message: "Password must be at least 8 characters" }),
     newPasswordConfirmation: z
       .string()
       .min(8, { message: "Password must be at least 8 characters" }),
   })
-  .refine(
-    ({ newPassword, newPasswordConfirmation }) =>
-      newPassword === newPasswordConfirmation,
-    {
-      message: "Passwords don't match",
-      path: ["newPasswordConfirmation"],
-    },
-  );
+  .refine(({ newPassword, newPasswordConfirmation }) => newPassword === newPasswordConfirmation, {
+    message: "Passwords don't match",
+    path: ["newPasswordConfirmation"],
+  });
 
 export default function CreateNewPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -96,9 +86,7 @@ export default function CreateNewPasswordPage() {
               {...register("newPassword")}
             />
             {errors.newPassword && (
-              <div className="text-red-500 text-sm">
-                {errors.newPassword.message}
-              </div>
+              <div className="text-red-500 text-sm">{errors.newPassword.message}</div>
             )}
           </div>
           <div className="grid gap-2">
@@ -114,9 +102,7 @@ export default function CreateNewPasswordPage() {
               {...register("newPasswordConfirmation")}
             />
             {errors.newPasswordConfirmation && (
-              <div className="text-red-500 text-sm">
-                {errors.newPasswordConfirmation.message}
-              </div>
+              <div className="text-red-500 text-sm">{errors.newPasswordConfirmation.message}</div>
             )}
           </div>
           <Button type="submit" className="w-full">

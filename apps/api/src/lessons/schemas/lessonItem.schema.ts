@@ -1,8 +1,11 @@
-import { Static, Type } from "@sinclair/typebox";
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import { type Static, Type } from "@sinclair/typebox";
+
 import { UUIDSchema } from "src/common";
-import { files, questions, textBlocks } from "src/storage/schema";
+
 import { LESSON_ITEM_TYPES } from "../lessonItems.type";
+
+import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import type { files, questions, textBlocks } from "src/storage/schema";
 
 export const lessonItemToAdd = Type.Object({
   id: UUIDSchema,
@@ -115,26 +118,16 @@ export const fileContentResponse = Type.Object({
   url: Type.String(),
 });
 
-export const textBlockUpdateSchema = Type.Partial(
-  Type.Omit(textBlockSchema, ["id"]),
-);
-export const questionUpdateSchema = Type.Partial(
-  Type.Omit(questionSchema, ["id"]),
-);
-export const fileUpdateSchema = Type.Partial(
-  Type.Omit(lessonItemFileSchema, ["id"]),
-);
+export const textBlockUpdateSchema = Type.Partial(Type.Omit(textBlockSchema, ["id"]));
+export const questionUpdateSchema = Type.Partial(Type.Omit(questionSchema, ["id"]));
+export const fileUpdateSchema = Type.Partial(Type.Omit(lessonItemFileSchema, ["id"]));
 
 export const lessonItemResponse = Type.Object({
   lessonItemId: UUIDSchema,
   lessonItemType: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   passQuestion: Type.Optional(Type.Union([Type.Null(), Type.Boolean()])),
-  content: Type.Union([
-    questionContentResponse,
-    textBlockContentResponse,
-    fileContentResponse,
-  ]),
+  content: Type.Union([questionContentResponse, textBlockContentResponse, fileContentResponse]),
 });
 
 export const questionWithContent = Type.Object({
@@ -149,11 +142,7 @@ export const lessonItemSelectSchema = Type.Object({
   lessonItemType: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   passQuestion: Type.Optional(Type.Union([Type.Null(), Type.Unknown()])),
-  content: Type.Union([
-    questionContentResponse,
-    textBlockContentResponse,
-    fileContentResponse,
-  ]),
+  content: Type.Union([questionContentResponse, textBlockContentResponse, fileContentResponse]),
 });
 
 export type LessonItemToAdd = Static<typeof lessonItemToAdd>;
@@ -266,10 +255,6 @@ export const GetSingleLessonItemsResponseSchema = Type.Union([
   TextBlockItem,
 ]);
 
-export type GetAllLessonItemsResponse = Static<
-  typeof GetAllLessonItemsResponseSchema
->;
+export type GetAllLessonItemsResponse = Static<typeof GetAllLessonItemsResponseSchema>;
 
-export type GetSingleLessonItemsResponse = Static<
-  typeof GetSingleLessonItemsResponseSchema
->;
+export type GetSingleLessonItemsResponse = Static<typeof GetSingleLessonItemsResponseSchema>;

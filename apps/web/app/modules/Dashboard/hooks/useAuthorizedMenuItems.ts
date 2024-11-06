@@ -1,18 +1,13 @@
 import { useMemo } from "react";
-import type {
-  MenuItemType,
-  Role,
-} from "../DashboardNavigation/DashboardNavigation";
+
+import type { MenuItemType, Role } from "../DashboardNavigation/DashboardNavigation";
 
 interface UseAuthorizedMenuItems {
   menuItems: MenuItemType[] | undefined;
   userRole: Role;
 }
 
-export const useAuthorizedMenuItems = ({
-  menuItems,
-  userRole,
-}: UseAuthorizedMenuItems) => {
+export const useAuthorizedMenuItems = ({ menuItems, userRole }: UseAuthorizedMenuItems) => {
   return useMemo(() => {
     if (!menuItems || !Array.isArray(menuItems)) {
       return [];

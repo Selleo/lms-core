@@ -1,7 +1,6 @@
 import {
   closestCenter,
   DndContext,
-  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   useSensor,
@@ -13,11 +12,15 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { Control, UseFieldArrayReturn } from "react-hook-form";
+
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
+
 import { SortableAnswerOption } from "./SortableAnswerOption";
-import { UpdateQuestionItemBody } from "~/api/generated-api";
+
+import type { DragEndEvent } from "@dnd-kit/core";
+import type { Control, UseFieldArrayReturn } from "react-hook-form";
+import type { UpdateQuestionItemBody } from "~/api/generated-api";
 
 interface AnswerOptionsProps {
   questionType?: string;
@@ -48,12 +51,10 @@ export const AnswerOptions = ({
       const oldIndex = fields.findIndex((field) => field.id === active.id);
       const newIndex = fields.findIndex((field) => field.id === over.id);
 
-      const newFields = arrayMove(fields, oldIndex, newIndex).map(
-        (field, index) => ({
-          ...field,
-          position: index,
-        }),
-      );
+      const newFields = arrayMove(fields, oldIndex, newIndex).map((field, index) => ({
+        ...field,
+        position: index,
+      }));
 
       replace(newFields);
     }
@@ -71,11 +72,7 @@ export const AnswerOptions = ({
   return (
     <div className="space-y-4">
       <Label>Answer Options</Label>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
         <SortableContext
           items={fields.map((field) => field.id)}
           strategy={verticalListSortingStrategy}

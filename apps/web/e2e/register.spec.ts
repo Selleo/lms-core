@@ -29,8 +29,6 @@ test.describe("register page", () => {
     await page.getByRole("button", { name: /create/i }).click();
 
     await expect(page.getByText("Invalid email")).toBeVisible();
-    await expect(
-      page.getByText("Password must be at least 8 characters")
-    ).toBeVisible();
+    await expect(page.getByText("Password must be at least 8 characters")).toBeVisible();
   });
 });

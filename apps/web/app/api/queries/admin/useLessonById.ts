@@ -1,10 +1,8 @@
-import {
-  queryOptions,
-  useQuery,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
 import { ApiClient } from "../../api-client";
-import { GetLessonByIdResponse } from "../../generated-api";
+
+import type { GetLessonByIdResponse } from "../../generated-api";
 
 export const lessonByIdQueryOptions = (id: string) =>
   queryOptions({

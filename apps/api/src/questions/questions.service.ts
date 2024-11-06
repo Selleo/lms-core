@@ -6,8 +6,10 @@ import {
   NotAcceptableException,
   NotFoundException,
 } from "@nestjs/common";
-import { DatabasePg, UUIDType } from "src/common";
-import { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
+import { and, eq, inArray, sql } from "drizzle-orm";
+
+import { DatabasePg, type UUIDType } from "src/common";
+import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
 import {
   lessonItems,
   lessons,
@@ -15,10 +17,11 @@ import {
   questions,
   studentQuestionAnswers,
 } from "src/storage/schema";
-import { and, eq, inArray, sql } from "drizzle-orm";
-import { QuestionType } from "./schema/questionsSchema";
 import { StudentCompletedLessonItemsService } from "src/studentCompletedLessonItem/studentCompletedLessonItems.service";
-import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
+
+import { QuestionType } from "./schema/questionsSchema";
+
+import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
 
 @Injectable()
 export class QuestionsService {
@@ -30,10 +33,7 @@ export class QuestionsService {
 
   async questionAnswer(answerQuestion: AnswerQuestionSchema, userId: string) {
     return await this.db.transaction(async (trx) => {
-      const questionData: QuestionSchema = await this.fetchQuestionData(
-        trx,
-        answerQuestion,
-      );
+      const questionData: QuestionSchema = await this.fetchQuestionData(trx, answerQuestion);
 
       if (!questionData || !questionData.questionId) {
         throw new NotFoundException("Question not found");
@@ -63,16 +63,12 @@ export class QuestionsService {
         [QuestionType.single_choice.key]: this.handleChoiceAnswer.bind(this),
         [QuestionType.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
         [QuestionType.open_answer.key]: this.handleOpenAnswer.bind(this),
-        [QuestionType.fill_in_the_blanks_text.key]:
-          this.handleFillInTheBlanksAnswer.bind(this),
-        [QuestionType.fill_in_the_blanks_dnd.key]:
-          this.handleFillInTheBlanksAnswer.bind(this),
+        [QuestionType.fill_in_the_blanks_text.key]: this.handleFillInTheBlanksAnswer.bind(this),
+        [QuestionType.fill_in_the_blanks_dnd.key]: this.handleFillInTheBlanksAnswer.bind(this),
       } as const;
 
       const handler =
-        questionTypeHandlers[
-          questionData.questionType as keyof typeof questionTypeHandlers
-        ];
+        questionTypeHandlers[questionData.questionType as keyof typeof questionTypeHandlers];
 
       if (!handler) {
         throw new NotAcceptableException("Unknown question type");

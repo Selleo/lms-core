@@ -1,6 +1,7 @@
 import { isEqual, startCase } from "lodash-es";
 import { useEffect } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+
 import { useUpdateQuestionItem } from "~/api/mutations/admin/useUpdateQuestionItem";
 import { useUpdateQuestionOptions } from "~/api/mutations/admin/useUpdateQuestionOptions";
 import {
@@ -10,16 +11,14 @@ import {
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
+
+import { AnswerOptions } from "./question/AnswerOptions";
+import { QuestionField } from "./question/QuestionField";
+
 import type { QuestionItemProps } from "./question/types";
 import type { UpdateQuestionItemBody } from "~/api/generated-api";
-import { QuestionField } from "./question/QuestionField";
-import { AnswerOptions } from "./question/AnswerOptions";
 
-export const QuestionItem = ({
-  id,
-  initialData,
-  onUpdate,
-}: QuestionItemProps) => {
+export const QuestionItem = ({ id, initialData, onUpdate }: QuestionItemProps) => {
   const { mutateAsync: updateQuestionItem } = useUpdateQuestionItem();
   const { mutateAsync: updateAnswerOptions } = useUpdateQuestionOptions();
   const { data: questionOptions } = useQuestionOptions(id);
@@ -105,18 +104,10 @@ export const QuestionItem = ({
       </div>
       <div className="space-y-4">
         {(
-          [
-            "questionType",
-            "questionBody",
-            "state",
-            "solutionExplanation",
-            "archived",
-          ] as const
+          ["questionType", "questionBody", "state", "solutionExplanation", "archived"] as const
         ).map((field) => (
           <div key={field} className="flex flex-col gap-y-1">
-            <Label htmlFor={field}>
-              {field === "archived" ? "Status" : startCase(field)}
-            </Label>
+            <Label htmlFor={field}>{field === "archived" ? "Status" : startCase(field)}</Label>
             <QuestionField name={field} control={control} />
           </div>
         ))}

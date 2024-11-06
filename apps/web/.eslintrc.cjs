@@ -49,6 +49,36 @@ module.exports = {
         },
       },
       rules: {
+        "import/no-duplicates": "error",
+        "import/order": [
+          "error",
+          {
+            groups: [
+              "builtin",
+              "external",
+              "internal",
+              "parent",
+              "sibling",
+              "index",
+              "object",
+              "type",
+            ],
+            "newlines-between": "always",
+            alphabetize: {
+              order: "asc",
+              caseInsensitive: true,
+            },
+          },
+        ],
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          {
+            prefer: "type-imports",
+            fixStyle: "separate-type-imports",
+            disallowTypeAnnotations: false,
+          },
+        ],
+        "@typescript-eslint/no-import-type-side-effects": "error",
         "react/prop-types": "off",
         "react/display-name": "off",
       },
