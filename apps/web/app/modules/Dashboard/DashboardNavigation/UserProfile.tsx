@@ -1,5 +1,6 @@
 import { useCurrentUserSuspense } from "~/api/queries";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Gravatar } from "~/components/Gravatar";
+import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 
 export const UserProfile = () => {
   const {
@@ -10,7 +11,7 @@ export const UserProfile = () => {
     <div className="p-[18px] max-w-[268px] bg-primary-50 rounded-md w-full flex items-center justify-between mt-auto">
       <div className="flex gap-x-2 min-w-0">
         <Avatar>
-          <AvatarImage src="https://ui-avatars.com/api/?name=User" />
+          <Gravatar email={email} />
           <AvatarFallback>
             {firstName[0]}
             {lastName[0]}
