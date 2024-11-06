@@ -3882,52 +3882,62 @@
       },
       "CreateCourseBody": {
         "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "state": {
-            "anyOf": [
-              {
-                "const": "draft",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
                 "type": "string"
               },
-              {
-                "const": "published",
+              "description": {
+                "type": "string"
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "const": "draft",
+                    "type": "string"
+                  },
+                  {
+                    "const": "published",
+                    "type": "string"
+                  }
+                ]
+              },
+              "imageUrl": {
+                "type": "string"
+              },
+              "priceInCents": {
+                "type": "integer"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "categoryId": {
+                "format": "uuid",
                 "type": "string"
               }
+            },
+            "required": [
+              "title",
+              "description",
+              "state",
+              "priceInCents",
+              "categoryId"
             ]
           },
-          "imageUrl": {
-            "type": "string"
-          },
-          "priceInCents": {
-            "type": "integer"
-          },
-          "currency": {
-            "type": "string"
-          },
-          "categoryId": {
-            "format": "uuid",
-            "type": "string"
-          },
-          "lessons": {
-            "type": "array",
-            "items": {
-              "format": "uuid",
-              "type": "string"
+          {
+            "type": "object",
+            "properties": {
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
             }
           }
-        },
-        "required": [
-          "title",
-          "description",
-          "state",
-          "priceInCents",
-          "categoryId"
         ]
       },
       "CreateCourseResponse": {

@@ -1,7 +1,7 @@
 import { type Static, Type } from "@sinclair/typebox";
 import { STATES } from "src/common/states";
 
-export const createCourseSchema = Type.Object({
+export const baseCourseSchema = Type.Object({
   title: Type.String(),
   description: Type.String(),
   state: Type.Union([
@@ -12,7 +12,13 @@ export const createCourseSchema = Type.Object({
   priceInCents: Type.Integer(),
   currency: Type.Optional(Type.String()),
   categoryId: Type.String({ format: "uuid" }),
-  lessons: Type.Optional(Type.Array(Type.String({ format: "uuid" }))),
 });
+
+export const createCourseSchema = Type.Intersect([
+  baseCourseSchema,
+  Type.Object({
+    lessons: Type.Optional(Type.Array(Type.String({ format: "uuid" }))),
+  }),
+]);
 
 export type CreateCourseBody = Static<typeof createCourseSchema>;

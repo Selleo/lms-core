@@ -56,7 +56,7 @@ jobs:
           ECS_CLUSTER: ${{ vars.AWS_ECS_CLUSTER }}
           ECS_SERVICE: ${{ vars.AWS_ECS_SERVICE }}
           DOCKER_IMAGE: ${{ secrets.AWS_ECR_REGISTRY }}:${{ github.sha }}
-        run: selleo aws ecs deploy --region $AWS_REGION --cluster $ECS_CLUSTER --service $ECS_SERVICE --docker-image $DOCKER_IMAGE --one-off migrate --one-off seed
+        run: selleo aws ecs deploy --region $AWS_REGION --cluster $ECS_CLUSTER --service $ECS_SERVICE --docker-image $DOCKER_IMAGE --one-off migrate --one-off storage/seed/seed
 
       - name: ECS Run migrations
         env:
@@ -70,4 +70,4 @@ jobs:
           AWS_REGION: ${{ vars.AWS_REGION }}
           ECS_CLUSTER: ${{ vars.AWS_ECS_CLUSTER }}
           ECS_SERVICE: ${{ vars.AWS_ECS_SERVICE }}
-        run: selleo aws ecs run --region $AWS_REGION --cluster $ECS_CLUSTER --service $ECS_SERVICE --one-off seed
+        run: selleo aws ecs run --region $AWS_REGION --cluster $ECS_CLUSTER --service $ECS_SERVICE --one-off storage/seed/seed

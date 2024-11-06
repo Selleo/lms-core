@@ -2,13 +2,7 @@ import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { sampleSize } from "lodash";
 import postgres from "postgres";
-
-import hashPassword from "./common/helpers/hashPassword";
-import { STATES } from "./common/states";
-import { LESSON_ITEM_TYPE } from "./lessons/lessonFileType";
-import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
   categories,
   courseLessons,
@@ -22,11 +16,15 @@ import {
   studentCourses,
   textBlocks,
   users,
-} from "./storage/schema";
-import { STATUS } from "./storage/schema/utils";
-import { USER_ROLES } from "./users/schemas/user-roles";
-
-import type { DatabasePg, UUIDType } from "./common";
+} from "../schema";
+import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
+import { DatabasePg, UUIDType } from "../../common";
+import hashPassword from "../../common/helpers/hashPassword";
+import { USER_ROLES } from "../../users/schemas/user-roles";
+import { STATUS } from "../schema/utils";
+import { STATES } from "../../common/states";
+import { LESSON_ITEM_TYPE } from "../../lessons/lessonFileType";
+import { sampleSize } from "lodash";
 
 dotenv.config({ path: "./.env" });
 
