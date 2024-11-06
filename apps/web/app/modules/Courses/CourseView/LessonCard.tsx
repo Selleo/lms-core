@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 
 import { cva } from "class-variance-authority";
 import { startCase } from "lodash-es";
+
 import type { GetCourseResponse } from "~/api/generated-api";
 import { CaretRight } from "~/assets/svgs";
 import CourseProgress from "~/components/CourseProgress";

@@ -8,10 +8,10 @@ import {
 import { isNull } from "lodash";
 import { DatabasePg } from "src/common";
 import { S3Service } from "src/file/s3.service";
+import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import { match, P } from "ts-pattern";
 
 import { LessonsRepository } from "./repositories/lessons.repository";
-import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import { type Lesson } from "./schemas/lesson.schema";
 import {
   type LessonItemResponse,

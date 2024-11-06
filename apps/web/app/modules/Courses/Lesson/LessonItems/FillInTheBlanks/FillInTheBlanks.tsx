@@ -1,9 +1,9 @@
 import { useState } from "react";
 
+import Viewer from "~/components/RichText/Viever";
 import { Card } from "~/components/ui/card";
 import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheTextBlanks";
 import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
-import Viewer from "~/components/RichText/Viever";
 
 type Answer = {
   id: string;

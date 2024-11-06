@@ -182,9 +182,7 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
           answers={content.questionAnswers}
           isQuizSubmitted={lesson?.isSubmitted}
           solutionExplanation={
-            "solutionExplanation" in content
-              ? content.solutionExplanation
-              : null
+            "solutionExplanation" in content ? content.solutionExplanation : null
           }
           isPassed={!!content.passQuestion}
         />
@@ -200,9 +198,7 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
           answers={fillInTheBlanksDndData}
           isQuizSubmitted={lesson?.isSubmitted}
           solutionExplanation={
-            "solutionExplanation" in content
-              ? content.solutionExplanation
-              : null
+            "solutionExplanation" in content ? content.solutionExplanation : null
           }
           isPassed={!!content.passQuestion}
         />

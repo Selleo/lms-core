@@ -116,11 +116,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
             const { from, to } = editor.state.selection;
 
             if (from !== to) {
-              editor
-                .chain()
-                .focus()
-                .insertContentAt({ from, to }, "[word]")
-                .run();
+              editor.chain().focus().insertContentAt({ from, to }, "[word]").run();
             }
           }}
           pressed={isWordSelected}
