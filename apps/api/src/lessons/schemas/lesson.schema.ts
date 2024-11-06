@@ -10,6 +10,13 @@ export const lessonSchema = Type.Object({
   description: Type.String(),
   itemsCount: Type.Number(),
   itemsCompletedCount: Type.Optional(Type.Number()),
+  lessonProgress: Type.Optional(
+    Type.Union([
+      Type.Literal(LessonProgress.completed),
+      Type.Literal(LessonProgress.inProgress),
+      Type.Literal(LessonProgress.notStarted),
+    ]),
+  ),
   state: Type.Optional(Type.String()),
   archived: Type.Optional(Type.Boolean()),
   isSubmitted: Type.Optional(Type.Boolean()),
@@ -40,9 +47,11 @@ export const showLessonSchema = Type.Object({
   ...lessonSchema.properties,
   lessonItems: Type.Array(lessonItemSelectSchema),
   lessonProgress: Type.Optional(
-    Type.String({
-      pattern: `(${LessonProgress.notStarted}|${LessonProgress.inProgress}|${LessonProgress.completed})`,
-    }),
+    Type.Union([
+      Type.Literal(LessonProgress.completed),
+      Type.Literal(LessonProgress.inProgress),
+      Type.Literal(LessonProgress.notStarted),
+    ]),
   ),
   itemsCount: Type.Number(),
   itemsCompletedCount: Type.Optional(Type.Number()),

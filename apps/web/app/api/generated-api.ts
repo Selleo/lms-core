@@ -387,6 +387,7 @@ export interface GetCourseResponse {
       description: string;
       itemsCount: number;
       itemsCompletedCount?: number;
+      lessonProgress?: "completed" | "in_progress" | "not_started";
       state?: string;
       archived?: boolean;
       isSubmitted?: boolean;
@@ -422,6 +423,7 @@ export interface GetCourseByIdResponse {
       description: string;
       itemsCount: number;
       itemsCompletedCount?: number;
+      lessonProgress?: "completed" | "in_progress" | "not_started";
       state?: string;
       archived?: boolean;
       isSubmitted?: boolean;
@@ -490,6 +492,7 @@ export interface GetAllLessonsResponse {
     description: string;
     itemsCount: number;
     itemsCompletedCount?: number;
+    lessonProgress?: "completed" | "in_progress" | "not_started";
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -523,6 +526,7 @@ export interface GetLessonResponse {
     description: string;
     itemsCount: number;
     itemsCompletedCount?: number;
+    lessonProgress?: "completed" | "in_progress" | "not_started";
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -550,6 +554,7 @@ export interface GetLessonResponse {
               isCorrect?: boolean | null;
               studentAnswerText?: string | null;
             }[];
+            solutionExplanation?: string | null;
             passQuestion?: boolean | null;
           }
         | {
@@ -567,8 +572,6 @@ export interface GetLessonResponse {
             url: string;
           };
     }[];
-    /** @pattern (not_started|in_progress|completed) */
-    lessonProgress?: string;
   };
 }
 
@@ -581,6 +584,7 @@ export interface GetLessonByIdResponse {
     description: string;
     itemsCount: number;
     itemsCompletedCount?: number;
+    lessonProgress?: "completed" | "in_progress" | "not_started";
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -608,6 +612,7 @@ export interface GetLessonByIdResponse {
               isCorrect?: boolean | null;
               studentAnswerText?: string | null;
             }[];
+            solutionExplanation?: string | null;
             passQuestion?: boolean | null;
           }
         | {
@@ -625,8 +630,6 @@ export interface GetLessonByIdResponse {
             url: string;
           };
     }[];
-    /** @pattern (not_started|in_progress|completed) */
-    lessonProgress?: string;
   };
 }
 
@@ -634,6 +637,7 @@ export interface CreateLessonBody {
   title: string;
   imageUrl: string;
   description: string;
+  lessonProgress?: "completed" | "in_progress" | "not_started";
   state?: string;
   archived?: boolean;
   isSubmitted?: boolean;
@@ -654,6 +658,7 @@ export interface UpdateLessonBody {
   title?: string;
   imageUrl?: string;
   description?: string;
+  lessonProgress?: "completed" | "in_progress" | "not_started";
   state?: string;
   archived?: boolean;
   isSubmitted?: boolean;

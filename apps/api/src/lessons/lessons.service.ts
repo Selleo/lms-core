@@ -90,11 +90,12 @@ export class LessonsService {
       itemsCount: lessonProgress.lessonItemCount,
       itemsCompletedCount: lessonProgress.completedLessonItemCount,
       quizScore: lessonProgress.quizScore,
-      lessonProgress: (lessonProgress.completedLessonItemCount === 0
-        ? LessonProgress.notStarted
-        : lessonProgress.completedLessonItemCount > 0
-          ? LessonProgress.inProgress
-          : LessonProgress.completed) as keyof typeof LessonProgress,
+      lessonProgress:
+        lessonProgress.completedLessonItemCount === 0
+          ? LessonProgress.notStarted
+          : lessonProgress.completedLessonItemCount > 0
+            ? LessonProgress.inProgress
+            : LessonProgress.completed,
     };
   }
 

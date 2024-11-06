@@ -3660,6 +3660,22 @@
                     "itemsCompletedCount": {
                       "type": "number"
                     },
+                    "lessonProgress": {
+                      "anyOf": [
+                        {
+                          "const": "completed",
+                          "type": "string"
+                        },
+                        {
+                          "const": "in_progress",
+                          "type": "string"
+                        },
+                        {
+                          "const": "not_started",
+                          "type": "string"
+                        }
+                      ]
+                    },
                     "state": {
                       "type": "string"
                     },
@@ -3791,6 +3807,22 @@
                     },
                     "itemsCompletedCount": {
                       "type": "number"
+                    },
+                    "lessonProgress": {
+                      "anyOf": [
+                        {
+                          "const": "completed",
+                          "type": "string"
+                        },
+                        {
+                          "const": "in_progress",
+                          "type": "string"
+                        },
+                        {
+                          "const": "not_started",
+                          "type": "string"
+                        }
+                      ]
                     },
                     "state": {
                       "type": "string"
@@ -4033,6 +4065,22 @@
                 "itemsCompletedCount": {
                   "type": "number"
                 },
+                "lessonProgress": {
+                  "anyOf": [
+                    {
+                      "const": "completed",
+                      "type": "string"
+                    },
+                    {
+                      "const": "in_progress",
+                      "type": "string"
+                    },
+                    {
+                      "const": "not_started",
+                      "type": "string"
+                    }
+                  ]
+                },
                 "state": {
                   "type": "string"
                 },
@@ -4149,6 +4197,22 @@
               "itemsCompletedCount": {
                 "type": "number"
               },
+              "lessonProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
+              },
               "state": {
                 "type": "string"
               },
@@ -4272,6 +4336,16 @@
                                 ]
                               }
                             },
+                            "solutionExplanation": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "passQuestion": {
                               "anyOf": [
                                 {
@@ -4348,10 +4422,6 @@
                     "content"
                   ]
                 }
-              },
-              "lessonProgress": {
-                "pattern": "(not_started|in_progress|completed)",
-                "type": "string"
               }
             },
             "required": [
@@ -4393,6 +4463,22 @@
               "itemsCompletedCount": {
                 "type": "number"
               },
+              "lessonProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
+              },
               "state": {
                 "type": "string"
               },
@@ -4516,6 +4602,16 @@
                                 ]
                               }
                             },
+                            "solutionExplanation": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
                             "passQuestion": {
                               "anyOf": [
                                 {
@@ -4592,10 +4688,6 @@
                     "content"
                   ]
                 }
-              },
-              "lessonProgress": {
-                "pattern": "(not_started|in_progress|completed)",
-                "type": "string"
               }
             },
             "required": [
@@ -4623,6 +4715,22 @@
           },
           "description": {
             "type": "string"
+          },
+          "lessonProgress": {
+            "anyOf": [
+              {
+                "const": "completed",
+                "type": "string"
+              },
+              {
+                "const": "in_progress",
+                "type": "string"
+              },
+              {
+                "const": "not_started",
+                "type": "string"
+              }
+            ]
           },
           "state": {
             "type": "string"
@@ -4684,6 +4792,22 @@
           },
           "description": {
             "type": "string"
+          },
+          "lessonProgress": {
+            "anyOf": [
+              {
+                "const": "completed",
+                "type": "string"
+              },
+              {
+                "const": "in_progress",
+                "type": "string"
+              },
+              {
+                "const": "not_started",
+                "type": "string"
+              }
+            ]
           },
           "state": {
             "type": "string"

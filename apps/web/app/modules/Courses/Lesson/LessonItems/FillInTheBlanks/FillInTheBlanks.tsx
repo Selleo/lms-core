@@ -20,7 +20,7 @@ type FillTheBlanksProps = {
   answers: Answer[];
   questionLabel: string;
   isQuizSubmitted?: boolean;
-  solutionExplanation: string | null;
+  solutionExplanation?: string | null;
   isPassed: boolean | null;
 };
 

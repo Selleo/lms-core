@@ -17,7 +17,7 @@ type LessonCardProps = Lesson & {
   isEnrolled: boolean;
   isAdmin: boolean;
   type?: string;
-  lessonProgress: LessonStatus;
+  lessonProgress?: LessonStatus;
 };
 
 const buttonVariants = cva("w-full transition", {

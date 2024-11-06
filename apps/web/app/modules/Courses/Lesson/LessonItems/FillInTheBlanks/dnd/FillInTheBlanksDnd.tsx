@@ -28,7 +28,7 @@ type FillInTheBlanksDndProps = {
   ) => Promise<void>;
   answers: DndWord[];
   isQuizSubmitted?: boolean;
-  solutionExplanation: string | null;
+  solutionExplanation?: string | null;
   isPassed: boolean | null;
 };
 

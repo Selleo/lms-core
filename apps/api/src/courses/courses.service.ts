@@ -329,7 +329,7 @@ export class CoursesService {
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
           AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
-        lessonProgress: sql<string>`
+        lessonProgress: sql<"completed" | "in_progress" | "not_started">`
           (CASE
             WHEN (
               SELECT COUNT(*)
