@@ -1,21 +1,18 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@remix-run/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
 import { useCreateLesson } from "~/api/mutations/admin/useCreateLesson";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { ALL_LESSONS_QUERY_KEY } from "~/api/queries/admin/useAllLessons";
 import { queryClient } from "~/api/queryClient";
 import Editor from "~/components/RichText/Editor";
-import { CreatePageHeader } from "~/modules/Admin/components";
-import { useNavigate } from "@remix-run/react";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "~/components/ui/form";
+import { Button } from "~/components/ui/button";
+import { DialogFooter } from "~/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
   Select,
@@ -24,9 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Input } from "~/components/ui/input";
-import { DialogFooter } from "~/components/ui/dialog";
-import { Button } from "~/components/ui/button";
+import { CreatePageHeader } from "~/modules/Admin/components";
 
 const formSchema = z.object({
   type: z.enum(["multimedia", "quiz"]),
@@ -96,10 +91,7 @@ export default function CreateNewLessonPage() {
                 <Label htmlFor="state" className="text-right">
                   Type
                 </Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger id="type">
                       <SelectValue placeholder="Select lesson type" />
@@ -157,10 +149,7 @@ export default function CreateNewLessonPage() {
                 <Label htmlFor="state" className="text-right">
                   State
                 </Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger id="state">
                       <SelectValue placeholder="Select a lesson state" />

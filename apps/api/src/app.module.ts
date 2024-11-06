@@ -1,42 +1,36 @@
+import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
+import { Module } from "@nestjs/common";
+import { ConditionalModule, ConfigModule, ConfigService } from "@nestjs/config";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtModule } from "@nestjs/jwt";
+import { ScheduleModule } from "@nestjs/schedule";
+import { UsersModule } from "src/users/users.module";
+
 import { AuthModule } from "./auth/auth.module";
 import { CategoriesModule } from "./categories/categories.module";
-import { ConditionalModule, ConfigModule, ConfigService } from "@nestjs/config";
-import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
-import { JwtModule } from "@nestjs/jwt";
-import { Module } from "@nestjs/common";
-import * as schema from "./storage/schema";
-import database from "./common/configuration/database";
-import jwtConfig from "./common/configuration/jwt";
-import emailConfig from "./common/configuration/email";
 import awsConfig from "./common/configuration/aws";
+import database from "./common/configuration/database";
+import emailConfig from "./common/configuration/email";
+import jwtConfig from "./common/configuration/jwt";
 import s3Config from "./common/configuration/s3";
 import stripeConfig from "./common/configuration/stripe";
-import { APP_GUARD } from "@nestjs/core";
-import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { EmailModule } from "./common/emails/emails.module";
-import { TestConfigModule } from "./test-config/test-config.module";
+import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { StagingGuard } from "./common/guards/staging.guard";
-import { HealthModule } from "./health/health.module";
-import { ScheduleModule } from "@nestjs/schedule";
 import { CoursesModule } from "./courses/courses.module";
+import { S3Module } from "./file/s3.module";
+import { HealthModule } from "./health/health.module";
 import { LessonsModule } from "./lessons/lessons.module";
 import { QuestionsModule } from "./questions/questions.module";
-import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/studentCompletedLessonItems.module";
-import { S3Module } from "./file/s3.module";
+import * as schema from "./storage/schema";
 import { StripeModule } from "./stripe/stripe.module";
-import { UsersModule } from "src/users/users.module";
+import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/studentCompletedLessonItems.module";
+import { TestConfigModule } from "./test-config/test-config.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [
-        database,
-        jwtConfig,
-        emailConfig,
-        awsConfig,
-        s3Config,
-        stripeConfig,
-      ],
+      load: [database, jwtConfig, emailConfig, awsConfig, s3Config, stripeConfig],
       isGlobal: true,
     }),
     DrizzlePostgresModule.registerAsync({
@@ -71,10 +65,7 @@ import { UsersModule } from "src/users/users.module";
     EmailModule,
     TestConfigModule,
     CategoriesModule,
-    ConditionalModule.registerWhen(
-      ScheduleModule.forRoot(),
-      (env) => env.NODE_ENV !== "test",
-    ),
+    ConditionalModule.registerWhen(ScheduleModule.forRoot(), (env) => env.NODE_ENV !== "test"),
     CoursesModule,
     LessonsModule,
     QuestionsModule,

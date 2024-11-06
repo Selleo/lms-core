@@ -12,9 +12,7 @@ type StudentCoursesCarouselProps = {
   studentCourses?: GetAllCoursesResponse["data"];
 };
 
-export const StudentCoursesCarousel = ({
-  studentCourses,
-}: StudentCoursesCarouselProps) => {
+export const StudentCoursesCarousel = ({ studentCourses }: StudentCoursesCarouselProps) => {
   const renderCarouselItems = () => {
     if (!studentCourses) return null;
 
@@ -25,10 +23,7 @@ export const StudentCoursesCarousel = ({
             key={studentCourse.id}
             className="max-w-[calc(100%-24px)] xs:max-w-[320px] w-full shrink-0 mr-3 sm:mr-6 sm:last:mr-0"
           >
-            <CourseCard
-              {...studentCourse}
-              href={`/course/${studentCourse.id}`}
-            />
+            <CourseCard {...studentCourse} href={`/course/${studentCourse.id}`} />
           </CarouselItem>
         );
       }

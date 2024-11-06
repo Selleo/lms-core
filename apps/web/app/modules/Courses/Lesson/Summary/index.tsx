@@ -1,10 +1,12 @@
-import { Card, CardContent } from "~/components/ui/card";
-import { getSummaryItems } from "../utils";
-import { useLessonSuspense } from "~/api/queries/useLesson";
 import { useParams } from "@remix-run/react";
-import SingleLessonSummary from "~/modules/Courses/Lesson/Summary/SingleLessonSummary";
-import { QuizSummary } from "~/modules/Courses/Lesson/Summary/QuizSummary";
+
+import { useLessonSuspense } from "~/api/queries/useLesson";
 import CourseProgress from "~/components/CourseProgress";
+import { Card, CardContent } from "~/components/ui/card";
+import { QuizSummary } from "~/modules/Courses/Lesson/Summary/QuizSummary";
+import SingleLessonSummary from "~/modules/Courses/Lesson/Summary/SingleLessonSummary";
+
+import { getSummaryItems } from "../utils";
 
 export default function Summary() {
   const { lessonId } = useParams();

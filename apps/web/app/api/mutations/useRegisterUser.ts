@@ -1,9 +1,12 @@
 import { useNavigate } from "@remix-run/react";
 import { useMutation } from "@tanstack/react-query";
-import { ApiClient } from "../api-client";
-import type { RegisterBody } from "../generated-api";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
+import { ApiClient } from "../api-client";
+
+import type { RegisterBody } from "../generated-api";
 
 type RegisterUserOptions = {
   data: RegisterBody;

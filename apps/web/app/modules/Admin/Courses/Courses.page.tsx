@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React, { startTransition } from "react";
+
 import type { GetAllCoursesResponse } from "~/api/generated-api";
 import { useCategories } from "~/api/queries";
 import {
@@ -36,8 +37,8 @@ import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 import { formatPrice } from "~/lib/formatters/priceFormatter";
 import { cn } from "~/lib/utils";
 import {
-  FilterConfig,
-  FilterValue,
+  type FilterConfig,
+  type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
 
@@ -123,32 +124,22 @@ const Courses = () => {
     },
     {
       accessorKey: "title",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>Title</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Title</SortButton>,
       cell: ({ row }) => (
-        <div className="max-w-md truncate">
-          {formatHtmlString(row.original.title)}
-        </div>
+        <div className="max-w-md truncate">{formatHtmlString(row.original.title)}</div>
       ),
     },
     {
       accessorKey: "author",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>Author</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Author</SortButton>,
     },
     {
       accessorKey: "category",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>Category</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Category</SortButton>,
     },
     {
       accessorKey: "priceInCents",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>Price</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Price</SortButton>,
       cell: ({ row }) => {
         return formatPrice(row.original.priceInCents, row.original.currency);
       },
@@ -157,9 +148,7 @@ const Courses = () => {
       accessorKey: "state",
       header: "State",
       cell: ({ row }) => (
-        <Badge
-          variant={row.original.state === "published" ? "secondary" : "outline"}
-        >
+        <Badge variant={row.original.state === "published" ? "secondary" : "outline"}>
           {row.original.state}
         </Badge>
       ),
@@ -175,12 +164,8 @@ const Courses = () => {
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>Created At</SortButton>
-      ),
-      cell: ({ row }) =>
-        row.original.createdAt &&
-        format(new Date(row.original.createdAt), "PPpp"),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Created At</SortButton>,
+      cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
 
@@ -197,9 +182,7 @@ const Courses = () => {
     },
   });
 
-  const selectedCourses = table
-    .getSelectedRowModel()
-    .rows.map((row) => row.original.id);
+  const selectedCourses = table.getSelectedRowModel().rows.map((row) => row.original.id);
 
   const handleDeleteCourses = () => {
     // TODO: Implement archive functionality
@@ -250,10 +233,7 @@ const Courses = () => {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </TableRow>

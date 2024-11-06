@@ -1,11 +1,6 @@
-import { PropsWithChildren, ReactNode } from "react";
-import {
-  SheetContent,
-  SheetHeader,
-  SheetDescription,
-  Sheet,
-  SheetTitle,
-} from "../ui/sheet";
+import { type PropsWithChildren, type ReactNode } from "react";
+
+import { SheetContent, SheetHeader, SheetDescription, Sheet, SheetTitle } from "../ui/sheet";
 
 type SheetMenuProps = {
   isSheetOpen: boolean;
@@ -28,9 +23,7 @@ export default function SheetMenu({
       <SheetContent side={side}>
         <SheetHeader>
           {sheetTitle && <SheetTitle>{sheetTitle}</SheetTitle>}
-          {sheetDescription && (
-            <SheetDescription>{sheetDescription}</SheetDescription>
-          )}
+          {sheetDescription && <SheetDescription>{sheetDescription}</SheetDescription>}
         </SheetHeader>
         {children}
       </SheetContent>

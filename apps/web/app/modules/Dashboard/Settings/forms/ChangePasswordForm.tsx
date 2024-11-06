@@ -1,7 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { ChangePasswordBody } from "~/api/generated-api";
+
+import { type ChangePasswordBody } from "~/api/generated-api";
+import { useChangePassword } from "~/api/mutations/useChangePassword";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -13,7 +15,6 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { useChangePassword } from "~/api/mutations/useChangePassword";
 import { cn } from "~/lib/utils";
 
 const passwordSchema = z.object({
@@ -52,9 +53,7 @@ export default function ChangePasswordForm() {
             })}
           />
           {errors.oldPassword && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.oldPassword.message}
-            </p>
+            <p className="text-red-500 text-xs mt-1">{errors.oldPassword.message}</p>
           )}
           <Label htmlFor="newPassword">New Password</Label>
           <Input
@@ -67,9 +66,7 @@ export default function ChangePasswordForm() {
             })}
           />
           {errors.newPassword && (
-            <p className="text-red-500 text-xs mt-1">
-              {errors.newPassword.message}
-            </p>
+            <p className="text-red-500 text-xs mt-1">{errors.newPassword.message}</p>
           )}
         </CardContent>
         <CardFooter className="border-t px-6 py-4">

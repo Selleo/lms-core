@@ -1,7 +1,8 @@
 import { http, HttpResponse } from "msw";
-import { categories } from "../data/categories";
+
 import { handlers as authHandlers } from "./auth";
 import { handlers as courseHandlers } from "./course";
+import { categories } from "../data/categories";
 
 export const handlers = [
   http.get("/api/categories", () => {

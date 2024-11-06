@@ -1,12 +1,7 @@
-import type {
-  DefineRouteFunction,
-  RouteManifest,
-} from "@remix-run/dev/dist/config/routes";
+import type { DefineRouteFunction, RouteManifest } from "@remix-run/dev/dist/config/routes";
 
 export const routes: (
-  defineRoutes: (
-    callback: (defineRoute: DefineRouteFunction) => void,
-  ) => RouteManifest,
+  defineRoutes: (callback: (defineRoute: DefineRouteFunction) => void) => RouteManifest,
 ) => RouteManifest | Promise<RouteManifest> = (defineRoutes) => {
   return defineRoutes((route) => {
     route("auth", "modules/Auth/Auth.layout.tsx", () => {
@@ -19,41 +14,21 @@ export const routes: (
       route("", "modules/Dashboard/Dashboard.page.tsx", {
         index: true,
       });
-      route(
-        "lesson-items",
-        "modules/Courses/LessonItems/LessonItems.layout.tsx",
-      );
+      route("lesson-items", "modules/Courses/LessonItems/LessonItems.layout.tsx");
       route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
-      route(
-        "course/:courseId/lesson/:lessonId",
-        "modules/Courses/Lesson/Lesson.layout.tsx",
-        () => {
-          route("", "modules/Courses/Lesson/Lesson.page.tsx", {
-            index: true,
-          });
-        },
-      );
-      route(
-        "lesson-items/:id/edit",
-        "modules/Courses/LessonItems/EditLessonItem.page.tsx",
-      );
-      route(
-        "lesson-items/add/video",
-        "modules/Courses/LessonItems/LessonItemsAddVideo.page.tsx",
-      );
-      route(
-        "lesson-items/add/text",
-        "modules/Courses/LessonItems/LessonItemsAddText.page.tsx",
-      );
-      route(
-        "settings",
-        "modules/Dashboard/Settings/Settings.layout.tsx",
-        () => {
-          route("", "modules/Dashboard/Settings/Settings.page.tsx", {
-            index: true,
-          });
-        },
-      );
+      route("course/:courseId/lesson/:lessonId", "modules/Courses/Lesson/Lesson.layout.tsx", () => {
+        route("", "modules/Courses/Lesson/Lesson.page.tsx", {
+          index: true,
+        });
+      });
+      route("lesson-items/:id/edit", "modules/Courses/LessonItems/EditLessonItem.page.tsx");
+      route("lesson-items/add/video", "modules/Courses/LessonItems/LessonItemsAddVideo.page.tsx");
+      route("lesson-items/add/text", "modules/Courses/LessonItems/LessonItemsAddText.page.tsx");
+      route("settings", "modules/Dashboard/Settings/Settings.layout.tsx", () => {
+        route("", "modules/Dashboard/Settings/Settings.page.tsx", {
+          index: true,
+        });
+      });
       route("courses", "modules/Courses/Courses.page.tsx", {
         index: true,
       });
@@ -72,30 +47,15 @@ export const routes: (
       route("users/new", "modules/Admin/Users/CreateNewUser.page.tsx");
       route("categories", "modules/Admin/Categories/Categories.page.tsx");
       route("categories/:id", "modules/Admin/Categories/Category.page.tsx");
-      route(
-        "categories/new",
-        "modules/Admin/Categories/CreateNewCategory.page.tsx",
-      );
+      route("categories/new", "modules/Admin/Categories/CreateNewCategory.page.tsx");
       route("lessons", "modules/Admin/Lessons/Lessons.page.tsx");
       route("lessons/:id", "modules/Admin/Lessons/Lesson.page.tsx");
       route("lessons/new", "modules/Admin/Lessons/CreateNewLesson.page.tsx");
       route("lesson-items", "modules/Admin/LessonItems/LessonItems.page.tsx");
-      route(
-        "lesson-items/new-file",
-        "modules/Admin/LessonItems/CreateNewFile.page.tsx",
-      );
-      route(
-        "lesson-items/new-text-block",
-        "modules/Admin/LessonItems/CreateNewTextBlock.page.tsx",
-      );
-      route(
-        "lesson-items/new-question",
-        "modules/Admin/LessonItems/CreateNewQuestion.page.tsx",
-      );
-      route(
-        "lesson-items/:id",
-        "modules/Admin/LessonItems/LessonItem.page.tsx",
-      );
+      route("lesson-items/new-file", "modules/Admin/LessonItems/CreateNewFile.page.tsx");
+      route("lesson-items/new-text-block", "modules/Admin/LessonItems/CreateNewTextBlock.page.tsx");
+      route("lesson-items/new-question", "modules/Admin/LessonItems/CreateNewQuestion.page.tsx");
+      route("lesson-items/:id", "modules/Admin/LessonItems/LessonItem.page.tsx");
     });
   });
 };

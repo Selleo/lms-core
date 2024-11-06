@@ -1,7 +1,8 @@
-import React from "react";
 import { TableButtonDelete } from "./TableButtonDelete.js";
 import { TableButtonEdit } from "./TableButtonEdit.js";
 import { TableButtonPreview } from "./TableButtonPreview.js";
+
+import type React from "react";
 
 interface DataFetch {
   id: string;
@@ -29,11 +30,7 @@ export const TableOptionButtons = ({
     <div className="flex gap-3">
       <TableButtonPreview displayName={displayName} description={description} />
       <TableButtonEdit description={description} id={id} />
-      <TableButtonDelete
-        id={id}
-        setToast={setToast}
-        setDataFetch={setDataFetch}
-      />
+      <TableButtonDelete id={id} setToast={setToast} setDataFetch={setDataFetch} />
     </div>
   );
 };

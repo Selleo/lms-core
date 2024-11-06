@@ -1,7 +1,9 @@
-import React from "react";
+import { type Column } from "@tanstack/react-table";
 import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
+
 import { Button } from "../ui/button";
-import { Column } from "@tanstack/react-table";
+
+import type React from "react";
 
 interface SortButtonProps<T> {
   column: Column<T, unknown>;

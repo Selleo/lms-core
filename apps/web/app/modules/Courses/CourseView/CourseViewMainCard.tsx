@@ -1,15 +1,13 @@
-import {
-  isRouteErrorResponse,
-  Link,
-  useParams,
-  useRouteError,
-} from "@remix-run/react";
+import { isRouteErrorResponse, Link, useParams, useRouteError } from "@remix-run/react";
 import { last } from "lodash-es";
+
 import type { GetCourseResponse } from "~/api/generated-api";
 import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
 import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { queryClient } from "~/api/queryClient";
+import CourseProgress from "~/components/CourseProgress";
+import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { toast } from "~/components/ui/use-toast";
@@ -17,14 +15,8 @@ import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 import { PaymentModal } from "~/modules/stripe/PaymentModal";
-import CourseProgress from "~/components/CourseProgress";
-import Viewer from "~/components/RichText/Viever";
 
-export const CourseViewMainCard = ({
-  course,
-}: {
-  course: GetCourseResponse["data"];
-}) => {
+export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data"] }) => {
   const {
     category,
     currency,
@@ -52,9 +44,8 @@ export const CourseViewMainCard = ({
   }
 
   const firstUncompletedLesson =
-    course.lessons.find(
-      (lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount,
-    )?.id ?? last(course.lessons)?.id;
+    course.lessons.find((lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount)?.id ??
+    last(course.lessons)?.id;
 
   const handleEnroll = () => {
     enrollCourse({ id: courseId }).then(() => {
@@ -87,9 +78,7 @@ export const CourseViewMainCard = ({
           completedLessonCount={completedLessonCount}
           courseLessonCount={courseLessonCount}
         />
-        <h4 className="text-2xl font-bold mt-4 lg:mt-6 leading-10 text-neutral-950">
-          {title}
-        </h4>
+        <h4 className="text-2xl font-bold mt-4 lg:mt-6 leading-10 text-neutral-950">{title}</h4>
         <div className="min-h-0 scrollbar-thin overflow-auto">
           <Viewer content={description} />
         </div>
@@ -119,13 +108,9 @@ export const CourseViewMainCard = ({
           )}
           {!isAdmin && isEnrolled && (
             <Button
-              className={cn(
-                "w-full bg-secondary-500 text-white py-2 rounded-lg",
-                {
-                  "bg-white border border-secondary-500 text-secondary-700 w-full mt-3":
-                    isEnrolled,
-                },
-              )}
+              className={cn("w-full bg-secondary-500 text-white py-2 rounded-lg", {
+                "bg-white border border-secondary-500 text-secondary-700 w-full mt-3": isEnrolled,
+              })}
               onClick={handleUnenroll}
             >
               Unenroll

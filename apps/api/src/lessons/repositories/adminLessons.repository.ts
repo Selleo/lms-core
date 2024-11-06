@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { eq, and, sql, isNotNull, count } from "drizzle-orm";
-import { DatabasePg, UUIDType } from "src/common";
+import { DatabasePg, type UUIDType } from "src/common";
 import {
   lessons,
   courseLessons,
@@ -10,7 +10,8 @@ import {
   textBlocks,
   questionAnswerOptions,
 } from "src/storage/schema";
-import { CreateLessonBody, UpdateLessonBody } from "../schemas/lesson.schema";
+
+import { type CreateLessonBody, type UpdateLessonBody } from "../schemas/lesson.schema";
 
 @Injectable()
 export class AdminLessonsRepository {
@@ -77,10 +78,7 @@ export class AdminLessonsRepository {
       );
   }
 
-  async updateDisplayOrderLessonsInCourse(
-    courseId: UUIDType,
-    lessonId: UUIDType,
-  ) {
+  async updateDisplayOrderLessonsInCourse(courseId: UUIDType, lessonId: UUIDType) {
     await this.db.execute(sql`
       UPDATE ${courseLessons}
       SET display_order = display_order - 1
@@ -97,12 +95,7 @@ export class AdminLessonsRepository {
   async removeCourseLesson(courseId: string, lessonId: string) {
     return await this.db
       .delete(courseLessons)
-      .where(
-        and(
-          eq(courseLessons.courseId, courseId),
-          eq(courseLessons.lessonId, lessonId),
-        ),
-      )
+      .where(and(eq(courseLessons.courseId, courseId), eq(courseLessons.lessonId, lessonId)))
       .returning();
   }
 
@@ -165,11 +158,7 @@ export class AdminLessonsRepository {
       .where(eq(questionAnswerOptions.questionId, questionId));
   }
 
-  async assignLessonToCourse(
-    courseId: UUIDType,
-    lessonId: UUIDType,
-    displayOrder: number,
-  ) {
+  async assignLessonToCourse(courseId: UUIDType, lessonId: UUIDType, displayOrder: number) {
     return await this.db.insert(courseLessons).values({
       courseId,
       lessonId,
@@ -185,11 +174,7 @@ export class AdminLessonsRepository {
   }
 
   async updateLesson(id: string, body: UpdateLessonBody) {
-    return await this.db
-      .update(lessons)
-      .set(body)
-      .where(eq(lessons.id, id))
-      .returning();
+    return await this.db.update(lessons).set(body).where(eq(lessons.id, id)).returning();
   }
 
   async getLessonsCount(conditions: any[]) {

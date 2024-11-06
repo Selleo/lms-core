@@ -1,12 +1,13 @@
-import { cn } from "~/lib/utils";
-import { Card, CardContent } from "~/components/ui/card";
 import { Link } from "@remix-run/react";
-import CourseProgress from "~/components/CourseProgress";
-import { CaretRight } from "~/assets/svgs";
-import type { GetCourseResponse } from "~/api/generated-api";
-import { Icon } from "~/components/Icon";
+
 import { cva } from "class-variance-authority";
 import { startCase } from "lodash-es";
+import type { GetCourseResponse } from "~/api/generated-api";
+import { CaretRight } from "~/assets/svgs";
+import CourseProgress from "~/components/CourseProgress";
+import { Icon } from "~/components/Icon";
+import { Card, CardContent } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
 
 type Lesson = GetCourseResponse["data"]["lessons"][number];
 
@@ -109,9 +110,7 @@ export const LessonCard = ({
             <div className="flex justify-between items-center">
               <div className="flex flex-col h-full bg-white w-full">
                 <CourseProgress
-                  label={
-                    type === "quiz" ? "Quiz progress:" : "Lesson progress:"
-                  }
+                  label={type === "quiz" ? "Quiz progress:" : "Lesson progress:"}
                   isCompleted={lessonProgress === "completed"}
                   completedLessonCount={itemsCompletedCount ?? 0}
                   courseLessonCount={itemsCount}
@@ -119,9 +118,7 @@ export const LessonCard = ({
               </div>
             </div>
             <div className="flex flex-col gap-y-2 pb-4">
-              <h4 className="font-medium text-sm text-neutral-950 mt-2">
-                {title}
-              </h4>
+              <h4 className="font-medium text-sm text-neutral-950 mt-2">{title}</h4>
               <p className="text-xs text-neutral-900 mt-1 line-clamp-3 flex-grow leading-5">
                 {description}
               </p>
@@ -134,8 +131,7 @@ export const LessonCard = ({
                 "Lesson preview"
               ) : isEnrolled ? (
                 <>
-                  Read more{" "}
-                  <CaretRight className="w-3 h-3 inline-block text-primary-700" />
+                  Read more <CaretRight className="w-3 h-3 inline-block text-primary-700" />
                 </>
               ) : null}
             </Link>

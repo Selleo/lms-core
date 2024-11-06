@@ -1,8 +1,9 @@
+import { SES, type SESClientConfig } from "@aws-sdk/client-ses";
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { SES, SESClientConfig } from "@aws-sdk/client-ses";
+
 import { EmailAdapter } from "./email.adapter";
-import { Email } from "../email.interface";
+import { type Email } from "../email.interface";
 
 @Injectable()
 export class AWSSESAdapter extends EmailAdapter {
@@ -17,9 +18,7 @@ export class AWSSESAdapter extends EmailAdapter {
   private getAWSConfig(): SESClientConfig {
     const region = this.configService.get<string>("aws.AWS_REGION");
     const accessKeyId = this.configService.get<string>("aws.AWS_ACCESS_KEY_ID");
-    const secretAccessKey = this.configService.get<string>(
-      "aws.AWS_SECRET_ACCESS_KEY",
-    );
+    const secretAccessKey = this.configService.get<string>("aws.AWS_SECRET_ACCESS_KEY");
 
     if (!region || !accessKeyId || !secretAccessKey) {
       throw new Error("Missing AWS configuration");

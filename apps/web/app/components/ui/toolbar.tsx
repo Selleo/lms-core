@@ -1,10 +1,11 @@
-import React from "react";
 import {
   ToggleGroup as ToggleGroupPrimitive,
   Toolbar as ToolbarPrimitive,
 } from "@radix-ui/react-toolbar";
 
 import { cn } from "~/lib/utils";
+
+import type React from "react";
 
 interface ToolbarProps {
   children: React.ReactNode;

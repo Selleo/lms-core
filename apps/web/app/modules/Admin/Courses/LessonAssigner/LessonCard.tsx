@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GetAllLessonsResponse } from "~/api/generated-api";
+
+import { type GetAllLessonsResponse } from "~/api/generated-api";
 import Viewer from "~/components/RichText/Viever";
 
 type TransformedLesson = GetAllLessonsResponse["data"][number] & {
@@ -12,10 +13,9 @@ interface LessonCardProps {
 }
 
 export function LessonCard({ lesson }: LessonCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: lesson.id,
-    });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+    id: lesson.id,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),

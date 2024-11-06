@@ -1,9 +1,7 @@
 import { memo } from "react";
 import { type Control, Controller } from "react-hook-form";
-import type {
-  GetCategoryByIdResponse,
-  UpdateCategoryBody,
-} from "~/api/generated-api";
+
+import type { GetCategoryByIdResponse, UpdateCategoryBody } from "~/api/generated-api";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 

@@ -1,11 +1,12 @@
-import { DatabasePg } from "../../common/index";
-import { INestApplication } from "@nestjs/common";
+import { type INestApplication } from "@nestjs/common";
+import * as cookie from "cookie";
 import { isArray, omit } from "lodash";
 import request from "supertest";
-import { createUserFactory } from "../../../test/factory/user.factory";
+
 import { createE2ETest } from "../../../test/create-e2e-test";
+import { createUserFactory } from "../../../test/factory/user.factory";
+import { type DatabasePg } from "../../common/index";
 import { AuthService } from "../auth.service";
-import * as cookie from "cookie";
 
 describe("AuthController (e2e)", () => {
   let app: INestApplication;
@@ -23,9 +24,7 @@ describe("AuthController (e2e)", () => {
 
   describe("POST /api/auth/register", () => {
     it("should register a new user", async () => {
-      const user = await userFactory
-        .withCredentials({ password: "password123" })
-        .build();
+      const user = await userFactory.withCredentials({ password: "password123" }).build();
 
       const response = await request(app.getHttpServer())
         .post("/api/auth/register")
@@ -53,10 +52,7 @@ describe("AuthController (e2e)", () => {
 
       await authService.register(existingUser);
 
-      await request(app.getHttpServer())
-        .post("/api/auth/register")
-        .send(existingUser)
-        .expect(409);
+      await request(app.getHttpServer()).post("/api/auth/register").send(existingUser).expect(409);
     });
   });
 
@@ -70,12 +66,10 @@ describe("AuthController (e2e)", () => {
           email: "test@example.com",
         });
 
-      const response = await request(app.getHttpServer())
-        .post("/api/auth/login")
-        .send({
-          email: user.email,
-          password: user.credentials?.password,
-        });
+      const response = await request(app.getHttpServer()).post("/api/auth/login").send({
+        email: user.email,
+        password: user.credentials?.password,
+      });
 
       expect(response.status).toEqual(201);
       expect(response.body.data).toHaveProperty("id");
@@ -108,12 +102,10 @@ describe("AuthController (e2e)", () => {
         password,
       });
 
-      const loginResponse = await request(app.getHttpServer())
-        .post("/api/auth/login")
-        .send({
-          email: user.email,
-          password: password,
-        });
+      const loginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
+        email: user.email,
+        password: password,
+      });
 
       const cookies = loginResponse.headers["set-cookie"];
 
@@ -192,16 +184,12 @@ describe("AuthController (e2e)", () => {
     it("should return current user data for authenticated user", async () => {
       let accessToken = "";
 
-      const user = await userFactory
-        .withCredentials({ password: "password123" })
-        .create();
+      const user = await userFactory.withCredentials({ password: "password123" }).create();
 
-      const loginResponse = await request(app.getHttpServer())
-        .post("/api/auth/login")
-        .send({
-          email: user.email,
-          password: "password123",
-        });
+      const loginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
+        email: user.email,
+        password: "password123",
+      });
 
       const cookies = loginResponse.headers["set-cookie"];
 
@@ -223,9 +211,7 @@ describe("AuthController (e2e)", () => {
     });
 
     it("should return 401 for unauthenticated request", async () => {
-      await request(app.getHttpServer())
-        .get("/api/auth/current-user")
-        .expect(401);
+      await request(app.getHttpServer()).get("/api/auth/current-user").expect(401);
     });
   });
 
@@ -268,9 +254,7 @@ describe("AuthController (e2e)", () => {
 
   describe("POST /api/auth/reset-password", () => {
     it("should reset the password successfully", async () => {
-      jest
-        .spyOn(authService, "resetPassword")
-        .mockImplementation(async () => {});
+      jest.spyOn(authService, "resetPassword").mockImplementation(async () => {});
 
       const response = await request(app.getHttpServer())
         .post("/api/auth/reset-password")

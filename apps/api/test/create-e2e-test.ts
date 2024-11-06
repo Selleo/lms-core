@@ -1,8 +1,9 @@
-import { Provider } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
+import { type Provider } from "@nestjs/common";
+import { Test, type TestingModule } from "@nestjs/testing";
 import cookieParser from "cookie-parser";
-import { AppModule } from "../src/app.module";
+
 import { setupTestDatabase } from "./test-database";
+import { AppModule } from "../src/app.module";
 
 export async function createE2ETest(customProviders: Provider[] = []) {
   const { db, connectionString } = await setupTestDatabase();

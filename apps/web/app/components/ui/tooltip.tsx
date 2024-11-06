@@ -1,5 +1,5 @@
-import * as React from "react";
 import * as TooltipPrimitive from "@radix-ui/react-tooltip";
+import * as React from "react";
 
 import { cn } from "~/lib/utils";
 
@@ -41,10 +41,4 @@ const TooltipArrow = React.forwardRef<
 ));
 TooltipArrow.displayName = TooltipPrimitive.Arrow.displayName;
 
-export {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-  TooltipArrow,
-};
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider, TooltipArrow };

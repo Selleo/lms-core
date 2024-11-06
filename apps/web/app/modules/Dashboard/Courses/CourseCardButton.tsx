@@ -9,12 +9,7 @@ type CourseCardButtonProps = {
   priceInCents: number;
 };
 
-const CourseCardButton = ({
-  currency,
-  enrolled,
-  isAdmin,
-  priceInCents,
-}: CourseCardButtonProps) => {
+const CourseCardButton = ({ currency, enrolled, isAdmin, priceInCents }: CourseCardButtonProps) => {
   const getButtonLabel = (enrolled: boolean, isAdmin: boolean) => {
     if (enrolled) {
       return (
@@ -34,10 +29,7 @@ const CourseCardButton = ({
   const buttonLabel = getButtonLabel(enrolled, isAdmin);
 
   return (
-    <Button
-      variant={enrolled ? "secondary" : "primary"}
-      className="mt-auto w-full"
-    >
+    <Button variant={enrolled ? "secondary" : "primary"} className="mt-auto w-full">
       {buttonLabel}
     </Button>
   );

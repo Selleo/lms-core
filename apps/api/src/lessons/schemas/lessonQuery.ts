@@ -1,11 +1,6 @@
-import { Type, Static } from "@sinclair/typebox";
+import { Type, type Static } from "@sinclair/typebox";
 
-export const lessonSortFields = [
-  "title",
-  "createdAt",
-  "state",
-  "itemsCount",
-] as const;
+export const lessonSortFields = ["title", "createdAt", "state", "itemsCount"] as const;
 
 export const LessonSortFields: Record<LessonSortField, LessonSortField> = {
   title: "title",

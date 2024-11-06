@@ -1,12 +1,9 @@
-import type { MetaFunction } from "@remix-run/node";
 import { isEmpty } from "lodash-es";
 import { useReducer } from "react";
 import { match } from "ts-pattern";
+
 import { useAvailableCourses } from "~/api/queries/useAvailableCourses";
-import {
-  categoriesQueryOptions,
-  useCategoriesSuspense,
-} from "~/api/queries/useCategories";
+import { categoriesQueryOptions, useCategoriesSuspense } from "~/api/queries/useCategories";
 import { allCoursesQueryOptions, useCourses } from "~/api/queries/useCourses";
 import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
@@ -15,16 +12,19 @@ import { Icon } from "~/components/Icon";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
+
+import { CourseList } from "./Courses/CourseList";
+import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
 import { useLayoutsStore } from "../common/Layout/LayoutsStore";
 import Loader from "../common/Loader/Loader";
 import {
-  FilterConfig,
-  FilterValue,
+  type FilterConfig,
+  type FilterValue,
   SearchFilter,
 } from "../common/SearchFilter/SearchFilter";
 import { DashboardIcon, HamburgerIcon } from "../icons/icons";
-import { CourseList } from "./Courses/CourseList";
-import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
+
+import type { MetaFunction } from "@remix-run/node";
 
 type State = {
   searchTitle: string | undefined;
@@ -38,10 +38,7 @@ type Action =
   | { type: "SET_CATEGORY"; payload: string | undefined };
 
 export const meta: MetaFunction = () => {
-  return [
-    { title: "Dashboard" },
-    { name: "description", content: "Welcome to Dashboard!" },
-  ];
+  return [{ title: "Dashboard" }, { name: "description", content: "Welcome to Dashboard!" }];
 };
 
 export const clientLoader = async () => {
@@ -75,15 +72,13 @@ export default function DashboardPage() {
     category: undefined,
   });
 
-  const { data: studentCourses, isLoading: isStudentCoursesLoading } =
-    useStudentCourses();
+  const { data: studentCourses, isLoading: isStudentCoursesLoading } = useStudentCourses();
 
-  const { data: userAvailableCourses, isLoading: isAvailableCoursesLoading } =
-    useAvailableCourses({
-      title: state.searchTitle,
-      category: state.category,
-      sort: state.sort,
-    });
+  const { data: userAvailableCourses, isLoading: isAvailableCoursesLoading } = useAvailableCourses({
+    title: state.searchTitle,
+    category: state.category,
+    sort: state.sort,
+  });
 
   const { data: allCourses, isLoading: isAllCoursesLoading } = useCourses({
     title: state.searchTitle,
@@ -101,8 +96,7 @@ export default function DashboardPage() {
     .with(false, () => isAvailableCoursesLoading)
     .exhaustive();
 
-  const { data: categories, isLoading: isCategoriesLoading } =
-    useCategoriesSuspense();
+  const { data: categories, isLoading: isCategoriesLoading } = useCategoriesSuspense();
 
   const { courseListLayout, setCourseListLayout } = useLayoutsStore();
 
@@ -147,9 +141,7 @@ export default function DashboardPage() {
     <div className="flex flex-1 flex-col gap-y-12 h-auto">
       <div className="flex flex-col gap-y-6">
         <div className="flex flex-col px-6">
-          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-            Your Courses
-          </h4>
+          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Your Courses</h4>
           <p className="text-lg leading-7 text-neutral-800">
             Courses you are currently enrolled in
           </p>
@@ -184,9 +176,7 @@ export default function DashboardPage() {
       </div>
       <div className="flex flex-col px-6">
         <div className="flex flex-col lg:p-0">
-          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-            Available Courses
-          </h4>
+          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Available Courses</h4>
           <p className="text-lg leading-7 text-neutral-800">
             All available career courses available to enroll
           </p>
@@ -220,19 +210,13 @@ export default function DashboardPage() {
         </div>
         <div
           data-testid="unenrolled-courses"
-          className={cn(
-            "lg:p-8 gap-6 rounded-lg drop-shadow-primary lg:bg-white",
-            {
-              "flex flex-wrap": courseListLayout === "card",
-              block: courseListLayout === "table",
-            },
-          )}
+          className={cn("lg:p-8 gap-6 rounded-lg drop-shadow-primary lg:bg-white", {
+            "flex flex-wrap": courseListLayout === "card",
+            block: courseListLayout === "table",
+          })}
         >
           {availableCourses && !isEmpty(availableCourses) && (
-            <CourseList
-              availableCourses={availableCourses}
-              courseListLayout={courseListLayout}
-            />
+            <CourseList availableCourses={availableCourses} courseListLayout={courseListLayout} />
           )}
           {!availableCourses ||
             (isEmpty(availableCourses) && (

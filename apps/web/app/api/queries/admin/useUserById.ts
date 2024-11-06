@@ -1,6 +1,7 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
 import { ApiClient } from "../../api-client";
-import { GetUserByIdResponse } from "../../generated-api";
+import { type GetUserByIdResponse } from "../../generated-api";
 
 export const userQueryOptions = (id: string) => ({
   queryKey: ["users", "admin", { id }],

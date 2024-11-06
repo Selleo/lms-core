@@ -1,17 +1,10 @@
-import {
-  queryOptions,
-  useQuery,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
 import { ApiClient } from "../../api-client";
+
 import type { GetAllLessonsResponse } from "../../generated-api";
 
-export const lessonSortFields = [
-  "title",
-  "createdAt",
-  "state",
-  "itemsCount",
-] as const;
+export const lessonSortFields = ["title", "createdAt", "state", "itemsCount"] as const;
 
 export type LessonSortField = (typeof lessonSortFields)[number];
 export type LessonSortOption = LessonSortField | `-${LessonSortField}` | "";

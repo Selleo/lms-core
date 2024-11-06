@@ -1,20 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@remix-run/react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import * as z from "zod";
+
 import { useCreateQuestionItem } from "~/api/mutations/admin/useCreateQuestionItem";
 import { useUpdateQuestionOptions } from "~/api/mutations/admin/useUpdateQuestionOptions";
 import { useCurrentUserSuspense } from "~/api/queries";
 import { ALL_LESSON_ITEMS_QUERY_KEY } from "~/api/queries/admin/useAllLessonItems";
 import { queryClient } from "~/api/queryClient";
+import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "~/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
@@ -24,9 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import Editor from "~/components/RichText/Editor";
 import { CreatePageHeader } from "~/modules/Admin/components";
-import { useNavigate } from "@remix-run/react";
 
 const questionFormSchema = z.object({
   questionType: z.enum([
@@ -36,9 +31,7 @@ const questionFormSchema = z.object({
     "fill_in_the_blanks_text",
     "fill_in_the_blanks_dnd",
   ]),
-  questionBody: z
-    .string()
-    .min(10, "Question body must be at least 10 characters."),
+  questionBody: z.string().min(10, "Question body must be at least 10 characters."),
   state: z.enum(["draft", "published"]),
   authorId: z.string().uuid("Invalid author ID."),
   solutionExplanation: z.string().optional(),
@@ -117,10 +110,7 @@ export default function CreateNewQuestionPage() {
 
   const renderQuestionForm = () => (
     <Form {...questionForm}>
-      <form
-        onSubmit={questionForm.handleSubmit(onQuestionSubmit)}
-        className="space-y-4"
-      >
+      <form onSubmit={questionForm.handleSubmit(onQuestionSubmit)} className="space-y-4">
         <FormField
           control={questionForm.control}
           name="questionType"
@@ -135,13 +125,9 @@ export default function CreateNewQuestionPage() {
                 </FormControl>
                 <SelectContent>
                   <SelectItem value="single_choice">Single Choice</SelectItem>
-                  <SelectItem value="multiple_choice">
-                    Multiple Choice
-                  </SelectItem>
+                  <SelectItem value="multiple_choice">Multiple Choice</SelectItem>
                   <SelectItem value="open_answer">Open Answer</SelectItem>
-                  <SelectItem value="fill_in_the_blanks_text">
-                    Fill in the blanks (text)
-                  </SelectItem>
+                  <SelectItem value="fill_in_the_blanks_text">Fill in the blanks (text)</SelectItem>
                   <SelectItem value="fill_in_the_blanks_dnd">
                     Fill in the blanks (drag & drop)
                   </SelectItem>
@@ -158,12 +144,7 @@ export default function CreateNewQuestionPage() {
             <FormItem>
               <Label htmlFor="questionBody">Question Body</Label>
               <FormControl>
-                <Editor
-                  id="questionBody"
-                  content={field.value}
-                  className="h-32"
-                  {...field}
-                />
+                <Editor id="questionBody" content={field.value} className="h-32" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -174,9 +155,7 @@ export default function CreateNewQuestionPage() {
           name="solutionExplanation"
           render={({ field }) => (
             <FormItem>
-              <Label htmlFor="solutionExplanation">
-                Solution Explanation (Optional)
-              </Label>
+              <Label htmlFor="solutionExplanation">Solution Explanation (Optional)</Label>
               <FormControl>
                 <Editor
                   id="solutionExplanation"
@@ -218,9 +197,7 @@ export default function CreateNewQuestionPage() {
               <Controller
                 name={`options.${index}.value`}
                 control={questionForm.control}
-                render={({ field }) => (
-                  <Input {...field} placeholder="Enter answer option" />
-                )}
+                render={({ field }) => <Input {...field} placeholder="Enter answer option" />}
               />
               <Controller
                 name={`options.${index}.isCorrect`}
@@ -238,11 +215,7 @@ export default function CreateNewQuestionPage() {
                   </FormItem>
                 )}
               />
-              <Button
-                type="button"
-                variant="destructive"
-                onClick={() => remove(index)}
-              >
+              <Button type="button" variant="destructive" onClick={() => remove(index)}>
                 Remove
               </Button>
             </div>

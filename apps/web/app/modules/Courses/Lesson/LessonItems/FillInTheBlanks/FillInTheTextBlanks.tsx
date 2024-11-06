@@ -5,10 +5,7 @@ type FillInTheTextBlanksProps = {
   replacement: (index: number) => JSX.Element;
 };
 
-export const FillInTheTextBlanks: FC<FillInTheTextBlanksProps> = ({
-  content,
-  replacement,
-}) => {
+export const FillInTheTextBlanks: FC<FillInTheTextBlanksProps> = ({ content, replacement }) => {
   const parts = content.split(/\[word]/g);
 
   return (

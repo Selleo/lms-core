@@ -1,6 +1,7 @@
 import { capitalize, startCase } from "lodash-es";
-import { Control, Controller } from "react-hook-form";
-import { UpdateQuestionItemBody } from "~/api/generated-api";
+import { type Control, Controller } from "react-hook-form";
+
+import { type UpdateQuestionItemBody } from "~/api/generated-api";
 import Editor from "~/components/RichText/Editor";
 import Viewer from "~/components/RichText/Viever";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -19,11 +20,7 @@ interface QuestionFieldProps {
   isEditing?: boolean;
 }
 
-export const QuestionField = ({
-  name,
-  control,
-  isEditing = true,
-}: QuestionFieldProps) => {
+export const QuestionField = ({ name, control, isEditing = true }: QuestionFieldProps) => {
   return (
     <Controller
       name={name}
@@ -39,9 +36,7 @@ export const QuestionField = ({
           }
           if (name === "questionType") {
             return (
-              <span className="font-semibold">
-                {capitalize(startCase(field.value as string))}
-              </span>
+              <span className="font-semibold">{capitalize(startCase(field.value as string))}</span>
             );
           }
           if (name === "questionBody" || name === "solutionExplanation") {
@@ -52,10 +47,7 @@ export const QuestionField = ({
 
         if (name === "questionType") {
           return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
+            <Select onValueChange={field.onChange} defaultValue={field.value as string}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a question type" />
               </SelectTrigger>
@@ -78,10 +70,7 @@ export const QuestionField = ({
 
         if (name === "state") {
           return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
+            <Select onValueChange={field.onChange} defaultValue={field.value as string}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a state" />
               </SelectTrigger>
@@ -97,13 +86,7 @@ export const QuestionField = ({
         }
 
         if (name === "questionBody" || name === "solutionExplanation") {
-          return (
-            <Editor
-              className="h-32"
-              content={field.value as string}
-              {...field}
-            />
-          );
+          return <Editor className="h-32" content={field.value as string} {...field} />;
         }
 
         if (name === "archived") {

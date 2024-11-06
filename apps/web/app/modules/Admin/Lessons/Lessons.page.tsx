@@ -8,23 +8,17 @@ import {
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
+
 import type { GetAllLessonsResponse } from "~/api/generated-api";
 import { useAllLessonsSuspense } from "~/api/queries/admin/useAllLessons";
 import SortButton from "~/components/TableSortButton/TableSortButton";
-import { cn } from "~/lib/utils";
-import {
-  type FilterConfig,
-  type FilterValue,
-  SearchFilter,
-} from "~/modules/common/SearchFilter/SearchFilter";
-import { format } from "date-fns";
-import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
-import { Checkbox } from "~/components/ui/checkbox";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -33,6 +27,13 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
+import { cn } from "~/lib/utils";
+import {
+  type FilterConfig,
+  type FilterValue,
+  SearchFilter,
+} from "~/modules/common/SearchFilter/SearchFilter";
 
 type TLesson = GetAllLessonsResponse["data"][number];
 
@@ -100,31 +101,23 @@ const Lessons = () => {
     },
     {
       accessorKey: "title",
-      header: ({ column }) => (
-        <SortButton<TLesson> column={column}>Title</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TLesson> column={column}>Title</SortButton>,
       cell: ({ row }) => (
-        <div className="max-w-md truncate">
-          {formatHtmlString(row.original.title)}
-        </div>
+        <div className="max-w-md truncate">{formatHtmlString(row.original.title)}</div>
       ),
     },
     {
       accessorKey: "state",
       header: "State",
       cell: ({ row }) => (
-        <Badge
-          variant={row.original.state === "published" ? "secondary" : "outline"}
-        >
+        <Badge variant={row.original.state === "published" ? "secondary" : "outline"}>
           {row.original.state}
         </Badge>
       ),
     },
     {
       accessorKey: "itemsCount",
-      header: ({ column }) => (
-        <SortButton<TLesson> column={column}>Items Count</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TLesson> column={column}>Items Count</SortButton>,
     },
     {
       accessorKey: "archived",
@@ -137,12 +130,8 @@ const Lessons = () => {
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TLesson> column={column}>Created At</SortButton>
-      ),
-      cell: ({ row }) =>
-        row.original.createdAt &&
-        format(new Date(row.original.createdAt), "PPpp"),
+      header: ({ column }) => <SortButton<TLesson> column={column}>Created At</SortButton>,
+      cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
 
@@ -159,9 +148,7 @@ const Lessons = () => {
     },
   });
 
-  const selectedLessons = table
-    .getSelectedRowModel()
-    .rows.map((row) => row.original.id);
+  const selectedLessons = table.getSelectedRowModel().rows.map((row) => row.original.id);
 
   const handleDeleteLessons = () => {
     //TODO: Implement delete functionality here
@@ -210,10 +197,7 @@ const Lessons = () => {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </TableRow>

@@ -1,6 +1,8 @@
+import { type ReactNode } from "react";
+
 import { cn } from "~/lib/utils";
-import { Button, ButtonProps } from "../ui/button";
-import { ReactNode } from "react";
+
+import { Button, type ButtonProps } from "../ui/button";
 
 interface SingleButtonProps extends ButtonProps {
   children: ReactNode;

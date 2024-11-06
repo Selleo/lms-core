@@ -1,4 +1,4 @@
-import { Type, Static } from "@sinclair/typebox";
+import { Type, type Static } from "@sinclair/typebox";
 
 export const courseSortFields = [
   "title",
@@ -52,10 +52,7 @@ export const coursesFilterSchema = Type.Object({
   state: Type.Optional(Type.String()),
   archived: Type.Optional(Type.String()),
   creationDateRange: Type.Optional(
-    Type.Tuple([
-      Type.String({ format: "date-time" }),
-      Type.String({ format: "date-time" }),
-    ]),
+    Type.Tuple([Type.String({ format: "date-time" }), Type.String({ format: "date-time" })]),
   ),
   author: Type.Optional(Type.String()),
 });

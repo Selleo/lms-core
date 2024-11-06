@@ -1,4 +1,4 @@
-import { passthrough, ResponseResolver } from "msw";
+import { passthrough, type ResponseResolver } from "msw";
 
 type Predicate = (searchParams: URLSearchParams) => boolean;
 type Args = { request: Request; requestId: string };

@@ -1,4 +1,5 @@
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
+import { type Control, Controller, type FieldValues, type Path } from "react-hook-form";
+
 import { Checkbox } from "~/components/ui/checkbox";
 import { Label } from "~/components/ui/label";
 
@@ -19,11 +20,7 @@ export const FormCheckbox = <T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <div className="flex items-center space-x-2">
-          <Checkbox
-            id={name}
-            checked={field.value}
-            onCheckedChange={field.onChange}
-          />
+          <Checkbox id={name} checked={field.value} onCheckedChange={field.onChange} />
           <Label
             htmlFor={name}
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

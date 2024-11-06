@@ -1,17 +1,15 @@
-import { DatabasePg } from "../../src/common";
-import { INestApplication } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
+import { type INestApplication } from "@nestjs/common";
+import { type JwtService } from "@nestjs/jwt";
 import { sql } from "drizzle-orm";
-import { UserWithCredentials } from "test/factory/user.factory";
 import request from "supertest";
+import { type UserWithCredentials } from "test/factory/user.factory";
+
+import { type DatabasePg } from "../../src/common";
 
 type CamelToSnake<T extends string, P extends string = ""> = string extends T
   ? string
   : T extends `${infer C0}${infer R}`
-    ? CamelToSnake<
-        R,
-        `${P}${C0 extends Lowercase<C0> ? "" : "_"}${Lowercase<C0>}`
-      >
+    ? CamelToSnake<R, `${P}${C0 extends Lowercase<C0> ? "" : "_"}${Lowercase<C0>}`>
     : P;
 
 type StringKeys<T> = Extract<keyof T, string>;
@@ -43,25 +41,18 @@ export async function truncateAllTables(connection: DatabasePg): Promise<void> {
 
 export async function truncateTables(
   connection: DatabasePg,
-  tables: Array<
-    CamelToSnake<StringKeys<NonNullable<DatabasePg["_"]["schema"]>>>
-  >,
+  tables: Array<CamelToSnake<StringKeys<NonNullable<DatabasePg["_"]["schema"]>>>>,
 ): Promise<void> {
   for (const table of tables) {
     await connection.execute(sql.raw(`TRUNCATE TABLE "${table}" CASCADE;`));
   }
 }
 
-export async function cookieFor(
-  user: UserWithCredentials,
-  app: INestApplication<any>,
-) {
-  const loginResponse = await request(app.getHttpServer())
-    .post("/api/auth/login")
-    .send({
-      email: user.email,
-      password: user.credentials?.password,
-    });
+export async function cookieFor(user: UserWithCredentials, app: INestApplication<any>) {
+  const loginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
+    email: user.email,
+    password: user.credentials?.password,
+  });
 
   return loginResponse.headers["set-cookie"];
 }

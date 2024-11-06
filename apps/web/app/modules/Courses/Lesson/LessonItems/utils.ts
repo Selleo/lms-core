@@ -1,5 +1,5 @@
-import type { UseFormGetValues } from "react-hook-form";
 import type { TQuestionsForm } from "../types";
+import type { UseFormGetValues } from "react-hook-form";
 
 type TProps = {
   getValues: UseFormGetValues<TQuestionsForm>;

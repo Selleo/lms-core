@@ -1,13 +1,12 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { ApiClient } from "../api-client";
-import { UpdateUserBody } from "../generated-api";
-import { queryClient } from "../queryClient";
-import {
-  currentUserQueryOptions,
-  useCurrentUserSuspense,
-} from "../queries/useCurrentUser";
+
 import { useToast } from "~/components/ui/use-toast";
+
+import { ApiClient } from "../api-client";
+import { type UpdateUserBody } from "../generated-api";
+import { currentUserQueryOptions, useCurrentUserSuspense } from "../queries/useCurrentUser";
+import { queryClient } from "../queryClient";
 
 type UpdateUserOptions = {
   data: UpdateUserBody;
@@ -19,10 +18,7 @@ export function useUpdateUser() {
 
   return useMutation({
     mutationFn: async (options: UpdateUserOptions) => {
-      const response = await ApiClient.api.usersControllerUpdateUser(
-        currentUser.id,
-        options.data,
-      );
+      const response = await ApiClient.api.usersControllerUpdateUser(currentUser.id, options.data);
 
       return response.data;
     },

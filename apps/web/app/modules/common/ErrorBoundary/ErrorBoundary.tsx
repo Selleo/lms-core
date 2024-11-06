@@ -1,5 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import { ArrowBigLeft } from "lucide-react";
+
 import { Button } from "~/components/ui/button";
 
 type ErrorBoundaryProps = {
@@ -13,15 +14,9 @@ const CustomErrorBoundary = ({ stack, message }: ErrorBoundaryProps) => {
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100 flex-col w-full">
       <div className="container">
-        <h1 className="text-2xl font-bold text-primary-700 mb-4">
-          Oops! Something went wrong.
-        </h1>
+        <h1 className="text-2xl font-bold text-primary-700 mb-4">Oops! Something went wrong.</h1>
         {message && <p className="text-gray-600 mb-4">{message}</p>}
-        {stack && (
-          <pre className="text-gray-600 bg-slate-200 p-4 rounded-sm">
-            {stack}
-          </pre>
-        )}
+        {stack && <pre className="text-gray-600 bg-slate-200 p-4 rounded-sm">{stack}</pre>}
       </div>
       <div className="flex justify-center gap-2">
         <Button

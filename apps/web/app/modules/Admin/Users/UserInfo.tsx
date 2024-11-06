@@ -1,6 +1,10 @@
-import { GetUserByIdResponse, UpdateUserBody } from "~/api/generated-api";
+import { capitalize } from "lodash-es";
 import { memo } from "react";
-import { Control, Controller } from "react-hook-form";
+import { type Control, Controller } from "react-hook-form";
+
+import { type GetUserByIdResponse, type UpdateUserBody } from "~/api/generated-api";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -9,9 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { capitalize } from "lodash-es";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Input } from "~/components/ui/input";
 
 export const UserInfo = memo<{
   name: keyof UpdateUserBody;
@@ -28,16 +29,10 @@ export const UserInfo = memo<{
         if (!isEditing) {
           if (name === "archived") {
             return (
-              <span className="font-semibold capitalize">
-                {user[name] ? "Archived" : "Active"}
-              </span>
+              <span className="font-semibold capitalize">{user[name] ? "Archived" : "Active"}</span>
             );
           }
-          return (
-            <span className="font-semibold capitalize">
-              {user[name]?.toString()}
-            </span>
-          );
+          return <span className="font-semibold capitalize">{user[name]?.toString()}</span>;
         }
 
         if (name === "role") {

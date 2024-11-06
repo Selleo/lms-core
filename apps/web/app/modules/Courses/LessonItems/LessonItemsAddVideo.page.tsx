@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { videoLessonItemSchema } from "./LessonItemsForms/zodFormType";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { isObject } from "lodash-es";
+import { useState } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { type z } from "zod";
+
 import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
+import { videoLessonItemSchema } from "./LessonItemsForms/zodFormType";
 
 const LessonItemsAddVideoLayout = () => {
   const [videoFile, setVideoFile] = useState<File | null | string>(null);
@@ -25,9 +26,7 @@ const LessonItemsAddVideoLayout = () => {
     } else setVideoFile(files);
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof videoLessonItemSchema>> = (
-    data,
-  ) => {
+  const onSubmit: SubmitHandler<z.infer<typeof videoLessonItemSchema>> = (data) => {
     console.log(data);
   };
 

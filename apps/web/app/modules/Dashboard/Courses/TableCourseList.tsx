@@ -1,4 +1,7 @@
+import { Link } from "@remix-run/react";
+
 import type { GetAvailableCoursesResponse } from "~/api/generated-api";
+import { CategoryChip } from "~/components/ui/CategoryChip";
 import {
   Table,
   TableBody,
@@ -7,10 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import CourseCardButton from "./CourseCardButton";
-import { CategoryChip } from "~/components/ui/CategoryChip";
-import { Link } from "@remix-run/react";
 import { useUserRole } from "~/hooks/useUserRole";
+
+import CourseCardButton from "./CourseCardButton";
 
 type CardCourseListProps = {
   availableCourses?: GetAvailableCoursesResponse["data"];
@@ -26,9 +28,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
           <TableHead className="w-24 text-sm font-medium text-neutral-950 rounded-s-lg">
             Image
           </TableHead>
-          <TableHead className="text-sm font-medium text-neutral-950">
-            Course Name
-          </TableHead>
+          <TableHead className="text-sm font-medium text-neutral-950">Course Name</TableHead>
           <TableHead className="text-sm font-medium text-neutral-950 hidden md:table-cell">
             Category
           </TableHead>
@@ -50,18 +50,14 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
             enrolled = false,
             priceInCents,
           }) => (
-            <TableRow
-              key={id}
-              className="group hover:bg-primary-50 border-none"
-            >
+            <TableRow key={id} className="group hover:bg-primary-50 border-none">
               <TableCell className="p-4 rounded-s-lg">
                 <img
                   src={imageUrl || "https://placehold.co/600x400/png"}
                   alt={title}
                   className="w-16 h-12 object-cover rounded-lg"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src =
-                      "https://picsum.photos/500/300";
+                    (e.target as HTMLImageElement).src = "https://picsum.photos/500/300";
                   }}
                 />
               </TableCell>

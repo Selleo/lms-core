@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
-import { UpdateQuestionItemBody } from "../../generated-api";
+import { type UpdateQuestionItemBody } from "../../generated-api";
 
 type UpdateQuestionOptions = {
   data: UpdateQuestionItemBody;
@@ -14,12 +16,9 @@ export function useUpdateQuestionItem() {
 
   return useMutation({
     mutationFn: async (options: UpdateQuestionOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateQuestionItem(
-        options.data,
-        {
-          id: options.questionId,
-        },
-      );
+      const response = await ApiClient.api.lessonsControllerUpdateQuestionItem(options.data, {
+        id: options.questionId,
+      });
 
       return response.data;
     },

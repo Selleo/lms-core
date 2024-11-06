@@ -1,10 +1,12 @@
-import { GenericContainer, StartedTestContainer } from "testcontainers";
-import { drizzle } from "drizzle-orm/postgres-js";
-import postgres from "postgres";
-import * as schema from "../src/storage/schema";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import { DatabasePg } from "../src/common";
 import path from "path";
+
+import { drizzle } from "drizzle-orm/postgres-js";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
+import postgres from "postgres";
+import { GenericContainer, type StartedTestContainer } from "testcontainers";
+
+import { type DatabasePg } from "../src/common";
+import * as schema from "../src/storage/schema";
 
 let container: StartedTestContainer;
 let sql: ReturnType<typeof postgres>;

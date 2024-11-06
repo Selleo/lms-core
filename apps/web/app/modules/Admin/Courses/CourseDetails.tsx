@@ -1,12 +1,16 @@
 import { capitalize, startCase } from "lodash-es";
 import { memo } from "react";
 import { type Control, Controller } from "react-hook-form";
+
 import type {
   GetAllCategoriesResponse,
   GetCourseByIdResponse,
   UpdateCourseBody,
 } from "~/api/generated-api";
 import Editor from "~/components/RichText/Editor";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -14,9 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Checkbox } from "~/components/ui/checkbox";
-import { Label } from "~/components/ui/label";
-import { Input } from "~/components/ui/input";
 
 export const CourseDetails = memo<{
   name: keyof UpdateCourseBody;
@@ -32,10 +33,7 @@ export const CourseDetails = memo<{
       render={({ field }) => {
         if (name === "categoryId") {
           return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
+            <Select onValueChange={field.onChange} defaultValue={field.value as string}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a category" />
               </SelectTrigger>
@@ -52,10 +50,7 @@ export const CourseDetails = memo<{
 
         if (name === "state") {
           return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
+            <Select onValueChange={field.onChange} defaultValue={field.value as string}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a state" />
               </SelectTrigger>

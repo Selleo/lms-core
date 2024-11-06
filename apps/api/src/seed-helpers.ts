@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { sql } from "drizzle-orm/sql";
 import {
   categories,
   courseLessons,
@@ -10,9 +11,9 @@ import {
   questions,
   textBlocks,
 } from "src/storage/schema";
-import { DatabasePg } from "./common";
+
+import { type DatabasePg } from "./common";
 import { niceCourses } from "./nice-data-seeds";
-import { sql } from "drizzle-orm/sql";
 
 export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
   for (const courseData of niceCourses) {
@@ -119,8 +120,7 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
               id: questionId,
               questionType: item.questionType,
               questionBody: item.questionBody,
-              solutionExplanation:
-                "Explanation will be provided after answering.",
+              solutionExplanation: "Explanation will be provided after answering.",
               state: item.state,
               authorId: adminUserId,
               createdAt: new Date().toISOString(),
@@ -173,15 +173,10 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             }
           }
 
-          if (
-            item.questionType === "multiple_choice" ||
-            item.questionType === "single_choice"
-          ) {
+          if (item.questionType === "multiple_choice" || item.questionType === "single_choice") {
             for (let index = 1; index < 5; index++) {
               const mockedIsCorrect =
-                item.questionType === "single_choice"
-                  ? index === 1
-                  : index % 2 === 0;
+                item.questionType === "single_choice" ? index === 1 : index % 2 === 0;
 
               await db
                 .insert(questionAnswerOptions)

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { CourseListLayout } from "~/types/shared";
+
+import { type CourseListLayout } from "~/types/shared";
 
 interface ILayoutsStore {
   courseListLayout: CourseListLayout;

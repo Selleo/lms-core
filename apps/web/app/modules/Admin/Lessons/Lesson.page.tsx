@@ -1,18 +1,17 @@
 import { useParams } from "@remix-run/react";
 import { startCase } from "lodash-es";
 import { useForm } from "react-hook-form";
+
 import type { UpdateLessonBody } from "~/api/generated-api";
 import { useUpdateLesson } from "~/api/mutations/admin/useUpdateLesson";
-import {
-  lessonByIdQueryOptions,
-  useLessonById,
-} from "~/api/queries/admin/useLessonById";
+import { lessonByIdQueryOptions, useLessonById } from "~/api/queries/admin/useLessonById";
 import { queryClient } from "~/api/queryClient";
-import Loader from "~/modules/common/Loader/Loader";
-import LessonItemAssigner from "./LessonItemsAssigner/LessonItemAssigner";
-import { LessonDetails } from "./LessonDetails";
 import { Button } from "~/components/ui/button";
 import { Label } from "~/components/ui/label";
+import Loader from "~/modules/common/Loader/Loader";
+
+import { LessonDetails } from "./LessonDetails";
+import LessonItemAssigner from "./LessonItemsAssigner/LessonItemAssigner";
 
 const displayedFields: Array<keyof UpdateLessonBody> = [
   "title",
@@ -55,9 +54,7 @@ const Lesson = () => {
     <div className="flex flex-col">
       <form onSubmit={handleSubmit(onSubmit)} className="rounded-lg h-full">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl text-neutral-950 font-semibold mb-4">
-            Lesson Information
-          </h2>
+          <h2 className="text-2xl text-neutral-950 font-semibold mb-4">Lesson Information</h2>
           <Button type="submit" disabled={!isDirty} className="mr-2">
             Save
           </Button>
@@ -74,9 +71,7 @@ const Lesson = () => {
         </div>
       </form>
       <div className="mt-8">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">
-          Lesson Items Assignment
-        </h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Lesson Items Assignment</h3>
         <LessonItemAssigner lessonId={id} />
       </div>
     </div>

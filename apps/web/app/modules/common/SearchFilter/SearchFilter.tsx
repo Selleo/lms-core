@@ -1,6 +1,7 @@
 import { debounce } from "lodash-es";
 import { Search } from "lucide-react";
-import React, { useRef } from "react";
+import { useRef } from "react";
+
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import {
@@ -11,16 +12,15 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 
+import type React from "react";
+
 export type FilterType = "text" | "select" | "state" | "status";
 
 export type TextFilterValue = string | undefined;
 export type SelectFilterValue = string | undefined;
 export type StatusFilterValue = boolean | undefined;
 
-export type FilterValue =
-  | TextFilterValue
-  | SelectFilterValue
-  | StatusFilterValue;
+export type FilterValue = TextFilterValue | SelectFilterValue | StatusFilterValue;
 
 export type FilterOption = {
   value: string;
@@ -45,10 +45,7 @@ export type StatusFilterConfig = BaseFilterConfig & {
   type: "status";
 };
 
-export type FilterConfig =
-  | TextFilterConfig
-  | SelectFilterConfig
-  | StatusFilterConfig;
+export type FilterConfig = TextFilterConfig | SelectFilterConfig | StatusFilterConfig;
 
 export type FilterValues = Partial<{
   [key: string]: FilterValue;

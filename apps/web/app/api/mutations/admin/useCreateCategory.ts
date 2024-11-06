@@ -1,7 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
+
 import type { CreateCategoryBody } from "../../generated-api";
 
 type CreateCategoryOptions = {
@@ -13,9 +16,7 @@ export function useCreateCategory() {
 
   return useMutation({
     mutationFn: async (options: CreateCategoryOptions) => {
-      const response = await ApiClient.api.categoriesControllerCreateCategory(
-        options.data,
-      );
+      const response = await ApiClient.api.categoriesControllerCreateCategory(options.data);
 
       return response.data;
     },

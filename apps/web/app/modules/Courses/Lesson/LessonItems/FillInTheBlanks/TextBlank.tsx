@@ -1,5 +1,6 @@
-import { cn } from "~/lib/utils";
 import { useEffect, useRef } from "react";
+
+import { cn } from "~/lib/utils";
 
 type TextBlankProps = {
   isQuiz: boolean;
@@ -38,8 +39,7 @@ export const TextBlank = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isQuiz, isQuizSubmitted]);
 
-  const isCorrectAnswer =
-    studentAnswer?.isCorrect && studentAnswer.isStudentAnswer;
+  const isCorrectAnswer = studentAnswer?.isCorrect && studentAnswer.isStudentAnswer;
 
   const textBlankClasses = cn(
     "bg-transparent border-dashed border-b mx-1.5 w-20 focus:ring-0 focus:outline-none text-primary-700 border-b-primary-700",

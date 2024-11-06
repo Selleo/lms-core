@@ -6,11 +6,7 @@ export type PasswordRecoveryEmailProps = {
   resetLink: string;
 };
 
-export const PasswordRecoveryEmail = ({
-  email,
-  name,
-  resetLink,
-}: PasswordRecoveryEmailProps) => {
+export const PasswordRecoveryEmail = ({ email, name, resetLink }: PasswordRecoveryEmailProps) => {
   return (
     <Html>
       <Button

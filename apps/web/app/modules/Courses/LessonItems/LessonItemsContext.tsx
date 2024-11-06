@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import { type ReactNode } from "react";
+import { createContext, useContext, useState } from "react";
+
+import type React from "react";
 
 export interface LessonItem {
   id: string;
@@ -14,189 +17,163 @@ interface LessonItemsContextType {
   updateLessonItem: (updatedItem: LessonItem) => void;
 }
 
-const LessonItemsContext = createContext<LessonItemsContextType | undefined>(
-  undefined,
-);
+const LessonItemsContext = createContext<LessonItemsContextType | undefined>(undefined);
 const initialLessonItems: LessonItem[] = [
   {
     id: "728ed51f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed52f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed53f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed54f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed55f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed56f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed57f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed58f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed59f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed510f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed511f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed512f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed513f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed514f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed515f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed516f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed517f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed518f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed519f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed520f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
   {
     id: "728ed521f",
     name: "Testing",
     displayName: "Testing",
-    description:
-      "Very very very very very very very very very very very very very great course :D",
+    description: "Very very very very very very very very very very very very very great course :D",
     video: null,
   },
 ];
 
 const LessonItemsProvider = ({ children }: { children: ReactNode }) => {
-  const [lessonItems, setLessonItems] =
-    useState<LessonItem[]>(initialLessonItems);
+  const [lessonItems, setLessonItems] = useState<LessonItem[]>(initialLessonItems);
 
   const updateLessonItem = (updatedItem: LessonItem) => {
     setLessonItems((prevItems: LessonItem[]) =>
-      prevItems.map((item) =>
-        item.id === updatedItem.id ? updatedItem : item,
-      ),
+      prevItems.map((item) => (item.id === updatedItem.id ? updatedItem : item)),
     );
   };
 

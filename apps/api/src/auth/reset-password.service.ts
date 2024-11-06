@@ -17,12 +17,7 @@ export class ResetPasswordService {
     const [resetToken] = await this.db
       .select()
       .from(resetTokens)
-      .where(
-        and(
-          eq(resetTokens.resetToken, token),
-          gte(resetTokens.expiryDate, new Date()),
-        ),
-      );
+      .where(and(eq(resetTokens.resetToken, token), gte(resetTokens.expiryDate, new Date())));
 
     if (!resetToken) throw new NotFoundException("Invalid token");
 

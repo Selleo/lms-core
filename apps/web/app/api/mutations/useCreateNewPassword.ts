@@ -1,7 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { ApiClient } from "../api-client";
+
 import { useToast } from "~/components/ui/use-toast";
+
+import { ApiClient } from "../api-client";
+
 import type { CreatePasswordBody, ResetPasswordBody } from "../generated-api";
 
 type CreateNewPasswordOptions = {
@@ -12,9 +15,7 @@ type useCreateNewPasswordProps = {
   isCreate?: boolean;
 };
 
-export function useCreateNewPassword({
-  isCreate = true,
-}: useCreateNewPasswordProps) {
+export function useCreateNewPassword({ isCreate = true }: useCreateNewPasswordProps) {
   const { toast } = useToast();
 
   return useMutation({

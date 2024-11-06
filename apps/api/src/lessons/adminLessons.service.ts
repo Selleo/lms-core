@@ -1,26 +1,22 @@
-import {
-  ConflictException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
+import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { eq, ilike, sql } from "drizzle-orm";
-import type { DatabasePg } from "src/common";
+import { isEmpty } from "lodash";
+import { DatabasePg } from "src/common";
+import { getSortOptions } from "src/common/helpers/getSortOptions";
+import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
+import { S3Service } from "src/file/s3.service";
 import { lessonItems, lessons } from "src/storage/schema";
 import { match, P } from "ts-pattern";
-import { LessonItemResponse } from "./schemas/lessonItem.schema";
-import { isEmpty } from "lodash";
-import { S3Service } from "src/file/s3.service";
-import { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
+
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
+import { type CreateLessonBody, type UpdateLessonBody } from "./schemas/lesson.schema";
+import { type LessonItemResponse } from "./schemas/lessonItem.schema";
 import {
-  LessonsFilterSchema,
-  LessonSortField,
+  type LessonsFilterSchema,
+  type LessonSortField,
   LessonSortFields,
-  SortLessonFieldsOptions,
+  type SortLessonFieldsOptions,
 } from "./schemas/lessonQuery";
-import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import { getSortOptions } from "src/common/helpers/getSortOptions";
 
 interface LessonsQuery {
   filters?: LessonsFilterSchema;
@@ -47,17 +43,11 @@ export class AdminLessonsService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
     const conditions = this.getFiltersConditions(filters);
-    const sortOrderQuery = sortOrder(
-      this.getColumnToSortBy(sortedField as LessonSortField),
-    );
+    const sortOrderQuery = sortOrder(this.getColumnToSortBy(sortedField as LessonSortField));
 
-    const lessonsData = await this.adminLessonsRepository.getLessons(
-      conditions,
-      sortOrderQuery,
-    );
+    const lessonsData = await this.adminLessonsRepository.getLessons(conditions, sortOrderQuery);
 
-    const [{ totalItems }] =
-      await this.adminLessonsRepository.getLessonsCount(conditions);
+    const [{ totalItems }] = await this.adminLessonsRepository.getLessonsCount(conditions);
 
     const lessonsWithSignedUrls = await Promise.all(
       lessonsData.map(async (lesson) => ({
@@ -83,30 +73,25 @@ export class AdminLessonsService {
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
-    const lessonItemsList =
-      await this.adminLessonsRepository.getLessonItems(id);
+    const lessonItemsList = await this.adminLessonsRepository.getLessonItems(id);
 
     const items = await Promise.all(
       lessonItemsList.map(async (item) => {
         const content = await match(item)
           .returnType<Promise<LessonItemResponse["content"]>>()
-          .with(
-            { lessonItemType: "question", questionData: P.not(P.nullish) },
-            async (item) => {
-              const questionAnswers =
-                await this.adminLessonsRepository.getQuestionAnswers(
-                  item.questionData.id,
-                );
+          .with({ lessonItemType: "question", questionData: P.not(P.nullish) }, async (item) => {
+            const questionAnswers = await this.adminLessonsRepository.getQuestionAnswers(
+              item.questionData.id,
+            );
 
-              return {
-                id: item.questionData.id,
-                questionType: item.questionData.questionType,
-                questionBody: item.questionData.questionBody,
-                questionAnswers,
-                state: item.questionData.state,
-              };
-            },
-          )
+            return {
+              id: item.questionData.id,
+              questionType: item.questionData.questionType,
+              questionBody: item.questionData.questionBody,
+              questionAnswers,
+              state: item.questionData.state,
+            };
+          })
           .with(
             { lessonItemType: "text_block", textBlockData: P.not(P.nullish) },
             async (item) => ({
@@ -116,16 +101,13 @@ export class AdminLessonsService {
               title: item.textBlockData.title,
             }),
           )
-          .with(
-            { lessonItemType: "file", fileData: P.not(P.nullish) },
-            async (item) => ({
-              id: item.fileData.id,
-              title: item.fileData.title,
-              type: item.fileData.type,
-              url: item.fileData.url,
-              state: item.fileData.state,
-            }),
-          )
+          .with({ lessonItemType: "file", fileData: P.not(P.nullish) }, async (item) => ({
+            id: item.fileData.id,
+            title: item.fileData.title,
+            type: item.fileData.type,
+            url: item.fileData.url,
+            state: item.fileData.state,
+          }))
           .otherwise(() => {
             throw new Error(`Unknown item type: ${item.lessonItemType}`);
           });
@@ -147,11 +129,9 @@ export class AdminLessonsService {
   }
 
   async getAvailableLessons() {
-    const availableLessons =
-      await this.adminLessonsRepository.getAvailableLessons();
+    const availableLessons = await this.adminLessonsRepository.getAvailableLessons();
 
-    if (isEmpty(availableLessons))
-      throw new NotFoundException("Lessons not found");
+    if (isEmpty(availableLessons)) throw new NotFoundException("Lessons not found");
 
     return await Promise.all(
       availableLessons.map(async (lesson) => {
@@ -164,10 +144,7 @@ export class AdminLessonsService {
   }
 
   async createLesson(body: CreateLessonBody, authorId: string) {
-    const [lesson] = await this.adminLessonsRepository.createLesson(
-      body,
-      authorId,
-    );
+    const [lesson] = await this.adminLessonsRepository.createLesson(body, authorId);
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
@@ -180,51 +157,33 @@ export class AdminLessonsService {
     if (!lesson) throw new NotFoundException("Lesson not found");
   }
 
-  async addLessonToCourse(
-    courseId: string,
-    lessonId: string,
-    displayOrder?: number,
-  ) {
+  async addLessonToCourse(courseId: string, lessonId: string, displayOrder?: number) {
     try {
       if (displayOrder === undefined) {
         const maxOrderResult =
-          await this.adminLessonsRepository.getMaxOrderLessonsInCourse(
-            courseId,
-          );
+          await this.adminLessonsRepository.getMaxOrderLessonsInCourse(courseId);
 
         displayOrder = maxOrderResult + 1;
       }
 
-      await this.adminLessonsRepository.assignLessonToCourse(
-        courseId,
-        lessonId,
-        displayOrder,
-      );
+      await this.adminLessonsRepository.assignLessonToCourse(courseId, lessonId, displayOrder);
     } catch (error) {
       if (error.code === "23505") {
         // postgres uniq error code
-        throw new ConflictException(
-          "This lesson is already added to the course",
-        );
+        throw new ConflictException("This lesson is already added to the course");
       }
       throw error;
     }
   }
 
   async removeLessonFromCourse(courseId: string, lessonId: string) {
-    const result = await this.adminLessonsRepository.removeCourseLesson(
-      courseId,
-      lessonId,
-    );
+    const result = await this.adminLessonsRepository.removeCourseLesson(courseId, lessonId);
 
     if (result.length === 0) {
       throw new NotFoundException("Lesson not found in this course");
     }
 
-    await this.adminLessonsRepository.updateDisplayOrderLessonsInCourse(
-      courseId,
-      lessonId,
-    );
+    await this.adminLessonsRepository.updateDisplayOrderLessonsInCourse(courseId, lessonId);
   }
 
   private getFiltersConditions(filters: LessonsFilterSchema) {

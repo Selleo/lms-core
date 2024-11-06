@@ -9,8 +9,8 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
-
 import { UserRoles } from "src/users/schemas/user-roles";
+
 import { archived, id, timestamps } from "./utils";
 
 export const users = pgTable("users", {

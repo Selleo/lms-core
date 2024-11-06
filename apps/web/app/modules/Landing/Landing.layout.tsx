@@ -1,5 +1,7 @@
 import { Link, Outlet } from "@remix-run/react";
 import { Menu } from "lucide-react";
+
+import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
 import { Button } from "~/components/ui/button";
 import {
   NavigationMenu,
@@ -7,19 +9,15 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "~/components/ui/navigation-menu";
+
 import { useLandingStore } from "./landingStore";
-import ThemeToggle from "~/components/ThemeToggle/ThemeToggle";
 
 export default function LandingLayout() {
   const setIsSheetOpen = useLandingStore((state) => state.setIsSheetOpen);
 
   return (
     <main className="p-4 relative">
-      <Button
-        variant="outline"
-        className="absolute"
-        onClick={() => setIsSheetOpen(true)}
-      >
+      <Button variant="outline" className="absolute" onClick={() => setIsSheetOpen(true)}>
         <Menu />
       </Button>
       <h1 className="text-3xl text-center">Welcome to Selleo Remix Template</h1>

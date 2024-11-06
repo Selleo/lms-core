@@ -1,6 +1,7 @@
-import { Static, TSchema, Type } from "@sinclair/typebox";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import * as schema from "src/storage/schema";
+import { type Static, type TSchema, Type } from "@sinclair/typebox";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+
+import type * as schema from "src/storage/schema";
 
 export type DatabasePg = PostgresJsDatabase<typeof schema>;
 

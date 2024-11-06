@@ -1,5 +1,6 @@
-import { INestApplication } from "@nestjs/common";
+import { type INestApplication } from "@nestjs/common";
 import request from "supertest";
+
 import { createE2ETest } from "../../../test/create-e2e-test";
 
 describe("HealthController (e2e)", () => {
@@ -12,9 +13,7 @@ describe("HealthController (e2e)", () => {
 
   describe("GET /healthcheck", () => {
     it("should return 200 for healthy server", async () => {
-      const response = await request(app.getHttpServer()).get(
-        "/api/healthcheck",
-      );
+      const response = await request(app.getHttpServer()).get("/api/healthcheck");
 
       expect(response.status).toBe(200);
     });

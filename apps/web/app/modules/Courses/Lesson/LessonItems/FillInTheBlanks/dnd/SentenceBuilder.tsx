@@ -5,10 +5,7 @@ type FillInTheDndBlanksProps = {
   replacement: (index: number) => JSX.Element;
 };
 
-export const SentenceBuilder: FC<FillInTheDndBlanksProps> = ({
-  content,
-  replacement,
-}) => {
+export const SentenceBuilder: FC<FillInTheDndBlanksProps> = ({ content, replacement }) => {
   const parts = content.split(/\[word]/g);
 
   return (

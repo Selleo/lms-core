@@ -1,13 +1,11 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { QuestionsService } from "../questions.service";
-import { Validate } from "nestjs-typebox";
-import {
-  answerQuestionSchema,
-  AnswerQuestionSchema,
-} from "../schema/question.schema";
-import { CurrentUser } from "src/common/decorators/user.decorator";
-import { baseResponse, BaseResponse } from "src/common";
 import { Type } from "@sinclair/typebox";
+import { Validate } from "nestjs-typebox";
+import { baseResponse, BaseResponse } from "src/common";
+import { CurrentUser } from "src/common/decorators/user.decorator";
+
+import { QuestionsService } from "../questions.service";
+import { answerQuestionSchema, AnswerQuestionSchema } from "../schema/question.schema";
 
 @Controller("questions")
 export class QuestionsController {

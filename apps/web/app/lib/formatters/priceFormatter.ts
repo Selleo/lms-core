@@ -65,14 +65,7 @@ function getMinimumFractionDigits(currency: CurrencyCode): number {
  */
 function getMaximumFractionDigits(currency: CurrencyCode): number {
   const noFractionCurrencies: CurrencyCode[] = ["JPY", "KRW", "VND"];
-  const threeFractionCurrencies: CurrencyCode[] = [
-    "BHD",
-    "IQD",
-    "JOD",
-    "KWD",
-    "OMR",
-    "TND",
-  ];
+  const threeFractionCurrencies: CurrencyCode[] = ["BHD", "IQD", "JOD", "KWD", "OMR", "TND"];
 
   if (noFractionCurrencies.includes(currency)) return 0;
   if (threeFractionCurrencies.includes(currency)) return 3;

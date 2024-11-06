@@ -8,8 +8,7 @@ const FIELD_LABEL_MAP: Record<SortableField, string> = {
   category: "Category",
 };
 
-export const getFieldLabel = (field: SortableField): string =>
-  FIELD_LABEL_MAP[field];
+export const getFieldLabel = (field: SortableField): string => FIELD_LABEL_MAP[field];
 
 export const createSortOption = (
   field: SortableField,

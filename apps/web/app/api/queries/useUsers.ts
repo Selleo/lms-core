@@ -1,6 +1,7 @@
 import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+
 import { ApiClient } from "../api-client";
-import { GetUsersResponse } from "../generated-api";
+import { type GetUsersResponse } from "../generated-api";
 
 type UsersParams = {
   keyword?: string;

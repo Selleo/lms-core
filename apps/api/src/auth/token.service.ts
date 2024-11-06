@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
+
+import { ACCESS_TOKEN_EXPIRATION_TIME, REFRESH_TOKEN_EXPIRATION_TIME } from "./consts";
+
 import type { Response } from "express";
-import {
-  ACCESS_TOKEN_EXPIRATION_TIME,
-  REFRESH_TOKEN_EXPIRATION_TIME,
-} from "./consts";
 
 @Injectable()
 export class TokenService {
@@ -15,12 +14,8 @@ export class TokenService {
   ) {
     const oneMonthExpirationTime = 30 * 24 * 60 * 60 * 1000;
 
-    const accessTokenMaxAge = rememberMe
-      ? oneMonthExpirationTime
-      : ACCESS_TOKEN_EXPIRATION_TIME;
-    const refreshTokenMaxAge = rememberMe
-      ? oneMonthExpirationTime
-      : REFRESH_TOKEN_EXPIRATION_TIME;
+    const accessTokenMaxAge = rememberMe ? oneMonthExpirationTime : ACCESS_TOKEN_EXPIRATION_TIME;
+    const refreshTokenMaxAge = rememberMe ? oneMonthExpirationTime : REFRESH_TOKEN_EXPIRATION_TIME;
 
     response.cookie("access_token", accessToken, {
       httpOnly: true,

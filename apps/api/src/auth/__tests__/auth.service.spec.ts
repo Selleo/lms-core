@@ -1,22 +1,19 @@
-import {
-  ConflictException,
-  NotFoundException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { ConflictException, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcrypt";
 import { eq } from "drizzle-orm";
-import { AuthService } from "src/auth/auth.service";
-import { JwtService } from "@nestjs/jwt";
-import { credentials, resetTokens, users } from "../../storage/schema";
-import { DatabasePg } from "src/common";
-import { createUnitTest, TestContext } from "test/create-unit-test";
-import { createUserFactory } from "test/factory/user.factory";
 import { omit } from "lodash";
-import hashPassword from "src/common/helpers/hashPassword";
-import { truncateAllTables } from "test/helpers/test-helpers";
-import { EmailTestingAdapter } from "test/helpers/test-email.adapter";
-import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
 import { nanoid } from "nanoid";
+import { AuthService } from "src/auth/auth.service";
+import { type DatabasePg } from "src/common";
+import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
+import hashPassword from "src/common/helpers/hashPassword";
+import { createUnitTest, type TestContext } from "test/create-unit-test";
+import { createUserFactory } from "test/factory/user.factory";
+import { type EmailTestingAdapter } from "test/helpers/test-email.adapter";
+import { truncateAllTables } from "test/helpers/test-helpers";
+
+import { credentials, resetTokens, users } from "../../storage/schema";
 
 describe("AuthService", () => {
   let testContext: TestContext;
@@ -56,10 +53,7 @@ describe("AuthService", () => {
         password,
       });
 
-      const [savedUser] = await db
-        .select()
-        .from(users)
-        .where(eq(users.email, user.email));
+      const [savedUser] = await db.select().from(users).where(eq(users.email, user.email));
 
       const [savedCredentials] = await db
         .select()
@@ -70,9 +64,7 @@ describe("AuthService", () => {
       expect(result).toBeDefined();
       expect(result.email).toBe(user.email);
       expect(savedCredentials).toBeDefined();
-      expect(await bcrypt.compare(password, savedCredentials.password)).toBe(
-        true,
-      );
+      expect(await bcrypt.compare(password, savedCredentials.password)).toBe(true);
     });
 
     it("should send a welcome email after successful registration", async () => {
@@ -110,9 +102,7 @@ describe("AuthService", () => {
     it("should login user successfully", async () => {
       const password = "password123";
       const email = "example@test.com";
-      const user = await userFactory
-        .withCredentials({ password })
-        .create({ email });
+      const user = await userFactory.withCredentials({ password }).create({ email });
 
       const result = await authService.login({
         email: user.email,
@@ -158,13 +148,8 @@ describe("AuthService", () => {
       const lastName = "Durden";
       const hashedPassword = await hashPassword(password);
 
-      const [user] = await db
-        .insert(users)
-        .values({ email, firstName, lastName })
-        .returning();
-      await db
-        .insert(credentials)
-        .values({ userId: user.id, password: hashedPassword });
+      const [user] = await db.insert(users).values({ email, firstName, lastName }).returning();
+      await db.insert(credentials).values({ userId: user.id, password: hashedPassword });
 
       const result = await authService.validateUser(email, password);
 
@@ -196,9 +181,7 @@ describe("AuthService", () => {
     it("should throw UnauthorizedException for non-existent user", async () => {
       const nonExistentUserId = crypto.randomUUID();
 
-      await expect(authService.currentUser(nonExistentUserId)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(authService.currentUser(nonExistentUserId)).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -223,9 +206,7 @@ describe("AuthService", () => {
     it("should throw BadRequestException if email is not found", async () => {
       const email = "nonexistent@example.com";
 
-      await expect(authService.forgotPassword(email)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(authService.forgotPassword(email)).rejects.toThrow(NotFoundException);
     });
   });
 
@@ -236,9 +217,7 @@ describe("AuthService", () => {
 
       const password = "password123";
       const email = "example@test.com";
-      const user = await userFactory
-        .withCredentials({ password })
-        .create({ email });
+      const user = await userFactory.withCredentials({ password }).create({ email });
 
       await db.insert(resetTokens).values({
         userId: user.id,
@@ -253,9 +232,7 @@ describe("AuthService", () => {
         .where(eq(credentials.userId, user.id));
 
       expect(user).toBeDefined();
-      expect(await bcrypt.compare(newPassword, savedCredentials.password)).toBe(
-        true,
-      );
+      expect(await bcrypt.compare(newPassword, savedCredentials.password)).toBe(true);
 
       const [deletedToken] = await db
         .select()

@@ -1,8 +1,10 @@
 import { Outlet, redirect } from "@remix-run/react";
+
 import { currentUserQueryOptions } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
-import { useAuthEffect } from "../Auth/authEffect";
 import { DashboardNavigation } from "~/modules/Dashboard/DashboardNavigation/DashboardNavigation";
+
+import { useAuthEffect } from "../Auth/authEffect";
 
 export const clientLoader = async () => {
   try {

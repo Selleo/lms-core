@@ -1,7 +1,8 @@
 import { Card } from "~/components/ui/card";
+import { useUserRole } from "~/hooks/useUserRole";
+
 import Presentation from "./Presentation";
 import Video from "./Video";
-import { useUserRole } from "~/hooks/useUserRole";
 
 type FileProps = {
   lessonItemId: string;
@@ -23,18 +24,9 @@ export const File = ({ content, lessonItemId }: FileProps) => {
     <Card className="flex flex-col gap-4 p-8 border-none drop-shadow-primary">
       <div className="h6 text-neutral-950">{content.title}</div>
       {isPresentation ? (
-        <Presentation
-          url={content.url}
-          presentationId={lessonItemId}
-          isAdmin={isAdmin}
-        />
+        <Presentation url={content.url} presentationId={lessonItemId} isAdmin={isAdmin} />
       ) : (
-        <Video
-          url={content.url}
-          videoId={lessonItemId}
-          isAdmin={isAdmin}
-          type={content.type}
-        />
+        <Video url={content.url} videoId={lessonItemId} isAdmin={isAdmin} type={content.type} />
       )}
     </Card>
   );

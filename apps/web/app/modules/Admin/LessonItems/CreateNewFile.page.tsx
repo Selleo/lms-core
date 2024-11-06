@@ -1,8 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@remix-run/react";
 import { capitalize, startCase } from "lodash-es";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
 import { useCreateFileItem } from "~/api/mutations/admin/useCreateFileItem";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCurrentUserSuspense } from "~/api/queries";
@@ -10,13 +12,7 @@ import { ALL_LESSON_ITEMS_QUERY_KEY } from "~/api/queries/admin/useAllLessonItem
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { DialogFooter } from "~/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "~/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
@@ -27,16 +23,10 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { CreatePageHeader } from "~/modules/Admin/components";
-import { useNavigate } from "@remix-run/react";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  type: z.enum([
-    "presentation",
-    "external_presentation",
-    "video",
-    "external_video",
-  ]),
+  type: z.enum(["presentation", "external_presentation", "video", "external_video"]),
   url: z.string().url("Invalid URL"),
   state: z.enum(["draft", "published"]),
   authorId: z.string().uuid("Invalid author ID"),
@@ -92,8 +82,7 @@ export default function CreateNewFilePage() {
 
   const renderFileInput = () => {
     if (fileType === "presentation" || fileType === "video") {
-      const acceptedTypes =
-        fileType === "presentation" ? ".pptx,.ppt,.odp" : ".mp4,.avi,.mov";
+      const acceptedTypes = fileType === "presentation" ? ".pptx,.ppt,.odp" : ".mp4,.avi,.mov";
 
       return (
         <FormItem>
@@ -182,16 +171,13 @@ export default function CreateNewFilePage() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {[
-                      "presentation",
-                      "external_presentation",
-                      "video",
-                      "external_video",
-                    ].map((type) => (
-                      <SelectItem value={type} key={type}>
-                        {capitalize(startCase(type))}
-                      </SelectItem>
-                    ))}
+                    {["presentation", "external_presentation", "video", "external_video"].map(
+                      (type) => (
+                        <SelectItem value={type} key={type}>
+                          {capitalize(startCase(type))}
+                        </SelectItem>
+                      ),
+                    )}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -206,10 +192,7 @@ export default function CreateNewFilePage() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="state">State</Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger id="state">
                       <SelectValue placeholder="Select a state" />

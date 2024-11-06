@@ -1,6 +1,6 @@
 import {
-  CategoryFilterSchema,
-  SortCategoryFieldsOptions,
+  type CategoryFilterSchema,
+  type SortCategoryFieldsOptions,
 } from "../schemas/categoryQuery";
 
 export type CategoriesQuery = {

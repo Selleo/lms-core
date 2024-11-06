@@ -1,4 +1,4 @@
-import { Editor } from "@tiptap/react";
+import { type Editor } from "@tiptap/react";
 import {
   Bold,
   Code,
@@ -12,8 +12,9 @@ import {
   Undo,
 } from "lucide-react";
 
-import { ToggleGroup, Toolbar } from "~/components/ui/toolbar";
 import { Toggle } from "~/components/ui/toggle";
+import { ToggleGroup, Toolbar } from "~/components/ui/toolbar";
+
 import { FormatType } from "./FormatType";
 
 type EditorToolbarProps = {
@@ -31,10 +32,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
   const isWordSelected = checkIsWordSelected();
 
   return (
-    <Toolbar
-      className="m-0 flex items-center justify-between p-2"
-      aria-label="Formatting options"
-    >
+    <Toolbar className="m-0 flex items-center justify-between p-2" aria-label="Formatting options">
       <ToggleGroup className="flex flex-row items-center" type="multiple">
         <Toggle
           size="sm"
@@ -70,9 +68,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         <Toggle
           size="sm"
           className="mr-1"
-          onPressedChange={() =>
-            editor.chain().focus().toggleBulletList().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
           pressed={editor.isActive("bulletList")}
         >
           <List className="h-4 w-4" />
@@ -81,9 +77,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         <Toggle
           size="sm"
           className="mr-1"
-          onPressedChange={() =>
-            editor.chain().focus().toggleOrderedList().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
           pressed={editor.isActive("orderedList")}
         >
           <ListOrdered className="h-4 w-4" />
@@ -101,9 +95,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         <Toggle
           size="sm"
           className="mr-1"
-          onPressedChange={() =>
-            editor.chain().focus().toggleBlockquote().run()
-          }
+          onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
           pressed={editor.isActive("blockquote")}
         >
           <Quote className="h-4 w-4" />
@@ -112,9 +104,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         <Toggle
           size="sm"
           className="mr-1"
-          onPressedChange={() =>
-            editor.chain().focus().setHorizontalRule().run()
-          }
+          onPressedChange={() => editor.chain().focus().setHorizontalRule().run()}
         >
           <Minus className="h-4 w-4" />
         </Toggle>
@@ -140,10 +130,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         <FormatType editor={editor} />
       </ToggleGroup>
 
-      <ToggleGroup
-        className="flex flex-row items-center invisible sm:visible"
-        type="multiple"
-      >
+      <ToggleGroup className="flex flex-row items-center invisible sm:visible" type="multiple">
         <Toggle
           size="sm"
           className="mr-1"

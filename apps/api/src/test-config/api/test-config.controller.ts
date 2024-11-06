@@ -1,7 +1,8 @@
 import { Controller, Post } from "@nestjs/common";
-import { TestConfigService } from "../test-config.service";
-import { OnlyStaging } from "src/common/decorators/staging.decorator";
 import { Public } from "src/common/decorators/public.decorator";
+import { OnlyStaging } from "src/common/decorators/staging.decorator";
+
+import { TestConfigService } from "../test-config.service";
 
 @Controller("test-config")
 export class TestConfigController {

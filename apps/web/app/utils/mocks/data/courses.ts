@@ -57,8 +57,7 @@ export const availableCourses = {
       category: "Xenobiology",
       title: "Surviving Extraterrestrial Encounters",
       courseLessonCount: 4,
-      description:
-        "Learn essential skills for dealing with hostile alien life forms",
+      description: "Learn essential skills for dealing with hostile alien life forms",
       enrolled: false,
       enrolledParticipantCount: 1979,
       imageUrl: "https://picsum.photos/640/480",

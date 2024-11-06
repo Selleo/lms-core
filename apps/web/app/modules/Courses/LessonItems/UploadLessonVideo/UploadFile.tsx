@@ -1,5 +1,6 @@
-import React, { useState } from "react";
 import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { useState } from "react";
+
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -9,12 +10,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "~/components/ui/alert-dialog";
-import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import type {
-  UploadAlertDialogProps,
-  UploadFileProps,
-} from "../LessonItemsForms/types";
+import { Input } from "~/components/ui/input";
+
+import type { UploadAlertDialogProps, UploadFileProps } from "../LessonItemsForms/types";
+import type React from "react";
 
 export const UploadFileDialog = ({
   setUploadMethod,
@@ -22,9 +22,7 @@ export const UploadFileDialog = ({
   field,
 }: UploadAlertDialogProps) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [selectedVideo, setSelectedVideo] = useState<FileList | string | null>(
-    null,
-  );
+  const [selectedVideo, setSelectedVideo] = useState<FileList | string | null>(null);
   const [videoError, setVideoError] = useState("");
 
   return (
@@ -45,9 +43,7 @@ export const UploadFileDialog = ({
                   setVideoError("");
                 }}
               />
-              {videoError !== "" && (
-                <span className="text-red-600">{videoError}</span>
-              )}
+              {videoError !== "" && <span className="text-red-600">{videoError}</span>}
             </div>
           </AlertDialogDescription>
         </AlertDialogHeader>

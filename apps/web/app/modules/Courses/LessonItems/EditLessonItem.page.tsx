@@ -1,13 +1,15 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "@remix-run/react";
 import { isObject } from "lodash-es";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { z } from "zod";
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { lessonItemFormSchema } from "./LessonItemsForms/zodFormType";
-import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { type z } from "zod";
+
+import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
+
 import { LessonItemForm } from "./LessonItemsForms/LessonItemForm";
+import { lessonItemFormSchema } from "./LessonItemsForms/zodFormType";
 
 export default function LessonItemsEditPage() {
   const [videoFile, setVideoFile] = useState<File | null | string>(null);
@@ -42,9 +44,7 @@ export default function LessonItemsEditPage() {
     } else setVideoFile(files);
   };
 
-  const onSubmit: SubmitHandler<z.infer<typeof lessonItemFormSchema>> = (
-    data,
-  ) => {
+  const onSubmit: SubmitHandler<z.infer<typeof lessonItemFormSchema>> = (data) => {
     console.log(data);
   };
 

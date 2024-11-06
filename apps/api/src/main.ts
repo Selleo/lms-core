@@ -1,10 +1,11 @@
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
-import { patchNestJsSwagger, applyFormats } from "nestjs-typebox";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import cookieParser from "cookie-parser";
+import { patchNestJsSwagger, applyFormats } from "nestjs-typebox";
+
+import { AppModule } from "./app.module";
 import { exportSchemaToFile } from "./utils/save-swagger-to-file";
 import { setupValidation } from "./utils/setup-validation";
-import cookieParser from "cookie-parser";
 
 patchNestJsSwagger();
 applyFormats();

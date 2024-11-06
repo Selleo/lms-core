@@ -1,8 +1,10 @@
-import type { GetLessonResponse } from "~/api/generated-api";
 import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
+
+import type { GetLessonResponse } from "~/api/generated-api";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
-import { Question } from "./Question";
+
 import { File } from "./File";
+import { Question } from "./Question";
 import { TextBlock } from "./TextBlock";
 
 type LessonItem = GetLessonResponse["data"]["lessonItems"][number];

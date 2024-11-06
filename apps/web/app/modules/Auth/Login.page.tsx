@@ -1,22 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "@remix-run/react";
-import { Button } from "~/components/ui/button";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+import type { LoginBody } from "~/api/generated-api";
+import { useLoginUser } from "~/api/mutations/useLoginUser";
+import { FormCheckbox } from "~/components/Form/FormCheckbox";
+import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { useLoginUser } from "~/api/mutations/useLoginUser";
-import { useForm } from "react-hook-form";
 import { cn } from "~/lib/utils";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { LoginBody } from "~/api/generated-api";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { FormCheckbox } from "~/components/Form/FormCheckbox";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Invalid email" }),
@@ -46,9 +40,7 @@ export default function LoginPage() {
         <CardTitle role="heading" className="text-2xl">
           Login
         </CardTitle>
-        <CardDescription>
-          Enter your email below to login to your account
-        </CardDescription>
+        <CardDescription>Enter your email below to login to your account</CardDescription>
       </CardHeader>
       <CardContent>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
@@ -61,17 +53,12 @@ export default function LoginPage() {
               className={cn({ "border-red-500": errors.email })}
               {...register("email")}
             />
-            {errors.email && (
-              <div className="text-red-500 text-sm">{errors.email.message}</div>
-            )}
+            {errors.email && <div className="text-red-500 text-sm">{errors.email.message}</div>}
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
               <Label htmlFor="password">Password</Label>
-              <Link
-                to="/auth/password-recovery"
-                className="ml-auto inline-block text-sm underline"
-              >
+              <Link to="/auth/password-recovery" className="ml-auto inline-block text-sm underline">
                 Forgot your password?
               </Link>
             </div>
@@ -82,16 +69,10 @@ export default function LoginPage() {
               {...register("password")}
             />
             {errors.password && (
-              <div className="text-red-500 text-sm">
-                {errors.password.message}
-              </div>
+              <div className="text-red-500 text-sm">{errors.password.message}</div>
             )}
           </div>
-          <FormCheckbox
-            control={control}
-            name="rememberMe"
-            label="Remember me"
-          />
+          <FormCheckbox control={control} name="rememberMe" label="Remember me" />
           <Button type="submit" className="w-full">
             Login
           </Button>

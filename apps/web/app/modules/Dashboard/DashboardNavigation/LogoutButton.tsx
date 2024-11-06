@@ -1,6 +1,7 @@
-import { Icon } from "~/components/Icon";
 import { startTransition } from "react";
+
 import { useLogoutUser } from "~/api/mutations/useLogoutUser";
+import { Icon } from "~/components/Icon";
 
 export const LogoutButton = () => {
   const { mutate: logout } = useLogoutUser();

@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
-import { UpsertQuestionOptionsBody } from "../../generated-api";
+import { type UpsertQuestionOptionsBody } from "../../generated-api";
 
 type UpdateCategoryOptions = {
   data: UpsertQuestionOptionsBody;
@@ -14,13 +16,9 @@ export function useUpdateQuestionOptions() {
 
   return useMutation({
     mutationFn: async (options: UpdateCategoryOptions) => {
-      const response =
-        await ApiClient.api.lessonsControllerUpsertQuestionOptions(
-          options.data,
-          {
-            questionId: options.questionId,
-          },
-        );
+      const response = await ApiClient.api.lessonsControllerUpsertQuestionOptions(options.data, {
+        questionId: options.questionId,
+      });
 
       return response.data;
     },

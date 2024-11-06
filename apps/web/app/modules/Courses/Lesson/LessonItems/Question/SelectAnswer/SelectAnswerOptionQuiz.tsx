@@ -1,8 +1,9 @@
 import { useFormContext } from "react-hook-form";
-import { cn } from "~/lib/utils";
-import { Input } from "~/components/ui/input";
+
 import { Icon } from "~/components/Icon";
+import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { cn } from "~/lib/utils";
 import { SELECT_OPTION_VARIANTS } from "~/modules/Courses/Lesson/LessonItems/constants";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
@@ -68,10 +69,7 @@ export const SelectAnswerOptionQuiz = ({
   const classes = getAnswerClasses();
 
   const isInputToggleHidden =
-    (isQuizSubmitted &&
-      !isStudentAnswer &&
-      isCorrectAnswerNotSelected &&
-      !isMultiAnswer) ||
+    (isQuizSubmitted && !isStudentAnswer && isCorrectAnswerNotSelected && !isMultiAnswer) ||
     (isQuizSubmitted &&
       isStudentAnswer &&
       (isCorrectAnswerNotSelected || isWrongAnswer || isCorrectAnswer));
@@ -125,9 +123,7 @@ export const SelectAnswerOptionQuiz = ({
         onClick={(e) => e.stopPropagation()}
       >
         <span>{answer}</span>
-        <span className={classes}>
-          {isStudentAnswer && isQuizSubmitted && "(Your answer)"}
-        </span>
+        <span className={classes}>{isStudentAnswer && isQuizSubmitted && "(Your answer)"}</span>
       </Label>
     </button>
   );

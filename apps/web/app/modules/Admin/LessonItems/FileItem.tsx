@@ -1,5 +1,8 @@
-import { Controller, useForm } from "react-hook-form";
 import { capitalize, startCase } from "lodash-es";
+import { Controller, useForm } from "react-hook-form";
+
+import type { UpdateFileItemBody } from "~/api/generated-api";
+import { useUpdateFileItem } from "~/api/mutations/admin/useUpdateFileItem";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -10,8 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { useUpdateFileItem } from "~/api/mutations/admin/useUpdateFileItem";
-import type { UpdateFileItemBody } from "~/api/generated-api";
+
 import type { FC } from "react";
 
 interface FileItemProps {
@@ -49,10 +51,7 @@ export const FileItem: FC<FileItemProps> = ({ id, initialData, onUpdate }) => {
       render={({ field }) => {
         if (name === "state") {
           return (
-            <Select
-              onValueChange={field.onChange}
-              defaultValue={field.value as string}
-            >
+            <Select onValueChange={field.onChange} defaultValue={field.value as string}>
               <SelectTrigger className="w-full">
                 <SelectValue placeholder="Select a state" />
               </SelectTrigger>

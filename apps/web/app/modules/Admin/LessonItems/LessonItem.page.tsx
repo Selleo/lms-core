@@ -1,12 +1,14 @@
 import { useParams } from "@remix-run/react";
-import { queryClient } from "~/api/queryClient";
-import { TextBlockItem } from "./TextBlockItem";
-import { QuestionItem } from "./QuestionItem";
-import { FileItem } from "./FileItem";
+
 import {
   lessonItemByIdQueryOptions,
   useLessonItemById,
 } from "~/api/queries/admin/useLessonItemById";
+import { queryClient } from "~/api/queryClient";
+
+import { FileItem } from "./FileItem";
+import { QuestionItem } from "./QuestionItem";
+import { TextBlockItem } from "./TextBlockItem";
 
 const LessonItem = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,17 +32,11 @@ const LessonItem = () => {
   const renderLessonItem = () => {
     switch (lessonItem.itemType) {
       case "text_block":
-        return (
-          <TextBlockItem id={id} initialData={lessonItem} onUpdate={onUpdate} />
-        );
+        return <TextBlockItem id={id} initialData={lessonItem} onUpdate={onUpdate} />;
       case "question":
-        return (
-          <QuestionItem id={id} initialData={lessonItem} onUpdate={onUpdate} />
-        );
+        return <QuestionItem id={id} initialData={lessonItem} onUpdate={onUpdate} />;
       case "file":
-        return (
-          <FileItem id={id} initialData={lessonItem} onUpdate={onUpdate} />
-        );
+        return <FileItem id={id} initialData={lessonItem} onUpdate={onUpdate} />;
       default:
         return <div>Unknown item type</div>;
     }

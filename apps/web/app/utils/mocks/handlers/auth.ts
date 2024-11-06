@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+
 import { currentUser } from "../data/currentUser";
 
 interface Credentials {
@@ -10,10 +11,7 @@ export const handlers = [
   http.post("/api/auth/login", async ({ request }) => {
     const credentials = (await request.json()) as Credentials;
 
-    if (
-      credentials.email === "test@example.com" &&
-      credentials.password === "password123"
-    ) {
+    if (credentials.email === "test@example.com" && credentials.password === "password123") {
       return HttpResponse.json({ token: "fake_token" }, { status: 200 });
     } else {
       return new HttpResponse(null, { status: 401 });
@@ -22,10 +20,7 @@ export const handlers = [
   http.post("/api/auth/register", async ({ request }) => {
     const credentials = (await request.json()) as Credentials;
 
-    if (
-      credentials.email === "test@example.com" &&
-      credentials.password === "password123"
-    ) {
+    if (credentials.email === "test@example.com" && credentials.password === "password123") {
       return HttpResponse.json({ token: "fake_token" }, { status: 200 });
     } else {
       return new HttpResponse(null, { status: 401 });

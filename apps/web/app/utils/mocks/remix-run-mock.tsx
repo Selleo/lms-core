@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { type PropsWithChildren } from "react";
 import { vi } from "vitest";
 
 export const mockedUseNavigate = vi.fn();
@@ -9,9 +9,7 @@ export function mockRemixReact() {
     return {
       ...original,
       useNavigate: () => mockedUseNavigate,
-      Link: ({ to, children }: PropsWithChildren<{ to: string }>) => (
-        <a href={to}>{children}</a>
-      ),
+      Link: ({ to, children }: PropsWithChildren<{ to: string }>) => <a href={to}>{children}</a>,
     };
   });
 }

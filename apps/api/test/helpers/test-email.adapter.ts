@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { EmailAdapter } from "../../src/common/emails/adapters/email.adapter";
-import { Email } from "../../src/common/emails/email.interface";
 import { last } from "lodash";
+
+import { EmailAdapter } from "../../src/common/emails/adapters/email.adapter";
+import { type Email } from "../../src/common/emails/email.interface";
 
 @Injectable()
 export class EmailTestingAdapter extends EmailAdapter {

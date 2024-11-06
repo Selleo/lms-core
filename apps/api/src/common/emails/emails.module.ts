@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+
 import { EmailAdapter } from "./adapters/email.adapter";
 import { EmailService } from "./emails.service";
 import { EmailAdapterFactory } from "./factory/email-adapters.factory";

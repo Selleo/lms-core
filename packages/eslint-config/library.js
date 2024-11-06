@@ -8,6 +8,7 @@ module.exports = {
   plugins: ["only-warn", "prettier"],
   rules: {
     "prettier/prettier": "error",
+    "@typescript-eslint/consistent-type-imports": "error",
   },
   globals: {
     React: true,

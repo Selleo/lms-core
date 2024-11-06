@@ -5,8 +5,8 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint/eslint-plugin"],
-  extends: ["plugin:@typescript-eslint/recommended"],
+  plugins: ["@typescript-eslint/eslint-plugin", "import"],
+  extends: ["plugin:@typescript-eslint/recommended", "plugin:import/typescript"],
   root: true,
   env: {
     node: true,
@@ -21,6 +21,25 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": [
       "error",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
+    ],
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        fixStyle: "inline-type-imports",
+        disallowTypeAnnotations: false,
+        prefer: "type-imports",
+      },
+    ],
+    "import/order": [
+      "error",
+      {
+        groups: ["builtin", "external", ["sibling", "parent"], "index", "type"],
+        "newlines-between": "always-and-inside-groups",
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+      },
     ],
   },
 };

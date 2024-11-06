@@ -1,12 +1,11 @@
-import { Type, Static } from "@sinclair/typebox";
+import { Type, type Static } from "@sinclair/typebox";
 
 export const categorySortFields = ["title", "creationDate"] as const;
 
-export const CategorySortFields: Record<CategorySortField, CategorySortField> =
-  {
-    title: "title",
-    creationDate: "creationDate",
-  };
+export const CategorySortFields: Record<CategorySortField, CategorySortField> = {
+  title: "title",
+  creationDate: "creationDate",
+};
 
 export type CategorySortField = (typeof categorySortFields)[number];
 
@@ -17,9 +16,7 @@ export const sortCategoryFieldsOptions = Type.Union([
   Type.Literal("-creationDate"),
 ]);
 
-export type SortCategoryFieldsOptions = Static<
-  typeof sortCategoryFieldsOptions
->;
+export type SortCategoryFieldsOptions = Static<typeof sortCategoryFieldsOptions>;
 
 export const categoryFilterFiled = Type.Union([
   Type.Literal("title"),
@@ -33,10 +30,7 @@ export const categoryFilterSchema = Type.Object({
   state: Type.Optional(Type.String()),
   archived: Type.Optional(Type.String()),
   creationDateRange: Type.Optional(
-    Type.Tuple([
-      Type.String({ format: "date-time" }),
-      Type.String({ format: "date-time" }),
-    ]),
+    Type.Tuple([Type.String({ format: "date-time" }), Type.String({ format: "date-time" })]),
   ),
 });
 

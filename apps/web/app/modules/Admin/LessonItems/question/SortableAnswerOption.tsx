@@ -2,12 +2,14 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { Controller, useWatch } from "react-hook-form";
+
+import { type UpdateQuestionItemBody } from "~/api/generated-api";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { SortableAnswerOptionProps } from "./types";
-import { UpdateQuestionItemBody } from "~/api/generated-api";
+
+import { type SortableAnswerOptionProps } from "./types";
 
 export const SortableAnswerOption = ({
   id,
@@ -16,14 +18,7 @@ export const SortableAnswerOption = ({
   control,
   onRemove,
 }: SortableAnswerOptionProps) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
   });
 
@@ -55,12 +50,7 @@ export const SortableAnswerOption = ({
       }`}
     >
       {isEditing && (
-        <button
-          type="button"
-          className="cursor-grab touch-none"
-          {...attributes}
-          {...listeners}
-        >
+        <button type="button" className="cursor-grab touch-none" {...attributes} {...listeners}>
           <GripVertical className="h-5 w-5 text-gray-400" />
         </button>
       )}
@@ -74,9 +64,7 @@ export const SortableAnswerOption = ({
                 render={({ field }) => <span>{field.value}</span>}
               />
             </span>
-            <span
-              className={`text-sm ${isCorrect ? "text-green-600" : "text-red-600"}`}
-            >
+            <span className={`text-sm ${isCorrect ? "text-green-600" : "text-red-600"}`}>
               {isCorrect ? "Correct" : "Incorrect"}
             </span>
           </>
@@ -85,9 +73,7 @@ export const SortableAnswerOption = ({
             <Controller
               name={`questionAnswers.${index}.optionText`}
               control={control}
-              render={({ field }) => (
-                <Input {...field} placeholder="Enter answer option" />
-              )}
+              render={({ field }) => <Input {...field} placeholder="Enter answer option" />}
             />
             <Controller
               name={`questionAnswers.${index}.isCorrect`}

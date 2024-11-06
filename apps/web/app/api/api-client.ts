@@ -1,4 +1,5 @@
 import { useAuthStore } from "~/modules/Auth/authStore";
+
 import { API } from "./generated-api";
 
 export const requestManager = {

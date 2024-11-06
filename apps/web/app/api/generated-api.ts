@@ -1059,10 +1059,7 @@ export interface FullRequestParams
   body?: unknown;
 }
 
-export type RequestParams = Omit<
-  FullRequestParams,
-  "body" | "method" | "query" | "path"
->;
+export type RequestParams = Omit<FullRequestParams, "body" | "method" | "query" | "path">;
 
 export interface ApiConfig<SecurityDataType = unknown>
   extends Omit<AxiosRequestConfig, "data" | "cancelToken"> {
@@ -1118,9 +1115,7 @@ export class HttpClient<SecurityDataType = unknown> {
       ...(params2 || {}),
       headers: {
         ...((method &&
-          this.instance.defaults.headers[
-            method.toLowerCase() as keyof HeadersDefaults
-          ]) ||
+          this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) ||
           {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
@@ -1142,15 +1137,11 @@ export class HttpClient<SecurityDataType = unknown> {
     }
     return Object.keys(input || {}).reduce((formData, key) => {
       const property = input[key];
-      const propertyContent: any[] =
-        property instanceof Array ? property : [property];
+      const propertyContent: any[] = property instanceof Array ? property : [property];
 
       for (const formItem of propertyContent) {
         const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(
-          key,
-          isFileType ? formItem : this.stringifyFormItem(formItem),
-        );
+        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
       }
 
       return formData;
@@ -1174,21 +1165,11 @@ export class HttpClient<SecurityDataType = unknown> {
     const requestParams = this.mergeRequestParams(params, secureParams);
     const responseFormat = format || this.format || undefined;
 
-    if (
-      type === ContentType.FormData &&
-      body &&
-      body !== null &&
-      typeof body === "object"
-    ) {
+    if (type === ContentType.FormData && body && body !== null && typeof body === "object") {
       body = this.createFormData(body as Record<string, unknown>);
     }
 
-    if (
-      type === ContentType.Text &&
-      body &&
-      body !== null &&
-      typeof body !== "string"
-    ) {
+    if (type === ContentType.Text && body && body !== null && typeof body !== "string") {
       body = JSON.stringify(body);
     }
 
@@ -1196,9 +1177,7 @@ export class HttpClient<SecurityDataType = unknown> {
       ...requestParams,
       headers: {
         ...(requestParams.headers || {}),
-        ...(type && type !== ContentType.FormData
-          ? { "Content-Type": type }
-          : {}),
+        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
       },
       params: query,
       responseType: responseFormat,
@@ -1215,9 +1194,7 @@ export class HttpClient<SecurityDataType = unknown> {
  *
  * Example usage of Swagger with Typebox
  */
-export class API<
-  SecurityDataType extends unknown,
-> extends HttpClient<SecurityDataType> {
+export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
     /**
      * No description
@@ -1299,10 +1276,7 @@ export class API<
      * @name AuthControllerForgotPassword
      * @request POST:/api/auth/forgot-password
      */
-    authControllerForgotPassword: (
-      data: ForgotPasswordBody,
-      params: RequestParams = {},
-    ) =>
+    authControllerForgotPassword: (data: ForgotPasswordBody, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/auth/forgot-password`,
         method: "POST",
@@ -1317,10 +1291,7 @@ export class API<
      * @name AuthControllerCreatePassword
      * @request POST:/api/auth/create-password
      */
-    authControllerCreatePassword: (
-      data: CreatePasswordBody,
-      params: RequestParams = {},
-    ) =>
+    authControllerCreatePassword: (data: CreatePasswordBody, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/auth/create-password`,
         method: "POST",
@@ -1335,10 +1306,7 @@ export class API<
      * @name AuthControllerResetPassword
      * @request POST:/api/auth/reset-password
      */
-    authControllerResetPassword: (
-      data: ResetPasswordBody,
-      params: RequestParams = {},
-    ) =>
+    authControllerResetPassword: (data: ResetPasswordBody, params: RequestParams = {}) =>
       this.request<void, any>({
         path: `/api/auth/reset-password`,
         method: "POST",
@@ -1450,10 +1418,7 @@ export class API<
      * @name UsersControllerDeleteBulkUsers
      * @request DELETE:/api/users
      */
-    usersControllerDeleteBulkUsers: (
-      data: DeleteBulkUsersBody,
-      params: RequestParams = {},
-    ) =>
+    usersControllerDeleteBulkUsers: (data: DeleteBulkUsersBody, params: RequestParams = {}) =>
       this.request<DeleteBulkUsersResponse, any>({
         path: `/api/users`,
         method: "DELETE",
@@ -1483,11 +1448,7 @@ export class API<
      * @name UsersControllerUpdateUser
      * @request PATCH:/api/users/{id}
      */
-    usersControllerUpdateUser: (
-      id: string,
-      data: UpdateUserBody,
-      params: RequestParams = {},
-    ) =>
+    usersControllerUpdateUser: (id: string, data: UpdateUserBody, params: RequestParams = {}) =>
       this.request<UpdateUserResponse, any>({
         path: `/api/users/${id}`,
         method: "PATCH",
@@ -1557,10 +1518,7 @@ export class API<
      * @name UsersControllerCreateUser
      * @request POST:/api/users/create
      */
-    usersControllerCreateUser: (
-      data: CreateUserBody,
-      params: RequestParams = {},
-    ) =>
+    usersControllerCreateUser: (data: CreateUserBody, params: RequestParams = {}) =>
       this.request<CreateUserResponse, any>({
         path: `/api/users/create`,
         method: "POST",
@@ -1627,10 +1585,7 @@ export class API<
      * @name CategoriesControllerCreateCategory
      * @request POST:/api/categories
      */
-    categoriesControllerCreateCategory: (
-      data: CreateCategoryBody,
-      params: RequestParams = {},
-    ) =>
+    categoriesControllerCreateCategory: (data: CreateCategoryBody, params: RequestParams = {}) =>
       this.request<CreateCategoryResponse, any>({
         path: `/api/categories`,
         method: "POST",
@@ -1646,10 +1601,7 @@ export class API<
      * @name CategoriesControllerGetCategoryById
      * @request GET:/api/categories/{id}
      */
-    categoriesControllerGetCategoryById: (
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    categoriesControllerGetCategoryById: (id: string, params: RequestParams = {}) =>
       this.request<GetCategoryByIdResponse, any>({
         path: `/api/categories/${id}`,
         method: "GET",
@@ -1725,10 +1677,7 @@ export class API<
      * @name CoursesControllerCreateCourse
      * @request POST:/api/courses
      */
-    coursesControllerCreateCourse: (
-      data: CreateCourseBody,
-      params: RequestParams = {},
-    ) =>
+    coursesControllerCreateCourse: (data: CreateCourseBody, params: RequestParams = {}) =>
       this.request<CreateCourseResponse, any>({
         path: `/api/courses`,
         method: "POST",
@@ -2039,10 +1988,7 @@ export class API<
      * @name LessonsControllerCreateLesson
      * @request POST:/api/lessons/create-lesson
      */
-    lessonsControllerCreateLesson: (
-      data: CreateLessonBody,
-      params: RequestParams = {},
-    ) =>
+    lessonsControllerCreateLesson: (data: CreateLessonBody, params: RequestParams = {}) =>
       this.request<CreateLessonResponse, any>({
         path: `/api/lessons/create-lesson`,
         method: "POST",
@@ -2058,10 +2004,7 @@ export class API<
      * @name LessonsControllerAddLessonToCourse
      * @request POST:/api/lessons/add
      */
-    lessonsControllerAddLessonToCourse: (
-      data: AddLessonToCourseBody,
-      params: RequestParams = {},
-    ) =>
+    lessonsControllerAddLessonToCourse: (data: AddLessonToCourseBody, params: RequestParams = {}) =>
       this.request<AddLessonToCourseResponse, any>({
         path: `/api/lessons/add`,
         method: "POST",
@@ -2184,10 +2127,7 @@ export class API<
      * @name LessonsControllerGetLessonItemById
      * @request GET:/api/lessons/lesson-items/{id}
      */
-    lessonsControllerGetLessonItemById: (
-      id: string,
-      params: RequestParams = {},
-    ) =>
+    lessonsControllerGetLessonItemById: (id: string, params: RequestParams = {}) =>
       this.request<GetLessonItemByIdResponse, any>({
         path: `/api/lessons/lesson-items/${id}`,
         method: "GET",
@@ -2313,10 +2253,7 @@ export class API<
      * @name LessonsControllerCreateTextBlock
      * @request POST:/api/lessons/create-text-block
      */
-    lessonsControllerCreateTextBlock: (
-      data: CreateTextBlockBody,
-      params: RequestParams = {},
-    ) =>
+    lessonsControllerCreateTextBlock: (data: CreateTextBlockBody, params: RequestParams = {}) =>
       this.request<CreateTextBlockResponse, any>({
         path: `/api/lessons/create-text-block`,
         method: "POST",
@@ -2332,10 +2269,7 @@ export class API<
      * @name LessonsControllerCreateQuestion
      * @request POST:/api/lessons/create-question
      */
-    lessonsControllerCreateQuestion: (
-      data: CreateQuestionBody,
-      params: RequestParams = {},
-    ) =>
+    lessonsControllerCreateQuestion: (data: CreateQuestionBody, params: RequestParams = {}) =>
       this.request<CreateQuestionResponse, any>({
         path: `/api/lessons/create-question`,
         method: "POST",
@@ -2396,10 +2330,7 @@ export class API<
      * @name LessonsControllerCreateFile
      * @request POST:/api/lessons/create-file
      */
-    lessonsControllerCreateFile: (
-      data: CreateFileBody,
-      params: RequestParams = {},
-    ) =>
+    lessonsControllerCreateFile: (data: CreateFileBody, params: RequestParams = {}) =>
       this.request<CreateFileResponse, any>({
         path: `/api/lessons/create-file`,
         method: "POST",
@@ -2415,10 +2346,7 @@ export class API<
      * @name QuestionsControllerAnswerQuestion
      * @request POST:/api/questions/answer
      */
-    questionsControllerAnswerQuestion: (
-      data: AnswerQuestionBody,
-      params: RequestParams = {},
-    ) =>
+    questionsControllerAnswerQuestion: (data: AnswerQuestionBody, params: RequestParams = {}) =>
       this.request<AnswerQuestionResponse, any>({
         path: `/api/questions/answer`,
         method: "POST",

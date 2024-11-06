@@ -3,6 +3,10 @@ import * as dotenv from "dotenv";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+
+import { type DatabasePg } from "./common";
+import hashPassword from "./common/helpers/hashPassword";
+import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
   categories,
   courseLessons,
@@ -17,9 +21,6 @@ import {
   textBlocks,
   users,
 } from "./storage/schema";
-import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
-import { DatabasePg } from "./common";
-import hashPassword from "./common/helpers/hashPassword";
 
 dotenv.config({ path: "./.env" });
 
@@ -31,15 +32,8 @@ const connectionString = process.env.DATABASE_URL!;
 const sql = postgres(connectionString);
 const db = drizzle(sql) as DatabasePg;
 
-async function createOrFindUser(
-  email: string,
-  password: string,
-  userData: any,
-) {
-  const [existingUser] = await db
-    .select()
-    .from(users)
-    .where(eq(users.email, email));
+async function createOrFindUser(email: string, password: string, userData: any) {
+  const [existingUser] = await db.select().from(users).where(eq(users.email, email));
   if (existingUser) return existingUser;
 
   const [newUser] = await db.insert(users).values(userData).returning();
@@ -77,11 +71,7 @@ async function createUsers(count: number) {
   );
 }
 
-async function createEntities(
-  table: any,
-  count: number,
-  dataGenerator: () => any,
-) {
+async function createEntities(table: any, count: number, dataGenerator: () => any) {
   const entities = Array.from({ length: count }, dataGenerator);
   return db.insert(table).values(entities).returning();
 }
@@ -157,19 +147,15 @@ async function seed() {
       role: "admin",
     });
 
-    const studentUser = await createOrFindUser(
-      "user@example.com",
-      "studentpassword",
-      {
-        id: faker.string.uuid(),
-        email: "user@example.com",
-        firstName: "Student",
-        lastName: "User",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        role: "student",
-      },
-    );
+    const studentUser = await createOrFindUser("user@example.com", "studentpassword", {
+      id: faker.string.uuid(),
+      email: "user@example.com",
+      firstName: "Student",
+      lastName: "User",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      role: "student",
+    });
 
     console.log("Created or found admin user:", adminUser);
     console.log("Created or found student user:", studentUser);
@@ -203,10 +189,7 @@ async function seed() {
 
     const createdQuestions = await createEntities(questions, 5, () => ({
       id: faker.string.uuid(),
-      questionType: faker.helpers.arrayElement([
-        "single_choice",
-        "multiple_choice",
-      ]),
+      questionType: faker.helpers.arrayElement(["single_choice", "multiple_choice"]),
       questionBody: faker.lorem.paragraph(3),
       solutionExplanation: faker.lorem.paragraph(3),
       state: faker.helpers.arrayElement(["draft", "published"]),
@@ -230,11 +213,7 @@ async function seed() {
     const createdFiles = await createEntities(files, 6, () => ({
       id: faker.string.uuid(),
       title: faker.lorem.sentence(3),
-      type: faker.helpers.arrayElement([
-        "presentation",
-        "external_presentation",
-        "video",
-      ]),
+      type: faker.helpers.arrayElement(["presentation", "external_presentation", "video"]),
       url: faker.internet.url(),
       state: faker.helpers.arrayElement(["draft", "published"]),
       authorId: adminUser.id,
@@ -255,12 +234,7 @@ async function seed() {
     }));
     console.log("Created lessons");
 
-    await createLessonItems(
-      createdLessons,
-      createdFiles,
-      createdTextBlocks,
-      createdQuestions,
-    );
+    await createLessonItems(createdLessons, createdFiles, createdTextBlocks, createdQuestions);
     console.log("Created lesson items");
 
     const createdCourses = await createEntities(courses, 5, () => ({

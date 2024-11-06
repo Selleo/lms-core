@@ -1,15 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@remix-run/react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+
+import { useCreateUser } from "~/api/mutations/admin/useCreateUser";
+import { ALL_COURSES_QUERY_KEY } from "~/api/queries/useCourses";
+import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { DialogFooter } from "~/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "~/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
@@ -20,10 +19,6 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { CreatePageHeader } from "~/modules/Admin/components";
-import { queryClient } from "~/api/queryClient";
-import { ALL_COURSES_QUERY_KEY } from "~/api/queries/useCourses";
-import { useCreateUser } from "~/api/mutations/admin/useCreateUser";
-import { useNavigate } from "@remix-run/react";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters."),
@@ -120,10 +115,7 @@ export default function CreateNewUserPage() {
                 <Label htmlFor="role" className="text-right">
                   Role
                 </Label>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger id="role">
                       <SelectValue placeholder="Select a role" />

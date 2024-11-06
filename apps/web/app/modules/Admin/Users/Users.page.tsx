@@ -8,9 +8,11 @@ import {
   type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
+
 import type { GetUsersResponse } from "~/api/generated-api";
 import { useBulkDeleteUsers } from "~/api/mutations/admin/useBulkDeleteUsers";
 import { useAllUsersSuspense, usersQueryOptions } from "~/api/queries/useUsers";
@@ -33,7 +35,6 @@ import {
   type FilterValue,
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
-import { format } from "date-fns";
 
 type TUser = GetUsersResponse["data"][number];
 
@@ -110,21 +111,15 @@ const Users = () => {
     },
     {
       accessorKey: "firstName",
-      header: ({ column }) => (
-        <SortButton<TUser> column={column}>First Name</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TUser> column={column}>First Name</SortButton>,
     },
     {
       accessorKey: "lastName",
-      header: ({ column }) => (
-        <SortButton<TUser> column={column}>Last Name</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TUser> column={column}>Last Name</SortButton>,
     },
     {
       accessorKey: "email",
-      header: ({ column }) => (
-        <SortButton<TUser> column={column}>Email</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TUser> column={column}>Email</SortButton>,
     },
     {
       accessorKey: "role",
@@ -144,12 +139,8 @@ const Users = () => {
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TUser> column={column}>Created At</SortButton>
-      ),
-      cell: ({ row }) =>
-        row.original.createdAt &&
-        format(new Date(row.original.createdAt), "PPpp"),
+      header: ({ column }) => <SortButton<TUser> column={column}>Created At</SortButton>,
+      cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
 
@@ -166,9 +157,7 @@ const Users = () => {
     },
   });
 
-  const selectedUsers = table
-    .getSelectedRowModel()
-    .rows.map((row) => row.original.id);
+  const selectedUsers = table.getSelectedRowModel().rows.map((row) => row.original.id);
 
   const handleDeleteUsers = () => {
     console.log(selectedUsers);
@@ -220,10 +209,7 @@ const Users = () => {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </TableRow>

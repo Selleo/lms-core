@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { eq, and, inArray } from "drizzle-orm";
-import * as schema from "src/storage/schema";
-import { DatabasePg, UUIDType } from "src/common";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import { DatabasePg, type UUIDType } from "src/common";
 import {
   lessonItems,
   files,
@@ -10,14 +10,16 @@ import {
   questionAnswerOptions,
   studentQuestionAnswers,
 } from "src/storage/schema";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+
 import {
-  LessonItemToAdd,
-  LessonItemToRemove,
-  UpdateFileBody,
-  UpdateQuestionBody,
-  UpdateTextBlockBody,
+  type LessonItemToAdd,
+  type LessonItemToRemove,
+  type UpdateFileBody,
+  type UpdateQuestionBody,
+  type UpdateTextBlockBody,
 } from "../schemas/lessonItem.schema";
+
+import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class AdminLessonItemsRepository {
@@ -30,10 +32,7 @@ export class AdminLessonItemsRepository {
       .where(and(...conditions));
   }
 
-  async getQuestionAnswers(
-    questionId: UUIDType,
-    trx?: PostgresJsDatabase<typeof schema>,
-  ) {
+  async getQuestionAnswers(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
     return await dbInstance
@@ -47,10 +46,7 @@ export class AdminLessonItemsRepository {
       .where(eq(questionAnswerOptions.questionId, questionId));
   }
 
-  async getQuestionAnswerOptions(
-    questionId: UUIDType,
-    trx?: PostgresJsDatabase<typeof schema>,
-  ) {
+  async getQuestionAnswerOptions(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
     return await dbInstance
@@ -59,10 +55,7 @@ export class AdminLessonItemsRepository {
       .where(eq(questionAnswerOptions.questionId, questionId));
   }
 
-  async getQuestionStudentAnswers(
-    questionId: UUIDType,
-    trx?: PostgresJsDatabase<typeof schema>,
-  ) {
+  async getQuestionStudentAnswers(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
     return await dbInstance

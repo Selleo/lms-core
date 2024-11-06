@@ -12,7 +12,8 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import { useState, useTransition } from "react";
-import { GetAllLessonItemsResponse } from "~/api/generated-api";
+
+import { type GetAllLessonItemsResponse } from "~/api/generated-api";
 import {
   type LessonItemType,
   useAllLessonItemsSuspense,
@@ -120,34 +121,23 @@ const LessonItems = () => {
     },
     {
       accessorKey: "title",
-      header: ({ column }) => (
-        <SortButton<TLessonItem> column={column}>Title</SortButton>
-      ),
-      accessorFn: (row) =>
-        row.itemType === "question" ? row.questionBody : row.title,
+      header: ({ column }) => <SortButton<TLessonItem> column={column}>Title</SortButton>,
+      accessorFn: (row) => (row.itemType === "question" ? row.questionBody : row.title),
       cell: ({ row }) => {
         const content =
-          row.original.itemType === "question"
-            ? row.original.questionBody
-            : row.original.title;
-        return (
-          <div className="max-w-md truncate">{formatHtmlString(content)}</div>
-        );
+          row.original.itemType === "question" ? row.original.questionBody : row.original.title;
+        return <div className="max-w-md truncate">{formatHtmlString(content)}</div>;
       },
     },
     {
       accessorKey: "itemType",
-      header: ({ column }) => (
-        <SortButton<TLessonItem> column={column}>Type</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TLessonItem> column={column}>Type</SortButton>,
     },
     {
       accessorKey: "state",
       header: "State",
       cell: ({ row }) => (
-        <Badge
-          variant={row.original.state === "published" ? "secondary" : "outline"}
-        >
+        <Badge variant={row.original.state === "published" ? "secondary" : "outline"}>
           {row.original.state}
         </Badge>
       ),
@@ -163,12 +153,8 @@ const LessonItems = () => {
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TLessonItem> column={column}>Created At</SortButton>
-      ),
-      cell: ({ row }) =>
-        row.original.createdAt &&
-        format(new Date(row.original.createdAt), "PPpp"),
+      header: ({ column }) => <SortButton<TLessonItem> column={column}>Created At</SortButton>,
+      cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
 
@@ -185,9 +171,7 @@ const LessonItems = () => {
     },
   });
 
-  const selectedLessonItems = table
-    .getSelectedRowModel()
-    .rows.map((row) => row.original.id);
+  const selectedLessonItems = table.getSelectedRowModel().rows.map((row) => row.original.id);
 
   const handleDeleteLessonItems = () => {
     // TODO: Implement delete functionality
@@ -252,10 +236,7 @@ const LessonItems = () => {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <TableHead key={header.id}>
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext(),
-                  )}
+                  {flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
             </TableRow>

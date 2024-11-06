@@ -51,6 +51,31 @@ module.exports = {
       rules: {
         "react/prop-types": "off",
         "react/display-name": "off",
+        "@typescript-eslint/consistent-type-imports": [
+          "error",
+          {
+            fixStyle: "inline-type-imports",
+            disallowTypeAnnotations: false,
+            prefer: "type-imports",
+          },
+        ],
+        "import/order": [
+          "error",
+          {
+            groups: ["builtin", "external", "internal", ["sibling", "parent"], "index", "type"],
+            pathGroups: [
+              {
+                pattern: "~/**",
+                group: "internal",
+              },
+            ],
+            "newlines-between": "always-and-inside-groups",
+            alphabetize: {
+              order: "asc",
+              caseInsensitive: true,
+            },
+          },
+        ],
       },
     },
 

@@ -1,4 +1,5 @@
 import { cn } from "~/lib/utils";
+
 import { useCompletedLessonItemsStore } from "../LessonItems/LessonItemStore";
 
 type TProps = {
@@ -25,10 +26,7 @@ export default function SingleLessonSummary({ lesson, isLast }: TProps) {
         readOnly
         type="radio"
       />
-      <div
-        className="body-base-md"
-        dangerouslySetInnerHTML={{ __html: lesson.title }}
-      />
+      <div className="body-base-md" dangerouslySetInnerHTML={{ __html: lesson.title }} />
     </div>
   );
 }

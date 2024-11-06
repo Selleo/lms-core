@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { and, eq, gte } from "drizzle-orm";
-import type { DatabasePg } from "src/common";
+import { DatabasePg } from "src/common";
 import { createTokens } from "src/storage/schema";
 
 @Injectable()
@@ -11,12 +11,7 @@ export class CreatePasswordService {
     const [createToken] = await this.db
       .select()
       .from(createTokens)
-      .where(
-        and(
-          eq(createTokens.createToken, token),
-          gte(createTokens.expiryDate, new Date()),
-        ),
-      );
+      .where(and(eq(createTokens.createToken, token), gte(createTokens.expiryDate, new Date())));
 
     if (!createToken) throw new NotFoundException("Invalid token");
 

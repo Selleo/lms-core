@@ -1,11 +1,9 @@
 import { Elements } from "@stripe/react-stripe-js";
-import { Appearance } from "@stripe/stripe-js";
+import { type Appearance } from "@stripe/stripe-js";
 import { useState } from "react";
+
 import { useStripePaymentIntent } from "~/api/mutations/useStripePaymentIntent";
-import {
-  currentUserQueryOptions,
-  useCurrentUserSuspense,
-} from "~/api/queries/useCurrentUser";
+import { currentUserQueryOptions, useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import {
@@ -15,10 +13,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
+import { toast } from "~/components/ui/use-toast";
 import { formatPrice } from "~/lib/formatters/priceFormatter";
+
 import { useStripePromise } from "./hooks/useStripePromise";
 import { PaymentForm } from "./PaymentForm";
-import { toast } from "~/components/ui/use-toast";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(currentUserQueryOptions);
@@ -49,8 +48,7 @@ export function PaymentModal({
     data: { id: currentUserId },
   } = useCurrentUserSuspense();
   const stripePromise = useStripePromise();
-  const { clientSecret, createPaymentIntent, resetClientSecret } =
-    useStripePaymentIntent();
+  const { clientSecret, createPaymentIntent, resetClientSecret } = useStripePaymentIntent();
 
   const handlePayment = async () => {
     try {
@@ -86,15 +84,10 @@ export function PaymentModal({
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="line-clamp-1 my-2">
-            Enroll in {courseTitle}
-          </DialogTitle>
+          <DialogTitle className="line-clamp-1 my-2">Enroll in {courseTitle}</DialogTitle>
         </DialogHeader>
         {clientSecret && (
-          <Elements
-            stripe={stripePromise}
-            options={{ clientSecret, appearance }}
-          >
+          <Elements stripe={stripePromise} options={{ clientSecret, appearance }}>
             <PaymentForm
               currency={courseCurrency}
               courseId={courseId}

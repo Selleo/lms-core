@@ -1,11 +1,12 @@
-import { Provider } from "@nestjs/common";
-import { Test, TestingModule } from "@nestjs/testing";
+import { type Provider } from "@nestjs/common";
+import { Test, type TestingModule } from "@nestjs/testing";
 import { EmailAdapter } from "src/common/emails/adapters/email.adapter";
-import { StartedTestContainer } from "testcontainers";
-import { AppModule } from "../src/app.module";
-import { DatabasePg } from "../src/common";
+import { type StartedTestContainer } from "testcontainers";
+
 import { EmailTestingAdapter } from "./helpers/test-email.adapter";
 import { setupTestDatabase } from "./test-database";
+import { AppModule } from "../src/app.module";
+import { type DatabasePg } from "../src/common";
 
 export interface TestContext {
   module: TestingModule;
@@ -14,9 +15,7 @@ export interface TestContext {
   teardown: () => Promise<void>;
 }
 
-export async function createUnitTest(
-  customProviders: Provider[] = [],
-): Promise<TestContext> {
+export async function createUnitTest(customProviders: Provider[] = []): Promise<TestContext> {
   const { db, container, connectionString } = await setupTestDatabase();
 
   process.env.DATABASE_URL = connectionString;

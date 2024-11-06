@@ -1,9 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { ApiClient } from "../api-client";
-import { ChangePasswordBody } from "../generated-api";
-import { useCurrentUserSuspense } from "../queries/useCurrentUser";
+
 import { useToast } from "~/components/ui/use-toast";
+
+import { ApiClient } from "../api-client";
+import { type ChangePasswordBody } from "../generated-api";
+import { useCurrentUserSuspense } from "../queries/useCurrentUser";
 
 type ChangePasswordOptions = {
   data: ChangePasswordBody;

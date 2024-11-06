@@ -22,6 +22,7 @@
 **/*.d.ts
 **/public
 packages/email-templates/**/index.ts
+apps/api/src/storage/migrations/**
 
 
 # Cache

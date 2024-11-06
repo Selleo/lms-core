@@ -1,13 +1,11 @@
-import { INestApplication } from "@nestjs/common";
-import request from "supertest";
+import { type INestApplication } from "@nestjs/common";
 import { castArray, omit } from "lodash";
+import request from "supertest";
+
 import { AuthService } from "../../../src/auth/auth.service";
+import { type DatabasePg } from "../../../src/common";
 import { createE2ETest } from "../../../test/create-e2e-test";
-import {
-  createUserFactory,
-  UserWithCredentials,
-} from "../../../test/factory/user.factory";
-import { DatabasePg } from "../../../src/common";
+import { createUserFactory, type UserWithCredentials } from "../../../test/factory/user.factory";
 
 describe("UsersController (e2e)", () => {
   let app: INestApplication;
@@ -31,16 +29,12 @@ describe("UsersController (e2e)", () => {
   });
 
   beforeEach(async () => {
-    testUser = await userFactory
-      .withCredentials({ password: testPassword })
-      .create();
+    testUser = await userFactory.withCredentials({ password: testPassword }).create();
 
-    const loginResponse = await request(app.getHttpServer())
-      .post("/api/auth/login")
-      .send({
-        email: testUser.email,
-        password: testUser.credentials?.password,
-      });
+    const loginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
+      email: testUser.email,
+      password: testUser.credentials?.password,
+    });
 
     cookies = loginResponse.headers["set-cookie"];
   });
@@ -52,9 +46,7 @@ describe("UsersController (e2e)", () => {
         .set("Cookie", cookies)
         .expect(200);
 
-      expect(response.body.data).toStrictEqual(
-        castArray(omit(testUser, "credentials")),
-      );
+      expect(response.body.data).toStrictEqual(castArray(omit(testUser, "credentials")));
       expect(Array.isArray(response.body.data)).toBe(true);
     });
   });

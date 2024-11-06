@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+
 import {
   Tooltip,
   TooltipContent,
@@ -29,10 +30,7 @@ export const CourseCardTitle = ({ title }: { title: string }) => {
       {isTruncated ? (
         <Tooltip>
           <TooltipTrigger asChild>
-            <h3
-              ref={titleRef}
-              className="font-bold text-lg text-neutral-950 line-clamp-2"
-            >
+            <h3 ref={titleRef} className="font-bold text-lg text-neutral-950 line-clamp-2">
               {title}
             </h3>
           </TooltipTrigger>
@@ -42,10 +40,7 @@ export const CourseCardTitle = ({ title }: { title: string }) => {
           </TooltipContent>
         </Tooltip>
       ) : (
-        <h3
-          ref={titleRef}
-          className="font-bold text-lg text-neutral-950 line-clamp-2"
-        >
+        <h3 ref={titleRef} className="font-bold text-lg text-neutral-950 line-clamp-2">
           {title}
         </h3>
       )}

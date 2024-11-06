@@ -1,14 +1,10 @@
+import { type Control } from "react-hook-form";
+import { type z } from "zod";
+
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "~/components/ui/form";
 import { Textarea } from "~/components/ui/textarea";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import { Control } from "react-hook-form";
-import { z } from "zod";
-import { lessonItemFormSchema } from "./zodFormType.js";
+
+import { type lessonItemFormSchema } from "./zodFormType.js";
 
 interface LessonItemFormTextareaInterface {
   control: Control<z.infer<typeof lessonItemFormSchema>>;

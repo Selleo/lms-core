@@ -5,10 +5,7 @@ type CreatePageHeaderProps = {
   description: string | ReactNode;
 };
 
-export const CreatePageHeader = ({
-  title,
-  description,
-}: CreatePageHeaderProps) => {
+export const CreatePageHeader = ({ title, description }: CreatePageHeaderProps) => {
   return (
     <hgroup>
       <h2 className="h1">{title}</h2>

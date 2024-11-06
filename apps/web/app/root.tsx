@@ -7,11 +7,14 @@ import {
   ScrollRestoration,
   useRouteError,
 } from "@remix-run/react";
+
+import faviconHref from "~/assets/favicon.ico";
 import { Toaster } from "~/components/ui/toaster";
+
 import "./index.css";
 import CustomErrorBoundary from "./modules/common/ErrorBoundary/ErrorBoundary";
+
 import type { LinksFunction } from "@remix-run/node";
-import faviconHref from "~/assets/favicon.ico";
 
 export const links: LinksFunction = () => {
   return [{ rel: "icon", href: faviconHref, type: "image/x-icon" }];
@@ -47,9 +50,7 @@ export function ErrorBoundary() {
   const error = useRouteError();
 
   if (isRouteErrorResponse(error)) {
-    return (
-      <CustomErrorBoundary stack={error.data} message={error.statusText} />
-    );
+    return <CustomErrorBoundary stack={error.data} message={error.statusText} />;
   } else if (error instanceof Error) {
     return <CustomErrorBoundary stack={error.stack} message={error.message} />;
   } else {

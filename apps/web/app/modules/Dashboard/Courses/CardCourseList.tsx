@@ -1,4 +1,5 @@
 import type { GetAvailableCoursesResponse } from "~/api/generated-api";
+
 import CourseCard from "./CourseCard";
 
 type CardCourseListProps = {

@@ -1,8 +1,10 @@
 import { EditorContent, useEditor } from "@tiptap/react";
 // eslint-disable-next-line import/no-named-as-default
 import StarterKit from "@tiptap/starter-kit";
-import EditorToolbar from "./toolbar/EditorToolbar";
+
 import { cn } from "~/lib/utils";
+
+import EditorToolbar from "./toolbar/EditorToolbar";
 
 type EditorProps = {
   content?: string;
@@ -12,13 +14,7 @@ type EditorProps = {
   className?: string;
 };
 
-const Editor = ({
-  content,
-  placeholder,
-  onChange,
-  id,
-  className,
-}: EditorProps) => {
+const Editor = ({ content, placeholder, onChange, id, className }: EditorProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
     content: content,
@@ -27,8 +23,7 @@ const Editor = ({
     },
     editorProps: {
       attributes: {
-        class:
-          "prose prose-xs sm:prose dark:prose-invert focus:outline-none max-w-full p-4",
+        class: "prose prose-xs sm:prose dark:prose-invert focus:outline-none max-w-full p-4",
       },
     },
   });
@@ -44,12 +39,7 @@ const Editor = ({
           className,
         )}
       >
-        <EditorContent
-          id={id}
-          editor={editor}
-          placeholder={placeholder}
-          className="h-full"
-        />
+        <EditorContent id={id} editor={editor} placeholder={placeholder} className="h-full" />
       </div>
     </div>
   );

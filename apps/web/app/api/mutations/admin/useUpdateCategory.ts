@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
-import { UpdateCategoryBody } from "../../generated-api";
+import { type UpdateCategoryBody } from "../../generated-api";
 
 type UpdateCategoryOptions = {
   data: UpdateCategoryBody;

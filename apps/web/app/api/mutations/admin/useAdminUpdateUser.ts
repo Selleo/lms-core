@@ -1,8 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+
 import { useToast } from "~/components/ui/use-toast";
+
 import { ApiClient } from "../../api-client";
-import { UpdateUserBody } from "../../generated-api";
+import { type UpdateUserBody } from "../../generated-api";
 import { usersQueryOptions } from "../../queries/useUsers";
 import { queryClient } from "../../queryClient";
 

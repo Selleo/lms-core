@@ -1,7 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { ApiClient } from "../api-client";
+
 import { useToast } from "~/components/ui/use-toast";
+
+import { ApiClient } from "../api-client";
+
 import type { ForgotPasswordBody } from "../generated-api";
 
 type LoginUserOptions = {
@@ -13,9 +16,7 @@ export function usePasswordRecovery() {
 
   return useMutation({
     mutationFn: async (options: LoginUserOptions) => {
-      const response = await ApiClient.api.authControllerForgotPassword(
-        options.data,
-      );
+      const response = await ApiClient.api.authControllerForgotPassword(options.data);
 
       return response.data;
     },

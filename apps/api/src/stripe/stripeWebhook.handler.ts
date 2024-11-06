@@ -1,6 +1,5 @@
-import { Inject, Injectable } from "@nestjs/common";
 import { StripeWebhookHandler as StripeWebhookHandlerDecorator } from "@golevelup/nestjs-stripe";
-import Stripe from "stripe";
+import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, sql } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import {
@@ -12,6 +11,7 @@ import {
   studentLessonsProgress,
   users,
 } from "src/storage/schema";
+import Stripe from "stripe";
 
 @Injectable()
 export class StripeWebhookHandler {
@@ -25,17 +25,11 @@ export class StripeWebhookHandler {
 
     if (!userId && !courseId) return null;
 
-    const [user] = await this.db
-      .select()
-      .from(users)
-      .where(eq(users.id, userId));
+    const [user] = await this.db.select().from(users).where(eq(users.id, userId));
 
     if (!user) return null;
 
-    const [course] = await this.db
-      .select()
-      .from(courses)
-      .where(eq(courses.id, courseId));
+    const [course] = await this.db.select().from(courses).where(eq(courses.id, courseId));
 
     if (!course) return null;
 

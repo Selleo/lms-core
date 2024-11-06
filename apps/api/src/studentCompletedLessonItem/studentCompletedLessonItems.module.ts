@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
-import { StudentCompletedLessonItemsService } from "./studentCompletedLessonItems.service";
+
 import { StudentCompletedLessonItemsController } from "./api/studentCompletedLessonItems.controller";
+import { StudentCompletedLessonItemsService } from "./studentCompletedLessonItems.service";
 
 @Module({
   imports: [],

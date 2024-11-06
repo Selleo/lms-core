@@ -1,9 +1,9 @@
 import {
   closestCorners,
   DndContext,
-  DragEndEvent,
+  type DragEndEvent,
   DragOverlay,
-  DragStartEvent,
+  type DragStartEvent,
   KeyboardSensor,
   PointerSensor,
   useDroppable,
@@ -15,13 +15,15 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { FC, useCallback, useEffect, useState } from "react";
-import { GetAllLessonsResponse } from "~/api/generated-api";
+import { type FC, useCallback, useEffect, useState } from "react";
+
+import { type GetAllLessonsResponse } from "~/api/generated-api";
 import { useAddLessonToCourse } from "~/api/mutations/admin/useAddLessonToCourse";
 import { useRemoveLessonFromCourse } from "~/api/mutations/admin/useRemoveLessonFromCourse";
-import { useAvailableLessons } from "~/api/queries/useAvailableLessons";
-import { LessonCard } from "./LessonCard";
 import { useCourseById } from "~/api/queries/admin/useCourseById";
+import { useAvailableLessons } from "~/api/queries/useAvailableLessons";
+
+import { LessonCard } from "./LessonCard";
 
 type TransformedLesson = GetAllLessonsResponse["data"][number] & {
   columnId: string;
@@ -37,11 +39,7 @@ interface LessonsColumnProps {
   columnId: string;
 }
 
-const LessonsColumn: FC<LessonsColumnProps> = ({
-  lessons,
-  columnTitle,
-  columnId,
-}) => {
+const LessonsColumn: FC<LessonsColumnProps> = ({ lessons, columnTitle, columnId }) => {
   const { setNodeRef } = useDroppable({ id: columnId });
 
   return (
@@ -62,8 +60,7 @@ const LessonsColumn: FC<LessonsColumnProps> = ({
 
 const LessonAssigner: FC<LessonAssignerProps> = ({ courseId }) => {
   const [lessons, setLessons] = useState<TransformedLesson[]>([]);
-  const [currentlyDraggedItem, setCurrentlyDraggedItem] =
-    useState<TransformedLesson | null>(null);
+  const [currentlyDraggedItem, setCurrentlyDraggedItem] = useState<TransformedLesson | null>(null);
 
   const { data: course } = useCourseById(courseId);
   const { data: allLessons } = useAvailableLessons();
@@ -109,12 +106,10 @@ const LessonAssigner: FC<LessonAssignerProps> = ({ courseId }) => {
       const activeLesson = lessons.find((lesson) => lesson.id === active.id);
       if (!activeLesson) return;
 
-      const isOverAColumn =
-        over.id === "column-assigned" || over.id === "column-unassigned";
+      const isOverAColumn = over.id === "column-assigned" || over.id === "column-unassigned";
       const newColumnId = isOverAColumn
         ? (over.id as string)
-        : lessons.find((lesson) => lesson.id === over.id)?.columnId ||
-          activeLesson.columnId;
+        : lessons.find((lesson) => lesson.id === over.id)?.columnId || activeLesson.columnId;
 
       if (activeLesson.columnId !== newColumnId) {
         try {
@@ -132,9 +127,7 @@ const LessonAssigner: FC<LessonAssignerProps> = ({ courseId }) => {
 
           setLessons((prev) =>
             prev.map((lesson) =>
-              lesson.id === activeLesson.id
-                ? { ...lesson, columnId: newColumnId }
-                : lesson,
+              lesson.id === activeLesson.id ? { ...lesson, columnId: newColumnId } : lesson,
             ),
           );
         } catch (error) {
@@ -149,12 +142,8 @@ const LessonAssigner: FC<LessonAssignerProps> = ({ courseId }) => {
     [lessons, courseId, addLessonToCourse, removeLessonFromCourse],
   );
 
-  const assignedLessons = lessons.filter(
-    (lesson) => lesson.columnId === "column-assigned",
-  );
-  const unassignedLessons = lessons.filter(
-    (lesson) => lesson.columnId === "column-unassigned",
-  );
+  const assignedLessons = lessons.filter((lesson) => lesson.columnId === "column-assigned");
+  const unassignedLessons = lessons.filter((lesson) => lesson.columnId === "column-unassigned");
 
   return (
     <DndContext

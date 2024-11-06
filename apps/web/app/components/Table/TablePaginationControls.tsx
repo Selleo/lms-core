@@ -1,5 +1,6 @@
+import { type Table as ReactTableInstance } from "@tanstack/react-table";
+
 import { Button } from "~/components/ui/button";
-import { Table as ReactTableInstance } from "@tanstack/react-table";
 
 interface PaginationControls<TData> {
   table: ReactTableInstance<TData>;

@@ -1,8 +1,9 @@
-import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import { Link } from "@remix-run/react";
+
 import CourseStartedImage from "~/assets/course-started.png";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
-import { Link } from "@remix-run/react";
+import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
 
 type QuizSummaryModalProps = {
   courseId: string;
@@ -22,11 +23,7 @@ export const QuizSummaryModal = ({
       <DialogContent className="max-w-[368px]">
         <div className="flex flex-col gap-y-4">
           <div className="w-full bg-neutral-50 rounded-lg flex justify-center">
-            <img
-              src={CourseStartedImage}
-              alt=""
-              className="w-[220px] h-auto aspect-square"
-            />
+            <img src={CourseStartedImage} alt="" className="w-[220px] h-auto aspect-square" />
           </div>
           <div className="flex flex-col items-center gap-y-2">
             <div className="flex items-center gap-x-1 mb-1">

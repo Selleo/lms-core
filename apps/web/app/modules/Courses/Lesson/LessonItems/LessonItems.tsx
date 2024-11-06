@@ -1,4 +1,5 @@
 import type { GetLessonResponse } from "~/api/generated-api";
+
 import { LessonItem } from "./LessonItem";
 
 type LessonItemsProps = {
@@ -7,11 +8,7 @@ type LessonItemsProps = {
   questions: string[];
 };
 
-export const LessonItems = ({
-  lessonItems,
-  questions,
-  isSubmitted,
-}: LessonItemsProps) => {
+export const LessonItems = ({ lessonItems, questions, isSubmitted }: LessonItemsProps) => {
   return lessonItems.map((lessonItem, index) => {
     return (
       <LessonItem
