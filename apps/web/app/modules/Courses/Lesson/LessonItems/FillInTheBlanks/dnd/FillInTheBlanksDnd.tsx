@@ -23,7 +23,7 @@ type FillInTheBlanksDndProps = {
   questionLabel: string;
   content: string;
   sendAnswer: (
-    selectedOption: { value: string; index: number }[],
+    selectedOption: { value: string; index: number }[]
   ) => Promise<void>;
   answers: DndWord[];
   isQuizSubmitted?: boolean;
@@ -42,10 +42,19 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
     useState<DndWord | null>(null);
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: isQuiz && isQuizSubmitted ? Infinity : 0,
+      },
+    }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    }),
+      keyboardCodes: {
+        start: isQuiz && isQuizSubmitted ? [] : ["Space"],
+        cancel: ["Escape"],
+        end: ["Space"],
+      },
+    })
   );
 
   useEffect(() => {
@@ -56,6 +65,8 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
 
   const handleDragStart = (event: DragStartEvent) => {
+    if (isQuiz && isQuizSubmitted) return;
+
     const { active } = event;
     const { id: activeId } = active;
 
@@ -67,6 +78,8 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   };
 
   const handleDragOver = (event: DragOverEvent) => {
+    if (isQuiz && isQuizSubmitted) return;
+
     const { active, over } = event;
     const { id: activeId } = active;
     const { id: overId } = over || {};
@@ -80,7 +93,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
 
     setWords((prev) => {
       const activeWords = prev.filter(
-        ({ blankId }) => blankId === activeBlankId,
+        ({ blankId }) => blankId === activeBlankId
       );
       const activeWord = activeWords.find(({ id }) => id === activeId);
       const updatedWord = prev.find(({ id }) => id === activeWord?.id);
@@ -110,7 +123,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
 
     setWords((prev) => {
       const activeWords = prev.filter(
-        ({ blankId }) => blankId === activeBlankId,
+        ({ blankId }) => blankId === activeBlankId
       );
 
       const overWords = prev.filter(({ blankId }) => blankId === overBlankId);
@@ -125,7 +138,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           ...arrayMove(
             overWords,
             activeWords.indexOf(activeWord),
-            overWord ? overWords.indexOf(overWord) : 0,
+            overWord ? overWords.indexOf(overWord) : 0
           ),
           ...prev,
         ]),
@@ -151,7 +164,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
             ...arrayMove(
               wordsWithUpdatedBlankId,
               activeWords.indexOf(firstWord),
-              overWord ? wordsWithUpdatedBlankId.indexOf(secondWord) : 0,
+              overWord ? wordsWithUpdatedBlankId.indexOf(secondWord) : 0
             ),
             ...prev,
           ]),
@@ -162,7 +175,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           .map((item) => {
             const newIndex = parseInt(
               item.blankId.match(/\d+$/)?.[0] ?? "0",
-              10,
+              10
             );
             return {
               ...item,
@@ -213,7 +226,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   }
 
   const wordBankWords = words.filter(
-    ({ blankId }) => blankId === "blank_preset",
+    ({ blankId }) => blankId === "blank_preset"
   );
 
   return (
@@ -242,7 +255,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
             const blankId = `blank_${index}`;
 
             const wordsInBlank = words.filter(
-              (word) => word.blankId === blankId,
+              (word) => word.blankId === blankId
             );
 
             return (
