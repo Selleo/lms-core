@@ -23,7 +23,7 @@ import type * as schema from "src/storage/schema";
 export class LessonsRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  async getLessonForUser(lessonId: UUIDType, userId: UUIDType) {
+  async getLessonForUser(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
     const [lesson] = await this.db
       .select({
         id: lessons.id,
@@ -42,6 +42,7 @@ export class LessonsRepository {
       .leftJoin(
         studentLessonsProgress,
         and(
+          eq(studentLessonsProgress.courseId, courseId),
           eq(studentLessonsProgress.lessonId, lessonId),
           eq(studentLessonsProgress.studentId, userId),
         ),
@@ -87,6 +88,7 @@ export class LessonsRepository {
         and(
           eq(studentQuestionAnswers.questionId, questions.id),
           eq(studentQuestionAnswers.studentId, studentId),
+          eq(studentQuestionAnswers.lessonId, lessonId),
         ),
       )
       .where(eq(lessonItems.lessonId, lessonId))
@@ -184,7 +186,7 @@ export class LessonsRepository {
       );
   }
 
-  async checkLessonAssignment(lessonId: UUIDType, userId: UUIDType) {
+  async checkLessonAssignment(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
     return this.db
       .select({
         id: lessons.id,
@@ -197,20 +199,30 @@ export class LessonsRepository {
         and(eq(studentCourses.courseId, courseLessons.id), eq(studentCourses.studentId, userId)),
       )
       .where(
-        and(eq(lessons.archived, false), eq(lessons.id, lessonId), eq(lessons.state, "published")),
+        and(
+          eq(studentCourses.courseId, courseId),
+          eq(lessons.archived, false),
+          eq(lessons.id, lessonId),
+          eq(lessons.state, "published"),
+        ),
       );
   }
 
-  async completedLessonItem(lessonId: UUIDType) {
+  async completedLessonItem(courseId: UUIDType, lessonId: UUIDType) {
     return await this.db
       .selectDistinct({
         lessonItemId: studentCompletedLessonItems.lessonItemId,
       })
       .from(studentCompletedLessonItems)
-      .where(eq(studentCompletedLessonItems.lessonId, lessonId));
+      .where(
+        and(
+          eq(studentCompletedLessonItems.lessonId, lessonId),
+          eq(studentCompletedLessonItems.courseId, courseId),
+        ),
+      );
   }
 
-  async lessonProgress(lessonId: UUIDType, userId: UUIDType) {
+  async lessonProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
     const [lessonProgress] = await this.db
       .select({
         quizCompleted: sql<boolean>`
@@ -228,6 +240,7 @@ export class LessonsRepository {
         and(
           eq(studentLessonsProgress.studentId, userId),
           eq(studentLessonsProgress.lessonId, lessonId),
+          eq(studentLessonsProgress.courseId, courseId),
         ),
       );
 
@@ -243,13 +256,18 @@ export class LessonsRepository {
     return lessonItemCount;
   }
 
-  async completedLessonItemsCount(lessonId: UUIDType) {
+  async completedLessonItemsCount(courseId: UUIDType, lessonId: UUIDType) {
     const [completedLessonItemsCount] = await this.db
       .selectDistinct({
         count: count(studentCompletedLessonItems.id),
       })
       .from(studentCompletedLessonItems)
-      .where(eq(studentCompletedLessonItems.lessonId, lessonId));
+      .where(
+        and(
+          eq(studentCompletedLessonItems.lessonId, lessonId),
+          eq(studentCompletedLessonItems.courseId, courseId),
+        ),
+      );
 
     return completedLessonItemsCount;
   }
@@ -281,6 +299,7 @@ export class LessonsRepository {
   }
 
   async completeQuiz(
+    courseId: UUIDType,
     lessonId: UUIDType,
     userId: UUIDType,
     completedLessonItemCount: number,
@@ -291,13 +310,18 @@ export class LessonsRepository {
       .values({
         studentId: userId,
         lessonId: lessonId,
+        courseId: courseId,
         quizCompleted: true,
         lessonItemCount: completedLessonItemCount,
         completedLessonItemCount,
         quizScore,
       })
       .onConflictDoUpdate({
-        target: [studentLessonsProgress.studentId, studentLessonsProgress.lessonId],
+        target: [
+          studentLessonsProgress.studentId,
+          studentLessonsProgress.lessonId,
+          studentLessonsProgress.courseId,
+        ],
         set: {
           quizCompleted: true,
           completedLessonItemCount,
@@ -307,7 +331,7 @@ export class LessonsRepository {
       .returning();
   }
 
-  async getQuizProgress(lessonId: UUIDType, userId: UUIDType) {
+  async getQuizProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
     const [quizProgress] = await this.db
       .select({
         quizCompleted: sql<boolean>`
@@ -322,6 +346,7 @@ export class LessonsRepository {
         and(
           eq(studentLessonsProgress.studentId, userId),
           eq(studentLessonsProgress.lessonId, lessonId),
+          eq(studentLessonsProgress.courseId, courseId),
         ),
       );
 
@@ -439,6 +464,7 @@ export class LessonsRepository {
   }
 
   async retireQuizProgress(
+    courseId: UUIDType,
     lessonId: UUIDType,
     userId: UUIDType,
     trx?: PostgresJsDatabase<typeof schema>,
@@ -452,11 +478,13 @@ export class LessonsRepository {
         and(
           eq(studentLessonsProgress.studentId, userId),
           eq(studentLessonsProgress.lessonId, lessonId),
+          eq(studentLessonsProgress.courseId, courseId),
         ),
       );
   }
 
   async removeStudentCompletedLessonItems(
+    courseId: UUIDType,
     lessonId: UUIDType,
     userId: UUIDType,
     trx?: PostgresJsDatabase<typeof schema>,
@@ -469,6 +497,7 @@ export class LessonsRepository {
         and(
           eq(studentCompletedLessonItems.studentId, userId),
           eq(studentCompletedLessonItems.lessonId, lessonId),
+          eq(studentCompletedLessonItems.courseId, courseId),
         ),
       );
   }

@@ -26,6 +26,7 @@ import {
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { CoursesService } from "../courses.service";
 import { SortCourseFieldsOptions } from "../schemas/courseQuery";
@@ -158,7 +159,7 @@ export class CoursesController {
   }
 
   @Get("course-by-id")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
@@ -183,7 +184,7 @@ export class CoursesController {
 
   @Patch(":id")
   @UseInterceptors(FileInterceptor("image"))
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "id", schema: UUIDSchema },

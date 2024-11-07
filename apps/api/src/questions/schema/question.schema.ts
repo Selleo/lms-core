@@ -3,6 +3,7 @@ import { type Static, Type } from "@sinclair/typebox";
 import { UUIDSchema } from "src/common";
 
 export const answerQuestionSchema = Type.Object({
+  courseId: UUIDSchema,
   lessonId: UUIDSchema,
   questionId: UUIDSchema,
   answer: Type.Union([
@@ -13,6 +14,7 @@ export const answerQuestionSchema = Type.Object({
 });
 
 export const questionSchema = Type.Object({
+  courseId: UUIDSchema,
   lessonId: UUIDSchema,
   questionId: UUIDSchema,
   questionType: Type.String(),

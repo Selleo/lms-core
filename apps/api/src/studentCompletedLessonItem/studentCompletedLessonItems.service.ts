@@ -4,11 +4,18 @@ import { and, eq } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import { lessonItems, studentCompletedLessonItems } from "src/storage/schema";
 
+import type { UUIDType } from "src/common";
+
 @Injectable()
 export class StudentCompletedLessonItemsService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  async markLessonItemAsCompleted(id: string, lessonId: string, studentId: string) {
+  async markLessonItemAsCompleted(
+    id: UUIDType,
+    courseId: UUIDType,
+    lessonId: UUIDType,
+    studentId: UUIDType,
+  ) {
     const [lessonItem] = await this.db
       .select()
       .from(lessonItems)
@@ -30,12 +37,13 @@ export class StudentCompletedLessonItemsService {
           eq(studentCompletedLessonItems.lessonItemId, lessonItem.id),
           eq(studentCompletedLessonItems.studentId, studentId),
           eq(studentCompletedLessonItems.lessonId, lessonId),
+          eq(studentCompletedLessonItems.courseId, courseId),
         ),
       );
     if (existingRecord) return;
 
     await this.db
       .insert(studentCompletedLessonItems)
-      .values({ studentId, lessonItemId: lessonItem.id, lessonId });
+      .values({ studentId, lessonItemId: lessonItem.id, lessonId, courseId });
   }
 }

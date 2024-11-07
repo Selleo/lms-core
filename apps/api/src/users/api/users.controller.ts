@@ -30,6 +30,7 @@ import { type CreateUserBody, createUserSchema } from "src/users/schemas/create-
 import { type ChangePasswordBody, changePasswordSchema } from "../schemas/change-password.schema";
 import { deleteUsersSchema, type DeleteUsersSchema } from "../schemas/delete-users.schema";
 import { type UpdateUserBody, updateUserSchema } from "../schemas/update-user.schema";
+import { USER_ROLES } from "../schemas/user-roles";
 import { type AllUsersResponse, allUsersSchema, type UserResponse } from "../schemas/user.schema";
 import { SortUserFieldsOptions } from "../schemas/userQuery";
 import { UsersService } from "../users.service";
@@ -111,7 +112,7 @@ export class UsersController {
   }
 
   @Patch("admin/:id")
-  @Roles("admin")
+  @Roles(USER_ROLES.admin)
   @Validate({
     response: baseResponse(commonUserSchema),
     request: [
@@ -167,7 +168,7 @@ export class UsersController {
   }
 
   @Delete()
-  @Roles("admin")
+  @Roles(USER_ROLES.admin)
   @Validate({
     response: nullResponse(),
     request: [{ type: "body", schema: deleteUsersSchema }],
@@ -179,7 +180,7 @@ export class UsersController {
   }
 
   @Post("create")
-  @Roles("admin")
+  @Roles(USER_ROLES.admin)
   @Validate({
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
     request: [{ type: "body", schema: createUserSchema }],

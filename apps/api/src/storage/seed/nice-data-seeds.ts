@@ -375,7 +375,7 @@ export const niceCourses: NiceCourseData[] = [
             itemType: LESSON_ITEM_TYPE.question.key,
             questionType: QUESTION_TYPE.multiple_choice.key,
             questionBody:
-              "Which of the following attributes are commonly used with the <img> tag? (Select all that apply)",
+              "Which of the following attributes are commonly used with the &lt;img&gt; tag? (Select all that apply)",
             state: STATUS.published.key,
             questionAnswers: [
               {

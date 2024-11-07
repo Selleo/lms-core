@@ -40,6 +40,7 @@ export class QuestionsService {
       }
 
       const quizProgress = await this.lessonsRepository.getQuizProgress(
+        answerQuestion.courseId,
         answerQuestion.lessonId,
         userId,
       );
@@ -78,6 +79,7 @@ export class QuestionsService {
 
       await this.studentCompletedLessonItemsService.markLessonItemAsCompleted(
         questionData.lessonItemAssociationId,
+        questionData.courseId,
         questionData.lessonId,
         userId,
       );

@@ -1540,6 +1540,14 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1716,6 +1724,14 @@
             "in": "query",
             "schema": {
               "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
               "type": "string"
             }
           }
@@ -2287,6 +2303,14 @@
             "in": "query",
             "schema": {
               "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
               "type": "string"
             }
           }
@@ -6116,6 +6140,10 @@
       "AnswerQuestionBody": {
         "type": "object",
         "properties": {
+          "courseId": {
+            "format": "uuid",
+            "type": "string"
+          },
           "lessonId": {
             "format": "uuid",
             "type": "string"
@@ -6158,6 +6186,7 @@
           }
         },
         "required": [
+          "courseId",
           "lessonId",
           "questionId",
           "answer"

@@ -278,6 +278,7 @@ export class CoursesService {
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
               WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.courseId} = ${courses.id}
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             )
           )::INTEGER`,
@@ -307,6 +308,7 @@ export class CoursesService {
             SELECT 1
             FROM ${studentLessonsProgress}
             WHERE ${studentLessonsProgress.lessonId} = ${lessons.id}
+              AND ${studentLessonsProgress.courseId} = ${course.id}
               AND ${studentLessonsProgress.studentId} = ${userId}
               AND ${studentLessonsProgress.quizCompleted}
           )::BOOLEAN`,
@@ -321,6 +323,7 @@ export class CoursesService {
           (SELECT COUNT(*)
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+            AND ${studentCompletedLessonItems.courseId} = ${courses.id}
             AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
         lessonProgress: sql<"completed" | "in_progress" | "not_started">`
           (CASE
@@ -333,6 +336,7 @@ export class CoursesService {
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
               WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.courseId} = ${courses.id}
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             )
             THEN ${LessonProgress.completed}
@@ -340,6 +344,7 @@ export class CoursesService {
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
               WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.courseId} = ${courses.id}
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             ) > 0
             THEN ${LessonProgress.inProgress}
@@ -593,6 +598,7 @@ export class CoursesService {
           quizLessons.map((lesson) => ({
             studentId: userId,
             lessonId: lesson.id,
+            courseId: course.id,
             quizCompleted: false,
             lessonItemCount: lesson.itemCount,
             completedLessonItemCount: 0,
@@ -638,6 +644,7 @@ export class CoursesService {
         .delete(studentLessonsProgress)
         .where(
           and(
+            eq(studentLessonsProgress.courseId, id),
             inArray(studentLessonsProgress.lessonId, courseLessonsIds),
             eq(studentLessonsProgress.studentId, userId),
           ),
@@ -648,6 +655,7 @@ export class CoursesService {
         .delete(studentQuestionAnswers)
         .where(
           and(
+            eq(studentQuestionAnswers.courseId, course.id),
             inArray(studentQuestionAnswers.lessonId, courseLessonsIds),
             eq(studentQuestionAnswers.studentId, userId),
           ),
@@ -658,6 +666,7 @@ export class CoursesService {
         .delete(studentCompletedLessonItems)
         .where(
           and(
+            eq(studentCompletedLessonItems.courseId, id),
             inArray(studentCompletedLessonItems.lessonId, courseLessonsIds),
             eq(studentCompletedLessonItems.studentId, userId),
           ),
@@ -718,6 +727,7 @@ export class CoursesService {
             SELECT COUNT(*)
             FROM ${studentCompletedLessonItems}
             WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+              AND ${studentCompletedLessonItems.courseId} = ${courses.id}
               AND ${studentCompletedLessonItems.studentId} = ${userId}
           )
         )::INTEGER`,

@@ -23,7 +23,7 @@ import {
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { UserRole } from "src/users/schemas/user-roles";
+import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
 
 import { AdminLessonItemsService } from "../adminLessonItems.service";
 import { AdminLessonsService } from "../adminLessons.service";
@@ -69,7 +69,7 @@ export class LessonsController {
   ) {}
 
   @Get()
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     response: paginatedResponse(allLessonsSchema),
     request: [
@@ -101,7 +101,7 @@ export class LessonsController {
   }
 
   @Get("available-lessons")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     response: baseResponse(
       Type.Array(
@@ -136,11 +136,14 @@ export class LessonsController {
     response: baseResponse(showLessonSchema),
   })
   async getLesson(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
+    @Query("courseId") courseId: UUIDType,
     @CurrentUser("role") userRole: UserRole,
-    @CurrentUser("userId") userId: string,
+    @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<ShowLessonResponse>> {
-    return new BaseResponse(await this.lessonsService.getLesson(id, userId, userRole === "admin"));
+    return new BaseResponse(
+      await this.lessonsService.getLesson(id, courseId, userId, userRole === USER_ROLES.admin),
+    );
   }
 
   @Get("lesson/:id")
@@ -152,7 +155,7 @@ export class LessonsController {
   }
 
   @Post("create-lesson")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -172,7 +175,7 @@ export class LessonsController {
   }
 
   @Patch("lesson")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -196,7 +199,7 @@ export class LessonsController {
   }
 
   @Post("add")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -222,7 +225,7 @@ export class LessonsController {
   }
 
   @Delete(":courseId/:lessonId")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "courseId", schema: UUIDSchema },
@@ -247,9 +250,10 @@ export class LessonsController {
   })
   async evaluationQuiz(
     @Query("lessonId") lessonId: string,
+    @Query("courseId") courseId: string,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.lessonsService.evaluationQuiz(lessonId, currentUserId);
+    await this.lessonsService.evaluationQuiz(courseId, lessonId, currentUserId);
     return new BaseResponse({
       message: "Evaluation quiz successfully",
     });
@@ -261,10 +265,11 @@ export class LessonsController {
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async clearQuizProgress(
+    @Query("courseId") courseId: string,
     @Query("lessonId") lessonId: string,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<{ message: string }>> {
-    const result = await this.lessonsService.clearQuizProgress(lessonId, currentUserId);
+    const result = await this.lessonsService.clearQuizProgress(courseId, lessonId, currentUserId);
     if (result)
       return new BaseResponse({
         message: "Evaluation quiz successfully",
@@ -320,7 +325,7 @@ export class LessonsController {
   }
 
   @Get("available-lesson-items")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -352,7 +357,7 @@ export class LessonsController {
   }
 
   @Post(":lessonId/assign-items")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "lessonId", schema: UUIDSchema },
@@ -392,7 +397,7 @@ export class LessonsController {
   }
 
   @Post(":lessonId/unassign-items")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "lessonId", schema: UUIDSchema },
@@ -428,7 +433,7 @@ export class LessonsController {
   }
 
   @Patch("text-block-item")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -452,7 +457,7 @@ export class LessonsController {
   }
 
   @Patch("question-item")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -476,7 +481,7 @@ export class LessonsController {
   }
 
   @Patch("file-item")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -501,7 +506,7 @@ export class LessonsController {
   }
 
   @Post("create-text-block")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -526,7 +531,7 @@ export class LessonsController {
   }
 
   @Post("create-question")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -590,7 +595,7 @@ export class LessonsController {
   }
 
   @Patch("question-options")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -633,7 +638,7 @@ export class LessonsController {
   }
 
   @Post("create-file")
-  @Roles("tutor", "admin")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     request: [
       {
