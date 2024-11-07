@@ -16,7 +16,7 @@ import { getSortOptions } from "src/common/helpers/getSortOptions";
 import hashPassword from "src/common/helpers/hashPassword";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 
-import { createTokens, credentials, users } from "../storage/schema";
+import { createTokens, credentials, userDetails, users } from "../storage/schema";
 
 import {
   type SortUserFieldsOptions,
@@ -26,6 +26,7 @@ import {
 } from "./schemas/userQuery";
 
 import type { UserRole } from "./schemas/user-roles";
+import type { UserDetails } from "./schemas/user.schema";
 import type { CreateUserBody } from "src/users/schemas/create-user.schema";
 
 type UsersQuery = {
@@ -92,6 +93,25 @@ export class UsersService {
     }
 
     return user;
+  }
+
+  public async getUserDetails(userId: string): Promise<UserDetails> {
+    const [userBio]: UserDetails[] = await this.db
+      .select({
+        id: userDetails.id,
+        description: userDetails.description,
+        contactEmail: userDetails.contactEmail,
+        contactPhone: userDetails.contactPhoneNumber,
+        jobTitle: userDetails.jobTitle,
+      })
+      .from(userDetails)
+      .where(eq(userDetails.userId, userId));
+
+    if (!userBio) {
+      throw new NotFoundException("User details not found");
+    }
+
+    return userBio;
   }
 
   public async updateUser(

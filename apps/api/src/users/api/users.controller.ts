@@ -24,14 +24,35 @@ import {
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { type CommonUser, commonUserSchema } from "src/common/schemas/common-user.schema";
-import { type CreateUserBody, createUserSchema } from "src/users/schemas/create-user.schema";
+import {
+  type CommonUser,
+  commonUserSchema,
+} from "src/common/schemas/common-user.schema";
+import {
+  type CreateUserBody,
+  createUserSchema,
+} from "src/users/schemas/create-user.schema";
 
-import { type ChangePasswordBody, changePasswordSchema } from "../schemas/change-password.schema";
-import { deleteUsersSchema, type DeleteUsersSchema } from "../schemas/delete-users.schema";
-import { type UpdateUserBody, updateUserSchema } from "../schemas/update-user.schema";
+import {
+  type ChangePasswordBody,
+  changePasswordSchema,
+} from "../schemas/change-password.schema";
+import {
+  deleteUsersSchema,
+  type DeleteUsersSchema,
+} from "../schemas/delete-users.schema";
+import {
+  type UpdateUserBody,
+  updateUserSchema,
+} from "../schemas/update-user.schema";
 import { USER_ROLES } from "../schemas/user-roles";
-import { type AllUsersResponse, allUsersSchema, type UserResponse } from "../schemas/user.schema";
+import {
+  allUsersSchema,
+  userDetailsSchema,
+  type AllUsersResponse,
+  type UserResponse,
+  type UserDetails,
+} from "../schemas/user.schema";
 import { SortUserFieldsOptions } from "../schemas/userQuery";
 import { UsersService } from "../users.service";
 
@@ -111,6 +132,19 @@ export class UsersController {
     }
   }
 
+  @Get("user-details")
+  @Validate({
+    response: baseResponse(userDetailsSchema),
+    request: [{ type: "query", name: "userId", schema: UUIDSchema }],
+  })
+  async getUserDetails(
+    @Query("userId") userId: UUIDType,
+  ): Promise<BaseResponse<UserDetails>> {
+    const userDetails = await this.usersService.getUserDetails(userId);
+
+    return new BaseResponse(userDetails);
+  }
+
   @Patch("admin/:id")
   @Roles(USER_ROLES.admin)
   @Validate({
@@ -147,7 +181,11 @@ export class UsersController {
     if (currentUser.userId !== id) {
       throw new ForbiddenException("You can only update your own account");
     }
-    await this.usersService.changePassword(id, data.oldPassword, data.newPassword);
+    await this.usersService.changePassword(
+      id,
+      data.oldPassword,
+      data.newPassword,
+    );
 
     return null;
   }
@@ -157,7 +195,10 @@ export class UsersController {
     response: nullResponse(),
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
   })
-  async deleteUser(id: string, @CurrentUser() currentUser: { userId: string }): Promise<null> {
+  async deleteUser(
+    id: string,
+    @CurrentUser() currentUser: { userId: string },
+  ): Promise<null> {
     if (currentUser.userId !== id) {
       throw new ForbiddenException("You can only delete your own account");
     }
@@ -182,7 +223,9 @@ export class UsersController {
   @Post("create")
   @Roles(USER_ROLES.admin)
   @Validate({
-    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
+    response: baseResponse(
+      Type.Object({ id: UUIDSchema, message: Type.String() }),
+    ),
     request: [{ type: "body", schema: createUserSchema }],
   })
   async createUser(
