@@ -3,6 +3,8 @@ import { Suspense, useLayoutEffect } from "react";
 
 import { currentUserQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
+import { adminNavigationConfig, mapNavigationItems } from "~/config/navigationConfig";
+import { RouteGuard } from "~/Guards/RouteGuard";
 import { useUserRole } from "~/hooks/useUserRole";
 
 import Loader from "../common/Loader/Loader";
@@ -27,16 +29,18 @@ export const clientLoader = async () => {
 };
 
 const AdminGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isAdmin } = useUserRole();
+  const { isAdmin, isTutor } = useUserRole();
   const navigate = useNavigate();
 
+  const isAllowed = isAdmin || isTutor;
+
   useLayoutEffect(() => {
-    if (!isAdmin) {
+    if (!isAllowed) {
       navigate("/");
     }
-  }, [isAdmin, navigate]);
+  }, [isAllowed, navigate]);
 
-  if (!isAdmin) return null;
+  if (!isAllowed) return null;
 
   return <>{children}</>;
 };
@@ -45,44 +49,13 @@ const AdminLayout = () => {
   return (
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 overflow-hidden">
-        <DashboardNavigation
-          menuItemsOverwrite={[
-            {
-              label: "courses",
-              link: "courses",
-              roles: ["admin"],
-              iconName: "Course",
-            },
-            {
-              label: "categories",
-              link: "categories",
-              roles: ["admin"],
-              iconName: "Category",
-            },
-            {
-              label: "lessons",
-              link: "lessons",
-              roles: ["admin"],
-              iconName: "Lesson",
-            },
-            {
-              label: "users",
-              link: "users",
-              roles: ["admin"],
-              iconName: "User",
-            },
-            {
-              label: "Lesson Content",
-              link: "lesson-items",
-              roles: ["admin"],
-              iconName: "LessonContent",
-            },
-          ]}
-        />
+        <DashboardNavigation menuItems={mapNavigationItems(adminNavigationConfig)} />
         <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
           <Suspense fallback={<Loader />}>
             <AdminGuard>
-              <Outlet />
+              <RouteGuard>
+                <Outlet />
+              </RouteGuard>
             </AdminGuard>
           </Suspense>
         </main>

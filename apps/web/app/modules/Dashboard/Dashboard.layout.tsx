@@ -2,6 +2,8 @@ import { Outlet, redirect } from "@remix-run/react";
 
 import { currentUserQueryOptions } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
+import { mapNavigationItems, navigationConfig } from "~/config/navigationConfig";
+import { RouteGuard } from "~/Guards/RouteGuard";
 import { DashboardNavigation } from "~/modules/Dashboard/DashboardNavigation/DashboardNavigation";
 
 import { useAuthEffect } from "../Auth/authEffect";
@@ -26,9 +28,11 @@ export default function DashboardLayout() {
   return (
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 overflow-hidden">
-        <DashboardNavigation />
+        <DashboardNavigation menuItems={mapNavigationItems(navigationConfig)} />
         <main className="flex-1 overflow-y-auto py-6 lg:p-6 bg-primary-50">
-          <Outlet />
+          <RouteGuard>
+            <Outlet />
+          </RouteGuard>
         </main>
       </div>
     </div>

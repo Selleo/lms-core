@@ -4,7 +4,7 @@ import { Icon } from "~/components/Icon";
 
 import { MenuItemLink } from "./MenuItemLink";
 
-import type { MenuItemType } from "./DashboardNavigation";
+import type { MenuItemType } from "~/config/navigationConfig";
 
 type MenuItemProps = {
   item: MenuItemType;

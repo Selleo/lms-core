@@ -4,7 +4,7 @@ import { memo } from "react";
 import { Icon } from "~/components/Icon";
 import { cn } from "~/lib/utils";
 
-import type { LeafMenuItem } from "./DashboardNavigation";
+import type { LeafMenuItem } from "~/config/navigationConfig";
 
 export const MenuItemLink = memo(({ label, link, iconName }: LeafMenuItem) => (
   <NavLink

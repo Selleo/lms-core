@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "@remix-run/react";
 import { cx } from "class-variance-authority";
-import { isEmpty } from "lodash-es";
+import { capitalize } from "lodash-es";
 import { ArrowRight } from "lucide-react";
 import { Suspense, useState } from "react";
 
@@ -11,67 +11,24 @@ import { useUserRole } from "~/hooks/useUserRole";
 import Loader from "~/modules/common/Loader/Loader";
 import { MenuItem } from "~/modules/Dashboard/DashboardNavigation/MenuItem";
 
-import { useAuthorizedMenuItems } from "../hooks/useAuthorizedMenuItems";
-
 import { LogoutButton } from "./LogoutButton";
 import { UserProfile } from "./UserProfile";
 
-import type { GetUsersResponse } from "~/api/generated-api";
-import type { IconName } from "~/types/shared";
+import type { MenuItemType } from "~/config/navigationConfig";
+import type { UserRole } from "~/config/userRoles";
 
-export type Role = GetUsersResponse["data"][number]["role"];
-
-export interface BaseMenuItem {
-  label: string;
-  roles: Role[];
-}
-
-export interface LeafMenuItem extends BaseMenuItem {
-  link: string;
-  iconName: IconName;
-}
-
-export interface ParentMenuItem extends BaseMenuItem {
-  children: MenuItemType[];
-}
-
-export type MenuItemType = LeafMenuItem | ParentMenuItem;
-
-//tests routes - to be adjusted
-const menuItems: MenuItemType[] = [
-  {
-    label: "dashboard",
-    link: "/",
-    roles: ["admin", "student"],
-    iconName: "Dashboard",
-  },
-  {
-    label: "settings",
-    link: "/settings",
-    roles: ["admin", "student"],
-    iconName: "Settings",
-  },
-];
-
-export function DashboardNavigation({
-  menuItemsOverwrite,
-}: {
-  menuItemsOverwrite?: MenuItemType[];
-}) {
-  const { isAdmin } = useUserRole();
+export function DashboardNavigation({ menuItems }: { menuItems: MenuItemType[] }) {
+  const { isAdmin, isTutor, role } = useUserRole();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const [isOpen, setIsOpen] = useState(false);
-  const { role } = useUserRole();
-  const authorizedMenuItems = useAuthorizedMenuItems({
-    menuItems: menuItemsOverwrite ?? menuItems,
-    userRole: role,
-  });
   const isAdminRoute = pathname.startsWith("/admin");
 
-  if (isEmpty(authorizedMenuItems)) {
-    return null;
-  }
+  const isAllowed = isAdmin || isTutor;
+
+  const filteredMenuItems = menuItems.filter(
+    (item) => item.roles && item.roles.includes(role as UserRole),
+  );
 
   return (
     <>
@@ -112,7 +69,7 @@ export function DashboardNavigation({
         <div className="flex flex-col h-full">
           <nav>
             <ul className="flex flex-col items-center">
-              {authorizedMenuItems.map((item) => (
+              {filteredMenuItems.map((item) => (
                 <MenuItem key={item.label} item={item} />
               ))}
             </ul>
@@ -122,13 +79,13 @@ export function DashboardNavigation({
           <UserProfile />
         </Suspense>
         <div className="flex items-center border-t border-t-primary-200 w-full pt-4 gap-2 flex-col">
-          {isAdmin && (
+          {isAllowed && (
             <Button
               className="w-full justify-start gap-2"
               variant="outline"
               onClick={() => navigate(isAdminRoute ? "/" : "/admin/courses")}
             >
-              {`Go to ${isAdminRoute ? "Dashboard" : "Admin"}`}
+              {`Go to ${isAdminRoute ? "Dashboard" : capitalize(role)}`}
               <ArrowRight className="w-4 h-4 inline-block text-primary-700" />
             </Button>
           )}
