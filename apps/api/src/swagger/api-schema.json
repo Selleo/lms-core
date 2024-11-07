@@ -1534,7 +1534,16 @@
         "parameters": [
           {
             "name": "id",
-            "required": false,
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": true,
             "in": "query",
             "schema": {
               "format": "uuid",
@@ -1711,6 +1720,15 @@
         "operationId": "LessonsController_evaluationQuiz",
         "parameters": [
           {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
             "name": "lessonId",
             "required": false,
             "in": "query",
@@ -1738,8 +1756,17 @@
         "operationId": "LessonsController_clearQuizProgress",
         "parameters": [
           {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
             "name": "lessonId",
-            "required": false,
+            "required": true,
             "in": "query",
             "schema": {
               "format": "uuid",
@@ -2287,6 +2314,14 @@
             "in": "query",
             "schema": {
               "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
               "type": "string"
             }
           }
@@ -3882,52 +3917,62 @@
       },
       "CreateCourseBody": {
         "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "state": {
-            "anyOf": [
-              {
-                "const": "draft",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
                 "type": "string"
               },
-              {
-                "const": "published",
+              "description": {
+                "type": "string"
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "const": "draft",
+                    "type": "string"
+                  },
+                  {
+                    "const": "published",
+                    "type": "string"
+                  }
+                ]
+              },
+              "imageUrl": {
+                "type": "string"
+              },
+              "priceInCents": {
+                "type": "integer"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "categoryId": {
+                "format": "uuid",
                 "type": "string"
               }
+            },
+            "required": [
+              "title",
+              "description",
+              "state",
+              "priceInCents",
+              "categoryId"
             ]
           },
-          "imageUrl": {
-            "type": "string"
-          },
-          "priceInCents": {
-            "type": "integer"
-          },
-          "currency": {
-            "type": "string"
-          },
-          "categoryId": {
-            "format": "uuid",
-            "type": "string"
-          },
-          "lessons": {
-            "type": "array",
-            "items": {
-              "format": "uuid",
-              "type": "string"
+          {
+            "type": "object",
+            "properties": {
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "format": "uuid",
+                  "type": "string"
+                }
+              }
             }
           }
-        },
-        "required": [
-          "title",
-          "description",
-          "state",
-          "priceInCents",
-          "categoryId"
         ]
       },
       "CreateCourseResponse": {
@@ -6106,6 +6151,10 @@
       "AnswerQuestionBody": {
         "type": "object",
         "properties": {
+          "courseId": {
+            "format": "uuid",
+            "type": "string"
+          },
           "lessonId": {
             "format": "uuid",
             "type": "string"
@@ -6148,6 +6197,7 @@
           }
         },
         "required": [
+          "courseId",
           "lessonId",
           "questionId",
           "answer"

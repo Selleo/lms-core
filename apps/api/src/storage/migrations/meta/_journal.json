@@ -43,6 +43,13 @@
       "when": 1730202829826,
       "tag": "0005_add_lesson_id_to_student_question_answers",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1730982478691,
+      "tag": "0006_add_course_id_to_missing_tables",
+      "breakpoints": true
     }
   ]
 }

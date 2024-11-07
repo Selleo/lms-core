@@ -1,6 +1,6 @@
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";
-import { type UserRole, UserRoles } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 import { createUnitTest, type TestContext } from "test/create-unit-test";
 import { createCategoryFactory } from "test/factory/category.factory";
 import { truncateAllTables } from "test/helpers/test-helpers";
@@ -9,6 +9,7 @@ import { CategoriesService } from "../categories.service";
 
 import type { CategoriesQuery } from "../api/categories.types";
 import type { DatabasePg } from "src/common";
+import type { UserRole } from "src/users/schemas/user-roles";
 
 const CATEGORIES_COUNT = 20;
 
@@ -36,7 +37,7 @@ describe("CategoriesService", () => {
   describe("getCategories", () => {
     describe("when the request specifies the pagination params", () => {
       it("returns correct pagination data", async () => {
-        userRole = UserRoles.student;
+        userRole = USER_ROLES.student;
         const perPage = 5;
         const page = 2,
           query = { page, perPage };

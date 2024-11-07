@@ -9,8 +9,8 @@ import SingleLessonSummary from "~/modules/Courses/Lesson/Summary/SingleLessonSu
 import { getSummaryItems } from "../utils";
 
 export default function Summary() {
-  const { lessonId } = useParams();
-  const { data } = useLessonSuspense(lessonId);
+  const { lessonId = "", courseId = "" } = useParams();
+  const { data } = useLessonSuspense(lessonId, courseId);
 
   const isQuiz = data.type === "quiz";
 
@@ -21,7 +21,7 @@ export default function Summary() {
 
   return (
     <Card className="sr-only lg:not-sr-only rounded-none max-w-[383px] w-full flex flex-col grow border-none drop-shadow-primary">
-      {isQuiz && <QuizSummary data={data} lessonId={lessonId ?? ""} />}
+      {isQuiz && <QuizSummary data={data} lessonId={lessonId ?? ""} courseId={courseId ?? ""} />}
       {!isQuiz && (
         <CardContent className="p-8 flex flex-col">
           <div className="h6">Lesson Summary</div>

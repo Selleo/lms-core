@@ -10,7 +10,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-import { UserRoles } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { archived, id, timestamps } from "./utils";
 
@@ -20,7 +20,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
-  role: text("role").notNull().default(UserRoles.student),
+  role: text("role").notNull().default(USER_ROLES.student),
   archived,
 });
 
@@ -155,6 +155,9 @@ export const studentQuestionAnswers = pgTable(
   {
     ...id,
     ...timestamps,
+    courseId: uuid("course_id")
+      .references(() => courses.id)
+      .notNull(),
     lessonId: uuid("lesson_id")
       .references(() => lessons.id)
       .notNull(),
@@ -292,9 +295,12 @@ export const studentCompletedLessonItems = pgTable(
     lessonId: uuid("lesson_id")
       .references(() => lessons.id)
       .notNull(),
+    courseId: uuid("course_id")
+      .references(() => courses.id)
+      .notNull(),
   },
   (table) => ({
-    unq: unique().on(table.studentId, table.lessonItemId, table.lessonId),
+    unq: unique().on(table.studentId, table.lessonItemId, table.lessonId, table.courseId),
   }),
 );
 
@@ -306,6 +312,9 @@ export const studentLessonsProgress = pgTable(
     studentId: uuid("student_id")
       .references(() => users.id)
       .notNull(),
+    courseId: uuid("course_id")
+      .references(() => courses.id)
+      .notNull(),
     lessonId: uuid("lesson_id")
       .references(() => lessons.id)
       .notNull(),
@@ -315,6 +324,6 @@ export const studentLessonsProgress = pgTable(
     quizScore: integer("quiz_score").notNull().default(0),
   },
   (table) => ({
-    unq: unique().on(table.studentId, table.lessonId),
+    unq: unique().on(table.studentId, table.lessonId, table.courseId),
   }),
 );

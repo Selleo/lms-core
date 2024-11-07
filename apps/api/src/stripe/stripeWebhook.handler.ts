@@ -69,6 +69,7 @@ export class StripeWebhookHandler {
           quizLessons.map((lesson) => ({
             studentId: userId,
             lessonId: lesson.id,
+            courseId: course.id,
             quizCompleted: false,
             lessonItemCount: lesson.itemCount,
             completedLessonItemCount: 0,

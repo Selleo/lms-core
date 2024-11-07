@@ -12,7 +12,7 @@ import {
 export default function Breadcrumb() {
   const { courseId, lessonId } = useParams();
   const { data: courseData } = useCourseSuspense(courseId!);
-  const { data: lessonData } = useLessonSuspense(lessonId!);
+  const { data: lessonData } = useLessonSuspense(lessonId!, courseId!);
 
   if (!courseData) {
     throw new Error(`Course with id: ${courseId} not found`);

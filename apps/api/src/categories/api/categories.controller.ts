@@ -11,7 +11,7 @@ import {
   type UUIDType,
 } from "src/common";
 import { CurrentUser } from "src/common/decorators/user.decorator";
-import { UserRole } from "src/users/schemas/user-roles";
+import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
 
 import { CategoriesService } from "../categories.service";
 import {
@@ -23,8 +23,8 @@ import {
   type SortCategoryFieldsOptions,
   sortCategoryFieldsOptions,
 } from "../schemas/categoryQuery";
-import { type CreateCategoryBody, createCategorySchema } from "../schemas/createCategorySchema";
-import { type UpdateCategoryBody, updateCategorySchema } from "../schemas/updateCategorySchema";
+import { categoryCreateSchema, type CategoryInsert } from "../schemas/createCategorySchema";
+import { categoryUpdateSchema, type CategoryUpdateBody } from "../schemas/updateCategorySchema";
 
 @Controller("categories")
 export class CategoriesController {
@@ -66,7 +66,7 @@ export class CategoriesController {
     @Query("id") id: string,
     @CurrentUser() currentUser: { role: string },
   ): Promise<BaseResponse<CategorySchema>> {
-    if (currentUser.role !== "admin") {
+    if (currentUser.role !== USER_ROLES.admin) {
       throw new UnauthorizedException("You don't have permission to get category");
     }
 
@@ -80,13 +80,13 @@ export class CategoriesController {
     request: [
       {
         type: "body",
-        schema: createCategorySchema,
+        schema: categoryCreateSchema,
       },
     ],
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
   })
   async createCategory(
-    @Body() createCategoryBody: CreateCategoryBody,
+    @Body() createCategoryBody: CategoryInsert,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const { id } = await this.categoriesService.createCategory(createCategoryBody);
 
@@ -98,15 +98,15 @@ export class CategoriesController {
     response: baseResponse(categorySchema),
     request: [
       { type: "param", name: "id", schema: Type.String() },
-      { type: "body", schema: updateCategorySchema },
+      { type: "body", schema: categoryUpdateSchema },
     ],
   })
   async updateCategory(
     @Query("id") id: string,
-    @Body() updateCategoryBody: UpdateCategoryBody,
+    @Body() updateCategoryBody: CategoryUpdateBody,
     @CurrentUser() currentUser: { role: string },
   ): Promise<BaseResponse<CategorySchema>> {
-    if (currentUser.role !== "admin") {
+    if (currentUser.role !== USER_ROLES.admin) {
       throw new UnauthorizedException("You don't have permission to update category");
     }
 

@@ -7,8 +7,8 @@ import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
 export default function Overview() {
-  const { lessonId } = useParams();
-  const { data } = useLessonSuspense(lessonId ?? "");
+  const { lessonId = "", courseId = "" } = useParams();
+  const { data } = useLessonSuspense(lessonId, courseId);
 
   const imageUrl = data.imageUrl ?? "https://placehold.co/320x180";
   const title = data.title;

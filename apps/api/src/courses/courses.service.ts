@@ -278,6 +278,7 @@ export class CoursesService {
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
               WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.courseId} = ${courses.id}
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             )
           )::INTEGER`,
@@ -302,18 +303,28 @@ export class CoursesService {
         id: lessons.id,
         title: lessons.title,
         type: lessons.type,
-        isSubmitted: sql<boolean>`EXISTS (SELECT 1 FROM ${studentLessonsProgress} WHERE ${studentLessonsProgress.lessonId} = ${lessons.id} AND ${studentLessonsProgress.studentId} = ${userId} AND ${studentLessonsProgress.quizCompleted})::BOOLEAN`,
+        isSubmitted: sql<boolean>`
+          EXISTS (
+            SELECT 1
+            FROM ${studentLessonsProgress}
+            WHERE ${studentLessonsProgress.lessonId} = ${lessons.id}
+              AND ${studentLessonsProgress.courseId} = ${course.id}
+              AND ${studentLessonsProgress.studentId} = ${userId}
+              AND ${studentLessonsProgress.quizCompleted}
+          )::BOOLEAN`,
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
         itemsCount: sql<number>`
           (SELECT COUNT(*)
           FROM ${lessonItems}
-          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+          WHERE ${lessonItems.lessonId} = ${lessons.id}
+            AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
         itemsCompletedCount: sql<number>`
           (SELECT COUNT(*)
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-          AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
+            AND ${studentCompletedLessonItems.courseId} = ${course.id}
+            AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
         lessonProgress: sql<"completed" | "in_progress" | "not_started">`
           (CASE
             WHEN (
@@ -325,6 +336,7 @@ export class CoursesService {
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
               WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.courseId} = ${course.id}
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             )
             THEN ${LessonProgress.completed}
@@ -332,6 +344,7 @@ export class CoursesService {
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
               WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.courseId} = ${course.id}
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             ) > 0
             THEN ${LessonProgress.inProgress}
@@ -585,6 +598,7 @@ export class CoursesService {
           quizLessons.map((lesson) => ({
             studentId: userId,
             lessonId: lesson.id,
+            courseId: course.id,
             quizCompleted: false,
             lessonItemCount: lesson.itemCount,
             completedLessonItemCount: 0,
@@ -630,6 +644,7 @@ export class CoursesService {
         .delete(studentLessonsProgress)
         .where(
           and(
+            eq(studentLessonsProgress.courseId, id),
             inArray(studentLessonsProgress.lessonId, courseLessonsIds),
             eq(studentLessonsProgress.studentId, userId),
           ),
@@ -640,6 +655,7 @@ export class CoursesService {
         .delete(studentQuestionAnswers)
         .where(
           and(
+            eq(studentQuestionAnswers.courseId, course.id),
             inArray(studentQuestionAnswers.lessonId, courseLessonsIds),
             eq(studentQuestionAnswers.studentId, userId),
           ),
@@ -650,6 +666,7 @@ export class CoursesService {
         .delete(studentCompletedLessonItems)
         .where(
           and(
+            eq(studentCompletedLessonItems.courseId, id),
             inArray(studentCompletedLessonItems.lessonId, courseLessonsIds),
             eq(studentCompletedLessonItems.studentId, userId),
           ),
@@ -710,6 +727,7 @@ export class CoursesService {
             SELECT COUNT(*)
             FROM ${studentCompletedLessonItems}
             WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+              AND ${studentCompletedLessonItems.courseId} = ${courses.id}
               AND ${studentCompletedLessonItems.studentId} = ${userId}
           )
         )::INTEGER`,

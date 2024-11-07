@@ -19,7 +19,7 @@ import {
 } from "src/storage/schema";
 import { StudentCompletedLessonItemsService } from "src/studentCompletedLessonItem/studentCompletedLessonItems.service";
 
-import { QuestionType } from "./schema/questionsSchema";
+import { QUESTION_TYPE } from "./schema/questions.types";
 
 import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
 
@@ -40,6 +40,7 @@ export class QuestionsService {
       }
 
       const quizProgress = await this.lessonsRepository.getQuizProgress(
+        answerQuestion.courseId,
         answerQuestion.lessonId,
         userId,
       );
@@ -57,14 +58,15 @@ export class QuestionsService {
         userId,
         questionData.questionId,
         questionData.lessonId,
+        answerQuestion.courseId,
       );
 
       const questionTypeHandlers = {
-        [QuestionType.single_choice.key]: this.handleChoiceAnswer.bind(this),
-        [QuestionType.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
-        [QuestionType.open_answer.key]: this.handleOpenAnswer.bind(this),
-        [QuestionType.fill_in_the_blanks_text.key]: this.handleFillInTheBlanksAnswer.bind(this),
-        [QuestionType.fill_in_the_blanks_dnd.key]: this.handleFillInTheBlanksAnswer.bind(this),
+        [QUESTION_TYPE.single_choice.key]: this.handleChoiceAnswer.bind(this),
+        [QUESTION_TYPE.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
+        [QUESTION_TYPE.open_answer.key]: this.handleOpenAnswer.bind(this),
+        [QUESTION_TYPE.fill_in_the_blanks_text.key]: this.handleFillInTheBlanksAnswer.bind(this),
+        [QUESTION_TYPE.fill_in_the_blanks_dnd.key]: this.handleFillInTheBlanksAnswer.bind(this),
       } as const;
 
       const handler =
@@ -78,6 +80,7 @@ export class QuestionsService {
 
       await this.studentCompletedLessonItemsService.markLessonItemAsCompleted(
         questionData.lessonItemAssociationId,
+        answerQuestion.courseId,
         questionData.lessonId,
         userId,
       );
@@ -127,6 +130,7 @@ export class QuestionsService {
     userId: UUIDType,
     questionId: UUIDType,
     lessonId: UUIDType,
+    courseId: UUIDType,
   ): Promise<string | null> {
     const [existingAnswer] = await trx
       .select({
@@ -138,6 +142,7 @@ export class QuestionsService {
           eq(studentQuestionAnswers.studentId, userId),
           eq(studentQuestionAnswers.questionId, questionId),
           eq(studentQuestionAnswers.lessonId, lessonId),
+          eq(studentQuestionAnswers.courseId, courseId),
         ),
       );
 
@@ -158,6 +163,7 @@ export class QuestionsService {
     if (answerQuestion.answer.length < 1)
       return await this.upsertAnswer(
         trx,
+        answerQuestion.courseId,
         questionData.lessonId,
         questionData.questionId,
         userId,
@@ -196,6 +202,7 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
@@ -224,6 +231,7 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
@@ -256,6 +264,7 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
@@ -266,6 +275,7 @@ export class QuestionsService {
 
   private async upsertAnswer(
     trx: any,
+    courseId: UUIDType,
     lessonId: UUIDType,
     questionId: UUIDType,
     userId: UUIDType,
@@ -288,6 +298,7 @@ export class QuestionsService {
       answer: sql`json_build_object(${sql.raw(jsonBuildObjectArgs)})`,
       studentId: userId,
       lessonId,
+      courseId,
     });
   }
 }

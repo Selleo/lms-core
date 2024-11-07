@@ -437,7 +437,7 @@ export interface GetCourseByIdResponse {
   };
 }
 
-export interface CreateCourseBody {
+export type CreateCourseBody = {
   title: string;
   description: string;
   state: "draft" | "published";
@@ -446,8 +446,9 @@ export interface CreateCourseBody {
   currency?: string;
   /** @format uuid */
   categoryId: string;
+} & {
   lessons?: string[];
-}
+};
 
 export interface CreateCourseResponse {
   data: {
@@ -996,6 +997,8 @@ export interface CreateFileResponse {
 }
 
 export interface AnswerQuestionBody {
+  /** @format uuid */
+  courseId: string;
   /** @format uuid */
   lessonId: string;
   /** @format uuid */
@@ -1927,9 +1930,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/lessons/lesson
      */
     lessonsControllerGetLesson: (
-      query?: {
+      query: {
         /** @format uuid */
-        id?: string;
+        id: string;
+        /** @format uuid */
+        courseId: string;
       },
       params: RequestParams = {},
     ) =>
@@ -2038,6 +2043,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     lessonsControllerEvaluationQuiz: (
       query?: {
         /** @format uuid */
+        courseId?: string;
+        /** @format uuid */
         lessonId?: string;
       },
       params: RequestParams = {},
@@ -2057,9 +2064,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/api/lessons/clear-quiz-progress
      */
     lessonsControllerClearQuizProgress: (
-      query?: {
+      query: {
         /** @format uuid */
-        lessonId?: string;
+        courseId: string;
+        /** @format uuid */
+        lessonId: string;
       },
       params: RequestParams = {},
     ) =>
@@ -2365,6 +2374,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         id: string;
         /** @format uuid */
         lessonId: string;
+        courseId: string;
       },
       params: RequestParams = {},
     ) =>

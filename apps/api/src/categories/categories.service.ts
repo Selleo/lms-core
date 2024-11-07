@@ -6,11 +6,11 @@ import {
 } from "@nestjs/common";
 import { and, count, eq, ilike, like } from "drizzle-orm";
 
-import { DatabasePg, type Pagination } from "src/common";
+import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";
-import { UserRoles, type UserRole } from "src/users/schemas/user-roles";
+import { type UserRole, USER_ROLES } from "src/users/schemas/user-roles";
 
 import {
   type CategoryFilterSchema,
@@ -20,8 +20,9 @@ import {
 
 import type { CategoriesQuery } from "./api/categories.types";
 import type { AllCategoriesResponse } from "./schemas/category.schema";
-import type { CreateCategoryBody } from "./schemas/createCategorySchema";
-import type { UpdateCategoryBody } from "./schemas/updateCategorySchema";
+import type { CategoryInsert } from "./schemas/createCategorySchema";
+import type { CategoryUpdateBody } from "./schemas/updateCategorySchema";
+import type { Pagination } from "src/common";
 
 @Injectable()
 export class CategoriesService {
@@ -40,7 +41,7 @@ export class CategoriesService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    const isAdmin = userRole === UserRoles.admin;
+    const isAdmin = userRole === USER_ROLES.admin;
 
     const selectedColumns = {
       id: categories.id,
@@ -81,7 +82,7 @@ export class CategoriesService {
     return category;
   }
 
-  public async createCategory(createCategoryBody: CreateCategoryBody) {
+  public async createCategory(createCategoryBody: CategoryInsert) {
     const [newCategory] = await this.db.insert(categories).values(createCategoryBody).returning();
 
     if (!newCategory) throw new UnprocessableEntityException("Category not created");
@@ -89,7 +90,7 @@ export class CategoriesService {
     return newCategory;
   }
 
-  public async updateCategory(id: string, updateCategoryBody: UpdateCategoryBody) {
+  public async updateCategory(id: string, updateCategoryBody: CategoryUpdateBody) {
     const [existingCategory] = await this.db.select().from(categories).where(eq(categories.id, id));
 
     if (!existingCategory) {

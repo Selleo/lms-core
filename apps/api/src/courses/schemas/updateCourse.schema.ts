@@ -1,10 +1,12 @@
 import { type Static, Type } from "@sinclair/typebox";
 
+import { STATES } from "src/common/states";
+
 export const updateCourseSchema = Type.Partial(
   Type.Object({
     title: Type.String(),
     description: Type.String(),
-    state: Type.Union([Type.Literal("draft"), Type.Literal("published")]),
+    state: Type.Union([Type.Literal(STATES.draft), Type.Literal(STATES.published)]),
     priceInCents: Type.Integer(),
     currency: Type.String(),
     categoryId: Type.String({ format: "uuid" }),

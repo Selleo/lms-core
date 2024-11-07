@@ -1,4 +1,4 @@
-export const QuestionType = {
+export const QUESTION_TYPE = {
   open_answer: { key: "open_answer", value: "Open Answer" },
   single_choice: { key: "single_choice", value: "Single Choice" },
   multiple_choice: { key: "multiple_choice", value: "Multiple Choice" },
@@ -11,3 +11,9 @@ export const QuestionType = {
     value: "Fill in the blanks",
   },
 } as const;
+
+export const QUESTION_TYPE_KEYS = Object.fromEntries(
+  Object.entries(QUESTION_TYPE).map(([key, { value }]) => [key, value]),
+) as {
+  [K in keyof typeof QUESTION_TYPE]: (typeof QUESTION_TYPE)[K]["value"];
+};

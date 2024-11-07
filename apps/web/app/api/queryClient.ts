@@ -20,7 +20,7 @@ export const queryClient = new QueryClient({
 
         if (isAxiosError(error) && error.response) return false;
 
-        if (failureCount >= 3) return false;
+        if (failureCount >= 2) return false;
 
         return true;
       },

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { sql } from "drizzle-orm/sql";
+import { sql, eq } from "drizzle-orm/sql";
 
 import {
   categories,
@@ -15,7 +15,7 @@ import {
 
 import { niceCourses } from "./nice-data-seeds";
 
-import type { DatabasePg } from "./common";
+import type { DatabasePg } from "../../common";
 
 export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
   for (const courseData of niceCourses) {
@@ -69,7 +69,7 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
       });
 
       for (const [index, item] of lessonData.items.entries()) {
-        if (item.type === "text_block") {
+        if (item.itemType === "text_block") {
           const [additionalTextBlock] = await db
             .insert(textBlocks)
             .values({
@@ -91,13 +91,13 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             lessonItemType: "text_block",
             displayOrder: index + 2,
           });
-        } else if (item.type === "file") {
+        } else if (item.itemType === "file") {
           const [file] = await db
             .insert(files)
             .values({
               id: crypto.randomUUID(),
               title: item.title,
-              type: item.fileType,
+              type: item.type,
               url: item.url,
               state: item.state,
               authorId: adminUserId,
@@ -113,7 +113,24 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             lessonItemType: "file",
             displayOrder: index + 2,
           });
-        } else if (item.type === "question") {
+        } else if (item.itemType === "question") {
+          const [questionExists] = await db
+            .select()
+            .from(questions)
+            .where(eq(questions.questionBody, item.questionBody));
+
+          if (questionExists) {
+            await db.insert(lessonItems).values({
+              id: crypto.randomUUID(),
+              lessonId: lesson.id,
+              lessonItemId: questionExists.id,
+              lessonItemType: "question",
+              displayOrder: index + 2,
+            });
+
+            continue;
+          }
+
           const questionId = crypto.randomUUID();
 
           const [question] = await db
@@ -122,7 +139,8 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
               id: questionId,
               questionType: item.questionType,
               questionBody: item.questionBody,
-              solutionExplanation: "Explanation will be provided after answering.",
+              solutionExplanation:
+                item.solutionExplanation || "Explanation will be provided after answering.",
               state: item.state,
               authorId: adminUserId,
               createdAt: new Date().toISOString(),
@@ -130,68 +148,17 @@ export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
             })
             .returning();
 
-          if (item.questionType === "fill_in_the_blanks_text") {
-            const words = ["headings", "paragraphs"];
-
-            for (let index = 0; index < words.length; index++) {
+          if (item.questionAnswers) {
+            for (let index = 0; index < item.questionAnswers.length; index++) {
               await db.insert(questionAnswerOptions).values({
                 id: crypto.randomUUID(),
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
                 questionId,
-                optionText: words[index],
-                isCorrect: true,
-                position: index,
+                optionText: item.questionAnswers[index].optionText,
+                isCorrect: item.questionAnswers[index].isCorrect || false,
+                position: item.questionAnswers[index].position,
               });
-            }
-          }
-
-          if (item.questionType === "fill_in_the_blanks_dnd") {
-            const words = [
-              "HTML",
-              "interactivity",
-              "styles",
-              "functions",
-              "content",
-              "elements",
-              "animations",
-              "design",
-              "databases",
-              "forms",
-              "structure",
-              "validation",
-            ];
-
-            for (let index = 0; index < words.length; index++) {
-              await db.insert(questionAnswerOptions).values({
-                id: crypto.randomUUID(),
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString(),
-                questionId,
-                optionText: words[index],
-                isCorrect: index < 2,
-                position: index < 2 ? index : null,
-              });
-            }
-          }
-
-          if (item.questionType === "multiple_choice" || item.questionType === "single_choice") {
-            for (let index = 1; index < 5; index++) {
-              const mockedIsCorrect =
-                item.questionType === "single_choice" ? index === 1 : index % 2 === 0;
-
-              await db
-                .insert(questionAnswerOptions)
-                .values({
-                  id: crypto.randomUUID(),
-                  createdAt: new Date().toISOString(),
-                  updatedAt: new Date().toISOString(),
-                  questionId,
-                  optionText: faker.lorem.sentence(),
-                  isCorrect: mockedIsCorrect,
-                  position: index,
-                })
-                .returning();
             }
           }
 

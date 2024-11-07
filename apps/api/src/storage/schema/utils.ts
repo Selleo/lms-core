@@ -28,7 +28,11 @@ export const timestamps = {
 
 export const archived = boolean("archived").default(false).notNull();
 
-export const Status = {
-  draft: "Draft",
-  published: "Published",
+export const STATUS = {
+  draft: { key: "draft", value: "Draft" },
+  published: { key: "published", value: "Published" },
 } as const;
+
+export const STATUS_KEYS = Object.fromEntries(
+  Object.entries(STATUS).map(([key, { value }]) => [key, value]),
+);

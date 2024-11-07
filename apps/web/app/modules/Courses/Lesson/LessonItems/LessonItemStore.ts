@@ -7,6 +7,7 @@ import { queryClient } from "~/api/queryClient";
 type TMarkLessonItemAsCompletedOptions = {
   lessonItemId: string;
   lessonId: string;
+  courseId: string;
 };
 
 type TCompletedLessonItemsStore = {
@@ -25,8 +26,9 @@ export const useCompletedLessonItemsStore = create<TCompletedLessonItemsStore>()
       markLessonItemAsCompleted: async ({
         lessonItemId,
         lessonId,
+        courseId,
       }: TMarkLessonItemAsCompletedOptions) => {
-        await queryClient.invalidateQueries(lessonQueryOptions(lessonId));
+        await queryClient.invalidateQueries(lessonQueryOptions(lessonId, courseId));
 
         return set((state) => ({
           completedLessonItems: [...state.completedLessonItems, lessonItemId],

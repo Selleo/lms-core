@@ -1,6 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { Factory } from "fishery";
 
+import { USER_ROLES } from "src/users/schemas/user-roles";
+
 import hashPassword from "../../src/common/helpers/hashPassword";
 import { credentials, users } from "../../src/storage/schema";
 
@@ -17,7 +19,7 @@ export const credentialFactory = Factory.define<Credential>(() => ({
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),
   password: faker.internet.password(),
-  role: "student" as const,
+  role: USER_ROLES.student,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   archived: false,
@@ -65,7 +67,7 @@ export const createUserFactory = (db: DatabasePg) => {
       lastName: faker.person.lastName(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: "student" as const,
+      role: USER_ROLES.student,
       archived: false,
     };
   });

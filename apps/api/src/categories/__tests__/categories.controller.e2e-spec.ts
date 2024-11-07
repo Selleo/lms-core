@@ -1,6 +1,6 @@
 import request from "supertest";
 
-import { UserRoles } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { createE2ETest } from "../../../test/create-e2e-test";
 import { createCategoryFactory } from "../../../test/factory/category.factory";
@@ -38,7 +38,7 @@ describe("CategoriesController (e2e)", () => {
       it("returns archived and createdAt equal to null", async () => {
         const user = await userFactory
           .withCredentials({ password })
-          .create({ role: UserRoles.student });
+          .create({ role: USER_ROLES.student });
 
         const response = await request(app.getHttpServer())
           .get("/api/categories")
@@ -58,7 +58,7 @@ describe("CategoriesController (e2e)", () => {
       it("returns all filled category columns", async () => {
         const user = await userFactory
           .withCredentials({ password })
-          .create({ role: UserRoles.admin });
+          .create({ role: USER_ROLES.admin });
 
         const response = await request(app.getHttpServer())
           .get("/api/categories")
@@ -81,7 +81,7 @@ describe("CategoriesController (e2e)", () => {
         let page = 1;
         const user = await userFactory
           .withCredentials({ password })
-          .create({ role: UserRoles.student });
+          .create({ role: USER_ROLES.student });
 
         const response = await request(app.getHttpServer())
           .get(`/api/categories?perPage=${perPage}&page=${page}`)

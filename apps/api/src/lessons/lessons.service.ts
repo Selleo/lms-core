@@ -32,13 +32,17 @@ export class LessonsService {
     private readonly lessonsRepository: LessonsRepository,
   ) {}
 
-  async getLesson(id: UUIDType, userId: UUIDType, isAdmin?: boolean) {
-    const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(id, userId);
+  async getLesson(id: UUIDType, courseId: UUIDType, userId: UUIDType, isAdmin?: boolean) {
+    const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(
+      courseId,
+      id,
+      userId,
+    );
 
     if (!isAdmin && !accessCourseLessons)
       throw new UnauthorizedException("You don't have access to this lesson");
 
-    const lesson = await this.lessonsRepository.getLessonForUser(id, userId);
+    const lesson = await this.lessonsRepository.getLessonForUser(courseId, id, userId);
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
@@ -46,7 +50,10 @@ export class LessonsService {
       ? lesson.imageUrl
       : await this.s3Service.getSignedUrl(lesson.imageUrl);
 
-    const completedLessonItems = await this.lessonsRepository.completedLessonItem(lesson.id);
+    const completedLessonItems = await this.lessonsRepository.completedLessonItem(
+      courseId,
+      lesson.id,
+    );
 
     if (lesson.type !== "quiz") {
       const lessonItems = await this.getLessonItems(lesson, userId);
@@ -70,7 +77,7 @@ export class LessonsService {
       };
     }
 
-    const lessonProgress = await this.lessonsRepository.lessonProgress(lesson.id, userId);
+    const lessonProgress = await this.lessonsRepository.lessonProgress(courseId, lesson.id, userId);
 
     if (!lessonProgress) throw new NotFoundException("Lesson progress not found");
 
@@ -96,8 +103,9 @@ export class LessonsService {
     };
   }
 
-  async evaluationQuiz(lessonId: UUIDType, userId: UUIDType) {
+  async evaluationQuiz(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
     const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(
+      courseId,
       lessonId,
       userId,
     );
@@ -105,25 +113,28 @@ export class LessonsService {
     if (!accessCourseLessons)
       throw new UnauthorizedException("You don't have assignment to this lesson");
 
-    const quizProgress = await this.lessonsRepository.getQuizProgress(lessonId, userId);
+    const quizProgress = await this.lessonsRepository.getQuizProgress(courseId, lessonId, userId);
 
     if (quizProgress.quizCompleted) throw new ConflictException("Quiz already completed");
 
     const lessonItemsCount = await this.lessonsRepository.getLessonItemCount(lessonId);
 
-    const completedLessonItemsCount =
-      await this.lessonsRepository.completedLessonItemsCount(lessonId);
+    const completedLessonItemsCount = await this.lessonsRepository.completedLessonItemsCount(
+      courseId,
+      lessonId,
+    );
 
     if (lessonItemsCount.count !== completedLessonItemsCount.count)
       throw new ConflictException("Lesson is not completed");
 
-    const evaluationResult = await this.evaluationsQuestions(lessonId, userId);
+    const evaluationResult = await this.evaluationsQuestions(lessonId, lessonId, userId);
 
     if (!evaluationResult) return false;
 
     const quizScore = await this.lessonsRepository.getQuizScore(lessonId, userId);
 
     const updateQuizResult = await this.lessonsRepository.completeQuiz(
+      courseId,
       lessonId,
       userId,
       completedLessonItemsCount.count,
@@ -135,8 +146,8 @@ export class LessonsService {
     return true;
   }
 
-  private async evaluationsQuestions(lessonId: UUIDType, userId: UUIDType) {
-    const lesson = await this.lessonsRepository.getLessonForUser(lessonId, userId);
+  private async evaluationsQuestions(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
+    const lesson = await this.lessonsRepository.getLessonForUser(courseId, lessonId, userId);
     const questionLessonItems = await this.getLessonQuestionsToEvaluation(lesson, userId, true);
     try {
       await this.db.transaction(async (trx) => {
@@ -209,8 +220,11 @@ export class LessonsService {
     }
   }
 
-  async clearQuizProgress(lessonId: UUIDType, userId: UUIDType) {
+  async clearQuizProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
+    console.log("clearQuizProgress", courseId, lessonId, userId);
+
     const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(
+      courseId,
       lessonId,
       userId,
     );
@@ -218,7 +232,7 @@ export class LessonsService {
     if (!accessCourseLessons)
       throw new UnauthorizedException("You don't have assignment to this lesson");
 
-    const quizProgress = await this.lessonsRepository.lessonProgress(lessonId, userId);
+    const quizProgress = await this.lessonsRepository.lessonProgress(courseId, lessonId, userId);
 
     if (!quizProgress) throw new NotFoundException("Lesson progress not found");
 
@@ -226,11 +240,16 @@ export class LessonsService {
       return await this.db.transaction(async (trx) => {
         const questionIds = await this.lessonsRepository.getQuestionsIdsByLessonId(lessonId);
 
-        await this.lessonsRepository.retireQuizProgress(lessonId, userId, trx);
+        await this.lessonsRepository.retireQuizProgress(courseId, lessonId, userId, trx);
 
         await this.lessonsRepository.removeQuestionsAnswer(lessonId, questionIds, userId, trx);
 
-        await this.lessonsRepository.removeStudentCompletedLessonItems(lessonId, userId, trx);
+        await this.lessonsRepository.removeStudentCompletedLessonItems(
+          courseId,
+          lessonId,
+          userId,
+          trx,
+        );
 
         return true;
       });

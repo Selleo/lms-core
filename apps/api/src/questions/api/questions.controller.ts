@@ -14,7 +14,7 @@ export class QuestionsController {
 
   @Post("answer")
   @Validate({
-    request: [{ type: "body", schema: answerQuestionSchema }],
+    request: [{ type: "body", schema: answerQuestionSchema, required: true }],
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async answerQuestion(

@@ -7,11 +7,20 @@ import { ApiClient } from "../api-client";
 
 export const useMarkLessonItemAsCompleted = () => {
   return useMutation({
-    mutationFn: async ({ id, lessonId }: { id: string; lessonId: string }) => {
+    mutationFn: async ({
+      id,
+      lessonId,
+      courseId,
+    }: {
+      id: string;
+      lessonId: string;
+      courseId: string;
+    }) => {
       const response =
         await ApiClient.api.studentCompletedLessonItemsControllerMarkLessonItemAsCompleted({
           id,
           lessonId,
+          courseId,
         });
 
       return response.data;
