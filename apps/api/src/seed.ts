@@ -5,10 +5,10 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { sampleSize } from "lodash";
 import postgres from "postgres";
 
-import hashPassword from "../../common/helpers/hashPassword";
-import { STATES } from "../../common/states";
-import { LESSON_ITEM_TYPE } from "../../lessons/lesson.type";
-import { USER_ROLES } from "../../users/schemas/user-roles";
+import hashPassword from "./common/helpers/hashPassword";
+import { STATES } from "./common/states";
+import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
+import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
   categories,
   courseLessons,
@@ -22,12 +22,11 @@ import {
   studentCourses,
   textBlocks,
   users,
-} from "../schema";
-import { STATUS } from "../schema/utils";
+} from "./storage/schema";
+import { STATUS } from "./storage/schema/utils";
+import { USER_ROLES } from "./users/schemas/user-roles";
 
-import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
-
-import type { DatabasePg, UUIDType } from "../../common";
+import type { DatabasePg, UUIDType } from "./common";
 
 dotenv.config({ path: "./.env" });
 

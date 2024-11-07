@@ -15,7 +15,7 @@ import {
 
 import { niceCourses } from "./nice-data-seeds";
 
-import type { DatabasePg } from "../../common";
+import type { DatabasePg } from "./common";
 
 export async function createNiceCourses(adminUserId: string, db: DatabasePg) {
   for (const courseData of niceCourses) {

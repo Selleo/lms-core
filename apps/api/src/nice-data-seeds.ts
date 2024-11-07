@@ -11,8 +11,8 @@ import {
   textBlockSchema,
 } from "src/lessons/schemas/lessonItem.schema";
 
-import { QUESTION_TYPE } from "../../questions/schema/questions.types";
-import { STATUS } from "../schema/utils";
+import { QUESTION_TYPE } from "./questions/schema/questions.types";
+import { STATUS } from "./storage/schema/utils";
 
 import type { Static } from "@sinclair/typebox";
 
