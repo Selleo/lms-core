@@ -193,10 +193,10 @@ export class LessonsRepository {
         studentCourseId: studentCourses.id,
       })
       .from(lessons)
-      .leftJoin(courseLessons, eq(courseLessons.id, lessons.id))
+      .leftJoin(courseLessons, eq(courseLessons.lessonId, lessons.id))
       .leftJoin(
         studentCourses,
-        and(eq(studentCourses.courseId, courseLessons.id), eq(studentCourses.studentId, userId)),
+        and(eq(studentCourses.courseId, courseId), eq(studentCourses.studentId, userId)),
       )
       .where(
         and(

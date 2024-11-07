@@ -5,15 +5,17 @@ import type { AnswerQuestionBody } from "~/api/generated-api";
 type TProps = {
   lessonId: string;
   questionId: string;
+  courseId: string;
 };
 
-export const useQuestionQuery = ({ lessonId, questionId }: TProps) => {
+export const useQuestionQuery = ({ lessonId, questionId, courseId }: TProps) => {
   const { mutateAsync: answerQuestion } = useQuestionAnswer();
 
   const sendOpenAnswer = async (openQuestion: string) => {
     await answerQuestion({
       lessonId,
       questionId,
+      courseId,
       answer: openQuestion,
     });
   };
@@ -22,6 +24,7 @@ export const useQuestionQuery = ({ lessonId, questionId }: TProps) => {
     await answerQuestion({
       lessonId,
       questionId,
+      courseId,
       answer: selectedOption,
     });
   };

@@ -22,17 +22,17 @@ export const meta: MetaFunction = () => {
 };
 
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
-  const { lessonId } = params;
+  const { lessonId = "", courseId = "" } = params;
   if (!lessonId) throw new Error("Lesson ID not found");
   await queryClient.prefetchQuery(allCoursesQueryOptions());
-  await queryClient.prefetchQuery(lessonQueryOptions(lessonId));
+  await queryClient.prefetchQuery(lessonQueryOptions(lessonId, courseId));
   return null;
 };
 
 export default function LessonPage() {
-  const { lessonId, courseId } = useParams();
+  const { lessonId = "", courseId = "" } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const { data, refetch } = useLessonSuspense(lessonId);
+  const { data, refetch } = useLessonSuspense(lessonId, courseId);
   const {
     data: { lessons },
   } = useCourseSuspense(courseId ?? "");
@@ -105,8 +105,8 @@ export default function LessonPage() {
           variant="outline"
           onClick={
             data?.isSubmitted
-              ? () => clearQuizProgress.mutate({ lessonId })
-              : () => submitQuiz.mutate({ lessonId })
+              ? () => clearQuizProgress.mutate({ lessonId, courseId })
+              : () => submitQuiz.mutate({ lessonId, courseId })
           }
         >
           {data?.isSubmitted ? "Clear progress" : "Check answers"}

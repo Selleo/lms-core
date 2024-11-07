@@ -221,6 +221,8 @@ export class LessonsService {
   }
 
   async clearQuizProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
+    console.log("clearQuizProgress", courseId, lessonId, userId);
+
     const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(
       courseId,
       lessonId,

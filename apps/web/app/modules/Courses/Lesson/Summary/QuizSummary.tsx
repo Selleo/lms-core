@@ -9,13 +9,14 @@ import type { GetLessonResponse } from "~/api/generated-api";
 
 type QuizSummaryProps = {
   lessonId: string;
+  courseId: string;
   data: GetLessonResponse["data"];
 };
 
-export const QuizSummary = ({ lessonId, data }: QuizSummaryProps) => {
+export const QuizSummary = ({ lessonId, courseId, data }: QuizSummaryProps) => {
   const clearQuizProgress = useClearQuizProgress({
     handleOnSuccess: async () => {
-      await queryClient.invalidateQueries(lessonQueryOptions(lessonId));
+      await queryClient.invalidateQueries(lessonQueryOptions(lessonId, courseId));
     },
   });
 
@@ -48,7 +49,14 @@ export const QuizSummary = ({ lessonId, data }: QuizSummaryProps) => {
         </hgroup>
         {isSubmitted && (
           <div className="flex flex-col gap-y-3">
-            <Button onClick={() => clearQuizProgress.mutate({ lessonId: lessonId ?? "" })}>
+            <Button
+              onClick={() =>
+                clearQuizProgress.mutate({
+                  lessonId: lessonId ?? "",
+                  courseId: courseId ?? "",
+                })
+              }
+            >
               Try Again
             </Button>
             <span className="text-center text-neutral-800 body-sm">

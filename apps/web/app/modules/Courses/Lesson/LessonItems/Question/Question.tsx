@@ -29,10 +29,10 @@ type QuestionProps = {
 };
 
 export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps) => {
-  const { lessonId } = useParams();
+  const { lessonId = "", courseId = "" } = useParams();
   const { register, getValues } = useFormContext<TQuestionsForm>();
   const { isAdmin } = useUserRole();
-  const { data: lesson } = useLesson(lessonId ?? "");
+  const { data: lesson } = useLesson(lessonId, courseId);
 
   const isQuiz = lesson?.type === "quiz";
 
@@ -52,6 +52,7 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
   const { sendAnswer, sendOpenAnswer } = useQuestionQuery({
     lessonId,
     questionId,
+    courseId,
   });
 
   const [selectedOption, setSelectedOption] = useState<string[]>(() =>
@@ -65,7 +66,11 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
   }, [isQuiz, isSubmitted]);
 
   const handleClick = async (id: string) => {
-    await markLessonItemAsCompleted({ lessonItemId: questionId, lessonId });
+    await markLessonItemAsCompleted({
+      lessonItemId: questionId,
+      lessonId,
+      courseId,
+    });
 
     if (isSingleQuestion) {
       setSelectedOption([id]);
@@ -88,6 +93,7 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
     await markLessonItemAsCompleted({
       lessonItemId: questionId,
       lessonId,
+      courseId,
     });
     await sendOpenAnswer(e.target.value);
   };

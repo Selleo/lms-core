@@ -1534,7 +1534,7 @@
         "parameters": [
           {
             "name": "id",
-            "required": false,
+            "required": true,
             "in": "query",
             "schema": {
               "format": "uuid",
@@ -1546,6 +1546,7 @@
             "required": true,
             "in": "query",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
@@ -1719,7 +1720,7 @@
         "operationId": "LessonsController_evaluationQuiz",
         "parameters": [
           {
-            "name": "lessonId",
+            "name": "courseId",
             "required": false,
             "in": "query",
             "schema": {
@@ -1728,10 +1729,11 @@
             }
           },
           {
-            "name": "courseId",
-            "required": true,
+            "name": "lessonId",
+            "required": false,
             "in": "query",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
@@ -1754,8 +1756,17 @@
         "operationId": "LessonsController_clearQuizProgress",
         "parameters": [
           {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
             "name": "lessonId",
-            "required": false,
+            "required": true,
             "in": "query",
             "schema": {
               "format": "uuid",

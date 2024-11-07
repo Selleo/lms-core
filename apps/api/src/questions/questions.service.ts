@@ -58,6 +58,7 @@ export class QuestionsService {
         userId,
         questionData.questionId,
         questionData.lessonId,
+        answerQuestion.courseId,
       );
 
       const questionTypeHandlers = {
@@ -79,7 +80,7 @@ export class QuestionsService {
 
       await this.studentCompletedLessonItemsService.markLessonItemAsCompleted(
         questionData.lessonItemAssociationId,
-        questionData.courseId,
+        answerQuestion.courseId,
         questionData.lessonId,
         userId,
       );
@@ -129,6 +130,7 @@ export class QuestionsService {
     userId: UUIDType,
     questionId: UUIDType,
     lessonId: UUIDType,
+    courseId: UUIDType,
   ): Promise<string | null> {
     const [existingAnswer] = await trx
       .select({
@@ -140,6 +142,7 @@ export class QuestionsService {
           eq(studentQuestionAnswers.studentId, userId),
           eq(studentQuestionAnswers.questionId, questionId),
           eq(studentQuestionAnswers.lessonId, lessonId),
+          eq(studentQuestionAnswers.courseId, courseId),
         ),
       );
 
@@ -160,6 +163,7 @@ export class QuestionsService {
     if (answerQuestion.answer.length < 1)
       return await this.upsertAnswer(
         trx,
+        answerQuestion.courseId,
         questionData.lessonId,
         questionData.questionId,
         userId,
@@ -198,6 +202,7 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
@@ -226,6 +231,7 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
@@ -258,6 +264,7 @@ export class QuestionsService {
 
     await this.upsertAnswer(
       trx,
+      answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
@@ -268,6 +275,7 @@ export class QuestionsService {
 
   private async upsertAnswer(
     trx: any,
+    courseId: UUIDType,
     lessonId: UUIDType,
     questionId: UUIDType,
     userId: UUIDType,
@@ -290,6 +298,7 @@ export class QuestionsService {
       answer: sql`json_build_object(${sql.raw(jsonBuildObjectArgs)})`,
       studentId: userId,
       lessonId,
+      courseId,
     });
   }
 }

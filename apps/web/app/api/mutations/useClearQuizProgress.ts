@@ -13,7 +13,7 @@ export function useClearQuizProgress({ handleOnSuccess }: SubmitQuizProps) {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (answer: { lessonId: string }) => {
+    mutationFn: async (answer: { lessonId: string; courseId: string }) => {
       const response = await ApiClient.api.lessonsControllerClearQuizProgress(answer);
 
       return response.data;

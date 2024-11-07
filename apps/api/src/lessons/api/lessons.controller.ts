@@ -132,7 +132,10 @@ export class LessonsController {
 
   @Get("lesson")
   @Validate({
-    request: [{ type: "query", name: "id", schema: UUIDSchema }],
+    request: [
+      { type: "query", name: "id", schema: UUIDSchema, required: true },
+      { type: "query", name: "courseId", schema: UUIDSchema, required: true },
+    ],
     response: baseResponse(showLessonSchema),
   })
   async getLesson(
@@ -245,12 +248,15 @@ export class LessonsController {
 
   @Post("evaluation-quiz")
   @Validate({
-    request: [{ type: "query", name: "lessonId", schema: UUIDSchema }],
+    request: [
+      { type: "query", name: "courseId", schema: UUIDSchema },
+      { type: "query", name: "lessonId", schema: UUIDSchema },
+    ],
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async evaluationQuiz(
-    @Query("lessonId") lessonId: string,
     @Query("courseId") courseId: string,
+    @Query("lessonId") lessonId: string,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<{ message: string }>> {
     await this.lessonsService.evaluationQuiz(courseId, lessonId, currentUserId);
@@ -261,7 +267,10 @@ export class LessonsController {
 
   @Delete("clear-quiz-progress")
   @Validate({
-    request: [{ type: "query", name: "lessonId", schema: UUIDSchema }],
+    request: [
+      { type: "query", name: "courseId", schema: UUIDSchema, required: true },
+      { type: "query", name: "lessonId", schema: UUIDSchema, required: true },
+    ],
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async clearQuizProgress(

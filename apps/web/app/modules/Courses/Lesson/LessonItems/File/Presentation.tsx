@@ -16,7 +16,10 @@ type PresentationProps = {
 
 export default function Presentation({ url, presentationId, isAdmin }: PresentationProps) {
   const intersectionRef = useRef<HTMLDivElement>(null);
-  const { lessonId } = useParams<{ lessonId: string }>();
+  const { lessonId, courseId = "" } = useParams<{
+    lessonId: string;
+    courseId: string;
+  }>();
   const {
     isLessonItemCompleted: isPresentationCompleted,
     markLessonItemAsCompleted: markPresentationAsCompleted,
@@ -36,8 +39,12 @@ export default function Presentation({ url, presentationId, isAdmin }: Presentat
 
     const loadTimeout = setTimeout(() => {
       if (isInViewport && !isCompleted && !isAdmin) {
-        markPresentationAsCompleted({ lessonItemId: presentationId, lessonId });
-        markLessonItemAsCompleted({ id: presentationId, lessonId });
+        markPresentationAsCompleted({
+          lessonItemId: presentationId,
+          lessonId,
+          courseId,
+        });
+        markLessonItemAsCompleted({ id: presentationId, lessonId, courseId });
       }
     }, 200);
 
@@ -50,6 +57,7 @@ export default function Presentation({ url, presentationId, isAdmin }: Presentat
     intersection,
     isPresentationCompleted,
     markPresentationAsCompleted,
+    courseId,
   ]);
 
   const docs = [

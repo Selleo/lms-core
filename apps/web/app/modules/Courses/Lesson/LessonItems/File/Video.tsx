@@ -13,7 +13,10 @@ type VideoProps = {
 };
 
 export default function Video({ url, videoId, isAdmin, type }: VideoProps) {
-  const { lessonId } = useParams<{ lessonId: string }>();
+  const { lessonId, courseId = "" } = useParams<{
+    lessonId: string;
+    courseId: string;
+  }>();
   const { mutate: markLessonItemAsCompleted } = useMarkLessonItemAsCompleted();
   const {
     isLessonItemCompleted: isVideoCompleted,
@@ -24,8 +27,9 @@ export default function Video({ url, videoId, isAdmin, type }: VideoProps) {
 
   const handleMarkLessonItemAsCompleted = () => {
     if (isVideoCompleted(videoId)) return;
-    markVideoAsCompleted({ lessonItemId: videoId, lessonId });
-    markLessonItemAsCompleted({ id: videoId, lessonId });
+
+    markVideoAsCompleted({ lessonItemId: videoId, lessonId, courseId });
+    markLessonItemAsCompleted({ id: videoId, lessonId, courseId });
   };
 
   const isExternalVideo = type === "external_video";

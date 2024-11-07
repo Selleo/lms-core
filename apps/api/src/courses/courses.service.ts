@@ -323,7 +323,7 @@ export class CoursesService {
           (SELECT COUNT(*)
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-            AND ${studentCompletedLessonItems.courseId} = ${courses.id}
+            AND ${studentCompletedLessonItems.courseId} = ${course.id}
             AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
         lessonProgress: sql<"completed" | "in_progress" | "not_started">`
           (CASE
@@ -336,7 +336,7 @@ export class CoursesService {
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
               WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-                AND ${studentCompletedLessonItems.courseId} = ${courses.id}
+                AND ${studentCompletedLessonItems.courseId} = ${course.id}
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             )
             THEN ${LessonProgress.completed}
@@ -344,7 +344,7 @@ export class CoursesService {
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
               WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-                AND ${studentCompletedLessonItems.courseId} = ${courses.id}
+                AND ${studentCompletedLessonItems.courseId} = ${course.id}
                 AND ${studentCompletedLessonItems.studentId} = ${userId}
             ) > 0
             THEN ${LessonProgress.inProgress}
