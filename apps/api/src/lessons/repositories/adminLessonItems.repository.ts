@@ -229,7 +229,7 @@ export class AdminLessonItemsRepository {
   async upsertQuestionAnswerOptions(
     questionId: UUIDType,
     option: {
-      id: string;
+      id?: string;
       optionText: string;
       isCorrect: boolean;
       position: number;
@@ -237,7 +237,6 @@ export class AdminLessonItemsRepository {
     trx?: PostgresJsDatabase<typeof schema>,
   ) {
     const dbInstance = trx ?? this.db;
-
     return await dbInstance
       .insert(questionAnswerOptions)
       .values({

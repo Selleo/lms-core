@@ -164,6 +164,17 @@ export interface UpdateUserResponse {
   };
 }
 
+export interface GetUserDetailsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    description: string | null;
+    contactEmail: string | null;
+    contactPhone: string | null;
+    jobTitle: string | null;
+  };
+}
+
 export interface AdminUpdateUserBody {
   firstName?: string;
   lastName?: string;
@@ -1468,6 +1479,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<DeleteUserResponse, any>({
         path: `/api/users/${id}`,
         method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name UsersControllerGetUserDetails
+     * @request GET:/api/users/user-details
+     */
+    usersControllerGetUserDetails: (
+      query?: {
+        /** @format uuid */
+        userId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetUserDetailsResponse, any>({
+        path: `/api/users/user-details`,
+        method: "GET",
+        query: query,
         format: "json",
         ...params,
       }),

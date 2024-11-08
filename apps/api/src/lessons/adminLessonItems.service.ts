@@ -329,7 +329,6 @@ export class AdminLessonItemsService {
 
       for (const option of options) {
         if (
-          option.id === undefined ||
           option.optionText === undefined ||
           option.isCorrect === undefined ||
           option.position === undefined

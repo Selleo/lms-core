@@ -513,6 +513,33 @@
         }
       }
     },
+    "/api/users/user-details": {
+      "get": {
+        "operationId": "UsersController_getUserDetails",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserDetailsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/admin/{id}": {
       "patch": {
         "operationId": "UsersController_adminUpdateUser",
@@ -2907,6 +2934,70 @@
               "lastName",
               "role",
               "archived"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetUserDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "contactEmail": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "contactPhone": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "jobTitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "description",
+              "contactEmail",
+              "contactPhone",
+              "jobTitle"
             ]
           }
         },
