@@ -376,6 +376,27 @@ export interface GetAvailableCoursesResponse {
   };
 }
 
+export interface GetTutorCoursesResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl: string | null;
+    description: string;
+    author: string;
+    category: string;
+    courseLessonCount: number;
+    completedLessonCount: number;
+    enrolled?: boolean;
+    enrolledParticipantCount: number;
+    priceInCents: number;
+    currency: string;
+    state?: string;
+    archived?: boolean;
+    createdAt?: string;
+  }[];
+}
+
 export interface GetCourseResponse {
   data: {
     /** @format uuid */
@@ -1797,6 +1818,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<GetAvailableCoursesResponse, any>({
         path: `/api/courses/available-courses`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CoursesControllerGetTutorCourses
+     * @request GET:/api/courses/tutor-courses
+     */
+    coursesControllerGetTutorCourses: (
+      query: {
+        /** @format uuid */
+        authorId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetTutorCoursesResponse, any>({
+        path: `/api/courses/tutor-courses`,
         method: "GET",
         query: query,
         format: "json",

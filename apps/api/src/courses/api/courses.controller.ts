@@ -19,8 +19,8 @@ import {
   baseResponse,
   BaseResponse,
   nullResponse,
-  PaginatedResponse,
   UUIDSchema,
+  PaginatedResponse,
   type UUIDType,
 } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
@@ -29,6 +29,11 @@ import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { CoursesService } from "../courses.service";
+import {
+  type AllCoursesResponse,
+  type AllCoursesForTutorResponse,
+  allCoursesSchema,
+} from "../schemas/course.schema";
 import { SortCourseFieldsOptions } from "../schemas/courseQuery";
 import { type CreateCourseBody, createCourseSchema } from "../schemas/createCourse.schema";
 import { type CommonShowCourse, commonShowCourseSchema } from "../schemas/showCourseCommon.schema";
@@ -36,7 +41,6 @@ import { type UpdateCourseBody, updateCourseSchema } from "../schemas/updateCour
 
 import { allCoursesValidation } from "./validations";
 
-import type { AllCoursesResponse } from "../schemas/course.schema";
 import type { CoursesFilterSchema } from "../schemas/courseQuery";
 
 @Controller("courses")
@@ -144,6 +148,18 @@ export class CoursesController {
     const data = await this.coursesService.getAvailableCourses(query, currentUserId);
 
     return new PaginatedResponse(data);
+  }
+
+  @Get("tutor-courses")
+  @Validate({
+    request: [{ type: "query", name: "authorId", schema: UUIDSchema, required: true }],
+    response: baseResponse(allCoursesSchema),
+  })
+  async getTutorCourses(
+    @Query("authorId") authorId: string,
+    @CurrentUser("userId") currentUserId: string,
+  ): Promise<BaseResponse<AllCoursesForTutorResponse>> {
+    return new BaseResponse(await this.coursesService.getTutorCourses(authorId, currentUserId));
   }
 
   @Get("course")

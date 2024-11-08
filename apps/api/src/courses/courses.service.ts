@@ -15,6 +15,7 @@ import {
 
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
+import { STATES } from "src/common/states";
 import { S3Service } from "src/file/s3.service";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
@@ -39,10 +40,10 @@ import {
 } from "./schemas/courseQuery";
 
 import type { CoursesQuery } from "./api/courses.types";
-import type { AllCoursesResponse } from "./schemas/course.schema";
+import type { AllCoursesForTutorResponse, AllCoursesResponse } from "./schemas/course.schema";
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
-import type { Pagination } from "src/common";
+import type { Pagination, UUIDType } from "src/common";
 
 @Injectable()
 export class CoursesService {
@@ -168,7 +169,9 @@ export class CoursesService {
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
-        .where(and(...conditions, eq(courses.state, "published"), eq(courses.archived, false)));
+        .where(
+          and(...conditions, eq(courses.state, STATES.published), eq(courses.archived, false)),
+        );
 
       const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
 
@@ -197,7 +200,7 @@ export class CoursesService {
 
     return this.db.transaction(async (tx) => {
       const conditions = [
-        eq(courses.state, "published"),
+        eq(courses.state, STATES.published),
         eq(courses.archived, false),
         isNull(studentCourses.studentId),
       ];
@@ -358,7 +361,7 @@ export class CoursesService {
         and(
           eq(courseLessons.courseId, id),
           eq(lessons.archived, false),
-          eq(lessons.state, "published"),
+          eq(lessons.state, STATES.published),
           isNotNull(lessons.id),
           isNotNull(lessons.title),
           isNotNull(lessons.description),
@@ -420,7 +423,7 @@ export class CoursesService {
         and(
           eq(courseLessons.courseId, id),
           eq(lessons.archived, false),
-          eq(lessons.state, "published"),
+          eq(lessons.state, STATES.published),
           isNotNull(lessons.id),
           isNotNull(lessons.title),
           isNotNull(lessons.description),
@@ -440,7 +443,44 @@ export class CoursesService {
     };
   }
 
-  async createCourse(createCourseBody: CreateCourseBody, authorId: string) {
+  async getTutorCourses(authorId: UUIDType, userId: UUIDType): Promise<AllCoursesForTutorResponse> {
+    return await this.db
+      .select({
+        ...this.getSelectField(userId),
+        authorId: courses.authorId,
+        authorEmail: sql<string>`${users.email}`,
+      })
+      .from(courses)
+      .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
+      .leftJoin(categories, eq(courses.categoryId, categories.id))
+      .leftJoin(users, eq(courses.authorId, users.id))
+      .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
+      .where(
+        and(
+          eq(courses.state, STATES.published),
+          eq(courses.archived, false),
+          eq(courses.authorId, authorId),
+        ),
+      )
+      .groupBy(
+        courses.id,
+        courses.title,
+        courses.imageUrl,
+        courses.description,
+        courses.authorId,
+        users.firstName,
+        users.lastName,
+        users.email,
+        studentCourses.studentId,
+        categories.title,
+      )
+      .orderBy(
+        sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NULL THEN true ELSE false END`,
+        courses.title,
+      );
+  }
+
+  async createCourse(createCourseBody: CreateCourseBody, authorId: UUIDType) {
     return this.db.transaction(async (tx) => {
       const [category] = await tx
         .select()
@@ -463,7 +503,7 @@ export class CoursesService {
           title: createCourseBody.title,
           description: createCourseBody.description,
           imageUrl: createCourseBody.imageUrl,
-          state: createCourseBody.state || "draft",
+          state: createCourseBody.state || STATES.draft,
           priceInCents: createCourseBody.priceInCents,
           currency: createCourseBody.currency || "usd",
           authorId: authorId,
@@ -587,7 +627,7 @@ export class CoursesService {
           and(
             eq(courseLessons.courseId, course.id),
             eq(lessons.archived, false),
-            eq(lessons.state, "published"),
+            eq(lessons.state, STATES.published),
             eq(lessons.type, "quiz"),
           ),
         )
@@ -763,7 +803,7 @@ export class CoursesService {
     }
 
     if (publishedOnly) {
-      conditions.push(eq(courses.state, "published"));
+      conditions.push(eq(courses.state, STATES.published));
     }
 
     return conditions;

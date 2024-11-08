@@ -1293,6 +1293,33 @@
         }
       }
     },
+    "/api/courses/tutor-courses": {
+      "get": {
+        "operationId": "CoursesController_getTutorCourses",
+        "parameters": [
+          {
+            "name": "authorId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTutorCoursesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/courses/course": {
       "get": {
         "operationId": "CoursesController_getCourse",
@@ -3708,6 +3735,88 @@
         "required": [
           "data",
           "pagination"
+        ]
+      },
+      "GetTutorCoursesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "author": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "courseLessonCount": {
+                  "type": "number"
+                },
+                "completedLessonCount": {
+                  "type": "number"
+                },
+                "enrolled": {
+                  "type": "boolean"
+                },
+                "enrolledParticipantCount": {
+                  "type": "number"
+                },
+                "priceInCents": {
+                  "type": "number"
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "archived": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "imageUrl",
+                "description",
+                "author",
+                "category",
+                "courseLessonCount",
+                "completedLessonCount",
+                "enrolledParticipantCount",
+                "priceInCents",
+                "currency"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "GetCourseResponse": {
