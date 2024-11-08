@@ -26,7 +26,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:generate": "drizzle-kit generate",
     "db:seed": "ts-node -r tsconfig-paths/register ./src/storage/seed/seed.ts",
-    "db:seed-prod": "node dist/src/seed.js",
+    "db:seed-prod": "node dist/src/seed-prod.js",
     "db:truncate-tables": "node dist/src/truncateTables.js"
   },
   "dependencies": {
