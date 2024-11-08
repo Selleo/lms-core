@@ -175,7 +175,7 @@ export default function DashboardPage() {
           <StudentCoursesCarousel studentCourses={studentCourses} />
         </div>
       </div>
-      <div className="flex flex-col px-6">
+      <div className="flex flex-col px-6 lg:px-0">
         <div className="flex flex-col lg:p-0">
           <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Available Courses</h4>
           <p className="text-lg leading-7 text-neutral-800">

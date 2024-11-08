@@ -8,7 +8,7 @@ type CardCourseListProps = {
 
 export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
   return (
-    <>
+    <div className="flex gap-6 flex-wrap *:h-auto">
       {availableCourses &&
         availableCourses.map(
           ({
@@ -42,6 +42,6 @@ export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
             return null;
           },
         )}
-    </>
+    </div>
   );
 };
