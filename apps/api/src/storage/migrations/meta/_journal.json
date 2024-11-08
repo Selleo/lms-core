@@ -50,6 +50,13 @@
       "when": 1730982478691,
       "tag": "0006_add_course_id_to_missing_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1731027071587,
+      "tag": "0007_create_user_details",
+      "breakpoints": true
     }
   ]
 }

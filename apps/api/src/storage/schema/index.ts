@@ -24,6 +24,19 @@ export const users = pgTable("users", {
   archived,
 });
 
+export const userDetails = pgTable("user_details", {
+  ...id,
+  ...timestamps,
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull()
+    .unique(),
+  contactPhoneNumber: text("contact_phone_number"),
+  description: text("description"),
+  contactEmail: text("contact_email"),
+  jobTitle: text("job_title"),
+});
+
 export const credentials = pgTable("credentials", {
   ...id,
   ...timestamps,

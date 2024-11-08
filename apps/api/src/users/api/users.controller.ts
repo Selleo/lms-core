@@ -31,7 +31,13 @@ import { type ChangePasswordBody, changePasswordSchema } from "../schemas/change
 import { deleteUsersSchema, type DeleteUsersSchema } from "../schemas/delete-users.schema";
 import { type UpdateUserBody, updateUserSchema } from "../schemas/update-user.schema";
 import { USER_ROLES } from "../schemas/user-roles";
-import { type AllUsersResponse, allUsersSchema, type UserResponse } from "../schemas/user.schema";
+import {
+  allUsersSchema,
+  userDetailsSchema,
+  type AllUsersResponse,
+  type UserResponse,
+  type UserDetails,
+} from "../schemas/user.schema";
 import { SortUserFieldsOptions } from "../schemas/userQuery";
 import { UsersService } from "../users.service";
 
@@ -109,6 +115,17 @@ export class UsersController {
 
       return new BaseResponse(updatedUser);
     }
+  }
+
+  @Get("user-details")
+  @Validate({
+    response: baseResponse(userDetailsSchema),
+    request: [{ type: "query", name: "userId", schema: UUIDSchema }],
+  })
+  async getUserDetails(@Query("userId") userId: UUIDType): Promise<BaseResponse<UserDetails>> {
+    const userDetails = await this.usersService.getUserDetails(userId);
+
+    return new BaseResponse(userDetails);
   }
 
   @Patch("admin/:id")
