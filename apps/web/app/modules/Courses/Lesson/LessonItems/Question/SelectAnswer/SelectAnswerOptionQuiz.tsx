@@ -124,7 +124,10 @@ export const SelectAnswerOptionQuiz = ({
         onClick={(e) => e.stopPropagation()}
       >
         <span>{answer}</span>
-        <span className={classes}>{isStudentAnswer && isQuizSubmitted && "(Your answer)"}</span>
+        <span className={classes}>
+          {isStudentAnswer && isQuizSubmitted && "(Your answer)"}
+          {isMultiAnswer && isCorrectAnswerNotSelected && "(Missing answer)"}
+        </span>
       </Label>
     </button>
   );
