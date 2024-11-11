@@ -254,40 +254,43 @@ export class CoursesService {
   async getCourse(id: string, userId: string) {
     const [course] = await this.db
       .select({
-        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         id: courses.id,
         title: courses.title,
         imageUrl: courses.imageUrl,
         category: categories.title,
         description: sql<string>`${courses.description}`,
         courseLessonCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${courseLessons}
-          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
+        (SELECT COUNT(*)
+        FROM ${courseLessons}
+        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
         completedLessonCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${courseLessons}
-          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-          WHERE ${courseLessons.courseId} = ${courses.id}
-            AND ${lessons.state} = 'published'
-            AND ${lessons.archived} = false
-            AND (
-              SELECT COUNT(*)
-              FROM ${lessonItems}
-              WHERE ${lessonItems.lessonId} = ${lessons.id}
-                AND ${lessonItems.lessonItemType} != 'text_block'
-            ) = (
-              SELECT COUNT(*)
-              FROM ${studentCompletedLessonItems}
-              WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-                AND ${studentCompletedLessonItems.courseId} = ${courses.id}
-                AND ${studentCompletedLessonItems.studentId} = ${userId}
+        (SELECT COUNT(*)
+        FROM ${courseLessons}
+        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+        WHERE ${courseLessons.courseId} = ${courses.id}
+        AND ${lessons.state} = 'published'
+        AND ${lessons.archived} = false
+        AND (
+          SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id}
+          AND ${lessonItems.lessonItemType} != 'text_block'
+          ) = (
+            SELECT COUNT(*)
+            FROM ${studentCompletedLessonItems}
+            WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+            AND ${studentCompletedLessonItems.courseId} = ${courses.id}
+            AND ${studentCompletedLessonItems.studentId} = ${userId}
             )
-          )::INTEGER`,
+            )::INTEGER`,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         state: studentCourses.state,
         priceInCents: courses.priceInCents,
         currency: courses.currency,
+        authorId: courses.authorId,
+        author: sql<string>`${users.firstName} || ' ' || ${users.lastName}`,
+        authorEmail: sql<string>`${users.email}`,
       })
       .from(courses)
       .innerJoin(categories, eq(courses.categoryId, categories.id))
