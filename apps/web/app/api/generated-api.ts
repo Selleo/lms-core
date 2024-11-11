@@ -142,6 +142,17 @@ export interface GetUserByIdResponse {
   };
 }
 
+export interface GetUserDetailsResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    description: string | null;
+    contactEmail: string | null;
+    contactPhone: string | null;
+    jobTitle: string | null;
+  };
+}
+
 export interface UpdateUserBody {
   firstName?: string;
   lastName?: string;
@@ -161,17 +172,6 @@ export interface UpdateUserResponse {
     lastName: string;
     role: string;
     archived: boolean;
-  };
-}
-
-export interface GetUserDetailsResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    description: string | null;
-    contactEmail: string | null;
-    contactPhone: string | null;
-    jobTitle: string | null;
   };
 }
 
@@ -1447,6 +1447,30 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name UsersControllerUpdateUser
+     * @request PATCH:/api/users
+     */
+    usersControllerUpdateUser: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      data: UpdateUserBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateUserResponse, any>({
+        path: `/api/users`,
+        method: "PATCH",
+        query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name UsersControllerDeleteBulkUsers
      * @request DELETE:/api/users
      */
@@ -1464,28 +1488,19 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name UsersControllerGetUserById
-     * @request GET:/api/users/{id}
+     * @request GET:/api/users/user
      */
-    usersControllerGetUserById: (id: string, params: RequestParams = {}) =>
+    usersControllerGetUserById: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<GetUserByIdResponse, any>({
-        path: `/api/users/${id}`,
+        path: `/api/users/user`,
         method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name UsersControllerUpdateUser
-     * @request PATCH:/api/users/{id}
-     */
-    usersControllerUpdateUser: (id: string, data: UpdateUserBody, params: RequestParams = {}) =>
-      this.request<UpdateUserResponse, any>({
-        path: `/api/users/${id}`,
-        method: "PATCH",
-        body: data,
-        type: ContentType.Json,
+        query: query,
         format: "json",
         ...params,
       }),
@@ -1494,12 +1509,19 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name UsersControllerDeleteUser
-     * @request DELETE:/api/users/{id}
+     * @request DELETE:/api/users/user
      */
-    usersControllerDeleteUser: (id: string, params: RequestParams = {}) =>
+    usersControllerDeleteUser: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<DeleteUserResponse, any>({
-        path: `/api/users/${id}`,
+        path: `/api/users/user`,
         method: "DELETE",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -1511,9 +1533,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/users/user-details
      */
     usersControllerGetUserDetails: (
-      query?: {
+      query: {
         /** @format uuid */
-        userId?: string;
+        userId: string;
       },
       params: RequestParams = {},
     ) =>
@@ -1529,16 +1551,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name UsersControllerAdminUpdateUser
-     * @request PATCH:/api/users/admin/{id}
+     * @request PATCH:/api/users/admin/user
      */
     usersControllerAdminUpdateUser: (
-      id: string,
+      query: {
+        /** @format uuid */
+        id: string;
+      },
       data: AdminUpdateUserBody,
       params: RequestParams = {},
     ) =>
       this.request<AdminUpdateUserResponse, any>({
-        path: `/api/users/admin/${id}`,
+        path: `/api/users/admin/user`,
         method: "PATCH",
+        query: query,
         body: data,
         type: ContentType.Json,
         format: "json",
@@ -1549,16 +1575,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name UsersControllerChangePassword
-     * @request PATCH:/api/users/{id}/change-password
+     * @request PATCH:/api/users/change-password
      */
     usersControllerChangePassword: (
-      id: string,
+      query: {
+        /** @format uuid */
+        id: string;
+      },
       data: ChangePasswordBody,
       params: RequestParams = {},
     ) =>
       this.request<ChangePasswordResponse, any>({
-        path: `/api/users/${id}/change-password`,
+        path: `/api/users/change-password`,
         method: "PATCH",
+        query: query,
         body: data,
         type: ContentType.Json,
         format: "json",

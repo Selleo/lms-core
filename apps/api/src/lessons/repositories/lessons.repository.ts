@@ -151,12 +151,7 @@ export class LessonsRepository {
         isStudentAnswer: sql<boolean | null>`
           CASE
             WHEN ${studentQuestionAnswers.id} IS NULL THEN null
-            WHEN EXISTS (
-                SELECT 1
-                FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(${questionAnswerOptions.optionText})
-              )
-            THEN true
+            WHEN ${studentQuestionAnswers.answer}->>CAST(${questionAnswerOptions.position} AS text) = ${questionAnswerOptions.optionText} THEN TRUE
             ELSE false
           END
           `,
