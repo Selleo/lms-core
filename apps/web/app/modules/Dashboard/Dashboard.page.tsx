@@ -211,13 +211,10 @@ export default function DashboardPage() {
         </div>
         <div
           data-testid="unenrolled-courses"
-          className={cn(
-            "lg:p-8 gap-6 rounded-lg drop-shadow-primary lg:bg-white",
-            {
-              "flex flex-wrap": courseListLayout === "card",
-              block: courseListLayout === "table",
-            },
-          )}
+          className={cn("lg:p-8 gap-6 rounded-lg drop-shadow-primary lg:bg-white", {
+            "flex flex-wrap": courseListLayout === "card",
+            block: courseListLayout === "table",
+          })}
         >
           {availableCourses && !isEmpty(availableCourses) && (
             <CourseList availableCourses={availableCourses} courseListLayout={courseListLayout} />

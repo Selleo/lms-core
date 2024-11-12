@@ -6,6 +6,7 @@ export const useUserRole = () => {
   } = useCurrentUserSuspense();
 
   const isAdmin = role === "admin";
+  const isTutor = role === "tutor";
 
-  return { role, isAdmin };
+  return { role, isAdmin, isTutor };
 };

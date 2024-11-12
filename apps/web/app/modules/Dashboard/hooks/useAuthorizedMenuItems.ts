@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 
-import type { MenuItemType, Role } from "../DashboardNavigation/DashboardNavigation";
+import type { MenuItemType } from "~/config/navigationConfig";
+import type { UserRole } from "~/config/userRoles";
 
 interface UseAuthorizedMenuItems {
   menuItems: MenuItemType[] | undefined;
-  userRole: Role;
+  userRole: UserRole;
 }
 
 export const useAuthorizedMenuItems = ({ menuItems, userRole }: UseAuthorizedMenuItems) => {
@@ -15,7 +16,7 @@ export const useAuthorizedMenuItems = ({ menuItems, userRole }: UseAuthorizedMen
 
     const filterMenuItems = (items: MenuItemType[]): MenuItemType[] => {
       return items.reduce<MenuItemType[]>((acc, item) => {
-        if (item.roles.includes(userRole)) {
+        if (item.roles?.includes(userRole)) {
           if ("children" in item && Array.isArray(item.children)) {
             const filteredChildren = filterMenuItems(item.children);
             if (filteredChildren.length > 0) {

@@ -14,27 +14,17 @@ export const routes: (
       route("", "modules/Dashboard/Dashboard.page.tsx", {
         index: true,
       });
-      route("lesson-items", "modules/Courses/LessonItems/LessonItems.layout.tsx");
       route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
       route("course/:courseId/lesson/:lessonId", "modules/Courses/Lesson/Lesson.layout.tsx", () => {
         route("", "modules/Courses/Lesson/Lesson.page.tsx", {
           index: true,
         });
       });
-      route("lesson-items/:id/edit", "modules/Courses/LessonItems/EditLessonItem.page.tsx");
-      route("lesson-items/add/video", "modules/Courses/LessonItems/LessonItemsAddVideo.page.tsx");
-      route("lesson-items/add/text", "modules/Courses/LessonItems/LessonItemsAddText.page.tsx");
       route("settings", "modules/Dashboard/Settings/Settings.layout.tsx", () => {
         route("", "modules/Dashboard/Settings/Settings.page.tsx", {
           index: true,
         });
       });
-      route("courses", "modules/Courses/Courses.page.tsx", {
-        index: true,
-      });
-      route("lessons", "modules/Courses/Lessons/Lessons.page.tsx");
-      route("users", "modules/Users/Users.page.tsx");
-      route("categories", "modules/Courses/Categories/Categories.page.tsx");
       route("tutors/:id", "modules/Tutor/Tutor.page.tsx");
     });
     route("admin", "modules/Admin/Admin.layout.tsx", () => {
