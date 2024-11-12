@@ -12,6 +12,8 @@ export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
       {availableCourses &&
         availableCourses.map(
           ({
+            authorEmail,
+            author,
             title,
             category,
             description,
@@ -25,6 +27,8 @@ export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
             if (!enrolled) {
               return (
                 <CourseCard
+                  author={author}
+                  authorEmail={authorEmail}
                   key={id}
                   title={title}
                   imageUrl={imageUrl}
@@ -35,6 +39,7 @@ export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
                   enrolled={enrolled}
                   priceInCents={priceInCents}
                   currency={currency}
+                  withAuthor
                 />
               );
             }

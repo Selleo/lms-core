@@ -1,6 +1,8 @@
 import { Link } from "@remix-run/react";
 
 import CourseProgress from "~/components/CourseProgress";
+import { Gravatar } from "~/components/Gravatar";
+import { Avatar } from "~/components/ui/avatar";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
@@ -21,9 +23,12 @@ type CourseCardProps = Pick<
   | "enrolled"
   | "priceInCents"
   | "currency"
+  | "author"
+  | "authorEmail"
 > & {
   href: string;
   completedLessonCount?: number;
+  withAuthor?: boolean;
 };
 
 const CourseCard = ({
@@ -37,6 +42,9 @@ const CourseCard = ({
   completedLessonCount,
   currency,
   priceInCents,
+  withAuthor = false,
+  author,
+  authorEmail = "",
 }: CourseCardProps) => {
   const { isAdmin } = useUserRole();
 
@@ -44,7 +52,7 @@ const CourseCard = ({
     <Link
       to={href}
       className={cn(
-        "flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-full bg-white lg:bg-none border",
+        "flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-auto bg-white lg:bg-none border",
         {
           "border-secondary-200 hover:border-secondary-500": enrolled,
           "border-primary-200 hover:border-primary-500": !enrolled,
@@ -71,7 +79,7 @@ const CourseCard = ({
         </div>
       </div>
       <div className={cn("flex flex-col flex-grow p-4")}>
-        <div className="flex flex-col gap-y-3 flex-grow">
+        <div className={cn("flex flex-col flex-grow", { "gap-y-3": !withAuthor })}>
           {enrolled && typeof completedLessonCount === "number" && (
             <CourseProgress
               label="Course progress:"
@@ -79,7 +87,17 @@ const CourseCard = ({
               completedLessonCount={completedLessonCount}
             />
           )}
-          <CourseCardTitle title={title} />
+          <div className={cn({ "mt-3": withAuthor })}>
+            <CourseCardTitle title={title} />
+          </div>
+          {withAuthor && (
+            <div className="flex items-center gap-x-1.5 mt-1 mb-2">
+              <Avatar className="h-4 w-4">
+                <Gravatar email={authorEmail} />
+              </Avatar>
+              <span className="text-neutral-950">{author}</span>
+            </div>
+          )}
           <div className="text-neutral-500 text-sm flex-grow">
             <span className="line-clamp-3">
               <div dangerouslySetInnerHTML={{ __html: description }} />
