@@ -139,7 +139,7 @@ export class UsersController {
   @Patch("user-details")
   @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
-    response: baseResponse(commonUserSchema),
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
     request: [{ type: "body", schema: upsertUserDetailsSchema }],
   })
   async upsertUserDetails(
@@ -149,7 +149,10 @@ export class UsersController {
     {
       const upsertedUser = await this.usersService.upsertUserDetails(currentUserId, data);
 
-      return new BaseResponse({ id: upsertedUser.userId, message: "Course created successfully" });
+      return new BaseResponse({
+        id: upsertedUser.userId,
+        message: "User details updated successfully",
+      });
     }
   }
 
