@@ -110,51 +110,29 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
   const questionNumber = questionsArray.indexOf(questionId) + 1;
 
   const getFillInTheBlanksDndAnswers = () => {
-    if ("questionAnswers" in content && isDraggableFillInTheBlanks) {
-      const items: DndWord[] = [];
-
-      for (const {
-        id,
-        optionText,
-        position,
-        isStudentAnswer,
-        isCorrect,
-        studentAnswerText,
-      } of content.questionAnswers) {
-        if (studentAnswerText && studentAnswerText !== optionText) {
-          items.push({
-            id,
-            index: null,
-            value: optionText,
-            blankId: "blank_preset",
-            isCorrect,
-            isStudentAnswer,
-          });
-        }
-
-        items.push({
-          id,
-          index: position,
-          value: optionText,
-          studentAnswerText,
-          blankId: typeof position === "number" ? `blank_${position}` : "blank_preset",
-          isCorrect,
-          isStudentAnswer,
-        });
-      }
-
-      const studentAnswers = items.reduce<string[]>((acc, item) => {
-        if (item?.studentAnswerText && item.studentAnswerText !== item.value) {
-          acc.push(item.studentAnswerText);
-        }
-
-        return acc;
-      }, []);
-
-      return items.filter(({ value }) => !studentAnswers.includes(value));
+    if (!("questionAnswers" in content) || !isDraggableFillInTheBlanks) {
+      return [];
     }
 
-    return [] as DndWord[];
+    const items: DndWord[] = content.questionAnswers.map(
+      ({ id, optionText, position, isStudentAnswer, isCorrect, studentAnswerText }) => ({
+        id,
+        index: position ?? null,
+        value: optionText,
+        blankId: typeof position === "number" ? `blank_${position}` : "blank_preset",
+        isCorrect,
+        isStudentAnswer,
+        studentAnswerText,
+      }),
+    );
+
+    return items.reduce<DndWord[]>((acc, item) => {
+      if (!acc.some(({ value }) => value === item.value)) {
+        acc.push(item);
+      }
+
+      return acc;
+    }, []);
   };
 
   const fillInTheBlanksDndData = getFillInTheBlanksDndAnswers();
