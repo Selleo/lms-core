@@ -6,7 +6,9 @@ import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { queryClient } from "~/api/queryClient";
 import CourseProgress from "~/components/CourseProgress";
+import { Gravatar } from "~/components/Gravatar";
 import Viewer from "~/components/RichText/Viever";
+import { Avatar } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { toast } from "~/components/ui/use-toast";
@@ -28,6 +30,9 @@ export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data
     courseLessonCount,
     completedLessonCount = 0,
     priceInCents,
+    authorId,
+    author,
+    authorEmail = "",
   } = course;
   const { mutateAsync: unenrollCourse } = useUnenrollCourse();
   const { mutateAsync: enrollCourse } = useEnrollCourse();
@@ -80,6 +85,12 @@ export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data
           courseLessonCount={courseLessonCount}
         />
         <h4 className="text-2xl font-bold mt-4 lg:mt-6 leading-10 text-neutral-950">{title}</h4>
+        <Link to={`/tutors/${authorId}`} className="flex items-center gap-x-1.5 mt-3 mb-4">
+          <Avatar className="h-6 w-6">
+            <Gravatar email={authorEmail} />
+          </Avatar>
+          <span className="text-primary-700">{author}</span>
+        </Link>
         <div className="min-h-0 scrollbar-thin overflow-auto">
           <Viewer content={description} />
         </div>

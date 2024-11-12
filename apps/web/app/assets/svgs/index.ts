@@ -20,3 +20,5 @@ export { default as Course } from "./course.svg?react";
 export { default as Category } from "./category.svg?react";
 export { default as Lesson } from "./lesson.svg?react";
 export { default as LessonContent } from "./lesson-content.svg?react";
+export { default as Email } from "./email.svg?react";
+export { default as Phone } from "./phone.svg?react";

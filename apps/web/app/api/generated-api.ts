@@ -330,14 +330,14 @@ export interface GetAllCoursesResponse {
 export interface GetStudentCoursesResponse {
   data: {
     /** @format uuid */
+    authorId?: string;
+    authorEmail?: string;
+    /** @format uuid */
     id: string;
     title: string;
     imageUrl: string | null;
     description: string;
-    /** @format uuid */
-    authorId?: string;
     author: string;
-    authorEmail?: string;
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;

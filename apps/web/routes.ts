@@ -35,6 +35,7 @@ export const routes: (
       route("lessons", "modules/Courses/Lessons/Lessons.page.tsx");
       route("users", "modules/Users/Users.page.tsx");
       route("categories", "modules/Courses/Categories/Categories.page.tsx");
+      route("tutors/:id", "modules/Tutor/Tutor.page.tsx");
     });
     route("admin", "modules/Admin/Admin.layout.tsx", () => {
       route("courses", "modules/Admin/Courses/Courses.page.tsx", {

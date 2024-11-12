@@ -56,6 +56,6 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
-    include: ["@remix-run/react", "@remix-run/router"],
+    include: ["@remix-run/react", "@remix-run/router", "crypto-js"],
   },
 });
