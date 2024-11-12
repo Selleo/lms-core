@@ -3459,7 +3459,14 @@
                 "description": {
                   "type": "string"
                 },
+                "authorId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
                 "author": {
+                  "type": "string"
+                },
+                "authorEmail": {
                   "type": "string"
                 },
                 "category": {
@@ -3561,7 +3568,14 @@
                 "description": {
                   "type": "string"
                 },
+                "authorId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
                 "author": {
+                  "type": "string"
+                },
+                "authorEmail": {
                   "type": "string"
                 },
                 "category": {
@@ -3663,7 +3677,14 @@
                 "description": {
                   "type": "string"
                 },
+                "authorId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
                 "author": {
+                  "type": "string"
+                },
+                "authorEmail": {
                   "type": "string"
                 },
                 "category": {
@@ -3765,7 +3786,14 @@
                 "description": {
                   "type": "string"
                 },
+                "authorId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
                 "author": {
+                  "type": "string"
+                },
+                "authorEmail": {
                   "type": "string"
                 },
                 "category": {
@@ -3850,6 +3878,16 @@
               },
               "categoryId": {
                 "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "authorEmail": {
                 "type": "string"
               },
               "courseLessonCount": {
@@ -3998,6 +4036,16 @@
               },
               "categoryId": {
                 "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "authorEmail": {
                 "type": "string"
               },
               "courseLessonCount": {

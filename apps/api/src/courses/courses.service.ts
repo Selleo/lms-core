@@ -743,7 +743,7 @@ export class CoursesService {
       description: sql<string>`${courses.description}`,
       title: courses.title,
       imageUrl: courses.imageUrl,
-      authorId: courses.authorId,
+      authorId: sql<string>`${courses.authorId}`,
       author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
       authorEmail: sql<string>`${users.email}`,
       category: sql<string>`categories.title`,

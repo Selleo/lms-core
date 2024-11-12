@@ -305,7 +305,10 @@ export interface GetAllCoursesResponse {
     title: string;
     imageUrl: string | null;
     description: string;
+    /** @format uuid */
+    authorId?: string;
     author: string;
+    authorEmail?: string;
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
@@ -331,7 +334,10 @@ export interface GetStudentCoursesResponse {
     title: string;
     imageUrl: string | null;
     description: string;
+    /** @format uuid */
+    authorId?: string;
     author: string;
+    authorEmail?: string;
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
@@ -357,7 +363,10 @@ export interface GetAvailableCoursesResponse {
     title: string;
     imageUrl: string | null;
     description: string;
+    /** @format uuid */
+    authorId?: string;
     author: string;
+    authorEmail?: string;
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
@@ -383,7 +392,10 @@ export interface GetTutorCoursesResponse {
     title: string;
     imageUrl: string | null;
     description: string;
+    /** @format uuid */
+    authorId?: string;
     author: string;
+    authorEmail?: string;
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
@@ -407,6 +419,10 @@ export interface GetCourseResponse {
     category: string;
     /** @format uuid */
     categoryId?: string;
+    /** @format uuid */
+    authorId?: string;
+    author?: string;
+    authorEmail?: string;
     courseLessonCount: number;
     completedLessonCount?: number;
     enrolled?: boolean;
@@ -443,6 +459,10 @@ export interface GetCourseByIdResponse {
     category: string;
     /** @format uuid */
     categoryId?: string;
+    /** @format uuid */
+    authorId?: string;
+    author?: string;
+    authorEmail?: string;
     courseLessonCount: number;
     completedLessonCount?: number;
     enrolled?: boolean;
