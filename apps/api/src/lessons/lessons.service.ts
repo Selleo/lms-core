@@ -128,7 +128,7 @@ export class LessonsService {
     if (lessonItemsCount.count !== completedLessonItemsCount.count)
       throw new ConflictException("Lesson is not completed");
 
-    const evaluationResult = await this.evaluationsQuestions(lessonId, lessonId, userId);
+    const evaluationResult = await this.evaluationsQuestions(courseId, lessonId, userId);
 
     if (!evaluationResult) return false;
 
@@ -231,8 +231,6 @@ export class LessonsService {
   }
 
   async clearQuizProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
-    console.log("clearQuizProgress", courseId, lessonId, userId);
-
     const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(
       courseId,
       lessonId,
