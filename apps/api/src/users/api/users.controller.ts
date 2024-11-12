@@ -82,27 +82,37 @@ export class UsersController {
     return new PaginatedResponse(users);
   }
 
-  @Get(":id")
+  @Get("user")
   @Validate({
-    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonUserSchema),
   })
-  async getUserById(id: string): Promise<BaseResponse<UserResponse>> {
+  async getUserById(@Query("id") id: string): Promise<BaseResponse<UserResponse>> {
     const user = await this.usersService.getUserById(id);
 
     return new BaseResponse(user);
   }
 
-  @Patch(":id")
+  @Get("user-details")
+  @Validate({
+    request: [{ type: "query", name: "userId", schema: UUIDSchema, required: true }],
+    response: baseResponse(userDetailsSchema),
+  })
+  async getUserDetails(@Query("userId") userId: string): Promise<BaseResponse<UserDetails>> {
+    const userDetails = await this.usersService.getUserDetails(userId);
+    return new BaseResponse(userDetails);
+  }
+
+  @Patch()
   @Validate({
     response: baseResponse(commonUserSchema),
     request: [
-      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "query", name: "id", schema: UUIDSchema, required: true },
       { type: "body", schema: updateUserSchema },
     ],
   })
   async updateUser(
-    id: string,
+    @Query("id") id: string,
     @Body() data: UpdateUserBody,
     @CurrentUser() currentUser: { userId: CommonUser["id"] },
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
@@ -117,28 +127,17 @@ export class UsersController {
     }
   }
 
-  @Get("user-details")
-  @Validate({
-    response: baseResponse(userDetailsSchema),
-    request: [{ type: "query", name: "userId", schema: UUIDSchema }],
-  })
-  async getUserDetails(@Query("userId") userId: UUIDType): Promise<BaseResponse<UserDetails>> {
-    const userDetails = await this.usersService.getUserDetails(userId);
-
-    return new BaseResponse(userDetails);
-  }
-
-  @Patch("admin/:id")
+  @Patch("admin/user")
   @Roles(USER_ROLES.admin)
   @Validate({
     response: baseResponse(commonUserSchema),
     request: [
-      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "query", name: "id", schema: UUIDSchema, required: true },
       { type: "body", schema: updateUserSchema },
     ],
   })
   async adminUpdateUser(
-    id: string,
+    @Query("id") id: string,
     @Body() data: UpdateUserBody,
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     {
@@ -148,16 +147,16 @@ export class UsersController {
     }
   }
 
-  @Patch(":id/change-password")
+  @Patch("change-password")
   @Validate({
     response: nullResponse(),
     request: [
-      { type: "param", name: "id", schema: UUIDSchema },
+      { type: "query", name: "id", schema: UUIDSchema, required: true },
       { type: "body", schema: changePasswordSchema },
     ],
   })
   async changePassword(
-    id: string,
+    @Query("id") id: string,
     @Body() data: ChangePasswordBody,
     @CurrentUser() currentUser: { userId: string },
   ): Promise<null> {
@@ -169,12 +168,15 @@ export class UsersController {
     return null;
   }
 
-  @Delete(":id")
+  @Delete("user")
   @Validate({
     response: nullResponse(),
-    request: [{ type: "param", name: "id", schema: UUIDSchema }],
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
   })
-  async deleteUser(id: string, @CurrentUser() currentUser: { userId: string }): Promise<null> {
+  async deleteUser(
+    @Query("id") id: string,
+    @CurrentUser() currentUser: { userId: string },
+  ): Promise<null> {
     if (currentUser.userId !== id) {
       throw new ForbiddenException("You can only delete your own account");
     }

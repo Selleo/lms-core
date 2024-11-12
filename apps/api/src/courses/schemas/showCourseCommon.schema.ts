@@ -1,5 +1,7 @@
 import { type Static, Type } from "@sinclair/typebox";
 
+import { UUIDSchema } from "src/common";
+
 import { lessonSchema } from "../../lessons/schemas/lesson.schema";
 
 export const commonShowCourseSchema = Type.Object({
@@ -9,6 +11,9 @@ export const commonShowCourseSchema = Type.Object({
   description: Type.String(),
   category: Type.String(),
   categoryId: Type.Optional(Type.String({ format: "uuid" })),
+  authorId: Type.Optional(UUIDSchema),
+  author: Type.Optional(Type.String()),
+  authorEmail: Type.Optional(Type.String()),
   courseLessonCount: Type.Number(),
   completedLessonCount: Type.Optional(Type.Number()),
   enrolled: Type.Optional(Type.Boolean()),

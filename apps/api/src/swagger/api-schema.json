@@ -400,65 +400,13 @@
           }
         }
       },
-      "delete": {
-        "operationId": "UsersController_deleteBulkUsers",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteBulkUsersBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DeleteBulkUsersResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/users/{id}": {
-      "get": {
-        "operationId": "UsersController_getUserById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserByIdResponse"
-                }
-              }
-            }
-          }
-        }
-      },
       "patch": {
         "operationId": "UsersController_updateUser",
         "parameters": [
           {
             "name": "id",
             "required": true,
-            "in": "path",
+            "in": "query",
             "schema": {
               "format": "uuid",
               "type": "string"
@@ -488,12 +436,64 @@
         }
       },
       "delete": {
+        "operationId": "UsersController_deleteBulkUsers",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteBulkUsersBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteBulkUsersResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/user": {
+      "get": {
+        "operationId": "UsersController_getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserByIdResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
         "operationId": "UsersController_deleteUser",
         "parameters": [
           {
             "name": "id",
             "required": true,
-            "in": "path",
+            "in": "query",
             "schema": {
               "format": "uuid",
               "type": "string"
@@ -519,7 +519,7 @@
         "parameters": [
           {
             "name": "userId",
-            "required": false,
+            "required": true,
             "in": "query",
             "schema": {
               "format": "uuid",
@@ -540,14 +540,14 @@
         }
       }
     },
-    "/api/users/admin/{id}": {
+    "/api/users/admin/user": {
       "patch": {
         "operationId": "UsersController_adminUpdateUser",
         "parameters": [
           {
             "name": "id",
             "required": true,
-            "in": "path",
+            "in": "query",
             "schema": {
               "format": "uuid",
               "type": "string"
@@ -577,14 +577,14 @@
         }
       }
     },
-    "/api/users/{id}/change-password": {
+    "/api/users/change-password": {
       "patch": {
         "operationId": "UsersController_changePassword",
         "parameters": [
           {
             "name": "id",
             "required": true,
-            "in": "path",
+            "in": "query",
             "schema": {
               "format": "uuid",
               "type": "string"
@@ -1286,6 +1286,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetAvailableCoursesResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/courses/tutor-courses": {
+      "get": {
+        "operationId": "CoursesController_getTutorCourses",
+        "parameters": [
+          {
+            "name": "authorId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTutorCoursesResponse"
                 }
               }
             }
@@ -2860,6 +2887,70 @@
           "data"
         ]
       },
+      "GetUserDetailsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "contactEmail": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "contactPhone": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "jobTitle": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "id",
+              "description",
+              "contactEmail",
+              "contactPhone",
+              "jobTitle"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "UpdateUserBody": {
         "type": "object",
         "properties": {
@@ -2934,70 +3025,6 @@
               "lastName",
               "role",
               "archived"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
-      "GetUserDetailsResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "format": "uuid",
-                "type": "string"
-              },
-              "description": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "contactEmail": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "contactPhone": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "jobTitle": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "description",
-              "contactEmail",
-              "contactPhone",
-              "jobTitle"
             ]
           }
         },
@@ -3432,7 +3459,14 @@
                 "description": {
                   "type": "string"
                 },
+                "authorId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
                 "author": {
+                  "type": "string"
+                },
+                "authorEmail": {
                   "type": "string"
                 },
                 "category": {
@@ -3534,7 +3568,14 @@
                 "description": {
                   "type": "string"
                 },
+                "authorId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
                 "author": {
+                  "type": "string"
+                },
+                "authorEmail": {
                   "type": "string"
                 },
                 "category": {
@@ -3636,7 +3677,14 @@
                 "description": {
                   "type": "string"
                 },
+                "authorId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
                 "author": {
+                  "type": "string"
+                },
+                "authorEmail": {
                   "type": "string"
                 },
                 "category": {
@@ -3710,6 +3758,95 @@
           "pagination"
         ]
       },
+      "GetTutorCoursesResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "description": {
+                  "type": "string"
+                },
+                "authorId": {
+                  "format": "uuid",
+                  "type": "string"
+                },
+                "author": {
+                  "type": "string"
+                },
+                "authorEmail": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                },
+                "courseLessonCount": {
+                  "type": "number"
+                },
+                "completedLessonCount": {
+                  "type": "number"
+                },
+                "enrolled": {
+                  "type": "boolean"
+                },
+                "enrolledParticipantCount": {
+                  "type": "number"
+                },
+                "priceInCents": {
+                  "type": "number"
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "archived": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "imageUrl",
+                "description",
+                "author",
+                "category",
+                "courseLessonCount",
+                "completedLessonCount",
+                "enrolledParticipantCount",
+                "priceInCents",
+                "currency"
+              ]
+            }
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "GetCourseResponse": {
         "type": "object",
         "properties": {
@@ -3741,6 +3878,16 @@
               },
               "categoryId": {
                 "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "authorEmail": {
                 "type": "string"
               },
               "courseLessonCount": {
@@ -3889,6 +4036,16 @@
               },
               "categoryId": {
                 "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "authorEmail": {
                 "type": "string"
               },
               "courseLessonCount": {

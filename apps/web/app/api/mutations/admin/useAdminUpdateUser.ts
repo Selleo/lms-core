@@ -20,7 +20,7 @@ export function useAdminUpdateUser() {
   return useMutation({
     mutationFn: async (options: UpdateUserOptions) => {
       const response = await ApiClient.api.usersControllerAdminUpdateUser(
-        options.userId,
+        { id: options.userId },
         options.data,
       );
 

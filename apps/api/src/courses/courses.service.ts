@@ -15,6 +15,7 @@ import {
 
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
+import { STATES } from "src/common/states";
 import { S3Service } from "src/file/s3.service";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
@@ -39,10 +40,10 @@ import {
 } from "./schemas/courseQuery";
 
 import type { CoursesQuery } from "./api/courses.types";
-import type { AllCoursesResponse } from "./schemas/course.schema";
+import type { AllCoursesForTutorResponse, AllCoursesResponse } from "./schemas/course.schema";
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
-import type { Pagination } from "src/common";
+import type { Pagination, UUIDType } from "src/common";
 
 @Injectable()
 export class CoursesService {
@@ -151,8 +152,10 @@ export class CoursesService {
           courses.title,
           courses.imageUrl,
           courses.description,
+          courses.authorId,
           users.firstName,
           users.lastName,
+          users.email,
           studentCourses.studentId,
           categories.title,
         )
@@ -168,7 +171,9 @@ export class CoursesService {
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
-        .where(and(...conditions, eq(courses.state, "published"), eq(courses.archived, false)));
+        .where(
+          and(...conditions, eq(courses.state, STATES.published), eq(courses.archived, false)),
+        );
 
       const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
 
@@ -197,7 +202,7 @@ export class CoursesService {
 
     return this.db.transaction(async (tx) => {
       const conditions = [
-        eq(courses.state, "published"),
+        eq(courses.state, STATES.published),
         eq(courses.archived, false),
         isNull(studentCourses.studentId),
       ];
@@ -216,8 +221,10 @@ export class CoursesService {
           courses.title,
           courses.imageUrl,
           courses.description,
+          courses.authorId,
           users.firstName,
           users.lastName,
+          users.email,
           studentCourses.studentId,
           categories.title,
         )
@@ -251,40 +258,43 @@ export class CoursesService {
   async getCourse(id: string, userId: string) {
     const [course] = await this.db
       .select({
-        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         id: courses.id,
         title: courses.title,
         imageUrl: courses.imageUrl,
         category: categories.title,
         description: sql<string>`${courses.description}`,
         courseLessonCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${courseLessons}
-          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
+        (SELECT COUNT(*)
+        FROM ${courseLessons}
+        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
         completedLessonCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${courseLessons}
-          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-          WHERE ${courseLessons.courseId} = ${courses.id}
-            AND ${lessons.state} = 'published'
-            AND ${lessons.archived} = false
-            AND (
-              SELECT COUNT(*)
-              FROM ${lessonItems}
-              WHERE ${lessonItems.lessonId} = ${lessons.id}
-                AND ${lessonItems.lessonItemType} != 'text_block'
-            ) = (
-              SELECT COUNT(*)
-              FROM ${studentCompletedLessonItems}
-              WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-                AND ${studentCompletedLessonItems.courseId} = ${courses.id}
-                AND ${studentCompletedLessonItems.studentId} = ${userId}
+        (SELECT COUNT(*)
+        FROM ${courseLessons}
+        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+        WHERE ${courseLessons.courseId} = ${courses.id}
+        AND ${lessons.state} = 'published'
+        AND ${lessons.archived} = false
+        AND (
+          SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id}
+          AND ${lessonItems.lessonItemType} != 'text_block'
+          ) = (
+            SELECT COUNT(*)
+            FROM ${studentCompletedLessonItems}
+            WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+            AND ${studentCompletedLessonItems.courseId} = ${courses.id}
+            AND ${studentCompletedLessonItems.studentId} = ${userId}
             )
-          )::INTEGER`,
+            )::INTEGER`,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         state: studentCourses.state,
         priceInCents: courses.priceInCents,
         currency: courses.currency,
+        authorId: courses.authorId,
+        author: sql<string>`${users.firstName} || ' ' || ${users.lastName}`,
+        authorEmail: sql<string>`${users.email}`,
       })
       .from(courses)
       .innerJoin(categories, eq(courses.categoryId, categories.id))
@@ -358,7 +368,7 @@ export class CoursesService {
         and(
           eq(courseLessons.courseId, id),
           eq(lessons.archived, false),
-          eq(lessons.state, "published"),
+          eq(lessons.state, STATES.published),
           isNotNull(lessons.id),
           isNotNull(lessons.title),
           isNotNull(lessons.description),
@@ -420,7 +430,7 @@ export class CoursesService {
         and(
           eq(courseLessons.courseId, id),
           eq(lessons.archived, false),
-          eq(lessons.state, "published"),
+          eq(lessons.state, STATES.published),
           isNotNull(lessons.id),
           isNotNull(lessons.title),
           isNotNull(lessons.description),
@@ -440,7 +450,40 @@ export class CoursesService {
     };
   }
 
-  async createCourse(createCourseBody: CreateCourseBody, authorId: string) {
+  async getTutorCourses(authorId: UUIDType, userId: UUIDType): Promise<AllCoursesForTutorResponse> {
+    return await this.db
+      .select(this.getSelectField(userId))
+      .from(courses)
+      .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
+      .leftJoin(categories, eq(courses.categoryId, categories.id))
+      .leftJoin(users, eq(courses.authorId, users.id))
+      .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
+      .where(
+        and(
+          eq(courses.state, STATES.published),
+          eq(courses.archived, false),
+          eq(courses.authorId, authorId),
+        ),
+      )
+      .groupBy(
+        courses.id,
+        courses.title,
+        courses.imageUrl,
+        courses.description,
+        courses.authorId,
+        users.firstName,
+        users.lastName,
+        users.email,
+        studentCourses.studentId,
+        categories.title,
+      )
+      .orderBy(
+        sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NULL THEN true ELSE false END`,
+        courses.title,
+      );
+  }
+
+  async createCourse(createCourseBody: CreateCourseBody, authorId: UUIDType) {
     return this.db.transaction(async (tx) => {
       const [category] = await tx
         .select()
@@ -463,7 +506,7 @@ export class CoursesService {
           title: createCourseBody.title,
           description: createCourseBody.description,
           imageUrl: createCourseBody.imageUrl,
-          state: createCourseBody.state || "draft",
+          state: createCourseBody.state || STATES.draft,
           priceInCents: createCourseBody.priceInCents,
           currency: createCourseBody.currency || "usd",
           authorId: authorId,
@@ -587,7 +630,7 @@ export class CoursesService {
           and(
             eq(courseLessons.courseId, course.id),
             eq(lessons.archived, false),
-            eq(lessons.state, "published"),
+            eq(lessons.state, STATES.published),
             eq(lessons.type, "quiz"),
           ),
         )
@@ -700,7 +743,9 @@ export class CoursesService {
       description: sql<string>`${courses.description}`,
       title: courses.title,
       imageUrl: courses.imageUrl,
+      authorId: sql<string>`${courses.authorId}`,
       author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+      authorEmail: sql<string>`${users.email}`,
       category: sql<string>`categories.title`,
       enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
       enrolledParticipantCount: count(studentCourses.courseId),
@@ -763,7 +808,7 @@ export class CoursesService {
     }
 
     if (publishedOnly) {
-      conditions.push(eq(courses.state, "published"));
+      conditions.push(eq(courses.state, STATES.published));
     }
 
     return conditions;

@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
+import { QUESTION_TYPE } from "src/questions/schema/questions.types";
 import {
   courseLessons,
   files,
@@ -130,13 +131,15 @@ export class LessonsRepository {
           eq(files.state, "published"),
         ),
       )
-      .where(eq(lessonItems.lessonId, lessonId))
+      .where(and(eq(lessonItems.lessonId, lessonId)))
       .orderBy(lessonItems.displayOrder);
   }
 
   async getQuestionAnswers(
     questionId: UUIDType,
     userId: UUIDType,
+    courseId: UUIDType,
+    lessonId: UUIDType,
     lessonType: string,
     lessonRated: boolean,
     trx?: PostgresJsDatabase<typeof schema>,
@@ -150,29 +153,35 @@ export class LessonsRepository {
         position: questionAnswerOptions.position,
         isStudentAnswer: sql<boolean | null>`
           CASE
-            WHEN ${studentQuestionAnswers.id} IS NULL THEN null
+            WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+            WHEN ${studentQuestionAnswers.answer}->>CAST(${questionAnswerOptions.position} AS text) = ${questionAnswerOptions.optionText} AND
+              ${questions.questionType} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+              THEN TRUE
             WHEN EXISTS (
                 SELECT 1
                 FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
                 WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(${questionAnswerOptions.optionText})
               )
-            THEN true
-            ELSE false
+              THEN TRUE
+            ELSE FALSE
           END
           `,
         isCorrect: sql<boolean | null>`
           CASE
             WHEN ${lessonType} = 'quiz' AND ${lessonRated} THEN
               ${questionAnswerOptions.isCorrect}
-            ELSE null
+            ELSE NULL
           END
         `,
       })
       .from(questionAnswerOptions)
+      .leftJoin(questions, eq(questionAnswerOptions.questionId, questions.id))
       .leftJoin(
         studentQuestionAnswers,
         and(
           eq(studentQuestionAnswers.questionId, questionAnswerOptions.questionId),
+          eq(studentQuestionAnswers.lessonId, lessonId),
+          eq(studentQuestionAnswers.courseId, courseId),
           eq(studentQuestionAnswers.studentId, userId),
         ),
       )
@@ -183,6 +192,7 @@ export class LessonsRepository {
         questionAnswerOptions.position,
         studentQuestionAnswers.id,
         studentQuestionAnswers.answer,
+        questions.questionType,
       );
   }
 
@@ -272,7 +282,7 @@ export class LessonsRepository {
     return completedLessonItemsCount;
   }
 
-  async getQuizScore(lessonId: UUIDType, userId: UUIDType) {
+  async getQuizScore(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
     const questions = await this.db
       .select({
         questionId: lessonItems.lessonItemId,
@@ -423,6 +433,7 @@ export class LessonsRepository {
   }
 
   async removeQuestionsAnswer(
+    courseId: UUIDType,
     lessonId: UUIDType,
     questionIds: { questionId: string }[],
     userId: UUIDType,
@@ -432,6 +443,7 @@ export class LessonsRepository {
 
     return await dbInstance.delete(studentQuestionAnswers).where(
       and(
+        eq(studentQuestionAnswers.courseId, courseId),
         eq(studentQuestionAnswers.lessonId, lessonId),
         eq(studentQuestionAnswers.studentId, userId),
         inArray(
@@ -443,6 +455,8 @@ export class LessonsRepository {
   }
 
   async setCorrectAnswerForStudentAnswer(
+    courseId: UUIDType,
+    lessonId: UUIDType,
     questionId: UUIDType,
     userId: UUIDType,
     isCorrect: boolean,
@@ -459,6 +473,8 @@ export class LessonsRepository {
         and(
           eq(studentQuestionAnswers.studentId, userId),
           eq(studentQuestionAnswers.questionId, questionId),
+          eq(studentQuestionAnswers.lessonId, lessonId),
+          eq(studentQuestionAnswers.courseId, courseId),
         ),
       );
   }
