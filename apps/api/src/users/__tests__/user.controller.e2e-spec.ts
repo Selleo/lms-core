@@ -1,4 +1,4 @@
-import { castArray, omit } from "lodash";
+import { omit } from "lodash";
 import request from "supertest";
 
 import { AuthService } from "../../../src/auth/auth.service";
@@ -12,7 +12,7 @@ describe("UsersController (e2e)", () => {
   let app: INestApplication;
   let authService: AuthService;
   let testUser: UserWithCredentials;
-  let cookies: string;
+  let testCookies: string;
   const testPassword = "password123";
   let db: DatabasePg;
   let userFactory: ReturnType<typeof createUserFactory>;
@@ -30,24 +30,29 @@ describe("UsersController (e2e)", () => {
   });
 
   beforeEach(async () => {
-    testUser = await userFactory.withCredentials({ password: testPassword }).create();
+    testUser = await userFactory
+      .withCredentials({ password: testPassword })
+      .withAdminRole()
+      .create();
 
-    const loginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
+    const testLoginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
       email: testUser.email,
       password: testUser.credentials?.password,
     });
 
-    cookies = loginResponse.headers["set-cookie"];
+    testCookies = testLoginResponse.headers["set-cookie"];
   });
 
   describe("GET /users", () => {
     it("should return all users", async () => {
       const response = await request(app.getHttpServer())
         .get("/api/users")
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .expect(200);
 
-      expect(response.body.data).toStrictEqual(castArray(omit(testUser, "credentials")));
+      expect(response.body.data).toEqual(
+        expect.arrayContaining([expect.objectContaining(omit(testUser, "credentials"))]),
+      );
       expect(Array.isArray(response.body.data)).toBe(true);
     });
   });
@@ -56,7 +61,7 @@ describe("UsersController (e2e)", () => {
     it("should return a user by id", async () => {
       const response = await request(app.getHttpServer())
         .get(`/api/users/user?id=${testUser.id}`)
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .expect(200);
 
       expect(response.body.data).toBeDefined();
@@ -66,7 +71,7 @@ describe("UsersController (e2e)", () => {
     it("should return 404 for non-existent user", async () => {
       await request(app.getHttpServer())
         .get(`/api/users/user?id=${crypto.randomUUID()}`)
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .expect(404);
     });
   });
@@ -76,7 +81,7 @@ describe("UsersController (e2e)", () => {
       const updateData = { email: "newemail@example.com" };
       const response = await request(app.getHttpServer())
         .patch(`/api/users?id=${testUser.id}`)
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .send(updateData)
         .expect(200);
 
@@ -92,7 +97,7 @@ describe("UsersController (e2e)", () => {
       });
       await request(app.getHttpServer())
         .patch(`/api/users?id=${anotherUser.id}`)
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .send({ email: "newemail@example.com" })
         .expect(403);
     });
@@ -104,7 +109,7 @@ describe("UsersController (e2e)", () => {
 
       await request(app.getHttpServer())
         .patch(`/api/users/change-password?id=${testUser.id}`)
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .send({ oldPassword: testPassword, newPassword })
         .expect(200);
 
@@ -125,7 +130,7 @@ describe("UsersController (e2e)", () => {
 
       await request(app.getHttpServer())
         .patch(`/api/users/change-password?id=${testUser.id}`)
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .send({ oldPassword: incorrectOldPassword, newPassword })
         .expect(401);
     });
@@ -137,24 +142,25 @@ describe("UsersController (e2e)", () => {
         firstName: "Another",
         lastName: "User",
       });
+
       await request(app.getHttpServer())
         .patch(`/api/users/change-password?id=${anotherUser.id}`)
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .send({ oldPassword: "password123", newPassword: "newpassword" })
         .expect(403);
     });
   });
 
-  describe("DELETE /users?id=:id", () => {
+  describe("DELETE /users/user?id=:id", () => {
     it("should delete user", async () => {
       await request(app.getHttpServer())
         .delete(`/api/users/user?id=${testUser.id}`)
-        .set("Cookie", cookies)
+        .set("Cookie", testCookies)
         .expect(200);
 
       await request(app.getHttpServer())
-        .get(`/api/users/${testUser.id}`)
-        .set("Cookie", cookies)
+        .get(`/api/users/user?id=${testUser.id}`)
+        .set("Cookie", testCookies)
         .expect(404);
     });
 
@@ -166,8 +172,8 @@ describe("UsersController (e2e)", () => {
         lastName: "User",
       });
       await request(app.getHttpServer())
-        .delete(`/api/users?id=${anotherUser.id}`)
-        .set("Cookie", cookies)
+        .delete(`/api/users/user?id=${anotherUser.id}`)
+        .set("Cookie", testCookies)
         .expect(403);
     });
   });

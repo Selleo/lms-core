@@ -3,7 +3,7 @@ import {
   InjectStripeModuleConfig,
   StripeModuleConfig,
 } from "@golevelup/nestjs-stripe";
-import { Controller, Post, Query, Headers, type Request, Req, Get } from "@nestjs/common";
+import { Controller, Post, Query, Headers, Req } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
@@ -11,6 +11,8 @@ import Stripe from "stripe";
 
 import { BaseResponse, baseResponse } from "src/common";
 import { Public } from "src/common/decorators/public.decorator";
+import { Roles } from "src/common/decorators/roles.decorator";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { paymentIntentSchema } from "../schemas/payment";
 import { StripeService } from "../stripe.service";
@@ -36,6 +38,7 @@ export class StripeController {
   }
 
   @Post()
+  @Roles(USER_ROLES.student)
   @Validate({
     response: baseResponse(paymentIntentSchema),
     request: [
@@ -76,11 +79,6 @@ export class StripeController {
     });
   }
 
-  @Public()
-  @Get("test")
-  testRoute() {
-    return "Test successful";
-  }
   @Public()
   @Post("webhook")
   async handleWebhook(

@@ -14,9 +14,11 @@ import { Validate } from "nestjs-typebox";
 
 import { baseResponse, BaseResponse, nullResponse, type UUIDType } from "src/common";
 import { Public } from "src/common/decorators/public.decorator";
+import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RefreshTokenGuard } from "src/common/guards/refresh-token.guard";
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { AuthService } from "../auth.service";
 import { CreateAccountBody, createAccountSchema } from "../schemas/create-account.schema";
@@ -70,6 +72,7 @@ export class AuthController {
   }
 
   @Post("logout")
+  @Roles(...Object.values(USER_ROLES))
   @Validate({
     response: nullResponse(),
   })

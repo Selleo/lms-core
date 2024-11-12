@@ -2481,17 +2481,6 @@
         }
       }
     },
-    "/api/stripe/test": {
-      "get": {
-        "operationId": "StripeController_testRoute",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
     "/api/stripe/webhook": {
       "post": {
         "operationId": "StripeWebhookController_handleWebhook",
