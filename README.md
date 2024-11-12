@@ -1,123 +1,300 @@
-### Apps and Packages
+<div align="center">
 
-- apps
-  - `api`: a NestJS backend application working as API
-  - `web`: a Vite Remix SPA
-  - `reverse-proxy`: for domains and https during development
-- packages
-  - `email-templates`: a package for email templates
-  - `eslint-config`: a package for eslint configuration
-  - `typescript-config`: a package for typescript configuration
+# LMS Core Project
 
-### Install
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) [![Node.js](https://img.shields.io/badge/Node.js-20.15.0-brightgreen.svg)](https://nodejs.org/) [![pnpm](https://img.shields.io/badge/pnpm-supported-blue.svg)](https://pnpm.io/) [![NestJS](https://img.shields.io/badge/NestJS-10.x-red.svg)](https://nestjs.com/) [![Remix](https://img.shields.io/badge/Remix-Latest-purple.svg)](https://remix.run/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+A modern, scalable Learning Management System built with cutting-edge technologies.
 
-To start with the setup make sure you have the correct NodeJS version stated in [.tool-versions](./.tool-versions).
-For the node versioning we recommend [asdf](https://asdf-vm.com/). At the time of writing this readme the version is `20.15.0`
+[Features](#features) • [Getting Started](#getting-started) • [Development](#development) • [Contributing](#contributing)
 
-After these steps, run the following command
+</div>
 
-```sh
+</br>
+<div align="center">
+
+## Table of Contents
+
+</div>
+
+- [Overview](#overview)
+  - [Apps](#apps)
+  - [Packages](#packages)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Environment Setup](#environment-setup)
+- [Database Setup](#database-setup)
+  - [Migrations](#migrations)
+  - [Database Seeding](#database-seeding)
+- [Development](#development)
+  - [Available Services](#available-services)
+- [Commands Reference](#commands-reference)
+  - [Database Commands](#database-commands)
+  - [HTTP Client Generation](#http-client-generation)
+  - [Email Templates](#email-templates)
+  - [Testing](#testing)
+- [Project Structure](#project-structure)
+- [Contributing](#contributing)
+- [Legal Notice](#legal-notice)
+- [About Selleo](#about-selleo)
+
+</br>
+<div align="center">
+
+## Features
+
+</div>
+
+- **Modern Tech Stack**: Built with NestJS, Remix, and TypeScript
+- **Monorepo Structure**: Well-organized codebase using Turborepo
+- **Development Ready**: Complete development environment with Caddy for HTTPS
+- **Database Setup**: PostgreSQL with migration and seeding support
+- **Email System**: Built-in email templates and testing via Mailhog
+- **Testing**: Comprehensive test suite for both frontend and backend
+- **API Documentation**: Swagger integration with TypeScript client generation
+
+</br>
+<div align="center">
+
+## Overview
+
+</div>
+
+### Apps
+
+- **api**: A NestJS backend application working as API
+- **web**: A Vite Remix SPA
+- **reverse-proxy**: For domains and https during development
+
+### Packages
+
+- **email-templates**: A package for email templates
+- **eslint-config**: A package for eslint configuration
+- **typescript-config**: A package for typescript configuration
+
+</br>
+<div align="center">
+
+## Getting Started
+
+</div>
+
+### Prerequisites
+
+Before you begin, make sure you have:
+
+- Node.js version 20.15.0 (stated in `.tool-versions`)
+  - We recommend using [asdf](https://asdf-vm.com/) for version management
+- [pnpm](https://pnpm.io/) package manager
+- [Caddy](https://caddyserver.com/docs/install#homebrew-mac)
+- Docker and Docker Compose
+
+### Installation
+
+Install project dependencies:
+
+```bash
 pnpm install
 ```
 
-Now to configure our reverse proxy we need to install [Caddy](https://caddyserver.com/docs/install#homebrew-mac). You
-can do this using `homebrew` on mac.
+Configure Caddy (first-time setup only):
 
-> [!IMPORTANT]  
+```bash
+cd ./apps/reverse-proxy
+caddy run
+# After running caddy just terminate the process with Ctrl+C
+```
+
+> [!IMPORTANT]
 > First run has to be run by hand to configure caddy. Later on it will automatically
 > start with the app start script.
 
-To do that proceed with the following
+### Environment Setup
 
-```sh
-cd ./apps/reverse-proxy
-caddy run
-```
+Configure environment variables for both applications:
 
-After running caddy proceed with the on screen instructions.
-
-Last step is to go our NestJS app and configure its environmental variables and docker.
-So being in `guidebook/apps/api` run the following command
-
-```sh
+```bash
+cd apps/api
 cp .env.example .env
-docker-compose up -d
 ```
+
+```bash
+cd apps/web
+cp .env.example .env
+```
+
+</br>
+<div align="center">
+
+## Database Setup
+
+</div>
 
 ### Migrations
 
-Once the docker is up and running we need to run the migrations. To do that run the following command
+1. Start the database:
 
-```sh
+```bash
+docker-compose up -d
+```
+
+2. Run migrations:
+
+```bash
 pnpm db:migrate
 ```
 
-### Develop
+### Database Seeding
 
-Now in the main directory once you run `pnpm dev` it will run everything in parallel
-and you should be abble to acces your app on the following adresses!
+Populate the database with initial data:
 
-| Service | URL                                                                          |
-| ------- | ---------------------------------------------------------------------------- |
-| Web app | [ https://app.guidebook.localhost ](https://app.guidebook.localhost)         |
-| Api     | [https://api.guidebook.localhost ](https://api.guidebook.localhost)          |
-| Swagger | [ https://api.guidebook.localhost/api ](https://api.guidebook.localhost/api) |
+```bash
+pnpm db:seed
+```
 
-### Commands
+</br>
+<div align="center">
 
-- #### Database
+## Development
 
-  - generate migration
+</div>
 
-    ```sh
-    pnpm db:generate
-    ```
+To start all applications in development mode:
 
-  - run migrations
+```bash
+pnpm dev
+```
 
-    ```sh
-    pnpm db:migrate
-    ```
+### Available Services
+
+After starting the development environment, you can access:
+
+| Service | URL                           | Description             |
+| ------- | ----------------------------- | ----------------------- |
+| Web App | https://app.lms.localhost     | Frontend application    |
+| API     | https://api.lms.localhost     | Backend API             |
+| Swagger | https://api.lms.localhost/api | API documentation       |
+| Mailhog | https://mailbox.lms.localhost | Email testing interface |
+
+</br>
+<div align="center">
+
+## Commands Reference
+
+</div>
+
+### Formatting
+
+- Format all files with Prettier
+  ```bash
+  pnpm format
+  ```
+- Check if all files are formatted with Prettier
+  ```bash
+  pnpm format:check
+  ```
+- Lint all files in the web app with ESLint
+  ```bash
+  pnpm lint-tsc-web
+  ```
+- Lint all files in the api app with ESLint
+  ```bash
+  pnpm lint-tsc-api
+  ```
+- Fix linting errors in the web app
+  ```bash
+  pnpm lint-tsc-web --fix
+  ```
+- Fix linting errors in the api app
+  ```bash
+  pnpm lint-tsc-api --fix
+  ```
+
+### Database Commands
+
+- Generate new migration:
+  ```bash
+  pnpm db:generate
+  ```
 
 > [!IMPORTANT]
-> Once migration is generated chagne its name to something more descriptive.
-> Also make sure to change the migration name in [\_journal.json](apps/api/src/storage/migrations/meta/_journal.json) file under the `tag` key.
+> After generating a migration:
+>
+> 1. Change its name to something descriptive that explains what it does
+> 2. Make sure to update the migration name in `apps/api/src/storage/migrations/meta/_journal.json` under the `tag` key
 
-- #### HTTP Client
+- Run migrations:
+  ```bash
+  pnpm db:migrate
+  ```
 
-  To generate the http client run the following command.
+### HTTP Client Generation
 
-  ```sh
+- Generate TypeScript API client based on Swagger specification:
+  ```bash
   pnpm generate:client
   ```
 
-  This command automates the process of creating a TypeScript client for the API based on the Swagger specification.
+### Email Templates
 
-- #### Email Templates
-
-  Email templates are generated on every start of turborepo. To generate them manually run the following command in `packages/email-templates`.
-
-  ```sh
+- Build email templates:
+  ```bash
+  cd packages/email-templates
   pnpm build
   ```
 
-  The mailhog service is available at [mailbox.guidebook.localhost](https://mailbox.guidebook.localhost)
+Email templates are automatically built when starting the development server. To test emails, check the Mailhog interface at [mailbox.lms.localhost](https://mailbox.lms.localhost).
 
-- #### Testing
-  - **Frontend**:
-    ```sh
-    pnpm test:web
-    ```
-    ```sh
-    pnpm test:web:e2e
-    ```
-  - **Backend**:
-    ```sh
-    pnpm test:api
-    ```
-    ```sh
-    pnpm test:api:e2e
-    ```
+### Testing
+
+- Frontend tests:
+
+  ```bash
+  pnpm test:web        # Unit tests
+  pnpm test:web:e2e    # E2E tests
+  ```
+
+- Backend tests:
+  ```bash
+  pnpm test:api        # Unit tests
+  pnpm test:api:e2e    # E2E tests
+  ```
+
+</br>
+<div align="center">
+
+## Project Structure
+
+</div>
+
+```
+lms-core
+├── apps
+│   ├── api
+│   │   ├── src
+│   │   └── test
+│   ├── reverse-proxy
+│   └── web
+│       ├── app
+│       │   ├── api
+│       │   ├── assets
+│       │   ├── components
+│       │   └── modules
+│       └── e2e
+└── packages
+    ├── email-templates
+    ├── eslint-config
+    └── typescript-config
+```
+
+</br>
+<div align="center">
+
+## Contributing
+
+</div>
+
+We welcome contributions to LMS Core! Please check our Contributing Guide (coming soon) for guidelines about how to proceed.
 
 ## Legal notice
 
@@ -130,3 +307,5 @@ This project was generated using [Selleo LMS](https://github.com/Selleo/lms-core
 Software development teams with an entrepreneurial sense of ownership at their core delivering great digital products and building culture people want to belong to. We are a community of engaged co-workers passionate about crafting impactful web solutions which transform the way our clients do business.
 
 All names and logos for [Selleo](https://selleo.com/about) are trademark of Selleo Labs Sp. z o.o. (formerly Selleo Sp. z o.o. Sp.k.)
+
+166 directories, 1388 files
