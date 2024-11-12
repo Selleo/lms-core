@@ -21,6 +21,7 @@ import {
   questions,
   studentCourses,
   textBlocks,
+  userDetails,
   users,
 } from "./storage/schema";
 import { STATUS } from "./storage/schema/utils";
@@ -43,7 +44,12 @@ async function createOrFindUser(email: string, password: string, userData: any) 
   if (existingUser) return existingUser;
 
   const [newUser] = await db.insert(users).values(userData).returning();
+
   await insertCredential(newUser.id, password);
+
+  if (newUser.role === USER_ROLES.admin || newUser.role === USER_ROLES.tutor)
+    await insertUserDetails(newUser.id);
+
   return newUser;
 }
 
@@ -56,6 +62,16 @@ async function insertCredential(userId: string, password: string) {
     updatedAt: new Date().toISOString(),
   };
   return (await db.insert(credentials).values(credentialData).returning())[0];
+}
+
+async function insertUserDetails(userId: string) {
+  return await db.insert(userDetails).values({
+    userId,
+    description: faker.lorem.paragraph(3),
+    contactEmail: faker.internet.email(),
+    contactPhoneNumber: faker.phone.number(),
+    jobTitle: faker.person.jobTitle(),
+  });
 }
 
 async function createUsers(count: number) {

@@ -152,8 +152,10 @@ export class CoursesService {
           courses.title,
           courses.imageUrl,
           courses.description,
+          courses.authorId,
           users.firstName,
           users.lastName,
+          users.email,
           studentCourses.studentId,
           categories.title,
         )
@@ -219,8 +221,10 @@ export class CoursesService {
           courses.title,
           courses.imageUrl,
           courses.description,
+          courses.authorId,
           users.firstName,
           users.lastName,
+          users.email,
           studentCourses.studentId,
           categories.title,
         )
@@ -448,11 +452,7 @@ export class CoursesService {
 
   async getTutorCourses(authorId: UUIDType, userId: UUIDType): Promise<AllCoursesForTutorResponse> {
     return await this.db
-      .select({
-        ...this.getSelectField(userId),
-        authorId: courses.authorId,
-        authorEmail: sql<string>`${users.email}`,
-      })
+      .select(this.getSelectField(userId))
       .from(courses)
       .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
       .leftJoin(categories, eq(courses.categoryId, categories.id))
@@ -743,7 +743,9 @@ export class CoursesService {
       description: sql<string>`${courses.description}`,
       title: courses.title,
       imageUrl: courses.imageUrl,
+      authorId: courses.authorId,
       author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+      authorEmail: sql<string>`${users.email}`,
       category: sql<string>`categories.title`,
       enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
       enrolledParticipantCount: count(studentCourses.courseId),
