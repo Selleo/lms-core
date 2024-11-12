@@ -3,7 +3,13 @@ import { Link } from "@remix-run/react";
 import CourseStartedImage from "~/assets/course-started.png";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
-import { Dialog, DialogContent, DialogTrigger } from "~/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "~/components/ui/dialog";
 
 type QuizSummaryModalProps = {
   courseId: string;
@@ -25,15 +31,17 @@ export const QuizSummaryModal = ({
           <div className="w-full bg-neutral-50 rounded-lg flex justify-center">
             <img src={CourseStartedImage} alt="" className="w-[220px] h-auto aspect-square" />
           </div>
-          <div className="flex flex-col items-center gap-y-2">
-            <div className="flex items-center gap-x-1 mb-1">
+          <div className="flex flex-col-reverse items-center gap-y-2">
+            <DialogTitle>
+              <hgroup className="text-center">
+                <h2 className="font-bold text-lg text-neutral-950">Congratulations!</h2>
+                <p className="body-base font-normal text-neutral-800">You are finished the quiz.</p>
+              </hgroup>
+            </DialogTitle>
+            <DialogDescription className="flex items-center gap-x-1 mb-1 text-neutral-950 bg-neutral-50 py-1 px-2 rounded-lg">
               <Icon name="QuizStar" />
               <span className="body-sm-md">Your Score: {scoreLabel}</span>
-            </div>
-            <hgroup className="text-center">
-              <h2 className="font-bold text-lg">Congratulations!</h2>
-              <p className="body-base">You are finished the quiz.</p>
-            </hgroup>
+            </DialogDescription>
           </div>
           <div className="flex flex-col gap-y-2">
             <DialogTrigger asChild>
