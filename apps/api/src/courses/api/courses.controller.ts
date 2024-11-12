@@ -228,9 +228,9 @@ export class CoursesController {
   })
   async enrollCourse(
     @Query("id") id: string,
-    @CurrentUser() currentUser: { userId: string },
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.coursesService.enrollCourse(id, currentUser.userId);
+    await this.coursesService.enrollCourse(id, currentUserId);
 
     return new BaseResponse({ message: "Course enrolled successfully" });
   }
@@ -243,9 +243,9 @@ export class CoursesController {
   })
   async unenrollCourse(
     @Query("id") id: string,
-    @CurrentUser() currentUser: { userId: string },
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<null> {
-    await this.coursesService.unenrollCourse(id, currentUser.userId);
+    await this.coursesService.unenrollCourse(id, currentUserId);
 
     return null;
   }

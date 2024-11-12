@@ -25,6 +25,7 @@ import {
   UserSortFields,
 } from "./schemas/userQuery";
 
+import type { UpsertUserDetailsBody } from "./schemas/update-user.schema";
 import type { UserRole } from "./schemas/user-roles";
 import type { UserDetails } from "./schemas/user.schema";
 import type { CreateUserBody } from "src/users/schemas/create-user.schema";
@@ -133,6 +134,22 @@ export class UsersService {
     const [updatedUser] = await this.db.update(users).set(data).where(eq(users.id, id)).returning();
 
     return updatedUser;
+  }
+
+  async upsertUserDetails(userId: string, data: UpsertUserDetailsBody) {
+    const [existingUser] = await this.db.select().from(users).where(eq(users.id, userId));
+
+    if (!existingUser) {
+      throw new NotFoundException("User not found");
+    }
+
+    const [updatedUserDetails] = await this.db
+      .update(userDetails)
+      .set(data)
+      .where(eq(userDetails.userId, userId))
+      .returning();
+
+    return updatedUserDetails;
   }
 
   async changePassword(id: string, oldPassword: string, newPassword: string) {

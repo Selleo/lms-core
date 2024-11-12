@@ -24,12 +24,17 @@ import {
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { type CommonUser, commonUserSchema } from "src/common/schemas/common-user.schema";
+import { commonUserSchema } from "src/common/schemas/common-user.schema";
 import { type CreateUserBody, createUserSchema } from "src/users/schemas/create-user.schema";
 
 import { type ChangePasswordBody, changePasswordSchema } from "../schemas/change-password.schema";
 import { deleteUsersSchema, type DeleteUsersSchema } from "../schemas/delete-users.schema";
-import { type UpdateUserBody, updateUserSchema } from "../schemas/update-user.schema";
+import {
+  type UpdateUserBody,
+  updateUserSchema,
+  UpsertUserDetailsBody,
+  upsertUserDetailsSchema,
+} from "../schemas/update-user.schema";
 import { USER_ROLES } from "../schemas/user-roles";
 import {
   allUsersSchema,
@@ -116,18 +121,35 @@ export class UsersController {
     ],
   })
   async updateUser(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @Body() data: UpdateUserBody,
-    @CurrentUser() currentUser: { userId: CommonUser["id"] },
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     {
-      if (currentUser.userId !== id) {
+      if (currentUserId !== id) {
         throw new ForbiddenException("You can only update your own account");
       }
 
       const updatedUser = await this.usersService.updateUser(id, data);
 
       return new BaseResponse(updatedUser);
+    }
+  }
+
+  @Patch("user-details")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Validate({
+    response: baseResponse(commonUserSchema),
+    request: [{ type: "body", schema: upsertUserDetailsSchema }],
+  })
+  async upsertUserDetails(
+    @Body() data: UpsertUserDetailsBody,
+    @CurrentUser("userId") currentUserId: UUIDType,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    {
+      const upsertedUser = await this.usersService.upsertUserDetails(currentUserId, data);
+
+      return new BaseResponse({ id: upsertedUser.userId, message: "Course created successfully" });
     }
   }
 
@@ -162,9 +184,9 @@ export class UsersController {
   async changePassword(
     @Query("id") id: string,
     @Body() data: ChangePasswordBody,
-    @CurrentUser() currentUser: { userId: string },
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<null> {
-    if (currentUser.userId !== id) {
+    if (currentUserId !== id) {
       throw new ForbiddenException("You can only update your own account");
     }
     await this.usersService.changePassword(id, data.oldPassword, data.newPassword);
@@ -180,9 +202,9 @@ export class UsersController {
   })
   async deleteUser(
     @Query("id") id: string,
-    @CurrentUser() currentUser: { userId: string },
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<null> {
-    if (currentUser.userId !== id) {
+    if (currentUserId !== id) {
       throw new ForbiddenException("You can only delete your own account");
     }
 

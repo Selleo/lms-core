@@ -111,9 +111,9 @@ export class AuthController {
     response: baseResponse(commonUserSchema),
   })
   async currentUser(
-    @CurrentUser() currentUser: { userId: string },
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
-    const account = await this.authService.currentUser(currentUser.userId);
+    const account = await this.authService.currentUser(currentUserId);
 
     return new BaseResponse(account);
   }
