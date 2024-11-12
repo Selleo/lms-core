@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Patch, Post, Query, UnauthorizedException } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Post,
+  Query,
+  UnauthorizedException,
+  UseGuards,
+} from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -10,7 +19,9 @@ import {
   UUIDSchema,
   type UUIDType,
 } from "src/common";
+import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
+import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
 
 import { CategoriesService } from "../categories.service";
@@ -25,12 +36,13 @@ import {
 } from "../schemas/categoryQuery";
 import { categoryCreateSchema, type CategoryInsert } from "../schemas/createCategorySchema";
 import { categoryUpdateSchema, type CategoryUpdateBody } from "../schemas/updateCategorySchema";
-
+@UseGuards(RolesGuard)
 @Controller("categories")
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
+  @Roles(...Object.values(USER_ROLES))
   @Validate({
     response: paginatedResponse(Type.Array(categorySchema)),
     request: [
@@ -58,6 +70,7 @@ export class CategoriesController {
   }
 
   @Get(":id")
+  @Roles(USER_ROLES.admin)
   @Validate({
     response: baseResponse(categorySchema),
     request: [{ type: "param", name: "id", schema: Type.String() }],
@@ -76,6 +89,7 @@ export class CategoriesController {
   }
 
   @Post()
+  @Roles(USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -94,6 +108,7 @@ export class CategoriesController {
   }
 
   @Patch(":id")
+  @Roles(USER_ROLES.admin)
   @Validate({
     response: baseResponse(categorySchema),
     request: [

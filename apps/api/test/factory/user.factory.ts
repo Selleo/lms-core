@@ -31,6 +31,12 @@ class UserFactory extends Factory<UserWithCredentials> {
       credentials: credentialFactory.build(credential),
     });
   }
+
+  withAdminRole() {
+    return this.associations({
+      role: USER_ROLES.admin,
+    });
+  }
 }
 
 export const createUserFactory = (db: DatabasePg) => {

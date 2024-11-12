@@ -1,12 +1,16 @@
-import { Controller, Post, Query } from "@nestjs/common";
+import { Controller, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
 import { UUIDSchema, baseResponse, BaseResponse, UUIDType } from "src/common";
+import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
+import { RolesGuard } from "src/common/guards/roles.guard";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { StudentCompletedLessonItemsService } from "../studentCompletedLessonItems.service";
 
+@UseGuards(RolesGuard)
 @Controller("studentCompletedLessonItems")
 export class StudentCompletedLessonItemsController {
   constructor(
@@ -14,6 +18,7 @@ export class StudentCompletedLessonItemsController {
   ) {}
 
   @Post()
+  @Roles(USER_ROLES.student)
   @Validate({
     request: [
       { type: "query", name: "id", schema: UUIDSchema, required: true },

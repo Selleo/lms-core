@@ -50,6 +50,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @Roles(USER_ROLES.admin)
   @Validate({
     request: [
       { type: "query", name: "keyword", schema: Type.String() },
@@ -83,6 +84,7 @@ export class UsersController {
   }
 
   @Get("user")
+  @Roles(USER_ROLES.admin)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonUserSchema),
@@ -94,6 +96,7 @@ export class UsersController {
   }
 
   @Get("user-details")
+  @Roles(...Object.values(USER_ROLES))
   @Validate({
     request: [{ type: "query", name: "userId", schema: UUIDSchema, required: true }],
     response: baseResponse(userDetailsSchema),
@@ -104,6 +107,7 @@ export class UsersController {
   }
 
   @Patch()
+  @Roles(USER_ROLES.admin)
   @Validate({
     response: baseResponse(commonUserSchema),
     request: [
@@ -169,6 +173,7 @@ export class UsersController {
   }
 
   @Delete("user")
+  @Roles(USER_ROLES.admin)
   @Validate({
     response: nullResponse(),
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],

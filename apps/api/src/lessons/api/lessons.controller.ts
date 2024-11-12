@@ -131,6 +131,7 @@ export class LessonsController {
   }
 
   @Get("lesson")
+  @Roles(...Object.values(USER_ROLES))
   @Validate({
     request: [
       { type: "query", name: "id", schema: UUIDSchema, required: true },
@@ -150,6 +151,7 @@ export class LessonsController {
   }
 
   @Get("lesson/:id")
+  @Roles(...Object.values(USER_ROLES))
   @Validate({
     response: baseResponse(showLessonSchema),
   })
@@ -247,6 +249,7 @@ export class LessonsController {
   }
 
   @Post("evaluation-quiz")
+  @Roles(USER_ROLES.student)
   @Validate({
     request: [
       { type: "query", name: "courseId", schema: UUIDSchema },
@@ -266,6 +269,7 @@ export class LessonsController {
   }
 
   @Delete("clear-quiz-progress")
+  @Roles(USER_ROLES.student)
   @Validate({
     request: [
       { type: "query", name: "courseId", schema: UUIDSchema, required: true },
@@ -290,6 +294,7 @@ export class LessonsController {
   }
 
   @Get("lesson-items")
+  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
   @Validate({
     request: [
       {
@@ -355,6 +360,7 @@ export class LessonsController {
   }
 
   @Get("lesson-items/:id")
+  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
   @Validate({
     response: baseResponse(GetSingleLessonItemsResponseSchema),
   })
@@ -570,6 +576,7 @@ export class LessonsController {
   }
 
   @Get("question-options")
+  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
   @Validate({
     request: [
       {

@@ -49,6 +49,7 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
+  @Roles(...Object.values(USER_ROLES))
   @Validate(allCoursesValidation)
   async getAllCourses(
     @Query("title") title: string,
@@ -185,6 +186,7 @@ export class CoursesController {
   }
 
   @Post()
+  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
   @Validate({
     request: [{ type: "body", schema: createCourseSchema }],
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
@@ -219,6 +221,7 @@ export class CoursesController {
   }
 
   @Post("enroll-course")
+  @Roles(USER_ROLES.student)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
     response: baseResponse(Type.Object({ message: Type.String() })),
@@ -233,6 +236,7 @@ export class CoursesController {
   }
 
   @Delete("unenroll-course")
+  @Roles(USER_ROLES.student)
   @Validate({
     response: nullResponse(),
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
