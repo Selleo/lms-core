@@ -17,3 +17,5 @@ export const QUESTION_TYPE_KEYS = Object.fromEntries(
 ) as {
   [K in keyof typeof QUESTION_TYPE]: (typeof QUESTION_TYPE)[K]["value"];
 };
+
+export type QuestionTypes = (typeof QUESTION_TYPE)[keyof typeof QUESTION_TYPE]["key"];
