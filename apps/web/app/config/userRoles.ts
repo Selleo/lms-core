@@ -4,4 +4,4 @@ export enum USER_ROLE {
   "tutor" = "tutor",
 }
 
-export type UserRole = keyof typeof USER_ROLE;
+export type UserRole = `${USER_ROLE}`;
