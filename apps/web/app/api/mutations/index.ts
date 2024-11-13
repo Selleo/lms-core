@@ -15,3 +15,4 @@ export { useSubmitQuiz } from "./useSubmitQuiz";
 export { useUnenrollCourse } from "./useUnenrollCourse";
 export { useUpdateLessonItem } from "./useUpdateLessonItem";
 export { useUpdateUser } from "./useUpdateUser";
+export { useUpsertUserDetails } from "./useUpsertUserDetails";

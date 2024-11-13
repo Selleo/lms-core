@@ -35,13 +35,13 @@ export class StudentCompletedLessonItemsController {
     @Query("id") id: UUIDType,
     @Query("lessonId") lessonId: UUIDType,
     @Query("courseId") courseId: UUIDType,
-    @CurrentUser() currentUser: { userId: UUIDType },
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
     await this.studentCompletedLessonItemsService.markLessonItemAsCompleted(
       id,
       courseId,
       lessonId,
-      currentUser.userId,
+      currentUserId,
     );
 
     return new BaseResponse({ message: "Lesson item marked as completed" });

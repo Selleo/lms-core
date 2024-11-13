@@ -175,6 +175,27 @@ export interface UpdateUserResponse {
   };
 }
 
+export interface UpsertUserDetailsBody {
+  description?: string;
+  /** @format email */
+  contactEmail?: string;
+  contactPhoneNumber?: string;
+  jobTitle?: string;
+}
+
+export interface UpsertUserDetailsResponse {
+  data: {
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    role: string;
+    archived: boolean;
+  };
+}
+
 export interface AdminUpdateUserBody {
   firstName?: string;
   lastName?: string;
@@ -330,14 +351,14 @@ export interface GetAllCoursesResponse {
 export interface GetStudentCoursesResponse {
   data: {
     /** @format uuid */
-    authorId?: string;
-    authorEmail?: string;
-    /** @format uuid */
     id: string;
     title: string;
     imageUrl: string | null;
     description: string;
+    /** @format uuid */
+    authorId?: string;
     author: string;
+    authorEmail?: string;
     category: string;
     courseLessonCount: number;
     completedLessonCount: number;
@@ -1563,6 +1584,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/users/user-details`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name UsersControllerUpsertUserDetails
+     * @request PATCH:/api/users/user-details
+     */
+    usersControllerUpsertUserDetails: (data: UpsertUserDetailsBody, params: RequestParams = {}) =>
+      this.request<UpsertUserDetailsResponse, any>({
+        path: `/api/users/user-details`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),

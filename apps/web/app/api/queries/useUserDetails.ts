@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { ApiClient } from "../api-client";
 
@@ -18,4 +18,8 @@ export const userDetails = (userId: string) => {
 
 export function useUserDetails(userId: string) {
   return useQuery(userDetails(userId));
+}
+
+export function useUserDetailsSuspense(userId: string) {
+  return useSuspenseQuery(userDetails(userId));
 }

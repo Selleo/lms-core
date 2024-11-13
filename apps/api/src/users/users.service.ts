@@ -18,6 +18,7 @@ import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 
 import { createTokens, credentials, userDetails, users } from "../storage/schema";
 
+import { USER_ROLES, type UserRole } from "./schemas/user-roles";
 import {
   type SortUserFieldsOptions,
   type UsersFilterSchema,
@@ -25,7 +26,7 @@ import {
   UserSortFields,
 } from "./schemas/userQuery";
 
-import type { UserRole } from "./schemas/user-roles";
+import type { UpsertUserDetailsBody } from "./schemas/update-user.schema";
 import type { UserDetails } from "./schemas/user.schema";
 import type { CreateUserBody } from "src/users/schemas/create-user.schema";
 
@@ -135,6 +136,22 @@ export class UsersService {
     return updatedUser;
   }
 
+  async upsertUserDetails(userId: string, data: UpsertUserDetailsBody) {
+    const [existingUser] = await this.db.select().from(users).where(eq(users.id, userId));
+
+    if (!existingUser) {
+      throw new NotFoundException("User not found");
+    }
+
+    const [updatedUserDetails] = await this.db
+      .update(userDetails)
+      .set(data)
+      .where(eq(userDetails.userId, userId))
+      .returning();
+
+    return updatedUserDetails;
+  }
+
   async changePassword(id: string, oldPassword: string, newPassword: string) {
     const [existingUser] = await this.db.select().from(users).where(eq(users.id, id));
 
@@ -237,6 +254,11 @@ export class UsersService {
         html,
         from: process.env.SES_EMAIL || "",
       });
+
+      if (USER_ROLES.tutor === createdUser.role || USER_ROLES.admin === createdUser.role)
+        await trx
+          .insert(userDetails)
+          .values({ userId: createdUser.id, contactEmail: createdUser.email });
 
       return createdUser;
     });

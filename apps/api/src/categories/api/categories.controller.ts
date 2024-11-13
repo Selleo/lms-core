@@ -59,12 +59,12 @@ export class CategoriesController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCategoryFieldsOptions,
-    @CurrentUser("role") userRole: UserRole,
+    @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<PaginatedResponse<AllCategoriesResponse>> {
     const filters = { archived, title };
     const query = { filters, page, perPage, sort };
 
-    const data = await this.categoriesService.getCategories(query, userRole);
+    const data = await this.categoriesService.getCategories(query, currentUserRole);
 
     return new PaginatedResponse(data);
   }
@@ -77,9 +77,9 @@ export class CategoriesController {
   })
   async getCategoryById(
     @Query("id") id: string,
-    @CurrentUser() currentUser: { role: string },
+    @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<BaseResponse<CategorySchema>> {
-    if (currentUser.role !== USER_ROLES.admin) {
+    if (currentUserRole !== USER_ROLES.admin) {
       throw new UnauthorizedException("You don't have permission to get category");
     }
 
@@ -119,9 +119,9 @@ export class CategoriesController {
   async updateCategory(
     @Query("id") id: string,
     @Body() updateCategoryBody: CategoryUpdateBody,
-    @CurrentUser() currentUser: { role: string },
+    @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<BaseResponse<CategorySchema>> {
-    if (currentUser.role !== USER_ROLES.admin) {
+    if (currentUserRole !== USER_ROLES.admin) {
       throw new UnauthorizedException("You don't have permission to update category");
     }
 

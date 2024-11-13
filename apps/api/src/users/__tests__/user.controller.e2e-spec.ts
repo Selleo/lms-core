@@ -23,11 +23,11 @@ describe("UsersController (e2e)", () => {
     authService = app.get(AuthService);
     db = app.get("DB");
     userFactory = createUserFactory(db);
-  });
+  }, 10000);
 
   afterAll(async () => {
     await app.close();
-  });
+  }, 10000);
 
   beforeEach(async () => {
     testUser = await userFactory
