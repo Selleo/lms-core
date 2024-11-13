@@ -9,18 +9,25 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes, ApiQuery, ApiResponse } from "@nestjs/swagger";
 
+import { Roles } from "src/common/decorators/roles.decorator";
+import { RolesGuard } from "src/common/guards/roles.guard";
+import { USER_ROLES } from "src/users/schemas/user-roles";
+
 import { S3Service } from "../s3.service";
 import { FileUploadResponse } from "../schemas/file.schema";
 
+@UseGuards(RolesGuard)
 @Controller("files")
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 
+  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   @ApiConsumes("multipart/form-data")
@@ -88,6 +95,7 @@ export class S3Controller {
     }
   }
 
+  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
   @Delete()
   @ApiQuery({
     name: "fileKey",

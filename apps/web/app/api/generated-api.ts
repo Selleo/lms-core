@@ -414,7 +414,7 @@ export interface GetCourseResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string | null;
+    imageUrl: string;
     description: string;
     category: string;
     /** @format uuid */
@@ -454,7 +454,7 @@ export interface GetCourseByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string | null;
+    imageUrl: string;
     description: string;
     category: string;
     /** @format uuid */
@@ -513,6 +513,7 @@ export interface CreateCourseResponse {
 export interface UpdateCourseBody {
   title?: string;
   description?: string;
+  imageUrl?: string;
   state?: "draft" | "published";
   priceInCents?: number;
   currency?: string;

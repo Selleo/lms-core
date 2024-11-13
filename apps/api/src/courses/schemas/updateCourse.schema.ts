@@ -6,6 +6,7 @@ export const updateCourseSchema = Type.Partial(
   Type.Object({
     title: Type.String(),
     description: Type.String(),
+    imageUrl: Type.String(),
     state: Type.Union([Type.Literal(STATES.draft), Type.Literal(STATES.published)]),
     priceInCents: Type.Integer(),
     currency: Type.String(),

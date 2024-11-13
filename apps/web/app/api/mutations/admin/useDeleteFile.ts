@@ -23,9 +23,6 @@ export function useDeleteFile() {
         fileKey,
       });
     },
-    onSuccess: () => {
-      toast({ description: "File deleted successfully" });
-    },
     onError: (error) => {
       toast({
         description: error.message,

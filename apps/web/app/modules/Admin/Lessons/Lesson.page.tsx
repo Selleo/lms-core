@@ -73,7 +73,7 @@ const Lesson = () => {
     setIsUploading(true);
     try {
       const result = await uploadFile({ file, resource: "lesson" });
-      setValue("imageUrl", result.fileUrl, { shouldValidate: true });
+      setValue("imageUrl", result.fileUrl, { shouldValidate: true, shouldDirty: true });
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
@@ -105,7 +105,7 @@ const Lesson = () => {
                   <img
                     src={newImageUrl ?? oldImageUrl}
                     alt="Lesson"
-                    className="h-48 self-start object-contain"
+                    className="h-80 self-start object-contain py-2"
                   />
                   <Input id={field} hidden readOnly className="hidden" />
                   <Input

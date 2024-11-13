@@ -1,12 +1,17 @@
 import { useParams } from "@remix-run/react";
 import { startCase } from "lodash-es";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { match } from "ts-pattern";
 
+import { useDeleteFile } from "~/api/mutations/admin/useDeleteFile";
 import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
+import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { courseQueryOptions, useCourseById } from "~/api/queries/admin/useCourseById";
 import { categoriesQueryOptions, useCategoriesSuspense } from "~/api/queries/useCategories";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
 import { CourseDetails } from "./CourseDetails";
@@ -26,6 +31,7 @@ const displayedFields: Array<keyof UpdateCourseBody> = [
   "priceInCents",
   "currency",
   "categoryId",
+  "imageUrl",
   "archived",
 ];
 
@@ -34,13 +40,18 @@ const Course = () => {
 
   if (!id) throw new Error("Course ID not found");
 
+  const [isUploading, setIsUploading] = useState(false);
   const { data: course, isLoading } = useCourseById(id);
   const { mutateAsync: updateCourse } = useUpdateCourse();
   const { data: categories } = useCategoriesSuspense();
+  const { mutateAsync: uploadFile } = useUploadFile();
+  const { mutateAsync: deleteOldFile } = useDeleteFile();
 
   const {
     control,
     handleSubmit,
+    setValue,
+    getValues,
     formState: { isDirty },
   } = useForm<UpdateCourseBody>();
 
@@ -54,14 +65,38 @@ const Course = () => {
 
   if (!course) throw new Error("Course not found");
 
+  const newImageUrl = getValues("imageUrl");
+  const oldImageUrl = course["imageUrl"];
+
   const onSubmit = async (data: UpdateCourseBody) => {
     updateCourse({
       data: { ...data, priceInCents: Number(data.priceInCents) },
       courseId: id,
     }).then(() => {
       queryClient.invalidateQueries(courseQueryOptions(id));
+      if (newImageUrl && newImageUrl !== oldImageUrl) {
+        deleteOldFile(oldImageUrl);
+      }
     });
   };
+
+  const handleImageUpload = async (file: File) => {
+    setIsUploading(true);
+    try {
+      const result = await uploadFile({ file, resource: "lesson" });
+      setValue("imageUrl", result.fileUrl, { shouldValidate: true, shouldDirty: true });
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const displayFieldName = (field: string) =>
+    match(field)
+      .with("archived", () => "Status")
+      .with("imageUrl", () => "Image")
+      .otherwise(() => startCase(field));
 
   return (
     <div className="flex flex-col">
@@ -75,13 +110,36 @@ const Course = () => {
         <div className="space-y-4">
           {displayedFields.map((field) => (
             <div key={field} className="flex flex-col gap-y-1">
-              <Label htmlFor={field}>{field === "archived" ? "Status" : startCase(field)}</Label>
-              <CourseDetails
-                name={field}
-                control={control}
-                categories={categories}
-                course={course}
-              />
+              <Label htmlFor={field}>{displayFieldName(field)}</Label>
+              {field === "imageUrl" ? (
+                <>
+                  <img
+                    src={newImageUrl ?? oldImageUrl}
+                    alt="Lesson"
+                    className="h-80 self-start object-contain py-2"
+                  />
+                  <Input id={field} hidden readOnly className="hidden" />
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        handleImageUpload(file);
+                      }
+                    }}
+                    disabled={isUploading}
+                    className="w-full"
+                  />
+                </>
+              ) : (
+                <CourseDetails
+                  name={field}
+                  control={control}
+                  categories={categories}
+                  course={course}
+                />
+              )}
             </div>
           ))}
         </div>

@@ -175,7 +175,11 @@ export default function CreateNewLessonPage() {
                 <FormControl>
                   <div className="flex items-center flex-col gap-y-2">
                     {field.value && (
-                      <img src={field.value} alt="Lesson" className="w-1/3 self-start" />
+                      <img
+                        src={field.value}
+                        alt="Lesson"
+                        className="h-80 self-start object-contain py-2"
+                      />
                     )}
                     <Input id="imageUrl" {...field} hidden readOnly className="hidden" />
                     <Input

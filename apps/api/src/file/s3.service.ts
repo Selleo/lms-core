@@ -45,7 +45,6 @@ export class S3Service {
   }
 
   async deleteFile(key: string): Promise<void> {
-    console.log({ key });
     const command = new DeleteObjectCommand({
       Bucket: this.bucketName,
       Key: key,

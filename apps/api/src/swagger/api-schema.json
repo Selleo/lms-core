@@ -3869,14 +3869,7 @@
                 "type": "string"
               },
               "imageUrl": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": "string"
               },
               "description": {
                 "type": "string"
@@ -4027,14 +4020,7 @@
                 "type": "string"
               },
               "imageUrl": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
+                "type": "string"
               },
               "description": {
                 "type": "string"
@@ -4262,6 +4248,9 @@
             "type": "string"
           },
           "description": {
+            "type": "string"
+          },
+          "imageUrl": {
             "type": "string"
           },
           "state": {
