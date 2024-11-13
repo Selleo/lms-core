@@ -18,6 +18,7 @@ import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 
 import { createTokens, credentials, userDetails, users } from "../storage/schema";
 
+import { USER_ROLES, type UserRole } from "./schemas/user-roles";
 import {
   type SortUserFieldsOptions,
   type UsersFilterSchema,
@@ -26,7 +27,6 @@ import {
 } from "./schemas/userQuery";
 
 import type { UpsertUserDetailsBody } from "./schemas/update-user.schema";
-import type { UserRole } from "./schemas/user-roles";
 import type { UserDetails } from "./schemas/user.schema";
 import type { CreateUserBody } from "src/users/schemas/create-user.schema";
 
@@ -254,6 +254,11 @@ export class UsersService {
         html,
         from: process.env.SES_EMAIL || "",
       });
+
+      if (USER_ROLES.tutor === createdUser.role || USER_ROLES.admin === createdUser.role)
+        await trx
+          .insert(userDetails)
+          .values({ userId: createdUser.id, contactEmail: createdUser.email });
 
       return createdUser;
     });

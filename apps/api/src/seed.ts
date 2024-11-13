@@ -99,7 +99,7 @@ async function createEntities(table: any, count: number, dataGenerator: () => an
 }
 
 async function createCoursesWithLessons(
-  adminUserId: string,
+  adminUserIds: string[],
   categories: any[],
   existingFiles: any[],
   existingTextBlocks: any[],
@@ -121,7 +121,7 @@ async function createCoursesWithLessons(
       imageUrl: faker.image.urlPicsumPhotos(),
       state: isPublished ? STATUS.published.key : STATUS.draft.key,
       priceInCents: i % 3 === 0 ? faker.number.int({ min: 0, max: 1000 }) : 0,
-      authorId: adminUserId,
+      authorId: adminUserIds[i % 2 ? 0 : 1],
       categoryId: faker.helpers.arrayElement(categories).id,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -138,7 +138,7 @@ async function createCoursesWithLessons(
           title: faker.lorem.sentence(3),
           description: faker.lorem.paragraph(3),
           imageUrl: faker.image.urlPicsumPhotos(),
-          authorId: adminUserId,
+          authorId: adminUserIds[j % 2 ? 0 : 1],
           state: STATUS.published.key,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -162,7 +162,7 @@ async function createCoursesWithLessons(
           title: faker.lorem.sentence(3),
           description: faker.lorem.paragraph(3),
           imageUrl: faker.image.urlPicsumPhotos(),
-          authorId: adminUserId,
+          authorId: adminUserIds[j % 2 ? 0 : 1],
           state: STATUS.published.key,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
@@ -262,8 +262,19 @@ async function seed() {
       role: USER_ROLES.student,
     });
 
+    const tutorUser = await createOrFindUser("tutor@example.com", "password", {
+      id: faker.string.uuid(),
+      email: "tutor@example.com",
+      firstName: "Tutor",
+      lastName: "User",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      role: USER_ROLES.tutor,
+    });
+
     console.log("Created or found admin user:", adminUser);
     console.log("Created or found student user:", studentUser);
+    console.log("Created or found tutor user:", tutorUser);
 
     await createUsers(5);
     console.log("Created users with credentials");
@@ -358,7 +369,7 @@ async function seed() {
     console.log("Created files");
 
     const createdCourses = await createCoursesWithLessons(
-      adminUser.id,
+      [adminUser.id, tutorUser.id],
       createdCategories,
       createdFilesStatePublished,
       createdTextBlocksStatePublished,
