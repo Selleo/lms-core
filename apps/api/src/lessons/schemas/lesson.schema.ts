@@ -8,7 +8,7 @@ import { lessonItemSelectSchema } from "./lessonItem.schema";
 export const lessonSchema = Type.Object({
   id: UUIDSchema,
   title: Type.String(),
-  imageUrl: Type.String(),
+  imageUrl: Type.Optional(Type.String()),
   description: Type.String(),
   itemsCount: Type.Number(),
   itemsCompletedCount: Type.Optional(Type.Number()),

@@ -5,6 +5,7 @@ import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
 import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { queryClient } from "~/api/queryClient";
+import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import CourseProgress from "~/components/CourseProgress";
 import { Gravatar } from "~/components/Gravatar";
 import Viewer from "~/components/RichText/Viever";
@@ -71,12 +72,14 @@ export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data
         <CategoryChip category={category} />
       </div>
       <img
-        src={
-          imageUrl ||
-          "https://foundr.com/wp-content/uploads/2023/04/How-to-create-an-online-course.jpg.webp"
-        }
+        src={imageUrl || CardPlaceholder}
         alt="Course"
+        loading="eager"
+        decoding="async"
         className="w-full object-cover aspect-video object-center rounded-t-2xl lg:rounded-2xl"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = CardPlaceholder;
+        }}
       />
       <div className="flex flex-col h-full bg-white p-6 lg:p-8 pt-6 rounded-b-2xl min-h-0">
         <CourseProgress

@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react";
 
+import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import {
   Table,
@@ -56,9 +57,11 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
                 <img
                   src={imageUrl || "https://placehold.co/600x400/png"}
                   alt={title}
+                  loading="eager"
+                  decoding="async"
                   className="w-16 h-12 object-cover rounded-lg"
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = "https://picsum.photos/500/300";
+                    (e.target as HTMLImageElement).src = CardPlaceholder;
                   }}
                 />
               </TableCell>

@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react";
 
+import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import CourseProgress from "~/components/CourseProgress";
 import { Gravatar } from "~/components/Gravatar";
 import { Avatar } from "~/components/ui/avatar";
@@ -61,11 +62,13 @@ const CourseCard = ({
     >
       <div className="relative">
         <img
-          src={imageUrl || "https://placehold.co/600x400/png"}
+          src={imageUrl || CardPlaceholder}
           alt="Course"
+          loading="eager"
+          decoding="async"
           className="w-full aspect-video object-cover rounded-t-lg"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://picsum.photos/500/300";
+            (e.target as HTMLImageElement).src = CardPlaceholder;
           }}
         />
         <div className="absolute top-4 left-4 right-4">

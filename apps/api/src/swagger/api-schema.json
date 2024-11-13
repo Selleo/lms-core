@@ -4039,7 +4039,6 @@
                   "required": [
                     "id",
                     "title",
-                    "imageUrl",
                     "description",
                     "itemsCount"
                   ]
@@ -4190,7 +4189,6 @@
                   "required": [
                     "id",
                     "title",
-                    "imageUrl",
                     "description",
                     "itemsCount"
                   ]
@@ -4460,7 +4458,6 @@
               "required": [
                 "id",
                 "title",
-                "imageUrl",
                 "description",
                 "itemsCount"
               ]
@@ -4784,7 +4781,6 @@
             "required": [
               "id",
               "title",
-              "imageUrl",
               "description",
               "itemsCount",
               "lessonItems"
@@ -5050,7 +5046,6 @@
             "required": [
               "id",
               "title",
-              "imageUrl",
               "description",
               "itemsCount",
               "lessonItems"
@@ -5110,7 +5105,6 @@
         },
         "required": [
           "title",
-          "imageUrl",
           "description"
         ]
       },

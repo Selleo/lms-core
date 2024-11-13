@@ -580,10 +580,6 @@ export class CoursesService {
         throw new ConflictException("Failed to update course");
       }
 
-      // if (imageKey && existingCourse.imageUrl !== imageKey) {
-      //   TODO: remove old image
-      // }
-
       if (updatedCourse.imageUrl) {
         updatedCourse.imageUrl = await this.s3Service.getSignedUrl(updatedCourse.imageUrl);
       }

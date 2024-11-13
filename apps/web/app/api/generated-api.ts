@@ -452,7 +452,7 @@ export interface GetCourseResponse {
       /** @format uuid */
       id: string;
       title: string;
-      imageUrl: string;
+      imageUrl?: string;
       description: string;
       itemsCount: number;
       itemsCompletedCount?: number;
@@ -492,7 +492,7 @@ export interface GetCourseByIdResponse {
       /** @format uuid */
       id: string;
       title: string;
-      imageUrl: string;
+      imageUrl?: string;
       description: string;
       itemsCount: number;
       itemsCompletedCount?: number;
@@ -563,7 +563,7 @@ export interface GetAllLessonsResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
     description: string;
     itemsCount: number;
     itemsCompletedCount?: number;
@@ -597,7 +597,7 @@ export interface GetLessonResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
     description: string;
     itemsCount: number;
     itemsCompletedCount?: number;
@@ -655,7 +655,7 @@ export interface GetLessonByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
     description: string;
     itemsCount: number;
     itemsCompletedCount?: number;
@@ -710,7 +710,7 @@ export interface GetLessonByIdResponse {
 
 export interface CreateLessonBody {
   title: string;
-  imageUrl: string;
+  imageUrl?: string;
   description: string;
   lessonProgress?: "completed" | "in_progress" | "not_started";
   state?: string;

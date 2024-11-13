@@ -57,13 +57,17 @@ const Lesson = () => {
   if (!lesson) throw new Error("Lesson not found");
 
   const newImageUrl = getValues("imageUrl");
-  const oldImageUrl = lesson["imageUrl"];
+  const oldImageUrl = lesson["imageUrl"] ?? "";
+
+  const oldImageExist = Boolean(oldImageUrl);
+  const newImageExist = Boolean(newImageUrl);
+  const imageUrlChanged = oldImageExist && newImageExist && newImageUrl !== oldImageUrl;
 
   const onSubmit = (data: UpdateLessonBody) => {
     updateLesson({ data, lessonId: id }).then(() => {
       queryClient.invalidateQueries(lessonByIdQueryOptions(id));
 
-      if (newImageUrl && newImageUrl !== oldImageUrl) {
+      if (imageUrlChanged) {
         deleteOldFile(oldImageUrl);
       }
     });
@@ -102,11 +106,13 @@ const Lesson = () => {
               <Label className="text-neutral-600 font-normal">{displayFieldName(field)}</Label>
               {field === "imageUrl" ? (
                 <>
-                  <img
-                    src={newImageUrl ?? oldImageUrl}
-                    alt="Lesson"
-                    className="h-80 self-start object-contain py-2"
-                  />
+                  {(oldImageUrl || newImageUrl) && (
+                    <img
+                      src={newImageUrl ?? oldImageUrl}
+                      alt="Lesson"
+                      className="h-80 self-start object-contain py-2"
+                    />
+                  )}
                   <Input id={field} hidden readOnly className="hidden" />
                   <Input
                     type="file"

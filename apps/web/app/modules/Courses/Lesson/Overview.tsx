@@ -1,6 +1,7 @@
 import { useParams } from "@remix-run/react";
 
 import { useLessonSuspense } from "~/api/queries/useLesson";
+import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
 import { Card, CardContent } from "~/components/ui/card";
@@ -10,7 +11,7 @@ export default function Overview() {
   const { lessonId = "", courseId = "" } = useParams();
   const { data } = useLessonSuspense(lessonId, courseId);
 
-  const imageUrl = data.imageUrl ?? "https://placehold.co/320x180";
+  const imageUrl = data.imageUrl ?? CardPlaceholder;
   const title = data.title;
   const description = data.description;
   const lessonItemsCount = data.itemsCount;
@@ -52,7 +53,12 @@ export default function Overview() {
           <img
             src={imageUrl}
             alt={title}
+            loading="eager"
+            decoding="async"
             className="w-full h-full object-cover rounded-lg drop-shadow-sm"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = CardPlaceholder;
+            }}
           />
         </div>
         <div className="flex flex-col w-full">
