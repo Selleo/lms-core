@@ -4057,7 +4057,6 @@
             "required": [
               "id",
               "title",
-              "imageUrl",
               "description",
               "category",
               "courseLessonCount",
@@ -4207,7 +4206,6 @@
             "required": [
               "id",
               "title",
-              "imageUrl",
               "description",
               "category",
               "courseLessonCount",

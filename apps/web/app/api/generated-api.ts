@@ -185,14 +185,9 @@ export interface UpsertUserDetailsBody {
 
 export interface UpsertUserDetailsResponse {
   data: {
+    /** @format uuid */
     id: string;
-    createdAt: string;
-    updatedAt: string;
-    email: string;
-    firstName: string;
-    lastName: string;
-    role: string;
-    archived: boolean;
+    message: string;
   };
 }
 
@@ -435,7 +430,7 @@ export interface GetCourseResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
     description: string;
     category: string;
     /** @format uuid */
@@ -475,7 +470,7 @@ export interface GetCourseByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string;
+    imageUrl?: string;
     description: string;
     category: string;
     /** @format uuid */

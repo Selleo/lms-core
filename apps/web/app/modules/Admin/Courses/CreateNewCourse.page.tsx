@@ -36,9 +36,9 @@ const formSchema = z.object({
   }),
   priceInCents: z.string(),
   currency: z.string().optional().default("usd"),
-  categoryId: z.string(),
+  categoryId: z.string().min(1, "Category is required"),
   lessons: z.array(z.string()).optional(),
-  imageUrl: z.string().url("Invalid image URL").optional(),
+  imageUrl: z.union([z.string().url("Invalid image URL"), z.string().length(0)]).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -216,7 +216,7 @@ export default function CreateNewCourse() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="imageUrl" className="text-right">
-                  Course Image
+                  Lesson Image (optional)
                 </Label>
                 <FormControl>
                   <div className="flex items-center flex-col gap-y-2">

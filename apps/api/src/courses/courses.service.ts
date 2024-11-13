@@ -260,7 +260,7 @@ export class CoursesService {
       .select({
         id: courses.id,
         title: courses.title,
-        imageUrl: courses.imageUrl,
+        imageUrl: sql<string>`${courses.imageUrl}`,
         category: categories.title,
         description: sql<string>`${courses.description}`,
         courseLessonCount: sql<number>`
@@ -306,7 +306,6 @@ export class CoursesService {
       .where(and(eq(courses.id, id), eq(courses.archived, false)));
 
     if (!course) throw new NotFoundException("Course not found");
-    if (!course.imageUrl) throw new ConflictException("Course has no image");
 
     const courseLessonList = await this.db
       .select({
@@ -376,9 +375,12 @@ export class CoursesService {
         ),
       );
 
-    const imageUrl = (course.imageUrl as string).startsWith("https://")
-      ? course.imageUrl
-      : await this.s3Service.getSignedUrl(course.imageUrl);
+    const getImageUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.s3Service.getSignedUrl(url);
+    };
+
+    const imageUrl = await getImageUrl(course.imageUrl);
 
     return {
       ...course,
@@ -392,7 +394,7 @@ export class CoursesService {
       .select({
         id: courses.id,
         title: courses.title,
-        imageUrl: courses.imageUrl,
+        imageUrl: sql<string>`${courses.imageUrl}`,
         category: categories.title,
         categoryId: categories.id,
         description: sql<string>`${courses.description}`,
@@ -411,7 +413,6 @@ export class CoursesService {
       .where(and(eq(courses.id, id)));
 
     if (!course) throw new NotFoundException("Course not found");
-    if (!course.imageUrl) throw new ConflictException("Course has no image");
 
     const courseLessonList = await this.db
       .select({
@@ -438,9 +439,12 @@ export class CoursesService {
         ),
       );
 
-    const imageUrl = (course.imageUrl as string).startsWith("https://")
-      ? course.imageUrl
-      : await this.s3Service.getSignedUrl(course.imageUrl);
+    const getImageUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.s3Service.getSignedUrl(url);
+    };
+
+    const imageUrl = await getImageUrl(course.imageUrl);
 
     return {
       ...course,
