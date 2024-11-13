@@ -1,0 +1,1 @@
+ALTER TABLE "course_lessons" ADD COLUMN "is_free" boolean DEFAULT false NOT NULL;

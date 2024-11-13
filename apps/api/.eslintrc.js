@@ -5,7 +5,7 @@ module.exports = {
     tsconfigRootDir: __dirname,
     sourceType: "module",
   },
-  plugins: ["@typescript-eslint", "import"],
+  plugins: ["@typescript-eslint", "import", "unused-imports"],
   extends: ["plugin:@typescript-eslint/recommended", "plugin:import/typescript"],
   root: true,
   env: {
@@ -20,7 +20,7 @@ module.exports = {
     },
   },
   rules: {
-    "import/no-duplicates": "error",
+    "import/no-duplicates": ["error", { considerQueryString: true }],
     "import/order": [
       "error",
       {
@@ -49,5 +49,7 @@ module.exports = {
       "error",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
     ],
+    "@typescript-eslint/no-unused-vars": "off",
+    "unused-imports/no-unused-imports": "error",
   },
 };

@@ -28,6 +28,8 @@ import type { GetAllLessonsResponse } from "~/api/generated-api";
 
 type TransformedLesson = GetAllLessonsResponse["data"][number] & {
   columnId: string;
+  courseId: string;
+  isFree: boolean;
 };
 
 interface LessonAssignerProps {
@@ -64,12 +66,12 @@ const LessonAssigner: FC<LessonAssignerProps> = ({ courseId }) => {
   const [currentlyDraggedItem, setCurrentlyDraggedItem] = useState<TransformedLesson | null>(null);
 
   const { data: course } = useCourseById(courseId);
-  const { data: allLessons } = useAvailableLessons();
+  const { data: allLessons } = useAvailableLessons(courseId);
   const { mutateAsync: addLessonToCourse } = useAddLessonToCourse();
   const { mutateAsync: removeLessonFromCourse } = useRemoveLessonFromCourse();
 
   const sensors = useSensors(
-    useSensor(PointerSensor),
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
@@ -83,6 +85,7 @@ const LessonAssigner: FC<LessonAssignerProps> = ({ courseId }) => {
         columnId: courseAssignedLessonIds.includes(lesson.id)
           ? "column-assigned"
           : "column-unassigned",
+        courseId: course.id,
       }));
       setLessons(transformedLessons);
     }

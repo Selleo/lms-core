@@ -26,6 +26,7 @@ export function useUpdateLesson() {
     onSuccess: () => {
       toast({
         variant: "default",
+        title: "Lesson updated successfully",
         description: "Lesson updated successfully",
       });
     },

@@ -41,8 +41,13 @@ export class LessonsRepository {
             ELSE FALSE
           END
         `,
+        isFree: courseLessons.isFree,
       })
       .from(lessons)
+      .innerJoin(
+        courseLessons,
+        and(eq(courseLessons.id, lessons.id), eq(courseLessons.courseId, courseId)),
+      )
       .leftJoin(
         studentLessonsProgress,
         and(

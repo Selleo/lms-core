@@ -46,15 +46,15 @@ export const LessonDetails = memo<{
         return (
           <div className="flex items-center space-x-2">
             <Checkbox
-              id="archived"
+              id={name}
               checked={field.value as boolean | undefined}
               onCheckedChange={(checked) => field.onChange(checked)}
             />
             <label
-              htmlFor="archived"
+              htmlFor={name}
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Archived
+              {startCase(name)}
             </label>
           </div>
         );

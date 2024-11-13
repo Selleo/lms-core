@@ -41,7 +41,15 @@ export const lesson = Type.Object({
   imageUrl: Type.String(),
   description: Type.String(),
   type: Type.String(),
+  isFree: Type.Boolean(),
 });
+
+export const lessonWithCountItems = Type.Intersect([
+  Type.Omit(lesson, ["type"]),
+  Type.Object({
+    itemsCount: Type.Number(),
+  }),
+]);
 
 export const allLessonsSchema = Type.Array(lessonSchema);
 
@@ -60,6 +68,7 @@ export const showLessonSchema = Type.Object({
 });
 
 export type Lesson = Static<typeof lesson>;
+export type LessonWithCountItems = Static<typeof lessonWithCountItems>;
 export type LessonResponse = Static<typeof lessonSchema>;
 export type ShowLessonResponse = Static<typeof showLessonSchema>;
 export type AllLessonsResponse = Static<typeof allLessonsSchema>;

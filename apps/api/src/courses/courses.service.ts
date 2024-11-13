@@ -295,6 +295,13 @@ export class CoursesService {
         authorId: courses.authorId,
         author: sql<string>`${users.firstName} || ' ' || ${users.lastName}`,
         authorEmail: sql<string>`${users.email}`,
+        hasFreeLessons: sql<boolean>`
+        EXISTS (
+          SELECT 1
+          FROM ${courseLessons}
+          WHERE ${courseLessons.courseId} = ${courses.id}
+            AND ${courseLessons.isFree} = true
+        )`,
       })
       .from(courses)
       .innerJoin(categories, eq(courses.categoryId, categories.id))
@@ -303,6 +310,7 @@ export class CoursesService {
         studentCourses,
         and(eq(courses.id, studentCourses.courseId), eq(studentCourses.studentId, userId)),
       )
+      .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
       .where(and(eq(courses.id, id), eq(courses.archived, false)));
 
     if (!course) throw new NotFoundException("Course not found");
@@ -360,6 +368,7 @@ export class CoursesService {
             ELSE ${LessonProgress.notStarted}
           END)
         `,
+        isFree: courseLessons.isFree,
       })
       .from(courseLessons)
       .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
@@ -424,6 +433,7 @@ export class CoursesService {
           (SELECT COUNT(*)
           FROM ${lessonItems}
           WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+        isFree: courseLessons.isFree,
       })
       .from(courseLessons)
       .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
@@ -777,6 +787,13 @@ export class CoursesService {
         )::INTEGER`,
       priceInCents: courses.priceInCents,
       currency: courses.currency,
+      hasFreeLessons: sql<boolean>`
+        EXISTS (
+          SELECT 1
+          FROM ${courseLessons}
+          WHERE ${courseLessons.courseId} = ${courses.id}
+            AND ${courseLessons.isFree} = true
+        )`,
     };
   }
 

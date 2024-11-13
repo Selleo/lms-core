@@ -19,6 +19,7 @@ import {
 
 import type { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
 import type { LessonItemResponse } from "./schemas/lessonItem.schema";
+import type { UUIDType } from "src/common";
 
 interface LessonsQuery {
   filters?: LessonsFilterSchema;
@@ -136,8 +137,8 @@ export class AdminLessonsService {
     };
   }
 
-  async getAvailableLessons() {
-    const availableLessons = await this.adminLessonsRepository.getAvailableLessons();
+  async getAvailableLessons(courseId: UUIDType) {
+    const availableLessons = await this.adminLessonsRepository.getAvailableLessons(courseId);
 
     if (isEmpty(availableLessons)) throw new NotFoundException("Lessons not found");
 
@@ -167,6 +168,10 @@ export class AdminLessonsService {
     const [lesson] = await this.adminLessonsRepository.updateLesson(id, body);
 
     if (!lesson) throw new NotFoundException("Lesson not found");
+  }
+
+  async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {
+    return await this.adminLessonsRepository.toggleLessonAsFree(courseId, lessonId, isFree);
   }
 
   async addLessonToCourse(courseId: string, lessonId: string, displayOrder?: number) {
