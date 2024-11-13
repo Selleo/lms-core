@@ -5,17 +5,19 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiQuery, ApiResponse } from "@nestjs/swagger";
 
 import { S3Service } from "../s3.service";
 import { FileUploadResponse } from "../schemas/file.schema";
 
-@Controller("upload")
+@Controller("files")
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 
@@ -83,6 +85,25 @@ export class S3Controller {
       return { fileKey, fileUrl };
     } catch (error) {
       throw new ConflictException("Failed to upload file");
+    }
+  }
+
+  @Delete()
+  @ApiQuery({
+    name: "fileKey",
+    description: "Key of the file to delete",
+    type: "string",
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "File deleted successfully",
+  })
+  async deleteFile(@Query("fileKey") fileKey: string): Promise<void> {
+    try {
+      await this.s3Service.deleteFile(fileKey);
+    } catch (error) {
+      throw new ConflictException("Failed to delete file");
     }
   }
 }

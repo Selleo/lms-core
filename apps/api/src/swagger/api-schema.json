@@ -2393,7 +2393,7 @@
         }
       }
     },
-    "/api/upload": {
+    "/api/files": {
       "post": {
         "operationId": "S3Controller_uploadFile",
         "parameters": [],
@@ -2427,6 +2427,25 @@
                 }
               }
             }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "S3Controller_deleteFile",
+        "parameters": [
+          {
+            "name": "fileKey",
+            "required": true,
+            "in": "query",
+            "description": "Key of the file to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File deleted successfully"
           }
         }
       }

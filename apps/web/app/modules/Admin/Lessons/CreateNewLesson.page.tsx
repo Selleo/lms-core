@@ -174,13 +174,10 @@ export default function CreateNewLessonPage() {
                 </Label>
                 <FormControl>
                   <div className="flex items-center flex-col gap-y-2">
-                    <Input
-                      id="imageUrl"
-                      {...field}
-                      readOnly
-                      placeholder="Image URL will appear here after upload"
-                      className="w-full"
-                    />
+                    {field.value && (
+                      <img src={field.value} alt="Lesson" className="w-1/3 self-start" />
+                    )}
+                    <Input id="imageUrl" {...field} hidden readOnly className="hidden" />
                     <Input
                       type="file"
                       accept="image/*"
