@@ -1,49 +1,57 @@
-import { Status } from "src/storage/schema/utils";
+import { Type } from "@sinclair/typebox";
 
-export const LessonFileType = {
-  presentation: "Presentation",
-  external_presentation: "External Presentation",
-  video: "Video",
-  external_video: "External Video",
-} as const;
+import { baseCourseSchema } from "src/courses/schemas/createCourse.schema";
+import { LESSON_ITEM_TYPE } from "src/lessons/lesson.type";
+import { lesson } from "src/lessons/schemas/lesson.schema";
+import {
+  lessonItemFileSchema,
+  questionAnswerOptionsSchema,
+  questionSchema,
+  textBlockSchema,
+} from "src/lessons/schemas/lessonItem.schema";
 
-export const QuestionType = {
-  open_answer: "Open Answer",
-  single_choice: "Single Choice",
-  multiple_choice: "Multiple Choice",
-} as const;
+import { STATUS } from "../../storage/schema/utils";
 
-export interface CourseData {
-  title: string;
-  description: string;
-  imageUrl?: string;
-  state: keyof typeof Status;
-  priceInCents: number;
-  category: string;
-  lessons: {
-    title: string;
-    description: string;
-    state: keyof typeof Status;
-    items: Array<
-      | {
-          type: "text_block";
-          title: string;
-          body: string;
-          state: keyof typeof Status;
-        }
-      | {
-          type: "file";
-          title: string;
-          fileType: keyof typeof LessonFileType;
-          url: string;
-          state: keyof typeof Status;
-        }
-      | {
-          type: "question";
-          questionType: keyof typeof QuestionType;
-          questionBody: string;
-          state: keyof typeof Status;
-        }
-    >;
-  }[];
-}
+import type { Static } from "@sinclair/typebox";
+
+const niceCourseData = Type.Intersect([
+  Type.Omit(baseCourseSchema, ["categoryId"]),
+  Type.Object({
+    category: Type.String(),
+    lessons: Type.Array(
+      Type.Intersect([
+        Type.Omit(lesson, ["id"]),
+        Type.Object({
+          state: Type.Union([Type.Literal(STATUS.draft.key), Type.Literal(STATUS.published.key)]),
+          items: Type.Array(
+            Type.Union([
+              Type.Intersect([
+                Type.Omit(lessonItemFileSchema, ["id", "archived", "authorId"]),
+                Type.Object({
+                  itemType: Type.Literal(LESSON_ITEM_TYPE.file.key),
+                }),
+              ]),
+              Type.Intersect([
+                Type.Omit(textBlockSchema, ["id", "archived", "authorId"]),
+                Type.Object({
+                  itemType: Type.Literal(LESSON_ITEM_TYPE.text_block.key),
+                }),
+              ]),
+              Type.Intersect([
+                Type.Omit(questionSchema, ["id", "archived", "authorId", "questionAnswers"]),
+                Type.Object({
+                  itemType: Type.Literal(LESSON_ITEM_TYPE.question.key),
+                  questionAnswers: Type.Optional(
+                    Type.Array(Type.Omit(questionAnswerOptionsSchema, ["id", "questionId"])),
+                  ),
+                }),
+              ]),
+            ]),
+          ),
+        }),
+      ]),
+    ),
+  }),
+]);
+
+export type NiceCourseData = Static<typeof niceCourseData>;

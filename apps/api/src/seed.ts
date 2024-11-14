@@ -7,7 +7,9 @@ import postgres from "postgres";
 
 import hashPassword from "./common/helpers/hashPassword";
 import { STATES } from "./common/states";
+import { e2eCourses } from "./e2e-data-seeds";
 import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
+import { niceCourses } from "./nice-data-seeds";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
   categories,
