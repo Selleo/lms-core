@@ -24,13 +24,15 @@ const Viewer = ({ content, style, className }: ViewerProps) => {
     className,
   );
 
+  const unOrderedListClasses = "[&>div>ul]:list-disc [&>div>ul]:list-inside [&>div>ul>li>p]:inline";
+  const orderedListClasses =
+    "[&>div>ol]:list-decimal [&>div>ol]:list-inside [&>div>ol>li>p]:inline";
+
+  const editorClasses = cn(unOrderedListClasses, orderedListClasses);
+
   return (
     <article className={classNames}>
-      <EditorContent
-        editor={editor}
-        readOnly={true}
-        className="[&>div>ol]:list-disc [&>div>ol]:list-outside"
-      />
+      <EditorContent editor={editor} readOnly={true} className={editorClasses} />
     </article>
   );
 };
