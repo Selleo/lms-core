@@ -7,7 +7,9 @@ import postgres from "postgres";
 
 import hashPassword from "./common/helpers/hashPassword";
 import { STATES } from "./common/states";
+import { e2eCourses } from "./e2e-data-seeds";
 import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
+import { niceCourses } from "./nice-data-seeds";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
   categories,
@@ -279,8 +281,10 @@ async function seed() {
     await createUsers(5);
     console.log("Created users with credentials");
 
-    await createNiceCourses(adminUser.id, db);
+    await createNiceCourses(adminUser.id, db, niceCourses);
     console.log("✨✨✨Created created nice courses✨✨✨");
+    await createNiceCourses(adminUser.id, db, e2eCourses);
+    console.log("🧪 Created e2e courses");
 
     const createdCategories = await createEntities(
       categories,

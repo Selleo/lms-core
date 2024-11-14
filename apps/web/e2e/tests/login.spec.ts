@@ -14,7 +14,7 @@ test.describe("login page", () => {
 
   test("should login as test user", async ({ page }) => {
     await page.getByLabel("email").fill("user@example.com");
-    await page.getByLabel("password").fill("studentpassword");
+    await page.getByLabel("password").fill("password");
     await page.getByRole("button", { name: /login/i }).click();
 
     await expect(page).toHaveURL("/");
