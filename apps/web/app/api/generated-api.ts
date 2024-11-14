@@ -466,6 +466,7 @@ export interface GetCourseResponse {
     priceInCents: number;
     currency: string;
     archived?: boolean;
+    hasFreeLessons?: boolean;
   };
 }
 
@@ -506,6 +507,7 @@ export interface GetCourseByIdResponse {
     priceInCents: number;
     currency: string;
     archived?: boolean;
+    hasFreeLessons?: boolean;
   };
 }
 

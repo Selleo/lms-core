@@ -1,9 +1,11 @@
 import { useParams } from "@remix-run/react";
 
 import { useLessonSuspense } from "~/api/queries/useLesson";
+import { CardBadge } from "~/components/CardBadge";
 import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
+import Viewer from "~/components/RichText/Viever";
 import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
@@ -22,20 +24,22 @@ export default function Overview() {
   const isQuizSubmitted = data.type === "quiz" && data.isSubmitted;
 
   const renderQuizProgressBadge = () => {
+    const badgeClasses = "absolute top-4 left-4 z-10";
+
     if (isQuizSubmitted) {
       return (
-        <>
+        <CardBadge variant="successOutlined" className={badgeClasses}>
           <Icon name="InputRoundedMarkerSuccess" />
-          <span className="text-success-800">Completed</span>
-        </>
+          Completed
+        </CardBadge>
       );
     }
 
     return (
-      <>
+      <CardBadge className={badgeClasses}>
         <Icon name="NotStartedRounded" />
-        <span className="text-neutral-900">Not started</span>
-      </>
+        Not started
+      </CardBadge>
     );
   };
 
@@ -45,11 +49,7 @@ export default function Overview() {
     <Card className="w-full pt-6 lg:pt-0 border-none drop-shadow-primary">
       <CardContent className="lg:p-8 flex flex-col align-center gap-6 2xl:flex-row">
         <div className="relative self-center w-full lg:max-w-[320px] aspect-video">
-          {isQuiz && (
-            <div className="absolute z-10 flex items-center body-sm-md px-2 gap-x-1 rounded-lg py-1 left-4 top-4 bg-white">
-              {quizBadge}
-            </div>
-          )}
+          {isQuiz && quizBadge}
           <img
             src={imageUrl}
             alt={title}
@@ -78,7 +78,7 @@ export default function Overview() {
             </div>
           )}
           <h5 className={cn("h5", { "mt-6": data.type !== "quiz" })}>{title}</h5>
-          <div className="body-base">{description}</div>
+          <Viewer content={description} className="body-base text-neutral-900" />
         </div>
       </CardContent>
     </Card>

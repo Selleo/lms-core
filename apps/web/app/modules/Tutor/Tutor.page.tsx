@@ -91,9 +91,7 @@ export default function TutorPage() {
             {/*TODO: Add filters*/}
           </div>
           <div className="flex flex-wrap lg:overflow-y-scroll lg:max-h-[calc(100dvh-260px)] gap-6 xl:gap-4 *:max-w-[250px]">
-            {tutorCourses?.map((course) => (
-              <CourseCard href={`/course/${course.id}`} key={course.id} {...course} />
-            ))}
+            {tutorCourses?.map((course) => <CourseCard key={course.id} {...course} />)}
           </div>
           <Button variant="outline" className="sr-only">
             Show more

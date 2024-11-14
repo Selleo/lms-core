@@ -5,9 +5,11 @@ import { useEnrollCourse } from "~/api/mutations/useEnrollCourse";
 import { useUnenrollCourse } from "~/api/mutations/useUnenrollCourse";
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { queryClient } from "~/api/queryClient";
+import { CardBadge } from "~/components/CardBadge";
 import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import CourseProgress from "~/components/CourseProgress";
 import { Gravatar } from "~/components/Gravatar";
+import { Icon } from "~/components/Icon";
 import Viewer from "~/components/RichText/Viever";
 import { Avatar } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -20,23 +22,26 @@ import { PaymentModal } from "~/modules/stripe/PaymentModal";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 
-export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data"] }) => {
-  const {
-    category,
-    currency,
-    description,
-    imageUrl,
-    title,
-    enrolled: isEnrolled,
-    courseLessonCount,
-    completedLessonCount = 0,
-    priceInCents,
-    authorId,
-    author,
-    authorEmail = "",
-  } = course;
-  const { mutateAsync: unenrollCourse } = useUnenrollCourse();
+type CourseViewMainCardProps = GetCourseResponse["data"];
+
+export const CourseViewMainCard = ({
+  author,
+  authorEmail = "",
+  authorId,
+  category,
+  completedLessonCount = 0,
+  courseLessonCount,
+  currency,
+  description,
+  enrolled: isEnrolled,
+  hasFreeLessons = false,
+  imageUrl,
+  priceInCents,
+  title,
+  lessons,
+}: CourseViewMainCardProps) => {
   const { mutateAsync: enrollCourse } = useEnrollCourse();
+  const { mutateAsync: unenrollCourse } = useUnenrollCourse();
   const { id: courseId } = useParams<{ id: string }>();
   const { isAdmin } = useUserRole();
 
@@ -51,8 +56,8 @@ export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data
   }
 
   const firstUncompletedLesson =
-    course.lessons.find((lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount)?.id ??
-    last(course.lessons)?.id;
+    lessons.find((lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount)?.id ??
+    last(lessons)?.id;
 
   const handleEnroll = () => {
     enrollCourse({ id: courseId }).then(() => {
@@ -68,8 +73,14 @@ export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data
 
   return (
     <div className="md:w-[380px] xl:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-primary relative">
-      <div className="absolute top-4 left-4 right-4">
+      <div className="absolute top-4 left-4 right-4 flex flex-col gap-y-1">
         <CategoryChip category={category} />
+        {hasFreeLessons && !isEnrolled && (
+          <CardBadge variant="successFilled">
+            <Icon name="FreeRight" className="w-4" />
+            Free Lessons!
+          </CardBadge>
+        )}
       </div>
       <img
         src={imageUrl || CardPlaceholder}
@@ -95,7 +106,7 @@ export const CourseViewMainCard = ({ course }: { course: GetCourseResponse["data
           <span className="text-primary-700">{author}</span>
         </Link>
         <div className="min-h-0 scrollbar-thin overflow-auto">
-          <Viewer content={description} />
+          <Viewer content={description} className="text-neutral-900 body-base" />
         </div>
         <div className="mt-auto">
           {!isAdmin && isEnrolled && (

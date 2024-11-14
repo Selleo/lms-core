@@ -4101,6 +4101,9 @@
               },
               "archived": {
                 "type": "boolean"
+              },
+              "hasFreeLessons": {
+                "type": "boolean"
               }
             },
             "required": [
@@ -4249,6 +4252,9 @@
                 "type": "string"
               },
               "archived": {
+                "type": "boolean"
+              },
+              "hasFreeLessons": {
                 "type": "boolean"
               }
             },

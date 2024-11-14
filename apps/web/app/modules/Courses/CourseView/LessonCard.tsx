@@ -3,9 +3,10 @@ import { cva } from "class-variance-authority";
 import { startCase } from "lodash-es";
 
 import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
-import { CaretRight } from "~/assets/svgs";
+import { CardBadge } from "~/components/CardBadge";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
+import Viewer from "~/components/RichText/Viever";
 import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
@@ -19,8 +20,7 @@ type LessonCardProps = Lesson & {
   index: number;
   isEnrolled: boolean;
   isAdmin: boolean;
-  type?: string;
-  lessonProgress?: LessonStatus;
+  isFree?: boolean;
 };
 
 const buttonVariants = cva("w-full transition", {
@@ -36,55 +36,77 @@ const buttonVariants = cva("w-full transition", {
   },
 });
 
-const cardBadgeLabelVariants = cva("details-md", {
-  defaultVariants: {
-    variant: "not_started",
-  },
-  variants: {
-    variant: {
-      not_started: "text-neutral-900",
-      in_progress: "text-secondary-700",
-      completed: "text-success-800",
-    },
-  },
-});
+const getButtonProps = (lessonProgress: LessonStatus, isAdmin: boolean, type?: string) => {
+  if (isAdmin) {
+    return { text: "Lesson preview", colorClass: "text-primary-700" };
+  }
+
+  if (lessonProgress === "completed") {
+    return type === "quiz"
+      ? { text: "Try again", colorClass: "text-success-600" }
+      : { text: "Read more", colorClass: "text-success-600" };
+  }
+
+  if (lessonProgress === "in_progress") {
+    return { text: "Continue", colorClass: "text-secondary-500" };
+  }
+
+  if (lessonProgress === "not_started" && type === "quiz") {
+    return { text: "Start", colorClass: "text-primary-700" };
+  }
+
+  return { text: "Read more", colorClass: "text-primary-700" };
+};
+
+const cardBadgeIcon = {
+  completed: "InputRoundedMarkerSuccess",
+  in_progress: "InProgress",
+  not_started: "NotStartedRounded",
+} as const;
+
+const cardBadgeVariant: Record<string, "successOutlined" | "secondary" | "default"> = {
+  completed: "successOutlined",
+  in_progress: "secondary",
+  not_started: "default",
+};
 
 export const LessonCard = ({
-  id: lessonId,
-  lessonProgress = "not_started",
-  index,
-  isEnrolled,
+  description,
   imageUrl,
+  index,
+  isAdmin,
+  isEnrolled,
+  isFree = false,
   itemsCompletedCount,
   itemsCount,
+  id: lessonId,
+  lessonProgress = "not_started",
   title,
   type,
-  description,
-  isAdmin,
 }: LessonCardProps) => {
   const cardClasses = buttonVariants({
     className: cn({
-      "opacity-60 cursor-not-allowed": !isEnrolled,
+      "opacity-60 cursor-not-allowed hover:border-primary-200": !isEnrolled && !isFree,
     }),
     variant: lessonProgress,
   });
 
-  const cardBadgeIcon = {
-    completed: "InputRoundedMarkerSuccess",
-    in_progress: "InProgress",
-    not_started: "NotStartedRounded",
-  } as const;
+  const { text: buttonText, colorClass: buttonColorClass } = getButtonProps(
+    lessonProgress,
+    isAdmin,
+    type,
+  );
 
   return (
-    <Card key={index} className={cardClasses}>
+    <Card className={cardClasses}>
       <CardContent className="p-4 h-full">
         <Link
           className={cn("flex flex-col h-full gap-4", {
-            "cursor-not-allowed": !isEnrolled,
+            "cursor-not-allowed": !isEnrolled && !isFree,
           })}
-          to={isEnrolled ? `lesson/${lessonId}` : "#"}
-          onClick={(e) => !isEnrolled && e.preventDefault()}
-          aria-disabled={!isEnrolled}
+          to={isEnrolled || isFree ? `lesson/${lessonId}` : "#"}
+          onClick={(e) => !isEnrolled && !isFree && e.preventDefault()}
+          aria-disabled={!isEnrolled && !isFree}
         >
           <div className="relative">
             <img
@@ -98,16 +120,13 @@ export const LessonCard = ({
               }}
             />
             {lessonProgress && (
-              <div className="flex items-center absolute gap-x-1 py-0.5 px-1 left-3 top-3 bg-white rounded-lg">
+              <CardBadge
+                variant={cardBadgeVariant[lessonProgress]}
+                className="absolute top-3 left-3"
+              >
                 <Icon name={cardBadgeIcon[lessonProgress]} />
-                <span
-                  className={cardBadgeLabelVariants({
-                    variant: lessonProgress,
-                  })}
-                >
-                  {startCase(lessonProgress)}
-                </span>
-              </div>
+                {startCase(lessonProgress)}
+              </CardBadge>
             )}
             <span className="absolute bottom-0 right-0 -translate-x-1/2 translate-y-1/2 bg-white rounded-full w-8 h-8 flex justify-center items-center text-primary-700">
               {(index + 1).toString().padStart(2, "0")}
@@ -126,22 +145,16 @@ export const LessonCard = ({
             </div>
             <div className="flex flex-col gap-y-2 pb-4">
               <h4 className="font-medium text-sm text-neutral-950 mt-2">{title}</h4>
-              <p className="text-xs text-neutral-900 mt-1 line-clamp-3 flex-grow leading-5">
-                {description}
-              </p>
+              <Viewer
+                content={description}
+                className="text-xs text-neutral-900 mt-1 line-clamp-3 flex-grow leading-5"
+              />
             </div>
-            <Link
-              to={`lesson/${lessonId}`}
-              className="text-primary-700 text-xs mt-auto self-start font-medium"
+            <button
+              className={cn("text-xs mt-auto inline-flex self-start font-medium", buttonColorClass)}
             >
-              {isAdmin ? (
-                "Lesson preview"
-              ) : isEnrolled ? (
-                <>
-                  Read more <CaretRight className="w-3 h-3 inline-block text-primary-700" />
-                </>
-              ) : null}
-            </Link>
+              {buttonText} <Icon name="CaretRight" className="w-3 h-3 ml-1" />
+            </button>
           </div>
         </Link>
       </CardContent>
