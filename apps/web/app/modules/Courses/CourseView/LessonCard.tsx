@@ -2,6 +2,7 @@ import { Link } from "@remix-run/react";
 import { cva } from "class-variance-authority";
 import { startCase } from "lodash-es";
 
+import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import { CaretRight } from "~/assets/svgs";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
@@ -87,9 +88,14 @@ export const LessonCard = ({
         >
           <div className="relative">
             <img
-              src={imageUrl ?? "https://placehold.co/600x400"}
+              src={imageUrl ?? CardPlaceholder}
               alt={`Lesson ${index + 1}`}
+              loading="eager"
+              decoding="async"
               className="w-full object-cover object-center rounded-lg drop-shadow-sm aspect-video"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = CardPlaceholder;
+              }}
             />
             {lessonProgress && (
               <div className="flex items-center absolute gap-x-1 py-0.5 px-1 left-3 top-3 bg-white rounded-lg">

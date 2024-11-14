@@ -28,7 +28,7 @@ const formSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters."),
   description: z.string().min(2, "Description must be at least 2 characters."),
   state: z.string().optional(),
-  imageUrl: z.string().url("Invalid image URL"),
+  imageUrl: z.union([z.string().url("Invalid image URL"), z.string().length(0)]).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -170,7 +170,7 @@ export default function CreateNewLessonPage() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="imageUrl" className="text-right">
-                  Lesson Image
+                  Lesson Image (optional)
                 </Label>
                 <FormControl>
                   <div className="flex items-center flex-col gap-y-2">

@@ -52,12 +52,18 @@ export class AdminLessonsService {
     const [{ totalItems }] = await this.adminLessonsRepository.getLessonsCount(conditions);
 
     const lessonsWithSignedUrls = await Promise.all(
-      lessonsData.map(async (lesson) => ({
-        ...lesson,
-        imageUrl: lesson.imageUrl.startsWith("https://")
-          ? lesson.imageUrl
-          : await this.s3Service.getSignedUrl(lesson.imageUrl),
-      })),
+      lessonsData.map(async (lesson) => {
+        if (!lesson.imageUrl) {
+          return lesson;
+        }
+
+        return {
+          ...lesson,
+          imageUrl: lesson.imageUrl.startsWith("https://")
+            ? lesson.imageUrl
+            : await this.s3Service.getSignedUrl(lesson.imageUrl),
+        };
+      }),
     );
 
     return {
@@ -137,6 +143,10 @@ export class AdminLessonsService {
 
     return await Promise.all(
       availableLessons.map(async (lesson) => {
+        if (!lesson.imageUrl) {
+          return lesson;
+        }
+
         const imageUrl = lesson.imageUrl.startsWith("https://")
           ? lesson.imageUrl
           : await this.s3Service.getSignedUrl(lesson.imageUrl);

@@ -1,6 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import Viewer from "~/components/RichText/Viever";
 
 import type { GetAllLessonsResponse } from "~/api/generated-api";
@@ -31,7 +32,14 @@ export function LessonCard({ lesson }: LessonCardProps) {
       {...listeners}
       className="bg-white p-2 mb-2 rounded shadow flex items-center gap-2 cursor-move"
     >
-      <img src={lesson.imageUrl} alt="" className="w-16 h-16 rounded-md" />
+      <img
+        src={lesson.imageUrl ?? CardPlaceholder}
+        alt=""
+        className="w-16 h-16 rounded-md"
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = CardPlaceholder;
+        }}
+      />
       <div>
         <h4 className="font-medium">{lesson.title}</h4>
         <Viewer content={lesson.description} />

@@ -46,9 +46,12 @@ export class LessonsService {
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
-    const imageUrl = (lesson.imageUrl as string).startsWith("https://")
-      ? lesson.imageUrl
-      : await this.s3Service.getSignedUrl(lesson.imageUrl);
+    const getImageUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.s3Service.getSignedUrl(url);
+    };
+
+    const imageUrl = await getImageUrl(lesson.imageUrl);
 
     const completedLessonItems = await this.lessonsRepository.completedLessonItem(
       courseId,

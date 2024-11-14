@@ -66,7 +66,11 @@ const Course = () => {
   if (!course) throw new Error("Course not found");
 
   const newImageUrl = getValues("imageUrl");
-  const oldImageUrl = course["imageUrl"];
+  const oldImageUrl = course["imageUrl"] ?? "";
+
+  const oldImageExist = Boolean(oldImageUrl);
+  const newImageExist = Boolean(newImageUrl);
+  const imageUrlChanged = oldImageExist && newImageExist && newImageUrl !== oldImageUrl;
 
   const onSubmit = async (data: UpdateCourseBody) => {
     updateCourse({
@@ -74,7 +78,8 @@ const Course = () => {
       courseId: id,
     }).then(() => {
       queryClient.invalidateQueries(courseQueryOptions(id));
-      if (newImageUrl && newImageUrl !== oldImageUrl) {
+
+      if (imageUrlChanged) {
         deleteOldFile(oldImageUrl);
       }
     });
@@ -113,11 +118,13 @@ const Course = () => {
               <Label htmlFor={field}>{displayFieldName(field)}</Label>
               {field === "imageUrl" ? (
                 <>
-                  <img
-                    src={newImageUrl ?? oldImageUrl}
-                    alt="Lesson"
-                    className="h-80 self-start object-contain py-2"
-                  />
+                  {(oldImageUrl || newImageUrl) && (
+                    <img
+                      src={newImageUrl ?? oldImageUrl}
+                      alt="Lesson"
+                      className="h-80 self-start object-contain py-2"
+                    />
+                  )}
                   <Input id={field} hidden readOnly className="hidden" />
                   <Input
                     type="file"
