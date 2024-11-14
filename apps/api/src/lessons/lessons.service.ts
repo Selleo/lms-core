@@ -44,6 +44,8 @@ export class LessonsService {
 
     const lesson = await this.lessonsRepository.getLessonForUser(courseId, id, userId);
 
+    console.log(courseId, id, userId);
+
     if (!lesson) throw new NotFoundException("Lesson not found");
 
     const getImageUrl = async (url: string) => {
