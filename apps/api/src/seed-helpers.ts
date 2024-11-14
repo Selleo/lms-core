@@ -69,6 +69,7 @@ export async function createNiceCourses(
         id: crypto.randomUUID(),
         courseId: course.id,
         lessonId: lesson.id,
+        isFree: lessonData.isFree,
       });
 
       for (const [index, item] of lessonData.items.entries()) {

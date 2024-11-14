@@ -19,6 +19,7 @@ export const e2eCourses: NiceCourseData[] = [
         imageUrl: "https://placehold.co/600x400",
         type: LESSON_TYPE.multimedia.key,
         state: STATUS.published.key,
+        isFree: false,
         items: [
           {
             itemType: LESSON_ITEM_TYPE.text_block.key,

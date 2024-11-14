@@ -1,7 +1,7 @@
 import { Link } from "@remix-run/react";
 
-import { CardBadge } from "~/components/CardBadge";
 import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
+import { CardBadge } from "~/components/CardBadge";
 import CourseProgress from "~/components/CourseProgress";
 import { Gravatar } from "~/components/Gravatar";
 import { Icon } from "~/components/Icon";

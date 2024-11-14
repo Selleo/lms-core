@@ -1,8 +1,8 @@
 import { useParams } from "@remix-run/react";
 
 import { useLessonSuspense } from "~/api/queries/useLesson";
-import { CardBadge } from "~/components/CardBadge";
 import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
+import { CardBadge } from "~/components/CardBadge";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
 import Viewer from "~/components/RichText/Viever";

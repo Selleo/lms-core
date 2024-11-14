@@ -46,7 +46,7 @@ export class LessonsRepository {
       .from(lessons)
       .innerJoin(
         courseLessons,
-        and(eq(courseLessons.id, lessons.id), eq(courseLessons.courseId, courseId)),
+        and(eq(courseLessons.lessonId, lessons.id), eq(courseLessons.courseId, courseId)),
       )
       .leftJoin(
         studentLessonsProgress,
