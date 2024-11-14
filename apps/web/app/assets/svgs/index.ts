@@ -22,3 +22,4 @@ export { default as Lesson } from "./lesson.svg?react";
 export { default as LessonContent } from "./lesson-content.svg?react";
 export { default as Email } from "./email.svg?react";
 export { default as Phone } from "./phone.svg?react";
+export { default as FreeRight } from "./free-right.svg?react";
