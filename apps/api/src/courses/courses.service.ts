@@ -411,7 +411,7 @@ export class CoursesService {
       .where(and(eq(courses.id, id)));
 
     if (!course) throw new NotFoundException("Course not found");
-    // TODO: if (!course.imageUrl) throw new ConflictException("Course has no image");
+    if (!course.imageUrl) throw new ConflictException("Course has no image");
 
     const courseLessonList = await this.db
       .select({
@@ -438,14 +438,13 @@ export class CoursesService {
         ),
       );
 
-    // TODO:
-    // const imageUrl = (course.imageUrl as string).startsWith("https://")
-    //   ? course.imageUrl
-    //   : await this.s3Service.getSignedUrl(course.imageUrl);
+    const imageUrl = (course.imageUrl as string).startsWith("https://")
+      ? course.imageUrl
+      : await this.s3Service.getSignedUrl(course.imageUrl);
 
     return {
       ...course,
-      // imageUrl,
+      imageUrl,
       lessons: courseLessonList ?? [],
     };
   }

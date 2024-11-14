@@ -5,20 +5,29 @@ import {
   Body,
   ConflictException,
   Controller,
+  Delete,
   Post,
+  Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiQuery, ApiResponse } from "@nestjs/swagger";
+
+import { Roles } from "src/common/decorators/roles.decorator";
+import { RolesGuard } from "src/common/guards/roles.guard";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { S3Service } from "../s3.service";
 import { FileUploadResponse } from "../schemas/file.schema";
 
-@Controller("upload")
+@UseGuards(RolesGuard)
+@Controller("files")
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 
+  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   @ApiConsumes("multipart/form-data")
@@ -83,6 +92,26 @@ export class S3Controller {
       return { fileKey, fileUrl };
     } catch (error) {
       throw new ConflictException("Failed to upload file");
+    }
+  }
+
+  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Delete()
+  @ApiQuery({
+    name: "fileKey",
+    description: "Key of the file to delete",
+    type: "string",
+    required: true,
+  })
+  @ApiResponse({
+    status: 200,
+    description: "File deleted successfully",
+  })
+  async deleteFile(@Query("fileKey") fileKey: string): Promise<void> {
+    try {
+      await this.s3Service.deleteFile(fileKey);
+    } catch (error) {
+      throw new ConflictException("Failed to delete file");
     }
   }
 }

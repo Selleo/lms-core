@@ -220,13 +220,14 @@ export default function CreateNewCourse() {
                 </Label>
                 <FormControl>
                   <div className="flex items-center flex-col gap-y-2">
-                    <Input
-                      id="imageUrl"
-                      {...field}
-                      readOnly
-                      placeholder="Image URL will appear here after upload"
-                      className="w-full"
-                    />
+                    {field.value && (
+                      <img
+                        src={field.value}
+                        alt="Lesson"
+                        className="h-80 self-start object-contain py-2"
+                      />
+                    )}
+                    <Input id="imageUrl" {...field} hidden readOnly className="hidden" />
                     <Input
                       type="file"
                       accept="image/*"

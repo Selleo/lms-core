@@ -435,7 +435,7 @@ export interface GetCourseResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string | null;
+    imageUrl: string;
     description: string;
     category: string;
     /** @format uuid */
@@ -475,7 +475,7 @@ export interface GetCourseByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string | null;
+    imageUrl: string;
     description: string;
     category: string;
     /** @format uuid */
@@ -534,6 +534,7 @@ export interface CreateCourseResponse {
 export interface UpdateCourseBody {
   title?: string;
   description?: string;
+  imageUrl?: string;
   state?: "draft" | "published";
   priceInCents?: number;
   currency?: string;
@@ -2551,7 +2552,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name S3ControllerUploadFile
-     * @request POST:/api/upload
+     * @request POST:/api/files
      */
     s3ControllerUploadFile: (
       data: {
@@ -2563,11 +2564,31 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<FileUploadResponse, any>({
-        path: `/api/upload`,
+        path: `/api/files`,
         method: "POST",
         body: data,
         type: ContentType.FormData,
         format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name S3ControllerDeleteFile
+     * @request DELETE:/api/files
+     */
+    s3ControllerDeleteFile: (
+      query: {
+        /** Key of the file to delete */
+        fileKey: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/files`,
+        method: "DELETE",
+        query: query,
         ...params,
       }),
 
