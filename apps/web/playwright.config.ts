@@ -7,7 +7,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   use: {
-    baseURL: process.env.CI ? "https://staging-url.example.com" : "https://app.lms.localhost",
+    baseURL: process.env.CI ? "https://lms.beta.selleo.app" : "https://app.lms.localhost",
     ignoreHTTPSErrors: true,
     launchOptions: {
       args: [

@@ -10,7 +10,7 @@ concurrency:
 on:
   pull_request:
     branches:
-      - '*'
+      - "*"
     paths:
       - apps/web/**
 jobs:

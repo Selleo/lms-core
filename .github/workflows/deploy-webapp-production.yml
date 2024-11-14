@@ -9,7 +9,11 @@ on:
       - "*"
 
 jobs:
+  test:
+    uses: ./.github/workflows/playwright-tests.yml
+
   build-web:
+    needs: test
     runs-on: ubuntu-latest
     environment:
       name: production
