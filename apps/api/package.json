@@ -55,6 +55,7 @@
     "bcrypt": "^5.1.1",
     "cookie": "^0.6.0",
     "cookie-parser": "^1.4.6",
+    "date-fns": "^3.6.0",
     "dotenv": "^16.4.5",
     "drizzle-kit": "^0.22.8",
     "drizzle-orm": "^0.31.2",

@@ -14,6 +14,8 @@ import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { archived, id, timestamps } from "./utils";
 
+import type { ActivityHistory } from "src/common/types";
+
 export const users = pgTable("users", {
   ...id,
   ...timestamps,
@@ -35,6 +37,38 @@ export const userDetails = pgTable("user_details", {
   description: text("description"),
   contactEmail: text("contact_email"),
   jobTitle: text("job_title"),
+});
+
+export const userStatistics = pgTable("user_statistics", {
+  ...id,
+  ...timestamps,
+  userId: uuid("user_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull()
+    .unique(),
+
+  currentStreak: integer("current_streak").notNull().default(0),
+  longestStreak: integer("longest_streak").notNull().default(0),
+  lastActivityDate: timestamp("last_activity_date", { withTimezone: true }),
+
+  activityHistory: jsonb("activity_history").$type<ActivityHistory>().default({}),
+});
+
+export const quizAttempts = pgTable("quiz_attempts", {
+  ...id,
+  ...timestamps,
+  userId: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
+  courseId: uuid("course_id")
+    .references(() => courses.id)
+    .notNull(),
+  lessonId: uuid("lesson_id")
+    .references(() => lessons.id)
+    .notNull(),
+  correctAnswers: integer("correct_answers").notNull(),
+  wrongAnswers: integer("wrong_answers").notNull(),
+  score: integer("score").notNull(),
 });
 
 export const credentials = pgTable("credentials", {

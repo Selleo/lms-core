@@ -64,6 +64,13 @@
       "when": 1731575473118,
       "tag": "0008_add_is_free_to_course_lessons",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1731976176840,
+      "tag": "0009_create_statistics",
+      "breakpoints": true
     }
   ]
 }

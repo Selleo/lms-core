@@ -5,10 +5,12 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from "@nestjs/common";
+import { EventBus } from "@nestjs/cqrs";
 import { isNull } from "lodash";
 import { match, P } from "ts-pattern";
 
 import { DatabasePg } from "src/common";
+import { QuizCompletedEvent } from "src/events";
 import { S3Service } from "src/file/s3.service";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
@@ -30,6 +32,7 @@ export class LessonsService {
     @Inject("DB") private readonly db: DatabasePg,
     private readonly s3Service: S3Service,
     private readonly lessonsRepository: LessonsRepository,
+    private readonly eventBus: EventBus,
   ) {}
 
   async getLesson(id: UUIDType, courseId: UUIDType, userId: UUIDType, isAdmin?: boolean) {
@@ -163,6 +166,7 @@ export class LessonsService {
       userId,
       true,
     );
+
     try {
       await this.db.transaction(async (trx) => {
         await Promise.all(
@@ -231,6 +235,30 @@ export class LessonsService {
           }),
         );
       });
+
+      const correctAnswerCount = questionLessonItems
+        .map(
+          (item) =>
+            item.content.questionAnswers.filter((answer) => Boolean(answer.isCorrect)).length,
+        )
+        .reduce((acc, count) => acc + count, 0);
+
+      const totalQuestions = questionLessonItems.length;
+      const wrongAnswerCount = totalQuestions - correctAnswerCount;
+
+      const score = Math.round((correctAnswerCount / totalQuestions) * 100);
+
+      this.eventBus.publish(
+        new QuizCompletedEvent(
+          userId,
+          courseId,
+          lessonId,
+          correctAnswerCount,
+          wrongAnswerCount,
+          score,
+        ),
+      );
+
       return true;
     } catch (error) {
       console.log("error", error);

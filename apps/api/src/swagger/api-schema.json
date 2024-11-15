@@ -2581,6 +2581,23 @@
           }
         }
       }
+    },
+    "/api/statistics": {
+      "get": {
+        "operationId": "StatisticsController_getUserStatistics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserStatisticsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "info": {
@@ -6730,6 +6747,128 @@
             },
             "required": [
               "clientSecret"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetUserStatisticsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "quizzes": {
+                "type": "object",
+                "properties": {
+                  "totalAttempts": {
+                    "type": "number"
+                  },
+                  "totalCorrectAnswers": {
+                    "type": "number"
+                  },
+                  "totalWrongAnswers": {
+                    "type": "number"
+                  },
+                  "totalQuestions": {
+                    "type": "number"
+                  },
+                  "averageScore": {
+                    "type": "number"
+                  },
+                  "uniqueQuizzesTaken": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "totalAttempts",
+                  "totalCorrectAnswers",
+                  "totalWrongAnswers",
+                  "totalQuestions",
+                  "averageScore",
+                  "uniqueQuizzesTaken"
+                ]
+              },
+              "courses": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "object",
+                    "properties": {
+                      "started": {
+                        "type": "number"
+                      },
+                      "completed": {
+                        "type": "number"
+                      },
+                      "completionRate": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "started",
+                      "completed",
+                      "completionRate"
+                    ]
+                  }
+                }
+              },
+              "lessons": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "object",
+                    "properties": {
+                      "started": {
+                        "type": "number"
+                      },
+                      "completed": {
+                        "type": "number"
+                      },
+                      "completionRate": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "started",
+                      "completed",
+                      "completionRate"
+                    ]
+                  }
+                }
+              },
+              "streak": {
+                "type": "object",
+                "properties": {
+                  "current": {
+                    "type": "number"
+                  },
+                  "longest": {
+                    "type": "number"
+                  },
+                  "activityHistory": {
+                    "type": "object",
+                    "patternProperties": {
+                      "^(.*)$": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "required": [
+                  "current",
+                  "longest",
+                  "activityHistory"
+                ]
+              }
+            },
+            "required": [
+              "quizzes",
+              "courses",
+              "lessons",
+              "streak"
             ]
           }
         },

@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -120,7 +121,7 @@ export class AuthService {
       const tokens = await this.getTokens(user);
       return tokens;
     } catch (error) {
-      throw new UnauthorizedException("Invalid refresh token");
+      throw new ForbiddenException("Invalid refresh token");
     }
   }
 
