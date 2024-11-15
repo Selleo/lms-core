@@ -136,7 +136,7 @@ export class LessonsController {
   }
 
   @Get("lesson/:id")
-  @Roles(...Object.values(USER_ROLES))
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     response: baseResponse(showLessonSchema),
   })

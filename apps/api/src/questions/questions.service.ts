@@ -11,6 +11,7 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import { DatabasePg, type UUIDType } from "src/common";
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
 import {
+  courseLessons,
   lessonItems,
   lessons,
   questionAnswerOptions,
@@ -39,18 +40,27 @@ export class QuestionsService {
         throw new NotFoundException("Question not found");
       }
 
+      const [lesson] = await trx
+        .select({
+          lessonType: lessons.type,
+          isFree: sql<boolean>`COALESCE(${courseLessons.isFree}, FALSE)`,
+        })
+        .from(lessons)
+        .leftJoin(courseLessons, eq(courseLessons.lessonId, lessons.id))
+        .where(
+          and(
+            eq(lessons.id, answerQuestion.lessonId),
+            eq(courseLessons.courseId, answerQuestion.courseId),
+          ),
+        );
+
       const quizProgress = await this.lessonsRepository.getQuizProgress(
         answerQuestion.courseId,
         answerQuestion.lessonId,
         userId,
       );
 
-      const [lesson] = await trx
-        .select({ lessonType: lessons.type })
-        .from(lessons)
-        .where(eq(lessons.id, answerQuestion.lessonId));
-
-      if (lesson.lessonType === "quiz" && quizProgress.quizCompleted)
+      if (lesson.lessonType === "quiz" && quizProgress?.quizCompleted)
         throw new ConflictException("Quiz already completed");
 
       const lastAnswerId = await this.findExistingAnswer(

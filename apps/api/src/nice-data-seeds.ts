@@ -65,6 +65,16 @@ export const niceCourses: NiceCourseData[] = [
                 isCorrect: true,
                 position: 1,
               },
+              {
+                optionText: "grid",
+                isCorrect: false,
+                position: 2,
+              },
+              {
+                optionText: "flex",
+                isCorrect: false,
+                position: 3,
+              },
             ],
           },
           {
@@ -505,6 +515,45 @@ export const niceCourses: NiceCourseData[] = [
             questionBody:
               "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
             state: STATUS.published.key,
+            solutionExplanation:
+              "<p>CSS is used to style <strong>HTML</strong>, while JavaScript is used to add <strong>interactivity</strong> to web pages.</p>",
+            questionAnswers: [
+              {
+                optionText: "HTML",
+                isCorrect: true,
+                position: 0,
+              },
+              {
+                optionText: "interactivity",
+                isCorrect: true,
+                position: 1,
+              },
+              {
+                optionText: "styles",
+                isCorrect: false,
+                position: 2,
+              },
+              {
+                optionText: "functions",
+                isCorrect: false,
+                position: 3,
+              },
+              {
+                optionText: "content",
+                isCorrect: false,
+                position: 4,
+              },
+              {
+                optionText: "elements",
+                isCorrect: false,
+                position: 5,
+              },
+              {
+                optionText: "animations",
+                isCorrect: false,
+                position: 6,
+              },
+            ],
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,
@@ -602,6 +651,30 @@ export const niceCourses: NiceCourseData[] = [
             questionBody:
               "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
             state: STATUS.published.key,
+            solutionExplanation:
+              "<p>The CSS <strong>flexbox</strong> property is used for creating flexible box layouts, while <strong>color properties</strong> are used for creating grid layouts.</p>",
+            questionAnswers: [
+              {
+                optionText: "flexbox",
+                isCorrect: true,
+                position: 0,
+              },
+              {
+                optionText: "color properties",
+                isCorrect: true,
+                position: 1,
+              },
+              {
+                optionText: "grid",
+                isCorrect: false,
+                position: 2,
+              },
+              {
+                optionText: "flex",
+                isCorrect: false,
+                position: 3,
+              },
+            ],
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,
@@ -1019,6 +1092,8 @@ export const niceCourses: NiceCourseData[] = [
             questionBody:
               "In Android, [word] are used to start new screens, while [word] are used to perform background tasks.",
             state: STATUS.published.key,
+            solutionExplanation:
+              "<p>In Android, <strong>Activities</strong> are used to start new screens, while <strong>Services</strong> are used to perform background tasks.</p>",
             questionAnswers: [
               {
                 optionText: "Activities",
@@ -1060,6 +1135,18 @@ export const niceCourses: NiceCourseData[] = [
             state: STATUS.published.key,
             solutionExplanation:
               "<p>In Android Studio, the <strong>Layout Editor</strong> tool is used to create and preview layouts, while the <strong>Emulator</strong> tool is used to test apps on different device configurations.</p>",
+            questionAnswers: [
+              {
+                optionText: "Layout Editor",
+                isCorrect: true,
+                position: 0,
+              },
+              {
+                optionText: "Emulator",
+                isCorrect: true,
+                position: 1,
+              },
+            ],
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,
@@ -1069,6 +1156,18 @@ export const niceCourses: NiceCourseData[] = [
             state: STATUS.published.key,
             solutionExplanation:
               "<p>In Android, <strong>SharedPreferences</strong> are used to store app data persistently, while <strong>Bundle</strong> objects are used for temporary data storage.</p>",
+            questionAnswers: [
+              {
+                optionText: "SharedPreferences",
+                isCorrect: true,
+                position: 0,
+              },
+              {
+                optionText: "Bundle",
+                isCorrect: true,
+                position: 1,
+              },
+            ],
           },
         ],
       },

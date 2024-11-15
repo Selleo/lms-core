@@ -71,6 +71,7 @@ export default function LessonPage() {
     currentLessonIndex < lessonsIds.length - 1 ? lessonsIds[currentLessonIndex + 1] : null;
 
   const isQuiz = data?.type === "quiz";
+  const isEnrolled = data?.enrolled;
 
   const getScorePercentage = () => {
     if (!data.quizScore || data.quizScore === 0 || !data.lessonItems.length) return "0%";
@@ -112,28 +113,30 @@ export default function LessonPage() {
           {data?.isSubmitted ? "Clear progress" : "Check answers"}
         </Button>
       )}
-      <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
-        <Link
-          to={previousLessonId ? `/course/${courseId}/lesson/${previousLessonId}` : "#"}
-          onClick={(e) => !previousLessonId && e.preventDefault()}
-          reloadDocument
-          replace
-        >
-          <Button variant="outline" className="w-full sm:w-[180px]" disabled={!previousLessonId}>
-            Previous lesson
-          </Button>
-        </Link>
-        <Link
-          to={nextLessonId ? `/course/${courseId}/lesson/${nextLessonId}` : "#"}
-          onClick={(e) => !nextLessonId && e.preventDefault()}
-          reloadDocument
-          replace
-        >
-          <Button className="w-full sm:w-[180px]" disabled={!nextLessonId}>
-            Next lesson
-          </Button>
-        </Link>
-      </div>
+      {isEnrolled && (
+        <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
+          <Link
+            to={previousLessonId ? `/course/${courseId}/lesson/${previousLessonId}` : "#"}
+            onClick={(e) => !previousLessonId && e.preventDefault()}
+            reloadDocument
+            replace
+          >
+            <Button variant="outline" className="w-full sm:w-[180px]" disabled={!previousLessonId}>
+              Previous lesson
+            </Button>
+          </Link>
+          <Link
+            to={nextLessonId ? `/course/${courseId}/lesson/${nextLessonId}` : "#"}
+            onClick={(e) => !nextLessonId && e.preventDefault()}
+            reloadDocument
+            replace
+          >
+            <Button className="w-full sm:w-[180px]" disabled={!nextLessonId}>
+              Next lesson
+            </Button>
+          </Link>
+        </div>
+      )}
     </>
   );
 }

@@ -456,6 +456,8 @@ export interface GetCourseResponse {
       itemsCount: number;
       itemsCompletedCount?: number;
       lessonProgress?: "completed" | "in_progress" | "not_started";
+      isFree?: boolean;
+      enrolled?: boolean;
       state?: string;
       archived?: boolean;
       isSubmitted?: boolean;
@@ -497,6 +499,8 @@ export interface GetCourseByIdResponse {
       itemsCount: number;
       itemsCompletedCount?: number;
       lessonProgress?: "completed" | "in_progress" | "not_started";
+      isFree?: boolean;
+      enrolled?: boolean;
       state?: string;
       archived?: boolean;
       isSubmitted?: boolean;
@@ -569,6 +573,8 @@ export interface GetAllLessonsResponse {
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
+    isFree?: boolean;
+    enrolled?: boolean;
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -606,6 +612,8 @@ export interface GetLessonResponse {
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
+    isFree?: boolean;
+    enrolled?: boolean;
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -664,6 +672,8 @@ export interface GetLessonByIdResponse {
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
+    isFree?: boolean;
+    enrolled?: boolean;
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -717,6 +727,8 @@ export interface CreateLessonBody {
   imageUrl?: string;
   description: string;
   lessonProgress?: "completed" | "in_progress" | "not_started";
+  isFree?: boolean;
+  enrolled?: boolean;
   state?: string;
   archived?: boolean;
   isSubmitted?: boolean;
@@ -738,6 +750,8 @@ export interface UpdateLessonBody {
   imageUrl?: string;
   description?: string;
   lessonProgress?: "completed" | "in_progress" | "not_started";
+  isFree?: boolean;
+  enrolled?: boolean;
   state?: string;
   archived?: boolean;
   isSubmitted?: boolean;

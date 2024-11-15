@@ -4066,6 +4066,12 @@
                         }
                       ]
                     },
+                    "isFree": {
+                      "type": "boolean"
+                    },
+                    "enrolled": {
+                      "type": "boolean"
+                    },
                     "state": {
                       "type": "string"
                     },
@@ -4217,6 +4223,12 @@
                           "type": "string"
                         }
                       ]
+                    },
+                    "isFree": {
+                      "type": "boolean"
+                    },
+                    "enrolled": {
+                      "type": "boolean"
                     },
                     "state": {
                       "type": "string"
@@ -4489,6 +4501,12 @@
                     }
                   ]
                 },
+                "isFree": {
+                  "type": "boolean"
+                },
+                "enrolled": {
+                  "type": "boolean"
+                },
                 "state": {
                   "type": "string"
                 },
@@ -4636,6 +4654,12 @@
                     "type": "string"
                   }
                 ]
+              },
+              "isFree": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
               },
               "state": {
                 "type": "string"
@@ -4902,6 +4926,12 @@
                   }
                 ]
               },
+              "isFree": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
               "state": {
                 "type": "string"
               },
@@ -5154,6 +5184,12 @@
               }
             ]
           },
+          "isFree": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
+          },
           "state": {
             "type": "string"
           },
@@ -5229,6 +5265,12 @@
                 "type": "string"
               }
             ]
+          },
+          "isFree": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
           },
           "state": {
             "type": "string"

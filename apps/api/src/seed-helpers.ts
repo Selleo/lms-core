@@ -13,6 +13,8 @@ import {
   textBlocks,
 } from "src/storage/schema";
 
+import { QUESTION_TYPE } from "./questions/schema/questions.types";
+
 import type { DatabasePg } from "./common";
 import type { NiceCourseData } from "./utils/types/test-types";
 
@@ -144,7 +146,10 @@ export async function createNiceCourses(
               questionType: item.questionType,
               questionBody: item.questionBody,
               solutionExplanation:
-                item.solutionExplanation || "Explanation will be provided after answering.",
+                item.questionType === QUESTION_TYPE.fill_in_the_blanks_text.key ||
+                item.questionType === QUESTION_TYPE.fill_in_the_blanks_dnd.key
+                  ? item.solutionExplanation || "Explanation will be provided after answering."
+                  : null,
               state: item.state,
               authorId: adminUserId,
               createdAt: new Date().toISOString(),

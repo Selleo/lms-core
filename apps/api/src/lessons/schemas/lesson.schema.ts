@@ -19,6 +19,8 @@ export const lessonSchema = Type.Object({
       Type.Literal(LessonProgress.notStarted),
     ]),
   ),
+  isFree: Type.Optional(Type.Boolean()),
+  enrolled: Type.Optional(Type.Boolean()),
   state: Type.Optional(Type.String()),
   archived: Type.Optional(Type.Boolean()),
   isSubmitted: Type.Optional(Type.Boolean()),
