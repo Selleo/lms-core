@@ -38,11 +38,10 @@ export class LessonsService {
       id,
       userId,
     );
-
-    if (!isAdmin && !accessCourseLessons)
-      throw new UnauthorizedException("You don't have access to this lesson");
-
     const lesson = await this.lessonsRepository.getLessonForUser(courseId, id, userId);
+
+    if (!isAdmin && !accessCourseLessons && !lesson.isFree)
+      throw new UnauthorizedException("You don't have access to this lesson");
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
@@ -82,24 +81,30 @@ export class LessonsService {
 
     const lessonProgress = await this.lessonsRepository.lessonProgress(courseId, lesson.id, userId);
 
-    if (!lessonProgress) throw new NotFoundException("Lesson progress not found");
+    if (!lessonProgress && !isAdmin && !lesson.isFree)
+      throw new NotFoundException("Lesson progress not found");
+
+    const isAdminOrFreeLessonWithoutLessonProgress = (isAdmin || lesson.isFree) && !lessonProgress;
 
     const questionLessonItems = await this.getLessonQuestions(
       lesson,
       courseId,
       userId,
-      lessonProgress.quizCompleted,
+      isAdminOrFreeLessonWithoutLessonProgress ? false : lessonProgress.quizCompleted,
     );
 
     return {
       ...lesson,
       imageUrl,
       lessonItems: questionLessonItems,
-      itemsCount: lessonProgress.lessonItemCount,
-      itemsCompletedCount: lessonProgress.completedLessonItemCount,
-      quizScore: lessonProgress.quizScore,
-      lessonProgress:
-        lessonProgress.completedLessonItemCount === 0
+      itemsCount: isAdminOrFreeLessonWithoutLessonProgress ? 0 : lessonProgress.lessonItemCount,
+      itemsCompletedCount: isAdminOrFreeLessonWithoutLessonProgress
+        ? 0
+        : lessonProgress.completedLessonItemCount,
+      quizScore: isAdminOrFreeLessonWithoutLessonProgress ? 0 : lessonProgress.quizScore,
+      lessonProgress: isAdminOrFreeLessonWithoutLessonProgress
+        ? LessonProgress.notStarted
+        : lessonProgress.completedLessonItemCount === 0
           ? LessonProgress.notStarted
           : lessonProgress.completedLessonItemCount > 0
             ? LessonProgress.inProgress
@@ -114,12 +119,12 @@ export class LessonsService {
       userId,
     );
 
-    if (!accessCourseLessons)
+    if (!accessCourseLessons.isAssigned && !accessCourseLessons.isFree)
       throw new UnauthorizedException("You don't have assignment to this lesson");
 
     const quizProgress = await this.lessonsRepository.getQuizProgress(courseId, lessonId, userId);
 
-    if (quizProgress.quizCompleted) throw new ConflictException("Quiz already completed");
+    if (quizProgress?.quizCompleted) throw new ConflictException("Quiz already completed");
 
     const lessonItemsCount = await this.lessonsRepository.getLessonItemCount(lessonId);
 

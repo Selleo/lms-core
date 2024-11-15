@@ -1,8 +1,10 @@
 import { Link } from "@remix-run/react";
 
 import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
+import { CardBadge } from "~/components/CardBadge";
 import CourseProgress from "~/components/CourseProgress";
 import { Gravatar } from "~/components/Gravatar";
+import { Icon } from "~/components/Icon";
 import { Avatar } from "~/components/ui/avatar";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { useUserRole } from "~/hooks/useUserRole";
@@ -13,45 +15,28 @@ import { CourseCardTitle } from "./CourseCardTitle";
 
 import type { GetAllCoursesResponse } from "~/api/generated-api";
 
-type CourseType = GetAllCoursesResponse["data"][number];
-type CourseCardProps = Pick<
-  CourseType,
-  | "title"
-  | "category"
-  | "courseLessonCount"
-  | "imageUrl"
-  | "description"
-  | "enrolled"
-  | "priceInCents"
-  | "currency"
-  | "author"
-  | "authorEmail"
-> & {
-  href: string;
-  completedLessonCount?: number;
-  withAuthor?: boolean;
-};
+type CourseCardProps = GetAllCoursesResponse["data"][number];
 
 const CourseCard = ({
-  href,
-  title,
-  description,
-  category,
-  imageUrl,
-  enrolled = false,
-  courseLessonCount,
-  completedLessonCount,
-  currency,
-  priceInCents,
-  withAuthor = false,
   author,
   authorEmail = "",
+  category,
+  completedLessonCount,
+  courseLessonCount,
+  currency,
+  description,
+  enrolled = false,
+  hasFreeLessons,
+  id,
+  imageUrl,
+  priceInCents,
+  title,
 }: CourseCardProps) => {
   const { isAdmin } = useUserRole();
 
   return (
     <Link
-      to={href}
+      to={`/course/${id}`}
       className={cn(
         "flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-auto bg-white lg:bg-none border",
         {
@@ -71,7 +56,7 @@ const CourseCard = ({
             (e.target as HTMLImageElement).src = CardPlaceholder;
           }}
         />
-        <div className="absolute top-4 left-4 right-4">
+        <div className="absolute top-4 left-4 flex flex-col gap-y-1 right-4">
           <CategoryChip
             category={category}
             color={cn({
@@ -79,28 +64,32 @@ const CourseCard = ({
               "text-primary-700": isAdmin || !enrolled,
             })}
           />
+          {hasFreeLessons && !enrolled && (
+            <CardBadge variant="successFilled">
+              <Icon name="FreeRight" className="w-4" />
+              Free Lessons!
+            </CardBadge>
+          )}
         </div>
       </div>
       <div className={cn("flex flex-col flex-grow p-4")}>
-        <div className={cn("flex flex-col flex-grow", { "gap-y-3": !withAuthor })}>
-          {enrolled && typeof completedLessonCount === "number" && (
+        <div className="flex flex-col flex-grow">
+          {enrolled && (
             <CourseProgress
               label="Course progress:"
               courseLessonCount={courseLessonCount}
               completedLessonCount={completedLessonCount}
             />
           )}
-          <div className={cn({ "mt-3": withAuthor })}>
+          <div className={cn({ "mt-3": author })}>
             <CourseCardTitle title={title} />
           </div>
-          {withAuthor && (
-            <div className="flex items-center gap-x-1.5 mt-1 mb-2">
-              <Avatar className="h-4 w-4">
-                <Gravatar email={authorEmail} />
-              </Avatar>
-              <span className="text-neutral-950">{author}</span>
-            </div>
-          )}
+          <div className="flex items-center gap-x-1.5 mt-1 mb-2">
+            <Avatar className="h-4 w-4">
+              <Gravatar email={authorEmail} />
+            </Avatar>
+            <span className="text-neutral-950">{author}</span>
+          </div>
           <div className="text-neutral-500 text-sm flex-grow">
             <span className="line-clamp-3">
               <div dangerouslySetInnerHTML={{ __html: description }} />

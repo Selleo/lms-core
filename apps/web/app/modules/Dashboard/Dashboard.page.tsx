@@ -111,9 +111,9 @@ export default function DashboardPage() {
       name: "category",
       type: "select",
       placeholder: "Categories",
-      options: categories?.map((cat) => ({
-        value: cat.title,
-        label: cat.title,
+      options: categories?.map(({ title }) => ({
+        value: title,
+        label: title,
       })),
     },
     {

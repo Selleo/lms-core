@@ -1593,7 +1593,17 @@
     "/api/lessons/available-lessons": {
       "get": {
         "operationId": "LessonsController_getAvailableLessons",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "content": {
@@ -1787,6 +1797,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RemoveLessonFromCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/course-lesson": {
+      "patch": {
+        "operationId": "LessonsController_toggleLessonAsFree",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ToggleLessonAsFreeBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ToggleLessonAsFreeResponse"
                 }
               }
             }
@@ -3573,6 +3610,9 @@
                 },
                 "createdAt": {
                   "type": "string"
+                },
+                "hasFreeLessons": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -3682,6 +3722,9 @@
                 },
                 "createdAt": {
                   "type": "string"
+                },
+                "hasFreeLessons": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -3791,6 +3834,9 @@
                 },
                 "createdAt": {
                   "type": "string"
+                },
+                "hasFreeLessons": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -3900,6 +3946,9 @@
                 },
                 "createdAt": {
                   "type": "string"
+                },
+                "hasFreeLessons": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -4017,6 +4066,12 @@
                         }
                       ]
                     },
+                    "isFree": {
+                      "type": "boolean"
+                    },
+                    "enrolled": {
+                      "type": "boolean"
+                    },
                     "state": {
                       "type": "string"
                     },
@@ -4051,6 +4106,9 @@
                 "type": "string"
               },
               "archived": {
+                "type": "boolean"
+              },
+              "hasFreeLessons": {
                 "type": "boolean"
               }
             },
@@ -4166,6 +4224,12 @@
                         }
                       ]
                     },
+                    "isFree": {
+                      "type": "boolean"
+                    },
+                    "enrolled": {
+                      "type": "boolean"
+                    },
                     "state": {
                       "type": "string"
                     },
@@ -4200,6 +4264,9 @@
                 "type": "string"
               },
               "archived": {
+                "type": "boolean"
+              },
+              "hasFreeLessons": {
                 "type": "boolean"
               }
             },
@@ -4434,6 +4501,12 @@
                     }
                   ]
                 },
+                "isFree": {
+                  "type": "boolean"
+                },
+                "enrolled": {
+                  "type": "boolean"
+                },
                 "state": {
                   "type": "string"
                 },
@@ -4493,29 +4566,46 @@
             "type": "array",
             "items": {
               "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "isFree": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "imageUrl",
+                    "description",
+                    "isFree"
+                  ]
                 },
-                "title": {
-                  "type": "string"
-                },
-                "description": {
-                  "type": "string"
-                },
-                "imageUrl": {
-                  "type": "string"
-                },
-                "itemsCount": {
-                  "type": "number"
+                {
+                  "type": "object",
+                  "properties": {
+                    "itemsCount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "itemsCount"
+                  ]
                 }
-              },
-              "required": [
-                "id",
-                "title",
-                "description",
-                "imageUrl",
-                "itemsCount"
               ]
             }
           }
@@ -4564,6 +4654,12 @@
                     "type": "string"
                   }
                 ]
+              },
+              "isFree": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
               },
               "state": {
                 "type": "string"
@@ -4830,6 +4926,12 @@
                   }
                 ]
               },
+              "isFree": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
               "state": {
                 "type": "string"
               },
@@ -5082,6 +5184,12 @@
               }
             ]
           },
+          "isFree": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
+          },
           "state": {
             "type": "string"
           },
@@ -5157,6 +5265,12 @@
                 "type": "string"
               }
             ]
+          },
+          "isFree": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
           },
           "state": {
             "type": "string"
@@ -5247,6 +5361,50 @@
               }
             },
             "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "ToggleLessonAsFreeBody": {
+        "type": "object",
+        "properties": {
+          "courseId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "lessonId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "isFree": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "courseId",
+          "lessonId",
+          "isFree"
+        ]
+      },
+      "ToggleLessonAsFreeResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "isFree": {
+                "type": "boolean"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "isFree",
               "message"
             ]
           }

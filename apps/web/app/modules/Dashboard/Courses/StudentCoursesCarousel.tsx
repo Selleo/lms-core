@@ -24,7 +24,7 @@ export const StudentCoursesCarousel = ({ studentCourses }: StudentCoursesCarouse
             key={studentCourse.id}
             className="max-w-[calc(100%-24px)] xs:max-w-[320px] *:h-full w-full shrink-0 mr-3 sm:mr-6 sm:last:mr-0"
           >
-            <CourseCard {...studentCourse} href={`/course/${studentCourse.id}`} withAuthor />
+            <CourseCard {...studentCourse} />
           </CarouselItem>
         );
       }

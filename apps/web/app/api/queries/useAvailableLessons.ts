@@ -4,19 +4,20 @@ import { ApiClient } from "../api-client";
 
 import type { GetAvailableLessonsResponse } from "../generated-api";
 
-export const availableLessons = queryOptions({
-  queryKey: ["available-lessons"],
-  queryFn: async () => {
-    const response = await ApiClient.api.lessonsControllerGetAvailableLessons();
-    return response.data;
-  },
-  select: (data: GetAvailableLessonsResponse) => data.data,
-});
+export const availableLessons = (courseId: string) =>
+  queryOptions({
+    queryKey: ["available-lessons", "courseId"],
+    queryFn: async () => {
+      const response = await ApiClient.api.lessonsControllerGetAvailableLessons({ courseId });
+      return response.data;
+    },
+    select: (data: GetAvailableLessonsResponse) => data.data,
+  });
 
-export function useAvailableLessons() {
-  return useQuery(availableLessons);
+export function useAvailableLessons(courseId: string) {
+  return useQuery(availableLessons(courseId));
 }
 
-export function useAvailableLessonsSuspense() {
-  return useSuspenseQuery(availableLessons);
+export function useAvailableLessonsSuspense(courseId: string) {
+  return useSuspenseQuery(availableLessons(courseId));
 }

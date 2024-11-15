@@ -43,7 +43,7 @@ export default function CoursesViewPage() {
   return (
     <div className="h-full">
       <div className="flex flex-col md:flex-row h-full gap-6 px-6">
-        <CourseViewMainCard course={course} />
+        <CourseViewMainCard {...course} />
         <LessonsList lessons={course.lessons} isEnrolled={course.enrolled || isAdmin} />
       </div>
     </div>

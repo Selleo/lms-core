@@ -54,7 +54,7 @@ export class AdminLessonsRepository {
     return lesson;
   }
 
-  async getAvailableLessons() {
+  async getAvailableLessons(courseId: UUIDType) {
     return await this.db
       .select({
         id: lessons.id,
@@ -65,8 +65,13 @@ export class AdminLessonsRepository {
         (SELECT COUNT(*)
         FROM ${lessonItems}
         WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+        isFree: sql<boolean>`COALESCE(${courseLessons.isFree}, false)`,
       })
       .from(lessons)
+      .leftJoin(
+        courseLessons,
+        and(eq(courseLessons.lessonId, lessons.id), eq(courseLessons.courseId, courseId)),
+      )
       .where(
         and(
           eq(lessons.archived, false),
@@ -165,6 +170,14 @@ export class AdminLessonsRepository {
       lessonId,
       displayOrder,
     });
+  }
+
+  async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {
+    return await this.db
+      .update(courseLessons)
+      .set({ isFree })
+      .where(and(eq(courseLessons.lessonId, lessonId), eq(courseLessons.courseId, courseId)))
+      .returning();
   }
 
   async createLesson(body: CreateLessonBody, authorId: string) {

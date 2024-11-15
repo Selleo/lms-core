@@ -20,6 +20,7 @@ export const courseSchema = Type.Object({
   state: Type.Optional(Type.String()),
   archived: Type.Optional(Type.Boolean()),
   createdAt: Type.Optional(Type.String()),
+  hasFreeLessons: Type.Optional(Type.Boolean()),
 });
 
 export const allCoursesSchema = Type.Array(courseSchema);

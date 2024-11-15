@@ -249,6 +249,7 @@ export const courseLessons = pgTable(
       .references(() => lessons.id)
       .notNull(),
     displayOrder: integer("display_order"),
+    isFree: boolean("is_free").notNull().default(false),
   },
   (table) => ({
     unq: unique().on(table.courseId, table.lessonId),

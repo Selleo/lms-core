@@ -57,6 +57,13 @@
       "when": 1731027071587,
       "tag": "0007_create_user_details",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1731575473118,
+      "tag": "0008_add_is_free_to_course_lessons",
+      "breakpoints": true
     }
   ]
 }

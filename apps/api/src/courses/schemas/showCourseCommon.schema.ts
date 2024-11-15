@@ -22,6 +22,7 @@ export const commonShowCourseSchema = Type.Object({
   priceInCents: Type.Number(),
   currency: Type.String(),
   archived: Type.Optional(Type.Boolean()),
+  hasFreeLessons: Type.Optional(Type.Boolean()),
 });
 
 export type CommonShowCourse = Static<typeof commonShowCourseSchema>;

@@ -31,31 +31,33 @@ import { LessonsService } from "../lessons.service";
 import {
   type AllLessonsResponse,
   allLessonsSchema,
-  type CreateLessonBody,
   createLessonSchema,
-  type ShowLessonResponse,
+  lessonWithCountItems,
   showLessonSchema,
-  type UpdateLessonBody,
   updateLessonSchema,
+  type CreateLessonBody,
+  type ShowLessonResponse,
+  type UpdateLessonBody,
+  type LessonWithCountItems,
 } from "../schemas/lesson.schema";
 import {
-  type FileInsertType,
   fileUpdateSchema,
-  type GetAllLessonItemsResponse,
   GetAllLessonItemsResponseSchema,
-  type GetSingleLessonItemsResponse,
   GetSingleLessonItemsResponseSchema,
-  type QuestionInsertType,
   questionUpdateSchema,
-  type TextBlockInsertType,
   textBlockUpdateSchema,
+  type FileInsertType,
+  type GetAllLessonItemsResponse,
+  type GetSingleLessonItemsResponse,
+  type QuestionInsertType,
+  type TextBlockInsertType,
   type UpdateFileBody,
   type UpdateQuestionBody,
   type UpdateTextBlockBody,
 } from "../schemas/lessonItem.schema";
 import {
-  type LessonsFilterSchema,
   sortLessonFieldsOptions,
+  type LessonsFilterSchema,
   type SortLessonFieldsOptions,
 } from "../schemas/lessonQuery";
 
@@ -103,30 +105,13 @@ export class LessonsController {
   @Get("available-lessons")
   @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
-    response: baseResponse(
-      Type.Array(
-        Type.Object({
-          id: Type.String(),
-          title: Type.String(),
-          description: Type.String(),
-          imageUrl: Type.String(),
-          itemsCount: Type.Number(),
-        }),
-      ),
-    ),
+    request: [{ type: "query", name: "courseId", schema: UUIDSchema, required: true }],
+    response: baseResponse(Type.Array(lessonWithCountItems)),
   })
-  async getAvailableLessons(): Promise<
-    BaseResponse<
-      Array<{
-        id: string;
-        title: string;
-        description: string;
-        imageUrl: string;
-        itemsCount: number;
-      }>
-    >
-  > {
-    const availableLessons = await this.adminLessonsService.getAvailableLessons();
+  async getAvailableLessons(
+    @Query("courseId") courseId: UUIDType,
+  ): Promise<BaseResponse<Array<LessonWithCountItems>>> {
+    const availableLessons = await this.adminLessonsService.getAvailableLessons(courseId);
     return new BaseResponse(availableLessons);
   }
 
@@ -151,7 +136,7 @@ export class LessonsController {
   }
 
   @Get("lesson/:id")
-  @Roles(...Object.values(USER_ROLES))
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
   @Validate({
     response: baseResponse(showLessonSchema),
   })
@@ -245,6 +230,37 @@ export class LessonsController {
     await this.adminLessonsService.removeLessonFromCourse(courseId, lessonId);
     return new BaseResponse({
       message: "Lesson removed from course successfully",
+    });
+  }
+
+  @Patch("course-lesson")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: Type.Object({
+          courseId: UUIDSchema,
+          lessonId: UUIDSchema,
+          isFree: Type.Boolean(),
+        }),
+      },
+    ],
+    response: baseResponse(Type.Object({ isFree: Type.Boolean(), message: Type.String() })),
+  })
+  async toggleLessonAsFree(
+    @Body() body: { courseId: string; lessonId: string; isFree: boolean },
+  ): Promise<BaseResponse<{ isFree: boolean; message: string }>> {
+    const [toggledLesson] = await this.adminLessonsService.toggleLessonAsFree(
+      body.courseId,
+      body.lessonId,
+      body.isFree,
+    );
+    return new BaseResponse({
+      isFree: toggledLesson.isFree,
+      message: body.isFree
+        ? "Lesson toggled as free successfully"
+        : "Lesson toggled as not free successfully",
     });
   }
 

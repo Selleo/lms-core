@@ -41,8 +41,14 @@ export class LessonsRepository {
             ELSE FALSE
           END
         `,
+        isFree: courseLessons.isFree,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN true ELSE false END`,
       })
       .from(lessons)
+      .innerJoin(
+        courseLessons,
+        and(eq(courseLessons.lessonId, lessons.id), eq(courseLessons.courseId, courseId)),
+      )
       .leftJoin(
         studentLessonsProgress,
         and(
@@ -50,6 +56,10 @@ export class LessonsRepository {
           eq(studentLessonsProgress.lessonId, lessonId),
           eq(studentLessonsProgress.studentId, userId),
         ),
+      )
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, courseId), eq(studentCourses.studentId, userId)),
       )
       .where(
         and(
@@ -207,17 +217,20 @@ export class LessonsRepository {
     return this.db
       .select({
         id: lessons.id,
-        studentCourseId: studentCourses.id,
+        isFree: sql<boolean>`COALESCE(${courseLessons.isFree}, FALSE)`,
+        isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN true ELSE false END`,
       })
       .from(lessons)
-      .leftJoin(courseLessons, eq(courseLessons.lessonId, lessons.id))
+      .leftJoin(
+        courseLessons,
+        and(eq(courseLessons.lessonId, lessons.id), eq(courseLessons.courseId, courseId)),
+      )
       .leftJoin(
         studentCourses,
         and(eq(studentCourses.courseId, courseId), eq(studentCourses.studentId, userId)),
       )
       .where(
         and(
-          eq(studentCourses.courseId, courseId),
           eq(lessons.archived, false),
           eq(lessons.id, lessonId),
           eq(lessons.state, STATES.published),
@@ -523,5 +536,21 @@ export class LessonsRepository {
           eq(studentCompletedLessonItems.courseId, courseId),
         ),
       );
+  }
+
+  async createLessonProgress(
+    courseId: UUIDType,
+    lessonId: UUIDType,
+    userId: UUIDType,
+    lessonItemCount: number,
+  ) {
+    return await this.db.insert(studentLessonsProgress).values({
+      studentId: userId,
+      lessonId,
+      courseId,
+      quizCompleted: false,
+      lessonItemCount,
+      completedLessonItemCount: 0,
+    });
   }
 }

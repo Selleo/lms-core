@@ -335,6 +335,7 @@ export interface GetAllCoursesResponse {
     state?: string;
     archived?: boolean;
     createdAt?: string;
+    hasFreeLessons?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -364,6 +365,7 @@ export interface GetStudentCoursesResponse {
     state?: string;
     archived?: boolean;
     createdAt?: string;
+    hasFreeLessons?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -393,6 +395,7 @@ export interface GetAvailableCoursesResponse {
     state?: string;
     archived?: boolean;
     createdAt?: string;
+    hasFreeLessons?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -422,6 +425,7 @@ export interface GetTutorCoursesResponse {
     state?: string;
     archived?: boolean;
     createdAt?: string;
+    hasFreeLessons?: boolean;
   }[];
 }
 
@@ -452,6 +456,8 @@ export interface GetCourseResponse {
       itemsCount: number;
       itemsCompletedCount?: number;
       lessonProgress?: "completed" | "in_progress" | "not_started";
+      isFree?: boolean;
+      enrolled?: boolean;
       state?: string;
       archived?: boolean;
       isSubmitted?: boolean;
@@ -462,6 +468,7 @@ export interface GetCourseResponse {
     priceInCents: number;
     currency: string;
     archived?: boolean;
+    hasFreeLessons?: boolean;
   };
 }
 
@@ -492,6 +499,8 @@ export interface GetCourseByIdResponse {
       itemsCount: number;
       itemsCompletedCount?: number;
       lessonProgress?: "completed" | "in_progress" | "not_started";
+      isFree?: boolean;
+      enrolled?: boolean;
       state?: string;
       archived?: boolean;
       isSubmitted?: boolean;
@@ -502,6 +511,7 @@ export interface GetCourseByIdResponse {
     priceInCents: number;
     currency: string;
     archived?: boolean;
+    hasFreeLessons?: boolean;
   };
 }
 
@@ -563,6 +573,8 @@ export interface GetAllLessonsResponse {
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
+    isFree?: boolean;
+    enrolled?: boolean;
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -578,13 +590,16 @@ export interface GetAllLessonsResponse {
 }
 
 export interface GetAvailableLessonsResponse {
-  data: {
+  data: ({
+    /** @format uuid */
     id: string;
     title: string;
-    description: string;
     imageUrl: string;
+    description: string;
+    isFree: boolean;
+  } & {
     itemsCount: number;
-  }[];
+  })[];
 }
 
 export interface GetLessonResponse {
@@ -597,6 +612,8 @@ export interface GetLessonResponse {
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
+    isFree?: boolean;
+    enrolled?: boolean;
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -655,6 +672,8 @@ export interface GetLessonByIdResponse {
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
+    isFree?: boolean;
+    enrolled?: boolean;
     state?: string;
     archived?: boolean;
     isSubmitted?: boolean;
@@ -708,6 +727,8 @@ export interface CreateLessonBody {
   imageUrl?: string;
   description: string;
   lessonProgress?: "completed" | "in_progress" | "not_started";
+  isFree?: boolean;
+  enrolled?: boolean;
   state?: string;
   archived?: boolean;
   isSubmitted?: boolean;
@@ -729,6 +750,8 @@ export interface UpdateLessonBody {
   imageUrl?: string;
   description?: string;
   lessonProgress?: "completed" | "in_progress" | "not_started";
+  isFree?: boolean;
+  enrolled?: boolean;
   state?: string;
   archived?: boolean;
   isSubmitted?: boolean;
@@ -759,6 +782,21 @@ export interface AddLessonToCourseResponse {
 
 export interface RemoveLessonFromCourseResponse {
   data: {
+    message: string;
+  };
+}
+
+export interface ToggleLessonAsFreeBody {
+  /** @format uuid */
+  courseId: string;
+  /** @format uuid */
+  lessonId: string;
+  isFree: boolean;
+}
+
+export interface ToggleLessonAsFreeResponse {
+  data: {
+    isFree: boolean;
     message: string;
   };
 }
@@ -2072,10 +2110,17 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @name LessonsControllerGetAvailableLessons
      * @request GET:/api/lessons/available-lessons
      */
-    lessonsControllerGetAvailableLessons: (params: RequestParams = {}) =>
+    lessonsControllerGetAvailableLessons: (
+      query: {
+        /** @format uuid */
+        courseId: string;
+      },
+      params: RequestParams = {},
+    ) =>
       this.request<GetAvailableLessonsResponse, any>({
         path: `/api/lessons/available-lessons`,
         method: "GET",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -2187,6 +2232,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<RemoveLessonFromCourseResponse, any>({
         path: `/api/lessons/${courseId}/${lessonId}`,
         method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerToggleLessonAsFree
+     * @request PATCH:/api/lessons/course-lesson
+     */
+    lessonsControllerToggleLessonAsFree: (
+      data: ToggleLessonAsFreeBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<ToggleLessonAsFreeResponse, any>({
+        path: `/api/lessons/course-lesson`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
