@@ -7,6 +7,6 @@ export class StatisticsService {
   constructor(private statisticsRepository: StatisticsRepository) {}
 
   async getUserStats(userId: string) {
-    return this.statisticsRepository.getUserStats(userId);
+    return await this.statisticsRepository.getUserStats(userId);
   }
 }
