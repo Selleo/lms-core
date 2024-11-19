@@ -3,6 +3,7 @@ import {
   type CanActivate,
   type ExecutionContext,
   UnauthorizedException,
+  ForbiddenException,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
@@ -34,7 +35,7 @@ export class RefreshTokenGuard implements CanActivate {
 
       return true;
     } catch {
-      throw new UnauthorizedException("Invalid refresh token");
+      throw new ForbiddenException("Invalid refresh token");
     }
   }
 }

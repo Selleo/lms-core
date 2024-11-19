@@ -8,6 +8,7 @@ import {
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
+import { EventBus } from "@nestjs/cqrs";
 import { AuthGuard } from "@nestjs/passport";
 import { type Request, Response } from "express";
 import { Validate } from "nestjs-typebox";
@@ -18,6 +19,7 @@ import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RefreshTokenGuard } from "src/common/guards/refresh-token.guard";
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
+import { UserActivityEvent } from "src/events";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { AuthService } from "../auth.service";
@@ -39,6 +41,7 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly tokenService: TokenService,
+    private readonly eventBus: EventBus,
   ) {}
 
   @Public()
@@ -114,6 +117,8 @@ export class AuthController {
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     const account = await this.authService.currentUser(currentUserId);
+
+    this.eventBus.publish(new UserActivityEvent(currentUserId, "LOGIN"));
 
     return new BaseResponse(account);
   }

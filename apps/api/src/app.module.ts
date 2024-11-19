@@ -19,10 +19,12 @@ import { EmailModule } from "./common/emails/emails.module";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { StagingGuard } from "./common/guards/staging.guard";
 import { CoursesModule } from "./courses/courses.module";
+import { EventsModule } from "./events/events.module";
 import { S3Module } from "./file/s3.module";
 import { HealthModule } from "./health/health.module";
 import { LessonsModule } from "./lessons/lessons.module";
 import { QuestionsModule } from "./questions/questions.module";
+import { StatisticsModule } from "./statistics/statistics.module";
 import * as schema from "./storage/schema";
 import { StripeModule } from "./stripe/stripe.module";
 import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/studentCompletedLessonItems.module";
@@ -73,6 +75,8 @@ import { TestConfigModule } from "./test-config/test-config.module";
     StudentCompletedLessonItemsModule,
     S3Module,
     StripeModule,
+    EventsModule,
+    StatisticsModule,
   ],
   controllers: [],
   providers: [

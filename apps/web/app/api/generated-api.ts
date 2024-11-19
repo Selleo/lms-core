@@ -1142,6 +1142,26 @@ export interface CreatePaymentIntentResponse {
   };
 }
 
+export interface GetUserStatisticsResponse {
+  data: {
+    quizzes: {
+      totalAttempts: number;
+      totalCorrectAnswers: number;
+      totalWrongAnswers: number;
+      totalQuestions: number;
+      averageScore: number;
+      uniqueQuizzesTaken: number;
+    };
+    courses: object;
+    lessons: object;
+    streak: {
+      current: number;
+      longest: number;
+      activityHistory: object;
+    };
+  };
+}
+
 import type {
   AxiosInstance,
   AxiosRequestConfig,
@@ -2684,6 +2704,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/stripe/webhook`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StatisticsControllerGetUserStatistics
+     * @request GET:/api/statistics
+     */
+    statisticsControllerGetUserStatistics: (params: RequestParams = {}) =>
+      this.request<GetUserStatisticsResponse, any>({
+        path: `/api/statistics`,
+        method: "GET",
+        format: "json",
         ...params,
       }),
   };
