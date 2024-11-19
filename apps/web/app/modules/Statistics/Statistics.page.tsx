@@ -6,9 +6,20 @@ import { LessonCard } from "~/modules/Courses/CourseView/LessonCard";
 import { AvgCoursePercentCompletition } from "~/modules/Statistics/components/AvgCoursePercentCompletition";
 import { AvgQuizzesPercentScore } from "~/modules/Statistics/components/AvgQuizzesPercentScore";
 
+import { RatesChart } from "./components/RatesChart";
+
 export default function StatisticsPage() {
   const { data: user } = useCurrentUser();
-  console.log({ user });
+
+  const chartData = [
+    { month: "January", completed: 186, started: 80 },
+    { month: "February", completed: 305, started: 200 },
+    { month: "March", completed: 237, started: 120 },
+    { month: "April", completed: 73, started: 190 },
+    { month: "May", completed: 209, started: 130 },
+    { month: "June", completed: 214, started: 140 },
+  ];
+
   return (
     <div className="flex flex-col gap-y-8">
       <div className="flex gap-x-4 items-center">
@@ -23,6 +34,7 @@ export default function StatisticsPage() {
             <div className="w-full h-full p-8 gap-y-4 bg-white rounded-lg drop-shadow-card max-w-[296px] flex flex-col">
               <div className="text-center">
                 <h2 className="body-lg-md text-neutral-950">Continue learning in:</h2>
+                {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                 <a href="#" className="body-sm-md text-primary-700 underline">
                   Introduction to Cloud Computing
                 </a>
@@ -43,8 +55,8 @@ export default function StatisticsPage() {
             <AvgCoursePercentCompletition />
           </div>
           <div className="flex gap-x-4 w-full h-full">
-            <div className="w-full h-full bg-white rounded-lg drop-shadow-card"></div>
-            <div className="w-full h-full bg-white rounded-lg drop-shadow-card"></div>
+            <RatesChart resourceName="Courses" chartData={chartData} />
+            <RatesChart resourceName="Courses" chartData={chartData} />
           </div>
         </div>
         <div className="w-full h-full max-w-[480px] bg-white rounded-lg drop-shadow-card p-8 flex flex-col gap-6">
