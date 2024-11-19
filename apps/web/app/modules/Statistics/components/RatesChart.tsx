@@ -16,23 +16,27 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-interface ChartData {
-  month: string;
-  completed: number;
+interface CourseData {
   started: number;
+  completed: number;
+  completionRate: number;
 }
 
-export const RatesChart = ({
-  resourceName,
-  chartData,
-}: {
+interface RatesChartProps {
   resourceName: string;
-  chartData: ChartData[];
-}) => {
-  const dataMax = Math.max(...chartData.map((d) => d.started));
+  chartData: Record<string, CourseData>;
+}
+
+export const RatesChart: React.FC<RatesChartProps> = ({ resourceName, chartData }) => {
+  const data = Object.entries(chartData).map(([month, values]) => ({
+    month,
+    started: values.started,
+    completed: values.completed,
+  }));
+  const dataMax = Math.max(...data.map((d) => d.started));
   const step = Math.ceil(dataMax / 10);
   const yAxisMax = dataMax + step;
-  const ticks = Array.from({ length: Math.floor(yAxisMax / step) }, (_, i) => (i + 1) * step);
+  const ticks = Array.from({ length: Math.floor(yAxisMax / step) + 1 }, (_, i) => i * step);
 
   return (
     <div className="w-full h-full bg-white rounded-lg  gap-6 drop-shadow-card p-8 flex flex-col">
@@ -43,7 +47,7 @@ export const RatesChart = ({
           config={chartConfig}
           className="mx-auto aspect-square max-h-[450px] w-full h-full"
         >
-          <BarChart accessibilityLayer data={chartData}>
+          <BarChart accessibilityLayer data={data}>
             <CartesianGrid horizontal={true} vertical={false} />
             <YAxis ticks={ticks} tickLine={false} axisLine={false} domain={[0, dataMax]} />
             <XAxis

@@ -11,26 +11,147 @@ import { RatesChart } from "./components/RatesChart";
 export default function StatisticsPage() {
   const { data: user } = useCurrentUser();
 
-  const chartData = [
-    { month: "January", completed: 2, started: 8 },
-    { month: "February", completed: 3, started: 5 },
-    { month: "March", completed: 2, started: 2 },
-    { month: "April", completed: 7, started: 9 },
-    { month: "May", completed: 2, started: 3 },
-    { month: "June", completed: 2, started: 4 },
-    { month: "July", completed: 4, started: 5 },
-    { month: "August", completed: 3, started: 6 },
-    { month: "September", completed: 6, started: 7 },
-    { month: "October", completed: 1, started: 8 },
-    { month: "November", completed: 7, started: 9 },
-    { month: "December", completed: 8, started: 10 },
-  ];
-
-  const chartData2 = chartData.map((item) => ({
-    ...item,
-    completed: item.completed * 22,
-    started: item.started * 22,
-  }));
+  const data = {
+    data: {
+      quizzes: {
+        totalAttempts: 1,
+        totalCorrectAnswers: 1,
+        totalWrongAnswers: 6,
+        totalQuestions: 7,
+        averageScore: 14,
+        uniqueQuizzesTaken: 1,
+      },
+      courses: {
+        December: {
+          started: 10,
+          completed: 8,
+          completionRate: 80,
+        },
+        January: {
+          started: 5,
+          completed: 1,
+          completionRate: 20,
+        },
+        February: {
+          started: 2,
+          completed: 1,
+          completionRate: 50,
+        },
+        March: {
+          started: 1,
+          completed: 1,
+          completionRate: 100,
+        },
+        April: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        May: {
+          started: 12,
+          completed: 8,
+          completionRate: 66,
+        },
+        June: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        July: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        August: {
+          started: 0,
+          completed: 0,
+          completionRate: 20,
+        },
+        September: {
+          started: 0,
+          completed: 3,
+          completionRate: 75,
+        },
+        October: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        November: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+      },
+      streak: {
+        current: 0,
+        longest: 0,
+        activityHistory: {},
+      },
+      lessons: {
+        December: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        January: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        February: {
+          started: 10,
+          completed: 4,
+          completionRate: 40,
+        },
+        March: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        April: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        May: {
+          started: 3,
+          completed: 1,
+          completionRate: 33,
+        },
+        June: {
+          started: 6,
+          completed: 3,
+          completionRate: 50,
+        },
+        July: {
+          started: 40,
+          completed: 20,
+          completionRate: 50,
+        },
+        August: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        September: {
+          started: 0,
+          completed: 0,
+          completionRate: 0,
+        },
+        October: {
+          started: 0,
+          completed: 0,
+          completionRate: 33,
+        },
+        November: {
+          started: 0,
+          completed: 4,
+          completionRate: 75,
+        },
+      },
+    },
+  };
 
   return (
     <div className="flex flex-col gap-y-8">
@@ -67,8 +188,8 @@ export default function StatisticsPage() {
             <AvgCoursePercentCompletition />
           </div>
           <div className="flex gap-x-4 w-full h-full">
-            <RatesChart resourceName="Courses" chartData={chartData} />
-            <RatesChart resourceName="Courses" chartData={chartData2} />
+            <RatesChart resourceName="Courses" chartData={data.data.courses} />
+            <RatesChart resourceName="Lessons" chartData={data.data.lessons} />
           </div>
         </div>
         <div className="w-full h-full max-w-[480px] bg-white rounded-lg drop-shadow-card p-8 flex flex-col gap-6">
