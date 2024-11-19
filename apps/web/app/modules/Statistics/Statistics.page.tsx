@@ -12,13 +12,25 @@ export default function StatisticsPage() {
   const { data: user } = useCurrentUser();
 
   const chartData = [
-    { month: "January", completed: 186, started: 80 },
-    { month: "February", completed: 305, started: 200 },
-    { month: "March", completed: 237, started: 120 },
-    { month: "April", completed: 73, started: 190 },
-    { month: "May", completed: 209, started: 130 },
-    { month: "June", completed: 214, started: 140 },
+    { month: "January", completed: 2, started: 8 },
+    { month: "February", completed: 3, started: 5 },
+    { month: "March", completed: 2, started: 2 },
+    { month: "April", completed: 7, started: 9 },
+    { month: "May", completed: 2, started: 3 },
+    { month: "June", completed: 2, started: 4 },
+    { month: "July", completed: 4, started: 5 },
+    { month: "August", completed: 3, started: 6 },
+    { month: "September", completed: 6, started: 7 },
+    { month: "October", completed: 1, started: 8 },
+    { month: "November", completed: 7, started: 9 },
+    { month: "December", completed: 8, started: 10 },
   ];
+
+  const chartData2 = chartData.map((item) => ({
+    ...item,
+    completed: item.completed * 22,
+    started: item.started * 22,
+  }));
 
   return (
     <div className="flex flex-col gap-y-8">
@@ -56,7 +68,7 @@ export default function StatisticsPage() {
           </div>
           <div className="flex gap-x-4 w-full h-full">
             <RatesChart resourceName="Courses" chartData={chartData} />
-            <RatesChart resourceName="Courses" chartData={chartData} />
+            <RatesChart resourceName="Courses" chartData={chartData2} />
           </div>
         </div>
         <div className="w-full h-full max-w-[480px] bg-white rounded-lg drop-shadow-card p-8 flex flex-col gap-6">

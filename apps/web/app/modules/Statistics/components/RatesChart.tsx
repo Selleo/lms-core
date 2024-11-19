@@ -1,4 +1,4 @@
-import { CartesianGrid, XAxis, Bar, BarChart } from "recharts";
+import { CartesianGrid, XAxis, Bar, BarChart, YAxis } from "recharts";
 
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
@@ -29,6 +29,11 @@ export const RatesChart = ({
   resourceName: string;
   chartData: ChartData[];
 }) => {
+  const dataMax = Math.max(...chartData.map((d) => d.started));
+  const step = Math.ceil(dataMax / 10);
+  const yAxisMax = dataMax + step;
+  const ticks = Array.from({ length: Math.floor(yAxisMax / step) }, (_, i) => (i + 1) * step);
+
   return (
     <div className="w-full h-full bg-white rounded-lg  gap-6 drop-shadow-card p-8 flex flex-col">
       <h2 className="body-lg-md text-neutral-950 text-center">{resourceName} Rates</h2>
@@ -36,10 +41,11 @@ export const RatesChart = ({
       <div className="grid place-items-center h-full">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] w-full h-full"
+          className="mx-auto aspect-square max-h-[450px] w-full h-full"
         >
           <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid horizontal={true} vertical={false} />
+            <YAxis ticks={ticks} tickLine={false} axisLine={false} domain={[0, dataMax]} />
             <XAxis
               dataKey="month"
               tickLine={false}
