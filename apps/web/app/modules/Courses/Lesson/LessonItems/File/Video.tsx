@@ -1,5 +1,5 @@
 import { useParams } from "@remix-run/react";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player/lazy";
 
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
 
