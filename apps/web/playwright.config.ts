@@ -20,20 +20,19 @@ export default defineConfig({
     //   ],
     // },
   },
-
   projects: [
-    { name: "setup", testMatch: /.*\.setup\.ts/ },
     {
-      name: "chromium",
-      use: {
-        ...devices["Desktop Chrome"],
-      },
+      name: "setup",
+      testMatch: /.*\.setup\.ts/,
     },
     {
-      name: "firefox",
+      name: "chromium",
+      dependencies: ["setup"],
       use: {
-        ...devices["Desktop Firefox"],
+        ...devices["Desktop Chrome"],
+        storageState: "e2e/.auth/user.json",
       },
+      testMatch: /.*\.(spec|test)\.ts$/,
     },
   ],
 });
