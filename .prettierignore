@@ -23,6 +23,7 @@
 **/public
 packages/email-templates/**/index.ts
 apps/api/src/storage/migrations/**
+apps/web/e2e/**/*.json
 
 
 # Cache

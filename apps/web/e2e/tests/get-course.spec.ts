@@ -1,18 +1,8 @@
 import { expect, test } from "@playwright/test";
 
 test.describe("course", () => {
-  test.beforeEach(async ({ page }) => {
-    await page.goto("/auth/login");
-  });
-
   test("should find, open and enroll the paid course", async ({ page }) => {
-    await page.getByLabel("email").fill("user@example.com");
-    await page.getByLabel("password").fill("password");
-    await page.getByRole("button", { name: /login/i }).click();
-
-    await expect(page).toHaveURL("/");
-    await expect(page).toHaveTitle(/dashboard/i);
-
+    await page.goto("/");
     await page.getByPlaceholder("Search by title...").fill("For E2E Testing");
     await expect(page.getByRole("button", { name: "Clear All" })).toBeVisible();
 

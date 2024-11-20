@@ -1,7 +1,12 @@
 import { test, expect } from "@playwright/test";
 
+import { AuthFixture } from "e2e/fixture/auth.fixture";
+
 test.describe("register page", () => {
   test.beforeEach(async ({ page }) => {
+    const authFixture = new AuthFixture(page);
+    await page.goto("/");
+    await authFixture.logout();
     await page.goto("/auth/register");
   });
 
