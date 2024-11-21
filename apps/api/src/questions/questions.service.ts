@@ -108,16 +108,15 @@ export class QuestionsService {
         trx,
       );
 
-    const answerList = answerQuestion.answer.map((a) => {
-      if (typeof a !== "string") {
-        return a.value;
+    const answerList = answerQuestion.answer.map((answerElement) => {
+      if (typeof answerElement !== "string") {
+        return answerElement.value;
       }
 
-      return a;
+      return answerElement;
     });
 
-    if (!answerList || answerList.length === 0)
-      throw new NotFoundException("User answers not found");
+    if (!(answerList?.length === 0)) throw new NotFoundException("User answers not found");
 
     const answers: { answer: string }[] = await this.questionsRepository.getQuestionAnswers(
       answerQuestion.questionId,

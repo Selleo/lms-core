@@ -14,6 +14,7 @@ import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { type FC, useEffect, useState } from "react";
 
 import Viewer from "~/components/RichText/Viever";
+import { handleCompletionForMediaLesson } from "~/utils/handleCompletionForMediaLesson";
 
 import { DndBlank } from "./DndBlank";
 import { DraggableWord } from "./DraggableWord";
@@ -115,6 +116,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
     });
   };
 
+  const handleCompletion = () =>
+    handleCompletionForMediaLesson(isCompleted, isQuiz) && updateLessonItemCompletion(lessonItemId);
+
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
 
@@ -190,9 +194,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
           if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
             sendAnswer(sortedWords);
-            if (!isCompleted && !isQuiz && sortedWords.length === maxAnswersAmount) {
-              updateLessonItemCompletion(lessonItemId);
-            }
+            handleCompletion();
           }
         }
 
@@ -213,9 +215,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
         if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
           sendAnswer(sortedWords);
-          if (!isCompleted && !isQuiz && sortedWords.length === maxAnswersAmount) {
-            updateLessonItemCompletion(lessonItemId);
-          }
+          handleCompletion();
         }
       }
 

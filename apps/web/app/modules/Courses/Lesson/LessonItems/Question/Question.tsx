@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form";
 import { Textarea } from "~/components/ui/textarea";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
+import { handleCompletionForMediaLesson } from "~/utils/handleCompletionForMediaLesson";
 
 import { FillInTheBlanksDnd } from "../FillInTheBlanks/dnd/FillInTheBlanksDnd";
 import { FillInTheBlanks } from "../FillInTheBlanks/FillInTheBlanks";
@@ -71,11 +72,14 @@ export const Question = ({
     }
   }, [isQuiz, isSubmitted]);
 
+  const handleCompletion = () =>
+    handleCompletionForMediaLesson(isCompleted, isQuiz) && updateLessonItemCompletion(lessonItemId);
+
   const handleClick = async (id: string) => {
     if (isSingleQuestion) {
       setSelectedOption([id]);
       await sendAnswer([id]);
-      !isCompleted && !isQuiz && updateLessonItemCompletion(lessonItemId);
+      handleCompletion();
     } else {
       let newSelectedOptions: string[];
 
@@ -87,13 +91,13 @@ export const Question = ({
 
       setSelectedOption(newSelectedOptions);
       await sendAnswer(newSelectedOptions);
-      !isCompleted && !isQuiz && updateLessonItemCompletion(lessonItemId);
+      handleCompletion();
     }
   };
 
   const handleOpenAnswerRequest = async (e: ChangeEvent<HTMLTextAreaElement>) => {
     await sendOpenAnswer(e.target.value);
-    !isCompleted && !isQuiz && updateLessonItemCompletion(lessonItemId);
+    handleCompletion();
   };
 
   const canRenderCorrectAnswers =

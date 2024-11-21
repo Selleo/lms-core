@@ -4,6 +4,7 @@ import Viewer from "~/components/RichText/Viever";
 import { Card } from "~/components/ui/card";
 import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheTextBlanks";
 import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
+import { handleCompletionForMediaLesson } from "~/utils/handleCompletionForMediaLesson";
 
 type Answer = {
   id: string;
@@ -75,7 +76,10 @@ export const FillInTheBlanks = ({
 
     if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
       sendAnswer(sortedWords);
-      if (!isCompleted && !isQuiz && sortedWords.length === maxAnswersAmount) {
+      if (
+        handleCompletionForMediaLesson(isCompleted, isQuiz) &&
+        sortedWords.length === maxAnswersAmount
+      ) {
         updateLessonItemCompletion(lessonItemId);
       }
     }
