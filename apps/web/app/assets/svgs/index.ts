@@ -23,3 +23,5 @@ export { default as LessonContent } from "./lesson-content.svg?react";
 export { default as Email } from "./email.svg?react";
 export { default as Phone } from "./phone.svg?react";
 export { default as FreeRight } from "./free-right.svg?react";
+export { default as Checkmark } from "./checkmark.svg?react";
+export { default as Flame } from "./flame.svg?react";

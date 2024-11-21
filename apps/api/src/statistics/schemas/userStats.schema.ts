@@ -37,6 +37,10 @@ export const StreakSchema = Type.Object({
 });
 
 export const UserStatsSchema = Type.Object({
+  averageStats: Type.Object({
+    lessonStats: MonthlyStatsSchema,
+    courseStats: MonthlyStatsSchema,
+  }),
   quizzes: QuizStatsSchema,
   courses: CourseStatsSchema,
   lessons: LessonsStatsSchema,

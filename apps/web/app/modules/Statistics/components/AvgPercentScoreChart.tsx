@@ -11,8 +11,14 @@ type AvgPercentScoreChartProps = {
   label: string;
   title: string;
   chartConfig: ChartConfig;
-  chartData: { state: string; percentage: number; fill: string }[];
+  chartData: { state: string; percentage: number | undefined; fill: string }[];
   isLoading?: boolean;
+};
+
+const emptyChartData = {
+  state: "No data",
+  percentage: 1,
+  fill: "var(--neutral-200)",
 };
 
 export const AvgPercentScoreChart = ({
@@ -34,9 +40,11 @@ export const AvgPercentScoreChart = ({
     });
   }, [chartConfig]);
 
+  const isEmptyChart = chartData.every(({ percentage }) => !percentage);
+
   if (isLoading) {
     return (
-      <div className="w-full md:max-w-[352px] h-auto lg:max-w-[436px] bg-white items-center rounded-lg gap-6 drop-shadow-card p-8 flex flex-col">
+      <div className="w-full h-auto md:w-[calc(50%-8px)] 2xl:max-w-[436px] bg-white items-center rounded-lg gap-6 drop-shadow-card p-8 flex flex-col">
         <Skeleton className="max-w-[240px] w-full h-[30px] rounded-lg" />
         <div className="grid place-items-center h-[250px]">
           <Skeleton className="aspect-square max-h-[200px] w-full h-full rounded-full" />
@@ -50,17 +58,19 @@ export const AvgPercentScoreChart = ({
   }
 
   return (
-    <div className="w-full md:w-[calc(50%-8px)] h-auto lg:max-w-[436px] bg-white rounded-lg gap-6 drop-shadow-card p-8 flex flex-col">
+    <div className="w-full md:w-[calc(50%-8px)] h-auto 2xl:max-w-[436px] bg-white rounded-lg gap-6 drop-shadow-card p-8 flex flex-col">
       <h2 className="body-lg-md text-neutral-950 text-center">{title}</h2>
       <div className="grid place-items-center h-full">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] w-full h-full"
+          className="mx-auto aspect-square max-h-[250px] size-full"
         >
           <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            {!isEmptyChart && (
+              <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            )}
             <Pie
-              data={chartData}
+              data={isEmptyChart ? [emptyChartData, ...chartData] : chartData}
               dataKey="percentage"
               nameKey="state"
               innerRadius={88}
@@ -79,7 +89,7 @@ export const AvgPercentScoreChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {label}
+                          {isEmptyChart ? "No data" : label}
                         </tspan>
                       </text>
                     );

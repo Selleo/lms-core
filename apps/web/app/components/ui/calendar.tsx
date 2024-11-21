@@ -1,26 +1,41 @@
 import { DayPicker } from "react-day-picker";
 
+import { Checkmark } from "~/assets/svgs";
 import { buttonVariants } from "~/components/ui/button";
 import { cn } from "~/lib/utils";
 
 import type { ComponentProps } from "react";
-import type { DayContentProps } from "react-day-picker";
+import type { DayProps } from "react-day-picker";
 
 export type CalendarProps = ComponentProps<typeof DayPicker> & {
-  dates: Date[] | undefined;
+  dates: string[] | undefined;
 };
 
-type CustomDayContentProps = DayContentProps & {
-  dates: Date[] | undefined;
+type CustomDayContentProps = DayProps & {
+  dates: string[] | undefined;
 };
 
 function CustomDayContent({ dates, ...props }: CustomDayContentProps) {
-  console.log(props.date);
-  if (dates?.includes(props.date)) {
-    return <span style={{ position: "relative", overflow: "visible" }}>🎉</span>;
+  if (dates?.includes(props?.["data-day"])) {
+    const classes = cn(
+      "text-primary-foreground hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground p-0 border aspect-square size-8 text-sm flex items-center justify-center has-[button]:hover:!bg-success-200 rounded-full has-[button]:hover:aria-selected:!bg-success-500 has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
+      { "bg-success-200 border-success-200": !!props?.day?.outside },
+      { "bg-success-500 border-success-500": !props?.day?.outside },
+    );
+
+    return (
+      <td className={classes}>
+        <Checkmark className="text-white size-6" />
+      </td>
+    );
   }
 
-  return <div>{props.date.getDate()}</div>;
+  const classes2 = cn(
+    "p-0 border border-neutral-300 text-neutral-950 aspect-square size-8 text-sm flex items-center justify-center has-[button]:hover:!bg-success-200 rounded-full has-[button]:hover:aria-selected:!bg-success-500 has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
+    { "bg-neutral-100": !!props.day.outside },
+  );
+
+  return <td className={classes2}>{props.children.props.children}</td>;
 }
 
 function Calendar({
@@ -33,12 +48,12 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("w-full", className)}
+      className={cn("w-min md:w-full", className)}
       classNames={{
         months: "flex flex-col relative",
         month_caption:
           "flex justify-center h-10 w-full border-primary-500 border-b relative items-center",
-        weekdays: "flex flex-row gap-1.5 lg:gap-2",
+        weekdays: "flex justify-center flex-row gap-1.5 lg:gap-2",
         weekday: "text-muted-foreground w-8 font-normal text-[0.8rem]",
         month:
           "gap-y-4 overflow-x-hidden w-full border border-primary-500 rounded-2xl pt-1.5 pb-4 lg:pb-6 px-2.5 lg:px-6",
@@ -58,7 +73,7 @@ function Calendar({
         ),
         nav: "flex items-start justify-between absolute w-full",
         month_grid: "mt-4 w-full",
-        week: "flex w-full mt-3 gap-1.5 lg:gap-2",
+        week: "flex w-full mt-3 justify-center gap-1.5 lg:gap-2",
         day: "p-0 border border-neutral-300 text-neutral-950 aspect-square size-8 text-sm flex items-center justify-center has-[button]:hover:!bg-success-200 rounded-full has-[button]:hover:aria-selected:!bg-success-500 has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
         day_button: cn(
           buttonVariants({ variant: "ghost" }),
@@ -78,7 +93,9 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        DayContent: ({ ...props }) => <CustomDayContent {...props} dates={dates} />,
+        Day: ({ ...props }) => {
+          return <CustomDayContent dates={dates} {...props} />;
+        },
         PreviousMonthButton: ({ ...props }) => <div className="sr-only" />,
         NextMonthButton: ({ ...props }) => <div className="sr-only" />,
       }}
