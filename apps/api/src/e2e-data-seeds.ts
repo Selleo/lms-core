@@ -29,6 +29,70 @@ export const e2eCourses: NiceCourseData[] = [
           },
         ],
       },
+      {
+        title: "E2E Testing Quiz",
+        description: "E2E Testing Quiz Description",
+        imageUrl: "https://placehold.co/600x400",
+        type: LESSON_TYPE.quiz.key,
+        state: STATUS.published.key,
+        isFree: true,
+        items: [
+          {
+            itemType: LESSON_ITEM_TYPE.question.key,
+            questionType: "single_choice",
+            questionBody: "E2E Testing Question",
+            state: "published",
+            questionAnswers: [
+              {
+                optionText: "E2E Testing Answer",
+                isCorrect: true,
+                position: 0,
+              },
+            ],
+          },
+          {
+            itemType: LESSON_ITEM_TYPE.question.key,
+            questionType: "single_choice",
+            questionBody: "E2E Testing Question 2",
+            state: "published",
+            questionAnswers: [
+              {
+                optionText: "single true",
+                isCorrect: true,
+                position: 0,
+              },
+              {
+                optionText: "single false",
+                isCorrect: false,
+                position: 1,
+              },
+            ],
+          },
+          {
+            itemType: LESSON_ITEM_TYPE.question.key,
+            questionType: "multiple_choice",
+            questionBody: "E2E Testing Question 3",
+            state: "published",
+            questionAnswers: [
+              {
+                optionText: "multiple true a",
+                isCorrect: true,
+                position: 0,
+              },
+              {
+                optionText: "multiple true b",
+                isCorrect: false,
+                position: 1,
+              },
+              {
+                optionText: "multiple false c",
+                isCorrect: false,
+                position: 2,
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
 ];
