@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, count, eq, inArray, sql } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNotNull, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import { STATES } from "src/common/states";
@@ -19,6 +19,7 @@ import {
 } from "src/storage/schema";
 
 import { LESSON_TYPE } from "../lesson.type";
+import { LessonProgress } from "../schemas/lesson.types";
 
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
@@ -36,11 +37,11 @@ export class LessonsRepository {
         imageUrl: sql<string>`${lessons.imageUrl}`,
         type: sql<string>`${lessons.type}`,
         isSubmitted: sql<boolean>`
-          CASE
+                    CASE
             WHEN ${studentLessonsProgress.quizCompleted} IS NOT NULL THEN ${studentLessonsProgress.quizCompleted}
-            ELSE FALSE
-          END
-        `,
+                    ELSE FALSE
+                    END
+                `,
         isFree: courseLessons.isFree,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN true ELSE false END`,
       })
@@ -111,12 +112,12 @@ export class LessonsRepository {
         questionData: questions,
         displayOrder: lessonItems.displayOrder,
         passQuestion: sql<boolean | null>`
-          CASE
+                    CASE
             WHEN ${lessonType} = ${LESSON_TYPE.quiz.key} AND ${lessonRated} THEN
-              ${studentQuestionAnswers.isCorrect}
-            ELSE null
-          END
-        `,
+                    ${studentQuestionAnswers.isCorrect}
+                    ELSE null
+                    END
+                `,
       })
       .from(lessonItems)
       .leftJoin(
@@ -204,27 +205,27 @@ export class LessonsRepository {
         optionText: questionAnswerOptions.optionText,
         position: questionAnswerOptions.position,
         isStudentAnswer: sql<boolean | null>`
-          CASE
+                    CASE
             WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-            WHEN ${studentQuestionAnswers.answer}->>CAST(${questionAnswerOptions.position} AS text) = ${questionAnswerOptions.optionText} AND
-              ${questions.questionType} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
-              THEN TRUE
-            WHEN EXISTS (
-                SELECT 1
-                FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(${questionAnswerOptions.optionText})
-              ) AND  ${questions.questionType} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
-              THEN TRUE
-            ELSE FALSE
-          END
-          `,
+                    WHEN ${studentQuestionAnswers.answer}->>CAST(${questionAnswerOptions.position} AS text) = ${questionAnswerOptions.optionText} AND
+                    ${questions.questionType} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+                    THEN TRUE
+                    WHEN EXISTS (
+                    SELECT 1
+                    FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                    WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(${questionAnswerOptions.optionText})
+                    ) AND  ${questions.questionType} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+                    THEN TRUE
+                    ELSE FALSE
+                    END
+                `,
         isCorrect: sql<boolean | null>`
-          CASE
+                    CASE
             WHEN ${lessonType} = 'quiz' AND ${lessonRated} THEN
-              ${questionAnswerOptions.isCorrect}
-            ELSE NULL
-          END
-        `,
+                    ${questionAnswerOptions.isCorrect}
+                    ELSE NULL
+                    END
+                `,
       })
       .from(questionAnswerOptions)
       .leftJoin(questions, eq(questionAnswerOptions.questionId, questions.id))
@@ -291,11 +292,11 @@ export class LessonsRepository {
     const [lessonProgress] = await this.db
       .select({
         quizCompleted: sql<boolean>`
-          CASE
+                    CASE
             WHEN ${studentLessonsProgress.quizCompleted} THEN
-              ${studentLessonsProgress.quizCompleted}
-            ELSE false
-          END`,
+                    ${studentLessonsProgress.quizCompleted}
+                    ELSE false
+                    END`,
         lessonItemCount: studentLessonsProgress.lessonItemCount,
         completedLessonItemCount: studentLessonsProgress.completedLessonItemCount,
         quizScore: studentLessonsProgress.quizScore,
@@ -361,6 +362,78 @@ export class LessonsRepository {
       .groupBy(studentQuestionAnswers.studentId);
 
     return quizScore.quizScore;
+  }
+
+  async getLessonsDetails(userId: UUIDType, courseId: UUIDType, lessonId?: UUIDType) {
+    const conditions = [
+      eq(courseLessons.courseId, courseId),
+      eq(lessons.archived, false),
+      eq(lessons.state, STATES.published),
+      isNotNull(lessons.id),
+      isNotNull(lessons.title),
+      isNotNull(lessons.description),
+      isNotNull(lessons.imageUrl),
+    ];
+    if (lessonId) conditions.push(eq(lessons.id, lessonId));
+
+    return await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        type: lessons.type,
+        isSubmitted: sql<boolean>`
+          EXISTS (
+            SELECT 1
+            FROM ${studentLessonsProgress}
+            WHERE ${studentLessonsProgress.lessonId} = ${lessons.id}
+              AND ${studentLessonsProgress.courseId} = ${courseId}
+              AND ${studentLessonsProgress.studentId} = ${userId}
+              AND ${studentLessonsProgress.quizCompleted}
+          )::BOOLEAN`,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
+        itemsCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id}
+            AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+        itemsCompletedCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${studentCompletedLessonItems}
+          WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+            AND ${studentCompletedLessonItems.courseId} = ${courseId}
+            AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
+        lessonProgress: sql<"completed" | "in_progress" | "not_started">`
+          (CASE
+            WHEN (
+              SELECT COUNT(*)
+              FROM ${lessonItems}
+              WHERE ${lessonItems.lessonId} = ${lessons.id}
+                AND ${lessonItems.lessonItemType} != 'text_block'
+            ) = (
+              SELECT COUNT(*)
+              FROM ${studentCompletedLessonItems}
+              WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.courseId} = ${courseId}
+                AND ${studentCompletedLessonItems.studentId} = ${userId}
+            )
+            THEN ${LessonProgress.completed}
+            WHEN (
+              SELECT COUNT(*)
+              FROM ${studentCompletedLessonItems}
+              WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
+                AND ${studentCompletedLessonItems.courseId} = ${courseId}
+                AND ${studentCompletedLessonItems.studentId} = ${userId}
+            ) > 0
+            THEN ${LessonProgress.inProgress}
+            ELSE ${LessonProgress.notStarted}
+          END)
+        `,
+        isFree: courseLessons.isFree,
+      })
+      .from(courseLessons)
+      .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+      .where(and(...conditions));
   }
 
   async completeQuiz(
@@ -485,6 +558,21 @@ export class LessonsRepository {
         ),
       )
       .limit(1);
+  }
+
+  async getLastLessonItemForUser(userId: UUIDType) {
+    const [lastLessonItem] = await this.db
+      .select({
+        id: studentCompletedLessonItems.lessonItemId,
+        lessonId: studentCompletedLessonItems.lessonId,
+        courseId: studentCompletedLessonItems.courseId,
+      })
+      .from(studentCompletedLessonItems)
+      .where(eq(studentCompletedLessonItems.studentId, userId))
+      .orderBy(desc(studentCompletedLessonItems.updatedAt))
+      .limit(1);
+
+    return lastLessonItem;
   }
 
   async removeQuestionsAnswer(

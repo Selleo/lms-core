@@ -1,28 +1,16 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { differenceInDays, eachDayOfInterval, format, startOfDay } from "date-fns";
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
-import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import {
-  lessonItems,
-  lessons,
   quizAttempts,
-  studentCompletedLessonItems,
   studentCourses,
   studentLessonsProgress,
   userStatistics,
 } from "src/storage/schema";
 
-import type { LessonProgressType } from "src/lessons/schemas/lesson.types";
-
-type Stats = {
-  month: string;
-  started: number;
-  completed: number;
-  completionRate: number;
-};
+import type { UserStatistic } from "src/statistics/schemas/userStats.schema";
 
 @Injectable()
 export class StatisticsRepository {
@@ -31,34 +19,28 @@ export class StatisticsRepository {
     private readonly lessonsRepository: LessonsRepository,
   ) {}
 
-  async getUserStats(userId: string) {
+  async getQuizStats(userId: string) {
     const [quizStatsResult] = await this.db
       .select({
-        totalAttempts: sql<number>`count(*)`,
-        totalCorrectAnswers: sql<number>`coalesce(sum(${quizAttempts.correctAnswers}), 0)`,
-        totalWrongAnswers: sql<number>`coalesce(sum(${quizAttempts.wrongAnswers}), 0)`,
-        totalQuestions: sql<number>`coalesce(sum(${quizAttempts.correctAnswers} + ${quizAttempts.wrongAnswers}), 0)`,
-        averageScore: sql<number>`coalesce(round(avg(${quizAttempts.score}), 2), 0)`,
-        uniqueQuizzesTaken: sql<number>`count(distinct ${quizAttempts.lessonId})`,
+        totalAttempts: sql<number>`count(*) :: INTEGER`,
+        totalCorrectAnswers: sql<number>`coalesce(sum(${quizAttempts.correctAnswers}), 0) :: INTEGER`,
+        totalWrongAnswers: sql<number>`coalesce(sum(${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
+        totalQuestions: sql<number>`coalesce(sum(${quizAttempts.correctAnswers} + ${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
+        averageScore: sql<number>`coalesce(round(avg(${quizAttempts.score}), 2), 0) :: INTEGER`,
+        uniqueQuizzesTaken: sql<number>`coalesce(count(distinct ${quizAttempts.lessonId}), 0) :: INTEGER`,
       })
       .from(quizAttempts)
-      .where(eq(quizAttempts.userId, userId))
-      .groupBy(quizAttempts.userId);
+      .where(eq(quizAttempts.userId, userId));
 
-    const quizStats = quizStatsResult || {
-      totalAttempts: 0,
-      totalCorrectAnswers: 0,
-      totalWrongAnswers: 0,
-      totalQuestions: 0,
-      averageScore: 0,
-      uniqueQuizzesTaken: 0,
-    };
+    return quizStatsResult;
+  }
 
-    const courseStatsResult = await this.db
+  async getCoursesStatsByMonth(userId: string) {
+    return this.db
       .select({
         month: sql<string>`to_char(date_trunc('month', ${studentCourses.createdAt}), 'YYYY-MM')`,
-        started: sql<number>`count(*)`,
-        completed: sql<number>`count(case when ${studentCourses.state} = 'completed' then 1 end)`,
+        started: sql<number>`count(*) :: INTEGER`,
+        completed: sql<number>`count(case when ${studentCourses.state} = 'completed' then 1 end) :: INTEGER`,
         completionRate: sql<number>`
         coalesce(
           round(
@@ -67,7 +49,7 @@ export class StatisticsRepository {
             2
           ),
           0
-        )
+        ) :: INTEGER
       `,
       })
       .from(studentCourses)
@@ -79,40 +61,14 @@ export class StatisticsRepository {
       )
       .groupBy(sql<string>`date_trunc('month', ${studentCourses.createdAt})`)
       .orderBy(sql<string>`date_trunc('month', ${studentCourses.createdAt})`);
+  }
 
-    const [courseStats] = await this.db
-      .select({
-        started: sql<number>`count(*)::INTEGER`,
-        completed: sql<number>`count(case when ${studentCourses.state} = 'completed' then 1 end)::INTEGER`,
-        completionRate: sql<number>`
-        coalesce(
-          round(
-            (count(case when ${studentCourses.state} = 'completed' then 1 end)::numeric /
-            nullif(count(*)::numeric, 0)) * 100,
-            2
-          ),
-          0
-        )::INTEGER
-      `,
-      })
-      .from(studentCourses)
-      .where(
-        and(
-          eq(studentCourses.studentId, userId),
-          sql`${studentCourses.createdAt} >= date_trunc('month', current_date) - interval '11 months'`,
-        ),
-      );
-
-    const [activityStats] = await this.db
-      .select()
-      .from(userStatistics)
-      .where(eq(userStatistics.userId, userId));
-
-    const lessonStatsResult = await this.db
+  async getLessonsStatsByMonth(userId: string) {
+    return this.db
       .select({
         month: sql<string>`to_char(date_trunc('month', ${studentLessonsProgress.createdAt}), 'YYYY-MM')`,
-        started: sql<number>`count(distinct ${studentLessonsProgress.lessonId})`,
-        completed: sql<number>`count(case when ${studentLessonsProgress.completedLessonItemCount} = ${studentLessonsProgress.lessonItemCount} then 1 end)`,
+        started: sql<number>`count(distinct ${studentLessonsProgress.lessonId}) :: INTEGER`,
+        completed: sql<number>`count(case when ${studentLessonsProgress.completedLessonItemCount} = ${studentLessonsProgress.lessonItemCount} then 1 end) :: INTEGER`,
         completionRate: sql<number>`
           coalesce(
             round(
@@ -121,7 +77,7 @@ export class StatisticsRepository {
               2
             ),
             0
-          )
+          ) :: INTEGER
         `,
       })
       .from(studentLessonsProgress)
@@ -133,135 +89,19 @@ export class StatisticsRepository {
       )
       .groupBy(sql<string>`date_trunc('month', ${studentLessonsProgress.createdAt})`)
       .orderBy(sql<string>`date_trunc('month', ${studentLessonsProgress.createdAt})`);
+  }
 
-    const [lessonStats] = await this.db
+  async getActivityStats(userId: string) {
+    const [result] = await this.db
       .select({
-        started: sql<number>`count(distinct ${studentLessonsProgress.lessonId})::INTEGER`,
-        completed: sql<number>`count(case when ${studentLessonsProgress.completedLessonItemCount} = ${studentLessonsProgress.lessonItemCount} then 1 end)::INTEGER`,
-        completionRate: sql<number>`
-          coalesce(
-            round(
-              (count(case when ${studentLessonsProgress.completedLessonItemCount} = ${studentLessonsProgress.lessonItemCount} then 1 end)::numeric /
-              nullif(count(distinct ${studentLessonsProgress.lessonId})::numeric, 0)) * 100,
-              2
-            ),
-            0
-          )::INTEGER
-        `,
+        currentStreak: userStatistics.currentStreak,
+        longestStreak: userStatistics.longestStreak,
+        lastActivityDate: userStatistics.lastActivityDate,
+        activityHistory: userStatistics.activityHistory,
       })
-      .from(studentLessonsProgress)
-      .where(
-        and(
-          eq(studentLessonsProgress.studentId, userId),
-          sql`${studentLessonsProgress.createdAt} >= date_trunc('month', current_date) - interval '11 months'`,
-        ),
-      );
-
-    const [lastLessonItem] = await this.db
-      .select()
-      .from(studentCompletedLessonItems)
-      .where(and(eq(studentCompletedLessonItems.studentId, userId)))
-      .orderBy(desc(studentCompletedLessonItems.updatedAt))
-      .limit(1);
-
-    const lastLessonDetails = await this.lessonsRepository.getLessonForUser(
-      lastLessonItem.courseId,
-      lastLessonItem.lessonId,
-      userId,
-    );
-
-    const [lastLesson] = await this.db
-      .select({
-        // TODO: Code below needs https://github.com/wielopolski love
-        lessonProgress: sql<LessonProgressType>`
-          (CASE
-            WHEN (
-              SELECT COUNT(*)
-              FROM ${lessonItems}
-              WHERE ${lessonItems.lessonId} = ${lastLessonItem.lessonId}
-                AND ${lessonItems.lessonItemType} != 'text_block'
-            ) = (
-              SELECT COUNT(*)
-              FROM ${studentCompletedLessonItems}
-              WHERE ${studentCompletedLessonItems.lessonId} = ${lastLessonItem.lessonId}
-                AND ${studentCompletedLessonItems.courseId} = ${lastLessonItem.courseId}
-                AND ${studentCompletedLessonItems.studentId} = ${userId}
-            ) AND (
-              SELECT COUNT(*)
-              FROM ${lessonItems}
-              WHERE ${lessonItems.lessonId} = ${lastLessonItem.lessonId}
-                AND ${lessonItems.lessonItemType} != 'text_block'
-            ) > 0
-            THEN ${LessonProgress.completed}
-            WHEN (
-              SELECT COUNT(*)
-              FROM ${studentCompletedLessonItems}
-              WHERE ${studentCompletedLessonItems.lessonId} = ${lastLessonItem.lessonId}
-                AND ${studentCompletedLessonItems.courseId} = ${lastLessonItem.courseId}
-                AND ${studentCompletedLessonItems.studentId} = ${userId}
-            ) > 0
-            THEN ${LessonProgress.inProgress}
-            ELSE ${LessonProgress.notStarted}
-          END)
-        `,
-        itemsCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${lessonItems}
-          WHERE ${lessonItems.lessonId} = ${lastLessonItem.lessonId}
-            AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
-        itemsCompletedCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${studentCompletedLessonItems}
-          WHERE ${studentCompletedLessonItems.lessonId} = ${lastLessonItem.lessonId}
-            AND ${studentCompletedLessonItems.courseId} = ${lastLessonItem.courseId}
-            AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER
-        `,
-      })
-      .from(lessons)
-      .where(and(eq(lessons.id, lastLessonItem.lessonId)))
-      .leftJoin(
-        studentLessonsProgress,
-        and(
-          eq(studentLessonsProgress.studentId, userId),
-          eq(studentLessonsProgress.lessonId, lastLessonItem.lessonId),
-          eq(studentLessonsProgress.courseId, lastLessonItem.courseId),
-        ),
-      )
-      .leftJoin(lessonItems, eq(studentLessonsProgress.lessonId, lessonItems.lessonId))
-      .leftJoin(
-        studentCompletedLessonItems,
-        and(
-          eq(studentLessonsProgress.lessonId, studentCompletedLessonItems.lessonId),
-          eq(studentCompletedLessonItems.courseId, studentLessonsProgress.courseId),
-        ),
-      );
-
-    console.log(lastLesson);
-    return {
-      quizzes: {
-        totalAttempts: Number(quizStats.totalAttempts),
-        totalCorrectAnswers: Number(quizStats.totalCorrectAnswers),
-        totalWrongAnswers: Number(quizStats.totalWrongAnswers),
-        totalQuestions: Number(quizStats.totalQuestions),
-        averageScore: Number(quizStats.averageScore),
-        uniqueQuizzesTaken: Number(quizStats.uniqueQuizzesTaken),
-      },
-      courses: this.formatCourseStats(courseStatsResult),
-      streak: {
-        current: Number(activityStats?.currentStreak) || 0,
-        longest: Number(activityStats?.longestStreak) || 0,
-        activityHistory: activityStats?.activityHistory || {},
-      },
-      lessons: this.formatLessonStats(lessonStatsResult),
-      averageStats: {
-        lessonStats,
-        courseStats,
-      },
-      lastLesson: {
-        ...lastLessonDetails,
-        ...lastLesson,
-      },
-    };
+      .from(userStatistics)
+      .where(eq(userStatistics.userId, userId));
+    return result;
   }
 
   async createQuizAttempt(data: {
@@ -275,129 +115,18 @@ export class StatisticsRepository {
     return this.db.insert(quizAttempts).values(data);
   }
 
-  async updateUserActivity(userId: string) {
-    const today = startOfDay(new Date());
-    const formatedTodayDate = format(today, "yyyy-MM-dd");
-
-    const [currentStats] = await this.db
-      .select({
-        currentStreak: userStatistics.currentStreak,
-        longestStreak: userStatistics.longestStreak,
-        lastActivityDate: userStatistics.lastActivityDate,
-        activityHistory: userStatistics.activityHistory,
-      })
-      .from(userStatistics)
-      .where(eq(userStatistics.userId, userId));
-
-    const lastActivityDate = currentStats?.lastActivityDate
-      ? startOfDay(new Date(currentStats.lastActivityDate))
-      : null;
-
-    const newCurrentStreak = (() => {
-      if (!lastActivityDate) return 1;
-
-      const daysDiff = differenceInDays(today, lastActivityDate);
-
-      if (daysDiff === 0) return currentStats?.currentStreak ?? 1;
-      if (daysDiff === 1) return (currentStats?.currentStreak ?? 0) + 1;
-      return 1;
-    })();
-
-    const newLongestStreak = Math.max(newCurrentStreak, currentStats?.longestStreak ?? 0);
-
-    const isUserLoggedInToday = currentStats?.activityHistory?.[formatedTodayDate] ?? false;
-    if (isUserLoggedInToday) {
-      return;
-    }
-
-    const dateRange = lastActivityDate
-      ? eachDayOfInterval({ start: lastActivityDate, end: today })
-      : [today];
-
-    const newActivityHistory = dateRange.reduce(
-      (acc, date) => {
-        const dateStr = format(date, "yyyy-MM-dd");
-        if (!acc[dateStr]) {
-          acc[dateStr] = dateStr === formatedTodayDate;
-        }
-        return acc;
-      },
-      { ...(currentStats?.activityHistory ?? {}) },
-    );
-
+  async upsertUserStatistic(userId: string, upsertUserStatistic: UserStatistic) {
     await this.db
       .insert(userStatistics)
       .values({
         userId,
-        currentStreak: newCurrentStreak,
-        longestStreak: newLongestStreak,
-        lastActivityDate: today,
-        activityHistory: newActivityHistory,
+        ...upsertUserStatistic,
       })
       .onConflictDoUpdate({
         target: userStatistics.userId,
         set: {
-          currentStreak: newCurrentStreak,
-          longestStreak: newLongestStreak,
-          lastActivityDate: today,
-          activityHistory: newActivityHistory,
+          ...upsertUserStatistic,
         },
       });
   }
-
-  private formatCourseStats = (courseStats: Stats[]) => {
-    const monthlyStats: { [key: string]: Omit<Stats, "month"> } = {};
-
-    const currentDate = new Date();
-    for (let index = 11; index >= 0; index--) {
-      const month = format(
-        new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
-        "MMMM",
-      );
-      monthlyStats[month] = {
-        started: 0,
-        completed: 0,
-        completionRate: 0,
-      };
-    }
-
-    for (const stat of courseStats) {
-      const month = format(new Date(stat.month), "MMMM");
-      monthlyStats[month] = {
-        started: Number(stat.started),
-        completed: Number(stat.completed),
-        completionRate: Number(stat.completionRate),
-      };
-    }
-
-    return monthlyStats;
-  };
-
-  private formatLessonStats = (lessonStats: Stats[]) => {
-    const monthlyStats: { [key: string]: Omit<Stats, "month"> } = {};
-
-    const currentDate = new Date();
-    for (let index = 11; index >= 0; index--) {
-      const month = format(
-        new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
-        "MMMM",
-      );
-      monthlyStats[month] = {
-        started: 0,
-        completed: 0,
-        completionRate: 0,
-      };
-    }
-
-    for (const stat of lessonStats) {
-      const month = format(new Date(stat.month), "MMMM");
-      monthlyStats[month] = {
-        started: Number(stat.started),
-        completed: Number(stat.completed),
-        completionRate: Number(stat.completionRate),
-      };
-    }
-
-    return monthlyStats;
-  };
 }
