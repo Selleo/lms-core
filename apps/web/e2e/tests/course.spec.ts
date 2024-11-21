@@ -61,7 +61,7 @@ class PaymentActions {
 
   async completePurchase(): Promise<void> {
     await this.page.getByRole("button", { name: /Buy for/ }).click();
-    await this.page.waitForTimeout(4500);
+    await this.page.waitForTimeout(10000);
   }
 
   async checkPaymentSuccess(): Promise<void> {
