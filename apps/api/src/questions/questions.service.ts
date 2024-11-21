@@ -116,7 +116,7 @@ export class QuestionsService {
       return answerElement;
     });
 
-    if (!(answerList?.length === 0)) throw new NotFoundException("User answers not found");
+    if (!answerList?.length) throw new NotFoundException("User answers not found");
 
     const answers: { answer: string }[] = await this.questionsRepository.getQuestionAnswers(
       answerQuestion.questionId,
