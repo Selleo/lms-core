@@ -88,7 +88,11 @@ class QuizActions {
     await expect(this.page).toHaveURL(URL_PATTERNS.lesson);
 
     for (const answer of QUIZ_ANSWERS) {
-      await this.page.getByRole("button", { name: answer.name }).click();
+      const answerButton = this.page.getByRole("button", { name: answer.name });
+      const input = answerButton.locator('input[type="checkbox"], input[type="radio"]');
+      await answerButton.click();
+      await expect(input).toBeChecked();
+      await expect(answerButton.getByText("(Missing answer)")).toBeHidden();
     }
   }
 
