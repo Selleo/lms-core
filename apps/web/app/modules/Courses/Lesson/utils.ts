@@ -12,12 +12,14 @@ export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
           title: lessonItem.content.title,
           displayOrder: lessonItem.displayOrder,
           id: lessonItem.lessonItemId,
+          isCompleted: !!lessonItem.isCompleted,
         };
       } else {
         return {
           title: lessonItem.content.questionBody,
           displayOrder: lessonItem.displayOrder,
           id: lessonItem.content.id,
+          isCompleted: !!lessonItem.isCompleted,
         };
       }
     })

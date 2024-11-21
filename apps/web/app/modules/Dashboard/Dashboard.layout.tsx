@@ -29,7 +29,7 @@ export default function DashboardLayout() {
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 overflow-hidden">
         <DashboardNavigation menuItems={mapNavigationItems(navigationConfig)} />
-        <main className="flex-1 overflow-y-auto py-6 lg:p-6 bg-primary-50">
+        <main className="flex-1 overflow-y-auto py-6 lg:p-8 bg-primary-50">
           <RouteGuard>
             <Outlet />
           </RouteGuard>

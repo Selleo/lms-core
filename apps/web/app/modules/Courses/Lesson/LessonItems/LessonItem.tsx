@@ -14,28 +14,42 @@ type LessonItemsSwitchProps = {
   lessonItem: LessonItem;
   questionsArray: string[];
   isSubmitted?: boolean;
+  lessonType: string;
+  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
 export const LessonItem = ({
-  lessonItem: { content, lessonItemId },
+  lessonItem: { content, lessonItemId, isCompleted },
   questionsArray,
   isSubmitted,
+  lessonType,
+  updateLessonItemCompletion,
 }: LessonItemsSwitchProps) => {
   if ("body" in content) return <TextBlock content={content} />;
 
   if ("questionBody" in content) {
     return (
       <Question
-        id={lessonItemId}
+        lessonItemId={lessonItemId}
         isSubmitted={isSubmitted}
         content={content}
         questionsArray={questionsArray}
+        lessonType={lessonType}
+        isCompleted={!!isCompleted}
+        updateLessonItemCompletion={updateLessonItemCompletion}
       />
     );
   }
 
   if ("url" in content) {
-    return <File content={content} lessonItemId={lessonItemId} />;
+    return (
+      <File
+        content={content}
+        lessonItemId={lessonItemId}
+        isCompleted={!!isCompleted}
+        updateLessonItemCompletion={updateLessonItemCompletion}
+      />
+    );
   }
 
   return (

@@ -1,7 +1,3 @@
-import { useParams } from "@remix-run/react";
-
-import { useCourseSuspense } from "~/api/queries/useCourse";
-import { useLessonSuspense } from "~/api/queries/useLesson";
 import {
   BreadcrumbItem,
   BreadcrumbLink,
@@ -9,20 +5,15 @@ import {
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 
-export default function Breadcrumb() {
-  const { courseId, lessonId } = useParams();
-  const { data: courseData } = useCourseSuspense(courseId!);
-  const { data: lessonData } = useLessonSuspense(lessonId!, courseId!);
+import type { GetLessonResponse } from "~/api/generated-api";
 
-  if (!courseData) {
-    throw new Error(`Course with id: ${courseId} not found`);
-  }
+type BreadcrumbProps = {
+  lessonData: GetLessonResponse["data"];
+  courseId: string;
+  courseTitle: string;
+};
 
-  if (!lessonData) {
-    throw new Error(`Lesson with id: ${lessonId} not found`);
-  }
-
-  const courseTitle = courseData?.title || "Course";
+export default function Breadcrumb({ lessonData, courseId, courseTitle }: BreadcrumbProps) {
   const lessonTitle = lessonData?.title || "Lesson";
 
   return (

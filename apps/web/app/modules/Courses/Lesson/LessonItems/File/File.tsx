@@ -12,9 +12,16 @@ type FileProps = {
     type: string;
     url: string;
   };
+  isCompleted: boolean;
+  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
-export const File = ({ content, lessonItemId }: FileProps) => {
+export const File = ({
+  content,
+  lessonItemId,
+  isCompleted,
+  updateLessonItemCompletion,
+}: FileProps) => {
   const { isAdmin } = useUserRole();
 
   const isPresentation =
@@ -24,9 +31,24 @@ export const File = ({ content, lessonItemId }: FileProps) => {
     <Card className="flex flex-col gap-4 p-8 border-none drop-shadow-primary">
       <div className="h6 text-neutral-950">{content.title}</div>
       {isPresentation ? (
-        <Presentation url={content.url} presentationId={lessonItemId} isAdmin={isAdmin} />
+        <Presentation
+          url={content.url}
+          presentationId={lessonItemId}
+          isAdmin={isAdmin}
+          isCompleted={isCompleted}
+          lessonItemId={lessonItemId}
+          updateLessonItemCompletion={updateLessonItemCompletion}
+        />
       ) : (
-        <Video url={content.url} videoId={lessonItemId} isAdmin={isAdmin} type={content.type} />
+        <Video
+          url={content.url}
+          videoId={lessonItemId}
+          isAdmin={isAdmin}
+          type={content.type}
+          isCompleted={isCompleted}
+          lessonItemId={lessonItemId}
+          updateLessonItemCompletion={updateLessonItemCompletion}
+        />
       )}
     </Card>
   );

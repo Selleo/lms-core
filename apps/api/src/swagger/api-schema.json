@@ -4726,6 +4726,9 @@
                         {}
                       ]
                     },
+                    "isCompleted": {
+                      "type": "boolean"
+                    },
                     "content": {
                       "anyOf": [
                         {
@@ -4996,6 +4999,9 @@
                         },
                         {}
                       ]
+                    },
+                    "isCompleted": {
+                      "type": "boolean"
                     },
                     "content": {
                       "anyOf": [
