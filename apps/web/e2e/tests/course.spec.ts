@@ -61,6 +61,11 @@ class PaymentActions {
 
   async completePurchase(): Promise<void> {
     await this.page.getByRole("button", { name: /Buy for/ }).click();
+    await this.page.waitForTimeout(4500);
+  }
+
+  async checkPaymentSuccess(): Promise<void> {
+    await expect(this.page.getByText("Payment successful", { exact: true })).toBeVisible();
   }
 }
 
@@ -126,6 +131,7 @@ test.describe.serial("Course E2E", () => {
     await enrollmentActions.enrollInCourse();
     await paymentActions.fillPaymentForm(new Date().getFullYear() + 1);
     await paymentActions.completePurchase();
+    await paymentActions.checkPaymentSuccess();
     await enrollmentActions.unenrollFromCourse();
   });
 
