@@ -309,7 +309,7 @@ export class LessonsService {
   }
 
   private async getLessonItems(lesson: Lesson, courseId: UUIDType, userId: UUIDType) {
-    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id);
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id, courseId);
     const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
 
     return await Promise.all(
@@ -365,7 +365,7 @@ export class LessonsService {
     userId: UUIDType,
     quizCompleted: boolean,
   ) {
-    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id);
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id, courseId);
     const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
 
     return await Promise.all(
@@ -437,6 +437,7 @@ export class LessonsService {
       lessonItemId: item.lessonItemId,
       lessonItemType: item.lessonItemType,
       displayOrder: item.displayOrder,
+      isCompleted: item.isCompleted,
       content,
     };
   }

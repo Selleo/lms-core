@@ -626,6 +626,7 @@ export interface GetLessonResponse {
       lessonItemType: string;
       displayOrder: number | null;
       passQuestion?: null;
+      isCompleted?: boolean;
       content:
         | {
             /** @format uuid */
@@ -686,6 +687,7 @@ export interface GetLessonByIdResponse {
       lessonItemType: string;
       displayOrder: number | null;
       passQuestion?: null;
+      isCompleted?: boolean;
       content:
         | {
             /** @format uuid */

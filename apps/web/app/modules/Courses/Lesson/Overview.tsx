@@ -1,6 +1,3 @@
-import { useParams } from "@remix-run/react";
-
-import { useLessonSuspense } from "~/api/queries/useLesson";
 import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import { CardBadge } from "~/components/CardBadge";
 import CourseProgress from "~/components/CourseProgress";
@@ -9,19 +6,22 @@ import Viewer from "~/components/RichText/Viever";
 import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
-export default function Overview() {
-  const { lessonId = "", courseId = "" } = useParams();
-  const { data } = useLessonSuspense(lessonId, courseId);
+import type { GetLessonResponse } from "~/api/generated-api";
 
-  const imageUrl = data.imageUrl ?? CardPlaceholder;
-  const title = data.title;
-  const description = data.description;
-  const lessonItemsCount = data.itemsCount;
-  const lessonItemsCompletedCount = data.itemsCompletedCount ?? 0;
+type OverviewProps = {
+  lesson: GetLessonResponse["data"];
+};
 
-  const isQuiz = data.type === "quiz";
+export default function Overview({ lesson }: OverviewProps) {
+  const imageUrl = lesson.imageUrl ?? CardPlaceholder;
+  const title = lesson.title;
+  const description = lesson.description;
+  const lessonItemsCount = lesson.itemsCount;
+  const lessonItemsCompletedCount = lesson.itemsCompletedCount ?? 0;
 
-  const isQuizSubmitted = data.type === "quiz" && data.isSubmitted;
+  const isQuiz = lesson.type === "quiz";
+
+  const isQuizSubmitted = lesson.type === "quiz" && lesson.isSubmitted;
 
   const renderQuizProgressBadge = () => {
     const badgeClasses = "absolute top-4 left-4 z-10";
@@ -73,11 +73,11 @@ export default function Overview() {
             <div className="bg-neutral-50 body-sm-md w-max mb-2 flex items-center gap-x-1 rounded-lg px-2 py-1">
               <Icon name="QuizStar" />
               <span>
-                Your Score: {data.quizScore} / {data.lessonItems.length}
+                Your Score: {lesson.quizScore} / {lesson.lessonItems.length}
               </span>
             </div>
           )}
-          <h5 className={cn("h5", { "mt-6": data.type !== "quiz" })}>{title}</h5>
+          <h5 className={cn("h5", { "mt-6": lesson.type !== "quiz" })}>{title}</h5>
           <Viewer content={description} className="body-base text-neutral-900" />
         </div>
       </CardContent>

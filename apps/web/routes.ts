@@ -15,11 +15,7 @@ export const routes: (
         index: true,
       });
       route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
-      route("course/:courseId/lesson/:lessonId", "modules/Courses/Lesson/Lesson.layout.tsx", () => {
-        route("", "modules/Courses/Lesson/Lesson.page.tsx", {
-          index: true,
-        });
-      });
+      route("course/:courseId/lesson/:lessonId", "modules/Courses/Lesson/Lesson.page.tsx");
       route("settings", "modules/Dashboard/Settings/Settings.layout.tsx", () => {
         route("", "modules/Dashboard/Settings/Settings.page.tsx", {
           index: true,

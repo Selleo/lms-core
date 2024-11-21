@@ -31,6 +31,9 @@ type FillInTheBlanksDndProps = {
   isQuizSubmitted?: boolean;
   solutionExplanation?: string | null;
   isPassed: boolean | null;
+  lessonItemId: string;
+  isCompleted: boolean;
+  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
 export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
@@ -42,6 +45,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   isQuizSubmitted,
   solutionExplanation,
   isPassed,
+  lessonItemId,
+  isCompleted,
+  updateLessonItemCompletion,
 }) => {
   const [words, setWords] = useState<DndWord[]>(answers);
   const [currentlyDraggedWord, setCurrentlyDraggedWord] = useState<DndWord | null>(null);
@@ -184,6 +190,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
           if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
             sendAnswer(sortedWords);
+            if (!isCompleted && !isQuiz && sortedWords.length === maxAnswersAmount) {
+              updateLessonItemCompletion(lessonItemId);
+            }
           }
         }
 
@@ -204,6 +213,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
         if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
           sendAnswer(sortedWords);
+          if (!isCompleted && !isQuiz && sortedWords.length === maxAnswersAmount) {
+            updateLessonItemCompletion(lessonItemId);
+          }
         }
       }
 

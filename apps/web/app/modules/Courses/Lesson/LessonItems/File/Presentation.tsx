@@ -6,24 +6,28 @@ import { useIntersection } from "react-use";
 
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
 
-import { useCompletedLessonItemsStore } from "../LessonItemStore";
-
 type PresentationProps = {
   url: string;
   presentationId: string;
   isAdmin: boolean;
+  isCompleted: boolean;
+  lessonItemId: string;
+  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
-export default function Presentation({ url, presentationId, isAdmin }: PresentationProps) {
+export default function Presentation({
+  url,
+  presentationId,
+  isAdmin,
+  isCompleted,
+  lessonItemId,
+  updateLessonItemCompletion,
+}: PresentationProps) {
   const intersectionRef = useRef<HTMLDivElement>(null);
   const { lessonId, courseId = "" } = useParams<{
     lessonId: string;
     courseId: string;
   }>();
-  const {
-    isLessonItemCompleted: isPresentationCompleted,
-    markLessonItemAsCompleted: markPresentationAsCompleted,
-  } = useCompletedLessonItemsStore();
   const { mutate: markLessonItemAsCompleted } = useMarkLessonItemAsCompleted();
   const intersection = useIntersection(intersectionRef, {
     root: null,
@@ -34,17 +38,12 @@ export default function Presentation({ url, presentationId, isAdmin }: Presentat
   useEffect(() => {
     if (!lessonId) throw new Error("Lesson ID not found");
 
-    const isCompleted = isPresentationCompleted(presentationId);
     const isInViewport = intersection && intersection.intersectionRatio === 1;
 
     const loadTimeout = setTimeout(() => {
       if (isInViewport && !isCompleted && !isAdmin) {
-        markPresentationAsCompleted({
-          lessonItemId: presentationId,
-          lessonId,
-          courseId,
-        });
         markLessonItemAsCompleted({ id: presentationId, lessonId, courseId });
+        updateLessonItemCompletion(lessonItemId);
       }
     }, 200);
 
@@ -55,9 +54,10 @@ export default function Presentation({ url, presentationId, isAdmin }: Presentat
     presentationId,
     markLessonItemAsCompleted,
     intersection,
-    isPresentationCompleted,
-    markPresentationAsCompleted,
     courseId,
+    isCompleted,
+    lessonItemId,
+    updateLessonItemCompletion,
   ]);
 
   const docs = [

@@ -72,6 +72,32 @@ export class LessonsRepository {
     return lesson;
   }
 
+  async getLesson(courseId: UUIDType, lessonId: UUIDType) {
+    const [lesson] = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        imageUrl: sql<string>`${lessons.imageUrl}`,
+        type: sql<string>`${lessons.type}`,
+        isFree: courseLessons.isFree,
+      })
+      .from(lessons)
+      .innerJoin(
+        courseLessons,
+        and(eq(courseLessons.lessonId, lessons.id), eq(courseLessons.courseId, courseId)),
+      )
+      .where(
+        and(
+          eq(lessons.id, lessonId),
+          eq(lessons.archived, false),
+          eq(lessons.state, STATES.published),
+        ),
+      );
+
+    return lesson;
+  }
+
   async getQuestionItems(
     lessonId: UUIDType,
     studentId: UUIDType,
@@ -113,7 +139,7 @@ export class LessonsRepository {
       .orderBy(lessonItems.displayOrder);
   }
 
-  async getLessonItems(lessonId: UUIDType) {
+  async getLessonItems(lessonId: UUIDType, courseId: UUIDType) {
     return await this.db
       .select({
         lessonItemType: lessonItems.lessonItemType,
@@ -122,6 +148,7 @@ export class LessonsRepository {
         textBlockData: textBlocks,
         fileData: files,
         displayOrder: lessonItems.displayOrder,
+        isCompleted: sql<boolean>`CASE WHEN ${studentCompletedLessonItems.id} IS NOT NULL THEN true ELSE false END`,
       })
       .from(lessonItems)
       .leftJoin(
@@ -146,6 +173,14 @@ export class LessonsRepository {
           eq(lessonItems.lessonItemId, files.id),
           eq(lessonItems.lessonItemType, "file"),
           eq(files.state, STATES.published),
+        ),
+      )
+      .leftJoin(
+        studentCompletedLessonItems,
+        and(
+          eq(studentCompletedLessonItems.lessonItemId, lessonItems.id),
+          eq(studentCompletedLessonItems.lessonId, lessonId),
+          eq(studentCompletedLessonItems.courseId, courseId),
         ),
       )
       .where(and(eq(lessonItems.lessonId, lessonId)))

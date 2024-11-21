@@ -2,14 +2,12 @@ import { useParams } from "@remix-run/react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { useLesson } from "~/api/queries";
 import { Textarea } from "~/components/ui/textarea";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 
 import { FillInTheBlanksDnd } from "../FillInTheBlanks/dnd/FillInTheBlanksDnd";
-import { FillTheBlanks } from "../FillInTheBlanks/FillInTheBlanks";
-import { useCompletedLessonItemsStore } from "../LessonItemStore";
+import { FillInTheBlanks } from "../FillInTheBlanks/FillInTheBlanks";
 import { useQuestionQuery } from "../useQuestionQuery";
 import { getQuestionDefaultValue } from "../utils";
 
@@ -22,23 +20,31 @@ import type { GetLessonResponse } from "~/api/generated-api";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type QuestionProps = {
-  id: string;
+  lessonItemId: string;
   content: GetLessonResponse["data"]["lessonItems"][number]["content"];
   questionsArray: string[];
   isSubmitted?: boolean;
+  lessonType: string;
+  isCompleted: boolean;
+  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
-export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps) => {
+export const Question = ({
+  lessonItemId,
+  isSubmitted,
+  content,
+  questionsArray,
+  lessonType,
+  isCompleted,
+  updateLessonItemCompletion,
+}: QuestionProps) => {
   const { lessonId = "", courseId = "" } = useParams();
   const { register, getValues } = useFormContext<TQuestionsForm>();
   const { isAdmin } = useUserRole();
-  const { data: lesson } = useLesson(lessonId, courseId);
 
-  const isQuiz = lesson?.type === "quiz";
+  const isQuiz = lessonType === "quiz";
 
   if (!lessonId) throw new Error("Lesson ID not found");
-
-  const { markLessonItemAsCompleted } = useCompletedLessonItemsStore();
 
   const questionId = content.id;
   const isSingleQuestion = "questionType" in content && content.questionType === "single_choice";
@@ -66,15 +72,10 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
   }, [isQuiz, isSubmitted]);
 
   const handleClick = async (id: string) => {
-    await markLessonItemAsCompleted({
-      lessonItemId: questionId,
-      lessonId,
-      courseId,
-    });
-
     if (isSingleQuestion) {
       setSelectedOption([id]);
       await sendAnswer([id]);
+      !isCompleted && !isQuiz && updateLessonItemCompletion(lessonItemId);
     } else {
       let newSelectedOptions: string[];
 
@@ -86,16 +87,13 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
 
       setSelectedOption(newSelectedOptions);
       await sendAnswer(newSelectedOptions);
+      !isCompleted && !isQuiz && updateLessonItemCompletion(lessonItemId);
     }
   };
 
   const handleOpenAnswerRequest = async (e: ChangeEvent<HTMLTextAreaElement>) => {
-    await markLessonItemAsCompleted({
-      lessonItemId: questionId,
-      lessonId,
-      courseId,
-    });
     await sendOpenAnswer(e.target.value);
+    !isCompleted && !isQuiz && updateLessonItemCompletion(lessonItemId);
   };
 
   const canRenderCorrectAnswers =
@@ -159,17 +157,20 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
 
     case isTextFillInTheBlanks:
       return (
-        <FillTheBlanks
+        <FillInTheBlanks
           isQuiz={isQuiz}
           questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
           content={content.questionBody}
           sendAnswer={sendAnswer}
           answers={content.questionAnswers}
-          isQuizSubmitted={lesson?.isSubmitted}
+          isQuizSubmitted={isSubmitted}
           solutionExplanation={
             "solutionExplanation" in content ? content.solutionExplanation : null
           }
           isPassed={!!content.passQuestion}
+          lessonItemId={lessonItemId}
+          isCompleted={isCompleted}
+          updateLessonItemCompletion={updateLessonItemCompletion}
         />
       );
 
@@ -181,11 +182,14 @@ export const Question = ({ isSubmitted, content, questionsArray }: QuestionProps
           content={content.questionBody}
           sendAnswer={sendAnswer}
           answers={fillInTheBlanksDndData}
-          isQuizSubmitted={lesson?.isSubmitted}
+          isQuizSubmitted={isSubmitted}
           solutionExplanation={
             "solutionExplanation" in content ? content.solutionExplanation : null
           }
           isPassed={!!content.passQuestion}
+          lessonItemId={lessonItemId}
+          isCompleted={isCompleted}
+          updateLessonItemCompletion={updateLessonItemCompletion}
         />
       );
 

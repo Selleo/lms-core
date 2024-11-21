@@ -64,6 +64,7 @@ export const lessonItemSchema = Type.Object({
 
 export const lessonItemWithContent = Type.Object({
   ...lessonItemSchema.properties,
+  isCompleted: Type.Boolean(),
   questionData: Type.Union([questionSchema, Type.Null()]),
   textBlockData: Type.Union([textBlockSchema, Type.Null()]),
   fileData: Type.Union([lessonItemFileSchema, Type.Null()]),
@@ -142,6 +143,7 @@ export const lessonItemSelectSchema = Type.Object({
   lessonItemType: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   passQuestion: Type.Optional(Type.Union([Type.Null(), Type.Unknown()])),
+  isCompleted: Type.Optional(Type.Boolean()),
   content: Type.Union([questionContentResponse, textBlockContentResponse, fileContentResponse]),
 });
 

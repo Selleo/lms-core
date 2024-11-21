@@ -6,53 +6,42 @@ import {
   NotAcceptableException,
   NotFoundException,
 } from "@nestjs/common";
-import { and, eq, inArray, sql } from "drizzle-orm";
 
-import { DatabasePg, type UUIDType } from "src/common";
+import { DatabasePg } from "src/common";
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
-import {
-  courseLessons,
-  lessonItems,
-  lessons,
-  questionAnswerOptions,
-  questions,
-  studentQuestionAnswers,
-} from "src/storage/schema";
 import { StudentCompletedLessonItemsService } from "src/studentCompletedLessonItem/studentCompletedLessonItems.service";
 
+import { QuestionsRepository } from "./questions.repository";
 import { QUESTION_TYPE } from "./schema/questions.types";
 
 import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class QuestionsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly studentCompletedLessonItemsService: StudentCompletedLessonItemsService,
+    private readonly questionsRepository: QuestionsRepository,
     private readonly lessonsRepository: LessonsRepository,
   ) {}
 
   async questionAnswer(answerQuestion: AnswerQuestionSchema, userId: string) {
     return await this.db.transaction(async (trx) => {
-      const questionData: QuestionSchema = await this.fetchQuestionData(trx, answerQuestion);
+      const questionData: QuestionSchema = await this.questionsRepository.fetchQuestionData(
+        answerQuestion,
+        trx,
+      );
 
       if (!questionData || !questionData.questionId) {
         throw new NotFoundException("Question not found");
       }
 
-      const [lesson] = await trx
-        .select({
-          lessonType: lessons.type,
-          isFree: sql<boolean>`COALESCE(${courseLessons.isFree}, FALSE)`,
-        })
-        .from(lessons)
-        .leftJoin(courseLessons, eq(courseLessons.lessonId, lessons.id))
-        .where(
-          and(
-            eq(lessons.id, answerQuestion.lessonId),
-            eq(courseLessons.courseId, answerQuestion.courseId),
-          ),
-        );
+      const lesson = await this.lessonsRepository.getLesson(
+        answerQuestion.courseId,
+        answerQuestion.lessonId,
+      );
 
       const quizProgress = await this.lessonsRepository.getQuizProgress(
         answerQuestion.courseId,
@@ -60,15 +49,15 @@ export class QuestionsService {
         userId,
       );
 
-      if (lesson.lessonType === "quiz" && quizProgress?.quizCompleted)
+      if (lesson.type === "quiz" && quizProgress?.quizCompleted)
         throw new ConflictException("Quiz already completed");
 
-      const lastAnswerId = await this.findExistingAnswer(
-        trx,
+      const lastAnswerId = await this.questionsRepository.findExistingAnswer(
         userId,
         questionData.questionId,
         questionData.lessonId,
         answerQuestion.courseId,
+        trx,
       );
 
       const questionTypeHandlers = {
@@ -97,70 +86,8 @@ export class QuestionsService {
     });
   }
 
-  private async fetchQuestionData(
-    trx: any,
-    answerQuestion: AnswerQuestionSchema,
-  ): Promise<QuestionSchema> {
-    const [questionData] = await trx
-      .select({
-        lessonId: lessons.id,
-        questionId: questions.id,
-        questionType: questions.questionType,
-        lessonItemAssociationId: lessonItems.id,
-      })
-      .from(lessons)
-      .innerJoin(
-        lessonItems,
-        and(
-          eq(lessonItems.lessonId, answerQuestion.lessonId),
-          eq(lessonItems.lessonItemId, answerQuestion.questionId),
-        ),
-      )
-      .leftJoin(
-        questions,
-        and(
-          eq(questions.id, lessonItems.lessonItemId),
-          eq(questions.archived, false),
-          eq(questions.state, "published"),
-        ),
-      )
-      .where(
-        and(
-          eq(lessons.id, lessonItems.lessonId),
-          eq(lessons.archived, false),
-          eq(lessons.state, "published"),
-        ),
-      );
-
-    return questionData;
-  }
-
-  private async findExistingAnswer(
-    trx: any,
-    userId: UUIDType,
-    questionId: UUIDType,
-    lessonId: UUIDType,
-    courseId: UUIDType,
-  ): Promise<string | null> {
-    const [existingAnswer] = await trx
-      .select({
-        id: studentQuestionAnswers.id,
-      })
-      .from(studentQuestionAnswers)
-      .where(
-        and(
-          eq(studentQuestionAnswers.studentId, userId),
-          eq(studentQuestionAnswers.questionId, questionId),
-          eq(studentQuestionAnswers.lessonId, lessonId),
-          eq(studentQuestionAnswers.courseId, courseId),
-        ),
-      );
-
-    return existingAnswer?.id;
-  }
-
   private async handleChoiceAnswer(
-    trx: any,
+    trx: PostgresJsDatabase<typeof schema>,
     questionData: QuestionSchema,
     answerQuestion: AnswerQuestionSchema,
     lastAnswerId: string | null,
@@ -171,36 +98,32 @@ export class QuestionsService {
     }
 
     if (answerQuestion.answer.length < 1)
-      return await this.upsertAnswer(
-        trx,
+      return await this.questionsRepository.upsertAnswer(
         answerQuestion.courseId,
         questionData.lessonId,
         questionData.questionId,
         userId,
         lastAnswerId,
         [],
+        trx,
       );
 
-    const answers: { answer: string }[] = await trx
-      .select({
-        answer: questionAnswerOptions.optionText,
-      })
-      .from(questionAnswerOptions)
-      .where(
-        and(
-          eq(questionAnswerOptions.questionId, questionData.questionId),
-          inArray(
-            questionAnswerOptions.id,
-            answerQuestion.answer.map((a) => {
-              if (typeof a !== "string") {
-                return a.value;
-              }
+    const answerList = answerQuestion.answer.map((a) => {
+      if (typeof a !== "string") {
+        return a.value;
+      }
 
-              return a;
-            }),
-          ),
-        ),
-      );
+      return a;
+    });
+
+    if (!answerList || answerList.length === 0)
+      throw new NotFoundException("User answers not found");
+
+    const answers: { answer: string }[] = await this.questionsRepository.getQuestionAnswers(
+      answerQuestion.questionId,
+      answerList,
+      trx,
+    );
 
     if (!answers || answers.length !== answerQuestion.answer.length)
       throw new NotFoundException("Answers not found");
@@ -210,19 +133,19 @@ export class QuestionsService {
       return acc;
     }, [] as string[]);
 
-    await this.upsertAnswer(
-      trx,
+    await this.questionsRepository.upsertAnswer(
       answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
       lastAnswerId,
       studentAnswer,
+      trx,
     );
   }
 
   private async handleFillInTheBlanksAnswer(
-    trx: any,
+    trx: PostgresJsDatabase<typeof schema>,
     questionData: QuestionSchema,
     answerQuestion: AnswerQuestionSchema,
     lastAnswerId: string | null,
@@ -239,19 +162,19 @@ export class QuestionsService {
       return acc;
     }, [] as string[]);
 
-    await this.upsertAnswer(
-      trx,
+    await this.questionsRepository.upsertAnswer(
       answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
       lastAnswerId,
       studentAnswer,
+      trx,
     );
   }
 
   private async handleOpenAnswer(
-    trx: any,
+    trx: PostgresJsDatabase<typeof schema>,
     questionData: QuestionSchema,
     answerQuestion: AnswerQuestionSchema,
     lastAnswerId: string | null,
@@ -265,50 +188,21 @@ export class QuestionsService {
     if (answerQuestion.answer.length < 1) {
       if (!lastAnswerId) return;
 
-      return await trx
-        .delete(studentQuestionAnswers)
-        .where(eq(studentQuestionAnswers.id, lastAnswerId));
+      await this.questionsRepository.deleteAnswer(lastAnswerId, trx);
+      return;
     }
 
-    const studentAnswer = [`'1'`, `'${answerQuestion.answer}'`];
+    const studentAnswer = [`'0'`, `'${answerQuestion.answer}'`];
 
-    await this.upsertAnswer(
-      trx,
+    await this.questionsRepository.upsertAnswer(
       answerQuestion.courseId,
       questionData.lessonId,
       questionData.questionId,
       userId,
       lastAnswerId,
       studentAnswer,
+      trx,
     );
-  }
-
-  private async upsertAnswer(
-    trx: any,
-    courseId: UUIDType,
-    lessonId: UUIDType,
-    questionId: UUIDType,
-    userId: UUIDType,
-    answerId: UUIDType | null,
-    answer: string[],
-  ): Promise<void> {
-    const jsonBuildObjectArgs = answer.join(",");
-    if (answerId) {
-      await trx
-        .update(studentQuestionAnswers)
-        .set({
-          answer: sql`json_build_object(${sql.raw(jsonBuildObjectArgs)})`,
-        })
-        .where(eq(studentQuestionAnswers.id, answerId));
-      return;
-    }
-
-    await trx.insert(studentQuestionAnswers).values({
-      questionId,
-      answer: sql`json_build_object(${sql.raw(jsonBuildObjectArgs)})`,
-      studentId: userId,
-      lessonId,
-      courseId,
-    });
+    return;
   }
 }

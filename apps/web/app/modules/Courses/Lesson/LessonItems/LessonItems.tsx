@@ -6,9 +6,17 @@ type LessonItemsProps = {
   lessonItems: GetLessonResponse["data"]["lessonItems"];
   isSubmitted: boolean;
   questions: string[];
+  lessonType: string;
+  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
-export const LessonItems = ({ lessonItems, questions, isSubmitted }: LessonItemsProps) => {
+export const LessonItems = ({
+  lessonItems,
+  questions,
+  isSubmitted,
+  lessonType,
+  updateLessonItemCompletion,
+}: LessonItemsProps) => {
   return lessonItems.map((lessonItem, index) => {
     return (
       <LessonItem
@@ -16,6 +24,8 @@ export const LessonItems = ({ lessonItems, questions, isSubmitted }: LessonItems
         key={index}
         lessonItem={lessonItem}
         questionsArray={questions}
+        lessonType={lessonType}
+        updateLessonItemCompletion={updateLessonItemCompletion}
       />
     );
   });

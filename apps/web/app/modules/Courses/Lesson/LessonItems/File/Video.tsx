@@ -3,33 +3,38 @@ import ReactPlayer from "react-player/lazy";
 
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
 
-import { useCompletedLessonItemsStore } from "../LessonItemStore";
-
 type VideoProps = {
   url: string;
   videoId: string;
   isAdmin: boolean;
   type: string;
+  isCompleted: boolean;
+  lessonItemId: string;
+  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
-export default function Video({ url, videoId, isAdmin, type }: VideoProps) {
+export default function Video({
+  url,
+  videoId,
+  isAdmin,
+  type,
+  isCompleted,
+  lessonItemId,
+  updateLessonItemCompletion,
+}: VideoProps) {
   const { lessonId, courseId = "" } = useParams<{
     lessonId: string;
     courseId: string;
   }>();
   const { mutate: markLessonItemAsCompleted } = useMarkLessonItemAsCompleted();
-  const {
-    isLessonItemCompleted: isVideoCompleted,
-    markLessonItemAsCompleted: markVideoAsCompleted,
-  } = useCompletedLessonItemsStore();
 
   if (!lessonId) throw new Error("Lesson ID not found");
 
   const handleMarkLessonItemAsCompleted = () => {
-    if (isVideoCompleted(videoId)) return;
+    if (isCompleted) return;
 
-    markVideoAsCompleted({ lessonItemId: videoId, lessonId, courseId });
     markLessonItemAsCompleted({ id: videoId, lessonId, courseId });
+    updateLessonItemCompletion(lessonItemId);
   };
 
   const isExternalVideo = type === "external_video";
@@ -37,7 +42,11 @@ export default function Video({ url, videoId, isAdmin, type }: VideoProps) {
   return (
     <div className="w-full h-full flex justify-center items-center">
       {isExternalVideo ? (
-        <ReactPlayer url={url} controls />
+        <ReactPlayer
+          url={url}
+          controls
+          {...(!isAdmin && { onEnded: handleMarkLessonItemAsCompleted })}
+        />
       ) : (
         <video
           width="100%"
