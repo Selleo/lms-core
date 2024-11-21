@@ -72,10 +72,8 @@ class EnrollmentActions {
   }
 
   async unenrollFromCourse(): Promise<void> {
-    const unenrollButton = this.page.getByRole("button", { name: "Unenroll" });
-    await unenrollButton.waitFor({ state: "visible", timeout: 10000 });
-    await expect(unenrollButton).toBeVisible();
-    await unenrollButton.click();
+    await this.page.getByRole("button", { name: "Unenroll" }).click();
+    await this.page.waitForTimeout(1000);
     await expect(this.page.getByRole("button", { name: /Enroll - / })).toBeVisible();
   }
 }
