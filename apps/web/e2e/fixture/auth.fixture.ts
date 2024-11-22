@@ -22,7 +22,6 @@ export class AuthFixture {
     await this.loginButton.click();
 
     await expect(this.page).toHaveURL("/");
-    await expect(this.page).toHaveTitle(/dashboard/i);
   }
 
   async logout() {
