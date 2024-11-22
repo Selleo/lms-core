@@ -43,7 +43,7 @@ export const niceCourses: NiceCourseData[] = [
             itemType: LESSON_ITEM_TYPE.file.key,
             title: "HTML Elements Video",
             type: LESSON_FILE_TYPE.external_video.key,
-            url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4w",
             state: STATUS.published.key,
           },
           {
@@ -699,7 +699,7 @@ export const niceCourses: NiceCourseData[] = [
           {
             itemType: LESSON_ITEM_TYPE.file.key,
             type: LESSON_FILE_TYPE.external_video.key,
-            url: "https://example.com/javascript-intro-video",
+            url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
             title: "Introduction to JavaScript",
             state: STATUS.published.key,
           },
@@ -785,7 +785,7 @@ export const niceCourses: NiceCourseData[] = [
             itemType: LESSON_ITEM_TYPE.file.key,
             title: "Java Basics Video Tutorial",
             type: LESSON_FILE_TYPE.external_video.key,
-            url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
             state: STATUS.published.key,
           },
           {

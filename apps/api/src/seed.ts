@@ -8,7 +8,7 @@ import postgres from "postgres";
 import hashPassword from "./common/helpers/hashPassword";
 import { STATES } from "./common/states";
 import { e2eCourses } from "./e2e-data-seeds";
-import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
+import { LESSON_FILE_TYPE, LESSON_ITEM_TYPE } from "./lessons/lesson.type";
 import { niceCourses } from "./nice-data-seeds";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
@@ -40,6 +40,26 @@ if (!("DATABASE_URL" in process.env)) {
 const connectionString = process.env.DATABASE_URL!;
 const sql = postgres(connectionString);
 const db = drizzle(sql) as DatabasePg;
+
+const external_video_urls = [
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+];
+
+const external_presentation_urls = [
+  "https://res.cloudinary.com/dinpapxzv/raw/upload/v1727104719/presentation_gp0o3d.pptx",
+];
 
 async function createOrFindUser(email: string, password: string, userData: any) {
   const [existingUser] = await db.select().from(users).where(eq(users.email, email));
@@ -95,7 +115,11 @@ async function createUsers(count: number) {
   );
 }
 
-async function createEntities(table: any, count: number, dataGenerator: () => any) {
+async function createEntities<T = any>(
+  table: any,
+  count: number,
+  dataGenerator: () => T,
+): Promise<T[]> {
   const entities = Array.from({ length: count }, dataGenerator);
   return db.insert(table).values(entities).returning();
 }
@@ -357,16 +381,32 @@ async function seed() {
     }
     console.log("Created question answer options");
 
-    const createdFiles = await createEntities(files, 10, () => ({
-      id: faker.string.uuid(),
-      title: faker.lorem.sentence(3),
-      type: faker.helpers.arrayElement(["presentation", "external_presentation", "video"]),
-      url: faker.internet.url(),
-      state: faker.helpers.arrayElement([STATUS.draft.key, STATUS.published.key]),
-      authorId: adminUser.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }));
+    const createdFiles = await createEntities(files, 10, () => {
+      const fileType = faker.helpers.arrayElement([
+        LESSON_FILE_TYPE.external_presentation.key,
+        LESSON_FILE_TYPE.external_video.key,
+      ]);
+
+      let url;
+      if (fileType === LESSON_FILE_TYPE.external_video.key) {
+        url = faker.helpers.arrayElement(external_video_urls);
+      } else if (fileType === LESSON_FILE_TYPE.external_presentation.key) {
+        url = faker.helpers.arrayElement(external_presentation_urls);
+      } else {
+        url = faker.internet.url();
+      }
+
+      return {
+        id: faker.string.uuid(),
+        title: faker.lorem.sentence(3),
+        type: fileType,
+        url: url,
+        state: faker.helpers.arrayElement([STATUS.draft.key, STATUS.published.key]),
+        authorId: adminUser.id,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    });
     const createdFilesStatePublished = createdFiles.filter(
       (file) => file.state === STATES.published,
     );

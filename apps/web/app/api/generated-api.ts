@@ -1190,6 +1190,10 @@ export interface GetUserStatisticsResponse {
       type?: string;
       createdAt?: string;
       quizScore?: number;
+      /** @format uuid */
+      courseId: string;
+      courseTitle: string;
+      courseDescription: string;
     };
   };
 }

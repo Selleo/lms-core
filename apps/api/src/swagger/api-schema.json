@@ -6977,13 +6977,26 @@
                   },
                   "quizScore": {
                     "type": "number"
+                  },
+                  "courseId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "courseTitle": {
+                    "type": "string"
+                  },
+                  "courseDescription": {
+                    "type": "string"
                   }
                 },
                 "required": [
                   "id",
                   "title",
                   "description",
-                  "itemsCount"
+                  "itemsCount",
+                  "courseId",
+                  "courseTitle",
+                  "courseDescription"
                 ]
               }
             },

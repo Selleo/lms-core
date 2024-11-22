@@ -57,6 +57,9 @@ export class StatisticsService {
       lastLesson: {
         ...lastLesson,
         enrolled: lastLessonDetails.enrolled,
+        courseId: lastLessonItem.courseId,
+        courseTitle: lastLessonItem.courseTitle,
+        courseDescription: lastLessonItem.courseDescription,
       },
       streak: {
         current: activityStats.currentStreak ?? 0,

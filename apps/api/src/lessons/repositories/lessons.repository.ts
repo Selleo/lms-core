@@ -6,6 +6,7 @@ import { STATES } from "src/common/states";
 import { QUESTION_TYPE } from "src/questions/schema/questions.types";
 import {
   courseLessons,
+  courses,
   files,
   lessonItems,
   lessons,
@@ -566,8 +567,11 @@ export class LessonsRepository {
         id: studentCompletedLessonItems.lessonItemId,
         lessonId: studentCompletedLessonItems.lessonId,
         courseId: studentCompletedLessonItems.courseId,
+        courseTitle: sql<string>`${courses.title}`,
+        courseDescription: sql<string>`${courses.description}`,
       })
       .from(studentCompletedLessonItems)
+      .leftJoin(courses, eq(studentCompletedLessonItems.courseId, courses.id))
       .where(eq(studentCompletedLessonItems.studentId, userId))
       .orderBy(desc(studentCompletedLessonItems.updatedAt))
       .limit(1);

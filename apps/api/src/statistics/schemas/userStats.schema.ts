@@ -1,5 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
+import { UUIDSchema } from "src/common";
 import { lessonSchema } from "src/lessons/schemas/lesson.schema";
 
 import type { Static } from "@sinclair/typebox";
@@ -45,7 +46,12 @@ export const UserStatsSchema = Type.Object({
   courses: CourseStatsSchema,
   lessons: LessonsStatsSchema,
   streak: StreakSchema,
-  lastLesson: lessonSchema,
+  lastLesson: Type.Object({
+    ...lessonSchema.properties,
+    courseId: UUIDSchema,
+    courseTitle: Type.String(),
+    courseDescription: Type.String(),
+  }),
 });
 
 const UserStatisticSchema = Type.Object({
