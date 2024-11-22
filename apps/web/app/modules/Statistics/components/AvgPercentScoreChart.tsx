@@ -89,7 +89,7 @@ export const AvgPercentScoreChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {isEmptyChart ? "No data" : label}
+                          {isEmptyChart ? "No data" : `${label}%`}
                         </tspan>
                       </text>
                     );

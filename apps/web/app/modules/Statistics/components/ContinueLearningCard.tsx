@@ -6,7 +6,7 @@ import type { GetUserStatisticsResponse } from "~/api/generated-api";
 
 type ContinueLearningCardProps = {
   isLoading: boolean;
-  lesson: GetUserStatisticsResponse["data"]["lastLesson"];
+  lesson: GetUserStatisticsResponse["data"]["lastLesson"] | undefined;
 };
 
 export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLearningCardProps) => {
@@ -35,14 +35,17 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
           {lesson?.courseDescription}
         </p>
       </div>
-      <LessonCard
-        {...lesson}
-        isAdmin={isAdmin}
-        isEnrolled={!!lesson?.enrolled}
-        itemsCount={lesson?.itemsCount}
-        itemsCompletedCount={lesson?.itemsCompletedCount}
-        index={1}
-      />
+      {lesson && (
+        <LessonCard
+          {...lesson}
+          customHref={`/course/${lesson.courseId}/lesson/${lesson.id}`}
+          isAdmin={isAdmin}
+          isEnrolled={!!lesson.enrolled}
+          itemsCount={lesson.itemsCount}
+          itemsCompletedCount={lesson.itemsCompletedCount}
+          index={1}
+        />
+      )}
     </div>
   );
 };

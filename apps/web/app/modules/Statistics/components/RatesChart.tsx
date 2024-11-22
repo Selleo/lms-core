@@ -135,7 +135,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
           return (
             <ChartLegendBadge
               key={config.label as string}
-              label={config.label}
+              label={`${config.label} ${resourceName}`}
               dotColor={config.color}
             />
           );

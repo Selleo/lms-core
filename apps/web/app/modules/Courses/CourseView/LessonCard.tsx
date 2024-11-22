@@ -21,6 +21,7 @@ type LessonCardProps = Lesson & {
   isEnrolled: boolean;
   isAdmin: boolean;
   isFree?: boolean;
+  customHref?: string;
 };
 
 const buttonVariants = cva("w-full transition", {
@@ -83,6 +84,7 @@ export const LessonCard = ({
   lessonProgress = "not_started",
   title,
   type,
+  customHref,
 }: LessonCardProps) => {
   const cardClasses = buttonVariants({
     className: cn({
@@ -97,6 +99,8 @@ export const LessonCard = ({
     type,
   );
 
+  const hrefToLessonPage = customHref ?? `lesson/${lessonId}`;
+
   return (
     <Card className={cardClasses}>
       <CardContent className="p-4 h-full">
@@ -104,7 +108,7 @@ export const LessonCard = ({
           className={cn("flex flex-col h-full gap-4", {
             "cursor-not-allowed": !isEnrolled && !isFree,
           })}
-          to={isEnrolled || isFree ? `lesson/${lessonId}` : "#"}
+          to={isEnrolled || isFree ? hrefToLessonPage : "#"}
           onClick={(e) => !isEnrolled && !isFree && e.preventDefault()}
           aria-disabled={!isEnrolled && !isFree}
         >

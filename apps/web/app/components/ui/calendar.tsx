@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck - react-day-picker untyped library
 import { DayPicker } from "react-day-picker";
 
 import { Checkmark } from "~/assets/svgs";
@@ -12,10 +14,14 @@ export type CalendarProps = ComponentProps<typeof DayPicker> & {
 };
 
 type CustomDayContentProps = DayProps & {
+  "data-day": string;
   dates: string[] | undefined;
+  day: { outside: boolean | undefined };
+  children: { props: { children: string } };
 };
 
 function CustomDayContent({ dates, ...props }: CustomDayContentProps) {
+  console.log({ props });
   if (dates?.includes(props?.["data-day"])) {
     const classes = cn(
       "text-primary-foreground hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground p-0 border aspect-square size-8 text-sm flex items-center justify-center has-[button]:hover:!bg-success-200 rounded-full has-[button]:hover:aria-selected:!bg-success-500 has-[button]:hover:text-accent-foreground has-[button]:hover:aria-selected:text-primary-foreground",
@@ -96,8 +102,8 @@ function Calendar({
         Day: ({ ...props }) => {
           return <CustomDayContent dates={dates} {...props} />;
         },
-        PreviousMonthButton: ({ ...props }) => <div className="sr-only" />,
-        NextMonthButton: ({ ...props }) => <div className="sr-only" />,
+        PreviousMonthButton: () => <div className="sr-only" />,
+        NextMonthButton: () => <div className="sr-only" />,
       }}
       {...props}
     />

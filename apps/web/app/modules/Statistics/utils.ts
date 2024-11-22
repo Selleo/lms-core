@@ -1,5 +1,6 @@
 type Data =
   | Record<string, { started: number; completed: number; completionRate: number }>
+  | object
   | undefined;
 
 export const parseRatesChartData = (data: Data) => {
