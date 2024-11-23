@@ -579,6 +579,30 @@ export class LessonsRepository {
     return lastLessonItem;
   }
 
+  async getQuizQuestionsAnswers(
+    courseId: UUIDType,
+    lessonId: UUIDType,
+    userId: UUIDType,
+    onlyCorrect = false,
+  ) {
+    const conditions = [
+      eq(studentQuestionAnswers.courseId, courseId),
+      eq(studentQuestionAnswers.lessonId, lessonId),
+      eq(studentQuestionAnswers.studentId, userId),
+    ];
+
+    if (onlyCorrect) conditions.push(eq(studentQuestionAnswers.isCorrect, true));
+
+    return this.db
+      .select({
+        questionId: studentQuestionAnswers.questionId,
+        isCorrect: studentQuestionAnswers.isCorrect,
+      })
+      .from(studentQuestionAnswers)
+      .where(and(...conditions))
+      .orderBy(studentQuestionAnswers.questionId);
+  }
+
   async removeQuestionsAnswer(
     courseId: UUIDType,
     lessonId: UUIDType,

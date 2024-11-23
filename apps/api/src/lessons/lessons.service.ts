@@ -236,16 +236,15 @@ export class LessonsService {
         );
       });
 
-      const correctAnswerCount = questionLessonItems
-        .map(
-          (item) =>
-            item.content.questionAnswers.filter((answer) => Boolean(answer.isCorrect)).length,
-        )
-        .reduce((acc, count) => acc + count, 0);
-
+      const correctAnswers = await this.lessonsRepository.getQuizQuestionsAnswers(
+        courseId,
+        lessonId,
+        userId,
+        true,
+      );
+      const correctAnswerCount = correctAnswers.length;
       const totalQuestions = questionLessonItems.length;
       const wrongAnswerCount = totalQuestions - correctAnswerCount;
-
       const score = Math.round((correctAnswerCount / totalQuestions) * 100);
 
       this.eventBus.publish(
