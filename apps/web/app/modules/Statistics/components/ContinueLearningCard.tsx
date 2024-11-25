@@ -30,11 +30,9 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
 
   if (!lesson) {
     return (
-      <div className="w-full h-full items-center justify-between flex-col md:gap-8 2xl:flex-col 2xl:gap-y-4 p-8 gap-y-4 bg-white rounded-lg drop-shadow-card 2xl:max-w-[296px] flex flex-col">
+      <div className="w-full h-full items-center justify-between md:gap-8 2xl:flex-col 2xl:gap-y-4 p-8 gap-y-4 bg-white rounded-lg drop-shadow-card 2xl:max-w-[296px] flex flex-col">
         <div className="text-center md:w-fit 2xl:w-full">
-          <h2 className="body-lg-md text-neutral-950">
-            Currently don&apos;t have any enrolled lessons
-          </h2>
+          <h2 className="body-lg-md text-neutral-950">Currently have no lessons to continue.</h2>
         </div>
         <Icon name="NoData" />
         <Link to="/courses" className="w-full md:w-min 2xl:w-full">

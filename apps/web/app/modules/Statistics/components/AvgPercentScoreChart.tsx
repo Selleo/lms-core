@@ -44,7 +44,7 @@ export const AvgPercentScoreChart = ({
 
   if (isLoading) {
     return (
-      <div className="w-full h-auto md:w-[calc(50%-8px)] 2xl:max-w-[436px] bg-white items-center rounded-lg gap-6 drop-shadow-card p-8 flex flex-col">
+      <div className="w-full h-auto md:w-[calc(50%-8px)] bg-white items-center rounded-lg gap-6 drop-shadow-card p-8 flex flex-col">
         <Skeleton className="max-w-[240px] w-full h-[30px] rounded-lg" />
         <div className="grid place-items-center h-[250px]">
           <Skeleton className="aspect-square max-h-[200px] w-full h-full rounded-full" />
@@ -58,7 +58,7 @@ export const AvgPercentScoreChart = ({
   }
 
   return (
-    <div className="w-full md:w-[calc(50%-8px)] h-auto 2xl:max-w-[436px] bg-white rounded-lg gap-6 drop-shadow-card p-8 flex flex-col">
+    <div className="w-full md:w-[calc(50%-8px)] bg-white rounded-lg gap-6 drop-shadow-card py-8 px-8 flex flex-col">
       <h2 className="body-lg-md text-neutral-950 text-center">{title}</h2>
       <div className="grid place-items-center h-full">
         <ChartContainer

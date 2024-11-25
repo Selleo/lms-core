@@ -87,9 +87,9 @@ export default function StatisticsPage() {
           <Gravatar email={user?.email} />
         </Avatar>
       </div>
-      <div className="flex items-center flex-col-reverse 2xl:flex-row gap-y-4 h-full gap-x-7 2xl:h-[calc(100dvh-161px)]">
-        <div className="w-full h-full gap-y-4 2xl:gap-x-4 2xl:gap-y-6 flex flex-col">
-          <div className="flex flex-wrap 2xl:flex-nowrap gap-4 w-full h-full">
+      <div className="flex items-start flex-col-reverse 2xl:flex-row gap-y-6 h-full gap-x-7 2xl:h-[calc(100dvh-161px)]">
+        <div className="w-full h-full gap-y-6 2xl:gap-x-4 2xl:gap-y-6 flex flex-col">
+          <div className="flex flex-wrap 2xl:flex-nowrap gap-4 w-full">
             <ContinueLearningCard isLoading={isLoading} lesson={userStatistics?.lastLesson} />
             <AvgPercentScoreChart
               label={`${userStatistics?.quizzes.averageScore}`}
@@ -106,21 +106,17 @@ export default function StatisticsPage() {
               isLoading={isLoading}
             />
           </div>
-          <div className="flex flex-col 2xl:gap-x-4 2xl:flex-row w-full h-full gap-y-4">
-            <div className="w-full h-full bg-white rounded-lg 2xl:max-w-[592px] drop-shadow-card">
-              <RatesChart
-                resourceName="Courses"
-                chartData={coursesRatesChartData}
-                isLoading={isLoading}
-              />
-            </div>
-            <div className="w-full h-full bg-white rounded-lg 2xl:max-w-[592px] drop-shadow-card">
-              <RatesChart
-                resourceName="Lessons"
-                chartData={lessonRatesChartData}
-                isLoading={isLoading}
-              />
-            </div>
+          <div className="flex flex-col 2xl:gap-x-4 2xl:flex-row w-full gap-y-4">
+            <RatesChart
+              resourceName="Courses"
+              chartData={coursesRatesChartData}
+              isLoading={isLoading}
+            />
+            <RatesChart
+              resourceName="Lessons"
+              chartData={lessonRatesChartData}
+              isLoading={isLoading}
+            />
           </div>
         </div>
         <ProfileWithCalendar

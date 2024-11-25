@@ -50,12 +50,12 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
   }
 
   return (
-    <div className="w-full 2xl:divide-primary-200 2xl:divide-y h-full 2xl:max-w-[384px] 2xl:flex-col md:flex-row 2xl:bg-white rounded-lg drop-shadow-card 2xl:p-8 flex flex-col 2xl:gap-8 gap-6">
+    <div className="w-full 2xl:divide-primary-200 2xl:divide-y h-auto 2xl:max-w-[384px] 2xl:flex-col md:flex-row 2xl:bg-white rounded-lg drop-shadow-card 2xl:p-8 flex flex-col 2xl:gap-8 gap-6">
       <div className="bg-white rounded-lg w-full p-6 md:p-8 2xl:p-0">
         <span className="body-lg-md text-neutral-900">My Profile</span>
-        <div className="flex flex-col items-center gap-6 mt-6">
-          <Avatar className="size-[124px]">
-            <Gravatar email={user?.email} />
+        <div className="flex flex-col items-center gap-4 mt-4">
+          <Avatar className="size-[120px]">
+            <Gravatar email={user?.email} size={120} />
           </Avatar>
           <div className="text-center">
             <h2 className="h5">
@@ -70,10 +70,10 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
           </Link>
         </div>
       </div>
-      <div className="flex flex-col w-full p-6 2xl:pt-8 gap-y-2 bg-white rounded-lg md:p-8 2xl:p-0">
+      <div className="flex flex-col w-full p-6 2xl:pt-4 gap-y-2 bg-white md:p-8 2xl:p-0">
         <div className="flex flex-row-reverse 2xl:flex-row justify-between items-center">
-          <div className="flex items-center py-2 gap-x-2">
-            <Icon name="Flame" />
+          <div className="flex items-center gap-x-2">
+            <Icon name="Flame" className="w-10 h-10" />
             <span className="h1 text-neutral-950">{streak?.current}</span>
           </div>
           <span className="text-neutral-800 body-lg-md">Daily Streak</span>
