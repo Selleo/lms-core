@@ -96,7 +96,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
       <div className="grid mt-2 place-items-center h-full">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[273px] w-full h-full"
+          className="mx-auto aspect-square max-h-[224px] w-full h-full"
         >
           <BarChart accessibilityLayer data={chartData}>
             <Customized
