@@ -1,3 +1,4 @@
+import { Link } from "@remix-run/react";
 import { keys, pickBy } from "lodash-es";
 
 import { Gravatar } from "~/components/Gravatar";
@@ -64,7 +65,9 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
               {user?.email}
             </a>
           </div>
-          <Button className="w-full">Settings</Button>
+          <Link to="/settings" className="w-full">
+            <Button className="w-full">Settings</Button>
+          </Link>
         </div>
       </div>
       <div className="flex flex-col w-full p-6 2xl:pt-8 gap-y-2 bg-white rounded-lg md:p-8 2xl:p-0">

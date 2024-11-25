@@ -148,7 +148,8 @@ export class StatisticsService {
   };
 
   private async getLassLesson(userId: string) {
-    const lastLessonItem = await this.lessonsRepository.getLastLessonItemForUser(userId);
+    const lastLessonItem =
+      await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(userId);
 
     if (!lastLessonItem) return null;
 

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, count, desc, eq, inArray, isNotNull, sql } from "drizzle-orm";
+import { and, count, desc, eq, inArray, isNotNull, isNull, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import { STATES } from "src/common/states";
@@ -569,18 +569,26 @@ export class LessonsRepository {
       .limit(1);
   }
 
-  async getLastLessonItemForUser(userId: UUIDType) {
+  async getLastInteractedOrNextLessonItemForUser(userId: UUIDType) {
     const [lastLessonItem] = await this.db
       .select({
-        id: studentCompletedLessonItems.lessonItemId,
-        lessonId: studentCompletedLessonItems.lessonId,
-        courseId: studentCompletedLessonItems.courseId,
+        id: sql<string>`${studentCompletedLessonItems.lessonItemId}`,
+        lessonId: sql<string>`${studentCompletedLessonItems.lessonId}`,
+        courseId: sql<string>`${studentCompletedLessonItems.courseId}`,
         courseTitle: sql<string>`${courses.title}`,
         courseDescription: sql<string>`${courses.description}`,
       })
-      .from(studentCompletedLessonItems)
+      .from(studentLessonsProgress)
+      .leftJoin(studentCompletedLessonItems, and(eq(studentCompletedLessonItems.studentId, userId)))
+      .where(
+        and(
+          eq(studentCompletedLessonItems.studentId, userId),
+          eq(studentLessonsProgress.lessonId, studentCompletedLessonItems.lessonId),
+          eq(studentLessonsProgress.courseId, studentCompletedLessonItems.courseId),
+          isNull(studentLessonsProgress.completedAt),
+        ),
+      )
       .leftJoin(courses, eq(studentCompletedLessonItems.courseId, courses.id))
-      .where(eq(studentCompletedLessonItems.studentId, userId))
       .orderBy(desc(studentCompletedLessonItems.updatedAt))
       .limit(1);
 
