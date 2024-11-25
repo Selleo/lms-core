@@ -94,7 +94,9 @@ export const routeAccessConfig = createRouteConfig({
   // Admin part
   "admin/courses": ADMIN_AND_TUTOR,
   "admin/courses/new": ADMIN_AND_TUTOR,
+  "admin/beta-courses/new": ADMIN_AND_TUTOR,
   "admin/courses/:id": ADMIN_AND_TUTOR,
+  "admin/beta-courses/:id": ADMIN_AND_TUTOR,
   "admin/users/*": ADMIN_ONLY,
   "admin/categories": ADMIN_AND_TUTOR,
   "admin/categories/:id": ADMIN_AND_TUTOR,

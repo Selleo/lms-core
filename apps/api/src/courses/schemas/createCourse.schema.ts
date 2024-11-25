@@ -7,7 +7,7 @@ export const baseCourseSchema = Type.Object({
   description: Type.String(),
   state: Type.Union([Type.Literal(STATES.draft), Type.Literal(STATES.published)]),
   imageUrl: Type.Optional(Type.String()),
-  priceInCents: Type.Integer(),
+  priceInCents: Type.Optional(Type.Integer()),
   currency: Type.Optional(Type.String()),
   categoryId: Type.String({ format: "uuid" }),
 });

@@ -4346,7 +4346,6 @@
               "title",
               "description",
               "state",
-              "priceInCents",
               "categoryId"
             ]
           },
