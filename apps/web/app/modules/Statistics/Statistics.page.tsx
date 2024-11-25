@@ -29,7 +29,7 @@ export default function StatisticsPage() {
       {
         state: "Started Courses",
         percentage: userStatistics?.averageStats.courseStats.started,
-        fill: "var(--primary-700)",
+        fill: "var(--primary-300)",
       },
     ],
     [
@@ -59,7 +59,7 @@ export default function StatisticsPage() {
       {
         state: "Wrong Answers",
         percentage: userStatistics?.quizzes.totalWrongAnswers,
-        fill: "var(--primary-700)",
+        fill: "var(--primary-300)",
       },
     ],
     [userStatistics?.quizzes.totalCorrectAnswers, userStatistics?.quizzes.totalWrongAnswers],

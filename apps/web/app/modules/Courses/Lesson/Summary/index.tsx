@@ -23,11 +23,6 @@ export default function Summary({ lesson }: SummaryProps) {
 
   const lessonItemsSummary = getSummaryItems(lesson);
 
-  console.log({ lesson });
-  console.log({ lessonItemsSummary });
-  console.log({ lessonItemsCount });
-  console.log({ lessonItemsCompletedCount });
-
   return (
     <Card className="sr-only lg:not-sr-only rounded-none max-w-[383px] w-full flex flex-col grow border-none drop-shadow-primary">
       {isQuiz && <QuizSummary data={lesson} lessonId={lesson.id} courseId={courseId} />}

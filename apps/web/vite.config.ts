@@ -24,7 +24,7 @@ export default defineConfig(({ mode }) => {
           v3_fetcherPersist: true,
           v3_relativeSplatPath: true,
           v3_throwAbortReason: true,
-          unstable_singleFetch: true,
+          v3_singleFetch: true,
         },
         ssr: false, // SPA MODE - Might migrate to React Router 7
         routes,

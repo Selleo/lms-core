@@ -1,3 +1,5 @@
+import { keys, pickBy } from "lodash-es";
+
 import { Gravatar } from "~/components/Gravatar";
 import { Icon } from "~/components/Icon";
 import { Avatar } from "~/components/ui/avatar";
@@ -79,7 +81,7 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
             showOutsideDays
             fixedWeeks
             weekStartsOn={1}
-            dates={Object.keys(streak?.activityHistory || {}) ?? []}
+            dates={keys(pickBy(streak?.activityHistory, Boolean))}
           />
         </div>
       </div>

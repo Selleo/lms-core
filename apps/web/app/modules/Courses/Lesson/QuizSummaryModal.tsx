@@ -48,7 +48,7 @@ export const QuizSummaryModal = ({
               <Button variant="outline">Try Again</Button>
             </DialogTrigger>
             <DialogTrigger asChild>
-              <Link to={`/course/${courseId}/`}>
+              <Link to={`/course/${courseId}`}>
                 <Button className="w-full">Back to Course</Button>
               </Link>
             </DialogTrigger>

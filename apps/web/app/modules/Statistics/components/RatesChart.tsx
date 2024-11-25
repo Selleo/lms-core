@@ -124,7 +124,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 3)}
             />
-            <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="dashed" />} />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Bar dataKey="completed" fill="var(--color-completed)" />
             <Bar dataKey="started" fill="var(--color-started)" />
           </BarChart>
