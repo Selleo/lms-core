@@ -1,5 +1,8 @@
 import { Type } from "@sinclair/typebox";
 
+import { UUIDSchema } from "src/common";
+import { lessonSchema } from "src/lessons/schemas/lesson.schema";
+
 import type { Static } from "@sinclair/typebox";
 
 export const ActivityHistorySchema = Type.Record(Type.String(), Type.Boolean());
@@ -19,6 +22,11 @@ const MonthlyStatsSchema = Type.Object({
   completionRate: Type.Number(),
 });
 
+const StatsByMonthSchema = Type.Object({
+  month: Type.String(),
+  ...MonthlyStatsSchema.properties,
+});
+
 export const CourseStatsSchema = Type.Record(Type.String(), MonthlyStatsSchema);
 
 export const LessonsStatsSchema = Type.Record(Type.String(), MonthlyStatsSchema);
@@ -30,10 +38,32 @@ export const StreakSchema = Type.Object({
 });
 
 export const UserStatsSchema = Type.Object({
+  averageStats: Type.Object({
+    lessonStats: MonthlyStatsSchema,
+    courseStats: MonthlyStatsSchema,
+  }),
   quizzes: QuizStatsSchema,
   courses: CourseStatsSchema,
   lessons: LessonsStatsSchema,
   streak: StreakSchema,
+  lastLesson: Type.Union([
+    Type.Null(),
+    Type.Object({
+      ...lessonSchema.properties,
+      courseId: UUIDSchema,
+      courseTitle: Type.String(),
+      courseDescription: Type.String(),
+    }),
+  ]),
+});
+
+const UserStatisticSchema = Type.Object({
+  currentStreak: Type.Number(),
+  longestStreak: Type.Number(),
+  lastActivityDate: Type.Date(),
+  activityHistory: ActivityHistorySchema,
 });
 
 export type UserStats = Static<typeof UserStatsSchema>;
+export type StatsByMonth = Static<typeof StatsByMonthSchema>;
+export type UserStatistic = Static<typeof UserStatisticSchema>;

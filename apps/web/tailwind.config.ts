@@ -143,6 +143,7 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       dropShadow: {
+        card: "2px 4px 16px 0px rgba(34, 41, 73, 0.08)",
         primary: "2px 4px 16px rgba(34, 41, 73, 0.08)",
       },
       keyframes: {

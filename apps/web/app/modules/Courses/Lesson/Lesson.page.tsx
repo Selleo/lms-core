@@ -87,7 +87,7 @@ export default function LessonPage() {
   const updateLessonItemCompletion = (lessonItemId: string) => {
     setLesson((prevLesson) => {
       const updatedLessonItems = prevLesson.lessonItems.map((item) => {
-        if (item.lessonItemId === lessonItemId) {
+        if (item.lessonItemId === lessonItemId && item.isCompleted === false) {
           return { ...item, isCompleted: true };
         }
         return item;
@@ -96,7 +96,7 @@ export default function LessonPage() {
       return {
         ...prevLesson,
         lessonItems: updatedLessonItems,
-        itemsCompletedCount: (prevLesson?.itemsCompletedCount ?? 0) + 1,
+        itemsCompletedCount: updatedLessonItems.filter((item) => item.isCompleted).length ?? 0,
       };
     });
   };
@@ -106,7 +106,7 @@ export default function LessonPage() {
       <Summary lesson={lesson} />
       <div className="flex flex-col gap-8 w-full">
         <Breadcrumb lessonData={data} courseId={id} courseTitle={title} />
-        <Overview lesson={data} />
+        <Overview lesson={lesson} />
         {isQuiz && (
           <QuizSummaryModal
             isOpen={isOpen}

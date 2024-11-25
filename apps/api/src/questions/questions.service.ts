@@ -83,6 +83,23 @@ export class QuestionsService {
         questionData.lessonId,
         userId,
       );
+
+      const [studentLessonProgress] = await this.lessonsRepository.updateStudentLessonProgress(
+        userId,
+        questionData.lessonId,
+        answerQuestion.courseId,
+      );
+
+      if (
+        !quizProgress.completedAt &&
+        studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
+      ) {
+        await this.lessonsRepository.completeLessonProgress(
+          answerQuestion.courseId,
+          questionData.lessonId,
+          userId,
+        );
+      }
     });
   }
 
@@ -191,7 +208,7 @@ export class QuestionsService {
       return;
     }
 
-    const studentAnswer = [`'0'`, `'${answerQuestion.answer}'`];
+    const studentAnswer = [`'1'`, `'${answerQuestion.answer}'`];
 
     await this.questionsRepository.upsertAnswer(
       answerQuestion.courseId,

@@ -1146,6 +1146,18 @@ export interface CreatePaymentIntentResponse {
 
 export interface GetUserStatisticsResponse {
   data: {
+    averageStats: {
+      lessonStats: {
+        started: number;
+        completed: number;
+        completionRate: number;
+      };
+      courseStats: {
+        started: number;
+        completed: number;
+        completionRate: number;
+      };
+    };
     quizzes: {
       totalAttempts: number;
       totalCorrectAnswers: number;
@@ -1160,6 +1172,28 @@ export interface GetUserStatisticsResponse {
       current: number;
       longest: number;
       activityHistory: object;
+    };
+    lastLesson: null | {
+      /** @format uuid */
+      id: string;
+      title: string;
+      imageUrl?: string;
+      description: string;
+      itemsCount: number;
+      itemsCompletedCount?: number;
+      lessonProgress?: "completed" | "in_progress" | "not_started";
+      isFree?: boolean;
+      enrolled?: boolean;
+      state?: string;
+      archived?: boolean;
+      isSubmitted?: boolean;
+      type?: string;
+      createdAt?: string;
+      quizScore?: number;
+      /** @format uuid */
+      courseId: string;
+      courseTitle: string;
+      courseDescription: string;
     };
   };
 }

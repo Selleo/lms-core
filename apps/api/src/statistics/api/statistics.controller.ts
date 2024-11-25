@@ -2,8 +2,8 @@ import { Controller, Get } from "@nestjs/common";
 import { Validate } from "nestjs-typebox";
 
 import { baseResponse, BaseResponse, UUIDType } from "src/common";
+import { CurrentUser } from "src/common/decorators/user.decorator";
 
-import { CurrentUser } from "../../common/decorators/user.decorator";
 import { UserStatsSchema } from "../schemas/userStats.schema";
 import { StatisticsService } from "../statistics.service";
 

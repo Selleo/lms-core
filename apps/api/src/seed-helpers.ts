@@ -13,6 +13,7 @@ import {
   textBlocks,
 } from "src/storage/schema";
 
+import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
 import { QUESTION_TYPE } from "./questions/schema/questions.types";
 
 import type { DatabasePg } from "./common";
@@ -64,6 +65,9 @@ export async function createNiceCourses(
           state: lessonData.state,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          itemsCount: lessonData.items.filter(
+            (item) => item.itemType !== LESSON_ITEM_TYPE.text_block.key,
+          ).length,
         })
         .returning();
 

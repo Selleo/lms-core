@@ -2,8 +2,10 @@ import { Dot } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 
+import type { ReactNode } from "react";
+
 type CategoryChipProps = {
-  category: string;
+  category: string | ReactNode;
   color?: string;
   className?: string;
 };
