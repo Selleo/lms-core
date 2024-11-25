@@ -128,6 +128,7 @@ export const courses = pgTable("courses", {
     .references(() => categories.id)
     .notNull(),
   archived: boolean("archived").notNull().default(false),
+  lessonsCount: integer("lessons_count").notNull().default(0),
   ...timestamps,
 });
 
@@ -302,10 +303,14 @@ export const studentCourses = pgTable(
     courseId: uuid("course_id")
       .references(() => courses.id)
       .notNull(),
-    numberOfAssignments: integer("number_of_assignments"),
-    numberOfFinishedAssignments: integer("number_of_finished_assignments"),
+    finishedLessonsCount: integer("finished_lessons_count").default(0).notNull(),
     state: text("state").notNull().default("not_started"),
     paymentId: text("payment_id"),
+    completedAt: timestamp("completed_at", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    }),
     archived,
   },
   (table) => ({
@@ -370,7 +375,7 @@ export const studentLessonsProgress = pgTable(
     completedLessonItemCount: integer("completed_lesson_item_count").notNull(),
     quizCompleted: boolean("quiz_completed"),
     quizScore: integer("quiz_score"),
-    completedDate: timestamp("completed_date", {
+    completedAt: timestamp("completed_at", {
       mode: "string",
       withTimezone: true,
       precision: 3,

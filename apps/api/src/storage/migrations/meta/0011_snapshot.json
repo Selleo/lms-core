@@ -1,6 +1,6 @@
 {
-  "id": "ed34548f-99e5-4c76-82a4-965dd073fb3f",
-  "prevId": "fd627228-063a-40d1-8b82-f903ebaf5a94",
+  "id": "1baff279-0f61-40d1-90f4-be5e22542735",
+  "prevId": "ed34548f-99e5-4c76-82a4-965dd073fb3f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -368,6 +368,13 @@
           "primaryKey": false,
           "notNull": true,
           "default": false
+        },
+        "lessons_count": {
+          "name": "lessons_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
         },
         "created_at": {
           "name": "created_at",
@@ -1312,17 +1319,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "number_of_assignments": {
-          "name": "number_of_assignments",
+        "finished_lessons_count": {
+          "name": "finished_lessons_count",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
-        },
-        "number_of_finished_assignments": {
-          "name": "number_of_finished_assignments",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": 0
         },
         "state": {
           "name": "state",
@@ -1334,6 +1336,12 @@
         "payment_id": {
           "name": "payment_id",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp(3) with time zone",
           "primaryKey": false,
           "notNull": false
         },

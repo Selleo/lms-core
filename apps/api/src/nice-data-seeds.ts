@@ -43,7 +43,7 @@ export const niceCourses: NiceCourseData[] = [
             itemType: LESSON_ITEM_TYPE.file.key,
             title: "HTML Elements Video",
             type: LESSON_FILE_TYPE.external_video.key,
-            url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4w",
+            url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
             state: STATUS.published.key,
           },
           {

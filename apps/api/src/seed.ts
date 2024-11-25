@@ -9,7 +9,7 @@ import postgres from "postgres";
 import hashPassword from "./common/helpers/hashPassword";
 import { STATES } from "./common/states";
 import { e2eCourses } from "./e2e-data-seeds";
-import { LESSON_FILE_TYPE, LESSON_ITEM_TYPE } from "./lessons/lesson.type";
+import { LESSON_FILE_TYPE, LESSON_ITEM_TYPE, LESSON_TYPE } from "./lessons/lesson.type";
 import { niceCourses } from "./nice-data-seeds";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
@@ -287,12 +287,13 @@ async function createLessonProgress(userId: string) {
     .select({
       lessonId: courseLessons.lessonId,
       courseId: courseLessons.courseId,
-      lessonItemCount: sql<number>`${studentCourses.numberOfAssignments}`,
       createdAt: sql<string>`${courses.createdAt}`,
+      lessonType: sql<string>`${lessons.type}`,
     })
     .from(courseLessons)
-    .innerJoin(courses, eq(courseLessons.courseId, courses.id))
-    .innerJoin(studentCourses, eq(courses.id, studentCourses.courseId))
+    .leftJoin(courses, eq(courseLessons.courseId, courses.id))
+    .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
+    .leftJoin(lessons, eq(courseLessons.lessonId, lessons.id))
     .where(eq(studentCourses.studentId, userId));
 
   const lessonProgressList = courseLessonsList.map((courseLesson) => {
@@ -303,10 +304,11 @@ async function createLessonProgress(userId: string) {
       lessonId,
       courseId,
       studentId: userId,
-      lessonItemCount: courseLesson.lessonItemCount,
       completedLessonItemCount: 0,
       createdAt: courseLesson.createdAt,
       updatedAt: courseLesson.createdAt,
+      quizCompleted: courseLesson.lessonType === LESSON_TYPE.quiz.key ? false : null,
+      quizScore: courseLesson.lessonType === LESSON_TYPE.quiz.key ? 0 : null,
     };
   });
 

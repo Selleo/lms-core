@@ -19,9 +19,10 @@ import {
   textBlocks,
 } from "src/storage/schema";
 
-import { LESSON_TYPE } from "../lesson.type";
+import { LESSON_ITEM_TYPE, LESSON_TYPE } from "../lesson.type";
 import { LessonProgress } from "../schemas/lesson.types";
 
+import type { LessonProgressType } from "../schemas/lesson.types";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
@@ -404,20 +405,20 @@ export class LessonsRepository {
           (SELECT COUNT(*)
           FROM ${lessonItems}
           WHERE ${lessonItems.lessonId} = ${lessons.id}
-            AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+            AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
         itemsCompletedCount: sql<number>`
           (SELECT COUNT(*)
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
             AND ${studentCompletedLessonItems.courseId} = ${courseId}
             AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
-        lessonProgress: sql<"completed" | "in_progress" | "not_started">`
+        lessonProgress: sql<LessonProgressType>`
           (CASE
             WHEN (
               SELECT COUNT(*)
               FROM ${lessonItems}
               WHERE ${lessonItems.lessonId} = ${lessons.id}
-                AND ${lessonItems.lessonItemType} != 'text_block'
+                AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key}
             ) = (
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
@@ -485,7 +486,7 @@ export class LessonsRepository {
               ${studentLessonsProgress.quizCompleted}
             ELSE false
           END`,
-        completedDate: sql<string>`${studentLessonsProgress.completedDate}`,
+        completedAt: sql<string>`${studentLessonsProgress.completedAt}`,
       })
       .from(studentLessonsProgress)
       .where(
@@ -721,7 +722,7 @@ export class LessonsRepository {
     return await this.db
       .update(studentLessonsProgress)
       .set({
-        completedDate: sql<string>`now()`,
+        completedAt: sql<string>`now()`,
       })
       .where(
         and(

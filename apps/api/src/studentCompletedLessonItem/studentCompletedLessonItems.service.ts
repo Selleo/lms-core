@@ -1,8 +1,14 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, isNotNull, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-import { lessonItems, studentCompletedLessonItems, studentCourses } from "src/storage/schema";
+import { LESSON_ITEM_TYPE } from "src/lessons/lesson.type";
+import {
+  lessonItems,
+  studentCompletedLessonItems,
+  studentCourses,
+  studentLessonsProgress,
+} from "src/storage/schema";
 
 import { studentCoursesStates } from "./schemas/studentCompletedLesson.schema";
 
@@ -42,6 +48,7 @@ export class StudentCompletedLessonItemsService {
           eq(studentCompletedLessonItems.courseId, courseId),
         ),
       );
+
     if (existingRecord) return;
 
     await this.db
@@ -53,14 +60,45 @@ export class StudentCompletedLessonItemsService {
 
   private async checkCourseIsCompletedForUser(courseId: UUIDType, studentId: UUIDType) {
     const courseCompleted = await this.getCourseCompletionStatus(courseId);
+    const courseFinishedLessonsCount = await this.getCourseFinishedLessonsCount(
+      courseId,
+      studentId,
+    );
 
     if (courseCompleted.courseCompleted) {
-      return this.updateStudentCourseState(studentId, courseId, studentCoursesStates.completed);
+      return this.updateStudentCourseStats(
+        studentId,
+        courseId,
+        studentCoursesStates.completed,
+        courseFinishedLessonsCount,
+      );
     }
 
     if (courseCompleted.state !== studentCoursesStates.in_progress) {
-      return this.updateStudentCourseState(studentId, courseId, studentCoursesStates.in_progress);
+      return this.updateStudentCourseStats(
+        studentId,
+        courseId,
+        studentCoursesStates.in_progress,
+        courseFinishedLessonsCount,
+      );
     }
+  }
+
+  private async getCourseFinishedLessonsCount(courseId: UUIDType, studentId: UUIDType) {
+    const [finishedLessonsCount] = await this.db
+      .select({
+        count: sql<number>`COUNT(DISTINCT ${studentLessonsProgress.lessonId})`,
+      })
+      .from(studentLessonsProgress)
+      .where(
+        and(
+          eq(studentLessonsProgress.studentId, studentId),
+          eq(studentLessonsProgress.courseId, courseId),
+          isNotNull(studentLessonsProgress.completedAt),
+        ),
+      );
+
+    return finishedLessonsCount.count;
   }
 
   private async getCourseCompletionStatus(courseId: UUIDType) {
@@ -74,7 +112,7 @@ export class StudentCompletedLessonItemsService {
         LEFT JOIN lesson_items ON course_lessons.lesson_id = lesson_items.lesson_id
         WHERE
           course_lessons.course_id = ${courseId}
-          AND lesson_items.lesson_item_type != 'text_block'
+          AND lesson_items.lesson_item_type != ${LESSON_ITEM_TYPE.text_block.key}
         GROUP BY
           course_lessons.lesson_id
       ),
@@ -118,10 +156,15 @@ export class StudentCompletedLessonItemsService {
     return courseCompleted;
   }
 
-  private async updateStudentCourseState(studentId: UUIDType, courseId: UUIDType, state: string) {
+  private async updateStudentCourseStats(
+    studentId: UUIDType,
+    courseId: UUIDType,
+    state: string,
+    completedLessonsCount: number,
+  ) {
     return await this.db
       .update(studentCourses)
-      .set({ state })
+      .set({ state, completedAt: sql`now()`, finishedLessonsCount: completedLessonsCount })
       .where(and(eq(studentCourses.studentId, studentId), eq(studentCourses.courseId, courseId)));
   }
 }

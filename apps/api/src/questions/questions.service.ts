@@ -91,7 +91,7 @@ export class QuestionsService {
       );
 
       if (
-        !quizProgress.completedDate &&
+        !quizProgress.completedAt &&
         studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
       ) {
         await this.lessonsRepository.completeLessonProgress(
@@ -208,7 +208,7 @@ export class QuestionsService {
       return;
     }
 
-    const studentAnswer = [`'0'`, `'${answerQuestion.answer}'`];
+    const studentAnswer = [`'1'`, `'${answerQuestion.answer}'`];
 
     await this.questionsRepository.upsertAnswer(
       answerQuestion.courseId,

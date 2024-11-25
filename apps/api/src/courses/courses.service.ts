@@ -17,7 +17,7 @@ import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { STATES } from "src/common/states";
 import { S3Service } from "src/file/s3.service";
-import { LESSON_TYPE } from "src/lessons/lesson.type";
+import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/lessons/lesson.type";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
@@ -45,6 +45,7 @@ import type { AllCoursesForTutorResponse, AllCoursesResponse } from "./schemas/c
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { Pagination, UUIDType } from "src/common";
+import type { LessonProgressType } from "src/lessons/schemas/lesson.types";
 
 @Injectable()
 export class CoursesService {
@@ -268,19 +269,19 @@ export class CoursesService {
         (SELECT COUNT(*)
         FROM ${courseLessons}
         JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
+        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = ${STATES.published} AND ${lessons.archived} = false)::INTEGER`,
         completedLessonCount: sql<number>`
         (SELECT COUNT(*)
         FROM ${courseLessons}
         JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
         WHERE ${courseLessons.courseId} = ${courses.id}
-        AND ${lessons.state} = 'published'
+        AND ${lessons.state} = ${STATES.published}
         AND ${lessons.archived} = false
         AND (
           SELECT COUNT(*)
           FROM ${lessonItems}
           WHERE ${lessonItems.lessonId} = ${lessons.id}
-          AND ${lessonItems.lessonItemType} != 'text_block'
+          AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key}
           ) = (
             SELECT COUNT(*)
             FROM ${studentCompletedLessonItems}
@@ -337,20 +338,20 @@ export class CoursesService {
           (SELECT COUNT(*)
           FROM ${lessonItems}
           WHERE ${lessonItems.lessonId} = ${lessons.id}
-            AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+            AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
         itemsCompletedCount: sql<number>`
           (SELECT COUNT(*)
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
             AND ${studentCompletedLessonItems.courseId} = ${course.id}
             AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
-        lessonProgress: sql<"completed" | "in_progress" | "not_started">`
+        lessonProgress: sql<LessonProgressType>`
           (CASE
             WHEN (
               SELECT COUNT(*)
               FROM ${lessonItems}
               WHERE ${lessonItems.lessonId} = ${lessons.id}
-                AND ${lessonItems.lessonItemType} != 'text_block'
+                AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key}
             ) = (
               SELECT COUNT(*)
               FROM ${studentCompletedLessonItems}
@@ -413,7 +414,7 @@ export class CoursesService {
           (SELECT COUNT(*)
           FROM ${courseLessons}
           JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = 'published' AND ${lessons.archived} = false)::INTEGER`,
+          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = ${STATES.published} AND ${lessons.archived} = false)::INTEGER`,
         state: courses.state,
         priceInCents: courses.priceInCents,
         currency: courses.currency,
@@ -434,7 +435,7 @@ export class CoursesService {
         itemsCount: sql<number>`
           (SELECT COUNT(*)
           FROM ${lessonItems}
-          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != 'text_block')::INTEGER`,
+          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
         isFree: courseLessons.isFree,
       })
       .from(courseLessons)
@@ -765,20 +766,20 @@ export class CoursesService {
         FROM ${courseLessons}
         JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
         WHERE ${courseLessons.courseId} = ${courses.id}
-          AND ${lessons.state} = 'published'
+          AND ${lessons.state} = ${STATES.published}
           AND ${lessons.archived} = false)::INTEGER`,
       completedLessonCount: sql<number>`
         (SELECT COUNT(*)
         FROM ${courseLessons}
         JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
         WHERE ${courseLessons.courseId} = ${courses.id}
-          AND ${lessons.state} = 'published'
+          AND ${lessons.state} = ${STATES.published}
           AND ${lessons.archived} = false
           AND (
             SELECT COUNT(*)
             FROM ${lessonItems}
             WHERE ${lessonItems.lessonId} = ${lessons.id}
-              AND ${lessonItems.lessonItemType} != 'text_block'
+              AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key}
           ) = (
             SELECT COUNT(*)
             FROM ${studentCompletedLessonItems}
