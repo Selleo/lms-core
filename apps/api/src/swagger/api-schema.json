@@ -6917,86 +6917,93 @@
                 ]
               },
               "lastLesson": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "format": "uuid",
-                    "type": "string"
+                "anyOf": [
+                  {
+                    "type": "null"
                   },
-                  "title": {
-                    "type": "string"
-                  },
-                  "imageUrl": {
-                    "type": "string"
-                  },
-                  "description": {
-                    "type": "string"
-                  },
-                  "itemsCount": {
-                    "type": "number"
-                  },
-                  "itemsCompletedCount": {
-                    "type": "number"
-                  },
-                  "lessonProgress": {
-                    "anyOf": [
-                      {
-                        "const": "completed",
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
                         "type": "string"
                       },
-                      {
-                        "const": "in_progress",
+                      "title": {
                         "type": "string"
                       },
-                      {
-                        "const": "not_started",
+                      "imageUrl": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "itemsCount": {
+                        "type": "number"
+                      },
+                      "itemsCompletedCount": {
+                        "type": "number"
+                      },
+                      "lessonProgress": {
+                        "anyOf": [
+                          {
+                            "const": "completed",
+                            "type": "string"
+                          },
+                          {
+                            "const": "in_progress",
+                            "type": "string"
+                          },
+                          {
+                            "const": "not_started",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "isFree": {
+                        "type": "boolean"
+                      },
+                      "enrolled": {
+                        "type": "boolean"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "archived": {
+                        "type": "boolean"
+                      },
+                      "isSubmitted": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "quizScore": {
+                        "type": "number"
+                      },
+                      "courseId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "courseTitle": {
+                        "type": "string"
+                      },
+                      "courseDescription": {
                         "type": "string"
                       }
+                    },
+                    "required": [
+                      "id",
+                      "title",
+                      "description",
+                      "itemsCount",
+                      "courseId",
+                      "courseTitle",
+                      "courseDescription"
                     ]
-                  },
-                  "isFree": {
-                    "type": "boolean"
-                  },
-                  "enrolled": {
-                    "type": "boolean"
-                  },
-                  "state": {
-                    "type": "string"
-                  },
-                  "archived": {
-                    "type": "boolean"
-                  },
-                  "isSubmitted": {
-                    "type": "boolean"
-                  },
-                  "type": {
-                    "type": "string"
-                  },
-                  "createdAt": {
-                    "type": "string"
-                  },
-                  "quizScore": {
-                    "type": "number"
-                  },
-                  "courseId": {
-                    "format": "uuid",
-                    "type": "string"
-                  },
-                  "courseTitle": {
-                    "type": "string"
-                  },
-                  "courseDescription": {
-                    "type": "string"
                   }
-                },
-                "required": [
-                  "id",
-                  "title",
-                  "description",
-                  "itemsCount",
-                  "courseId",
-                  "courseTitle",
-                  "courseDescription"
                 ]
               }
             },

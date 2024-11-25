@@ -83,6 +83,23 @@ export class QuestionsService {
         questionData.lessonId,
         userId,
       );
+
+      const [studentLessonProgress] = await this.lessonsRepository.updateStudentLessonProgress(
+        userId,
+        questionData.lessonId,
+        answerQuestion.courseId,
+      );
+
+      if (
+        !quizProgress.completedDate &&
+        studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
+      ) {
+        await this.lessonsRepository.completeLessonProgress(
+          answerQuestion.courseId,
+          questionData.lessonId,
+          userId,
+        );
+      }
     });
   }
 

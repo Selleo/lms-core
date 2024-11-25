@@ -46,12 +46,15 @@ export const UserStatsSchema = Type.Object({
   courses: CourseStatsSchema,
   lessons: LessonsStatsSchema,
   streak: StreakSchema,
-  lastLesson: Type.Object({
-    ...lessonSchema.properties,
-    courseId: UUIDSchema,
-    courseTitle: Type.String(),
-    courseDescription: Type.String(),
-  }),
+  lastLesson: Type.Union([
+    Type.Null(),
+    Type.Object({
+      ...lessonSchema.properties,
+      courseId: UUIDSchema,
+      courseTitle: Type.String(),
+      courseDescription: Type.String(),
+    }),
+  ]),
 });
 
 const UserStatisticSchema = Type.Object({

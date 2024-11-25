@@ -1173,7 +1173,7 @@ export interface GetUserStatisticsResponse {
       longest: number;
       activityHistory: object;
     };
-    lastLesson: {
+    lastLesson: null | {
       /** @format uuid */
       id: string;
       title: string;

@@ -4,7 +4,7 @@ import { differenceInDays, eachDayOfInterval, format, startOfDay } from "date-fn
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
-import type { StatsByMonth } from "./schemas/userStats.schema";
+import type { StatsByMonth, UserStats } from "./schemas/userStats.schema";
 
 @Injectable()
 export class StatisticsService {
@@ -13,7 +13,7 @@ export class StatisticsService {
     private lessonsRepository: LessonsRepository,
   ) {}
 
-  async getUserStats(userId: string) {
+  async getUserStats(userId: string): Promise<UserStats> {
     const coursesStatsByMonth: StatsByMonth[] =
       await this.statisticsRepository.getCoursesStatsByMonth(userId);
     const coursesTotalStats = this.calculateTotalStats(coursesStatsByMonth);
@@ -25,17 +25,7 @@ export class StatisticsService {
     const quizStats = await this.statisticsRepository.getQuizStats(userId);
 
     // TODO: decide what to do when there is no last lesson
-    const lastLessonItem = await this.lessonsRepository.getLastLessonItemForUser(userId);
-    const [lastLesson] = await this.lessonsRepository.getLessonsDetails(
-      userId,
-      lastLessonItem.courseId,
-      lastLessonItem.lessonId,
-    );
-    const lastLessonDetails = await this.lessonsRepository.getLessonForUser(
-      lastLessonItem.courseId,
-      lastLessonItem.lessonId,
-      userId,
-    );
+    const lastLesson = await this.getLassLesson(userId);
 
     const activityStats = await this.statisticsRepository.getActivityStats(userId);
 
@@ -54,13 +44,7 @@ export class StatisticsService {
         lessonStats: lessonsTotalStats,
         courseStats: coursesTotalStats,
       },
-      lastLesson: {
-        ...lastLesson,
-        enrolled: lastLessonDetails.enrolled,
-        courseId: lastLessonItem.courseId,
-        courseTitle: lastLessonItem.courseTitle,
-        courseDescription: lastLessonItem.courseDescription,
-      },
+      lastLesson,
       streak: {
         current: activityStats.currentStreak ?? 0,
         longest: activityStats.longestStreak ?? 0,
@@ -162,4 +146,29 @@ export class StatisticsService {
 
     return monthlyStats;
   };
+
+  private async getLassLesson(userId: string) {
+    const lastLessonItem = await this.lessonsRepository.getLastLessonItemForUser(userId);
+
+    if (!lastLessonItem) return null;
+
+    const [lastLessonDetails] = await this.lessonsRepository.getLessonsDetails(
+      userId,
+      lastLessonItem.courseId,
+      lastLessonItem.lessonId,
+    );
+    const lastLessonUserDetails = await this.lessonsRepository.getLessonForUser(
+      lastLessonItem.courseId,
+      lastLessonItem.lessonId,
+      userId,
+    );
+
+    return {
+      ...lastLessonDetails,
+      enrolled: lastLessonUserDetails.enrolled,
+      courseId: lastLessonItem.courseId,
+      courseTitle: lastLessonItem.courseTitle,
+      courseDescription: lastLessonItem.courseDescription,
+    };
+  }
 }

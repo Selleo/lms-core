@@ -45,6 +45,7 @@ export class LessonsRepository {
                 `,
         isFree: courseLessons.isFree,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN true ELSE false END`,
+        itemsCount: lessons.itemsCount,
       })
       .from(lessons)
       .innerJoin(
@@ -83,6 +84,7 @@ export class LessonsRepository {
         imageUrl: sql<string>`${lessons.imageUrl}`,
         type: sql<string>`${lessons.type}`,
         isFree: courseLessons.isFree,
+        itemsCount: lessons.itemsCount,
       })
       .from(lessons)
       .innerJoin(
@@ -289,7 +291,17 @@ export class LessonsRepository {
       );
   }
 
-  async lessonProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
+  async lessonProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType, isQuiz = false) {
+    const conditions = [
+      eq(studentLessonsProgress.studentId, userId),
+      eq(studentLessonsProgress.lessonId, lessonId),
+      eq(studentLessonsProgress.courseId, courseId),
+    ];
+
+    if (isQuiz) {
+      conditions.push(eq(lessons.type, LESSON_TYPE.quiz.key));
+    }
+
     const [lessonProgress] = await this.db
       .select({
         quizCompleted: sql<boolean>`
@@ -298,18 +310,13 @@ export class LessonsRepository {
                     ${studentLessonsProgress.quizCompleted}
                     ELSE false
                     END`,
-        lessonItemCount: studentLessonsProgress.lessonItemCount,
+        lessonItemCount: lessons.itemsCount,
         completedLessonItemCount: studentLessonsProgress.completedLessonItemCount,
-        quizScore: studentLessonsProgress.quizScore,
+        quizScore: sql<number>`${studentLessonsProgress.quizScore}`,
       })
       .from(studentLessonsProgress)
-      .where(
-        and(
-          eq(studentLessonsProgress.studentId, userId),
-          eq(studentLessonsProgress.lessonId, lessonId),
-          eq(studentLessonsProgress.courseId, courseId),
-        ),
-      );
+      .leftJoin(lessons, eq(studentLessonsProgress.lessonId, lessons.id))
+      .where(and(...conditions));
 
     return lessonProgress;
   }
@@ -451,7 +458,6 @@ export class LessonsRepository {
         lessonId: lessonId,
         courseId: courseId,
         quizCompleted: true,
-        lessonItemCount: completedLessonItemCount,
         completedLessonItemCount,
         quizScore,
       })
@@ -479,6 +485,7 @@ export class LessonsRepository {
               ${studentLessonsProgress.quizCompleted}
             ELSE false
           END`,
+        completedDate: sql<string>`${studentLessonsProgress.completedDate}`,
       })
       .from(studentLessonsProgress)
       .where(
@@ -689,19 +696,39 @@ export class LessonsRepository {
       );
   }
 
-  async createLessonProgress(
-    courseId: UUIDType,
-    lessonId: UUIDType,
-    userId: UUIDType,
-    lessonItemCount: number,
-  ) {
-    return await this.db.insert(studentLessonsProgress).values({
-      studentId: userId,
-      lessonId,
-      courseId,
-      quizCompleted: false,
-      lessonItemCount,
-      completedLessonItemCount: 0,
-    });
+  async updateStudentLessonProgress(userId: UUIDType, lessonId: UUIDType, courseId: UUIDType) {
+    return await this.db
+      .update(studentLessonsProgress)
+      .set({
+        completedLessonItemCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${studentCompletedLessonItems}
+          WHERE ${studentCompletedLessonItems.lessonId} = ${lessonId}
+            AND ${studentCompletedLessonItems.courseId} = ${courseId}
+            AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
+      })
+      .where(
+        and(
+          eq(studentLessonsProgress.courseId, courseId),
+          eq(studentLessonsProgress.lessonId, lessonId),
+          eq(studentLessonsProgress.studentId, userId),
+        ),
+      )
+      .returning();
+  }
+
+  async completeLessonProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
+    return await this.db
+      .update(studentLessonsProgress)
+      .set({
+        completedDate: sql<string>`now()`,
+      })
+      .where(
+        and(
+          eq(studentLessonsProgress.courseId, courseId),
+          eq(studentLessonsProgress.lessonId, lessonId),
+          eq(studentLessonsProgress.studentId, userId),
+        ),
+      );
   }
 }

@@ -143,6 +143,7 @@ export const lessons = pgTable("lessons", {
   state: text("state").notNull().default("draft"),
   archived,
   type: text("type").notNull().default("multimedia"),
+  itemsCount: integer("items_count").notNull().default(0),
 });
 
 export const conversations = pgTable("conversations", {
@@ -366,10 +367,14 @@ export const studentLessonsProgress = pgTable(
     lessonId: uuid("lesson_id")
       .references(() => lessons.id)
       .notNull(),
-    quizCompleted: boolean("quiz_completed"),
-    lessonItemCount: integer("lesson_item_count").notNull(),
     completedLessonItemCount: integer("completed_lesson_item_count").notNull(),
-    quizScore: integer("quiz_score").notNull().default(0),
+    quizCompleted: boolean("quiz_completed"),
+    quizScore: integer("quiz_score"),
+    completedDate: timestamp("completed_date", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    }),
   },
   (table) => ({
     unq: unique().on(table.studentId, table.lessonId, table.courseId),

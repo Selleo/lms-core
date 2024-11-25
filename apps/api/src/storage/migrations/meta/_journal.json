@@ -71,6 +71,13 @@
       "when": 1731976176840,
       "tag": "0009_create_statistics",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1732490821130,
+      "tag": "0010_update_lessons_table",
+      "breakpoints": true
     }
   ]
 }

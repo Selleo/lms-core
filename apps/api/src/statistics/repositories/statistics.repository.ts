@@ -3,14 +3,9 @@ import { and, eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
-import {
-  quizAttempts,
-  studentCourses,
-  studentLessonsProgress,
-  userStatistics,
-} from "src/storage/schema";
+import { quizAttempts, studentCourses, userStatistics } from "src/storage/schema";
 
-import type { UserStatistic } from "src/statistics/schemas/userStats.schema";
+import type { StatsByMonth, UserStatistic } from "src/statistics/schemas/userStats.schema";
 
 @Injectable()
 export class StatisticsRepository {
@@ -63,32 +58,47 @@ export class StatisticsRepository {
       .orderBy(sql<string>`date_trunc('month', ${studentCourses.createdAt})`);
   }
 
-  async getLessonsStatsByMonth(userId: string) {
-    return this.db
-      .select({
-        month: sql<string>`to_char(date_trunc('month', ${studentLessonsProgress.createdAt}), 'YYYY-MM')`,
-        started: sql<number>`count(distinct ${studentLessonsProgress.lessonId}) :: INTEGER`,
-        completed: sql<number>`count(case when ${studentLessonsProgress.completedLessonItemCount} = ${studentLessonsProgress.lessonItemCount} then 1 end) :: INTEGER`,
-        completionRate: sql<number>`
-          coalesce(
-            round(
-              (count(case when ${studentLessonsProgress.completedLessonItemCount} = ${studentLessonsProgress.lessonItemCount} then 1 end)::numeric /
-              nullif(count(distinct ${studentLessonsProgress.lessonId})::numeric, 0)) * 100,
-              2
-            ),
-            0
-          ) :: INTEGER
-        `,
-      })
-      .from(studentLessonsProgress)
-      .where(
-        and(
-          eq(studentLessonsProgress.studentId, userId),
-          sql`${studentLessonsProgress.createdAt} >= date_trunc('month', current_date) - interval '11 months'`,
-        ),
+  async getLessonsStatsByMonth(userId: string): Promise<StatsByMonth[]> {
+    return this.db.execute(sql`
+      WITH completed_lessons AS (
+        SELECT
+          date_trunc('month',
+              student_lessons_progress.completed_date) AS month,
+          COUNT(student_lessons_progress.id) AS completed_lessons_count
+        FROM
+          student_lessons_progress
+        WHERE
+          student_id = ${userId}
+          AND student_lessons_progress.completed_date IS NOT NULL
+        GROUP BY
+          date_trunc('month',
+            student_lessons_progress.completed_date)
+      ),
+      month_stats AS (
+        SELECT
+          to_char(date_trunc('month', student_lessons_progress.created_at), 'YYYY-MM') AS month,
+          COUNT(DISTINCT student_lessons_progress.lesson_id)::INTEGER AS started,
+          (CASE WHEN completed_lessons.month IS NOT NULL THEN completed_lessons.completed_lessons_count ELSE 0 END)::INTEGER AS completed
+        FROM
+          student_lessons_progress
+          LEFT JOIN lessons ON student_lessons_progress.lesson_id = lessons.id
+          LEFT JOIN completed_lessons ON date_trunc('month', student_lessons_progress.created_at) = completed_lessons.month
+        WHERE
+          student_lessons_progress.student_id = ${userId}
+          AND student_lessons_progress.created_at >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
+        GROUP BY
+          date_trunc('month', student_lessons_progress.created_at), completed_lessons.month, completed_lessons.completed_lessons_count
+        ORDER BY
+          date_trunc('month', student_lessons_progress.created_at)
       )
-      .groupBy(sql<string>`date_trunc('month', ${studentLessonsProgress.createdAt})`)
-      .orderBy(sql<string>`date_trunc('month', ${studentLessonsProgress.createdAt})`);
+      SELECT
+        month_stats.month AS month,
+        month_stats.started AS started,
+        month_stats.completed AS completed,
+        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2)::INTEGER, 0) AS "completionRate"
+      FROM
+        month_stats
+      `);
   }
 
   async getActivityStats(userId: string) {

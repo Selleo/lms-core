@@ -17,6 +17,7 @@ import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { STATES } from "src/common/states";
 import { S3Service } from "src/file/s3.service";
+import { LESSON_TYPE } from "src/lessons/lesson.type";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
@@ -628,10 +629,11 @@ export class CoursesService {
 
       if (!enrolledCourse) throw new ConflictException("Course not enrolled");
 
-      const quizLessons = await trx
+      const courseLessonList = await trx
         .select({
           id: lessons.id,
-          itemCount: sql<number>`count(${lessonItems.id})`,
+          lessonType: lessons.type,
+          itemCount: lessons.itemsCount,
         })
         .from(courseLessons)
         .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
@@ -641,19 +643,18 @@ export class CoursesService {
             eq(courseLessons.courseId, course.id),
             eq(lessons.archived, false),
             eq(lessons.state, STATES.published),
-            eq(lessons.type, "quiz"),
           ),
         )
         .groupBy(lessons.id);
 
-      if (quizLessons.length > 0) {
+      if (courseLessonList.length > 0) {
         await trx.insert(studentLessonsProgress).values(
-          quizLessons.map((lesson) => ({
+          courseLessonList.map((lesson) => ({
             studentId: userId,
             lessonId: lesson.id,
             courseId: course.id,
-            quizCompleted: false,
-            lessonItemCount: lesson.itemCount,
+            quizCompleted: lesson.lessonType === LESSON_TYPE.quiz.key ? false : null,
+            quizScore: lesson.lessonType === LESSON_TYPE.quiz.key ? 0 : null,
             completedLessonItemCount: 0,
           })),
         );
