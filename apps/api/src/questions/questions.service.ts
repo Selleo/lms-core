@@ -91,7 +91,7 @@ export class QuestionsService {
       );
 
       if (
-        !quizProgress.completedAt &&
+        !quizProgress?.completedAt &&
         studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
       ) {
         await this.lessonsRepository.completeLessonProgress(

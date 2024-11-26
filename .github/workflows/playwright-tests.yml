@@ -37,3 +37,4 @@ jobs:
         run: pnpm playwright test
         env:
           HOME: /root
+          TEST_KEY: ${{ secrets.TEST_KEY }}
