@@ -5,7 +5,8 @@ env:
 
 on:
   workflow_run:
-    workflows: ["STAGING - Deploy WEBAPP", "STAGING - Deploy API"]
+    workflows:
+      - "STAGING - Deploy API"
     types:
       - completed
   workflow_call:
@@ -17,23 +18,24 @@ jobs:
     if: |
       github.event.workflow_run.conclusion == 'success' ||
       github.event_name == 'workflow_call'
-    container:
-      image: mcr.microsoft.com/playwright:v1.45.3-jammy
     defaults:
       run:
         working-directory: ./apps/web/
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: 20.15.0
-
       - name: Install dependencies
         run: pnpm install
-
-      - name: Run tests
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
+      - name: Run Playwright tests
         run: pnpm playwright test
         env:
           HOME: /root
