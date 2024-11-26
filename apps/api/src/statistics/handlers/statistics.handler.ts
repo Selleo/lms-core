@@ -3,7 +3,6 @@ import { EventsHandler } from "@nestjs/cqrs";
 import { match } from "ts-pattern";
 
 import { CourseStartedEvent, QuizCompletedEvent, UserActivityEvent } from "src/events";
-import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
 import { StatisticsService } from "../statistics.service";
 
@@ -14,10 +13,7 @@ type StatisticsEvent = QuizCompletedEvent | UserActivityEvent | CourseStartedEve
 @Injectable()
 @EventsHandler(QuizCompletedEvent, UserActivityEvent, CourseStartedEvent)
 export class StatisticsHandler implements IEventHandler<QuizCompletedEvent | UserActivityEvent> {
-  constructor(
-    private readonly statisticsRepository: StatisticsRepository,
-    private readonly statisticsService: StatisticsService,
-  ) {}
+  constructor(private readonly statisticsService: StatisticsService) {}
 
   async handle(event: StatisticsEvent) {
     try {
@@ -43,7 +39,7 @@ export class StatisticsHandler implements IEventHandler<QuizCompletedEvent | Use
   }
 
   private async handleQuizCompleted(event: QuizCompletedEvent) {
-    await this.statisticsRepository.createQuizAttempt({
+    await this.statisticsService.createQuizAttempt({
       userId: event.userId,
       courseId: event.courseId,
       lessonId: event.lessonId,

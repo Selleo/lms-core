@@ -13,7 +13,9 @@ import { DatabasePg } from "src/common";
 import { QuizCompletedEvent } from "src/events";
 import { S3Service } from "src/file/s3.service";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
+import { QUESTION_TYPE } from "src/questions/schema/questions.types";
 
+import { LESSON_ITEM_TYPE, LESSON_TYPE } from "./lesson.type";
 import { LessonsRepository } from "./repositories/lessons.repository";
 
 import type { Lesson, ShowLessonResponse } from "./schemas/lesson.schema";
@@ -65,11 +67,11 @@ export class LessonsService {
       lesson.id,
     );
 
-    if (lesson.type !== "quiz") {
+    if (lesson.type !== LESSON_TYPE.quiz.key) {
       const lessonItems = await this.getLessonItems(lesson, courseId, userId);
 
       const completableLessonItems = lessonItems.filter(
-        (item) => item.lessonItemType !== "text_block",
+        (item) => item.lessonItemType !== LESSON_ITEM_TYPE.text_block.key,
       );
 
       return {
@@ -191,7 +193,7 @@ export class LessonsService {
 
             const passQuestion = await match(questionLessonItem.content.questionType)
               .returnType<Promise<boolean>>()
-              .with("fill_in_the_blanks_text", async () => {
+              .with(QUESTION_TYPE.fill_in_the_blanks_text.key, async () => {
                 const question = questionLessonItem.content;
                 let passQuestion = true;
 
@@ -204,7 +206,7 @@ export class LessonsService {
 
                 return passQuestion;
               })
-              .with("fill_in_the_blanks_dnd", async () => {
+              .with(QUESTION_TYPE.fill_in_the_blanks_dnd.key, async () => {
                 const question = questionLessonItem.content;
                 let passQuestion = true;
 
@@ -415,32 +417,41 @@ export class LessonsService {
   ): Promise<LessonItemResponse> {
     const content = await match(item)
       .returnType<Promise<LessonItemResponse["content"]>>()
-      .with({ lessonItemType: "question", questionData: P.not(P.nullish) }, async (item) => {
-        const { lessonItemId, questionData, lessonItemType, displayOrder } = item;
-        return this.processQuestionItem(
-          { lessonItemId, displayOrder, lessonItemType, questionData },
-          userId,
-          courseId,
-          lessonId,
-          lessonType,
-          false,
-          null,
-        );
-      })
-      .with({ lessonItemType: "text_block", textBlockData: P.not(P.nullish) }, async (item) => ({
-        id: item.textBlockData.id,
-        body: item.textBlockData.body ?? "",
-        state: item.textBlockData.state ?? "",
-        title: item.textBlockData.title,
-      }))
-      .with({ lessonItemType: "file", fileData: P.not(P.nullish) }, async (item) => ({
-        id: item.fileData.id,
-        title: item.fileData.title,
-        type: item.fileData.type,
-        url: (item.fileData.url as string).startsWith("https://")
-          ? item.fileData.url
-          : await this.s3Service.getSignedUrl(item.fileData.url),
-      }))
+      .with(
+        { lessonItemType: LESSON_ITEM_TYPE.question.key, questionData: P.not(P.nullish) },
+        async (item) => {
+          const { lessonItemId, questionData, lessonItemType, displayOrder } = item;
+          return this.processQuestionItem(
+            { lessonItemId, displayOrder, lessonItemType, questionData },
+            userId,
+            courseId,
+            lessonId,
+            lessonType,
+            false,
+            null,
+          );
+        },
+      )
+      .with(
+        { lessonItemType: LESSON_ITEM_TYPE.text_block.key, textBlockData: P.not(P.nullish) },
+        async (item) => ({
+          id: item.textBlockData.id,
+          body: item.textBlockData.body ?? "",
+          state: item.textBlockData.state ?? "",
+          title: item.textBlockData.title,
+        }),
+      )
+      .with(
+        { lessonItemType: LESSON_ITEM_TYPE.file.key, fileData: P.not(P.nullish) },
+        async (item) => ({
+          id: item.fileData.id,
+          title: item.fileData.title,
+          type: item.fileData.type,
+          url: (item.fileData.url as string).startsWith("https://")
+            ? item.fileData.url
+            : await this.s3Service.getSignedUrl(item.fileData.url),
+        }),
+      )
       .otherwise(() => {
         throw new Error(`Unknown item type: ${item.lessonItemType}`);
       });
@@ -473,9 +484,9 @@ export class LessonsService {
     );
 
     if (
-      item.questionData.questionType !== "open_answer" &&
-      item.questionData.questionType !== "fill_in_the_blanks_text" &&
-      item.questionData.questionType !== "fill_in_the_blanks_dnd"
+      item.questionData.questionType !== QUESTION_TYPE.open_answer.key &&
+      item.questionData.questionType !== QUESTION_TYPE.fill_in_the_blanks_text.key &&
+      item.questionData.questionType !== QUESTION_TYPE.fill_in_the_blanks_dnd.key
     ) {
       return {
         id: item.questionData.id,
@@ -486,7 +497,7 @@ export class LessonsService {
       };
     }
 
-    if (item.questionData.questionType === "open_answer") {
+    if (item.questionData.questionType === QUESTION_TYPE.open_answer.key) {
       const studentAnswer = await this.lessonsRepository.getOpenQuestionStudentAnswer(
         lessonId,
         item.questionData.id,
@@ -510,7 +521,7 @@ export class LessonsService {
       lessonId,
     );
     // TODO: refactor DB query
-    if (item.questionData.questionType == "fill_in_the_blanks_text") {
+    if (item.questionData.questionType == QUESTION_TYPE.fill_in_the_blanks_text.key) {
       const result = !!studentAnswers?.answer
         ? Object.keys(studentAnswers.answer).map((key) => {
             const position = parseInt(key);
@@ -532,7 +543,8 @@ export class LessonsService {
               position: position,
               isStudentAnswer,
               studentAnswerText:
-                (lessonRated && lessonType === "quiz") || lessonType !== "quiz"
+                (lessonRated && lessonType === LESSON_TYPE.quiz.key) ||
+                lessonType !== LESSON_TYPE.quiz.key
                   ? studentAnswerText
                   : null,
               isCorrect,
@@ -541,7 +553,7 @@ export class LessonsService {
         : [];
 
       const canShowSolutionExplanation =
-        !!studentAnswers?.answer && lessonRated && lessonType === "quiz";
+        !!studentAnswers?.answer && lessonRated && lessonType === LESSON_TYPE.quiz.key;
 
       return {
         id: item.questionData.id,
@@ -561,7 +573,7 @@ export class LessonsService {
         optionText: answer.optionText,
         position:
           (lessonRated && answer.isCorrect) ||
-          (lessonType !== "quiz" &&
+          (lessonType !== LESSON_TYPE.quiz.key &&
             typeof answer?.position === "number" &&
             studentAnswers?.answer[answer.position])
             ? answer.position
@@ -574,7 +586,7 @@ export class LessonsService {
     });
 
     const canShowSolutionExplanation =
-      !!studentAnswers?.answer && lessonRated && lessonType === "quiz";
+      !!studentAnswers?.answer && lessonRated && lessonType === LESSON_TYPE.quiz.key;
 
     return {
       id: item.questionData.id,
@@ -590,11 +602,11 @@ export class LessonsService {
 
   private isValidItem(item: any): boolean {
     switch (item.lessonItemType) {
-      case "question":
+      case LESSON_ITEM_TYPE.question.key:
         return !!item.questionData;
-      case "text_block":
+      case LESSON_ITEM_TYPE.text_block.key:
         return !!item.textBlockData;
-      case "file":
+      case LESSON_ITEM_TYPE.file.key:
         return !!item.fileData;
       default:
         return false;

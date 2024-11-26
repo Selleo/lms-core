@@ -79,7 +79,7 @@ export async function createNiceCourses(
       });
 
       for (const [index, item] of lessonData.items.entries()) {
-        if (item.itemType === "text_block") {
+        if (item.itemType === LESSON_ITEM_TYPE.text_block.key) {
           const [additionalTextBlock] = await db
             .insert(textBlocks)
             .values({
@@ -98,10 +98,10 @@ export async function createNiceCourses(
             id: crypto.randomUUID(),
             lessonId: lesson.id,
             lessonItemId: additionalTextBlock.id,
-            lessonItemType: "text_block",
+            lessonItemType: LESSON_ITEM_TYPE.text_block.key,
             displayOrder: index + 2,
           });
-        } else if (item.itemType === "file") {
+        } else if (item.itemType === LESSON_ITEM_TYPE.file.key) {
           const [file] = await db
             .insert(files)
             .values({
@@ -120,10 +120,10 @@ export async function createNiceCourses(
             id: crypto.randomUUID(),
             lessonId: lesson.id,
             lessonItemId: file.id,
-            lessonItemType: "file",
+            lessonItemType: LESSON_ITEM_TYPE.file.key,
             displayOrder: index + 2,
           });
-        } else if (item.itemType === "question") {
+        } else if (item.itemType === LESSON_ITEM_TYPE.question.key) {
           const [questionExists] = await db
             .select()
             .from(questions)
@@ -134,7 +134,7 @@ export async function createNiceCourses(
               id: crypto.randomUUID(),
               lessonId: lesson.id,
               lessonItemId: questionExists.id,
-              lessonItemType: "question",
+              lessonItemType: LESSON_ITEM_TYPE.question.key,
               displayOrder: index + 2,
             });
 
@@ -179,7 +179,7 @@ export async function createNiceCourses(
             id: crypto.randomUUID(),
             lessonId: lesson.id,
             lessonItemId: question.id,
-            lessonItemType: "question",
+            lessonItemType: LESSON_ITEM_TYPE.question.key,
             displayOrder: index + 2,
           });
         }

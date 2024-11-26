@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import {
   lessons,
@@ -16,10 +15,7 @@ import type { StatsByMonth, UserStatistic } from "src/statistics/schemas/userSta
 
 @Injectable()
 export class StatisticsRepository {
-  constructor(
-    @Inject("DB") private readonly db: DatabasePg,
-    private readonly lessonsRepository: LessonsRepository,
-  ) {}
+  constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
   async getQuizStats(userId: string) {
     const [quizStatsResult] = await this.db

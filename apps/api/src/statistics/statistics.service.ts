@@ -24,7 +24,6 @@ export class StatisticsService {
 
     const quizStats = await this.statisticsRepository.getQuizStats(userId);
 
-    // TODO: decide what to do when there is no last lesson
     const lastLesson = await this.getLassLesson(userId);
 
     const activityStats = await this.statisticsRepository.getActivityStats(userId);
@@ -53,6 +52,17 @@ export class StatisticsService {
     };
   }
 
+  async createQuizAttempt(data: {
+    userId: string;
+    courseId: string;
+    lessonId: string;
+    correctAnswers: number;
+    wrongAnswers: number;
+    score: number;
+  }) {
+    await this.statisticsRepository.createQuizAttempt(data);
+  }
+
   async updateUserActivity(userId: string) {
     const today = startOfDay(new Date());
     const formatedTodayDate = format(today, "yyyy-MM-dd");
@@ -68,9 +78,14 @@ export class StatisticsService {
 
       const daysDiff = differenceInDays(today, lastActivityDate);
 
-      if (daysDiff === 0) return currentStats?.currentStreak ?? 1;
-      if (daysDiff === 1) return (currentStats?.currentStreak ?? 0) + 1;
-      return 1;
+      switch (daysDiff) {
+        case 0:
+          return currentStats?.currentStreak ?? 1;
+        case 1:
+          return (currentStats?.currentStreak ?? 0) + 1;
+        default:
+          return 1;
+      }
     })();
 
     const newLongestStreak = Math.max(newCurrentStreak, currentStats?.longestStreak ?? 0);
