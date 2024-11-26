@@ -76,7 +76,7 @@ const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSett
         <CardContent>
           <p>Fill in the details to create a new course.</p>
           <Form {...form}>
-            <form className="mt-[2.5rem]" onSubmit={form.handleSubmit(onSubmit)}>
+            <form className="mt-10" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="title"

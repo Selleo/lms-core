@@ -1,4 +1,4 @@
-import React from "react";
+import { cn } from "~/lib/utils";
 
 import { Icon } from "../Icon";
 
@@ -12,14 +12,14 @@ interface ImageUploadProps {
 const ImageUploadInput = ({ field, handleImageUpload, isUploading }: ImageUploadProps) => {
   return (
     <div className="flex items-center justify-center flex-col gap-y-2">
-      <div className="w-full h-[20rem] rounded-lg border-solid border-2 border-gray-300 flex justify-center items-center bg-gray-100 relative cursor-pointer overflow-hidden flex-col">
+      <div className="w-full h-80 rounded-lg border-solid border-2 border-gray-300 flex justify-center items-center bg-gray-100 relative cursor-pointer overflow-hidden flex-col">
         {field.value && (
           <img src={field.value} alt="Uploaded" className="w-full h-full object-cover" />
         )}
         <div
-          className={`absolute inset-0 flex flex-col items-center justify-center text-center ${
-            field.value ? "text-white" : ""
-          }`}
+          className={cn("absolute inset-0 flex flex-col items-center justify-center text-center", {
+            "text-white": field.value,
+          })}
         >
           <Icon name="UploadImageIcon" />
 
