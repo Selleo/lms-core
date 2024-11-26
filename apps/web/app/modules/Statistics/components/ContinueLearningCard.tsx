@@ -21,7 +21,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
       <div className="w-full h-full p-4 gap-y-4 bg-white rounded-lg drop-shadow-card 2xl:max-w-[296px] flex flex-col">
         <div className="flex flex-col items-center gap-y-1">
           <Skeleton className="h-[29px] max-w-[240px] w-full rounded-lg" />
-          <Skeleton className="h-[16px] max-w-[160px] w-full rounded-lg" />
+          <Skeleton className="h-4 max-w-[160px] w-full rounded-lg" />
         </div>
         <Skeleton className="h-full w-full rounded-lg" />
       </div>
