@@ -43,7 +43,7 @@ importers:
         version: 8.4.1
       '@golevelup/nestjs-stripe':
         specifier: 0.8.2
-        version: 0.8.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(rxjs@7.8.1)(stripe@17.0.0)
+        version: 0.8.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(rxjs@7.8.1)(stripe@17.0.0)
       '@knaadh/nestjs-drizzle-postgres':
         specifier: 1.0.0
         version: 1.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(drizzle-orm@0.31.2(@types/react@18.3.12)(postgres@3.4.4)(react@18.3.1))(postgres@3.4.4)
@@ -58,7 +58,7 @@ importers:
         version: 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/cqrs':
         specifier: 10.2.7
-        version: 10.2.7(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0)(rxjs@7.8.1)
+        version: 10.2.7(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/jwt':
         specifier: 10.2.0
         version: 10.2.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))
@@ -73,13 +73,13 @@ importers:
         version: 10.4.4(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/websockets@10.4.4)(rxjs@7.8.1)
       '@nestjs/schedule':
         specifier: 4.1.0
-        version: 4.1.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))
+        version: 4.1.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)
       '@nestjs/swagger':
         specifier: 7.4.0
-        version: 7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0)
+        version: 7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0)
       '@nestjs/terminus':
         specifier: 10.2.3
-        version: 10.2.3(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0)(rxjs@7.8.1)
+        version: 10.2.3(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/websockets':
         specifier: 10.4.4
         version: 10.4.4(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@nestjs/platform-socket.io@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1)
@@ -130,7 +130,7 @@ importers:
         version: 3.3.7
       nestjs-typebox:
         specifier: 3.0.0-next.8
-        version: 3.0.0-next.8(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/swagger@7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0))(@sinclair/typebox@0.32.34)(rxjs@7.8.1)
+        version: 3.0.0-next.8(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@nestjs/swagger@7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0))(@sinclair/typebox@0.32.34)(rxjs@7.8.1)
       nodemailer:
         specifier: 6.9.14
         version: 6.9.14
@@ -173,7 +173,7 @@ importers:
         version: 10.0.0(chokidar@3.5.3)(typescript@5.4.5)
       '@nestjs/testing':
         specifier: 10.0.0
-        version: 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0))
+        version: 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@nestjs/platform-express@10.0.0)
       '@types/bcrypt':
         specifier: 5.0.2
         version: 5.0.2
@@ -314,6 +314,9 @@ importers:
       '@radix-ui/react-slot':
         specifier: ^1.1.0
         version: 1.1.0(@types/react@18.3.12)(react@18.3.1)
+      '@radix-ui/react-tabs':
+        specifier: ^1.1.1
+        version: 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-toast':
         specifier: ^1.2.1
         version: 1.2.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -3106,6 +3109,19 @@ packages:
       react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
     peerDependenciesMeta:
       '@types/react':
+        optional: true
+
+  '@radix-ui/react-tabs@1.1.1':
+    resolution: {integrity: sha512-3GBUDmP2DvzmtYLMsHmpA1GtR46ZDZ+OreXM/N+kkQJOPIgytFWWTfDQmBQKBvaFS0Vno0FktdbVzN28KGrMdw==}
+    peerDependencies:
+      '@types/react': '*'
+      '@types/react-dom': '*'
+      react: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+      react-dom: ^16.8 || ^17.0 || ^18.0 || ^19.0 || ^19.0.0-rc
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
         optional: true
 
   '@radix-ui/react-toast@1.2.2':
@@ -13080,7 +13096,7 @@ snapshots:
       lodash: 4.17.21
       nanoid: 3.3.7
 
-  '@golevelup/nestjs-discovery@4.0.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))':
+  '@golevelup/nestjs-discovery@4.0.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)':
     dependencies:
       '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1)
@@ -13092,10 +13108,10 @@ snapshots:
       lodash: 4.17.21
       rxjs: 7.8.1
 
-  '@golevelup/nestjs-stripe@0.8.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(rxjs@7.8.1)(stripe@17.0.0)':
+  '@golevelup/nestjs-stripe@0.8.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(rxjs@7.8.1)(stripe@17.0.0)':
     dependencies:
       '@golevelup/nestjs-common': 2.0.1(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))
-      '@golevelup/nestjs-discovery': 4.0.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))
+      '@golevelup/nestjs-discovery': 4.0.2(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)
       '@golevelup/nestjs-modules': 0.7.1(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(rxjs@7.8.1)
       stripe: 17.0.0
     transitivePeerDependencies:
@@ -13484,7 +13500,7 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
-  '@nestjs/cqrs@10.2.7(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0)(rxjs@7.8.1)':
+  '@nestjs/cqrs@10.2.7(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1)':
     dependencies:
       '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1)
@@ -13532,7 +13548,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@nestjs/schedule@4.1.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))':
+  '@nestjs/schedule@4.1.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)':
     dependencies:
       '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1)
@@ -13561,7 +13577,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/swagger@7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0)':
+  '@nestjs/swagger@7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0)':
     dependencies:
       '@microsoft/tsdoc': 0.15.1
       '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
@@ -13573,7 +13589,7 @@ snapshots:
       reflect-metadata: 0.2.0
       swagger-ui-dist: 5.17.14
 
-  '@nestjs/terminus@10.2.3(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0)(rxjs@7.8.1)':
+  '@nestjs/terminus@10.2.3(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0)(rxjs@7.8.1)':
     dependencies:
       '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1)
@@ -13582,7 +13598,7 @@ snapshots:
       reflect-metadata: 0.2.0
       rxjs: 7.8.1
 
-  '@nestjs/testing@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0))':
+  '@nestjs/testing@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@nestjs/platform-express@10.0.0)':
     dependencies:
       '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1)
@@ -14259,6 +14275,22 @@ snapshots:
       react: 18.3.1
     optionalDependencies:
       '@types/react': 18.3.12
+
+  '@radix-ui/react-tabs@1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@radix-ui/primitive': 1.1.0
+      '@radix-ui/react-context': 1.1.1(@types/react@18.3.12)(react@18.3.1)
+      '@radix-ui/react-direction': 1.1.0(@types/react@18.3.12)(react@18.3.1)
+      '@radix-ui/react-id': 1.1.0(@types/react@18.3.12)(react@18.3.1)
+      '@radix-ui/react-presence': 1.1.1(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-primitive': 2.0.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-roving-focus': 1.1.0(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@radix-ui/react-use-controllable-state': 1.1.0(@types/react@18.3.12)(react@18.3.1)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+    optionalDependencies:
+      '@types/react': 18.3.12
+      '@types/react-dom': 18.3.1
 
   '@radix-ui/react-toast@1.2.2(@types/react-dom@18.3.1)(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
@@ -18483,7 +18515,7 @@ snapshots:
       debug: 4.3.7
       enhanced-resolve: 5.17.1
       eslint: 8.57.1
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
       fast-glob: 3.3.2
       get-tsconfig: 4.8.1
       is-bun-module: 1.2.1
@@ -18506,7 +18538,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
@@ -18555,7 +18587,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.1
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-plugin-import@2.31.0)(eslint@8.57.1))(eslint@8.57.1)
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@6.21.0(eslint@8.57.1)(typescript@5.7.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.6.3)(eslint@8.57.1)
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -21158,11 +21190,11 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nestjs-typebox@3.0.0-next.8(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/swagger@7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0))(@sinclair/typebox@0.32.34)(rxjs@7.8.1):
+  nestjs-typebox@3.0.0-next.8(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(@nestjs/swagger@7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0))(@sinclair/typebox@0.32.34)(rxjs@7.8.1):
     dependencies:
       '@nestjs/common': 10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1)
       '@nestjs/core': 10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1)
-      '@nestjs/swagger': 7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/platform-express@10.0.0)(@nestjs/websockets@10.4.4)(reflect-metadata@0.2.0)(rxjs@7.8.1))(reflect-metadata@0.2.0)
+      '@nestjs/swagger': 7.4.0(@nestjs/common@10.0.0(reflect-metadata@0.2.0)(rxjs@7.8.1))(@nestjs/core@10.0.0)(reflect-metadata@0.2.0)
       '@sinclair/typebox': 0.32.34
       rxjs: 7.8.1
 
