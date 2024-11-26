@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useCurrentUser } from "~/api/queries";
 import { useUserStatistics } from "~/api/queries/useUserStatistics";
 import { Gravatar } from "~/components/Gravatar";
+import { PageWrapper } from "~/components/PageWrapper";
 import { Avatar } from "~/components/ui/avatar";
 
 import {
@@ -80,51 +81,53 @@ export default function StatisticsPage() {
   const coursesRatesChartData = parseRatesChartData(userStatistics?.courses);
 
   return (
-    <div className="flex px-4 flex-col gap-y-6 2xl:gap-y-6 md:px-6 2xl:p-2">
-      <div className="gap-x-2 flex 2xl:gap-x-4 items-center">
-        <p className="h5 2xl:h2 text-neutral-950">Welcome back, {user?.firstName}</p>
-        <Avatar className="size-12">
-          <Gravatar email={user?.email} />
-        </Avatar>
-      </div>
-      <div className="flex items-center flex-col-reverse 2xl:flex-row gap-y-4 h-full gap-x-7 2xl:h-[calc(100dvh-161px)]">
-        <div className="w-full h-full gap-y-4 2xl:gap-x-4 2xl:gap-y-6 flex flex-col">
-          <div className="flex flex-wrap 2xl:flex-nowrap gap-4 w-full h-full">
-            <ContinueLearningCard isLoading={isLoading} lesson={userStatistics?.lastLesson} />
-            <AvgPercentScoreChart
-              label={`${userStatistics?.quizzes.averageScore}`}
-              title="Avg. Percent Score of Quizzes"
-              chartConfig={quizzesChartConfig}
-              chartData={quizzesChartData}
-              isLoading={isLoading}
-            />
-            <AvgPercentScoreChart
-              label={`${userStatistics?.averageStats.courseStats.completionRate}`}
-              title="Avg. Percent of Course Competition"
-              chartConfig={coursesChartConfig}
-              chartData={coursesChartData}
-              isLoading={isLoading}
-            />
-          </div>
-          <div className="flex flex-col 2xl:gap-x-4 2xl:flex-row w-full h-full gap-y-4">
-            <RatesChart
-              resourceName="Courses"
-              chartData={coursesRatesChartData}
-              isLoading={isLoading}
-            />
-            <RatesChart
-              resourceName="Lessons"
-              chartData={lessonRatesChartData}
-              isLoading={isLoading}
-            />
-          </div>
+    <PageWrapper>
+      <div className="flex flex-col gap-y-6 2xl:gap-y-6">
+        <div className="gap-x-2 flex 2xl:gap-x-4 items-center">
+          <p className="h5 2xl:h2 text-neutral-950">Welcome back, {user?.firstName}</p>
+          <Avatar className="size-12">
+            <Gravatar email={user?.email} />
+          </Avatar>
         </div>
-        <ProfileWithCalendar
-          user={user}
-          isLoading={isLoading || isUserLoading}
-          streak={userStatistics?.streak}
-        />
+        <div className="flex items-center flex-col-reverse 2xl:flex-row gap-y-4 h-full gap-x-7 2xl:h-[calc(100dvh-161px)]">
+          <div className="w-full h-full gap-y-4 2xl:gap-x-4 2xl:gap-y-6 flex flex-col">
+            <div className="flex flex-wrap 2xl:flex-nowrap gap-4 w-full h-full">
+              <ContinueLearningCard isLoading={isLoading} lesson={userStatistics?.lastLesson} />
+              <AvgPercentScoreChart
+                label={`${userStatistics?.quizzes.averageScore}`}
+                title="Avg. Percent Score of Quizzes"
+                chartConfig={quizzesChartConfig}
+                chartData={quizzesChartData}
+                isLoading={isLoading}
+              />
+              <AvgPercentScoreChart
+                label={`${userStatistics?.averageStats.courseStats.completionRate}`}
+                title="Avg. Percent of Course Competition"
+                chartConfig={coursesChartConfig}
+                chartData={coursesChartData}
+                isLoading={isLoading}
+              />
+            </div>
+            <div className="flex flex-col 2xl:gap-x-4 2xl:flex-row w-full h-full gap-y-4">
+              <RatesChart
+                resourceName="Courses"
+                chartData={coursesRatesChartData}
+                isLoading={isLoading}
+              />
+              <RatesChart
+                resourceName="Lessons"
+                chartData={lessonRatesChartData}
+                isLoading={isLoading}
+              />
+            </div>
+          </div>
+          <ProfileWithCalendar
+            user={user}
+            isLoading={isLoading || isUserLoading}
+            streak={userStatistics?.streak}
+          />
+        </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }
