@@ -7,6 +7,13 @@ import {
 
 import { courseQueryOptions, useCourseSuspense } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
+import { PageWrapper } from "~/components/PageWrapper";
+import {
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "~/components/ui/breadcrumb";
 import { useUserRole } from "~/hooks/useUserRole";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 
@@ -41,12 +48,21 @@ export default function CoursesViewPage() {
   }
 
   return (
-    <div className="h-full">
-      <div className="flex flex-col md:flex-row h-full gap-6 px-6">
+    <PageWrapper className="flex flex-col gap-y-4 md:gap-y-6">
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem>
+          <BreadcrumbLink href={`/course/${id}`}>{course.title}</BreadcrumbLink>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+      <div className="flex flex-col md:flex-row h-full gap-6">
         <CourseViewMainCard {...course} />
         <LessonsList lessons={course.lessons} isEnrolled={course.enrolled || isAdmin} />
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 
