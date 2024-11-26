@@ -6,6 +6,15 @@ type NavigationTabsProps = {
   setNavigationTabState: (navigationTabState: NavigationTab) => void;
 };
 
+const TabTrigger = ({ value, children }: { value: string; children: React.ReactNode }) => (
+  <Tabs.Trigger
+    className="text-gray-700 hover:text-black text-lg px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-black"
+    value={value}
+  >
+    {children}
+  </Tabs.Trigger>
+);
+
 const NavigationTabs = ({ setNavigationTabState }: NavigationTabsProps) => {
   const handleValueChange = (value: string) => {
     setNavigationTabState(value as NavigationTab);
@@ -14,30 +23,10 @@ const NavigationTabs = ({ setNavigationTabState }: NavigationTabsProps) => {
   return (
     <Tabs.Root className="flex flex-col" defaultValue="Settings" onValueChange={handleValueChange}>
       <Tabs.List className="flex items-center gap-5 border-b border-gray-200">
-        <Tabs.Trigger
-          className="text-gray-700 hover:text-black text-lg px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-black"
-          value="Settings"
-        >
-          Settings
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          className="text-gray-700 hover:text-black text-lg px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-black"
-          value="Lesson"
-        >
-          Lesson
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          className="text-gray-700 hover:text-black text-lg px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-black"
-          value="Pricing"
-        >
-          Pricing
-        </Tabs.Trigger>
-        <Tabs.Trigger
-          className="text-gray-700 hover:text-black text-lg px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-black"
-          value="Status"
-        >
-          Status
-        </Tabs.Trigger>
+        <TabTrigger value="Settings">Settings</TabTrigger>
+        <TabTrigger value="Lesson">Curriculum</TabTrigger>
+        <TabTrigger value="Pricing">Pricing</TabTrigger>
+        <TabTrigger value="Status">Status</TabTrigger>
       </Tabs.List>
     </Tabs.Root>
   );

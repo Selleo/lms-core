@@ -12,24 +12,30 @@ interface ImageUploadProps {
 const ImageUploadInput = ({ field, handleImageUpload, isUploading }: ImageUploadProps) => {
   return (
     <div className="flex items-center justify-center flex-col gap-y-2">
-      <div className="w-full h-[20rem] border-solid border-2 border-gray-300 flex justify-center items-center bg-gray-100 relative cursor-pointer overflow-hidden flex-col">
+      <div className="w-full h-[20rem] rounded-lg border-solid border-2 border-gray-300 flex justify-center items-center bg-gray-100 relative cursor-pointer overflow-hidden flex-col">
         {field.value && (
           <img src={field.value} alt="Uploaded" className="w-full h-full object-cover" />
         )}
+        <div
+          className={`absolute inset-0 flex flex-col items-center justify-center text-center ${
+            field.value ? "text-white" : ""
+          }`}
+        >
+          <Icon name="UploadImageIcon" />
 
-        {!field.value && (
-          <div>
-            <Icon name="UploadImageIcon" />
+          <div className="flex items-center justify-center mt-2">
+            <span className={`text-lg font-semibold text-[#7CA3DE]`}>
+              {field.value ? "Click to replace" : "Click to upload"}
+            </span>
+            <span className="ml-2 text-lg font-semibold">or drag and drop</span>
           </div>
-        )}
 
-        {!field.value && (
-          <div className="flex items-center justify-center">
-            <span className="text-blue-500 text-lg font-semibold">Click to upload</span>
-            <span className="text-black text-lg font-semibold ml-2">or drag and drop</span>
+          <div
+            className={`text-sm w-full px-2 mt-2 ${field.value ? "text-white" : "text-gray-600"}`}
+          >
+            {field.value ? "SVG, PNG, JPG (max. to 20MB)" : "SVG, PNG, JPG or GIF (max. 800x400px)"}
           </div>
-        )}
-
+        </div>
         <input
           type="file"
           accept="image/*"
@@ -42,11 +48,6 @@ const ImageUploadInput = ({ field, handleImageUpload, isUploading }: ImageUpload
           disabled={isUploading}
           className="absolute inset-0 opacity-0 cursor-pointer"
         />
-        {!field.value && (
-          <div className="text-center mt-2 text-gray-600 text-sm w-full px-2">
-            SVG, PNG, JPG or GIF (max. 20MB)
-          </div>
-        )}
       </div>
     </div>
   );

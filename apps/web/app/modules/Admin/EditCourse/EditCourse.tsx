@@ -12,7 +12,7 @@ import type { NavigationTab } from "./EditCourse.types";
 const Lesson = () => (
   <Card className="p-6 shadow-md border border-gray-200">
     <CardHeader>
-      <h5 className="text-xl font-semibold">Lesson</h5>
+      <h5 className="text-xl font-semibold">Curriculum</h5>
     </CardHeader>
     <CardContent>
       <p>Here you can add and manage lessons for your course.</p>
@@ -82,8 +82,8 @@ const EditCourse = () => {
     <div className="p-6">
       <Card className="shadow-md border border-gray-200">
         <CardHeader>
-          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1 mb-1">
-            Create new course
+          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
+            {course?.title || ""}
           </h4>
         </CardHeader>
         <CardContent>

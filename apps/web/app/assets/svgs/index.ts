@@ -19,6 +19,7 @@ export { default as User } from "./user.svg?react";
 export { default as Course } from "./course.svg?react";
 export { default as Category } from "./category.svg?react";
 export { default as UploadImageIcon } from "./upload-image.svg?react";
+export { default as TrashIcon } from "./trash-icon.svg?react";
 export { default as Lesson } from "./lesson.svg?react";
 export { default as LessonContent } from "./lesson-content.svg?react";
 export { default as Email } from "./email.svg?react";

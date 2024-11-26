@@ -17,7 +17,6 @@ export const useAddCourseForm = () => {
     defaultValues: {
       title: "",
       description: "",
-      state: "draft",
       categoryId: "",
       imageUrl: "",
     },
@@ -25,10 +24,10 @@ export const useAddCourseForm = () => {
 
   const onSubmit = (values: AddCourseFormValues) => {
     createCourse({
-      data: { ...values },
+      data: { ...values, state: "draft" },
     }).then(({ data }) => {
       queryClient.invalidateQueries({ queryKey: ALL_COURSES_QUERY_KEY });
-      navigate(`/admin/courses/${data.id}`);
+      navigate(`/admin/beta-courses/${data.id}`);
     });
   };
 

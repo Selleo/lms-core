@@ -8,7 +8,6 @@ import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
 import { Icon } from "~/components/Icon";
 import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -28,7 +27,7 @@ const AddCourse = () => {
   const { data: categories } = useCategoriesSuspense();
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
-  const { isValid: isFormValid, isDirty } = form.formState;
+  const { isValid: isFormValid } = form.formState;
   const watchedImageUrl = form.watch("imageUrl");
   const imageUrl = form.getValues("imageUrl");
 
@@ -49,12 +48,10 @@ const AddCourse = () => {
 
   return (
     <div className="flex h-screen bg-white">
-      <div className="w-2/5 flex items-center justify-center">
-        <Card className="bg-gray-100 p-6 rounded-lg shadow-md w-4/5 h-[65rem] flex items-center justify-center">
-          <img src={SplashScreenImage} alt="splashScreenImage" className="rounded" />
-        </Card>
+      <div className="w-1/2 flex items-center justify-center">
+        <img src={SplashScreenImage} alt="splashScreenImage" className="rounded" />
       </div>
-      <div className="w-3/5 mt-[6.5rem]">
+      <div className="w-1/2 mt-[1rem]">
         <Button
           onClick={() => navigate("/admin/courses")}
           className="border-2 border-beige-500 bg-white text-blue-500 py-2 px-6 rounded"
@@ -162,21 +159,26 @@ const AddCourse = () => {
             {watchedImageUrl && (
               <Button
                 onClick={() => form.setValue("imageUrl", "")}
-                className="bg-red-500 text-white py-2 px-6 rounded mb-4"
+                className="bg-red-500 text-white py-2 px-6 rounded mb-4 mt-4"
               >
+                <Icon name="TrashIcon" className="mr-2" />
                 Remove Thumbnail
               </Button>
             )}
 
-            <div className="flex space-x-5 mt-5">
-              <Button className="bg-white text-blue-500 border-2 rounded px-6 py-2">Cancel</Button>
-              <Button
-                type="submit"
-                className="bg-blue-500 text-white rounded px-6 py-2"
-                disabled={isFormValid || isUploading || !isDirty}
-              >
-                Proceed
-              </Button>
+            <div className="pb-5">
+              <div className="flex space-x-5 mt-5 mb-10">
+                <Button className="bg-white text-blue-500 border-2 rounded px-6 py-2">
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-blue-500 text-white rounded px-6 py-2"
+                  disabled={!isFormValid || isUploading}
+                >
+                  Proceed
+                </Button>
+              </div>
             </div>
           </form>
         </Form>

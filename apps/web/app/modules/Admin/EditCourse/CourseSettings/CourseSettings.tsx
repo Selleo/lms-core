@@ -4,6 +4,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
+import { Icon } from "~/components/Icon";
 import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
@@ -68,7 +69,7 @@ const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSett
 
   return (
     <div className="w-full flex gap-4 ">
-      <Card className="p-6 shadow-md border border-gray-200 w-7/10 flex-grow">
+      <Card className="p-4 shadow-md border border-gray-200 w-7/10 flex-grow">
         <CardHeader>
           <h5 className="text-xl font-semibold">Basic settings</h5>
         </CardHeader>
@@ -82,8 +83,8 @@ const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSett
                 render={({ field }) => (
                   <FormItem>
                     <Label htmlFor="title" className="text-right">
-                      <span className="text-red-500">*</span>
-                      Course title
+                      <span className="text-red-500 mr-1">*</span>
+                      Title
                     </Label>
                     <FormControl>
                       <Input id="title" {...field} required />
@@ -98,7 +99,7 @@ const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSett
                 render={({ field }) => (
                   <FormItem className="mt-5">
                     <Label htmlFor="description" className="text-right">
-                      <span className="text-red-500">*</span>
+                      <span className="text-red-500 mr-1">*</span>
                       Description
                     </Label>
                     <FormControl>
@@ -120,7 +121,7 @@ const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSett
                 render={({ field }) => (
                   <FormItem className="flex-1 mt-5">
                     <Label htmlFor="categoryId" className="text-right">
-                      <span className="text-red-500">*</span>
+                      <span className="text-red-500 mr-1">*</span>
                       Category
                     </Label>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -167,8 +168,9 @@ const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSett
                 {watchedImageUrl && (
                   <Button
                     onClick={() => form.setValue("imageUrl", "")}
-                    className="bg-red-500 text-white py-2 px-6 rounded mb-4"
+                    className="bg-red-500 text-white py-2 px-6 rounded mb-4 mt-4"
                   >
+                    <Icon name="TrashIcon" className="mr-2" />
                     Remove Thumbnail
                   </Button>
                 )}
