@@ -1,0 +1,39 @@
+name: E2E - Playwright Tests
+
+env:
+  HUSKY: 0
+
+on:
+  workflow_run:
+    workflows: ["STAGING - Deploy WEBAPP", "STAGING - Deploy API"]
+    types:
+      - completed
+  workflow_call:
+
+jobs:
+  playwright:
+    name: Playwright Tests
+    runs-on: ubuntu-latest
+    if: |
+      github.event.workflow_run.conclusion == 'success' ||
+      github.event_name == 'workflow_call'
+    container:
+      image: mcr.microsoft.com/playwright:v1.45.3-jammy
+    defaults:
+      run:
+        working-directory: ./apps/web/
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.15.0
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run tests
+        run: pnpm playwright test
+        env:
+          HOME: /root

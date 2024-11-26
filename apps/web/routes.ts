@@ -11,15 +11,12 @@ export const routes: (
       route("password-recovery", "modules/Auth/PasswordRecovery.page.tsx");
     });
     route("", "modules/Dashboard/Dashboard.layout.tsx", () => {
-      route("", "modules/Dashboard/Dashboard.page.tsx", {
+      route("", "modules/Statistics/Statistics.page.tsx", {
         index: true,
       });
+      route("courses", "modules/Dashboard/Dashboard.page.tsx");
       route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
-      route("course/:courseId/lesson/:lessonId", "modules/Courses/Lesson/Lesson.layout.tsx", () => {
-        route("", "modules/Courses/Lesson/Lesson.page.tsx", {
-          index: true,
-        });
-      });
+      route("course/:courseId/lesson/:lessonId", "modules/Courses/Lesson/Lesson.page.tsx");
       route("settings", "modules/Dashboard/Settings/Settings.layout.tsx", () => {
         route("", "modules/Dashboard/Settings/Settings.page.tsx", {
           index: true,

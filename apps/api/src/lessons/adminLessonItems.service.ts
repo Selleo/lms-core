@@ -12,6 +12,7 @@ import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { S3Service } from "src/file/s3.service";
 import { files, questions, textBlocks } from "src/storage/schema";
 
+import { LESSON_TYPE } from "./lesson.type";
 import { AdminLessonItemsRepository } from "./repositories/adminLessonItems.repository";
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
 
@@ -197,7 +198,7 @@ export class AdminLessonItemsService {
       throw new NotFoundException("Lesson not found");
     }
 
-    if (lesson.type == "quiz") {
+    if (lesson.type == LESSON_TYPE.quiz.key) {
       const lessonStudentAnswers = await this.adminLessonItemsRepository.getLessonStudentAnswers(
         lesson.id,
       );
@@ -209,7 +210,10 @@ export class AdminLessonItemsService {
 
     await this.verifyItems(items);
 
-    await this.adminLessonItemsRepository.addLessonItemToLesson(lessonId, items);
+    await this.db.transaction(async (trx) => {
+      await this.adminLessonItemsRepository.addLessonItemToLesson(lessonId, items, trx);
+      await this.adminLessonsRepository.updateLessonItemsCount(lessonId, trx);
+    });
   }
 
   async unassignItemsFromLesson(lessonId: string, items: LessonItemToRemove[]): Promise<void> {
@@ -219,7 +223,7 @@ export class AdminLessonItemsService {
       throw new NotFoundException("Lesson not found");
     }
 
-    if (lesson.type == "quiz") {
+    if (lesson.type == LESSON_TYPE.quiz.key) {
       const lessonStudentAnswers = await this.adminLessonItemsRepository.getLessonStudentAnswers(
         lesson.id,
       );
@@ -229,7 +233,10 @@ export class AdminLessonItemsService {
       }
     }
 
-    await this.adminLessonItemsRepository.removeLessonItemFromLesson(lessonId, items);
+    await this.db.transaction(async (trx) => {
+      await this.adminLessonItemsRepository.removeLessonItemFromLesson(lessonId, items, trx);
+      await this.adminLessonsRepository.updateLessonItemsCount(lessonId, trx);
+    });
   }
 
   async updateTextBlockItem(id: UUIDType, body: UpdateTextBlockBody) {

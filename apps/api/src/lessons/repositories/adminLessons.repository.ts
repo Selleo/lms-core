@@ -13,6 +13,8 @@ import {
 } from "src/storage/schema";
 
 import type { CreateLessonBody, UpdateLessonBody } from "../schemas/lesson.schema";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class AdminLessonsRepository {
@@ -196,5 +198,20 @@ export class AdminLessonsRepository {
       .select({ totalItems: count() })
       .from(lessons)
       .where(and(...conditions));
+  }
+
+  async updateLessonItemsCount(lessonId: string, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return await dbInstance
+      .update(lessons)
+      .set({
+        itemsCount: sql<number>`(
+          SELECT COUNT(*)
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id}
+      )`,
+      })
+      .where(eq(lessons.id, lessonId));
   }
 }

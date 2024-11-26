@@ -1,9 +1,11 @@
 import { StripeWebhookHandler as StripeWebhookHandlerDecorator } from "@golevelup/nestjs-stripe";
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import Stripe from "stripe";
 
 import { DatabasePg } from "src/common";
+import { STATES } from "src/common/states";
+import { LESSON_TYPE } from "src/lessons/lesson.type";
 import {
   courseLessons,
   courses,
@@ -46,10 +48,11 @@ export class StripeWebhookHandler {
     if (!payment) return null;
 
     await this.db.transaction(async (trx) => {
-      const quizLessons = await trx
+      const courseLessonList = await trx
         .select({
           id: lessons.id,
-          itemCount: sql<number>`count(${lessonItems.id})`,
+          lessonType: lessons.type,
+          itemCount: lessons.itemsCount,
         })
         .from(courseLessons)
         .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
@@ -58,20 +61,19 @@ export class StripeWebhookHandler {
           and(
             eq(courseLessons.courseId, course.id),
             eq(lessons.archived, false),
-            eq(lessons.state, "published"),
-            eq(lessons.type, "quiz"),
+            eq(lessons.state, STATES.published),
           ),
         )
         .groupBy(lessons.id);
 
-      if (quizLessons.length > 0) {
+      if (courseLessonList.length > 0) {
         await trx.insert(studentLessonsProgress).values(
-          quizLessons.map((lesson) => ({
+          courseLessonList.map((lesson) => ({
             studentId: userId,
             lessonId: lesson.id,
             courseId: course.id,
-            quizCompleted: false,
-            lessonItemCount: lesson.itemCount,
+            quizCompleted: lesson.lessonType === LESSON_TYPE.quiz.key ? false : null,
+            quizScore: lesson.lessonType === LESSON_TYPE.quiz.key ? 0 : null,
             completedLessonItemCount: 0,
           })),
         );

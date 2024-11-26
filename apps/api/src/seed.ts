@@ -1,14 +1,15 @@
 import { faker } from "@faker-js/faker";
+import { format, subMonths } from "date-fns";
 import * as dotenv from "dotenv";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { sampleSize } from "lodash";
+import { now, sampleSize } from "lodash";
 import postgres from "postgres";
 
 import hashPassword from "./common/helpers/hashPassword";
 import { STATES } from "./common/states";
 import { e2eCourses } from "./e2e-data-seeds";
-import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
+import { LESSON_FILE_TYPE, LESSON_ITEM_TYPE, LESSON_TYPE } from "./lessons/lesson.type";
 import { niceCourses } from "./nice-data-seeds";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import {
@@ -22,6 +23,7 @@ import {
   questionAnswerOptions,
   questions,
   studentCourses,
+  studentLessonsProgress,
   textBlocks,
   userDetails,
   users,
@@ -38,8 +40,28 @@ if (!("DATABASE_URL" in process.env)) {
 }
 
 const connectionString = process.env.DATABASE_URL!;
-const sql = postgres(connectionString);
-const db = drizzle(sql) as DatabasePg;
+const sqlConnect = postgres(connectionString);
+const db = drizzle(sqlConnect) as DatabasePg;
+
+const external_video_urls = [
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+];
+
+const external_presentation_urls = [
+  "https://res.cloudinary.com/dinpapxzv/raw/upload/v1727104719/presentation_gp0o3d.pptx",
+];
 
 async function createOrFindUser(email: string, password: string, userData: any) {
   const [existingUser] = await db.select().from(users).where(eq(users.email, email));
@@ -95,7 +117,11 @@ async function createUsers(count: number) {
   );
 }
 
-async function createEntities(table: any, count: number, dataGenerator: () => any) {
+async function createEntities<T = any>(
+  table: any,
+  count: number,
+  dataGenerator: () => T,
+): Promise<T[]> {
   const entities = Array.from({ length: count }, dataGenerator);
   return db.insert(table).values(entities).returning();
 }
@@ -112,9 +138,13 @@ async function createCoursesWithLessons(
   const lessonItemsData = [];
   const courseToLessonsMap = new Map<UUIDType, UUIDType[]>();
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 40; i++) {
     const courseId = faker.string.uuid();
-    const isPublished = i < 6; // First 6 courses will be published, rest will be drafts
+    const isPublished = i < 36; // First 36 courses will be published, rest will be drafts
+
+    const monthsToSubtract = i % 12;
+    const createdDate = subMonths(now(), monthsToSubtract);
+    const formattedCreatedDate = format(createdDate, "yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
 
     const course = {
       id: courseId,
@@ -125,15 +155,16 @@ async function createCoursesWithLessons(
       priceInCents: i % 3 === 0 ? faker.number.int({ min: 0, max: 1000 }) : 0,
       authorId: adminUserIds[i % 2 ? 0 : 1],
       categoryId: faker.helpers.arrayElement(categories).id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+      createdAt: formattedCreatedDate,
+      updatedAt: formattedCreatedDate,
     };
 
     coursesData.push(course);
 
     if (isPublished) {
+      const maxLessonCount = faker.number.int({ min: 3, max: 10 });
       const courseLessons = [];
-      for (let j = 0; j < 3; j++) {
+      for (let j = 0; j < maxLessonCount; j++) {
         const lessonId = faker.string.uuid();
         const lesson = {
           id: lessonId,
@@ -142,16 +173,24 @@ async function createCoursesWithLessons(
           imageUrl: faker.image.urlPicsumPhotos(),
           authorId: adminUserIds[j % 2 ? 0 : 1],
           state: STATUS.published.key,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          createdAt: formattedCreatedDate,
+          updatedAt: formattedCreatedDate,
+          itemsCount: 0,
         };
-        lessonsData.push(lesson);
         courseLessons.push(lessonId);
 
-        // Create published lesson items for published lessons
-        lessonItemsData.push(
-          ...createLessonItems(lessonId, existingFiles, existingTextBlocks, existingQuestions),
+        const newLessonItems = createLessonItems(
+          lessonId,
+          existingFiles,
+          existingTextBlocks,
+          existingQuestions,
         );
+        lessonItemsData.push(...newLessonItems);
+
+        lesson.itemsCount = newLessonItems.filter(
+          (item) => item.lessonItemType !== LESSON_ITEM_TYPE.text_block.key,
+        ).length;
+        lessonsData.push(lesson);
       }
       courseToLessonsMap.set(courseId, courseLessons);
     } else {
@@ -168,13 +207,20 @@ async function createCoursesWithLessons(
           state: STATUS.published.key,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
+          itemsCount: 0,
         };
-        lessonsData.push(lesson);
         courseLessons.push(lessonId);
 
-        lessonItemsData.push(
-          ...createLessonItems(lessonId, existingFiles, existingTextBlocks, existingQuestions),
+        const newLessonItems = createLessonItems(
+          lessonId,
+          existingFiles,
+          existingTextBlocks,
+          existingQuestions,
         );
+        lessonItemsData.push(...newLessonItems);
+
+        lesson.itemsCount = newLessonItems.length;
+        lessonsData.push(lesson);
       }
       courseToLessonsMap.set(courseId, courseLessons);
     }
@@ -201,29 +247,23 @@ async function createCoursesWithLessons(
 }
 
 function createLessonItems(lessonId: string, files: any[], textBlocks: any[], questions: any[]) {
-  return [
-    {
-      id: faker.string.uuid(),
-      lessonId: lessonId,
-      lessonItemId: faker.helpers.arrayElement(files).id,
-      lessonItemType: LESSON_ITEM_TYPE.file.key,
-      displayOrder: 1,
-    },
-    {
-      id: faker.string.uuid(),
-      lessonId: lessonId,
-      lessonItemId: faker.helpers.arrayElement(textBlocks).id,
-      lessonItemType: LESSON_ITEM_TYPE.text_block.key,
-      displayOrder: 2,
-    },
-    {
-      id: faker.string.uuid(),
-      lessonId: lessonId,
-      lessonItemId: faker.helpers.arrayElement(questions).id,
-      lessonItemType: LESSON_ITEM_TYPE.question.key,
-      displayOrder: 3,
-    },
+  const allItems = [
+    ...files.map((file) => ({ type: LESSON_ITEM_TYPE.file.key, item: file })),
+    ...textBlocks.map((textBlock) => ({ type: LESSON_ITEM_TYPE.text_block.key, item: textBlock })),
+    ...questions.map((question) => ({ type: LESSON_ITEM_TYPE.question.key, item: question })),
   ];
+
+  const shuffledItems = faker.helpers.shuffle(allItems);
+
+  const itemCount = faker.number.int({ min: 3, max: 10 });
+
+  return shuffledItems.slice(0, itemCount).map((item, index) => ({
+    id: faker.string.uuid(),
+    lessonId: lessonId,
+    lessonItemId: item.item.id,
+    lessonItemType: item.type,
+    displayOrder: index + 1,
+  }));
 }
 
 async function createStudentCourses(courses: any[], studentId: string) {
@@ -235,9 +275,44 @@ async function createStudentCourses(courses: any[], studentId: string) {
     numberOfFinishedAssignments: faker.number.int({ min: 0, max: 10 }),
     state: "not_started",
     archived: false,
+    createdAt: course.createdAt,
+    updatedAt: course.updatedAt,
   }));
 
   return db.insert(studentCourses).values(studentCoursesList).returning();
+}
+
+async function createLessonProgress(userId: string) {
+  const courseLessonsList = await db
+    .select({
+      lessonId: courseLessons.lessonId,
+      courseId: courseLessons.courseId,
+      createdAt: sql<string>`${courses.createdAt}`,
+      lessonType: sql<string>`${lessons.type}`,
+    })
+    .from(courseLessons)
+    .leftJoin(courses, eq(courseLessons.courseId, courses.id))
+    .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
+    .leftJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+    .where(eq(studentCourses.studentId, userId));
+
+  const lessonProgressList = courseLessonsList.map((courseLesson) => {
+    const lessonId = courseLesson.lessonId;
+    const courseId = courseLesson.courseId;
+
+    return {
+      lessonId,
+      courseId,
+      studentId: userId,
+      completedLessonItemCount: 0,
+      createdAt: courseLesson.createdAt,
+      updatedAt: courseLesson.createdAt,
+      quizCompleted: courseLesson.lessonType === LESSON_TYPE.quiz.key ? false : null,
+      quizScore: courseLesson.lessonType === LESSON_TYPE.quiz.key ? 0 : null,
+    };
+  });
+
+  return db.insert(studentLessonsProgress).values(lessonProgressList).returning();
 }
 
 async function seed() {
@@ -357,16 +432,32 @@ async function seed() {
     }
     console.log("Created question answer options");
 
-    const createdFiles = await createEntities(files, 10, () => ({
-      id: faker.string.uuid(),
-      title: faker.lorem.sentence(3),
-      type: faker.helpers.arrayElement(["presentation", "external_presentation", "video"]),
-      url: faker.internet.url(),
-      state: faker.helpers.arrayElement([STATUS.draft.key, STATUS.published.key]),
-      authorId: adminUser.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    }));
+    const createdFiles = await createEntities(files, 10, () => {
+      const fileType = faker.helpers.arrayElement([
+        LESSON_FILE_TYPE.external_presentation.key,
+        LESSON_FILE_TYPE.external_video.key,
+      ]);
+
+      let url;
+      if (fileType === LESSON_FILE_TYPE.external_video.key) {
+        url = faker.helpers.arrayElement(external_video_urls);
+      } else if (fileType === LESSON_FILE_TYPE.external_presentation.key) {
+        url = faker.helpers.arrayElement(external_presentation_urls);
+      } else {
+        url = faker.internet.url();
+      }
+
+      return {
+        id: faker.string.uuid(),
+        title: faker.lorem.sentence(3),
+        type: fileType,
+        url: url,
+        state: faker.helpers.arrayElement([STATUS.draft.key, STATUS.published.key]),
+        authorId: adminUser.id,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    });
     const createdFilesStatePublished = createdFiles.filter(
       (file) => file.state === STATES.published,
     );
@@ -386,6 +477,7 @@ async function seed() {
     console.log("Selected random courses for student from createdCourses");
     await createStudentCourses(selectedCourses, studentUser.id);
     console.log("Created student courses");
+    await createLessonProgress(studentUser.id);
 
     console.log("Seeding completed successfully");
   } catch (error) {
@@ -393,7 +485,7 @@ async function seed() {
   } finally {
     console.log("Closing database connection");
     try {
-      await sql.end();
+      await sqlConnect.end();
       console.log("Database connection closed successfully.");
     } catch (error) {
       console.error("Error closing the database connection:", error);

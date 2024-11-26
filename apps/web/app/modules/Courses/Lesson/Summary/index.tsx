@@ -1,6 +1,5 @@
 import { useParams } from "@remix-run/react";
 
-import { useLessonSuspense } from "~/api/queries/useLesson";
 import CourseProgress from "~/components/CourseProgress";
 import { Card, CardContent } from "~/components/ui/card";
 import { QuizSummary } from "~/modules/Courses/Lesson/Summary/QuizSummary";
@@ -8,20 +7,25 @@ import SingleLessonSummary from "~/modules/Courses/Lesson/Summary/SingleLessonSu
 
 import { getSummaryItems } from "../utils";
 
-export default function Summary() {
-  const { lessonId = "", courseId = "" } = useParams();
-  const { data } = useLessonSuspense(lessonId, courseId);
+import type { GetLessonResponse } from "~/api/generated-api";
 
-  const isQuiz = data.type === "quiz";
+type SummaryProps = {
+  lesson: GetLessonResponse["data"];
+};
 
-  const lessonItemsCount = data.itemsCount;
-  const lessonItemsCompletedCount = data.itemsCompletedCount ?? 0;
+export default function Summary({ lesson }: SummaryProps) {
+  const { courseId = "" } = useParams();
 
-  const lessonItemsSummary = getSummaryItems(data);
+  const isQuiz = lesson.type === "quiz";
+
+  const lessonItemsCount = lesson.itemsCount;
+  const lessonItemsCompletedCount = lesson.itemsCompletedCount ?? 0;
+
+  const lessonItemsSummary = getSummaryItems(lesson);
 
   return (
     <Card className="sr-only lg:not-sr-only rounded-none max-w-[383px] w-full flex flex-col grow border-none drop-shadow-primary">
-      {isQuiz && <QuizSummary data={data} lessonId={lessonId ?? ""} courseId={courseId ?? ""} />}
+      {isQuiz && <QuizSummary data={lesson} lessonId={lesson.id} courseId={courseId} />}
       {!isQuiz && (
         <CardContent className="p-8 flex flex-col">
           <div className="h6">Lesson Summary</div>

@@ -26,3 +26,6 @@ export { default as Email } from "./email.svg?react";
 export { default as Phone } from "./phone.svg?react";
 export { default as FreeRight } from "./free-right.svg?react";
 export { default as ChevronLeft } from "./chevron-left.svg?react";
+export { default as Checkmark } from "./checkmark.svg?react";
+export { default as Flame } from "./flame.svg?react";
+export { default as NoData } from "./no-data.svg?react";

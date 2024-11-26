@@ -16,7 +16,7 @@ import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
 import { LessonsRepository } from "./repositories/lessons.repository";
 
-import type { Lesson } from "./schemas/lesson.schema";
+import type { Lesson, ShowLessonResponse } from "./schemas/lesson.schema";
 import type {
   LessonItemResponse,
   LessonItemWithContentSchema,
@@ -35,7 +35,12 @@ export class LessonsService {
     private readonly eventBus: EventBus,
   ) {}
 
-  async getLesson(id: UUIDType, courseId: UUIDType, userId: UUIDType, isAdmin?: boolean) {
+  async getLesson(
+    id: UUIDType,
+    courseId: UUIDType,
+    userId: UUIDType,
+    isAdmin?: boolean,
+  ): Promise<ShowLessonResponse> {
     const [accessCourseLessons] = await this.lessonsRepository.checkLessonAssignment(
       courseId,
       id,
@@ -71,7 +76,6 @@ export class LessonsService {
         ...lesson,
         imageUrl,
         lessonItems: lessonItems,
-        itemsCount: completableLessonItems.length,
         lessonProgress:
           completableLessonItems.length === 0
             ? LessonProgress.notStarted
@@ -82,7 +86,12 @@ export class LessonsService {
       };
     }
 
-    const lessonProgress = await this.lessonsRepository.lessonProgress(courseId, lesson.id, userId);
+    const lessonProgress = await this.lessonsRepository.lessonProgress(
+      courseId,
+      lesson.id,
+      userId,
+      true,
+    );
 
     if (!lessonProgress && !isAdmin && !lesson.isFree)
       throw new NotFoundException("Lesson progress not found");
@@ -100,7 +109,6 @@ export class LessonsService {
       ...lesson,
       imageUrl,
       lessonItems: questionLessonItems,
-      itemsCount: isAdminOrFreeLessonWithoutLessonProgress ? 0 : lessonProgress.lessonItemCount,
       itemsCompletedCount: isAdminOrFreeLessonWithoutLessonProgress
         ? 0
         : lessonProgress.completedLessonItemCount,
@@ -236,16 +244,15 @@ export class LessonsService {
         );
       });
 
-      const correctAnswerCount = questionLessonItems
-        .map(
-          (item) =>
-            item.content.questionAnswers.filter((answer) => Boolean(answer.isCorrect)).length,
-        )
-        .reduce((acc, count) => acc + count, 0);
-
+      const correctAnswers = await this.lessonsRepository.getQuizQuestionsAnswers(
+        courseId,
+        lessonId,
+        userId,
+        true,
+      );
+      const correctAnswerCount = correctAnswers.length;
       const totalQuestions = questionLessonItems.length;
       const wrongAnswerCount = totalQuestions - correctAnswerCount;
-
       const score = Math.round((correctAnswerCount / totalQuestions) * 100);
 
       this.eventBus.publish(
@@ -276,7 +283,12 @@ export class LessonsService {
     if (!accessCourseLessons)
       throw new UnauthorizedException("You don't have assignment to this lesson");
 
-    const quizProgress = await this.lessonsRepository.lessonProgress(courseId, lessonId, userId);
+    const quizProgress = await this.lessonsRepository.lessonProgress(
+      courseId,
+      lessonId,
+      userId,
+      true,
+    );
 
     if (!quizProgress) throw new NotFoundException("Lesson progress not found");
 
@@ -309,7 +321,7 @@ export class LessonsService {
   }
 
   private async getLessonItems(lesson: Lesson, courseId: UUIDType, userId: UUIDType) {
-    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id);
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id, courseId);
     const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
 
     return await Promise.all(
@@ -365,7 +377,7 @@ export class LessonsService {
     userId: UUIDType,
     quizCompleted: boolean,
   ) {
-    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id);
+    const lessonItemsList = await this.lessonsRepository.getLessonItems(lesson.id, courseId);
     const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
 
     return await Promise.all(
@@ -437,6 +449,7 @@ export class LessonsService {
       lessonItemId: item.lessonItemId,
       lessonItemType: item.lessonItemType,
       displayOrder: item.displayOrder,
+      isCompleted: item.isCompleted,
       content,
     };
   }

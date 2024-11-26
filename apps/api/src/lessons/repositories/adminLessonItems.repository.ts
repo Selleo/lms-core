@@ -200,7 +200,7 @@ export class AdminLessonItemsRepository {
 
     return await dbInstance.delete(lessonItems).where(
       and(
-        eq(lessonItems.id, lessonId),
+        eq(lessonItems.lessonId, lessonId),
         inArray(
           lessonItems.lessonItemId,
           items.map((item) => item.id),

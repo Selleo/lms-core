@@ -5,13 +5,15 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useClearQuizProgress } from "~/api/mutations/useClearQuizProgress";
 import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
 import { useCourseSuspense } from "~/api/queries/useCourse";
-import { allCoursesQueryOptions } from "~/api/queries/useCourses";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { LessonItems } from "~/modules/Courses/Lesson/LessonItems/LessonItems";
 import { QuizSummaryModal } from "~/modules/Courses/Lesson/QuizSummaryModal";
 
+import Breadcrumb from "./Breadcrumb";
+import Overview from "./Overview";
+import Summary from "./Summary";
 import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
 
 import type { TQuestionsForm } from "./types";
@@ -24,7 +26,6 @@ export const meta: MetaFunction = () => {
 export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
   const { lessonId = "", courseId = "" } = params;
   if (!lessonId) throw new Error("Lesson ID not found");
-  await queryClient.prefetchQuery(allCoursesQueryOptions());
   await queryClient.prefetchQuery(lessonQueryOptions(lessonId, courseId));
   return null;
 };
@@ -34,7 +35,7 @@ export default function LessonPage() {
   const [isOpen, setIsOpen] = useState(false);
   const { data, refetch } = useLessonSuspense(lessonId, courseId);
   const {
-    data: { lessons },
+    data: { id, title, lessons },
   } = useCourseSuspense(courseId ?? "");
 
   const methods = useForm<TQuestionsForm>({
@@ -81,62 +82,92 @@ export default function LessonPage() {
 
   const scorePercentage = getScorePercentage();
 
+  const [lesson, setLesson] = useState(data);
+
+  const updateLessonItemCompletion = (lessonItemId: string) => {
+    setLesson((prevLesson) => {
+      const updatedLessonItems = prevLesson.lessonItems.map((item) => {
+        if (item.lessonItemId === lessonItemId && item.isCompleted === false) {
+          return { ...item, isCompleted: true };
+        }
+        return item;
+      });
+
+      return {
+        ...prevLesson,
+        lessonItems: updatedLessonItems,
+        itemsCompletedCount: updatedLessonItems.filter((item) => item.isCompleted).length ?? 0,
+      };
+    });
+  };
+
   return (
-    <>
-      {isQuiz && (
-        <QuizSummaryModal
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          scoreLabel={scorePercentage}
-          courseId={courseId ?? ""}
-        />
-      )}
-      <FormProvider {...methods}>
-        <form className="flex flex-col gap-8">
-          <LessonItems
-            isSubmitted={!!data?.isSubmitted}
-            questions={questionsArray}
-            lessonItems={orderedLessonsItems}
+    <div className="flex gap-8 w-full flex-row-reverse">
+      <Summary lesson={lesson} />
+      <div className="flex flex-col gap-8 w-full">
+        <Breadcrumb lessonData={data} courseId={id} courseTitle={title} />
+        <Overview lesson={lesson} />
+        {isQuiz && (
+          <QuizSummaryModal
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            scoreLabel={scorePercentage}
+            courseId={courseId ?? ""}
           />
-        </form>
-      </FormProvider>
-      {isQuiz && (
-        <Button
-          className="w-min self-end"
-          variant="outline"
-          onClick={
-            data?.isSubmitted
-              ? () => clearQuizProgress.mutate({ lessonId, courseId })
-              : () => submitQuiz.mutate({ lessonId, courseId })
-          }
-        >
-          {data?.isSubmitted ? "Clear progress" : "Check answers"}
-        </Button>
-      )}
-      {isEnrolled && (
-        <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
-          <Link
-            to={previousLessonId ? `/course/${courseId}/lesson/${previousLessonId}` : "#"}
-            onClick={(e) => !previousLessonId && e.preventDefault()}
-            reloadDocument
-            replace
+        )}
+        <FormProvider {...methods}>
+          <form className="flex flex-col gap-8">
+            <LessonItems
+              isSubmitted={!!data?.isSubmitted}
+              questions={questionsArray}
+              lessonItems={orderedLessonsItems}
+              lessonType={data?.type ?? "multimedia"}
+              updateLessonItemCompletion={updateLessonItemCompletion}
+            />
+          </form>
+        </FormProvider>
+        {isQuiz && (
+          <Button
+            className="w-min self-end"
+            variant="outline"
+            onClick={
+              data?.isSubmitted
+                ? () => clearQuizProgress.mutate({ lessonId, courseId })
+                : () => submitQuiz.mutate({ lessonId, courseId })
+            }
           >
-            <Button variant="outline" className="w-full sm:w-[180px]" disabled={!previousLessonId}>
-              Previous lesson
-            </Button>
-          </Link>
-          <Link
-            to={nextLessonId ? `/course/${courseId}/lesson/${nextLessonId}` : "#"}
-            onClick={(e) => !nextLessonId && e.preventDefault()}
-            reloadDocument
-            replace
-          >
-            <Button className="w-full sm:w-[180px]" disabled={!nextLessonId}>
-              Next lesson
-            </Button>
-          </Link>
-        </div>
-      )}
-    </>
+            {data?.isSubmitted ? "Clear progress" : "Check answers"}
+          </Button>
+        )}
+        {isEnrolled && (
+          <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
+            <Link
+              to={previousLessonId ? `/course/${courseId}/lesson/${previousLessonId}` : "#"}
+              onClick={(e) => !previousLessonId && e.preventDefault()}
+              reloadDocument
+              replace
+            >
+              <Button
+                variant="outline"
+                className="w-full sm:w-[180px]"
+                disabled={!previousLessonId}
+              >
+                Previous lesson
+              </Button>
+            </Link>
+            <Link
+              to={nextLessonId ? `/course/${courseId}/lesson/${nextLessonId}` : "#"}
+              onClick={(e) => !nextLessonId && e.preventDefault()}
+              reloadDocument
+              replace
+            >
+              <Button className="w-full sm:w-[180px]" disabled={!nextLessonId}>
+                Next lesson
+              </Button>
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

@@ -4,6 +4,7 @@ import Viewer from "~/components/RichText/Viever";
 import { Card } from "~/components/ui/card";
 import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheTextBlanks";
 import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
+import { handleCompletionForMediaLesson } from "~/utils/handleCompletionForMediaLesson";
 
 type Answer = {
   id: string;
@@ -14,7 +15,7 @@ type Answer = {
   studentAnswerText?: string | null;
 };
 
-type FillTheBlanksProps = {
+type FillInTheBlanksProps = {
   isQuiz: boolean;
   content: string;
   sendAnswer: (selectedOption: Word[]) => Promise<void>;
@@ -23,6 +24,9 @@ type FillTheBlanksProps = {
   isQuizSubmitted?: boolean;
   solutionExplanation?: string | null;
   isPassed: boolean | null;
+  lessonItemId: string;
+  isCompleted: boolean;
+  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
 type Word = {
@@ -30,7 +34,7 @@ type Word = {
   value: string;
 };
 
-export const FillTheBlanks = ({
+export const FillInTheBlanks = ({
   isQuiz = false,
   questionLabel,
   content,
@@ -39,7 +43,10 @@ export const FillTheBlanks = ({
   isQuizSubmitted,
   solutionExplanation,
   isPassed,
-}: FillTheBlanksProps) => {
+  lessonItemId,
+  isCompleted,
+  updateLessonItemCompletion,
+}: FillInTheBlanksProps) => {
   const [_words, setWords] = useState<Word[]>(
     answers.map(({ position, studentAnswerText }) => ({
       index: position ?? 0,
@@ -69,6 +76,12 @@ export const FillTheBlanks = ({
 
     if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
       sendAnswer(sortedWords);
+      if (
+        handleCompletionForMediaLesson(isCompleted, isQuiz) &&
+        sortedWords.length === maxAnswersAmount
+      ) {
+        updateLessonItemCompletion(lessonItemId);
+      }
     }
 
     return updatedWords;

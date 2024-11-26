@@ -61,6 +61,11 @@ class PaymentActions {
 
   async completePurchase(): Promise<void> {
     await this.page.getByRole("button", { name: /Buy for/ }).click();
+    await this.page.waitForTimeout(10000);
+  }
+
+  async checkPaymentSuccess(): Promise<void> {
+    await expect(this.page.getByText("Payment successful", { exact: true })).toBeVisible();
   }
 }
 
@@ -72,10 +77,8 @@ class EnrollmentActions {
   }
 
   async unenrollFromCourse(): Promise<void> {
-    const unenrollButton = this.page.getByRole("button", { name: "Unenroll" });
-    await unenrollButton.waitFor({ state: "visible", timeout: 10000 });
-    await expect(unenrollButton).toBeVisible();
-    await unenrollButton.click();
+    await this.page.getByRole("button", { name: "Unenroll" }).click();
+    await this.page.waitForTimeout(1000);
     await expect(this.page.getByRole("button", { name: /Enroll - / })).toBeVisible();
   }
 }
@@ -88,7 +91,11 @@ class QuizActions {
     await expect(this.page).toHaveURL(URL_PATTERNS.lesson);
 
     for (const answer of QUIZ_ANSWERS) {
-      await this.page.getByRole("button", { name: answer.name }).click();
+      const answerButton = this.page.getByRole("button", { name: answer.name });
+      const input = answerButton.locator('input[type="checkbox"], input[type="radio"]');
+      await answerButton.click();
+      await expect(input).toBeChecked();
+      await expect(answerButton.getByText("(Missing answer)")).toBeHidden();
     }
   }
 
@@ -124,6 +131,7 @@ test.describe.serial("Course E2E", () => {
     await enrollmentActions.enrollInCourse();
     await paymentActions.fillPaymentForm(new Date().getFullYear() + 1);
     await paymentActions.completePurchase();
+    await paymentActions.checkPaymentSuccess();
     await enrollmentActions.unenrollFromCourse();
   });
 

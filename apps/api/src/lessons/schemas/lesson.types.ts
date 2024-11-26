@@ -10,3 +10,5 @@ export const LessonProgress = {
   inProgress: "in_progress",
   completed: "completed",
 } as const;
+
+export type LessonProgressType = (typeof LessonProgress)[keyof typeof LessonProgress];

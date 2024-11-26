@@ -4725,6 +4725,9 @@
                         {}
                       ]
                     },
+                    "isCompleted": {
+                      "type": "boolean"
+                    },
                     "content": {
                       "anyOf": [
                         {
@@ -4995,6 +4998,9 @@
                         },
                         {}
                       ]
+                    },
+                    "isCompleted": {
+                      "type": "boolean"
                     },
                     "content": {
                       "anyOf": [
@@ -6759,6 +6765,53 @@
           "data": {
             "type": "object",
             "properties": {
+              "averageStats": {
+                "type": "object",
+                "properties": {
+                  "lessonStats": {
+                    "type": "object",
+                    "properties": {
+                      "started": {
+                        "type": "number"
+                      },
+                      "completed": {
+                        "type": "number"
+                      },
+                      "completionRate": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "started",
+                      "completed",
+                      "completionRate"
+                    ]
+                  },
+                  "courseStats": {
+                    "type": "object",
+                    "properties": {
+                      "started": {
+                        "type": "number"
+                      },
+                      "completed": {
+                        "type": "number"
+                      },
+                      "completionRate": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "started",
+                      "completed",
+                      "completionRate"
+                    ]
+                  }
+                },
+                "required": [
+                  "lessonStats",
+                  "courseStats"
+                ]
+              },
               "quizzes": {
                 "type": "object",
                 "properties": {
@@ -6861,13 +6914,105 @@
                   "longest",
                   "activityHistory"
                 ]
+              },
+              "lastLesson": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "title": {
+                        "type": "string"
+                      },
+                      "imageUrl": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "itemsCount": {
+                        "type": "number"
+                      },
+                      "itemsCompletedCount": {
+                        "type": "number"
+                      },
+                      "lessonProgress": {
+                        "anyOf": [
+                          {
+                            "const": "completed",
+                            "type": "string"
+                          },
+                          {
+                            "const": "in_progress",
+                            "type": "string"
+                          },
+                          {
+                            "const": "not_started",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "isFree": {
+                        "type": "boolean"
+                      },
+                      "enrolled": {
+                        "type": "boolean"
+                      },
+                      "state": {
+                        "type": "string"
+                      },
+                      "archived": {
+                        "type": "boolean"
+                      },
+                      "isSubmitted": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "quizScore": {
+                        "type": "number"
+                      },
+                      "courseId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "courseTitle": {
+                        "type": "string"
+                      },
+                      "courseDescription": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "title",
+                      "description",
+                      "itemsCount",
+                      "courseId",
+                      "courseTitle",
+                      "courseDescription"
+                    ]
+                  }
+                ]
               }
             },
             "required": [
+              "averageStats",
               "quizzes",
               "courses",
               "lessons",
-              "streak"
+              "streak",
+              "lastLesson"
             ]
           }
         },

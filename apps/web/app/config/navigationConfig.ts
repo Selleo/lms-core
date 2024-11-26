@@ -32,6 +32,11 @@ export const navigationConfig: NavigationItem[] = [
     iconName: "Dashboard",
   },
   {
+    label: "courses",
+    path: "courses",
+    iconName: "Course",
+  },
+  {
     label: "settings",
     path: "settings",
     iconName: "Settings",

@@ -7,18 +7,18 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   use: {
-    baseURL: process.env.CI ? "https://staging-url.example.com" : "https://app.lms.localhost",
+    baseURL: process.env.CI ? "https://lms.beta.selleo.app" : "https://app.lms.localhost",
     ignoreHTTPSErrors: true,
-    // launchOptions: {
-    //   args: [
-    //     "--ignore-certificate-errors",
-    //     "--ignore-certificate-errors-spki-list",
-    //     "--ignore-ssl-errors",
-    //     "--disable-web-security",
-    //     "--allow-insecure-localhost",
-    //     "--disable-features=IsolateOrigins,site-per-process",
-    //   ],
-    // },
+    launchOptions: {
+      args: [
+        "--ignore-certificate-errors",
+        "--ignore-certificate-errors-spki-list",
+        "--ignore-ssl-errors",
+        "--disable-web-security",
+        "--allow-insecure-localhost",
+        "--disable-features=IsolateOrigins,site-per-process",
+      ],
+    },
   },
   projects: [
     {
