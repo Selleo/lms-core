@@ -1,5 +1,3 @@
-import { useParams } from "@remix-run/react";
-
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
@@ -22,7 +20,6 @@ type CoursePricingProps = {
 };
 
 const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps) => {
-  const { id } = useParams();
   const { form, onSubmit } = useCoursePricingForm({ courseId, priceInCents, currency });
 
   return (

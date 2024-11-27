@@ -1,4 +1,3 @@
-import { useParams } from "@remix-run/react";
 import { useCallback, useMemo, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
@@ -52,10 +51,11 @@ const CourseSettings = ({
   const watchedTitle = form.watch("title");
   const watchedDescription = form.watch("description");
   const watchedImageUrl = form.watch("imageUrl");
+  const watchedCategoryId = form.getValues("categoryId");
 
   const categoryName = useMemo(() => {
-    return categories.find((category) => category.id === form.getValues("categoryId"))?.title;
-  }, [categories, form.getValues("categoryId")]);
+    return categories.find((category) => category.id === watchedCategoryId)?.title;
+  }, [categories, watchedCategoryId]);
 
   const handleImageUpload = useCallback(
     async (file: File) => {
@@ -69,7 +69,7 @@ const CourseSettings = ({
         setIsUploading(false);
       }
     },
-    [form],
+    [form, uploadFile],
   );
 
   return (
@@ -81,7 +81,7 @@ const CourseSettings = ({
         <CardContent>
           <p>Fill in the details to create a new course.</p>
           <Form {...form}>
-            <form className="mt-[2.5rem]" onSubmit={form.handleSubmit(onSubmit)}>
+            <form className="mt-10" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="title"

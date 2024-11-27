@@ -43,7 +43,7 @@ const AddCourse = () => {
         setIsUploading(false);
       }
     },
-    [form],
+    [form, uploadFile],
   );
 
   return (
@@ -51,7 +51,7 @@ const AddCourse = () => {
       <div className="w-1/2 flex items-center justify-center">
         <img src={SplashScreenImage} alt="splashScreenImage" className="rounded" />
       </div>
-      <div className="w-1/2 mt-[1rem]">
+      <div className="w-1/2 mt-4">
         <Button
           onClick={() => navigate("/admin/courses")}
           className="border-2 border-beige-500 bg-white text-blue-500 py-2 px-6 rounded"
@@ -59,13 +59,13 @@ const AddCourse = () => {
           <Icon name="ChevronLeft" className="w-3 h-3 mr-2" />
           Back
         </Button>
-        <h1 className="text-3xl font-bold mt-[2rem]">Create new course</h1>
+        <h1 className="text-3xl font-bold mt-8">Create new course</h1>
         <h1 className="mt-5">
           Provide the details to set up a new course. You’ll have more options to customize it
           later.
         </h1>
         <Form {...form}>
-          <form className="mt-[2.5rem]" onSubmit={form.handleSubmit(onSubmit)}>
+          <form className="mt-10" onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex space-x-5">
               <FormField
                 control={form.control}

@@ -22,28 +22,6 @@ const Lesson = () => (
   </Card>
 );
 
-const Pricing = () => (
-  <Card className="p-6 shadow-md border border-gray-200">
-    <CardHeader>
-      <h5 className="text-xl font-semibold">Pricing</h5>
-    </CardHeader>
-    <CardContent>
-      <p>Here you can set up the pricing for your course.</p>
-    </CardContent>
-  </Card>
-);
-
-const Status = () => (
-  <Card className="p-6 shadow-md border border-gray-200">
-    <CardHeader>
-      <h5 className="text-xl font-semibold">Status</h5>
-    </CardHeader>
-    <CardContent>
-      <p>Here you can check the status and progress of your course.</p>
-    </CardContent>
-  </Card>
-);
-
 const EditCourse = () => {
   const [navigationTabState, setNavigationTabState] = useState<NavigationTab>("Settings");
   const { id } = useParams();
