@@ -39,11 +39,10 @@ const CourseState = ({ courseId, state }: CourseStateProps) => {
                       <RadioGroup.Item
                         value="draft"
                         id="draft"
-                        className={cn(
-                          `p-4 border rounded-md cursor-pointer text-left ${
-                            field.value === "draft" ? "border-blue-500" : "border-gray-300"
-                          }`,
-                        )}
+                        className={cn("p-4 border rounded-md cursor-pointer text-left", {
+                          "border-blue-500": field.value === "draft",
+                          "border-gray-300": field.value !== "draft",
+                        })}
                       >
                         <div className="flex items-start">
                           <div className="w-6 h-6 aspect-square rounded-full border border-gray-300 flex justify-center items-center mr-3">
@@ -54,9 +53,10 @@ const CourseState = ({ courseId, state }: CourseStateProps) => {
                               Draft
                             </label>
                             <p
-                              className={cn(
-                                `mt-1 ${field.value === "draft" ? "text-black" : "text-gray-500"} text-sm`,
-                              )}
+                              className={cn("mt-1 text-sm", {
+                                "text-black": field.value === "draft",
+                                "text-gray-500": field.value !== "draft",
+                              })}
                             >
                               Students cannot purchase or enroll in this course. For those already
                               enrolled, the course will not appear in their Student Course List.
@@ -67,11 +67,10 @@ const CourseState = ({ courseId, state }: CourseStateProps) => {
                       <RadioGroup.Item
                         value="published"
                         id="published"
-                        className={cn(
-                          `p-4 border rounded-md cursor-pointer text-left ${
-                            field.value === "published" ? "border-blue-500" : "border-gray-300"
-                          }`,
-                        )}
+                        className={cn("p-4 border rounded-md cursor-pointer text-left", {
+                          "border-blue-500": field.value === "published",
+                          "border-gray-300": field.value !== "published",
+                        })}
                       >
                         <div className="flex items-start">
                           <div className="w-6 h-6 aspect-square rounded-full border border-gray-300 flex justify-center items-center mr-3">
@@ -82,9 +81,10 @@ const CourseState = ({ courseId, state }: CourseStateProps) => {
                               Published
                             </label>
                             <p
-                              className={cn(
-                                `mt-1 ${field.value === "published" ? "text-black" : "text-gray-500"} text-sm`,
-                              )}
+                              className={cn("mt-1 text-sm", {
+                                "text-black": field.value === "published",
+                                "text-gray-500": field.value !== "published",
+                              })}
                             >
                               Students can purchase, enroll in, and access the course content. Once
                               enrolled, the course will be displayed on their Student Dashboard.
