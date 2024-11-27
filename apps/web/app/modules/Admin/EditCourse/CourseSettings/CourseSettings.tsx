@@ -1,4 +1,3 @@
-import { useParams } from "@remix-run/react";
 import { useCallback, useMemo, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
@@ -24,20 +23,25 @@ import CourseCardPreview from "../compontents/CourseCardPreview";
 import { useCourseSettingsForm } from "./hooks/useCourseSettingsForm";
 
 type CourseSettingsProps = {
+  courseId?: string;
   title?: string;
   description?: string;
   categoryId?: string;
   imageUrl?: string;
 };
-const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSettingsProps) => {
-  const { id } = useParams();
-  const courseId = id ?? "";
+const CourseSettings = ({
+  courseId,
+  title,
+  description,
+  categoryId,
+  imageUrl,
+}: CourseSettingsProps) => {
   const { form, onSubmit } = useCourseSettingsForm({
     title,
     description,
     categoryId,
     imageUrl,
-    courseId,
+    courseId: courseId || "",
   });
   const { data: categories } = useCategoriesSuspense();
   const [isUploading, setIsUploading] = useState(false);
@@ -47,10 +51,11 @@ const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSett
   const watchedTitle = form.watch("title");
   const watchedDescription = form.watch("description");
   const watchedImageUrl = form.watch("imageUrl");
+  const watchedCategoryId = form.getValues("categoryId");
 
   const categoryName = useMemo(() => {
-    return categories.find((category) => category.id === form.getValues("categoryId"))?.title;
-  }, [categories, form.getValues("categoryId")]);
+    return categories.find((category) => category.id === watchedCategoryId)?.title;
+  }, [categories, watchedCategoryId]);
 
   const handleImageUpload = useCallback(
     async (file: File) => {
@@ -64,7 +69,7 @@ const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSett
         setIsUploading(false);
       }
     },
-    [form],
+    [form, uploadFile],
   );
 
   return (

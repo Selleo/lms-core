@@ -31,7 +31,10 @@ const ImageUploadInput = ({ field, handleImageUpload, isUploading }: ImageUpload
           </div>
 
           <div
-            className={`text-sm w-full px-2 mt-2 ${field.value ? "text-white" : "text-gray-600"}`}
+            className={cn("text-sm w-full px-2 mt-2", {
+              "text-white": field.value,
+              "text-gray-600": !field.value,
+            })}
           >
             {field.value ? "SVG, PNG, JPG (max. to 20MB)" : "SVG, PNG, JPG or GIF (max. 800x400px)"}
           </div>

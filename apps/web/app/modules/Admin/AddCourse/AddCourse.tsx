@@ -43,7 +43,7 @@ const AddCourse = () => {
         setIsUploading(false);
       }
     },
-    [form],
+    [form, uploadFile],
   );
 
   return (

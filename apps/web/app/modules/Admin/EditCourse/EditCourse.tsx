@@ -5,7 +5,9 @@ import { useCourseById } from "~/api/queries/admin/useCourseById";
 import { Card, CardHeader, CardContent } from "~/components/ui/card";
 
 import NavigationTabs from "./compontents/NavigationTabs";
+import CoursePricing from "./CoursePricing/CoursePricing";
 import CourseSettings from "./CourseSettings/CourseSettings";
+import CourseStatus from "./CourseStatus/CourseStatus";
 
 import type { NavigationTab } from "./EditCourse.types";
 
@@ -16,28 +18,6 @@ const Lesson = () => (
     </CardHeader>
     <CardContent>
       <p>Here you can add and manage lessons for your course.</p>
-    </CardContent>
-  </Card>
-);
-
-const Pricing = () => (
-  <Card className="p-6 shadow-md border border-gray-200">
-    <CardHeader>
-      <h5 className="text-xl font-semibold">Pricing</h5>
-    </CardHeader>
-    <CardContent>
-      <p>Here you can set up the pricing for your course.</p>
-    </CardContent>
-  </Card>
-);
-
-const Status = () => (
-  <Card className="p-6 shadow-md border border-gray-200">
-    <CardHeader>
-      <h5 className="text-xl font-semibold">Status</h5>
-    </CardHeader>
-    <CardContent>
-      <p>Here you can check the status and progress of your course.</p>
     </CardContent>
   </Card>
 );
@@ -61,6 +41,7 @@ const EditCourse = () => {
       case "Settings":
         return (
           <CourseSettings
+            courseId={course?.id || ""}
             title={course?.title}
             description={course?.description}
             categoryId={course?.categoryId}
@@ -70,9 +51,15 @@ const EditCourse = () => {
       case "Lesson":
         return <Lesson />;
       case "Pricing":
-        return <Pricing />;
+        return (
+          <CoursePricing
+            courseId={course?.id || ""}
+            currency={course?.currency}
+            priceInCents={course?.priceInCents}
+          />
+        );
       case "Status":
-        return <Status />;
+        return <CourseStatus courseId={course?.id || ""} state={course?.state || "draft"} />;
       default:
         return <div className="text-gray-700 text-lg">Select a tab to view content.</div>;
     }
