@@ -18,25 +18,32 @@ jobs:
     if: |
       github.event.workflow_run.conclusion == 'success' ||
       github.event_name == 'workflow_call'
-    defaults:
-      run:
-        working-directory: ./apps/web/
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
+        with:
+          version: 9.4.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20.15.0
+          cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install
+
       - name: Install Playwright Browsers
-        run: pnpm exec playwright install --with-deps
+        run: pnpm exec playwright install --with-deps chromium
+        working-directory: ./apps/web
+
       - name: Run Playwright tests
         run: pnpm playwright test
+        working-directory: ./apps/web
         env:
-          HOME: /root
+          PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
           TEST_KEY: ${{ secrets.TEST_KEY }}
