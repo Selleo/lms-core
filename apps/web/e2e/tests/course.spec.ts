@@ -5,12 +5,6 @@ const TEST_COURSE = {
   description: "E2E Testing Lesson Description",
 } as const;
 
-const PAYMENT_DATA = {
-  cardNumber: "4242424242424242",
-  cvc: "123",
-  expiryMonth: "10",
-} as const;
-
 const URL_PATTERNS = {
   course:
     /course\/[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/,
@@ -30,12 +24,15 @@ class CourseActions {
   constructor(private readonly page: Page) {}
 
   async searchCourse(): Promise<void> {
+    await this.page.waitForSelector('a[href="/courses"]', { state: "visible" });
+    await this.page.click('a[href="/courses"]');
     await this.page.getByPlaceholder("Search by title...").fill(TEST_COURSE.name);
     await expect(this.page.getByRole("button", { name: "Clear All" })).toBeVisible();
   }
 
   async openCourse(): Promise<void> {
     await this.page.getByRole("link", { name: TEST_COURSE.name }).click();
+    await this.page.waitForURL(URL_PATTERNS.course);
     await expect(this.page).toHaveURL(URL_PATTERNS.course);
     await this.verifyCourseContent();
   }
@@ -46,34 +43,30 @@ class CourseActions {
   }
 }
 
-class PaymentActions {
-  constructor(private readonly page: Page) {}
-
-  async fillPaymentForm(expiryYear: number): Promise<void> {
-    const stripeFrame = this.page.frameLocator('iframe[title="Secure payment input frame"]');
-    await stripeFrame.locator("#Field-numberInput").fill(PAYMENT_DATA.cardNumber);
-    await stripeFrame
-      .locator("#Field-expiryInput")
-      .fill(`${PAYMENT_DATA.expiryMonth}${expiryYear}`);
-    await stripeFrame.locator("#Field-cvcInput").fill(PAYMENT_DATA.cvc);
-    await expect(this.page.getByText(/Buy for/)).toBeVisible();
-  }
-
-  async completePurchase(): Promise<void> {
-    await this.page.getByRole("button", { name: /Buy for/ }).click();
-    await this.page.waitForTimeout(10000);
-  }
-
-  async checkPaymentSuccess(): Promise<void> {
-    await expect(this.page.getByText("Payment successful", { exact: true })).toBeVisible();
-  }
-}
-
 class EnrollmentActions {
   constructor(private readonly page: Page) {}
 
   async enrollInCourse(): Promise<void> {
+    const cookies = (await this.page.context().storageState()).cookies;
+    const accessToken = cookies.find((cookie) => cookie.name === "access_token")?.value;
+    const apiUrl = process.env.CI ? "" : "http://localhost:3000";
+
     await this.page.getByRole("button", { name: "Enroll" }).click();
+    await expect(this.page.getByRole("dialog")).toBeVisible();
+
+    const courseId = this.page.url().split("/").pop();
+
+    await this.page.request.post(`${apiUrl}/api/courses/enroll-course?id=${courseId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        "x-test-key": process.env.TEST_KEY ?? "",
+        cookie: `access_token=${accessToken}`,
+      },
+    });
+
+    await this.page.reload();
+    await this.page.waitForTimeout(5000);
+    expect(this.page.getByRole("button", { name: "Unenroll" })).toBeVisible();
   }
 
   async unenrollFromCourse(): Promise<void> {
@@ -88,12 +81,14 @@ class QuizActions {
 
   async solveQuiz(): Promise<void> {
     await this.page.getByRole("heading", { name: "E2E Testing Quiz" }).click();
+    await this.page.waitForURL(URL_PATTERNS.lesson);
     await expect(this.page).toHaveURL(URL_PATTERNS.lesson);
 
     for (const answer of QUIZ_ANSWERS) {
       const answerButton = this.page.getByRole("button", { name: answer.name });
       const input = answerButton.locator('input[type="checkbox"], input[type="radio"]');
       await answerButton.click();
+      await this.page.waitForTimeout(100);
       await expect(input).toBeChecked();
       await expect(answerButton.getByText("(Missing answer)")).toBeHidden();
     }
@@ -113,35 +108,27 @@ class QuizActions {
 
 test.describe.serial("Course E2E", () => {
   let courseActions: CourseActions;
-  let paymentActions: PaymentActions;
   let enrollmentActions: EnrollmentActions;
   let quizActions: QuizActions;
 
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     courseActions = new CourseActions(page);
-    paymentActions = new PaymentActions(page);
     enrollmentActions = new EnrollmentActions(page);
     quizActions = new QuizActions(page);
     await courseActions.searchCourse();
   });
 
-  test("should find, open and enroll the paid course", async () => {
+  test("should find, open and enroll the course", async () => {
     await courseActions.openCourse();
     await enrollmentActions.enrollInCourse();
-    await paymentActions.fillPaymentForm(new Date().getFullYear() + 1);
-    await paymentActions.completePurchase();
-    await paymentActions.checkPaymentSuccess();
     await enrollmentActions.unenrollFromCourse();
   });
 
-  test("should solve free quiz lesson", async ({ page }) => {
+  test("should solve free quiz lesson", async () => {
     await courseActions.openCourse();
-
     await quizActions.solveQuiz();
     await quizActions.checkAndVerifyResults();
     await quizActions.resetQuiz();
-
-    await page.goBack();
   });
 });

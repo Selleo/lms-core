@@ -1,4 +1,10 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  ForbiddenException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import {
   and,
   between,
@@ -605,11 +611,12 @@ export class CoursesService {
     });
   }
 
-  async enrollCourse(id: string, userId: string) {
+  async enrollCourse(id: string, userId: string, testKey?: string) {
     const [course] = await this.db
       .select({
         id: courses.id,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+        price: courses.priceInCents,
       })
       .from(courses)
       .leftJoin(
@@ -621,6 +628,13 @@ export class CoursesService {
     if (!course) throw new NotFoundException("Course not found");
 
     if (course.enrolled) throw new ConflictException("Course is already enrolled");
+
+    /*
+     For Playwright tests to bypass Stripe payment
+     Front-end interfaces, such as Stripe Checkout or the Payment Element, have security measures in place that prevent automated testing, and Stripe APIs are rate limited.
+   */
+    const isTest = testKey && testKey === process.env.TEST_KEY;
+    if (!isTest && Boolean(course.price)) throw new ForbiddenException();
 
     await this.db.transaction(async (trx) => {
       const [enrolledCourse] = await trx

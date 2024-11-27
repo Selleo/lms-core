@@ -1448,6 +1448,14 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "x-test-key",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
