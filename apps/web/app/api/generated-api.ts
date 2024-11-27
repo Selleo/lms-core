@@ -520,7 +520,7 @@ export type CreateCourseBody = {
   description: string;
   state: "draft" | "published";
   imageUrl?: string;
-  priceInCents: number;
+  priceInCents?: number;
   currency?: string;
   /** @format uuid */
   categoryId: string;

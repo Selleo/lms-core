@@ -26,6 +26,8 @@ export const routes: (
       route("courses", "modules/Admin/Courses/Courses.page.tsx", {
         index: true,
       });
+      route("beta-courses/new", "modules/Admin/AddCourse/AddCourse.tsx");
+      route("beta-courses/:id", "modules/Admin/EditCourse/EditCourse.tsx");
       route("courses/new", "modules/Admin/Courses/CreateNewCourse.page.tsx");
       route("courses/:id", "modules/Admin/Courses/Course.page.tsx");
       route("users", "modules/Admin/Users/Users.page.tsx");
