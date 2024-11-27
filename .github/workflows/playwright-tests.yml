@@ -47,5 +47,5 @@ jobs:
         run: pnpm playwright test
         working-directory: ./apps/web
         env:
-          PLAYWRIGHT_BROWSERS_PATH: ${{ github.workspace }}/ms-playwright
+          HOME: /root
           TEST_KEY: ${{ secrets.TEST_KEY }}
