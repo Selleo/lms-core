@@ -38,7 +38,7 @@ class CourseActions {
   }
 
   private async verifyCourseContent(): Promise<void> {
-    await expect(this.page.getByText(TEST_COURSE.name)).toBeVisible();
+    await expect(this.page.getByRole("heading", { name: TEST_COURSE.name })).toBeVisible();
     await expect(this.page.getByText(TEST_COURSE.description)).toBeVisible();
   }
 }
@@ -121,6 +121,11 @@ test.describe.serial("Course E2E", () => {
   });
 
   test.skip("should find, open and enroll the course", async () => {
+    /*
+     *  probably should be tested in another way (the unenroll action on course enrolled with action for free courses
+     *  does not seem to work - duplicates in the database)
+     *
+     */
     await courseActions.openCourse();
     await enrollmentActions.enrollInCourse();
     await enrollmentActions.unenrollFromCourse();
