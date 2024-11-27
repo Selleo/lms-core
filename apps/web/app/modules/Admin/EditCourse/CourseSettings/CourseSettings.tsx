@@ -24,20 +24,25 @@ import CourseCardPreview from "../compontents/CourseCardPreview";
 import { useCourseSettingsForm } from "./hooks/useCourseSettingsForm";
 
 type CourseSettingsProps = {
+  courseId?: string;
   title?: string;
   description?: string;
   categoryId?: string;
   imageUrl?: string;
 };
-const CourseSettings = ({ title, description, categoryId, imageUrl }: CourseSettingsProps) => {
-  const { id } = useParams();
-  const courseId = id ?? "";
+const CourseSettings = ({
+  courseId,
+  title,
+  description,
+  categoryId,
+  imageUrl,
+}: CourseSettingsProps) => {
   const { form, onSubmit } = useCourseSettingsForm({
     title,
     description,
     categoryId,
     imageUrl,
-    courseId,
+    courseId: courseId || "",
   });
   const { data: categories } = useCategoriesSuspense();
   const [isUploading, setIsUploading] = useState(false);
