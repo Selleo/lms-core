@@ -48,6 +48,12 @@ export default defineConfig(({ mode }) => {
         telemetry: false,
       }),
     ],
+    // https://github.com/remix-run/remix/issues/10156
+    server: {
+      warmup: {
+        clientFiles: ["./app/**/*.tsx"],
+      },
+    },
     resolve: {
       alias: {
         "~/": path.resolve(__dirname, "./app"),
@@ -70,7 +76,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     optimizeDeps: {
-      include: ["@remix-run/react", "@remix-run/router", "crypto-js"],
+      include: ["@remix-run/react", "crypto-js"],
     },
   };
 });
