@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Patch,
   Post,
@@ -229,8 +230,9 @@ export class CoursesController {
   async enrollCourse(
     @Query("id") id: string,
     @CurrentUser("userId") currentUserId: UUIDType,
+    @Headers("x-test-key") testKey: string,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.coursesService.enrollCourse(id, currentUserId);
+    await this.coursesService.enrollCourse(id, currentUserId, testKey);
 
     return new BaseResponse({ message: "Course enrolled successfully" });
   }

@@ -405,13 +405,13 @@ export class LessonsRepository {
           (SELECT COUNT(*)
           FROM ${lessonItems}
           WHERE ${lessonItems.lessonId} = ${lessons.id}
-            AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
+            AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})`,
         itemsCompletedCount: sql<number>`
           (SELECT COUNT(*)
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
             AND ${studentCompletedLessonItems.courseId} = ${courseId}
-            AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
+            AND ${studentCompletedLessonItems.studentId} = ${userId})`,
         lessonProgress: sql<LessonProgressType>`
           (CASE
             WHEN (
@@ -714,7 +714,7 @@ export class LessonsRepository {
           FROM ${studentCompletedLessonItems}
           WHERE ${studentCompletedLessonItems.lessonId} = ${lessonId}
             AND ${studentCompletedLessonItems.courseId} = ${courseId}
-            AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
+            AND ${studentCompletedLessonItems.studentId} = ${userId})`,
       })
       .where(
         and(

@@ -9,6 +9,7 @@ import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
+import { PageWrapper } from "~/components/PageWrapper";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
@@ -139,109 +140,113 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-y-12 h-auto">
-      <div className="flex flex-col gap-y-6">
-        <div className="flex flex-col px-6">
-          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Your Courses</h4>
-          <p className="text-lg leading-7 text-neutral-800">
-            Courses you are currently enrolled in
-          </p>
-        </div>
-        <div
-          data-testid="enrolled-courses"
-          className="flex lg:p-8 pl-6 gap-6 lg:bg-white w-full lg:rounded-lg drop-shadow-primary"
-        >
-          {!studentCourses ||
-            (isEmpty(studentCourses) && (
-              <div className="col-span-3 flex gap-8 ">
-                <div>
-                  <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
+    <PageWrapper>
+      <div className="flex flex-1 flex-col gap-y-12 h-auto">
+        <div className="flex flex-col gap-y-6">
+          <div className="flex flex-col">
+            <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Your Courses</h4>
+            <p className="text-lg leading-7 text-neutral-800">
+              Courses you are currently enrolled in
+            </p>
+          </div>
+          <div
+            data-testid="enrolled-courses"
+            className="flex gap-6 lg:p-8 lg:bg-white w-full lg:rounded-lg drop-shadow-primary"
+          >
+            {!studentCourses ||
+              (isEmpty(studentCourses) && (
+                <div className="col-span-3 flex gap-8 ">
+                  <div>
+                    <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
+                  </div>
+                  <div className="flex flex-col justify-center gap-2">
+                    <p className="text-lg font-bold leading-5 text-neutral-950">
+                      We could not find any courses
+                    </p>
+                    <p className="text-neutral-800 text-base leading-6 font-normal">
+                      Please change the search criteria or try again later
+                    </p>
+                  </div>
                 </div>
-                <div className="flex flex-col justify-center gap-2">
-                  <p className="text-lg font-bold leading-5 text-neutral-950">
-                    We could not find any courses
-                  </p>
-                  <p className="text-neutral-800 text-base leading-6 font-normal">
-                    Please change the search criteria or try again later
-                  </p>
-                </div>
+              ))}
+            {isStudentCoursesLoading && (
+              <div className="flex justify-center items-center h-full">
+                <Loader />
               </div>
-            ))}
-          {isStudentCoursesLoading && (
-            <div className="flex justify-center items-center h-full">
-              <Loader />
-            </div>
-          )}
-          <StudentCoursesCarousel studentCourses={studentCourses} />
-        </div>
-      </div>
-      <div className="flex flex-col px-6 lg:px-0">
-        <div className="flex flex-col lg:p-0">
-          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Available Courses</h4>
-          <p className="text-lg leading-7 text-neutral-800">
-            All available career courses available to enroll
-          </p>
-          <div className="flex justify-between gap-2 items-center">
-            <SearchFilter
-              filters={filterConfig}
-              values={{
-                title: state.searchTitle,
-                category: state.category,
-                sort: state.sort,
-              }}
-              onChange={handleFilterChange}
-              isLoading={isCategoriesLoading}
-            />
-            <ButtonGroup
-              className="sr-only lg:not-sr-only"
-              buttons={[
-                {
-                  children: <DashboardIcon />,
-                  isActive: courseListLayout === "card",
-                  onClick: () => setCourseListLayout("card"),
-                },
-                {
-                  children: <HamburgerIcon />,
-                  isActive: courseListLayout === "table",
-                  onClick: () => setCourseListLayout("table"),
-                },
-              ]}
-            />
+            )}
+            <StudentCoursesCarousel studentCourses={studentCourses} />
           </div>
         </div>
-        <div
-          data-testid="unenrolled-courses"
-          className={cn("lg:p-8 gap-6 rounded-lg drop-shadow-primary lg:bg-white", {
-            "flex flex-wrap": courseListLayout === "card",
-            block: courseListLayout === "table",
-          })}
-        >
-          {availableCourses && !isEmpty(availableCourses) && (
-            <CourseList availableCourses={availableCourses} courseListLayout={courseListLayout} />
-          )}
-          {!availableCourses ||
-            (isEmpty(availableCourses) && (
-              <div className="col-span-3 flex gap-8 ">
-                <div>
-                  <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
-                </div>
-                <div className="flex flex-col justify-center gap-2">
-                  <p className="text-lg font-bold leading-5 text-neutral-950">
-                    We could not find any courses
-                  </p>
-                  <p className="text-neutral-800 text-base leading-6 font-normal">
-                    Please change the search criteria or try again later
-                  </p>
-                </div>
-              </div>
-            ))}
-          {isCoursesLoading && (
-            <div className="flex justify-center items-center h-full">
-              <Loader />
+        <div className="flex flex-col">
+          <div className="flex flex-col lg:p-0">
+            <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
+              Available Courses
+            </h4>
+            <p className="text-lg leading-7 text-neutral-800">
+              All available career courses available to enroll
+            </p>
+            <div className="flex justify-between gap-2 items-center">
+              <SearchFilter
+                filters={filterConfig}
+                values={{
+                  title: state.searchTitle,
+                  category: state.category,
+                  sort: state.sort,
+                }}
+                onChange={handleFilterChange}
+                isLoading={isCategoriesLoading}
+              />
+              <ButtonGroup
+                className="sr-only lg:not-sr-only"
+                buttons={[
+                  {
+                    children: <DashboardIcon />,
+                    isActive: courseListLayout === "card",
+                    onClick: () => setCourseListLayout("card"),
+                  },
+                  {
+                    children: <HamburgerIcon />,
+                    isActive: courseListLayout === "table",
+                    onClick: () => setCourseListLayout("table"),
+                  },
+                ]}
+              />
             </div>
-          )}
+          </div>
+          <div
+            data-testid="unenrolled-courses"
+            className={cn("lg:p-8 gap-6 rounded-lg drop-shadow-primary lg:bg-white", {
+              "flex flex-wrap": courseListLayout === "card",
+              block: courseListLayout === "table",
+            })}
+          >
+            {availableCourses && !isEmpty(availableCourses) && (
+              <CourseList availableCourses={availableCourses} courseListLayout={courseListLayout} />
+            )}
+            {!availableCourses ||
+              (isEmpty(availableCourses) && (
+                <div className="col-span-3 flex gap-8 ">
+                  <div>
+                    <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
+                  </div>
+                  <div className="flex flex-col justify-center gap-2">
+                    <p className="text-lg font-bold leading-5 text-neutral-950">
+                      We could not find any courses
+                    </p>
+                    <p className="text-neutral-800 text-base leading-6 font-normal">
+                      Please change the search criteria or try again later
+                    </p>
+                  </div>
+                </div>
+              ))}
+            {isCoursesLoading && (
+              <div className="flex justify-center items-center h-full">
+                <Loader />
+              </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   );
 }

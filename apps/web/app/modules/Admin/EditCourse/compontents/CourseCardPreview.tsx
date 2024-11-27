@@ -1,4 +1,4 @@
-import DefaultCoursePhoto from "~/assets/default-photo-course.svg";
+import DefaultCoursePhoto from "~/assets/svgs/default-photo-course.svg";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { UserProfile } from "~/modules/Dashboard/DashboardNavigation/UserProfile";

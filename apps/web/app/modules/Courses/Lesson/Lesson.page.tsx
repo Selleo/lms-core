@@ -7,6 +7,7 @@ import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
 import { useCourseSuspense } from "~/api/queries/useCourse";
 import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
 import { queryClient } from "~/api/queryClient";
+import { PageWrapper } from "~/components/PageWrapper";
 import { Button } from "~/components/ui/button";
 import { LessonItems } from "~/modules/Courses/Lesson/LessonItems/LessonItems";
 import { QuizSummaryModal } from "~/modules/Courses/Lesson/QuizSummaryModal";
@@ -102,72 +103,74 @@ export default function LessonPage() {
   };
 
   return (
-    <div className="flex gap-8 w-full flex-row-reverse">
-      <Summary lesson={lesson} />
-      <div className="flex flex-col gap-8 w-full">
-        <Breadcrumb lessonData={data} courseId={id} courseTitle={title} />
-        <Overview lesson={lesson} />
-        {isQuiz && (
-          <QuizSummaryModal
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
-            scoreLabel={scorePercentage}
-            courseId={courseId ?? ""}
-          />
-        )}
-        <FormProvider {...methods}>
-          <form className="flex flex-col gap-8">
-            <LessonItems
-              isSubmitted={!!data?.isSubmitted}
-              questions={questionsArray}
-              lessonItems={orderedLessonsItems}
-              lessonType={data?.type ?? "multimedia"}
-              updateLessonItemCompletion={updateLessonItemCompletion}
+    <div className="flex">
+      <PageWrapper>
+        <div className="flex flex-col gap-8 w-full">
+          <Breadcrumb lessonData={data} courseId={id} courseTitle={title} />
+          <Overview lesson={lesson} />
+          {isQuiz && (
+            <QuizSummaryModal
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              scoreLabel={scorePercentage}
+              courseId={courseId ?? ""}
             />
-          </form>
-        </FormProvider>
-        {isQuiz && (
-          <Button
-            className="w-min self-end"
-            variant="outline"
-            onClick={
-              data?.isSubmitted
-                ? () => clearQuizProgress.mutate({ lessonId, courseId })
-                : () => submitQuiz.mutate({ lessonId, courseId })
-            }
-          >
-            {data?.isSubmitted ? "Clear progress" : "Check answers"}
-          </Button>
-        )}
-        {isEnrolled && (
-          <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
-            <Link
-              to={previousLessonId ? `/course/${courseId}/lesson/${previousLessonId}` : "#"}
-              onClick={(e) => !previousLessonId && e.preventDefault()}
-              reloadDocument
-              replace
+          )}
+          <FormProvider {...methods}>
+            <form className="flex flex-col gap-8">
+              <LessonItems
+                isSubmitted={!!data?.isSubmitted}
+                questions={questionsArray}
+                lessonItems={orderedLessonsItems}
+                lessonType={data?.type ?? "multimedia"}
+                updateLessonItemCompletion={updateLessonItemCompletion}
+              />
+            </form>
+          </FormProvider>
+          {isQuiz && (
+            <Button
+              className="w-min self-end"
+              variant="outline"
+              onClick={
+                data?.isSubmitted
+                  ? () => clearQuizProgress.mutate({ lessonId, courseId })
+                  : () => submitQuiz.mutate({ lessonId, courseId })
+              }
             >
-              <Button
-                variant="outline"
-                className="w-full sm:w-[180px]"
-                disabled={!previousLessonId}
+              {data?.isSubmitted ? "Clear progress" : "Check answers"}
+            </Button>
+          )}
+          {isEnrolled && (
+            <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
+              <Link
+                to={previousLessonId ? `/course/${courseId}/lesson/${previousLessonId}` : "#"}
+                onClick={(e) => !previousLessonId && e.preventDefault()}
+                reloadDocument
+                replace
               >
-                Previous lesson
-              </Button>
-            </Link>
-            <Link
-              to={nextLessonId ? `/course/${courseId}/lesson/${nextLessonId}` : "#"}
-              onClick={(e) => !nextLessonId && e.preventDefault()}
-              reloadDocument
-              replace
-            >
-              <Button className="w-full sm:w-[180px]" disabled={!nextLessonId}>
-                Next lesson
-              </Button>
-            </Link>
-          </div>
-        )}
-      </div>
+                <Button
+                  variant="outline"
+                  className="w-full sm:w-[180px]"
+                  disabled={!previousLessonId}
+                >
+                  Previous lesson
+                </Button>
+              </Link>
+              <Link
+                to={nextLessonId ? `/course/${courseId}/lesson/${nextLessonId}` : "#"}
+                onClick={(e) => !nextLessonId && e.preventDefault()}
+                reloadDocument
+                replace
+              >
+                <Button className="w-full sm:w-[180px]" disabled={!nextLessonId}>
+                  Next lesson
+                </Button>
+              </Link>
+            </div>
+          )}
+        </div>
+      </PageWrapper>
+      <Summary lesson={lesson} />
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
-import SplashScreenImage from "~/assets/splash-screen-image.svg";
+import SplashScreenImage from "~/assets/svgs/splash-screen-image.svg";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
 import { Icon } from "~/components/Icon";
 import Editor from "~/components/RichText/Editor";

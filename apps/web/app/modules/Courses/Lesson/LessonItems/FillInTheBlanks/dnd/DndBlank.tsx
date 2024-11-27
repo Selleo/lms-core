@@ -20,7 +20,10 @@ export const DndBlank = ({ isQuiz, words, blankId, isCorrect, isStudentAnswer }:
 
   return (
     <SortableContext id={blankId} items={words} strategy={rectSwappingStrategy}>
-      <div ref={setNodeRef} className="w-32 h-9 mx-2 bg-white overflow-hidden border rounded-md">
+      <div
+        ref={setNodeRef}
+        className="min-w-32 h-9 mx-2 bg-white overflow-hidden border rounded-md"
+      >
         {words.map((word) => (
           <DraggableWord
             isQuiz={isQuiz}
