@@ -133,7 +133,7 @@ export class StatisticsRepository {
     return result;
   }
 
-  async getMostFivePopularCourses(userId: string) {
+  async getFiveMostPopularCourses(userId: string) {
     return await this.db
       .select({
         courseName: courses.title,

@@ -63,7 +63,7 @@ export const PopularCourseStatsSchema = Type.Object({
 });
 
 export const TeacherStatsSchema = Type.Object({
-  mostFivePopularCourses: Type.Array(PopularCourseStatsSchema),
+  fiveMostPopularCourses: Type.Array(PopularCourseStatsSchema),
 });
 
 const UserStatisticSchema = Type.Object({

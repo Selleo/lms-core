@@ -53,11 +53,11 @@ export class StatisticsService {
   }
 
   async getTeacherStats(userId: string) {
-    const mostFivePopularCourses =
-      await this.statisticsRepository.getMostFivePopularCourses(userId);
+    const fiveMostPopularCourses =
+      await this.statisticsRepository.getFiveMostPopularCourses(userId);
 
     return {
-      mostFivePopularCourses,
+      fiveMostPopularCourses,
     };
   }
 
