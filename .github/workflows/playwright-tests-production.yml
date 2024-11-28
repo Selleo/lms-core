@@ -1,25 +1,17 @@
-name: E2E - Playwright Tests
+name: E2E - Playwright Tests (Production)
 
 env:
   HUSKY: 0
 
 on:
-  workflow_run:
-    workflows:
-      - "STAGING - Deploy API"
-    types:
-      - completed
   workflow_call:
-  workflow_dispatch:
 
 jobs:
   playwright:
     name: Playwright Tests
     runs-on: ubuntu-latest
-    if: |
-      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') ||
-      github.event_name == 'workflow_call' ||
-      github.event_name == 'workflow_dispatch'
+    environment:
+      name: production
 
     steps:
       - name: Checkout repository
