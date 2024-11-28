@@ -1,0 +1,51 @@
+name: E2E - Playwright Tests (Staging)
+
+env:
+  HUSKY: 0
+
+on:
+  workflow_run:
+    workflows:
+      - "STAGING - Deploy API"
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  playwright:
+    name: Playwright Tests
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    environment:
+      name: staging
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.4.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.15.0
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps chromium
+        working-directory: ./apps/web
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
+
+      - name: Run Playwright tests
+        run: pnpm playwright test
+        working-directory: ./apps/web
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
+          TEST_KEY: ${{ secrets.TEST_KEY }}
