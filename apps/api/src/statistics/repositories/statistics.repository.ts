@@ -1,9 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, sql } from "drizzle-orm";
+import { desc, eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import {
+  courses,
+  courseStatisticsPerTeacherMaterialized,
   lessons,
   quizAttempts,
   studentCourses,
@@ -129,6 +131,19 @@ export class StatisticsRepository {
       .from(userStatistics)
       .where(eq(userStatistics.userId, userId));
     return result;
+  }
+
+  async getFiveMostPopularCourses(userId: string) {
+    return await this.db
+      .select({
+        courseName: courses.title,
+        studentCount: courseStatisticsPerTeacherMaterialized.studentCount,
+      })
+      .from(courseStatisticsPerTeacherMaterialized)
+      .innerJoin(courses, eq(courseStatisticsPerTeacherMaterialized.courseId, courses.id))
+      .where(eq(courseStatisticsPerTeacherMaterialized.teacherId, userId))
+      .orderBy(desc(courseStatisticsPerTeacherMaterialized.studentCount))
+      .limit(5);
   }
 
   async createQuizAttempt(data: {

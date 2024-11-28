@@ -52,6 +52,15 @@ export class StatisticsService {
     };
   }
 
+  async getTeacherStats(userId: string) {
+    const fiveMostPopularCourses =
+      await this.statisticsRepository.getFiveMostPopularCourses(userId);
+
+    return {
+      fiveMostPopularCourses,
+    };
+  }
+
   async createQuizAttempt(data: {
     userId: string;
     courseId: string;

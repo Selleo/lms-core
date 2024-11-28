@@ -6,7 +6,7 @@ import type { GetUserStatisticsResponse } from "../generated-api";
 
 export const userStatistics = () => {
   return {
-    queryKey: ["user-statistics"],
+    queryKey: ["user-statistics/user-stats"],
     queryFn: async () => {
       const response = await ApiClient.api.statisticsControllerGetUserStatistics();
 

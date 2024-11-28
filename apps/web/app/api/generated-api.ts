@@ -1198,6 +1198,15 @@ export interface GetUserStatisticsResponse {
   };
 }
 
+export interface GetTeacherStatsResponse {
+  data: {
+    mostFivePopularCourses: {
+      courseName: string;
+      studentCount: number;
+    }[];
+  };
+}
+
 import type {
   AxiosInstance,
   AxiosRequestConfig,
@@ -1340,7 +1349,7 @@ export class HttpClient<SecurityDataType = unknown> {
       ...requestParams,
       headers: {
         ...(requestParams.headers || {}),
-        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
+        ...(type ? { "Content-Type": type } : {}),
       },
       params: query,
       responseType: responseFormat,
@@ -2747,11 +2756,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name StatisticsControllerGetUserStatistics
-     * @request GET:/api/statistics
+     * @request GET:/api/statistics/user-stats
      */
     statisticsControllerGetUserStatistics: (params: RequestParams = {}) =>
       this.request<GetUserStatisticsResponse, any>({
-        path: `/api/statistics`,
+        path: `/api/statistics/user-stats`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StatisticsControllerGetTeacherStats
+     * @request GET:/api/statistics/teacher-stats
+     */
+    statisticsControllerGetTeacherStats: (params: RequestParams = {}) =>
+      this.request<GetTeacherStatsResponse, any>({
+        path: `/api/statistics/teacher-stats`,
         method: "GET",
         format: "json",
         ...params,

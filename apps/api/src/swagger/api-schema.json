@@ -2590,7 +2590,7 @@
         }
       }
     },
-    "/api/statistics": {
+    "/api/statistics/user-stats": {
       "get": {
         "operationId": "StatisticsController_getUserStatistics",
         "parameters": [],
@@ -2600,6 +2600,23 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetUserStatisticsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistics/teacher-stats": {
+      "get": {
+        "operationId": "StatisticsController_getTeacherStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTeacherStatsResponse"
                 }
               }
             }
@@ -7021,6 +7038,40 @@
               "lessons",
               "streak",
               "lastLesson"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetTeacherStatsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "mostFivePopularCourses": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "courseName": {
+                      "type": "string"
+                    },
+                    "studentCount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "courseName",
+                    "studentCount"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "mostFivePopularCourses"
             ]
           }
         },

@@ -85,6 +85,13 @@
       "when": 1732502961161,
       "tag": "0011_update_courses_table",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1732759437699,
+      "tag": "0012_create_materialized_view_course_statistics_per_teacher",
+      "breakpoints": true
     }
   ]
 }
