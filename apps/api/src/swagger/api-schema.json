@@ -7068,10 +7068,26 @@
                     "studentCount"
                   ]
                 }
+              },
+              "totalCoursesCompletionStats": {
+                "type": "object",
+                "properties": {
+                  "totalCoursesCompletion": {
+                    "type": "number"
+                  },
+                  "totalCourses": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "totalCoursesCompletion",
+                  "totalCourses"
+                ]
               }
             },
             "required": [
-              "mostFivePopularCourses"
+              "mostFivePopularCourses",
+              "totalCoursesCompletionStats"
             ]
           }
         },

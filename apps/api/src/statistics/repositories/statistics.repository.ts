@@ -146,6 +146,16 @@ export class StatisticsRepository {
       .limit(5);
   }
 
+  async getTotalCoursesCompletion(userId: string) {
+    return await this.db
+      .select({
+        totalCoursesCompletion: sql<number>`sum(courseStatisticsPerTeacherMaterialized.completedStudentCount)`,
+        totalCourses: sql<number>`sum(courseStatisticsPerTeacherMaterialized.studentCount)`,
+      })
+      .from(courseStatisticsPerTeacherMaterialized)
+      .where(eq(courseStatisticsPerTeacherMaterialized.teacherId, userId));
+  }
+
   async createQuizAttempt(data: {
     userId: string;
     courseId: string;

@@ -53,11 +53,16 @@ export class StatisticsService {
   }
 
   async getTeacherStats(userId: string) {
-    const fiveMostPopularCourses =
-      await this.statisticsRepository.getFiveMostPopularCourses(userId);
+    const fiveMostPopularCourses = await this.statisticsRepository.getFiveMostPopularCourses(
+      userId,
+    );
+    const [totalCoursesCompletionStats] = await this.statisticsRepository.getTotalCoursesCompletion(
+      userId,
+    );
 
     return {
       fiveMostPopularCourses,
+      totalCoursesCompletionStats,
     };
   }
 
@@ -172,8 +177,9 @@ export class StatisticsService {
   };
 
   private async getLassLesson(userId: string) {
-    const lastLessonItem =
-      await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(userId);
+    const lastLessonItem = await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(
+      userId,
+    );
 
     if (!lastLessonItem) return null;
 
