@@ -1,7 +1,9 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
   integer,
   jsonb,
+  pgMaterializedView,
   pgTable,
   text,
   timestamp,
@@ -380,8 +382,49 @@ export const studentLessonsProgress = pgTable(
       withTimezone: true,
       precision: 3,
     }),
+    completedAsFreemium: boolean("completed_as_freemium").notNull().default(false),
   },
   (table) => ({
     unq: unique().on(table.studentId, table.lessonId, table.courseId),
   }),
+);
+
+// Materialized view
+
+export const courseStatisticsPerTeacherMaterialized = pgMaterializedView(
+  "course_statistics_per_teacher",
+  {
+    teacherId: uuid("teacher_id").notNull(),
+    courseId: uuid("course_id").notNull(),
+    studentCount: integer("student_count").notNull(),
+    completedStudentCount: integer("completed_student_count").notNull(),
+    purchasedAfterFreemiumCount: integer("purchased_after_freemium_count").notNull(),
+  },
+).as(
+  sql`
+    SELECT
+      c.author_id AS teacher_id,
+      c.id AS course_id,
+      COUNT(sc.id) AS student_count,
+      SUM(
+        CASE
+          WHEN sc.state = 'completed' THEN 1
+          ELSE 0
+        END
+      ) AS completed_student_count,
+      COUNT(
+        DISTINCT CASE
+          WHEN slp.completed_as_freemium = true THEN sc.student_id
+          ELSE NULL
+        END
+      ) AS purchased_after_freemium_count
+    FROM
+      courses c
+      LEFT JOIN student_courses sc ON c.id = sc.course_id
+      LEFT JOIN student_lessons_progress slp ON c.id = slp.course_id
+      AND slp.completed_at IS NOT NULL
+    GROUP BY
+      c.author_id,
+      c.id;
+`,
 );

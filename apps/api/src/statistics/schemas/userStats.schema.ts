@@ -57,6 +57,15 @@ export const UserStatsSchema = Type.Object({
   ]),
 });
 
+export const PopularCourseStatsSchema = Type.Object({
+  courseName: Type.String(),
+  studentCount: Type.Number(),
+});
+
+export const TeacherStatsSchema = Type.Object({
+  mostFivePopularCourses: Type.Array(PopularCourseStatsSchema),
+});
+
 const UserStatisticSchema = Type.Object({
   currentStreak: Type.Number(),
   longestStreak: Type.Number(),
@@ -67,3 +76,4 @@ const UserStatisticSchema = Type.Object({
 export type UserStats = Static<typeof UserStatsSchema>;
 export type StatsByMonth = Static<typeof StatsByMonthSchema>;
 export type UserStatistic = Static<typeof UserStatisticSchema>;
+export type TeacherStats = Static<typeof TeacherStatsSchema>;
