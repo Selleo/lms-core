@@ -53,8 +53,9 @@ export class StatisticsService {
   }
 
   async getTeacherStats(userId: string) {
-    const fiveMostPopularCourses =
-      await this.statisticsRepository.getFiveMostPopularCourses(userId);
+    const fiveMostPopularCourses = await this.statisticsRepository.getFiveMostPopularCourses(
+      userId,
+    );
 
     return {
       fiveMostPopularCourses,
@@ -172,8 +173,9 @@ export class StatisticsService {
   };
 
   private async getLassLesson(userId: string) {
-    const lastLessonItem =
-      await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(userId);
+    const lastLessonItem = await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(
+      userId,
+    );
 
     if (!lastLessonItem) return null;
 
