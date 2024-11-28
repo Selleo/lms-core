@@ -42,10 +42,12 @@ jobs:
       - name: Install Playwright Browsers
         run: pnpm exec playwright install --with-deps chromium
         working-directory: ./apps/web
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
 
       - name: Run Playwright tests
         run: pnpm playwright test
         working-directory: ./apps/web
         env:
-          HOME: /root
+          PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
           TEST_KEY: ${{ secrets.TEST_KEY }}
