@@ -56,9 +56,13 @@ export class StatisticsService {
     const fiveMostPopularCourses = await this.statisticsRepository.getFiveMostPopularCourses(
       userId,
     );
+    const [totalCoursesCompletionStats] = await this.statisticsRepository.getTotalCoursesCompletion(
+      userId,
+    );
 
     return {
       fiveMostPopularCourses,
+      totalCoursesCompletionStats,
     };
   }
 

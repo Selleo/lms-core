@@ -1204,6 +1204,10 @@ export interface GetTeacherStatsResponse {
       courseName: string;
       studentCount: number;
     }[];
+    totalCoursesCompletionStats: {
+      totalCoursesCompletion: number;
+      totalCourses: number;
+    };
   };
 }
 
