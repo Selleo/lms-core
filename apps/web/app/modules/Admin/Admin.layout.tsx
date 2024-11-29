@@ -1,4 +1,4 @@
-import { type MetaFunction, Outlet, redirect, useNavigate } from "@remix-run/react";
+import { type MetaFunction, Outlet, redirect, useLocation, useNavigate } from "@remix-run/react";
 import { Suspense, useLayoutEffect } from "react";
 
 import { currentUserQueryOptions } from "~/api/queries";
@@ -46,10 +46,14 @@ const AdminGuard = ({ children }: { children: React.ReactNode }) => {
 };
 
 const AdminLayout = () => {
+  const location = useLocation();
+  const hideTopbarAndSidebar = location.pathname === "/admin/beta-courses/new";
   return (
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 overflow-hidden">
-        <DashboardNavigation menuItems={mapNavigationItems(adminNavigationConfig)} />
+        {!hideTopbarAndSidebar && (
+          <DashboardNavigation menuItems={mapNavigationItems(adminNavigationConfig)} />
+        )}
         <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
           <Suspense fallback={<Loader />}>
             <AdminGuard>
