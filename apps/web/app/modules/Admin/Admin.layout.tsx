@@ -3,12 +3,12 @@ import { Suspense, useLayoutEffect } from "react";
 
 import { currentUserQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
+import { Navigation } from "~/components/Navigation";
 import { adminNavigationConfig, mapNavigationItems } from "~/config/navigationConfig";
 import { RouteGuard } from "~/Guards/RouteGuard";
 import { useUserRole } from "~/hooks/useUserRole";
 
 import Loader from "../common/Loader/Loader";
-import { DashboardNavigation } from "../Dashboard/DashboardNavigation/DashboardNavigation";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Admin" }];
@@ -48,11 +48,12 @@ const AdminGuard = ({ children }: { children: React.ReactNode }) => {
 const AdminLayout = () => {
   const location = useLocation();
   const hideTopbarAndSidebar = location.pathname === "/admin/beta-courses/new";
+
   return (
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 overflow-hidden">
         {!hideTopbarAndSidebar && (
-          <DashboardNavigation menuItems={mapNavigationItems(adminNavigationConfig)} />
+          <Navigation menuItems={mapNavigationItems(adminNavigationConfig)} />
         )}
         <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
           <Suspense fallback={<Loader />}>
