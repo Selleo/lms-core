@@ -23,7 +23,7 @@ const Lesson = () => (
 );
 
 const EditCourse = () => {
-  const [navigationTabState, setNavigationTabState] = useState<NavigationTab>("Settings");
+  const [navigationTabState, setNavigationTabState] = useState<NavigationTab>("Lesson");
   const { id } = useParams();
   if (!id) throw new Error("Course ID not found");
   const { data: course, isLoading } = useCourseById(id);
