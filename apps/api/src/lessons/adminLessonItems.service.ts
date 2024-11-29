@@ -27,6 +27,7 @@ import type {
   SingleLessonItemResponse,
   TextBlockInsertType,
   TextBlockSelectType,
+  TextBlockWithLessonId,
   UpdateFileBody,
   UpdateQuestionBody,
   UpdateTextBlockBody,
@@ -290,6 +291,32 @@ export class AdminLessonItemsService {
     if (!question) throw new NotFoundException("Question not found");
 
     return question;
+  }
+
+  async createTextBlockAndAssignToLesson(content: TextBlockWithLessonId, userId: UUIDType) {
+    return await this.db.transaction(async (trx) => {
+      const textBlock = await this.adminLessonItemsRepository.createBetaTextBlock(content, userId);
+      const highestDisplayOrder = await this.adminLessonItemsRepository.getHighestDisplayOrder(
+        content.lessonId,
+        trx,
+      );
+
+      const newDisplayOrder = highestDisplayOrder + 1;
+
+      const items: LessonItemToAdd[] = [
+        {
+          id: textBlock.id,
+          type: "text_block",
+          displayOrder: newDisplayOrder,
+        },
+      ];
+
+      await this.assignItemsToLesson(content.lessonId, items);
+
+      if (!textBlock) throw new NotFoundException("Text block not found");
+
+      return textBlock;
+    });
   }
 
   async getQuestionAnswers(questionId: UUIDType) {

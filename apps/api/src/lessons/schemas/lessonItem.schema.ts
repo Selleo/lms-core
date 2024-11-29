@@ -44,6 +44,7 @@ export const textBlockSchema = Type.Object({
   state: Type.Optional(Type.String()),
   archived: Type.Optional(Type.Boolean()),
   authorId: UUIDSchema,
+  lessonId: Type.Optional(Type.String()),
 });
 
 export const lessonItemFileSchema = Type.Object({
@@ -191,7 +192,20 @@ export const fileSelectSchema = Type.Object({
   updatedAt: Type.String(),
 });
 
+export const betaTextLessonSchema = Type.Object({
+  title: Type.String(),
+  body: Type.String(),
+  state: Type.String(),
+  authorId: UUIDSchema,
+  lessonId: Type.String(),
+});
+
+export type BetaTextLessonType = Static<typeof betaTextLessonSchema>;
+
 export type TextBlockInsertType = InferInsertModel<typeof textBlocks>;
+export type TextBlockWithLessonId = TextBlockInsertType & {
+  lessonId: string;
+};
 export type QuestionInsertType = InferInsertModel<typeof questions>;
 export type FileInsertType = InferInsertModel<typeof files>;
 

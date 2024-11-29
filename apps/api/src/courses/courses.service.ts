@@ -407,6 +407,79 @@ export class CoursesService {
     };
   }
 
+  async getBetaCourseById(id: string) {
+    const [course] = await this.db
+      .select({
+        id: courses.id,
+        title: courses.title,
+        imageUrl: sql<string>`${courses.imageUrl}`,
+        category: categories.title,
+        categoryId: categories.id,
+        description: sql<string>`${courses.description}`,
+        courseLessonCount: sql<number>`
+        (SELECT COUNT(*)
+        FROM ${courseLessons}
+        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.archived} = false)::INTEGER`,
+        state: courses.state,
+        priceInCents: courses.priceInCents,
+        currency: courses.currency,
+        archived: courses.archived,
+      })
+      .from(courses)
+      .innerJoin(categories, eq(courses.categoryId, categories.id))
+      .where(and(eq(courses.id, id)));
+
+    if (!course) throw new NotFoundException("Course not found");
+
+    const courseLessonList = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: lessons?.description ? sql<string>`${lessons.description}` : sql<string>`NULL`,
+        imageUrl: lessons?.imageUrl ? sql<string>`${lessons.imageUrl}` : sql<string>`NULL`,
+        displayOrder: courseLessons.displayOrder,
+        itemsCount: sql<number>`
+        (SELECT COUNT(*)
+        FROM ${lessonItems}
+        WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
+        isFree: courseLessons.isFree,
+        lessonItems: sql`
+        (SELECT json_agg(
+            json_build_object(
+              'id', ${lessonItems.id},
+              'lessonItemType', ${lessonItems.lessonItemType},
+              'displayOrder', ${lessonItems.displayOrder}
+            )
+          )
+        FROM ${lessonItems}
+        WHERE ${lessonItems.lessonId} = ${lessons.id}) AS lessonItems`,
+      })
+      .from(courseLessons)
+      .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+      .where(
+        and(
+          eq(courseLessons.courseId, id),
+          eq(lessons.archived, false),
+          isNotNull(lessons.id),
+          isNotNull(lessons.title),
+        ),
+      );
+
+    const getImageUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.s3Service.getSignedUrl(url);
+    };
+
+    const imageUrl = await getImageUrl(course.imageUrl);
+
+    return {
+      ...course,
+      imageUrl,
+      lessons: courseLessonList ?? [],
+    };
+  }
+
   async getCourseById(id: string) {
     const [course] = await this.db
       .select({

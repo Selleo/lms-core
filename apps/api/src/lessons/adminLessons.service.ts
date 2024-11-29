@@ -7,7 +7,7 @@ import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { S3Service } from "src/file/s3.service";
-import { lessonItems, lessons } from "src/storage/schema";
+import { courseLessons, lessonItems, lessons } from "src/storage/schema";
 
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
 import {
@@ -162,6 +162,38 @@ export class AdminLessonsService {
     if (!lesson) throw new NotFoundException("Lesson not found");
 
     return { id: lesson.id };
+  }
+
+  async createLessonAndAddToCourse(
+    body: CreateLessonBody & { courseId?: string },
+    authorId: string,
+  ) {
+    return await this.db.transaction(async (tx) => {
+      const [lesson] = await tx
+        .insert(lessons)
+        .values({ ...body, authorId })
+        .returning();
+
+      if (!lesson) throw new NotFoundException("Lesson not found");
+
+      if (body.courseId) {
+        const existingLessons = await tx
+          .select()
+          .from(courseLessons)
+          .where(eq(courseLessons.courseId, body.courseId))
+          .orderBy(courseLessons.displayOrder);
+
+        const newLessonDisplayOrder = (existingLessons.length > 0 ? existingLessons.length : 0) + 1;
+
+        await tx.insert(courseLessons).values({
+          courseId: body.courseId,
+          lessonId: lesson.id,
+          displayOrder: newLessonDisplayOrder,
+        });
+      }
+
+      return { id: lesson.id };
+    });
   }
 
   async updateLesson(id: string, body: UpdateLessonBody) {

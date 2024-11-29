@@ -186,6 +186,16 @@ export class CoursesController {
     return new BaseResponse(await this.coursesService.getCourseById(id));
   }
 
+  @Get("beta-course-by-id")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Validate({
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
+    // response: baseResponse(commonShowCourseSchema),
+  })
+  async getBetaCourseById(@Query("id") id: string): Promise<BaseResponse<CommonShowCourse>> {
+    return new BaseResponse(await this.coursesService.getBetaCourseById(id));
+  }
+
   @Post()
   @Roles(USER_ROLES.admin, USER_ROLES.tutor)
   @Validate({

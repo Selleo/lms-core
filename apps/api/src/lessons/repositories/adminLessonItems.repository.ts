@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, inArray } from "drizzle-orm";
+import { eq, and, inArray, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import {
@@ -46,6 +46,23 @@ export class AdminLessonItemsRepository {
       .where(eq(questionAnswerOptions.questionId, questionId));
   }
 
+  async getHighestDisplayOrder(
+    lessonId: string,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ): Promise<number> {
+    const dbInstance = trx ?? this.db;
+
+    const result = await dbInstance
+      .select({
+        highestOrder: sql<number>`MAX(${lessonItems.displayOrder})`,
+      })
+      .from(lessonItems)
+      .where(eq(lessonItems.lessonId, lessonId))
+      .limit(1);
+
+    return result.length > 0 && result[0].highestOrder !== null ? result[0].highestOrder : 0;
+  }
+
   async getQuestionAnswerOptions(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
@@ -86,6 +103,20 @@ export class AdminLessonItemsRepository {
   }
 
   async createTextBlock(content: any, userId: UUIDType) {
+    const [textBlock] = await this.db
+      .insert(textBlocks)
+      .values({
+        title: content.title,
+        body: content.body,
+        state: content.state,
+        authorId: userId,
+      })
+      .returning();
+
+    return textBlock;
+  }
+
+  async createBetaTextBlock(content: any, userId: UUIDType) {
     const [textBlock] = await this.db
       .insert(textBlocks)
       .values({

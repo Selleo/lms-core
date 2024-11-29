@@ -1399,6 +1399,27 @@
         }
       }
     },
+    "/api/courses/beta-course-by-id": {
+      "get": {
+        "operationId": "CoursesController_getBetaCourseById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/courses/{id}": {
       "patch": {
         "operationId": "CoursesController_updateCourse",
@@ -1742,6 +1763,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/beta-create-lesson": {
+      "post": {
+        "operationId": "LessonsController_betaCreateLesson",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BetaCreateLessonBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BetaCreateLessonResponse"
                 }
               }
             }
@@ -2269,6 +2317,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateTextBlockResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/create-beta-text-block": {
+      "post": {
+        "operationId": "LessonsController_createBetaTextBlock",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBetaTextBlockBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBetaTextBlockResponse"
                 }
               }
             }
@@ -4063,6 +4138,9 @@
                     "title": {
                       "type": "string"
                     },
+                    "courseId": {
+                      "type": "string"
+                    },
                     "imageUrl": {
                       "type": "string"
                     },
@@ -4119,7 +4197,6 @@
                   "required": [
                     "id",
                     "title",
-                    "description",
                     "itemsCount"
                   ]
                 }
@@ -4221,6 +4298,9 @@
                     "title": {
                       "type": "string"
                     },
+                    "courseId": {
+                      "type": "string"
+                    },
                     "imageUrl": {
                       "type": "string"
                     },
@@ -4277,7 +4357,6 @@
                   "required": [
                     "id",
                     "title",
-                    "description",
                     "itemsCount"
                   ]
                 }
@@ -4497,6 +4576,9 @@
                 "title": {
                   "type": "string"
                 },
+                "courseId": {
+                  "type": "string"
+                },
                 "imageUrl": {
                   "type": "string"
                 },
@@ -4553,7 +4635,6 @@
               "required": [
                 "id",
                 "title",
-                "description",
                 "itemsCount"
               ]
             }
@@ -4651,6 +4732,9 @@
               "title": {
                 "type": "string"
               },
+              "courseId": {
+                "type": "string"
+              },
               "imageUrl": {
                 "type": "string"
               },
@@ -4902,7 +4986,6 @@
             "required": [
               "id",
               "title",
-              "description",
               "itemsCount",
               "lessonItems"
             ]
@@ -4925,6 +5008,9 @@
               "title": {
                 "type": "string"
               },
+              "courseId": {
+                "type": "string"
+              },
               "imageUrl": {
                 "type": "string"
               },
@@ -5176,7 +5262,6 @@
             "required": [
               "id",
               "title",
-              "description",
               "itemsCount",
               "lessonItems"
             ]
@@ -5190,6 +5275,9 @@
         "type": "object",
         "properties": {
           "title": {
+            "type": "string"
+          },
+          "courseId": {
             "type": "string"
           },
           "imageUrl": {
@@ -5240,11 +5328,94 @@
           }
         },
         "required": [
-          "title",
-          "description"
+          "title"
         ]
       },
       "CreateLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BetaCreateLessonBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "lessonProgress": {
+            "anyOf": [
+              {
+                "const": "completed",
+                "type": "string"
+              },
+              {
+                "const": "in_progress",
+                "type": "string"
+              },
+              {
+                "const": "not_started",
+                "type": "string"
+              }
+            ]
+          },
+          "isFree": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "isSubmitted": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "quizScore": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "BetaCreateLessonResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -5272,6 +5443,9 @@
         "type": "object",
         "properties": {
           "title": {
+            "type": "string"
+          },
+          "courseId": {
             "type": "string"
           },
           "imageUrl": {
@@ -6256,6 +6430,9 @@
           "authorId": {
             "format": "uuid",
             "type": "string"
+          },
+          "lessonId": {
+            "type": "string"
           }
         }
       },
@@ -6432,6 +6609,58 @@
         ]
       },
       "CreateTextBlockResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateBetaTextBlockBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "authorId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "lessonId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body",
+          "state",
+          "authorId",
+          "lessonId"
+        ]
+      },
+      "CreateBetaTextBlockResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -6938,6 +7167,10 @@
                       "title": {
                         "type": "string"
                       },
+                      "courseId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
                       "imageUrl": {
                         "type": "string"
                       },
@@ -6990,10 +7223,6 @@
                       "quizScore": {
                         "type": "number"
                       },
-                      "courseId": {
-                        "format": "uuid",
-                        "type": "string"
-                      },
                       "courseTitle": {
                         "type": "string"
                       },
@@ -7004,9 +7233,8 @@
                     "required": [
                       "id",
                       "title",
-                      "description",
-                      "itemsCount",
                       "courseId",
+                      "itemsCount",
                       "courseTitle",
                       "courseDescription"
                     ]

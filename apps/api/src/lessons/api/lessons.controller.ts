@@ -41,6 +41,8 @@ import {
   type LessonWithCountItems,
 } from "../schemas/lesson.schema";
 import {
+  betaTextLessonSchema,
+  BetaTextLessonType,
   fileUpdateSchema,
   GetAllLessonItemsResponseSchema,
   GetSingleLessonItemsResponseSchema,
@@ -160,6 +162,29 @@ export class LessonsController {
     @CurrentUser("userId") userId: string,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const { id } = await this.adminLessonsService.createLesson(createLessonBody, userId);
+
+    return new BaseResponse({ id, message: "Lesson created successfully" });
+  }
+
+  @Post("beta-create-lesson")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: createLessonSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
+  })
+  async betaCreateLesson(
+    @Body() createLessonBody: CreateLessonBody,
+    @CurrentUser("userId") userId: string,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonsService.createLessonAndAddToCourse(
+      createLessonBody,
+      userId,
+    );
 
     return new BaseResponse({ id, message: "Lesson created successfully" });
   }
@@ -557,6 +582,29 @@ export class LessonsController {
     @CurrentUser("userId") userId: string,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const { id } = await this.adminLessonItemsService.createTextBlock(body, userId);
+
+    return new BaseResponse({ id, message: "Text block created successfully" });
+  }
+
+  @Post("create-beta-text-block")
+  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: betaTextLessonSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
+  })
+  async createBetaTextBlock(
+    @Body() body: BetaTextLessonType,
+    @CurrentUser("userId") userId: string,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonItemsService.createTextBlockAndAssignToLesson(
+      body,
+      userId,
+    );
 
     return new BaseResponse({ id, message: "Text block created successfully" });
   }

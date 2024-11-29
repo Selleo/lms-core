@@ -1,32 +1,22 @@
 import { useParams } from "@remix-run/react";
 import { useState } from "react";
 
-import { useCourseById } from "~/api/queries/admin/useCourseById";
+import { useBetaCourseById } from "~/api/queries/admin/useBetaCourse";
 import { Card, CardHeader, CardContent } from "~/components/ui/card";
 
 import NavigationTabs from "./compontents/NavigationTabs";
+import CourseLessons from "./CourseLessons/CourseLessons";
 import CoursePricing from "./CoursePricing/CoursePricing";
 import CourseSettings from "./CourseSettings/CourseSettings";
 import CourseStatus from "./CourseStatus/CourseStatus";
 
-import type { NavigationTab } from "./EditCourse.types";
-
-const Lesson = () => (
-  <Card className="p-6 shadow-md border border-gray-200">
-    <CardHeader>
-      <h5 className="text-xl font-semibold">Curriculum</h5>
-    </CardHeader>
-    <CardContent>
-      <p>Here you can add and manage lessons for your course.</p>
-    </CardContent>
-  </Card>
-);
+import type { Chapter, NavigationTab } from "./EditCourse.types";
 
 const EditCourse = () => {
   const [navigationTabState, setNavigationTabState] = useState<NavigationTab>("Settings");
   const { id } = useParams();
   if (!id) throw new Error("Course ID not found");
-  const { data: course, isLoading } = useCourseById(id);
+  const { data: course, isLoading } = useBetaCourseById(id);
 
   if (isLoading) {
     return (
@@ -49,7 +39,7 @@ const EditCourse = () => {
           />
         );
       case "Lesson":
-        return <Lesson />;
+        return <CourseLessons chapters={course?.lessons as Chapter[]} />;
       case "Pricing":
         return (
           <CoursePricing

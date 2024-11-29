@@ -51,7 +51,7 @@ export function LessonCard({ lesson }: LessonCardProps) {
       />
       <div>
         <h4 className="font-medium">{lesson.title}</h4>
-        <Viewer className="line-clamp-2" content={lesson.description} />
+        <Viewer className="line-clamp-2" content={lesson.description || ""} />
         {lesson.columnId === "column-assigned" && (
           <div className="flex items-center space-x-2">
             <Checkbox

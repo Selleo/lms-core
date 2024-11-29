@@ -15,7 +15,7 @@ type OverviewProps = {
 export default function Overview({ lesson }: OverviewProps) {
   const imageUrl = lesson.imageUrl ?? CardPlaceholder;
   const title = lesson.title;
-  const description = lesson.description;
+  const description = lesson.description || "";
   const lessonItemsCount = lesson.itemsCount;
   const lessonItemsCompletedCount = lesson.itemsCompletedCount ?? 0;
 

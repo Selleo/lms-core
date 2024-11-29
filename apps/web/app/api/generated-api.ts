@@ -451,8 +451,9 @@ export interface GetCourseResponse {
       /** @format uuid */
       id: string;
       title: string;
+      courseId?: string;
       imageUrl?: string;
-      description: string;
+      description?: string;
       itemsCount: number;
       itemsCompletedCount?: number;
       lessonProgress?: "completed" | "in_progress" | "not_started";
@@ -494,8 +495,9 @@ export interface GetCourseByIdResponse {
       /** @format uuid */
       id: string;
       title: string;
+      courseId?: string;
       imageUrl?: string;
-      description: string;
+      description?: string;
       itemsCount: number;
       itemsCompletedCount?: number;
       lessonProgress?: "completed" | "in_progress" | "not_started";
@@ -568,8 +570,9 @@ export interface GetAllLessonsResponse {
     /** @format uuid */
     id: string;
     title: string;
+    courseId?: string;
     imageUrl?: string;
-    description: string;
+    description?: string;
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
@@ -607,8 +610,9 @@ export interface GetLessonResponse {
     /** @format uuid */
     id: string;
     title: string;
+    courseId?: string;
     imageUrl?: string;
-    description: string;
+    description?: string;
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
@@ -668,8 +672,9 @@ export interface GetLessonByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
+    courseId?: string;
     imageUrl?: string;
-    description: string;
+    description?: string;
     itemsCount: number;
     itemsCompletedCount?: number;
     lessonProgress?: "completed" | "in_progress" | "not_started";
@@ -726,8 +731,9 @@ export interface GetLessonByIdResponse {
 
 export interface CreateLessonBody {
   title: string;
+  courseId?: string;
   imageUrl?: string;
-  description: string;
+  description?: string;
   lessonProgress?: "completed" | "in_progress" | "not_started";
   isFree?: boolean;
   enrolled?: boolean;
@@ -747,8 +753,33 @@ export interface CreateLessonResponse {
   };
 }
 
+export interface BetaCreateLessonBody {
+  title: string;
+  courseId?: string;
+  imageUrl?: string;
+  description?: string;
+  lessonProgress?: "completed" | "in_progress" | "not_started";
+  isFree?: boolean;
+  enrolled?: boolean;
+  state?: string;
+  archived?: boolean;
+  isSubmitted?: boolean;
+  type?: string;
+  createdAt?: string;
+  quizScore?: number;
+}
+
+export interface BetaCreateLessonResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    message: string;
+  };
+}
+
 export interface UpdateLessonBody {
   title?: string;
+  courseId?: string;
   imageUrl?: string;
   description?: string;
   lessonProgress?: "completed" | "in_progress" | "not_started";
@@ -983,6 +1014,7 @@ export interface UpdateTextBlockItemBody {
   archived?: boolean;
   /** @format uuid */
   authorId?: string;
+  lessonId?: string;
 }
 
 export interface UpdateTextBlockItemResponse {
@@ -1040,6 +1072,23 @@ export interface CreateTextBlockBody {
 }
 
 export interface CreateTextBlockResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    message: string;
+  };
+}
+
+export interface CreateBetaTextBlockBody {
+  title: string;
+  body: string;
+  state: string;
+  /** @format uuid */
+  authorId: string;
+  lessonId: string;
+}
+
+export interface CreateBetaTextBlockResponse {
   data: {
     /** @format uuid */
     id: string;
@@ -1177,8 +1226,10 @@ export interface GetUserStatisticsResponse {
       /** @format uuid */
       id: string;
       title: string;
+      /** @format uuid */
+      courseId: string;
       imageUrl?: string;
-      description: string;
+      description?: string;
       itemsCount: number;
       itemsCompletedCount?: number;
       lessonProgress?: "completed" | "in_progress" | "not_started";
@@ -1190,8 +1241,6 @@ export interface GetUserStatisticsResponse {
       type?: string;
       createdAt?: string;
       quizScore?: number;
-      /** @format uuid */
-      courseId: string;
       courseTitle: string;
       courseDescription: string;
     };
@@ -1340,7 +1389,7 @@ export class HttpClient<SecurityDataType = unknown> {
       ...requestParams,
       headers: {
         ...(requestParams.headers || {}),
-        ...(type && type !== ContentType.FormData ? { "Content-Type": type } : {}),
+        ...(type ? { "Content-Type": type } : {}),
       },
       params: query,
       responseType: responseFormat,
@@ -2067,6 +2116,26 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name CoursesControllerGetBetaCourseById
+     * @request GET:/api/courses/beta-course-by-id
+     */
+    coursesControllerGetBetaCourseById: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/courses/beta-course-by-id`,
+        method: "GET",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name CoursesControllerUpdateCourse
      * @request PATCH:/api/courses/{id}
      */
@@ -2251,6 +2320,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     lessonsControllerCreateLesson: (data: CreateLessonBody, params: RequestParams = {}) =>
       this.request<CreateLessonResponse, any>({
         path: `/api/lessons/create-lesson`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerBetaCreateLesson
+     * @request POST:/api/lessons/beta-create-lesson
+     */
+    lessonsControllerBetaCreateLesson: (data: BetaCreateLessonBody, params: RequestParams = {}) =>
+      this.request<BetaCreateLessonResponse, any>({
+        path: `/api/lessons/beta-create-lesson`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -2539,6 +2624,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     lessonsControllerCreateTextBlock: (data: CreateTextBlockBody, params: RequestParams = {}) =>
       this.request<CreateTextBlockResponse, any>({
         path: `/api/lessons/create-text-block`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerCreateBetaTextBlock
+     * @request POST:/api/lessons/create-beta-text-block
+     */
+    lessonsControllerCreateBetaTextBlock: (
+      data: CreateBetaTextBlockBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<CreateBetaTextBlockResponse, any>({
+        path: `/api/lessons/create-beta-text-block`,
         method: "POST",
         body: data,
         type: ContentType.Json,
