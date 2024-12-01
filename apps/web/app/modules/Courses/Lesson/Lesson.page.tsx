@@ -105,7 +105,7 @@ export default function LessonPage() {
   return (
     <div className="flex">
       <PageWrapper>
-        <div className="flex flex-col gap-8 w-full">
+        <div className="flex flex-col gap-6 w-full">
           <Breadcrumb lessonData={data} courseId={id} courseTitle={title} />
           <Overview lesson={lesson} />
           {isQuiz && (

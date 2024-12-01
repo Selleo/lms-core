@@ -12,7 +12,7 @@ type TutorPageBreadcrumbsProps = {
 
 export const TutorPageBreadcrumbs = ({ id, username }: TutorPageBreadcrumbsProps) => {
   return (
-    <div className="bg-primary-50 mb-4 px-6">
+    <div className="bg-primary-50 mb-4">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
