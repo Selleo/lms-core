@@ -1,14 +1,15 @@
-import { Bar, BarChart, CartesianGrid, Customized, Text, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
+import { Skeleton } from "~/components/ui/skeleton";
 import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { ChartLegendBadge } from "~/modules/Statistics/Client/components";
 
 import type { GetTeacherStatsResponse } from "~/api/generated-api";
 
-type Data = GetTeacherStatsResponse["data"]["mostFivePopularCourses"];
+type Data = GetTeacherStatsResponse["data"]["fiveMostPopularCourses"];
 
-type MostPopularCoursesChartProps = { data: Data };
+type MostPopularCoursesChartProps = { data: Data | undefined; isLoading: boolean | undefined };
 
 type ChartData = {
   courseName: string;
@@ -24,27 +25,26 @@ type ChartConfig = {
 
 const chartColors = [
   "var(--primary-700)",
-  "hsla(340, 75%, 55%, 1)",
-  "hsla(30, 80%, 55%, 1)",
-  "hsla(280, 65%, 60%, 1)",
-  "hsla(160, 60%, 45%, 1)",
+  "var(--cabaret-600)",
+  "var(--zest-500)",
+  "var(--amethyst-600)",
+  "var(--mountain-meadow-500)",
 ];
 
-export const FiveMostPopularCoursesChart = ({ data }: MostPopularCoursesChartProps) => {
+export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCoursesChartProps) => {
   const isTablet = useMediaQuery({ minWidth: 768 });
 
-  function generateChartData(input: Data): {
-    chartData: ChartData;
-    chartConfig: ChartConfig;
+  function generateChartData(input: Data | undefined): {
+    chartData: ChartData | undefined;
+    chartConfig: ChartConfig | undefined;
   } {
-    const chartData = input.map(({ courseName, studentCount }, index) => ({
+    const chartData = input?.map(({ courseName, studentCount }, index) => ({
       courseName,
-      chart: `desktop${index === 0 ? "" : index}`,
       studentCount,
       fill: chartColors[index % chartColors.length],
     }));
 
-    const chartConfig = input.reduce((config, { courseName }, index) => {
+    const chartConfig = input?.reduce((config, { courseName }, index) => {
       const key = `desktop${index === 0 ? "" : index}`;
       config[key] = { label: courseName };
       return config;
@@ -55,10 +55,78 @@ export const FiveMostPopularCoursesChart = ({ data }: MostPopularCoursesChartPro
 
   const { chartData, chartConfig } = generateChartData(data);
 
-  const isEmptyChart = chartData.every(({ studentCount }) => !studentCount);
+  const isEmptyChart =
+    chartData?.every(({ studentCount }) => !studentCount) || !data || !chartConfig;
+
+  if (isLoading) {
+    return (
+      <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 w-full flex flex-col">
+        <div className="flex flex-col py-[5px] items-center gap-y-[5px] pb-6 md:pb-4">
+          <Skeleton className="bg-neutral-100 rounded-lg w-[240px] h-6" />
+          <Skeleton className="bg-neutral-100 rounded-lg w-40 h-4" />
+        </div>
+        <div className="md:flex md:gap-x-3 md:size-full">
+          <div className="sr-only md:not-sr-only md:flex md:h-full md:flex-col md:gap-y-10 md:py-2">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="py-1 flex items-center">
+                <Skeleton className="bg-neutral-100 rounded-lg w-40 h-4" />
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-col py-2 gap-y-3 w-full relative md:gap-y-10">
+            <Skeleton className="bg-neutral-100 rounded-lg w-[93%] h-6" />
+            <Skeleton className="bg-neutral-100 rounded-lg w-[68%] h-6" />
+            <Skeleton className="bg-neutral-100 rounded-lg w-[56%] h-6" />
+            <Skeleton className="bg-neutral-100 rounded-lg w-[40%] h-6" />
+            <Skeleton className="bg-neutral-100 rounded-lg w-[34%] h-6" />
+            <div className="flex justify-between absolute top-0 left-0 w-full h-full">
+              {Array.from({ length: 21 }).map((_, index) => (
+                <Skeleton key={index} className="w-[1px] h-full" />
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-between pt-2 md:pl-[172px]">
+          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-2" />
+          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-6" />
+          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-6" />
+          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-6" />
+          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-7" />
+        </div>
+        <div className="flex flex-col gap-y-2 pt-6 md:sr-only">
+          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
+          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
+          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
+          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
+          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
+        </div>
+      </div>
+    );
+  }
+
+  if (isEmptyChart) {
+    return (
+      <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 gap-y-6 md:gap-y-4 xl:col-span-2 w-full flex flex-col">
+        <hgroup>
+          <h2 className="body-lg-md text-neutral-950 text-center">Most Popular</h2>
+          <p className="body-sm-md text-center text-neutral-800">Your top 5 Courses</p>
+        </hgroup>
+        <div className="md:flex md:gap-x-3 md:size-full">
+          <div className="flex py-2 h-full items-center min-h-[167px] justify-between gap-y-3 w-full relative md:gap-y-10">
+            {Array.from({ length: 21 }).map((_, index) => (
+              <div key={index} className="w-[1px] bg-neutral-100 h-full" />
+            ))}
+            <div className="flex text-primary-950 h5 md:h3 absolute z-0 top-0 left-0 size-full justify-center items-center">
+              No data available
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 gap-y-4 w-full flex flex-col">
+    <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 gap-y-6 md:gap-y-4 w-full flex flex-col">
       <hgroup>
         <h2 className="body-lg-md text-neutral-950 text-center">Most Popular</h2>
         <p className="body-sm-md text-center text-neutral-800">Your top 5 Courses</p>
@@ -73,21 +141,14 @@ export const FiveMostPopularCoursesChart = ({ data }: MostPopularCoursesChartPro
           }}
           barCategoryGap="16.5"
         >
-          <Customized
-            component={() => {
-              return isEmptyChart ? (
-                <Text
-                  x={0}
-                  textAnchor="middle"
-                  verticalAnchor="middle"
-                  className="fill-primary-950 h5 md:h3 translate-x-1/2 translate-y-1/2"
-                >
-                  No data available
-                </Text>
-              ) : null;
-            }}
+          <XAxis
+            type="number"
+            dataKey="studentCount"
+            axisLine={false}
+            tickFormatter={(value, index) => (index === 0 || index % 5 === 0 ? value : "")}
+            tickCount={21}
+            tickSize={0}
           />
-          <XAxis type="number" dataKey="studentCount" axisLine={false} />
           <YAxis
             dataKey="courseName"
             type="category"
@@ -99,11 +160,19 @@ export const FiveMostPopularCoursesChart = ({ data }: MostPopularCoursesChartPro
           />
           <CartesianGrid stroke="#eee" strokeDasharray="1 0" horizontal={false} />
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-          <Bar dataKey="studentCount" />
+          <Bar dataKey="studentCount">
+            <LabelList
+              dataKey="studentCount"
+              position="insideLeft"
+              offset={isTablet ? 8 : 36}
+              className="fill-[--color-white]"
+              fontSize={12}
+            />
+          </Bar>
         </BarChart>
       </ChartContainer>
       <div className="flex flex-col gap-2 md:sr-only">
-        {data.map(({ courseName }, index) => (
+        {data?.map(({ courseName }, index) => (
           <ChartLegendBadge key={courseName} label={courseName} dotColor={chartColors[index]} />
         ))}
       </div>

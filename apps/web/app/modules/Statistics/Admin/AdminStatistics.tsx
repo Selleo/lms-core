@@ -7,7 +7,7 @@ import { FiveMostPopularCoursesChart } from "./components";
 
 export const AdminStatistics = () => {
   const { data: user } = useCurrentUser();
-  const { data: statistics } = useTeacherStatistics();
+  const { data: statistics, isLoading } = useTeacherStatistics();
 
   return (
     <PageWrapper className="flex flex-col gap-y-6 xl:gap-y-8 xl:!h-full">
@@ -18,7 +18,10 @@ export const AdminStatistics = () => {
         </Avatar>
       </div>
       <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-y-6 md:gap-x-4 xl:grid-cols-4 xl:grid-rows-2 xl:h-full">
-        <FiveMostPopularCoursesChart data={statistics?.mostFivePopularCourses ?? []} />
+        <FiveMostPopularCoursesChart
+          data={statistics?.fiveMostPopularCourses}
+          isLoading={isLoading}
+        />
         <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-1 xl:col-span-1 w-full h-[400px] xl:h-full"></div>
         <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-1 xl:col-span-1 w-full h-[400px] xl:h-full"></div>
         <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 w-full h-[447px] xl:h-full"></div>
