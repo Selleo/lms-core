@@ -404,8 +404,6 @@ export const coursesSummaryStats = pgTable("courses_summary_stats", {
     .default(0),
   completedFreemiumStudentCount: integer("completed_freemium_student_count").notNull().default(0),
   completedCourseStudentCount: integer("completed_course_student_count").notNull().default(0),
-  correctAnswersCount: integer("correct_answers_count").notNull().default(0),
-  wrongAnswersCount: integer("wrong_answers_count").notNull().default(0),
 });
 
 export const courseStudentsStats = pgTable(
@@ -415,7 +413,6 @@ export const courseStudentsStats = pgTable(
     ...timestamps,
     courseId: uuid("course_id")
       .references(() => courses.id, { onDelete: "cascade" })
-      .unique()
       .notNull(),
     authorId: uuid("author_id")
       .references(() => users.id, { onDelete: "cascade" })

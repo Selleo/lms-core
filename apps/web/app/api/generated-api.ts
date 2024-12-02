@@ -1210,9 +1210,9 @@ export interface GetTeacherStatsResponse {
       totalCourses: number;
     };
     conversionAfterFreemiumLesson: {
+      conversionPercentage: number;
       purchasedCourses: number;
       remainedOnFreemium: number;
-      conversionPercentage: number;
     };
     courseStudentsStats: object;
     avgQuizScore: {
