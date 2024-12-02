@@ -4,6 +4,7 @@ import { useCurrentUser, useTeacherStatistics } from "~/api/queries";
 import { Gravatar } from "~/components/Gravatar";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Avatar } from "~/components/ui/avatar";
+import { AvgScoreAcrossAllQuizzesChart } from "~/modules/Statistics/Admin/components/AvgScoreAcrossAllQuizzessChart";
 import { ConversionsAfterFreemiumLessonChart } from "~/modules/Statistics/Admin/components/ConversionsAfterFreemiumLessonChart";
 
 import { CourseCompletionPercentageChart, FiveMostPopularCoursesChart } from "./components";
@@ -19,6 +20,10 @@ export const AdminStatistics = () => {
 
   const purchasedCourses = statistics?.conversionAfterFreemiumLesson.purchasedCourses;
   const remainedOnFreemium = statistics?.conversionAfterFreemiumLesson.remainedOnFreemium;
+
+  const correctAnswers = statistics?.avgQuizScore.correctAnswerCount;
+  const wrongAnswers = statistics?.avgQuizScore.wrongAnswerCount;
+  const totalAnswers = statistics?.avgQuizScore.answerCount;
 
   const coursesCompletionChartConfig = {
     completed: {
@@ -74,8 +79,35 @@ export const AdminStatistics = () => {
     [purchasedCourses, remainedOnFreemium],
   );
 
+  const avgQuizScoreChartConfig = {
+    completed: {
+      label: "Correct",
+      color: "var(--primary-700)",
+    },
+    notCompleted: {
+      label: "Incorrect",
+      color: "var(--primary-300)",
+    },
+  } satisfies ChartConfig;
+
+  const avgQuizScoreChartData = useMemo(
+    () => [
+      {
+        state: "Correct",
+        percentage: correctAnswers,
+        fill: "var(--primary-700)",
+      },
+      {
+        state: "Incorrect",
+        percentage: wrongAnswers,
+        fill: "var(--primary-300)",
+      },
+    ],
+    [correctAnswers, wrongAnswers],
+  );
+
   return (
-    <PageWrapper className="flex flex-col gap-y-6 xl:gap-y-8 xl:!h-full">
+    <PageWrapper className="flex flex-col gap-y-6 xl:gap-y-8 xl:!h-full 2xl:!h-auto">
       <div className="gap-x-2 flex xl:gap-x-4 items-center">
         <p className="h5 xl:h2 text-neutral-950">Welcome back, {user?.firstName}</p>
         <Avatar className="size-12">
@@ -101,8 +133,14 @@ export const AdminStatistics = () => {
           chartConfig={conversionsChartConfig}
           chartData={conversionsChartData}
         />
-        <div className="p-6 bg-white rounded-lg drop-shadow-card h-[400px] md:col-span-2 w-full xl:h-full"></div>
-        <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 w-full h-[447px] xl:h-full"></div>
+        <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 h-[400px] w-full xl:h-full"></div>
+        <AvgScoreAcrossAllQuizzesChart
+          isLoading={isLoading}
+          label={`${correctAnswers}/${totalAnswers}`}
+          title="Avg. Score Across All Quizzes"
+          chartConfig={avgQuizScoreChartConfig}
+          chartData={avgQuizScoreChartData}
+        />
       </div>
     </PageWrapper>
   );
