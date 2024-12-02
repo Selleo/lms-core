@@ -62,12 +62,18 @@ export class StatisticsService {
     const [conversionAfterFreemiumLesson] =
       await this.statisticsRepository.getConversationAfterFreemiumLesson(userId);
     const courseStudentsStats = await this.statisticsRepository.getCourseStudentsStats(userId);
+    const [avgQuizScore] = await this.statisticsRepository.getAvgQuizScore(userId);
 
     return {
       fiveMostPopularCourses,
       totalCoursesCompletionStats,
       conversionAfterFreemiumLesson,
       courseStudentsStats: this.formatCourseStudentStats(courseStudentsStats),
+      avgQuizScore: {
+        correctAnswerCount: avgQuizScore.correctAnswersCount,
+        wrongAnswerCount: avgQuizScore.wrongAnswersCount,
+        answerCount: avgQuizScore.correctAnswersCount + avgQuizScore.wrongAnswersCount,
+      },
     };
   }
 

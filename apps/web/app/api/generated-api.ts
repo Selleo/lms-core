@@ -1212,6 +1212,12 @@ export interface GetTeacherStatsResponse {
       purchasedCourses: number;
       remainedOnFreemium: number;
     };
+    courseStudentsStats: object;
+    avgQuizScore: {
+      correctAnswerCount: number;
+      wrongAnswerCount: number;
+      answerCount: number;
+    };
   };
 }
 

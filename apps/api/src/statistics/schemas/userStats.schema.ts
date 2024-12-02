@@ -73,6 +73,12 @@ const CourseStudentsStatsByMonthSchema = Type.Object({
 
 const CourseStudentsStatsSchema = Type.Record(Type.String(), MonthlyCourseStudentsStatsSchema);
 
+const QuizScoreSchema = Type.Object({
+  correctAnswerCount: Type.Number(),
+  wrongAnswerCount: Type.Number(),
+  answerCount: Type.Number(),
+});
+
 export const TeacherStatsSchema = Type.Object({
   fiveMostPopularCourses: Type.Array(PopularCourseStatsSchema),
   totalCoursesCompletionStats: Type.Object({
@@ -84,6 +90,7 @@ export const TeacherStatsSchema = Type.Object({
     remainedOnFreemium: Type.Number(),
   }),
   courseStudentsStats: CourseStudentsStatsSchema,
+  avgQuizScore: QuizScoreSchema,
 });
 
 const UserStatisticSchema = Type.Object({

@@ -7114,13 +7114,33 @@
                     ]
                   }
                 }
+              },
+              "avgQuizScore": {
+                "type": "object",
+                "properties": {
+                  "correctAnswerCount": {
+                    "type": "number"
+                  },
+                  "wrongAnswerCount": {
+                    "type": "number"
+                  },
+                  "answerCount": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "correctAnswerCount",
+                  "wrongAnswerCount",
+                  "answerCount"
+                ]
               }
             },
             "required": [
               "fiveMostPopularCourses",
               "totalCoursesCompletionStats",
               "conversionAfterFreemiumLesson",
-              "courseStudentsStats"
+              "courseStudentsStats",
+              "avgQuizScore"
             ]
           }
         },

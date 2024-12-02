@@ -184,6 +184,17 @@ export class StatisticsRepository {
       .limit(12);
   }
 
+  async getAvgQuizScore(userId: string) {
+    return await this.db
+      .select({
+        correctAnswersCount: sql<number>`COALESCE(SUM(${quizAttempts.correctAnswers}), 0)::INTEGER`,
+        wrongAnswersCount: sql<number>`COALESCE(SUM(${quizAttempts.wrongAnswers}), 0)::INTEGER`,
+      })
+      .from(quizAttempts)
+      .innerJoin(courses, eq(quizAttempts.courseId, courses.id))
+      .where(eq(courses.authorId, userId));
+  }
+
   async createQuizAttempt(data: {
     userId: string;
     courseId: string;
