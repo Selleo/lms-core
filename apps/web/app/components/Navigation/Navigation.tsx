@@ -28,8 +28,17 @@ export function Navigation({ menuItems }: DashboardNavigationProps) {
         })}
       >
         <TooltipProvider>
-          <NavigationMenu menuItems={menuItems} role={role} />
-          <NavigationFooter role={role} isAdmin={isAdmin} isTutor={isTutor} />
+          <NavigationMenu
+            menuItems={menuItems}
+            role={role}
+            setIsMobileNavOpen={setIsMobileNavOpen}
+          />
+          <NavigationFooter
+            role={role}
+            isAdmin={isAdmin}
+            isTutor={isTutor}
+            setIsMobileNavOpen={setIsMobileNavOpen}
+          />
         </TooltipProvider>
       </nav>
     </header>

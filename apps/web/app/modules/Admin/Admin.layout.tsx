@@ -51,7 +51,7 @@ const AdminLayout = () => {
 
   return (
     <div className="flex h-screen flex-col">
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 flex-col 2xl:flex-row overflow-hidden">
         {!hideTopbarAndSidebar && (
           <Navigation menuItems={mapNavigationItems(adminNavigationConfig)} />
         )}
