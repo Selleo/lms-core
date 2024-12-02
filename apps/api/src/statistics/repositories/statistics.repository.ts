@@ -176,7 +176,7 @@ export class StatisticsRepository {
   async getCourseStudentsStats(userId: string) {
     return this.db
       .select({
-        month: sql<string>`${courseStudentsStats.year} || '-' || ${courseStudentsStats.month}`,
+        month: sql<string>`${courseStudentsStats.year} || '-' || ${courseStudentsStats.month}+1`,
         newStudentsCount: sql<number>`SUM(${courseStudentsStats.newStudentsCount})::INTEGER`,
       })
       .from(courseStudentsStats)
