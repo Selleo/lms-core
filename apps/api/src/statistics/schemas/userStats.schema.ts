@@ -68,6 +68,10 @@ export const TeacherStatsSchema = Type.Object({
     totalCoursesCompletion: Type.Number(),
     totalCourses: Type.Number(),
   }),
+  conversionAfterFreemiumLesson: Type.Object({
+    purchasedCourses: Type.Number(),
+    remainedOnFreemium: Type.Number(),
+  }),
 });
 
 const UserStatisticSchema = Type.Object({

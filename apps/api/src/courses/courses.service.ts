@@ -25,12 +25,14 @@ import { STATES } from "src/common/states";
 import { S3Service } from "src/file/s3.service";
 import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/lessons/lesson.type";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
+import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
 import {
   categories,
   courseLessons,
   courses,
+  coursesSummaryStats,
   lessonItems,
   lessons,
   studentCompletedLessonItems,
@@ -58,6 +60,7 @@ export class CoursesService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly s3Service: S3Service,
+    private readonly statisticsRepository: StatisticsRepository,
   ) {}
 
   async getAllCourses(query: CoursesQuery): Promise<{
@@ -506,8 +509,8 @@ export class CoursesService {
   }
 
   async createCourse(createCourseBody: CreateCourseBody, authorId: UUIDType) {
-    return this.db.transaction(async (tx) => {
-      const [category] = await tx
+    return this.db.transaction(async (trx) => {
+      const [category] = await trx
         .select()
         .from(categories)
         .where(eq(categories.id, createCourseBody.categoryId));
@@ -516,13 +519,13 @@ export class CoursesService {
         throw new NotFoundException("Category not found");
       }
 
-      const [author] = await tx.select().from(users).where(eq(users.id, authorId));
+      const [author] = await trx.select().from(users).where(eq(users.id, authorId));
 
       if (!author) {
         throw new NotFoundException("Author not found");
       }
 
-      const [newCourse] = await tx
+      const [newCourse] = await trx
         .insert(courses)
         .values({
           title: createCourseBody.title,
@@ -531,7 +534,7 @@ export class CoursesService {
           state: createCourseBody.state || STATES.draft,
           priceInCents: createCourseBody.priceInCents,
           currency: createCourseBody.currency || "usd",
-          authorId: authorId,
+          authorId,
           categoryId: createCourseBody.categoryId,
         })
         .returning();
@@ -543,16 +546,18 @@ export class CoursesService {
       if (createCourseBody.lessons && createCourseBody.lessons.length > 0) {
         const courseLessonsData = createCourseBody.lessons.map((lessonId, index) => ({
           courseId: newCourse.id,
-          lessonId: lessonId,
+          lessonId,
           displayOrder: index + 1,
         }));
 
-        await tx.insert(courseLessons).values(courseLessonsData);
+        await trx.insert(courseLessons).values(courseLessonsData);
       }
 
       if (newCourse.imageUrl) {
         newCourse.imageUrl = await this.s3Service.getSignedUrl(newCourse.imageUrl);
       }
+
+      await trx.insert(coursesSummaryStats).values({ courseId: newCourse.id, authorId });
 
       return newCourse;
     });
@@ -674,6 +679,8 @@ export class CoursesService {
           })),
         );
       }
+
+      await this.statisticsRepository.updateFreePurchasedCoursesStats(course.id, trx);
     });
   }
 

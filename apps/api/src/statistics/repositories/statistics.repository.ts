@@ -1,11 +1,11 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { desc, eq, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import {
   courses,
-  courseStatisticsPerTeacherMaterialized,
+  coursesSummaryStats,
   lessons,
   quizAttempts,
   studentCourses,
@@ -13,7 +13,9 @@ import {
   userStatistics,
 } from "src/storage/schema";
 
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { StatsByMonth, UserStatistic } from "src/statistics/schemas/userStats.schema";
+import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class StatisticsRepository {
@@ -137,23 +139,35 @@ export class StatisticsRepository {
     return await this.db
       .select({
         courseName: courses.title,
-        studentCount: courseStatisticsPerTeacherMaterialized.studentCount,
+        studentCount: sql<number>`coursesSummaryStats.freePurchasedCount + coursesSummaryStats.paidPurchasedCount`,
       })
-      .from(courseStatisticsPerTeacherMaterialized)
-      .innerJoin(courses, eq(courseStatisticsPerTeacherMaterialized.courseId, courses.id))
-      .where(eq(courseStatisticsPerTeacherMaterialized.teacherId, userId))
-      .orderBy(desc(courseStatisticsPerTeacherMaterialized.studentCount))
+      .from(coursesSummaryStats)
+      .innerJoin(courses, eq(coursesSummaryStats.courseId, courses.id))
+      .where(eq(courses.authorId, userId))
+      .orderBy(
+        sql`coursesSummaryStats.freePurchasedCount + coursesSummaryStats.paidPurchasedCount DESC`,
+      )
       .limit(5);
   }
 
   async getTotalCoursesCompletion(userId: string) {
     return await this.db
       .select({
-        totalCoursesCompletion: sql<number>`sum(courseStatisticsPerTeacherMaterialized.completedStudentCount)`,
-        totalCourses: sql<number>`sum(courseStatisticsPerTeacherMaterialized.studentCount)`,
+        totalCoursesCompletion: sql<number>`sum(coursesSummaryStats.completedCourseStudentCount)`,
+        totalCourses: sql<number>`sum(coursesSummaryStats.freePurchasedCount + coursesSummaryStats.paidPurchasedCount)`,
       })
-      .from(courseStatisticsPerTeacherMaterialized)
-      .where(eq(courseStatisticsPerTeacherMaterialized.teacherId, userId));
+      .from(coursesSummaryStats)
+      .where(eq(coursesSummaryStats.authorId, userId));
+  }
+
+  async getConversationAfterFreemiumLesson(userId: string) {
+    return await this.db
+      .select({
+        purchasedCourses: sql<number>`sum(coursesSummaryStats.paidPurchasedAfterFreemiumCount)`,
+        remainedOnFreemium: sql<number>`sum(coursesSummaryStats.completed_freemium_student_count - coursesSummaryStats.paidPurchasedAfterFreemiumCount)`,
+      })
+      .from(coursesSummaryStats)
+      .where(eq(coursesSummaryStats.authorId, userId));
   }
 
   async createQuizAttempt(data: {
@@ -180,5 +194,56 @@ export class StatisticsRepository {
           ...upsertUserStatistic,
         },
       });
+  }
+
+  async updateFreePurchasedCoursesStats(courseId: string, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return dbInstance
+      .update(coursesSummaryStats)
+      .set({
+        freePurchasedCount: sql<number>`coursesSummaryStats.freePurchasedCount + 1`,
+      })
+      .where(eq(coursesSummaryStats.courseId, courseId));
+  }
+
+  async updatePaidPurchasedCoursesStats(courseId: string, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return dbInstance
+      .update(coursesSummaryStats)
+      .set({
+        paidPurchasedCount: sql<number>`coursesSummaryStats.paidPurchasedCount + 1`,
+      })
+      .where(eq(coursesSummaryStats.courseId, courseId));
+  }
+
+  async updatePaidPurchasedAfterFreemiumCoursesStats(
+    courseId: string,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
+    const dbInstance = trx ?? this.db;
+
+    return dbInstance
+      .update(coursesSummaryStats)
+      .set({
+        paidPurchasedCount: sql<number>`coursesSummaryStats.paidPurchasedCount + 1`,
+        paidPurchasedAfterFreemiumCount: sql<number>`coursesSummaryStats.paidPurchasedAfterFreemiumCount + 1`,
+      })
+      .where(eq(coursesSummaryStats.courseId, courseId));
+  }
+
+  async updateCompletedAsFreemiumCoursesStats(
+    courseId: string,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
+    const dbInstance = trx ?? this.db;
+
+    return dbInstance
+      .update(coursesSummaryStats)
+      .set({
+        completedFreemiumStudentCount: sql<number>`coursesSummaryStats.completedFreemiumStudentCount + 1`,
+      })
+      .where(eq(coursesSummaryStats.courseId, courseId));
   }
 }

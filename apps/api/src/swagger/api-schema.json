@@ -7083,11 +7083,27 @@
                   "totalCoursesCompletion",
                   "totalCourses"
                 ]
+              },
+              "conversionAfterFreemiumLesson": {
+                "type": "object",
+                "properties": {
+                  "purchasedCourses": {
+                    "type": "number"
+                  },
+                  "remainedOnFreemium": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "purchasedCourses",
+                  "remainedOnFreemium"
+                ]
               }
             },
             "required": [
               "fiveMostPopularCourses",
-              "totalCoursesCompletionStats"
+              "totalCoursesCompletionStats",
+              "conversionAfterFreemiumLesson"
             ]
           }
         },

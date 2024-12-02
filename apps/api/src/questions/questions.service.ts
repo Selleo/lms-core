@@ -9,6 +9,7 @@ import {
 
 import { DatabasePg } from "src/common";
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
+import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import { StudentCompletedLessonItemsService } from "src/studentCompletedLessonItem/studentCompletedLessonItems.service";
 
 import { QuestionsRepository } from "./questions.repository";
@@ -25,6 +26,7 @@ export class QuestionsService {
     private readonly studentCompletedLessonItemsService: StudentCompletedLessonItemsService,
     private readonly questionsRepository: QuestionsRepository,
     private readonly lessonsRepository: LessonsRepository,
+    private readonly statisticsRepository: StatisticsRepository,
   ) {}
 
   async questionAnswer(answerQuestion: AnswerQuestionSchema, userId: string) {
@@ -38,9 +40,10 @@ export class QuestionsService {
         throw new NotFoundException("Question not found");
       }
 
-      const lesson = await this.lessonsRepository.getLesson(
+      const lesson = await this.lessonsRepository.getLessonForUser(
         answerQuestion.courseId,
         answerQuestion.lessonId,
+        userId,
       );
 
       const quizProgress = await this.lessonsRepository.getQuizProgress(
@@ -94,11 +97,24 @@ export class QuestionsService {
         !quizProgress?.completedAt &&
         studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
       ) {
+        const isCompletedAsFreemium = lesson.isFree && !lesson.enrolled;
+
         await this.lessonsRepository.completeLessonProgress(
           answerQuestion.courseId,
           questionData.lessonId,
           userId,
+          isCompletedAsFreemium,
+          trx,
         );
+
+        const existingLessonProgress = await this.lessonsRepository.getLessonsProgressByCourseId(
+          answerQuestion.courseId,
+          trx,
+        );
+
+        if (isCompletedAsFreemium && existingLessonProgress.length === 0) {
+          await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(userId, trx);
+        }
       }
     });
   }

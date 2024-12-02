@@ -92,6 +92,13 @@
       "when": 1732759437699,
       "tag": "0012_create_materialized_view_course_statistics_per_teacher",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1732939355073,
+      "tag": "0013_create_courses_summary_stats_table",
+      "breakpoints": true
     }
   ]
 }

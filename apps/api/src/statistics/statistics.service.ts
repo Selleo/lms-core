@@ -53,16 +53,17 @@ export class StatisticsService {
   }
 
   async getTeacherStats(userId: string) {
-    const fiveMostPopularCourses = await this.statisticsRepository.getFiveMostPopularCourses(
-      userId,
-    );
-    const [totalCoursesCompletionStats] = await this.statisticsRepository.getTotalCoursesCompletion(
-      userId,
-    );
+    const fiveMostPopularCourses =
+      await this.statisticsRepository.getFiveMostPopularCourses(userId);
+    const [totalCoursesCompletionStats] =
+      await this.statisticsRepository.getTotalCoursesCompletion(userId);
+    const [conversionAfterFreemiumLesson] =
+      await this.statisticsRepository.getConversationAfterFreemiumLesson(userId);
 
     return {
       fiveMostPopularCourses,
       totalCoursesCompletionStats,
+      conversionAfterFreemiumLesson,
     };
   }
 
@@ -177,9 +178,8 @@ export class StatisticsService {
   };
 
   private async getLassLesson(userId: string) {
-    const lastLessonItem = await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(
-      userId,
-    );
+    const lastLessonItem =
+      await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(userId);
 
     if (!lastLessonItem) return null;
 

@@ -6,6 +6,8 @@ import Stripe from "stripe";
 import { DatabasePg } from "src/common";
 import { STATES } from "src/common/states";
 import { LESSON_TYPE } from "src/lessons/lesson.type";
+import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
+import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import {
   courseLessons,
   courses,
@@ -18,7 +20,11 @@ import {
 
 @Injectable()
 export class StripeWebhookHandler {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private readonly statisticsRepository: StatisticsRepository,
+    private readonly lessonsRepository: LessonsRepository,
+  ) {}
 
   @StripeWebhookHandlerDecorator("payment_intent.succeeded")
   async handlePaymentIntentSucceeded(event: Stripe.Event) {
@@ -77,6 +83,20 @@ export class StripeWebhookHandler {
             completedLessonItemCount: 0,
           })),
         );
+      }
+      const existingLessonProgress = await this.lessonsRepository.getLessonsProgressByCourseId(
+        course.id,
+        trx,
+      );
+
+      switch (existingLessonProgress.length) {
+        case 0:
+          return await this.statisticsRepository.updatePaidPurchasedCoursesStats(course.id, trx);
+        default:
+          return await this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
+            course.id,
+            trx,
+          );
       }
     });
 
