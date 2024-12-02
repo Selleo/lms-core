@@ -1,6 +1,7 @@
 import { StripeWebhookHandler as StripeWebhookHandlerDecorator } from "@golevelup/nestjs-stripe";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
+import { isEmpty } from "lodash";
 import Stripe from "stripe";
 
 import { DatabasePg } from "src/common";
@@ -89,15 +90,12 @@ export class StripeWebhookHandler {
         trx,
       );
 
-      switch (existingLessonProgress.length) {
-        case 0:
-          return await this.statisticsRepository.updatePaidPurchasedCoursesStats(course.id, trx);
-        default:
-          return await this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
+      return isEmpty(existingLessonProgress)
+        ? await this.statisticsRepository.updatePaidPurchasedCoursesStats(course.id, trx)
+        : await this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
             course.id,
             trx,
           );
-      }
     });
 
     return true;

@@ -1,5 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { differenceInDays, eachDayOfInterval, format, startOfDay } from "date-fns";
+import {
+  differenceInDays,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  startOfDay,
+  startOfMonth,
+  subDays,
+} from "date-fns";
 
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
@@ -60,7 +68,7 @@ export class StatisticsService {
     const [totalCoursesCompletionStats] =
       await this.statisticsRepository.getTotalCoursesCompletion(userId);
     const [conversionAfterFreemiumLesson] =
-      await this.statisticsRepository.getConversationAfterFreemiumLesson(userId);
+      await this.statisticsRepository.getConversionAfterFreemiumLesson(userId);
     const courseStudentsStats = await this.statisticsRepository.getCourseStudentsStats(userId);
     const [avgQuizScore] = await this.statisticsRepository.getAvgQuizScore(userId);
 
@@ -144,11 +152,11 @@ export class StatisticsService {
   }
 
   async refreshCourseStudentsStats() {
-    const yesterday = new Date(new Date().setDate(new Date().getDate() - 1));
-    const month = yesterday.getMonth();
-    const year = yesterday.getFullYear();
+    const yesterday = subDays(new Date(), 1);
+    const startDate = startOfMonth(yesterday).toISOString();
+    const endDate = endOfMonth(yesterday).toISOString();
 
-    await this.statisticsRepository.calculateCoursesStudentsStats(month, year);
+    await this.statisticsRepository.calculateCoursesStudentsStats(startDate, endDate);
   }
 
   private calculateTotalStats(coursesStatsByMonth: StatsByMonth[]) {

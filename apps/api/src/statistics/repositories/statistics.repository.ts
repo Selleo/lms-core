@@ -161,7 +161,7 @@ export class StatisticsRepository {
       .where(eq(coursesSummaryStats.authorId, userId));
   }
 
-  async getConversationAfterFreemiumLesson(userId: string) {
+  async getConversionAfterFreemiumLesson(userId: string) {
     return await this.db
       .select({
         purchasedCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
@@ -272,10 +272,7 @@ export class StatisticsRepository {
       .where(eq(coursesSummaryStats.courseId, courseId));
   }
 
-  async calculateCoursesStudentsStats(currentMonth: number, currentYear: number) {
-    const startOfMonth = new Date(currentYear, currentMonth, 1).toISOString();
-    const startOfNextMonth = new Date(currentYear, currentMonth + 1, 1).toISOString();
-
+  async calculateCoursesStudentsStats(startDate: string, endDate: string) {
     return await this.db
       .select({
         courseId: studentCourses.courseId,
@@ -284,8 +281,8 @@ export class StatisticsRepository {
       .from(studentCourses)
       .where(
         and(
-          gte(studentCourses.createdAt, sql`${startOfMonth}::timestamp`),
-          lt(studentCourses.createdAt, sql`${startOfNextMonth}::timestamp`),
+          gte(studentCourses.createdAt, sql`${startDate}::timestamp`),
+          lt(studentCourses.createdAt, sql`${startDate}::timestamp`),
         ),
       )
       .groupBy(studentCourses.courseId);

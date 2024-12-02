@@ -97,13 +97,13 @@ export class QuestionsService {
         !quizProgress?.completedAt &&
         studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
       ) {
-        const isCompletedAsFreemium = lesson.isFree && !lesson.enrolled;
+        const isCompletedFreemiumLesson = lesson.isFree && !lesson.enrolled;
 
         await this.lessonsRepository.completeLessonProgress(
           answerQuestion.courseId,
           questionData.lessonId,
           userId,
-          isCompletedAsFreemium,
+          isCompletedFreemiumLesson,
           trx,
         );
 
@@ -112,7 +112,7 @@ export class QuestionsService {
           trx,
         );
 
-        if (isCompletedAsFreemium && existingLessonProgress.length === 0) {
+        if (isCompletedFreemiumLesson && existingLessonProgress.length === 0) {
           await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(userId, trx);
         }
       }
