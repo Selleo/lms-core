@@ -156,7 +156,7 @@ export class StatisticsRepository {
       .select({
         totalCoursesCompletion: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedCourseStudentCount}), 0)::INTEGER`,
         totalCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}), 0)::INTEGER`,
-        completionPercentage: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedCourseStudentCount}) / SUM(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}), 0)::INTEGER`,
+        completionPercentage: sql<number>`(SUM(${coursesSummaryStats.completedCourseStudentCount})::DECIMAL / (SUM(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount})) * 100)::INTEGER`,
       })
       .from(coursesSummaryStats)
       .where(eq(coursesSummaryStats.authorId, userId));
@@ -167,7 +167,7 @@ export class StatisticsRepository {
       .select({
         purchasedCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
         remainedOnFreemium: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedFreemiumStudentCount} - ${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
-        conversionPercentage: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount}) / SUM(${coursesSummaryStats.completedFreemiumStudentCount}), 0)::INTEGER`,
+        conversionPercentage: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount})::DECIMAL / SUM(${coursesSummaryStats.completedFreemiumStudentCount}) * 100, 0)::INTEGER`,
       })
       .from(coursesSummaryStats)
       .where(eq(coursesSummaryStats.authorId, userId));
@@ -283,8 +283,8 @@ export class StatisticsRepository {
       .from(studentCourses)
       .where(
         and(
-          gte(studentCourses.createdAt, sql`${startDate}::timestamp`),
-          lt(studentCourses.createdAt, sql`${endDate}::timestamp`),
+          gte(studentCourses.createdAt, sql`${startDate}::TIMESTAMP`),
+          lt(studentCourses.createdAt, sql`${endDate}::TIMESTAMP`),
         ),
       )
       .groupBy(studentCourses.courseId);
