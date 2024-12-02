@@ -1,11 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, sql } from "drizzle-orm";
+import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import {
   courses,
   coursesSummaryStats,
+  courseStudentsStats,
   lessons,
   quizAttempts,
   studentCourses,
@@ -25,9 +26,9 @@ export class StatisticsRepository {
     const [quizStatsResult] = await this.db
       .select({
         totalAttempts: sql<number>`count(*) :: INTEGER`,
-        totalCorrectAnswers: sql<number>`coalesce(sum(${quizAttempts.correctAnswers}), 0) :: INTEGER`,
-        totalWrongAnswers: sql<number>`coalesce(sum(${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
-        totalQuestions: sql<number>`coalesce(sum(${quizAttempts.correctAnswers} + ${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
+        totalCorrectAnswers: sql<number>`coalesce(SUM(${quizAttempts.correctAnswers}), 0) :: INTEGER`,
+        totalWrongAnswers: sql<number>`coalesce(SUM(${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
+        totalQuestions: sql<number>`coalesce(SUM(${quizAttempts.correctAnswers} + ${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
         averageScore: sql<number>`coalesce(round(avg(${quizAttempts.score}), 2), 0) :: INTEGER`,
         uniqueQuizzesTaken: sql<number>`coalesce(count(distinct ${quizAttempts.lessonId}), 0) :: INTEGER`,
       })
@@ -72,7 +73,7 @@ export class StatisticsRepository {
         month_stats.month AS month,
         month_stats.started AS started,
         month_stats.completed AS completed,
-        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2)::INTEGER, 0) AS "completionRate"
+        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2), 0)::INTEGER AS "completionRate"
       FROM
         month_stats
     `);
@@ -116,7 +117,7 @@ export class StatisticsRepository {
         month_stats.month AS month,
         month_stats.started AS started,
         month_stats.completed AS completed,
-        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2)::INTEGER, 0) AS "completionRate"
+        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2), 0)::INTEGER AS "completionRate"
       FROM
         month_stats
       `);
@@ -139,13 +140,13 @@ export class StatisticsRepository {
     return await this.db
       .select({
         courseName: courses.title,
-        studentCount: sql<number>`coursesSummaryStats.freePurchasedCount + coursesSummaryStats.paidPurchasedCount`,
+        studentCount: sql<number>`${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}`,
       })
       .from(coursesSummaryStats)
       .innerJoin(courses, eq(coursesSummaryStats.courseId, courses.id))
       .where(eq(courses.authorId, userId))
       .orderBy(
-        sql`coursesSummaryStats.freePurchasedCount + coursesSummaryStats.paidPurchasedCount DESC`,
+        sql`${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount} DESC`,
       )
       .limit(5);
   }
@@ -153,8 +154,8 @@ export class StatisticsRepository {
   async getTotalCoursesCompletion(userId: string) {
     return await this.db
       .select({
-        totalCoursesCompletion: sql<number>`sum(coursesSummaryStats.completedCourseStudentCount)`,
-        totalCourses: sql<number>`sum(coursesSummaryStats.freePurchasedCount + coursesSummaryStats.paidPurchasedCount)`,
+        totalCoursesCompletion: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedCourseStudentCount}), 0)::INTEGER`,
+        totalCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}), 0)::INTEGER`,
       })
       .from(coursesSummaryStats)
       .where(eq(coursesSummaryStats.authorId, userId));
@@ -163,11 +164,24 @@ export class StatisticsRepository {
   async getConversationAfterFreemiumLesson(userId: string) {
     return await this.db
       .select({
-        purchasedCourses: sql<number>`sum(coursesSummaryStats.paidPurchasedAfterFreemiumCount)`,
-        remainedOnFreemium: sql<number>`sum(coursesSummaryStats.completed_freemium_student_count - coursesSummaryStats.paidPurchasedAfterFreemiumCount)`,
+        purchasedCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
+        remainedOnFreemium: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedFreemiumStudentCount} - ${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
       })
       .from(coursesSummaryStats)
       .where(eq(coursesSummaryStats.authorId, userId));
+  }
+
+  async getCourseStudentsStats(userId: string) {
+    return await this.db
+      .select({
+        month: sql<string>`${courseStudentsStats.year} || '-' || ${courseStudentsStats.month}`,
+        newStudentsCount: sql<number>`SUM(${courseStudentsStats.newStudentsCount})::INTEGER`,
+      })
+      .from(courseStudentsStats)
+      .where(eq(courseStudentsStats.authorId, userId))
+      .groupBy(courseStudentsStats.month, courseStudentsStats.year)
+      .orderBy(desc(courseStudentsStats.month), desc(courseStudentsStats.year))
+      .limit(12);
   }
 
   async createQuizAttempt(data: {
@@ -245,5 +259,24 @@ export class StatisticsRepository {
         completedFreemiumStudentCount: sql<number>`coursesSummaryStats.completedFreemiumStudentCount + 1`,
       })
       .where(eq(coursesSummaryStats.courseId, courseId));
+  }
+
+  async calculateCoursesStudentsStats(currentMonth: number, currentYear: number) {
+    const startOfMonth = new Date(currentYear, currentMonth, 1).toISOString();
+    const startOfNextMonth = new Date(currentYear, currentMonth + 1, 1).toISOString();
+
+    return await this.db
+      .select({
+        courseId: studentCourses.courseId,
+        newStudentsCount: sql<number>`COUNT(*)`,
+      })
+      .from(studentCourses)
+      .where(
+        and(
+          gte(studentCourses.createdAt, sql`${startOfMonth}::timestamp`),
+          lt(studentCourses.createdAt, sql`${startOfNextMonth}::timestamp`),
+        ),
+      )
+      .groupBy(studentCourses.courseId);
   }
 }

@@ -99,6 +99,13 @@
       "when": 1732939355073,
       "tag": "0013_create_courses_summary_stats_table",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1733102008225,
+      "tag": "0014_create_course_students_stats_table",
+      "breakpoints": true
     }
   ]
 }

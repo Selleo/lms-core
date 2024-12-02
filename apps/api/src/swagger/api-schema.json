@@ -7098,12 +7098,29 @@
                   "purchasedCourses",
                   "remainedOnFreemium"
                 ]
+              },
+              "courseStudentsStats": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "object",
+                    "properties": {
+                      "newStudentsCount": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "newStudentsCount"
+                    ]
+                  }
+                }
               }
             },
             "required": [
               "fiveMostPopularCourses",
               "totalCoursesCompletionStats",
-              "conversionAfterFreemiumLesson"
+              "conversionAfterFreemiumLesson",
+              "courseStudentsStats"
             ]
           }
         },

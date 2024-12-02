@@ -405,3 +405,24 @@ export const coursesSummaryStats = pgTable("courses_summary_stats", {
   completedFreemiumStudentCount: integer("completed_freemium_student_count").notNull().default(0),
   completedCourseStudentCount: integer("completed_course_student_count").notNull().default(0),
 });
+
+export const courseStudentsStats = pgTable(
+  "course_students_stats",
+  {
+    ...id,
+    ...timestamps,
+    courseId: uuid("course_id")
+      .references(() => courses.id, { onDelete: "cascade" })
+      .unique()
+      .notNull(),
+    authorId: uuid("author_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    month: integer("month").notNull(),
+    year: integer("year").notNull(),
+    newStudentsCount: integer("new_students_count").notNull().default(0),
+  },
+  (table) => ({
+    unq: unique().on(table.courseId, table.month, table.year),
+  }),
+);
