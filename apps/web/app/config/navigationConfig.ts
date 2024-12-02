@@ -13,10 +13,6 @@ export interface LeafMenuItem extends BaseMenuItem {
   iconName: IconName;
 }
 
-export interface ParentMenuItem extends BaseMenuItem {
-  children: MenuItemType[];
-}
-
 export type MenuItemType = LeafMenuItem;
 
 export type NavigationItem = {

@@ -21,12 +21,11 @@ export function Navigation({ menuItems }: DashboardNavigationProps) {
       <NavigationHeader isMobileNavOpen={isMobileNavOpen} setIsMobileNavOpen={setIsMobileNavOpen} />
       <Separator className="sr-only 2xl:not-sr-only 2xl:h-[1px] bg-primary-200" />
       <nav
-        className={cn(
-          "2xl:flex 2xl:flex-col 2xl:justify-between 2xl:h-full",
-          isMobileNavOpen
-            ? "pt-7 pb-4 px-4 flex flex-col bg-primary-50 gap-y-3 h-[calc(100dvh-4rem)] justify-between 2xl:p-0 2xl:bg-transparent"
-            : "sr-only 2xl:not-sr-only",
-        )}
+        className={cn("2xl:flex 2xl:flex-col 2xl:justify-between 2xl:h-full", {
+          "pt-7 pb-4 px-4 flex flex-col bg-primary-50 gap-y-3 h-[calc(100dvh-4rem)] justify-between 2xl:p-0 2xl:bg-transparent":
+            isMobileNavOpen,
+          "sr-only 2xl:not-sr-only": !isMobileNavOpen,
+        })}
       >
         <TooltipProvider>
           <NavigationMenu menuItems={menuItems} role={role} />
