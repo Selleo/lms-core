@@ -7072,6 +7072,9 @@
               "totalCoursesCompletionStats": {
                 "type": "object",
                 "properties": {
+                  "completionPercentage": {
+                    "type": "number"
+                  },
                   "totalCoursesCompletion": {
                     "type": "number"
                   },
@@ -7080,6 +7083,7 @@
                   }
                 },
                 "required": [
+                  "completionPercentage",
                   "totalCoursesCompletion",
                   "totalCourses"
                 ]
@@ -7087,6 +7091,9 @@
               "conversionAfterFreemiumLesson": {
                 "type": "object",
                 "properties": {
+                  "conversionPercentage": {
+                    "type": "number"
+                  },
                   "purchasedCourses": {
                     "type": "number"
                   },
@@ -7095,6 +7102,7 @@
                   }
                 },
                 "required": [
+                  "conversionPercentage",
                   "purchasedCourses",
                   "remainedOnFreemium"
                 ]

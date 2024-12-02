@@ -137,7 +137,7 @@ export class StatisticsRepository {
   }
 
   async getFiveMostPopularCourses(userId: string) {
-    return await this.db
+    return this.db
       .select({
         courseName: courses.title,
         studentCount: sql<number>`${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}`,
@@ -152,27 +152,29 @@ export class StatisticsRepository {
   }
 
   async getTotalCoursesCompletion(userId: string) {
-    return await this.db
+    return this.db
       .select({
         totalCoursesCompletion: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedCourseStudentCount}), 0)::INTEGER`,
         totalCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}), 0)::INTEGER`,
+        completionPercentage: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedCourseStudentCount}) / SUM(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}), 0)::INTEGER`,
       })
       .from(coursesSummaryStats)
       .where(eq(coursesSummaryStats.authorId, userId));
   }
 
   async getConversionAfterFreemiumLesson(userId: string) {
-    return await this.db
+    return this.db
       .select({
         purchasedCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
         remainedOnFreemium: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedFreemiumStudentCount} - ${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
+        conversionPercentage: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount}) / SUM(${coursesSummaryStats.completedFreemiumStudentCount}), 0)::INTEGER`,
       })
       .from(coursesSummaryStats)
       .where(eq(coursesSummaryStats.authorId, userId));
   }
 
   async getCourseStudentsStats(userId: string) {
-    return await this.db
+    return this.db
       .select({
         month: sql<string>`${courseStudentsStats.year} || '-' || ${courseStudentsStats.month}`,
         newStudentsCount: sql<number>`SUM(${courseStudentsStats.newStudentsCount})::INTEGER`,
@@ -185,7 +187,7 @@ export class StatisticsRepository {
   }
 
   async getAvgQuizScore(userId: string) {
-    return await this.db
+    return this.db
       .select({
         correctAnswersCount: sql<number>`COALESCE(SUM(${quizAttempts.correctAnswers}), 0)::INTEGER`,
         wrongAnswersCount: sql<number>`COALESCE(SUM(${quizAttempts.wrongAnswers}), 0)::INTEGER`,
@@ -227,7 +229,7 @@ export class StatisticsRepository {
     return dbInstance
       .update(coursesSummaryStats)
       .set({
-        freePurchasedCount: sql<number>`coursesSummaryStats.freePurchasedCount + 1`,
+        freePurchasedCount: sql<number>`${coursesSummaryStats.freePurchasedCount} + 1`,
       })
       .where(eq(coursesSummaryStats.courseId, courseId));
   }
@@ -238,7 +240,7 @@ export class StatisticsRepository {
     return dbInstance
       .update(coursesSummaryStats)
       .set({
-        paidPurchasedCount: sql<number>`coursesSummaryStats.paidPurchasedCount + 1`,
+        paidPurchasedCount: sql<number>`${coursesSummaryStats.paidPurchasedCount} + 1`,
       })
       .where(eq(coursesSummaryStats.courseId, courseId));
   }
@@ -252,8 +254,8 @@ export class StatisticsRepository {
     return dbInstance
       .update(coursesSummaryStats)
       .set({
-        paidPurchasedCount: sql<number>`coursesSummaryStats.paidPurchasedCount + 1`,
-        paidPurchasedAfterFreemiumCount: sql<number>`coursesSummaryStats.paidPurchasedAfterFreemiumCount + 1`,
+        paidPurchasedCount: sql<number>`${coursesSummaryStats.paidPurchasedCount} + 1`,
+        paidPurchasedAfterFreemiumCount: sql<number>`${coursesSummaryStats.paidPurchasedAfterFreemiumCount} + 1`,
       })
       .where(eq(coursesSummaryStats.courseId, courseId));
   }
@@ -267,13 +269,13 @@ export class StatisticsRepository {
     return dbInstance
       .update(coursesSummaryStats)
       .set({
-        completedFreemiumStudentCount: sql<number>`coursesSummaryStats.completedFreemiumStudentCount + 1`,
+        completedFreemiumStudentCount: sql<number>`${coursesSummaryStats.completedFreemiumStudentCount} + 1`,
       })
       .where(eq(coursesSummaryStats.courseId, courseId));
   }
 
   async calculateCoursesStudentsStats(startDate: string, endDate: string) {
-    return await this.db
+    return this.db
       .select({
         courseId: studentCourses.courseId,
         newStudentsCount: sql<number>`COUNT(*)`,
@@ -282,7 +284,7 @@ export class StatisticsRepository {
       .where(
         and(
           gte(studentCourses.createdAt, sql`${startDate}::timestamp`),
-          lt(studentCourses.createdAt, sql`${startDate}::timestamp`),
+          lt(studentCourses.createdAt, sql`${endDate}::timestamp`),
         ),
       )
       .groupBy(studentCourses.courseId);
