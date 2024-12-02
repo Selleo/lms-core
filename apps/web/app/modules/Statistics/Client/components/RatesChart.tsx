@@ -3,7 +3,7 @@ import { Bar, BarChart, CartesianGrid, Customized, Text, XAxis, YAxis } from "re
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
 import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils";
-import { ChartLegendBadge } from "~/modules/Statistics/components/ChartLegendBadge";
+import { ChartLegendBadge } from "~/modules/Statistics/Client/components/ChartLegendBadge";
 
 import type { ChartConfig } from "~/components/ui/chart";
 

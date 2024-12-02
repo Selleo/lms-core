@@ -3,7 +3,7 @@ import { Label, Pie, PieChart } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
 import { Skeleton } from "~/components/ui/skeleton";
-import { ChartLegendBadge } from "~/modules/Statistics/components/ChartLegendBadge";
+import { ChartLegendBadge } from "~/modules/Statistics/Client/components/ChartLegendBadge";
 
 import type { ChartConfig } from "~/components/ui/chart";
 
