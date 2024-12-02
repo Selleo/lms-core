@@ -4,7 +4,7 @@ import { ApiClient } from "../api-client";
 
 import type { GetTeacherStatsResponse } from "../generated-api";
 
-export const userStatistics = () => {
+export const teacherStatistics = () => {
   return {
     queryKey: ["statistics/teacher-stats"],
     queryFn: async () => {
@@ -17,9 +17,9 @@ export const userStatistics = () => {
 };
 
 export function useTeacherStatistics() {
-  return useQuery(userStatistics());
+  return useQuery(teacherStatistics());
 }
 
 export function useTeacherStatisticsSuspense() {
-  return useSuspenseQuery(userStatistics());
+  return useSuspenseQuery(teacherStatistics());
 }
