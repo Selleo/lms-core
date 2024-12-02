@@ -4,6 +4,7 @@ import { useCurrentUser, useTeacherStatistics } from "~/api/queries";
 import { Gravatar } from "~/components/Gravatar";
 import { PageWrapper } from "~/components/PageWrapper";
 import { Avatar } from "~/components/ui/avatar";
+import { ConversionsAfterFreemiumLessonChart } from "~/modules/Statistics/Admin/components/ConversionsAfterFreemiumLessonChart";
 
 import { CourseCompletionPercentageChart, FiveMostPopularCoursesChart } from "./components";
 
@@ -15,6 +16,9 @@ export const AdminStatistics = () => {
 
   const totalCoursesCompletion = statistics?.totalCoursesCompletionStats.totalCoursesCompletion;
   const totalCourses = statistics?.totalCoursesCompletionStats.totalCourses;
+
+  const purchasedCourses = statistics?.conversionAfterFreemiumLesson.purchasedCourses;
+  const remainedOnFreemium = statistics?.conversionAfterFreemiumLesson.remainedOnFreemium;
 
   const coursesCompletionChartConfig = {
     completed: {
@@ -43,6 +47,33 @@ export const AdminStatistics = () => {
     [totalCoursesCompletion, totalCourses],
   );
 
+  const conversionsChartConfig = {
+    completed: {
+      label: `Purchased Course - ${purchasedCourses}`,
+      color: "var(--primary-700)",
+    },
+    notCompleted: {
+      label: `Remained on Freemium - ${remainedOnFreemium}`,
+      color: "var(--primary-300)",
+    },
+  } satisfies ChartConfig;
+
+  const conversionsChartData = useMemo(
+    () => [
+      {
+        state: "Purchased Course",
+        percentage: purchasedCourses,
+        fill: "var(--primary-700)",
+      },
+      {
+        state: "Remained on Freemium",
+        percentage: remainedOnFreemium,
+        fill: "var(--primary-300)",
+      },
+    ],
+    [purchasedCourses, remainedOnFreemium],
+  );
+
   return (
     <PageWrapper className="flex flex-col gap-y-6 xl:gap-y-8 xl:!h-full">
       <div className="gap-x-2 flex xl:gap-x-4 items-center">
@@ -63,8 +94,14 @@ export const AdminStatistics = () => {
           chartConfig={coursesCompletionChartConfig}
           chartData={coursesCompletionChartData}
         />
-        <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-1 xl:col-span-1 w-full h-[400px] xl:h-full"></div>
-        <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-1 h-[400px] xl:col-span-2 w-full md:h-full"></div>
+        <ConversionsAfterFreemiumLessonChart
+          isLoading={isLoading}
+          label={`${statistics?.conversionAfterFreemiumLesson.conversionPercentage}`}
+          title="Conversions After Freemium Lesson"
+          chartConfig={conversionsChartConfig}
+          chartData={conversionsChartData}
+        />
+        <div className="p-6 bg-white rounded-lg drop-shadow-card h-[400px] md:col-span-2 w-full xl:h-full"></div>
         <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 w-full h-[447px] xl:h-full"></div>
       </div>
     </PageWrapper>
