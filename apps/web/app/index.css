@@ -84,6 +84,54 @@ html, body {
     --warning-900: #734210;
     --warning-950: #432205;
 
+    --cabaret-50: #fdf2f7;
+    --cabaret-100: #fce7f1;
+    --cabaret-200: #fccce3;
+    --cabaret-300: #fba6cb;
+    --cabaret-400: #f76fa7;
+    --cabaret-500: #f04487;
+    --cabaret-600: #e23670;
+    --cabaret-700: #c21449;
+    --cabaret-800: #a0143d;
+    --cabaret-900: #861537;
+    --cabaret-950: #52051c;
+
+    --zest-50: #fef8ee;
+    --zest-100: #fcf0d8;
+    --zest-200: #f7dbb1;
+    --zest-300: #f2c47f;
+    --zest-400: #eca24b;
+    --zest-500: #e88c30;
+    --zest-600: #d86f1e;
+    --zest-700: #b4551a;
+    --zest-800: #8f431d;
+    --zest-900: #74391a;
+    --zest-950: #3e1c0c;
+
+    --amethyst-50: #fbf6fe;
+    --amethyst-100: #f6eafd;
+    --amethyst-200: #eed9fb;
+    --amethyst-300: #e0bcf6;
+    --amethyst-400: #ce90f0;
+    --amethyst-500: #ba66e6;
+    --amethyst-600: #a557db;
+    --amethyst-700: #9034bc;
+    --amethyst-800: #792f9a;
+    --amethyst-900: #63277c;
+    --amethyst-950: #44115a;
+
+    --mountain-meadow-50: #eebfb5;
+    --mountain-meadow-100: #d7f4e5;
+    --mountain-meadow-200: #b2e8cf;
+    --mountain-meadow-300: #7d6bb3;
+    --mountain-meadow-400: #4bbc93;
+    --mountain-meadow-500: #2eb88a;
+    --mountain-meadow-600: #1a8161;
+    --mountain-meadow-700: #156750;
+    --mountain-meadow-800: #135240;
+    --mountain-meadow-900: #104436;
+    --mountain-meadow-950: #08261f;
+
     --background: var(--color-white);
     --foreground: var(--color-black);
     --card: var(--color-white);
