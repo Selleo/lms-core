@@ -39,6 +39,7 @@ export default defineConfig({
       dependencies: ["setup"],
       use: {
         ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
         storageState: "e2e/.auth/user.json",
       },
       testMatch: /.*\.(spec|test)\.ts$/,
