@@ -8,30 +8,32 @@ import { ChartLegendBadge } from "~/modules/Statistics/Client/components/ChartLe
 import type { ChartConfig } from "~/components/ui/chart";
 
 const chartConfig = {
-  completed: {
-    label: "Completed",
+  newStudentsCount: {
+    label: "Enrollments",
     color: "var(--primary-700)",
-  },
-  started: {
-    label: "Started",
-    color: "var(--primary-300)",
   },
 } satisfies ChartConfig;
 
-interface ChartData {
-  month: string;
-  completed: number;
-  started: number;
-}
+type Data = Record<string, { newStudentsCount: number }> | object | undefined;
 
-type RatesChartProps = {
+type EnrollmentChartProps = {
+  data: Data;
   isLoading?: boolean;
-  resourceName: string;
-  chartData: ChartData[];
 };
 
-export const RatesChart = ({ isLoading = false, resourceName, chartData }: RatesChartProps) => {
-  const dataMax = Math.max(...chartData.map(({ started }) => started));
+export const parseRatesChartData = (data: Data) => {
+  if (!data) return [];
+
+  return Object.entries(data).map(([month, values]) => ({
+    month,
+    newStudentsCount: values.newStudentsCount,
+  }));
+};
+
+export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProps) => {
+  const parsedData = parseRatesChartData(data);
+
+  const dataMax = Math.max(...parsedData.map(({ newStudentsCount }) => newStudentsCount));
   const step = Math.ceil(dataMax / 10);
   const yAxisMax = dataMax + step;
   const ticks = Array.from(
@@ -39,7 +41,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
     (_, index) => (index + 1) * step,
   );
 
-  const isEmptyChart = chartData.every(({ started, completed }) => !(started || completed));
+  const isEmptyChart = parsedData?.every(({ newStudentsCount }) => !newStudentsCount);
 
   if (isLoading) {
     return (
@@ -88,23 +90,17 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
   }
 
   return (
-    <div className="w-full bg-white rounded-lg gap-4 drop-shadow-card p-8 flex flex-col">
+    <div className="p-8 bg-white flex flex-col rounded-lg gap-y-6 drop-shadow-card md:col-span-2 size-full">
       <hgroup>
-        <h2 className="body-lg-md text-neutral-950 text-center">{resourceName} Rates</h2>
-        <p className="body-sm-md text-center text-neutral-800">Number of {resourceName} in 2024</p>
+        <h2 className="body-lg-md text-neutral-950 text-center">Enrollment</h2>
+        <p className="body-sm-md text-center text-neutral-800">Numbers of enrollment in 2024</p>
       </hgroup>
       <div className="grid mt-2 place-items-center h-full">
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square max-h-[224px] w-full h-full"
         >
-          <BarChart
-            accessibilityLayer
-            data={chartData}
-            margin={{
-              left: -28,
-            }}
-          >
+          <BarChart accessibilityLayer data={parsedData} margin={{ left: -28 }} barCategoryGap={12}>
             <Customized
               component={() => {
                 return isEmptyChart ? (
@@ -131,21 +127,12 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
               tickFormatter={(value) => value.slice(0, 3)}
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-            <Bar dataKey="completed" fill="var(--color-completed)" />
-            <Bar dataKey="started" fill="var(--color-started)" />
+            <Bar dataKey="newStudentsCount" fill="var(--primary-700)" />
           </BarChart>
         </ChartContainer>
       </div>
       <div className="flex gap-2 justify-center">
-        {Object.values(chartConfig).map((config) => {
-          return (
-            <ChartLegendBadge
-              key={config.label as string}
-              label={`${config.label} ${resourceName}`}
-              dotColor={config.color}
-            />
-          );
-        })}
+        <ChartLegendBadge label="Enrollments" dotColor={chartConfig.newStudentsCount.color} />
       </div>
     </div>
   );

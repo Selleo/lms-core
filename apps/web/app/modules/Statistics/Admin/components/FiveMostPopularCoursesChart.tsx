@@ -126,7 +126,7 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
   }
 
   return (
-    <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 gap-y-6 md:gap-y-4 w-full flex flex-col">
+    <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 gap-y-6 2xl:gap-y-6 md:gap-y-4 w-full flex flex-col">
       <hgroup>
         <h2 className="body-lg-md text-neutral-950 text-center">Most Popular</h2>
         <p className="body-sm-md text-center text-neutral-800">Your top 5 Courses</p>

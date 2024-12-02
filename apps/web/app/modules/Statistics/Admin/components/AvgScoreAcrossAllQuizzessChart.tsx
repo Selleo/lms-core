@@ -44,7 +44,7 @@ export const AvgScoreAcrossAllQuizzesChart = ({
 
   if (isLoading) {
     return (
-      <div className="p-8 bg-white flex flex-col md:gap-y-6 rounded-lg items-center justify-between drop-shadow-card md:col-span-2 xl:col-span-2 w-full h-full">
+      <div className="p-8 bg-white flex flex-col md:gap-y-6 rounded-lg items-center gap-y-6 drop-shadow-card md:col-span-2 xl:col-span-2 w-full h-full">
         <Skeleton className="max-w-[240px] w-full h-[30px] rounded-lg" />
         <div className="grid place-items-center h-[250px]">
           <Skeleton className="aspect-square max-h-[200px] w-full h-full rounded-full" />
@@ -58,7 +58,7 @@ export const AvgScoreAcrossAllQuizzesChart = ({
   }
 
   return (
-    <div className="p-8 bg-white flex flex-col md:gap-y-6 rounded-lg justify-between drop-shadow-card md:col-span-2 xl:col-span-2 w-full h-full">
+    <div className="p-8 bg-white flex flex-col md:gap-y-6 rounded-lg gap-y-6 drop-shadow-card md:col-span-2 xl:col-span-2 w-full h-full">
       <h2 className="body-lg-md text-neutral-950 text-center">{title}</h2>
       <div className="grid place-items-center">
         <ChartContainer
