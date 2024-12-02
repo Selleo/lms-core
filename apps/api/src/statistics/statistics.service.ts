@@ -1,10 +1,22 @@
 import { Injectable } from "@nestjs/common";
-import { differenceInDays, eachDayOfInterval, format, startOfDay } from "date-fns";
+import {
+  differenceInDays,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  startOfDay,
+  startOfMonth,
+  subDays,
+} from "date-fns";
 
 import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
-import type { StatsByMonth, UserStats } from "./schemas/userStats.schema";
+import type {
+  CourseStudentsStatsByMonth,
+  StatsByMonth,
+  UserStats,
+} from "./schemas/userStats.schema";
 
 @Injectable()
 export class StatisticsService {
@@ -23,9 +35,7 @@ export class StatisticsService {
     const lessonsTotalStats = this.calculateTotalStats(lessonsStatsByMonth);
 
     const quizStats = await this.statisticsRepository.getQuizStats(userId);
-
-    const lastLesson = await this.getLassLesson(userId);
-
+    const lastLesson = await this.getLastLesson(userId);
     const activityStats = await this.statisticsRepository.getActivityStats(userId);
 
     return {
@@ -53,16 +63,25 @@ export class StatisticsService {
   }
 
   async getTeacherStats(userId: string) {
-    const fiveMostPopularCourses = await this.statisticsRepository.getFiveMostPopularCourses(
-      userId,
-    );
-    const [totalCoursesCompletionStats] = await this.statisticsRepository.getTotalCoursesCompletion(
-      userId,
-    );
+    const fiveMostPopularCourses =
+      await this.statisticsRepository.getFiveMostPopularCourses(userId);
+    const [totalCoursesCompletionStats] =
+      await this.statisticsRepository.getTotalCoursesCompletion(userId);
+    const [conversionAfterFreemiumLesson] =
+      await this.statisticsRepository.getConversionAfterFreemiumLesson(userId);
+    const courseStudentsStats = await this.statisticsRepository.getCourseStudentsStats(userId);
+    const [avgQuizScore] = await this.statisticsRepository.getAvgQuizScore(userId);
 
     return {
       fiveMostPopularCourses,
       totalCoursesCompletionStats,
+      conversionAfterFreemiumLesson,
+      courseStudentsStats: this.formatCourseStudentStats(courseStudentsStats),
+      avgQuizScore: {
+        correctAnswerCount: avgQuizScore.correctAnswersCount,
+        wrongAnswerCount: avgQuizScore.wrongAnswersCount,
+        answerCount: avgQuizScore.correctAnswersCount + avgQuizScore.wrongAnswersCount,
+      },
     };
   }
 
@@ -79,7 +98,7 @@ export class StatisticsService {
 
   async updateUserActivity(userId: string) {
     const today = startOfDay(new Date());
-    const formatedTodayDate = format(today, "yyyy-MM-dd");
+    const formattedTodayDate = format(today, "yyyy-MM-dd");
 
     const currentStats = await this.statisticsRepository.getActivityStats(userId);
 
@@ -104,7 +123,7 @@ export class StatisticsService {
 
     const newLongestStreak = Math.max(newCurrentStreak, currentStats?.longestStreak ?? 0);
 
-    const isUserLoggedInToday = currentStats?.activityHistory?.[formatedTodayDate] ?? false;
+    const isUserLoggedInToday = currentStats?.activityHistory?.[formattedTodayDate] ?? false;
     if (isUserLoggedInToday) {
       return;
     }
@@ -117,7 +136,7 @@ export class StatisticsService {
       (acc, date) => {
         const dateStr = format(date, "yyyy-MM-dd");
         if (!acc[dateStr]) {
-          acc[dateStr] = dateStr === formatedTodayDate;
+          acc[dateStr] = dateStr === formattedTodayDate;
         }
         return acc;
       },
@@ -130,6 +149,14 @@ export class StatisticsService {
       lastActivityDate: today,
       activityHistory: newActivityHistory,
     });
+  }
+
+  async refreshCourseStudentsStats() {
+    const yesterday = subDays(new Date(), 1);
+    const startDate = startOfMonth(yesterday).toISOString();
+    const endDate = endOfMonth(yesterday).toISOString();
+
+    await this.statisticsRepository.calculateCoursesStudentsStats(startDate, endDate);
   }
 
   private calculateTotalStats(coursesStatsByMonth: StatsByMonth[]) {
@@ -176,10 +203,33 @@ export class StatisticsService {
     return monthlyStats;
   };
 
-  private async getLassLesson(userId: string) {
-    const lastLessonItem = await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(
-      userId,
-    );
+  private formatCourseStudentStats(stats: CourseStudentsStatsByMonth[]) {
+    const monthlyStats: { [key: string]: Omit<CourseStudentsStatsByMonth, "month"> } = {};
+
+    const currentDate = new Date();
+    for (let index = 11; index >= 0; index--) {
+      const month = format(
+        new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
+        "MMMM",
+      );
+      monthlyStats[month] = {
+        newStudentsCount: 0,
+      };
+    }
+
+    for (const stat of stats) {
+      const month = format(new Date(stat.month), "MMMM");
+      monthlyStats[month] = {
+        newStudentsCount: stat.newStudentsCount,
+      };
+    }
+
+    return monthlyStats;
+  }
+
+  private async getLastLesson(userId: string) {
+    const lastLessonItem =
+      await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(userId);
 
     if (!lastLessonItem) return null;
 

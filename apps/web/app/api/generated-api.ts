@@ -1200,13 +1200,23 @@ export interface GetUserStatisticsResponse {
 
 export interface GetTeacherStatsResponse {
   data: {
-    mostFivePopularCourses: {
+    fiveMostPopularCourses: {
       courseName: string;
       studentCount: number;
     }[];
     totalCoursesCompletionStats: {
       totalCoursesCompletion: number;
       totalCourses: number;
+    };
+    conversionAfterFreemiumLesson: {
+      purchasedCourses: number;
+      remainedOnFreemium: number;
+    };
+    courseStudentsStats: object;
+    avgQuizScore: {
+      correctAnswerCount: number;
+      wrongAnswerCount: number;
+      answerCount: number;
     };
   };
 }

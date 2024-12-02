@@ -3,6 +3,7 @@ import { and, eq, isNotNull, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { LESSON_ITEM_TYPE } from "src/lessons/lesson.type";
+import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import {
   lessonItems,
   studentCompletedLessonItems,
@@ -16,7 +17,10 @@ import type { UUIDType } from "src/common";
 
 @Injectable()
 export class StudentCompletedLessonItemsService {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private readonly statisticsRepository: StatisticsRepository,
+  ) {}
 
   async markLessonItemAsCompleted(
     id: UUIDType,
@@ -66,16 +70,18 @@ export class StudentCompletedLessonItemsService {
     );
 
     if (courseCompleted.courseCompleted) {
-      return this.updateStudentCourseStats(
+      await this.updateStudentCourseStats(
         studentId,
         courseId,
         studentCoursesStates.completed,
         courseFinishedLessonsCount,
       );
+
+      return await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(courseId);
     }
 
     if (courseCompleted.state !== studentCoursesStates.in_progress) {
-      return this.updateStudentCourseStats(
+      return await this.updateStudentCourseStats(
         studentId,
         courseId,
         studentCoursesStates.in_progress,

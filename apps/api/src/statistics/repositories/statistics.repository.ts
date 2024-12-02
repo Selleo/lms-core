@@ -1,11 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import {
   courses,
-  courseStatisticsPerTeacherMaterialized,
+  coursesSummaryStats,
+  courseStudentsStats,
   lessons,
   quizAttempts,
   studentCourses,
@@ -13,7 +14,9 @@ import {
   userStatistics,
 } from "src/storage/schema";
 
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { StatsByMonth, UserStatistic } from "src/statistics/schemas/userStats.schema";
+import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class StatisticsRepository {
@@ -23,9 +26,9 @@ export class StatisticsRepository {
     const [quizStatsResult] = await this.db
       .select({
         totalAttempts: sql<number>`count(*) :: INTEGER`,
-        totalCorrectAnswers: sql<number>`coalesce(sum(${quizAttempts.correctAnswers}), 0) :: INTEGER`,
-        totalWrongAnswers: sql<number>`coalesce(sum(${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
-        totalQuestions: sql<number>`coalesce(sum(${quizAttempts.correctAnswers} + ${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
+        totalCorrectAnswers: sql<number>`coalesce(SUM(${quizAttempts.correctAnswers}), 0) :: INTEGER`,
+        totalWrongAnswers: sql<number>`coalesce(SUM(${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
+        totalQuestions: sql<number>`coalesce(SUM(${quizAttempts.correctAnswers} + ${quizAttempts.wrongAnswers}), 0) :: INTEGER`,
         averageScore: sql<number>`coalesce(round(avg(${quizAttempts.score}), 2), 0) :: INTEGER`,
         uniqueQuizzesTaken: sql<number>`coalesce(count(distinct ${quizAttempts.lessonId}), 0) :: INTEGER`,
       })
@@ -70,7 +73,7 @@ export class StatisticsRepository {
         month_stats.month AS month,
         month_stats.started AS started,
         month_stats.completed AS completed,
-        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2)::INTEGER, 0) AS "completionRate"
+        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2), 0)::INTEGER AS "completionRate"
       FROM
         month_stats
     `);
@@ -114,7 +117,7 @@ export class StatisticsRepository {
         month_stats.month AS month,
         month_stats.started AS started,
         month_stats.completed AS completed,
-        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2)::INTEGER, 0) AS "completionRate"
+        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2), 0)::INTEGER AS "completionRate"
       FROM
         month_stats
       `);
@@ -137,23 +140,59 @@ export class StatisticsRepository {
     return await this.db
       .select({
         courseName: courses.title,
-        studentCount: courseStatisticsPerTeacherMaterialized.studentCount,
+        studentCount: sql<number>`${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}`,
       })
-      .from(courseStatisticsPerTeacherMaterialized)
-      .innerJoin(courses, eq(courseStatisticsPerTeacherMaterialized.courseId, courses.id))
-      .where(eq(courseStatisticsPerTeacherMaterialized.teacherId, userId))
-      .orderBy(desc(courseStatisticsPerTeacherMaterialized.studentCount))
+      .from(coursesSummaryStats)
+      .innerJoin(courses, eq(coursesSummaryStats.courseId, courses.id))
+      .where(eq(courses.authorId, userId))
+      .orderBy(
+        sql`${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount} DESC`,
+      )
       .limit(5);
   }
 
   async getTotalCoursesCompletion(userId: string) {
     return await this.db
       .select({
-        totalCoursesCompletion: sql<number>`sum(courseStatisticsPerTeacherMaterialized.completedStudentCount)`,
-        totalCourses: sql<number>`sum(courseStatisticsPerTeacherMaterialized.studentCount)`,
+        totalCoursesCompletion: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedCourseStudentCount}), 0)::INTEGER`,
+        totalCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}), 0)::INTEGER`,
       })
-      .from(courseStatisticsPerTeacherMaterialized)
-      .where(eq(courseStatisticsPerTeacherMaterialized.teacherId, userId));
+      .from(coursesSummaryStats)
+      .where(eq(coursesSummaryStats.authorId, userId));
+  }
+
+  async getConversionAfterFreemiumLesson(userId: string) {
+    return await this.db
+      .select({
+        purchasedCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
+        remainedOnFreemium: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedFreemiumStudentCount} - ${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
+      })
+      .from(coursesSummaryStats)
+      .where(eq(coursesSummaryStats.authorId, userId));
+  }
+
+  async getCourseStudentsStats(userId: string) {
+    return await this.db
+      .select({
+        month: sql<string>`${courseStudentsStats.year} || '-' || ${courseStudentsStats.month}`,
+        newStudentsCount: sql<number>`SUM(${courseStudentsStats.newStudentsCount})::INTEGER`,
+      })
+      .from(courseStudentsStats)
+      .where(eq(courseStudentsStats.authorId, userId))
+      .groupBy(courseStudentsStats.month, courseStudentsStats.year)
+      .orderBy(desc(courseStudentsStats.month), desc(courseStudentsStats.year))
+      .limit(12);
+  }
+
+  async getAvgQuizScore(userId: string) {
+    return await this.db
+      .select({
+        correctAnswersCount: sql<number>`COALESCE(SUM(${quizAttempts.correctAnswers}), 0)::INTEGER`,
+        wrongAnswersCount: sql<number>`COALESCE(SUM(${quizAttempts.wrongAnswers}), 0)::INTEGER`,
+      })
+      .from(quizAttempts)
+      .innerJoin(courses, eq(quizAttempts.courseId, courses.id))
+      .where(eq(courses.authorId, userId));
   }
 
   async createQuizAttempt(data: {
@@ -180,5 +219,72 @@ export class StatisticsRepository {
           ...upsertUserStatistic,
         },
       });
+  }
+
+  async updateFreePurchasedCoursesStats(courseId: string, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return dbInstance
+      .update(coursesSummaryStats)
+      .set({
+        freePurchasedCount: sql<number>`coursesSummaryStats.freePurchasedCount + 1`,
+      })
+      .where(eq(coursesSummaryStats.courseId, courseId));
+  }
+
+  async updatePaidPurchasedCoursesStats(courseId: string, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return dbInstance
+      .update(coursesSummaryStats)
+      .set({
+        paidPurchasedCount: sql<number>`coursesSummaryStats.paidPurchasedCount + 1`,
+      })
+      .where(eq(coursesSummaryStats.courseId, courseId));
+  }
+
+  async updatePaidPurchasedAfterFreemiumCoursesStats(
+    courseId: string,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
+    const dbInstance = trx ?? this.db;
+
+    return dbInstance
+      .update(coursesSummaryStats)
+      .set({
+        paidPurchasedCount: sql<number>`coursesSummaryStats.paidPurchasedCount + 1`,
+        paidPurchasedAfterFreemiumCount: sql<number>`coursesSummaryStats.paidPurchasedAfterFreemiumCount + 1`,
+      })
+      .where(eq(coursesSummaryStats.courseId, courseId));
+  }
+
+  async updateCompletedAsFreemiumCoursesStats(
+    courseId: string,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
+    const dbInstance = trx ?? this.db;
+
+    return dbInstance
+      .update(coursesSummaryStats)
+      .set({
+        completedFreemiumStudentCount: sql<number>`coursesSummaryStats.completedFreemiumStudentCount + 1`,
+      })
+      .where(eq(coursesSummaryStats.courseId, courseId));
+  }
+
+  async calculateCoursesStudentsStats(startDate: string, endDate: string) {
+    return await this.db
+      .select({
+        courseId: studentCourses.courseId,
+        newStudentsCount: sql<number>`COUNT(*)`,
+      })
+      .from(studentCourses)
+      .where(
+        and(
+          gte(studentCourses.createdAt, sql`${startDate}::timestamp`),
+          lt(studentCourses.createdAt, sql`${startDate}::timestamp`),
+        ),
+      )
+      .groupBy(studentCourses.courseId);
   }
 }

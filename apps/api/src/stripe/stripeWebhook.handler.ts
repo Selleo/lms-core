@@ -1,11 +1,14 @@
 import { StripeWebhookHandler as StripeWebhookHandlerDecorator } from "@golevelup/nestjs-stripe";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
+import { isEmpty } from "lodash";
 import Stripe from "stripe";
 
 import { DatabasePg } from "src/common";
 import { STATES } from "src/common/states";
 import { LESSON_TYPE } from "src/lessons/lesson.type";
+import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
+import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import {
   courseLessons,
   courses,
@@ -18,7 +21,11 @@ import {
 
 @Injectable()
 export class StripeWebhookHandler {
-  constructor(@Inject("DB") private readonly db: DatabasePg) {}
+  constructor(
+    @Inject("DB") private readonly db: DatabasePg,
+    private readonly statisticsRepository: StatisticsRepository,
+    private readonly lessonsRepository: LessonsRepository,
+  ) {}
 
   @StripeWebhookHandlerDecorator("payment_intent.succeeded")
   async handlePaymentIntentSucceeded(event: Stripe.Event) {
@@ -78,6 +85,17 @@ export class StripeWebhookHandler {
           })),
         );
       }
+      const existingLessonProgress = await this.lessonsRepository.getLessonsProgressByCourseId(
+        course.id,
+        trx,
+      );
+
+      return isEmpty(existingLessonProgress)
+        ? await this.statisticsRepository.updatePaidPurchasedCoursesStats(course.id, trx)
+        : await this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
+            course.id,
+            trx,
+          );
     });
 
     return true;

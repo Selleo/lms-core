@@ -1,9 +1,7 @@
-import { sql } from "drizzle-orm";
 import {
   boolean,
   integer,
   jsonb,
-  pgMaterializedView,
   pgTable,
   text,
   timestamp,
@@ -389,42 +387,44 @@ export const studentLessonsProgress = pgTable(
   }),
 );
 
-// Materialized view
+export const coursesSummaryStats = pgTable("courses_summary_stats", {
+  ...id,
+  ...timestamps,
+  courseId: uuid("course_id")
+    .references(() => courses.id, { onDelete: "cascade" })
+    .unique()
+    .notNull(),
+  authorId: uuid("author_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  freePurchasedCount: integer("free_purchased_count").notNull().default(0),
+  paidPurchasedCount: integer("paid_purchased_count").notNull().default(0),
+  paidPurchasedAfterFreemiumCount: integer("paid_purchased_after_freemium_count")
+    .notNull()
+    .default(0),
+  completedFreemiumStudentCount: integer("completed_freemium_student_count").notNull().default(0),
+  completedCourseStudentCount: integer("completed_course_student_count").notNull().default(0),
+  correctAnswersCount: integer("correct_answers_count").notNull().default(0),
+  wrongAnswersCount: integer("wrong_answers_count").notNull().default(0),
+});
 
-export const courseStatisticsPerTeacherMaterialized = pgMaterializedView(
-  "course_statistics_per_teacher",
+export const courseStudentsStats = pgTable(
+  "course_students_stats",
   {
-    teacherId: uuid("teacher_id").notNull(),
-    courseId: uuid("course_id").notNull(),
-    studentCount: integer("student_count").notNull(),
-    completedStudentCount: integer("completed_student_count").notNull(),
-    purchasedAfterFreemiumCount: integer("purchased_after_freemium_count").notNull(),
+    ...id,
+    ...timestamps,
+    courseId: uuid("course_id")
+      .references(() => courses.id, { onDelete: "cascade" })
+      .unique()
+      .notNull(),
+    authorId: uuid("author_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    month: integer("month").notNull(),
+    year: integer("year").notNull(),
+    newStudentsCount: integer("new_students_count").notNull().default(0),
   },
-).as(
-  sql`
-    SELECT
-      c.author_id AS teacher_id,
-      c.id AS course_id,
-      COUNT(sc.id) AS student_count,
-      SUM(
-        CASE
-          WHEN sc.state = 'completed' THEN 1
-          ELSE 0
-        END
-      ) AS completed_student_count,
-      COUNT(
-        DISTINCT CASE
-          WHEN slp.completed_as_freemium = true THEN sc.student_id
-          ELSE NULL
-        END
-      ) AS purchased_after_freemium_count
-    FROM
-      courses c
-      LEFT JOIN student_courses sc ON c.id = sc.course_id
-      LEFT JOIN student_lessons_progress slp ON c.id = slp.course_id
-      AND slp.completed_at IS NOT NULL
-    GROUP BY
-      c.author_id,
-      c.id;
-`,
+  (table) => ({
+    unq: unique().on(table.courseId, table.month, table.year),
+  }),
 );

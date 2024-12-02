@@ -7083,11 +7083,64 @@
                   "totalCoursesCompletion",
                   "totalCourses"
                 ]
+              },
+              "conversionAfterFreemiumLesson": {
+                "type": "object",
+                "properties": {
+                  "purchasedCourses": {
+                    "type": "number"
+                  },
+                  "remainedOnFreemium": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "purchasedCourses",
+                  "remainedOnFreemium"
+                ]
+              },
+              "courseStudentsStats": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "object",
+                    "properties": {
+                      "newStudentsCount": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "newStudentsCount"
+                    ]
+                  }
+                }
+              },
+              "avgQuizScore": {
+                "type": "object",
+                "properties": {
+                  "correctAnswerCount": {
+                    "type": "number"
+                  },
+                  "wrongAnswerCount": {
+                    "type": "number"
+                  },
+                  "answerCount": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "correctAnswerCount",
+                  "wrongAnswerCount",
+                  "answerCount"
+                ]
               }
             },
             "required": [
               "fiveMostPopularCourses",
-              "totalCoursesCompletionStats"
+              "totalCoursesCompletionStats",
+              "conversionAfterFreemiumLesson",
+              "courseStudentsStats",
+              "avgQuizScore"
             ]
           }
         },
