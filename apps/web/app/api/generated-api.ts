@@ -1205,12 +1205,14 @@ export interface GetTeacherStatsResponse {
       studentCount: number;
     }[];
     totalCoursesCompletionStats: {
+      completionPercentage: number;
       totalCoursesCompletion: number;
       totalCourses: number;
     };
     conversionAfterFreemiumLesson: {
       purchasedCourses: number;
       remainedOnFreemium: number;
+      conversionPercentage: number;
     };
     courseStudentsStats: object;
     avgQuizScore: {

@@ -82,10 +82,12 @@ const QuizScoreSchema = Type.Object({
 export const TeacherStatsSchema = Type.Object({
   fiveMostPopularCourses: Type.Array(PopularCourseStatsSchema),
   totalCoursesCompletionStats: Type.Object({
+    completionPercentage: Type.Number(),
     totalCoursesCompletion: Type.Number(),
     totalCourses: Type.Number(),
   }),
   conversionAfterFreemiumLesson: Type.Object({
+    conversionPercentage: Type.Number(),
     purchasedCourses: Type.Number(),
     remainedOnFreemium: Type.Number(),
   }),
