@@ -23,7 +23,8 @@ const config = {
       md: "768px",
       lg: "1024px",
       xl: "1280px",
-      "2xl": "1536px",
+      "2xl": "1440px",
+      "3xl": "1680px",
     },
     extend: {
       colors: {
@@ -159,9 +160,6 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-      },
-      screens: {
-        "3xl": "1600px",
       },
     },
   },

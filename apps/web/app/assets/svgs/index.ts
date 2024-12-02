@@ -1,5 +1,6 @@
 export { default as CaretDown } from "./carret-down.svg?react";
 export { default as SelleoLogo } from "./selleo-logo.svg?react";
+export { default as SelleoSignet } from "./selleo-signet.svg?react";
 export { default as Directory } from "./directory.svg?react";
 export { default as Dashboard } from "./dashboard.svg?react";
 export { default as Logout } from "./logout.svg?react";
@@ -29,3 +30,4 @@ export { default as ChevronLeft } from "./chevron-left.svg?react";
 export { default as Checkmark } from "./checkmark.svg?react";
 export { default as Flame } from "./flame.svg?react";
 export { default as NoData } from "./no-data.svg?react";
+export { default as Admin } from "./admin.svg?react";

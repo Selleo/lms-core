@@ -81,7 +81,7 @@ export default function StatisticsPage() {
   const coursesRatesChartData = parseRatesChartData(userStatistics?.courses);
 
   return (
-    <PageWrapper>
+    <PageWrapper className="2xl:!pt-8">
       <div className="flex flex-col gap-y-6 2xl:gap-y-6">
         <div className="gap-x-2 flex 2xl:gap-x-4 items-center">
           <p className="h5 2xl:h2 text-neutral-950">Welcome back, {user?.firstName}</p>
@@ -89,7 +89,7 @@ export default function StatisticsPage() {
             <Gravatar email={user?.email} />
           </Avatar>
         </div>
-        <div className="flex items-center flex-col-reverse 2xl:flex-row gap-y-4 h-full gap-x-7 2xl:h-[calc(100dvh-161px)]">
+        <div className="grid items-center flex-col-reverse 2xl:grid-cols-[1fr_384px] grid-cols-1 gap-y-4 h-full gap-x-7 2xl:h-full">
           <div className="w-full h-full gap-y-4 2xl:gap-x-4 2xl:gap-y-6 flex flex-col">
             <div className="flex flex-wrap 2xl:flex-nowrap gap-4 w-full h-full">
               <ContinueLearningCard isLoading={isLoading} lesson={userStatistics?.lastLesson} />

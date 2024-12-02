@@ -7051,7 +7051,7 @@
           "data": {
             "type": "object",
             "properties": {
-              "mostFivePopularCourses": {
+              "fiveMostPopularCourses": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -7086,7 +7086,7 @@
               }
             },
             "required": [
-              "mostFivePopularCourses",
+              "fiveMostPopularCourses",
               "totalCoursesCompletionStats"
             ]
           }

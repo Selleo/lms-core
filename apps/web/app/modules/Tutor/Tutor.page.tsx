@@ -6,6 +6,7 @@ import { useUserDetails } from "~/api/queries/useUserDetails";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Gravatar } from "~/components/Gravatar";
 import { Icon } from "~/components/Icon";
+import { PageWrapper } from "~/components/PageWrapper";
 import { Avatar } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import CourseCard from "~/modules/Dashboard/Courses/CourseCard";
@@ -18,9 +19,9 @@ export default function TutorPage() {
   const { data: tutorCourses } = useTutorCourses(id);
 
   return (
-    <>
+    <PageWrapper>
       <TutorPageBreadcrumbs id={id} username={`${user?.firstName} ${user?.lastName}`} />
-      <div className="flex flex-col xl:flex-row px-4 gap-6">
+      <div className="flex flex-col xl:flex-row gap-6">
         <section className="flex flex-col xl:w-full xl:max-w-[480px] gap-y-6 p-6 bg-white rounded-t-2xl rounded-b-lg drop-shadow">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <Avatar className="w-20 h-20">
@@ -98,6 +99,6 @@ export default function TutorPage() {
           </Button>
         </section>
       </div>
-    </>
+    </PageWrapper>
   );
 }
