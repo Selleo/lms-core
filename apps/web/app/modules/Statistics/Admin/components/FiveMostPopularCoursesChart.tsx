@@ -112,7 +112,7 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
           <p className="body-sm-md text-center text-neutral-800">Your top 5 Courses</p>
         </hgroup>
         <div className="md:flex md:gap-x-3 md:size-full">
-          <div className="flex py-2 h-full items-center min-h-[167px] justify-between gap-y-3 w-full relative md:gap-y-10">
+          <div className="flex py-2 h-full items-center min-h-[200px] md:min-h-[316px] justify-between gap-y-3 w-full relative md:gap-y-10">
             {Array.from({ length: 21 }).map((_, index) => (
               <div key={index} className="w-[1px] bg-neutral-100 h-full" />
             ))}
