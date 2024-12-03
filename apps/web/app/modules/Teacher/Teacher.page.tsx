@@ -10,9 +10,9 @@ import { PageWrapper } from "~/components/PageWrapper";
 import { Avatar } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import CourseCard from "~/modules/Dashboard/Courses/CourseCard";
-import { TutorPageBreadcrumbs } from "~/modules/Tutor/TutorPageBreadcrumbs";
+import { TeacherPageBreadcrumbs } from "~/modules/Teacher/TeacherPageBreadcrumbs";
 
-export default function TutorPage() {
+export default function TeacherPage() {
   const { id = "" } = useParams();
   const { data: userDetails } = useUserDetails(id);
   const { data: user } = useUserById(id);
@@ -20,7 +20,7 @@ export default function TutorPage() {
 
   return (
     <PageWrapper>
-      <TutorPageBreadcrumbs id={id} username={`${user?.firstName} ${user?.lastName}`} />
+      <TeacherPageBreadcrumbs id={id} username={`${user?.firstName} ${user?.lastName}`} />
       <div className="flex flex-col xl:flex-row gap-6">
         <section className="flex flex-col xl:w-full xl:max-w-[480px] gap-y-6 p-6 bg-white rounded-t-2xl rounded-b-lg drop-shadow">
           <div className="flex flex-col md:flex-row md:items-center gap-6">

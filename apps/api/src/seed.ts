@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { format, subMonths } from "date-fns";
 import * as dotenv from "dotenv";
-import { eq, sql, and } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import { flatMap, now, sampleSize } from "lodash";
 import postgres from "postgres";
@@ -419,7 +419,7 @@ async function seed() {
     const teacherUser = await createOrFindUser("teacher@example.com", "password", {
       id: faker.string.uuid(),
       email: "teacher@example.com",
-      firstName: "Tutor",
+      firstName: "Teacher",
       lastName: "User",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),

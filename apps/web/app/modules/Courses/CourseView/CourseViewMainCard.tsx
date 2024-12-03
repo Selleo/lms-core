@@ -99,7 +99,7 @@ export const CourseViewMainCard = ({
           courseLessonCount={courseLessonCount}
         />
         <h4 className="text-2xl font-bold mt-4 lg:mt-6 leading-10 text-neutral-950">{title}</h4>
-        <Link to={`/tutors/${authorId}`} className="flex items-center gap-x-1.5 mt-3 mb-4">
+        <Link to={`/teachers/${authorId}`} className="flex items-center gap-x-1.5 mt-3 mb-4">
           <Avatar className="h-6 w-6">
             <Gravatar email={authorEmail} />
           </Avatar>

@@ -18,7 +18,7 @@ export const routes: (
       route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
       route("course/:courseId/lesson/:lessonId", "modules/Courses/Lesson/Lesson.page.tsx");
       route("settings", "modules/Dashboard/Settings/Settings.page.tsx");
-      route("tutors/:id", "modules/Tutor/Tutor.page.tsx");
+      route("teachers/:id", "modules/Teacher/Teacher.page.tsx");
     });
     route("admin", "modules/Admin/Admin.layout.tsx", () => {
       route("courses", "modules/Admin/Courses/Courses.page.tsx", {
