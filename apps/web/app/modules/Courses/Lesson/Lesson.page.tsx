@@ -34,19 +34,19 @@ export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
 export default function LessonPage() {
   const { lessonId = "", courseId = "" } = useParams();
   const [isOpen, setIsOpen] = useState(false);
-  const { data, refetch } = useLessonSuspense(lessonId, courseId);
+  const { data: lesson, refetch } = useLessonSuspense(lessonId, courseId);
   const {
     data: { id, title, lessons },
   } = useCourseSuspense(courseId ?? "");
 
   const methods = useForm<TQuestionsForm>({
     mode: "onChange",
-    defaultValues: getUserAnswers(data),
+    defaultValues: getUserAnswers(lesson),
   });
 
   const submitQuiz = useSubmitQuiz({
-    handleOnSuccess: () => {
-      refetch();
+    handleOnSuccess: async () => {
+      await refetch();
       setIsOpen(true);
     },
   });
@@ -60,11 +60,11 @@ export default function LessonPage() {
   const lessonsIds = lessons.map((lesson) => lesson.id);
   const currentLessonIndex = lessonsIds.indexOf(lessonId ?? "");
 
-  if (!data || !lessonId) {
+  if (!lesson || !lessonId) {
     throw new Error(`Lesson with id: ${lessonId} not found`);
   }
 
-  const orderedLessonsItems = getOrderedLessons(data);
+  const orderedLessonsItems = getOrderedLessons(lesson);
 
   const questionsArray = getQuestionsArray(orderedLessonsItems);
 
@@ -72,57 +72,42 @@ export default function LessonPage() {
   const nextLessonId =
     currentLessonIndex < lessonsIds.length - 1 ? lessonsIds[currentLessonIndex + 1] : null;
 
-  const isQuiz = data?.type === "quiz";
-  const isEnrolled = data?.enrolled;
+  const isQuiz = lesson?.type === "quiz";
+  const isEnrolled = lesson?.enrolled;
 
   const getScorePercentage = () => {
-    if (!data.quizScore || data.quizScore === 0 || !data.lessonItems.length) return "0%";
+    if (!lesson.quizScore || lesson.quizScore === 0 || !lesson.lessonItems.length) return "0%";
 
-    return `${((data.quizScore / data.lessonItems.length) * 100)?.toFixed(0)}%`;
+    return `${((lesson.quizScore / lesson.lessonItems.length) * 100)?.toFixed(0)}%`;
   };
 
   const scorePercentage = getScorePercentage();
 
-  const [lesson, setLesson] = useState(data);
-
-  const updateLessonItemCompletion = (lessonItemId: string) => {
-    setLesson((prevLesson) => {
-      const updatedLessonItems = prevLesson.lessonItems.map((item) => {
-        if (item.lessonItemId === lessonItemId && item.isCompleted === false) {
-          return { ...item, isCompleted: true };
-        }
-        return item;
-      });
-
-      return {
-        ...prevLesson,
-        lessonItems: updatedLessonItems,
-        itemsCompletedCount: updatedLessonItems.filter((item) => item.isCompleted).length ?? 0,
-      };
-    });
+  const updateLessonItemCompletion = async () => {
+    await refetch();
   };
 
   return (
     <div className="flex">
       <PageWrapper>
         <div className="flex flex-col gap-6 w-full">
-          <Breadcrumb lessonData={data} courseId={id} courseTitle={title} />
+          <Breadcrumb lessonData={lesson} courseId={id} courseTitle={title} />
           <Overview lesson={lesson} />
           {isQuiz && (
             <QuizSummaryModal
               isOpen={isOpen}
               setIsOpen={setIsOpen}
               scoreLabel={scorePercentage}
-              courseId={courseId ?? ""}
+              courseId={courseId}
             />
           )}
           <FormProvider {...methods}>
             <form className="flex flex-col gap-8">
               <LessonItems
-                isSubmitted={!!data?.isSubmitted}
+                isSubmitted={!!lesson?.isSubmitted}
                 questions={questionsArray}
                 lessonItems={orderedLessonsItems}
-                lessonType={data?.type ?? "multimedia"}
+                lessonType={lesson?.type ?? "multimedia"}
                 updateLessonItemCompletion={updateLessonItemCompletion}
               />
             </form>
@@ -132,12 +117,12 @@ export default function LessonPage() {
               className="w-min self-end"
               variant="outline"
               onClick={
-                data?.isSubmitted
+                lesson?.isSubmitted
                   ? () => clearQuizProgress.mutate({ lessonId, courseId })
                   : () => submitQuiz.mutate({ lessonId, courseId })
               }
             >
-              {data?.isSubmitted ? "Clear progress" : "Check answers"}
+              {lesson?.isSubmitted ? "Clear progress" : "Check answers"}
             </Button>
           )}
           {isEnrolled && (

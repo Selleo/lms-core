@@ -52,8 +52,8 @@ export const QuizSummary = ({ lessonId, courseId, data }: QuizSummaryProps) => {
             <Button
               onClick={() =>
                 clearQuizProgress.mutate({
-                  lessonId: lessonId ?? "",
-                  courseId: courseId ?? "",
+                  lessonId: lessonId,
+                  courseId: courseId,
                 })
               }
             >
