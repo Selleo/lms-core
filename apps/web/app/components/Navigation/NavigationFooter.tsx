@@ -85,10 +85,10 @@ export function NavigationFooter({
           </TooltipContent>
         </Tooltip>
       </li>
-      <li className="2xl:sr-only md:col-span-3">
+      <li className={cn("md:col-span-3", { "sr-only": isAdminRoute || !isAllowed })}>
         <NavLink
           onClick={() => setIsMobileNavOpen(false)}
-          to="/settings"
+          to={`/teachers/${user?.id}`}
           className={({ isActive }) =>
             cn("flex gap-x-3 items-center py-3.5 px-4 rounded-lg w-full 2xl:p-2", {
               "bg-primary-700 text-white": isActive,

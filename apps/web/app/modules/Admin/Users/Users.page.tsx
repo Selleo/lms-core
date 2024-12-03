@@ -72,7 +72,7 @@ const Users = () => {
       options: [
         { value: "admin", label: "Admin" },
         { value: "student", label: "Student" },
-        { value: "tutor", label: "Tutor" },
+        { value: "tutor", label: "Teacher" },
       ],
     },
     {
