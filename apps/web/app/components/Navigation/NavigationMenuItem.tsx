@@ -4,19 +4,22 @@ import { Icon } from "~/components/Icon";
 import { Tooltip, TooltipContent, TooltipTrigger } from "~/components/ui/tooltip";
 import { cn } from "~/lib/utils";
 
+import type { Dispatch, SetStateAction } from "react";
 import type { MenuItemType } from "~/config/navigationConfig";
 
 type NavigationMenuItemProps = {
   item: MenuItemType;
+  setIsMobileNavOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export function NavigationMenuItem({ item }: NavigationMenuItemProps) {
+export function NavigationMenuItem({ item, setIsMobileNavOpen }: NavigationMenuItemProps) {
   return (
     <li key={item.label}>
       <Tooltip>
         <TooltipTrigger className="w-full">
           <NavLink
             to={item.link}
+            onClick={() => setIsMobileNavOpen(false)}
             className={({ isActive }) =>
               cn("flex gap-x-3 items-center py-3.5 px-4 rounded-lg 2xl:p-2", {
                 "bg-primary-700 text-white": isActive,

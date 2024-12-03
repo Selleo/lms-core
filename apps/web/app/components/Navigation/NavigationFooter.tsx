@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from "@remix-run/react";
 import { capitalize } from "lodash-es";
-import { startTransition } from "react";
+import { type Dispatch, type SetStateAction, startTransition } from "react";
 
 import { useLogoutUser } from "~/api/mutations";
 import { useCurrentUser } from "~/api/queries";
@@ -15,9 +15,15 @@ type NavigationFooterProps = {
   isAdmin: boolean;
   isTutor: boolean;
   role: string;
+  setIsMobileNavOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export function NavigationFooter({ isAdmin, isTutor, role }: NavigationFooterProps) {
+export function NavigationFooter({
+  isAdmin,
+  isTutor,
+  role,
+  setIsMobileNavOpen,
+}: NavigationFooterProps) {
   const { data: user } = useCurrentUser();
   const { mutate: logout } = useLogoutUser();
   const { pathname } = useLocation();
@@ -35,10 +41,11 @@ export function NavigationFooter({ isAdmin, isTutor, role }: NavigationFooterPro
           <Tooltip>
             <TooltipTrigger className="w-full">
               <NavLink
+                onClick={() => setIsMobileNavOpen(false)}
                 className="flex gap-x-3 items-center py-3.5 px-4 rounded-lg w-full 2xl:p-2 bg-white text-neutral-900"
                 to={isAdminRoute ? "/" : "/admin/courses"}
               >
-                <Icon name="Admin" className="size-6 pl-[2px]" />
+                <Icon name={isAdminRoute ? "Dashboard" : "Admin"} className="size-6 pl-[2px]" />
                 <span className="2xl:sr-only 3xl:not-sr-only">
                   {isAdminRoute ? "Dashboard" : <>{capitalize(role)} panel</>}{" "}
                 </span>
@@ -57,6 +64,7 @@ export function NavigationFooter({ isAdmin, isTutor, role }: NavigationFooterPro
         <Tooltip>
           <TooltipTrigger className="w-full">
             <NavLink
+              onClick={() => setIsMobileNavOpen(false)}
               to="/settings"
               className={({ isActive }) =>
                 cn("flex gap-x-3 items-center py-3.5 px-4 rounded-lg w-full 2xl:p-2", {
@@ -79,6 +87,7 @@ export function NavigationFooter({ isAdmin, isTutor, role }: NavigationFooterPro
       </li>
       <li className="2xl:sr-only md:col-span-3">
         <NavLink
+          onClick={() => setIsMobileNavOpen(false)}
           to="/settings"
           className={({ isActive }) =>
             cn("flex gap-x-3 items-center py-3.5 px-4 rounded-lg w-full 2xl:p-2", {
@@ -109,8 +118,8 @@ export function NavigationFooter({ isAdmin, isTutor, role }: NavigationFooterPro
       </li>
       <li
         className={cn({
-          "md:col-span-3 col-span-2": isAllowed && !isAdminRoute,
           "md:col-span-6 col-span-1": isAllowed && isAdminRoute,
+          "md:col-span-3 col-span-2": isAllowed && !isAdminRoute,
           "md:col-span-6 col-span-2": !isAllowed,
         })}
       >

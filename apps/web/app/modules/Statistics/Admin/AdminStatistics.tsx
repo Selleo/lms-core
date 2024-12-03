@@ -6,6 +6,7 @@ import { PageWrapper } from "~/components/PageWrapper";
 import { Avatar } from "~/components/ui/avatar";
 import { AvgScoreAcrossAllQuizzesChart } from "~/modules/Statistics/Admin/components/AvgScoreAcrossAllQuizzessChart";
 import { ConversionsAfterFreemiumLessonChart } from "~/modules/Statistics/Admin/components/ConversionsAfterFreemiumLessonChart";
+import { EnrollmentChart } from "~/modules/Statistics/Admin/components/EnrollmentChart";
 
 import { CourseCompletionPercentageChart, FiveMostPopularCoursesChart } from "./components";
 
@@ -14,16 +15,17 @@ import type { ChartConfig } from "~/components/ui/chart";
 export const AdminStatistics = () => {
   const { data: user } = useCurrentUser();
   const { data: statistics, isLoading } = useTeacherStatistics();
+  console.log({ statistics });
+  const totalCoursesCompletion =
+    statistics?.totalCoursesCompletionStats.totalCoursesCompletion ?? 0;
+  const totalCourses = statistics?.totalCoursesCompletionStats.totalCourses ?? 0;
 
-  const totalCoursesCompletion = statistics?.totalCoursesCompletionStats.totalCoursesCompletion;
-  const totalCourses = statistics?.totalCoursesCompletionStats.totalCourses;
+  const purchasedCourses = statistics?.conversionAfterFreemiumLesson.purchasedCourses ?? 0;
+  const remainedOnFreemium = statistics?.conversionAfterFreemiumLesson.remainedOnFreemium ?? 0;
 
-  const purchasedCourses = statistics?.conversionAfterFreemiumLesson.purchasedCourses;
-  const remainedOnFreemium = statistics?.conversionAfterFreemiumLesson.remainedOnFreemium;
-
-  const correctAnswers = statistics?.avgQuizScore.correctAnswerCount;
-  const wrongAnswers = statistics?.avgQuizScore.wrongAnswerCount;
-  const totalAnswers = statistics?.avgQuizScore.answerCount;
+  const correctAnswers = statistics?.avgQuizScore.correctAnswerCount ?? 0;
+  const wrongAnswers = statistics?.avgQuizScore.wrongAnswerCount ?? 0;
+  const totalAnswers = statistics?.avgQuizScore.answerCount ?? 0;
 
   const coursesCompletionChartConfig = {
     completed: {
@@ -94,12 +96,12 @@ export const AdminStatistics = () => {
     () => [
       {
         state: "Correct",
-        percentage: correctAnswers,
+        percentage: 7,
         fill: "var(--primary-700)",
       },
       {
         state: "Incorrect",
-        percentage: wrongAnswers,
+        percentage: 13,
         fill: "var(--primary-300)",
       },
     ],
@@ -114,7 +116,7 @@ export const AdminStatistics = () => {
           <Gravatar email={user?.email} />
         </Avatar>
       </div>
-      <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-y-6 md:gap-x-4 xl:grid-cols-4 xl:grid-rows-2 xl:h-full">
+      <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-y-6 md:gap-x-4 xl:grid-cols-4 xl:grid-rows-[minmax(min-content,_auto)] xl:h-full">
         <FiveMostPopularCoursesChart
           data={statistics?.fiveMostPopularCourses}
           isLoading={isLoading}
@@ -133,7 +135,7 @@ export const AdminStatistics = () => {
           chartConfig={conversionsChartConfig}
           chartData={conversionsChartData}
         />
-        <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 h-[400px] w-full xl:h-full"></div>
+        <EnrollmentChart isLoading={isLoading} data={statistics?.courseStudentsStats} />
         <AvgScoreAcrossAllQuizzesChart
           isLoading={isLoading}
           label={`${correctAnswers}/${totalAnswers}`}
