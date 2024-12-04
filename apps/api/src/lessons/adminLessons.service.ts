@@ -6,7 +6,7 @@ import { match, P } from "ts-pattern";
 import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import { S3Service } from "src/file/s3.service";
+import { FilesService } from "src/file/files.service";
 import { lessonItems, lessons } from "src/storage/schema";
 
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
@@ -32,7 +32,7 @@ interface LessonsQuery {
 export class AdminLessonsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly s3Service: S3Service,
+    private readonly filesService: FilesService,
     private readonly adminLessonsRepository: AdminLessonsRepository,
   ) {}
 
@@ -62,7 +62,7 @@ export class AdminLessonsService {
           ...lesson,
           imageUrl: lesson.imageUrl.startsWith("https://")
             ? lesson.imageUrl
-            : await this.s3Service.getSignedUrl(lesson.imageUrl),
+            : await this.filesService.getFileUrl(lesson.imageUrl),
         };
       }),
     );
@@ -150,7 +150,7 @@ export class AdminLessonsService {
 
         const imageUrl = lesson.imageUrl.startsWith("https://")
           ? lesson.imageUrl
-          : await this.s3Service.getSignedUrl(lesson.imageUrl);
+          : await this.filesService.getFileUrl(lesson.imageUrl);
         return { ...lesson, imageUrl };
       }),
     );

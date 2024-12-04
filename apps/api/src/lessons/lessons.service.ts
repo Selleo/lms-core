@@ -11,7 +11,7 @@ import { match, P } from "ts-pattern";
 
 import { DatabasePg } from "src/common";
 import { QuizCompletedEvent } from "src/events";
-import { S3Service } from "src/file/s3.service";
+import { FilesService } from "src/file/files.service";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import { QUESTION_TYPE } from "src/questions/schema/questions.types";
 
@@ -32,7 +32,7 @@ import type { UUIDType } from "src/common";
 export class LessonsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly s3Service: S3Service,
+    private readonly filesService: FilesService,
     private readonly lessonsRepository: LessonsRepository,
     private readonly eventBus: EventBus,
   ) {}
@@ -57,7 +57,7 @@ export class LessonsService {
 
     const getImageUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url;
-      return await this.s3Service.getSignedUrl(url);
+      return await this.filesService.getFileUrl(url);
     };
 
     const imageUrl = await getImageUrl(lesson.imageUrl);
@@ -449,7 +449,7 @@ export class LessonsService {
           type: item.fileData.type,
           url: (item.fileData.url as string).startsWith("https://")
             ? item.fileData.url
-            : await this.s3Service.getSignedUrl(item.fileData.url),
+            : await this.filesService.getFileUrl(item.fileData.url),
         }),
       )
       .otherwise(() => {

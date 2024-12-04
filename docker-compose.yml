@@ -3,12 +3,19 @@ services:
     image: postgres:16-alpine
     restart: always
     environment:
-      POSTGRES_PASSWORD: guidebook 
-      POSTGRES_DB: guidebook 
+      POSTGRES_PASSWORD: guidebook
+      POSTGRES_DB: guidebook
     volumes:
       - lms-db-data:/var/lib/postgresql/data
     ports:
       - 5432:5432
+  redis:
+    image: redis:8.0-M02-alpine3.20
+    restart: always
+    ports:
+      - 6379:6379
+    volumes:
+      - lms-redis-data:/data
   mailhog:
     image: mailhog/mailhog
     ports:
@@ -17,4 +24,6 @@ services:
 
 volumes:
   lms-db-data:
+    driver: local
+  lms-redis-data:
     driver: local

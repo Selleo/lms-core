@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 
-import { S3Service } from "src/file/s3.service";
+import { FilesModule } from "src/file/files.module";
 
 import { AdminLessonItemsService } from "./adminLessonItems.service";
 import { AdminLessonsService } from "./adminLessons.service";
@@ -11,13 +11,12 @@ import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
 import { LessonsRepository } from "./repositories/lessons.repository";
 
 @Module({
-  imports: [],
+  imports: [FilesModule],
   controllers: [LessonsController],
   providers: [
     LessonsService,
     AdminLessonsService,
     AdminLessonItemsService,
-    S3Service,
     LessonsRepository,
     AdminLessonsRepository,
     AdminLessonItemsRepository,

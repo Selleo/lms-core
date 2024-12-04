@@ -9,7 +9,6 @@ import { eq, ilike, isNotNull } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
-import { S3Service } from "src/file/s3.service";
 import { files, questions, textBlocks } from "src/storage/schema";
 
 import { LESSON_TYPE } from "./lesson.type";
@@ -47,7 +46,6 @@ type GetLessonItemsQuery = {
 export class AdminLessonItemsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly s3Service: S3Service,
     private readonly adminLessonItemsRepository: AdminLessonItemsRepository,
     private readonly adminLessonsRepository: AdminLessonsRepository,
   ) {}
