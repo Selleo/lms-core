@@ -23,7 +23,7 @@ import { FileUploadResponse } from "./schemas/file.schema";
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   @ApiConsumes("multipart/form-data")
@@ -54,7 +54,7 @@ export class FilesController {
     return await this.filesService.uploadFile(file, resource);
   }
 
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Delete()
   @ApiQuery({
     name: "fileKey",

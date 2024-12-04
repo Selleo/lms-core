@@ -14,19 +14,14 @@ export class FilesService {
   async getFileUrl(fileKey: string): Promise<string> {
     try {
       const cachedUrl = await this.cacheManager.get<string>(fileKey);
-      if (cachedUrl) {
-        console.log(`Cache hit for key: ${fileKey}`);
-        console.log(`Cached URL: ${cachedUrl}`);
-
-        return cachedUrl;
-      }
+      if (cachedUrl) return cachedUrl;
 
       const signedUrl = await this.s3Service.getSignedUrl(fileKey);
       await this.cacheManager.set(fileKey, signedUrl);
+
       return signedUrl;
     } catch (error) {
       console.error("Error in getFileUrl:", error);
-      // Fallback to getting the URL directly from S3 if caching fails
       return this.s3Service.getSignedUrl(fileKey);
     }
   }
@@ -67,8 +62,6 @@ export class FilesService {
       await this.s3Service.uploadFile(file.buffer, fileKey, file.mimetype);
 
       const fileUrl = await this.s3Service.getSignedUrl(fileKey);
-
-      console.log(fileKey);
 
       return { fileKey, fileUrl };
     } catch (error) {

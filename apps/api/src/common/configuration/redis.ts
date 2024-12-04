@@ -13,7 +13,7 @@ const validateRedisConfig = configValidator(schema);
 
 export default registerAs("redis", (): RedisConfigSchema => {
   const values = {
-    REDIS_URL: `redis://${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+    REDIS_URL: process.env.REDIS_URL || "",
   };
 
   return validateRedisConfig(values);

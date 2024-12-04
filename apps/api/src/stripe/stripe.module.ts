@@ -2,8 +2,8 @@ import { StripeModule as StripeModuleConfig, StripeWebhookService } from "@golev
 import { Module } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 
-import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
-import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
+import { LessonsModule } from "src/lessons/lessons.module";
+import { StatisticsModule } from "src/statistics/statistics.module";
 
 import { StripeController } from "./api/stripe.controller";
 import { StripeService } from "./stripe.service";
@@ -28,15 +28,11 @@ import { StripeWebhookHandler } from "./stripeWebhook.handler";
         };
       },
     }),
+    LessonsModule,
+    StatisticsModule,
   ],
   controllers: [StripeController],
-  providers: [
-    StripeService,
-    StripeWebhookHandler,
-    StripeWebhookService,
-    LessonsRepository,
-    StatisticsRepository,
-  ],
+  providers: [StripeService, StripeWebhookHandler, StripeWebhookService],
   exports: [],
 })
 export class StripeModule {}
