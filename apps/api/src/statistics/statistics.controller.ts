@@ -28,7 +28,7 @@ export class StatisticsController {
   }
 
   @Get("teacher-stats")
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Validate({
     response: baseResponse(TeacherStatsSchema),
   })

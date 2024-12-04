@@ -18,13 +18,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { USER_ROLE } from "~/config/userRoles";
 import { CreatePageHeader } from "~/modules/Admin/components";
 
 const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters."),
   lastName: z.string().min(2, "Last name must be at least 2 characters."),
   email: z.string().email("Please enter a valid email address."),
-  role: z.enum(["student", "admin", "tutor"], {
+  role: z.enum([USER_ROLE.admin, USER_ROLE.teacher, USER_ROLE.student], {
     required_error: "Please select a role.",
   }),
 });
@@ -40,7 +41,7 @@ export default function CreateNewUserPage() {
       firstName: "",
       lastName: "",
       email: "",
-      role: "student",
+      role: USER_ROLE.student,
     },
   });
 
@@ -122,9 +123,9 @@ export default function CreateNewUserPage() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="student">Student</SelectItem>
-                    <SelectItem value="admin">Admin</SelectItem>
-                    <SelectItem value="tutor">Tutor</SelectItem>
+                    <SelectItem value={USER_ROLE.student}>Student</SelectItem>
+                    <SelectItem value={USER_ROLE.admin}>Admin</SelectItem>
+                    <SelectItem value={USER_ROLE.teacher}>Teacher</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />

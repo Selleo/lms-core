@@ -74,7 +74,7 @@ async function createOrFindUser(email: string, password: string, userData: any) 
 
   await insertCredential(newUser.id, password);
 
-  if (newUser.role === USER_ROLES.admin || newUser.role === USER_ROLES.tutor)
+  if (newUser.role === USER_ROLES.admin || newUser.role === USER_ROLES.teacher)
     await insertUserDetails(newUser.id);
 
   return newUser;
@@ -423,7 +423,7 @@ async function seed() {
       lastName: "User",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: USER_ROLES.tutor,
+      role: USER_ROLES.teacher,
     });
 
     console.log("Created or found admin user:", adminUser);

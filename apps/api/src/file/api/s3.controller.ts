@@ -27,7 +27,7 @@ import { FileUploadResponse } from "../schemas/file.schema";
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   @ApiConsumes("multipart/form-data")
@@ -77,7 +77,9 @@ export class S3Controller {
 
     if (!allowedMimeTypes.includes(file.mimetype)) {
       throw new BadRequestException(
-        `File type ${file.mimetype} is not allowed. Allowed types are: ${allowedMimeTypes.join(", ")}`,
+        `File type ${file.mimetype} is not allowed. Allowed types are: ${allowedMimeTypes.join(
+          ", ",
+        )}`,
       );
     }
 
@@ -95,7 +97,7 @@ export class S3Controller {
     }
   }
 
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Delete()
   @ApiQuery({
     name: "fileKey",

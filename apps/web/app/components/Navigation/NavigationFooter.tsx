@@ -13,14 +13,14 @@ import { cn } from "~/lib/utils";
 
 type NavigationFooterProps = {
   isAdmin: boolean;
-  isTutor: boolean;
+  isTeacher: boolean;
   role: string;
   setIsMobileNavOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 export function NavigationFooter({
   isAdmin,
-  isTutor,
+  isTeacher,
   role,
   setIsMobileNavOpen,
 }: NavigationFooterProps) {
@@ -29,7 +29,7 @@ export function NavigationFooter({
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith("/admin");
 
-  const isAllowed = isAdmin || isTutor;
+  const isAllowed = isAdmin || isTeacher;
 
   return (
     <menu className="grid grid-cols-2 gap-2 md:gap-4 2xl:gap-2 md:grid-cols-6 w-full 2xl:flex 2xl:flex-col 2xl:self-end">

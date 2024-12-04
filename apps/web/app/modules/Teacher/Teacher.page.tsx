@@ -1,7 +1,7 @@
 import { useParams } from "@remix-run/react";
 
 import { useUserById } from "~/api/queries/admin/useUserById";
-import { useTutorCourses } from "~/api/queries/useTutorCourses";
+import { useTeacherCourses } from "~/api/queries/useTeacherCourses";
 import { useUserDetails } from "~/api/queries/useUserDetails";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Gravatar } from "~/components/Gravatar";
@@ -16,7 +16,7 @@ export default function TeacherPage() {
   const { id = "" } = useParams();
   const { data: userDetails } = useUserDetails(id);
   const { data: user } = useUserById(id);
-  const { data: tutorCourses } = useTutorCourses(id);
+  const { data: teacherCourses } = useTeacherCourses(id);
 
   return (
     <PageWrapper>
@@ -92,7 +92,7 @@ export default function TeacherPage() {
             {/*TODO: Add filters*/}
           </div>
           <div className="flex flex-wrap lg:overflow-y-scroll lg:max-h-[calc(100dvh-260px)] gap-6 xl:gap-4 *:max-w-[250px]">
-            {tutorCourses?.map((course) => <CourseCard key={course.id} {...course} />)}
+            {teacherCourses?.map((course) => <CourseCard key={course.id} {...course} />)}
           </div>
           <Button variant="outline" className="sr-only">
             Show more

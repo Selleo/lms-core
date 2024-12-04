@@ -158,7 +158,7 @@ export interface UpdateUserBody {
   lastName?: string;
   /** @format email */
   email?: string;
-  role?: "admin" | "student" | "tutor";
+  role?: "admin" | "student" | "teacher";
   archived?: boolean;
 }
 
@@ -196,7 +196,7 @@ export interface AdminUpdateUserBody {
   lastName?: string;
   /** @format email */
   email?: string;
-  role?: "admin" | "student" | "tutor";
+  role?: "admin" | "student" | "teacher";
   archived?: boolean;
 }
 
@@ -249,7 +249,7 @@ export interface CreateUserBody {
    * @maxLength 64
    */
   lastName: string;
-  role: "admin" | "student" | "tutor";
+  role: "admin" | "student" | "teacher";
 }
 
 export interface CreateUserResponse {
@@ -404,7 +404,7 @@ export interface GetAvailableCoursesResponse {
   };
 }
 
-export interface GetTutorCoursesResponse {
+export interface GetTeacherCoursesResponse {
   data: {
     /** @format uuid */
     id: string;
@@ -2029,18 +2029,18 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetTutorCourses
-     * @request GET:/api/courses/tutor-courses
+     * @name CoursesControllerGetTeacherCourses
+     * @request GET:/api/courses/teacher-courses
      */
-    coursesControllerGetTutorCourses: (
+    coursesControllerGetTeacherCourses: (
       query: {
         /** @format uuid */
         authorId: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<GetTutorCoursesResponse, any>({
-        path: `/api/courses/tutor-courses`,
+      this.request<GetTeacherCoursesResponse, any>({
+        path: `/api/courses/teacher-courses`,
         method: "GET",
         query: query,
         format: "json",

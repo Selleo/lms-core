@@ -49,7 +49,7 @@ import {
 } from "./schemas/courseQuery";
 
 import type { CoursesQuery } from "./api/courses.types";
-import type { AllCoursesForTutorResponse, AllCoursesResponse } from "./schemas/course.schema";
+import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas/course.schema";
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { Pagination, UUIDType } from "src/common";
@@ -475,7 +475,10 @@ export class CoursesService {
     };
   }
 
-  async getTutorCourses(authorId: UUIDType, userId: UUIDType): Promise<AllCoursesForTutorResponse> {
+  async getTeacherCourses(
+    authorId: UUIDType,
+    userId: UUIDType,
+  ): Promise<AllCoursesForTeacherResponse> {
     return await this.db
       .select(this.getSelectField(userId))
       .from(courses)
