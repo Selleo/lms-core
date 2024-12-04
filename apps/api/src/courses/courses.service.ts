@@ -26,6 +26,7 @@ import { S3Service } from "src/file/s3.service";
 import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/lessons/lesson.type";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
 import {
@@ -45,10 +46,10 @@ import {
 import {
   type CoursesFilterSchema,
   type CourseSortField,
+  type CoursesQuery,
   CourseSortFields,
 } from "./schemas/courseQuery";
 
-import type { CoursesQuery } from "./api/courses.types";
 import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas/course.schema";
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
@@ -72,12 +73,19 @@ export class CoursesService {
       perPage = DEFAULT_PAGE_SIZE,
       page = 1,
       filters = {},
+      currentUserId,
+      currentUserRole,
     } = query;
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
     return await this.db.transaction(async (tx) => {
       const conditions = this.getFiltersConditions(filters, false);
+
+      if (currentUserRole === USER_ROLES.teacher && currentUserId) {
+        conditions.push(eq(courses.authorId, currentUserId));
+      }
+
       const queryDB = tx
         .select({
           id: courses.id,
@@ -566,8 +574,23 @@ export class CoursesService {
     });
   }
 
-  async updateCourse(id: string, updateCourseBody: UpdateCourseBody, image?: Express.Multer.File) {
+  async updateCourse(
+    id: string,
+    updateCourseBody: UpdateCourseBody,
+    image?: Express.Multer.File,
+    currentUserId?: UUIDType,
+  ) {
     return this.db.transaction(async (tx) => {
+      const [existingCourse] = await tx.select().from(courses).where(eq(courses.id, id));
+
+      if (!existingCourse) {
+        throw new NotFoundException("Course not found");
+      }
+
+      if (existingCourse.authorId !== currentUserId) {
+        throw new ForbiddenException("You don't have permission to update course");
+      }
+
       if (updateCourseBody.categoryId) {
         const [category] = await tx
           .select()
@@ -588,12 +611,6 @@ export class CoursesService {
         } catch (error) {
           throw new ConflictException("Failed to upload course image");
         }
-      }
-
-      const [existingCourse] = await tx.select().from(courses).where(eq(courses.id, id));
-
-      if (!existingCourse) {
-        throw new NotFoundException("Course not found");
       }
 
       const updateData = {

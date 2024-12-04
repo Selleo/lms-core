@@ -29,20 +29,19 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
-import { CoursesService } from "../courses.service";
+import { CoursesService } from "./courses.service";
 import {
   type AllCoursesResponse,
   type AllCoursesForTeacherResponse,
   allCoursesSchema,
-} from "../schemas/course.schema";
-import { SortCourseFieldsOptions } from "../schemas/courseQuery";
-import { type CreateCourseBody, createCourseSchema } from "../schemas/createCourse.schema";
-import { type CommonShowCourse, commonShowCourseSchema } from "../schemas/showCourseCommon.schema";
-import { type UpdateCourseBody, updateCourseSchema } from "../schemas/updateCourse.schema";
+} from "./schemas/course.schema";
+import { SortCourseFieldsOptions } from "./schemas/courseQuery";
+import { type CreateCourseBody, createCourseSchema } from "./schemas/createCourse.schema";
+import { type CommonShowCourse, commonShowCourseSchema } from "./schemas/showCourseCommon.schema";
+import { type UpdateCourseBody, updateCourseSchema } from "./schemas/updateCourse.schema";
+import { allCoursesValidation } from "./validations/validations";
 
-import { allCoursesValidation } from "./validations";
-
-import type { CoursesFilterSchema } from "../schemas/courseQuery";
+import type { CoursesFilterSchema } from "./schemas/courseQuery";
 
 @Controller("courses")
 @UseGuards(RolesGuard)
@@ -64,6 +63,7 @@ export class CoursesController {
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
     @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("role") currentUserRole: string,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
@@ -83,6 +83,7 @@ export class CoursesController {
       perPage,
       sort,
       currentUserId,
+      currentUserRole,
     };
 
     const data = await this.coursesService.getAllCourses(query);
@@ -134,7 +135,7 @@ export class CoursesController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
-    @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
@@ -215,8 +216,9 @@ export class CoursesController {
     @Param("id") id: string,
     @Body() updateCourseBody: UpdateCourseBody,
     @UploadedFile() image: Express.Multer.File,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.coursesService.updateCourse(id, updateCourseBody, image);
+    await this.coursesService.updateCourse(id, updateCourseBody, image, currentUserId);
 
     return new BaseResponse({ message: "Course updated successfully" });
   }
