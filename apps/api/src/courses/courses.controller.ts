@@ -148,7 +148,7 @@ export class CoursesController {
     };
     const query = { filters, page, perPage, sort };
 
-    const data = await this.coursesService.getAvailableCourses(query, currentUserId);
+    const data = await this.coursesService.getAvailableCourses(query);
 
     return new PaginatedResponse(data);
   }
@@ -162,7 +162,7 @@ export class CoursesController {
     @Query("authorId") authorId: string,
     @CurrentUser("userId") currentUserId: string,
   ): Promise<BaseResponse<AllCoursesForTeacherResponse>> {
-    return new BaseResponse(await this.coursesService.getTeacherCourses(authorId, currentUserId));
+    return new BaseResponse(await this.coursesService.getTeacherCourses(authorId));
   }
 
   @Get("course")

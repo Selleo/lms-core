@@ -52,6 +52,7 @@ import {
 
 import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas/course.schema";
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
+import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { Pagination, UUIDType } from "src/common";
 import type { LessonProgressType } from "src/lessons/schemas/lesson.types";
@@ -94,9 +95,9 @@ export class CoursesService {
           imageUrl: courses.imageUrl,
           author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
           category: sql<string>`${categories.title}`,
-          enrolledParticipantCount: count(studentCourses.courseId),
-          courseLessonCount: count(courseLessons.id),
-          completedLessonCount: sql<number>`0::INTEGER`,
+          enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
+          courseLessonCount: courses.lessonsCount,
+          completedLessonCount: sql<number>`COALESCE(${studentCourses.finishedLessonsCount}, 0)`,
           priceInCents: courses.priceInCents,
           currency: courses.currency,
           state: courses.state,
@@ -107,7 +108,7 @@ export class CoursesService {
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
-        .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
+        .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
         .where(and(...conditions))
         .groupBy(
           courses.id,
@@ -121,6 +122,9 @@ export class CoursesService {
           courses.currency,
           courses.state,
           courses.archived,
+          coursesSummaryStats.freePurchasedCount,
+          coursesSummaryStats.paidPurchasedCount,
+          studentCourses.finishedLessonsCount,
         )
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
@@ -159,12 +163,13 @@ export class CoursesService {
       conditions.push(...this.getFiltersConditions(filters));
 
       const queryDB = tx
-        .select(this.getSelectField(userId))
+        .select(this.getSelectField())
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
         .innerJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
+        .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
         .where(and(...conditions))
         .groupBy(
           courses.id,
@@ -177,6 +182,9 @@ export class CoursesService {
           users.email,
           studentCourses.studentId,
           categories.title,
+          coursesSummaryStats.freePurchasedCount,
+          coursesSummaryStats.paidPurchasedCount,
+          studentCourses.finishedLessonsCount,
         )
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
@@ -209,7 +217,6 @@ export class CoursesService {
 
   async getAvailableCourses(
     query: CoursesQuery,
-    userId: string,
   ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
     const {
       sort = CourseSortFields.title,
@@ -228,12 +235,13 @@ export class CoursesService {
       conditions.push(...this.getFiltersConditions(filters));
 
       const queryDB = tx
-        .select(this.getSelectField(userId))
+        .select(this.getSelectField())
         .from(courses)
         .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
+        .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
         .where(and(...conditions))
         .groupBy(
           courses.id,
@@ -246,6 +254,9 @@ export class CoursesService {
           users.email,
           studentCourses.studentId,
           categories.title,
+          coursesSummaryStats.freePurchasedCount,
+          coursesSummaryStats.paidPurchasedCount,
+          studentCourses.finishedLessonsCount,
         )
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
@@ -274,7 +285,7 @@ export class CoursesService {
     });
   }
 
-  async getCourse(id: string, userId: string) {
+  async getCourse(id: string, userId: string): Promise<CommonShowCourse> {
     const [course] = await this.db
       .select({
         id: courses.id,
@@ -282,31 +293,8 @@ export class CoursesService {
         imageUrl: sql<string>`${courses.imageUrl}`,
         category: categories.title,
         description: sql<string>`${courses.description}`,
-        courseLessonCount: sql<number>`
-        (SELECT COUNT(*)
-        FROM ${courseLessons}
-        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = ${STATES.published} AND ${lessons.archived} = false)::INTEGER`,
-        completedLessonCount: sql<number>`
-        (SELECT COUNT(*)
-        FROM ${courseLessons}
-        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-        WHERE ${courseLessons.courseId} = ${courses.id}
-        AND ${lessons.state} = ${STATES.published}
-        AND ${lessons.archived} = false
-        AND (
-          SELECT COUNT(*)
-          FROM ${lessonItems}
-          WHERE ${lessonItems.lessonId} = ${lessons.id}
-          AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key}
-          ) = (
-            SELECT COUNT(*)
-            FROM ${studentCompletedLessonItems}
-            WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-            AND ${studentCompletedLessonItems.courseId} = ${courses.id}
-            AND ${studentCompletedLessonItems.studentId} = ${userId}
-            )
-            )::INTEGER`,
+        courseLessonCount: courses.lessonsCount,
+        completedLessonCount: sql<number>`COALESCE(${studentCourses.finishedLessonsCount}, 0)`,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
         state: studentCourses.state,
         priceInCents: courses.priceInCents,
@@ -351,17 +339,9 @@ export class CoursesService {
           )::BOOLEAN`,
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
-        itemsCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${lessonItems}
-          WHERE ${lessonItems.lessonId} = ${lessons.id}
-            AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
-        itemsCompletedCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${studentCompletedLessonItems}
-          WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-            AND ${studentCompletedLessonItems.courseId} = ${course.id}
-            AND ${studentCompletedLessonItems.studentId} = ${userId})::INTEGER`,
+        itemsCount: lessons.itemsCount,
+        itemsCompletedCount: sql<number>`COALESCE(${studentLessonsProgress.completedLessonItemCount}, 0)`,
+        // TODO: add lessonProgressState to student lessons progress table
         lessonProgress: sql<LessonProgressType>`
           (CASE
             WHEN (
@@ -392,6 +372,7 @@ export class CoursesService {
       })
       .from(courseLessons)
       .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+      .leftJoin(studentLessonsProgress, eq(courseLessons.lessonId, studentLessonsProgress.lessonId))
       .where(
         and(
           eq(courseLessons.courseId, id),
@@ -427,11 +408,7 @@ export class CoursesService {
         category: categories.title,
         categoryId: categories.id,
         description: sql<string>`${courses.description}`,
-        courseLessonCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${courseLessons}
-          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.state} = ${STATES.published} AND ${lessons.archived} = false)::INTEGER`,
+        courseLessonCount: courses.lessonsCount,
         state: courses.state,
         priceInCents: courses.priceInCents,
         currency: courses.currency,
@@ -449,10 +426,7 @@ export class CoursesService {
         title: lessons.title,
         description: sql<string>`${lessons.description}`,
         imageUrl: sql<string>`${lessons.imageUrl}`,
-        itemsCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${lessonItems}
-          WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
+        itemsCount: lessons.itemsCount,
         isFree: courseLessons.isFree,
       })
       .from(courseLessons)
@@ -483,12 +457,9 @@ export class CoursesService {
     };
   }
 
-  async getTeacherCourses(
-    authorId: UUIDType,
-    userId: UUIDType,
-  ): Promise<AllCoursesForTeacherResponse> {
+  async getTeacherCourses(authorId: UUIDType): Promise<AllCoursesForTeacherResponse> {
     return await this.db
-      .select(this.getSelectField(userId))
+      .select(this.getSelectField())
       .from(courses)
       .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
       .leftJoin(categories, eq(courses.categoryId, categories.id))
@@ -512,6 +483,8 @@ export class CoursesService {
         users.email,
         studentCourses.studentId,
         categories.title,
+        coursesSummaryStats.freePurchasedCount,
+        coursesSummaryStats.paidPurchasedCount,
       )
       .orderBy(
         sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NULL THEN true ELSE false END`,
@@ -790,7 +763,7 @@ export class CoursesService {
     );
   }
 
-  private getSelectField(userId: string) {
+  private getSelectField() {
     return {
       id: courses.id,
       description: sql<string>`${courses.description}`,
@@ -801,34 +774,9 @@ export class CoursesService {
       authorEmail: sql<string>`${users.email}`,
       category: sql<string>`categories.title`,
       enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
-      enrolledParticipantCount: count(studentCourses.courseId),
-      courseLessonCount: sql<number>`
-        (SELECT COUNT(*)
-        FROM ${courseLessons}
-        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-        WHERE ${courseLessons.courseId} = ${courses.id}
-          AND ${lessons.state} = ${STATES.published}
-          AND ${lessons.archived} = false)::INTEGER`,
-      completedLessonCount: sql<number>`
-        (SELECT COUNT(*)
-        FROM ${courseLessons}
-        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-        WHERE ${courseLessons.courseId} = ${courses.id}
-          AND ${lessons.state} = ${STATES.published}
-          AND ${lessons.archived} = false
-          AND (
-            SELECT COUNT(*)
-            FROM ${lessonItems}
-            WHERE ${lessonItems.lessonId} = ${lessons.id}
-              AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key}
-          ) = (
-            SELECT COUNT(*)
-            FROM ${studentCompletedLessonItems}
-            WHERE ${studentCompletedLessonItems.lessonId} = ${lessons.id}
-              AND ${studentCompletedLessonItems.courseId} = ${courses.id}
-              AND ${studentCompletedLessonItems.studentId} = ${userId}
-          )
-        )::INTEGER`,
+      enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
+      courseLessonCount: courses.lessonsCount,
+      completedLessonCount: sql<number>`COALESCE(${studentCourses.finishedLessonsCount}, 0)`,
       priceInCents: courses.priceInCents,
       currency: courses.currency,
       hasFreeLessons: sql<boolean>`

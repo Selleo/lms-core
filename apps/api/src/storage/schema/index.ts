@@ -372,7 +372,7 @@ export const studentLessonsProgress = pgTable(
     lessonId: uuid("lesson_id")
       .references(() => lessons.id)
       .notNull(),
-    completedLessonItemCount: integer("completed_lesson_item_count").notNull(),
+    completedLessonItemCount: integer("completed_lesson_item_count").default(0).notNull(),
     quizCompleted: boolean("quiz_completed"),
     quizScore: integer("quiz_score"),
     completedAt: timestamp("completed_at", {
