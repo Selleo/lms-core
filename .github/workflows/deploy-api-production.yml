@@ -4,16 +4,15 @@ env:
   HUSKY: 0
 
 on:
-  push:
-    tags:
-      - "*"
+  workflow_run:
+    workflows:
+      - "PRODUCTION - Deploy WEBAPP"
+    types:
+      - completed
 
 jobs:
-  test:
-    uses: ./.github/workflows/playwright-tests.yml
-
   build-api:
-    needs: test
+    if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     environment:
       name: production

@@ -137,7 +137,7 @@ export class UsersController {
   }
 
   @Patch("user-details")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
     request: [{ type: "body", schema: upsertUserDetailsSchema }],

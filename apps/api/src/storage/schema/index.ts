@@ -373,7 +373,7 @@ export const studentLessonsProgress = pgTable(
     lessonId: uuid("lesson_id")
       .references(() => lessons.id)
       .notNull(),
-    completedLessonItemCount: integer("completed_lesson_item_count").notNull(),
+    completedLessonItemCount: integer("completed_lesson_item_count").default(0).notNull(),
     quizCompleted: boolean("quiz_completed"),
     quizScore: integer("quiz_score"),
     completedAt: timestamp("completed_at", {
@@ -381,8 +381,48 @@ export const studentLessonsProgress = pgTable(
       withTimezone: true,
       precision: 3,
     }),
+    completedAsFreemium: boolean("completed_as_freemium").notNull().default(false),
   },
   (table) => ({
     unq: unique().on(table.studentId, table.lessonId, table.courseId),
+  }),
+);
+
+export const coursesSummaryStats = pgTable("courses_summary_stats", {
+  ...id,
+  ...timestamps,
+  courseId: uuid("course_id")
+    .references(() => courses.id, { onDelete: "cascade" })
+    .unique()
+    .notNull(),
+  authorId: uuid("author_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  freePurchasedCount: integer("free_purchased_count").notNull().default(0),
+  paidPurchasedCount: integer("paid_purchased_count").notNull().default(0),
+  paidPurchasedAfterFreemiumCount: integer("paid_purchased_after_freemium_count")
+    .notNull()
+    .default(0),
+  completedFreemiumStudentCount: integer("completed_freemium_student_count").notNull().default(0),
+  completedCourseStudentCount: integer("completed_course_student_count").notNull().default(0),
+});
+
+export const courseStudentsStats = pgTable(
+  "course_students_stats",
+  {
+    ...id,
+    ...timestamps,
+    courseId: uuid("course_id")
+      .references(() => courses.id, { onDelete: "cascade" })
+      .notNull(),
+    authorId: uuid("author_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
+    month: integer("month").notNull(),
+    year: integer("year").notNull(),
+    newStudentsCount: integer("new_students_count").notNull().default(0),
+  },
+  (table) => ({
+    unq: unique().on(table.courseId, table.month, table.year),
   }),
 );

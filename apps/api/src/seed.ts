@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
 import { format, subMonths } from "date-fns";
 import * as dotenv from "dotenv";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { now, sampleSize } from "lodash";
+import { flatMap, now, sampleSize } from "lodash";
 import postgres from "postgres";
 
 import hashPassword from "./common/helpers/hashPassword";
@@ -16,12 +16,15 @@ import {
   categories,
   courseLessons,
   courses,
+  coursesSummaryStats,
+  courseStudentsStats,
   credentials,
   files,
   lessonItems,
   lessons,
   questionAnswerOptions,
   questions,
+  quizAttempts,
   studentCourses,
   studentLessonsProgress,
   textBlocks,
@@ -71,7 +74,7 @@ async function createOrFindUser(email: string, password: string, userData: any) 
 
   await insertCredential(newUser.id, password);
 
-  if (newUser.role === USER_ROLES.admin || newUser.role === USER_ROLES.tutor)
+  if (newUser.role === USER_ROLES.admin || newUser.role === USER_ROLES.teacher)
     await insertUserDetails(newUser.id);
 
   return newUser;
@@ -315,6 +318,80 @@ async function createLessonProgress(userId: string) {
   return db.insert(studentLessonsProgress).values(lessonProgressList).returning();
 }
 
+async function createCoursesSummaryStats(courses: any[] = []) {
+  const createdCoursesSummaryStats = courses.map((course) => ({
+    authorId: course.authorId,
+    courseId: course.id,
+    freePurchasedCount: faker.number.int({ min: 20, max: 40 }),
+    paidPurchasedCount: faker.number.int({ min: 20, max: 40 }),
+    paidPurchasedAfterFreemiumCount: faker.number.int({ min: 0, max: 20 }),
+    completedFreemiumStudentCount: faker.number.int({ min: 40, max: 60 }),
+    completedCourseStudentCount: faker.number.int({ min: 0, max: 20 }),
+  }));
+
+  return db.insert(coursesSummaryStats).values(createdCoursesSummaryStats);
+}
+
+async function createQuizAttempts(userId: string) {
+  const quizzes = await db
+    .select({ courseId: courses.id, lessonId: lessons.id, lessonItemsCount: lessons.itemsCount })
+    .from(courses)
+    .innerJoin(courseLessons, eq(courses.id, courseLessons.courseId))
+    .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+    .where(and(eq(courses.state, STATES.published), eq(lessons.type, LESSON_TYPE.quiz.key)));
+
+  const createdQuizAttempts = quizzes.map((quiz) => {
+    const correctAnswers = faker.number.int({ min: 0, max: quiz.lessonItemsCount });
+
+    return {
+      userId,
+      courseId: quiz.courseId,
+      lessonId: quiz.lessonId,
+      correctAnswers: correctAnswers,
+      wrongAnswers: quiz.lessonItemsCount - correctAnswers,
+      score: Math.round((correctAnswers / quiz.lessonItemsCount) * 100),
+    };
+  });
+
+  return db.insert(quizAttempts).values(createdQuizAttempts);
+}
+
+function getLast12Months(): Array<{ month: number; year: number; formattedDate: string }> {
+  const today = new Date();
+  return Array.from({ length: 12 }, (_, index) => {
+    const date = subMonths(today, index);
+    return {
+      month: date.getMonth(),
+      year: date.getFullYear(),
+      formattedDate: format(date, "MMMM yyyy"),
+    };
+  }).reverse();
+}
+
+async function createCourseStudentsStats() {
+  const createdCourses = await db
+    .select({
+      courseId: courses.id,
+      authorId: courses.authorId,
+    })
+    .from(courses)
+    .where(eq(courses.state, STATES.published));
+
+  const twelveMonthsAgoArray = getLast12Months();
+
+  const createdTwelveMonthsAgoStats = flatMap(createdCourses, (course) =>
+    twelveMonthsAgoArray.map((monthDetails) => ({
+      courseId: course.courseId,
+      authorId: course.authorId,
+      newStudentsCount: faker.number.int({ min: 5, max: 25 }),
+      month: monthDetails.month,
+      year: monthDetails.year,
+    })),
+  );
+
+  await db.insert(courseStudentsStats).values(createdTwelveMonthsAgoStats);
+}
+
 async function seed() {
   await seedTruncateAllTables(db);
 
@@ -339,19 +416,19 @@ async function seed() {
       role: USER_ROLES.student,
     });
 
-    const tutorUser = await createOrFindUser("tutor@example.com", "password", {
+    const teacherUser = await createOrFindUser("teacher@example.com", "password", {
       id: faker.string.uuid(),
-      email: "tutor@example.com",
-      firstName: "Tutor",
+      email: "teacher@example.com",
+      firstName: "Teacher",
       lastName: "User",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: USER_ROLES.tutor,
+      role: USER_ROLES.teacher,
     });
 
     console.log("Created or found admin user:", adminUser);
     console.log("Created or found student user:", studentUser);
-    console.log("Created or found tutor user:", tutorUser);
+    console.log("Created or found teacher user:", teacherUser);
 
     await createUsers(5);
     console.log("Created users with credentials");
@@ -464,7 +541,7 @@ async function seed() {
     console.log("Created files");
 
     const createdCourses = await createCoursesWithLessons(
-      [adminUser.id, tutorUser.id],
+      [adminUser.id, teacherUser.id],
       createdCategories,
       createdFilesStatePublished,
       createdTextBlocksStatePublished,
@@ -478,6 +555,12 @@ async function seed() {
     await createStudentCourses(selectedCourses, studentUser.id);
     console.log("Created student courses");
     await createLessonProgress(studentUser.id);
+    console.log("Created student lesson progress");
+    // TODO: change to function working on data from database as in real app
+    await createCoursesSummaryStats(selectedCourses);
+    await createQuizAttempts(studentUser.id);
+    await createCourseStudentsStats();
+    console.log("Created student course students stats");
 
     console.log("Seeding completed successfully");
   } catch (error) {

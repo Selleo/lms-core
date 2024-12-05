@@ -75,7 +75,7 @@ export class LessonsController {
   ) {}
 
   @Get()
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     response: paginatedResponse(allLessonsSchema),
     request: [
@@ -107,7 +107,7 @@ export class LessonsController {
   }
 
   @Get("available-lessons")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [{ type: "query", name: "courseId", schema: UUIDSchema, required: true }],
     response: baseResponse(Type.Array(lessonWithCountItems)),
@@ -140,7 +140,7 @@ export class LessonsController {
   }
 
   @Get("lesson/:id")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     response: baseResponse(showLessonSchema),
   })
@@ -149,7 +149,7 @@ export class LessonsController {
   }
 
   @Post("create-lesson")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -169,7 +169,7 @@ export class LessonsController {
   }
 
   @Post("beta-create-lesson")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -192,7 +192,7 @@ export class LessonsController {
   }
 
   @Patch("lesson")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -216,7 +216,7 @@ export class LessonsController {
   }
 
   @Post("add")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -242,7 +242,7 @@ export class LessonsController {
   }
 
   @Delete(":courseId/:lessonId")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "courseId", schema: UUIDSchema },
@@ -261,7 +261,7 @@ export class LessonsController {
   }
 
   @Delete("chapter/:courseId/:chapterId")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "courseId", schema: UUIDSchema },
@@ -280,7 +280,7 @@ export class LessonsController {
   }
 
   @Delete("lesson/:courseId/:lessonId")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "courseId", schema: UUIDSchema },
@@ -299,7 +299,7 @@ export class LessonsController {
   }
 
   @Patch("course-lesson")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -375,7 +375,7 @@ export class LessonsController {
   }
 
   @Get("lesson-items")
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Validate({
     request: [
       {
@@ -420,7 +420,7 @@ export class LessonsController {
   }
 
   @Get("available-lesson-items")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -441,7 +441,7 @@ export class LessonsController {
   }
 
   @Get("lesson-items/:id")
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Validate({
     response: baseResponse(GetSingleLessonItemsResponseSchema),
   })
@@ -453,7 +453,7 @@ export class LessonsController {
   }
 
   @Post(":lessonId/assign-items")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "lessonId", schema: UUIDSchema },
@@ -493,7 +493,7 @@ export class LessonsController {
   }
 
   @Post(":lessonId/unassign-items")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "lessonId", schema: UUIDSchema },
@@ -529,7 +529,7 @@ export class LessonsController {
   }
 
   @Patch("text-block-item")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -553,7 +553,7 @@ export class LessonsController {
   }
 
   @Patch("question-item")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -577,7 +577,7 @@ export class LessonsController {
   }
 
   @Patch("file-item")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -602,7 +602,7 @@ export class LessonsController {
   }
 
   @Post("create-text-block")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -627,7 +627,7 @@ export class LessonsController {
   }
 
   @Post("create-beta-text-block")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -650,7 +650,7 @@ export class LessonsController {
   }
 
   @Post("create-question")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -680,7 +680,7 @@ export class LessonsController {
   }
 
   @Get("question-options")
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Validate({
     request: [
       {
@@ -715,7 +715,7 @@ export class LessonsController {
   }
 
   @Patch("question-options")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -758,7 +758,7 @@ export class LessonsController {
   }
 
   @Patch("course-lesson/premium-status")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -786,7 +786,7 @@ export class LessonsController {
   }
 
   @Post("create-file")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {
@@ -812,7 +812,7 @@ export class LessonsController {
   }
 
   @Post("beta-create-file")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       {

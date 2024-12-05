@@ -1318,9 +1318,9 @@
         }
       }
     },
-    "/api/courses/tutor-courses": {
+    "/api/courses/teacher-courses": {
       "get": {
-        "operationId": "CoursesController_getTutorCourses",
+        "operationId": "CoursesController_getTeacherCourses",
         "parameters": [
           {
             "name": "authorId",
@@ -1337,7 +1337,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetTutorCoursesResponse"
+                  "$ref": "#/components/schemas/GetTeacherCoursesResponse"
                 }
               }
             }
@@ -2807,7 +2807,7 @@
         }
       }
     },
-    "/api/statistics": {
+    "/api/statistics/user-stats": {
       "get": {
         "operationId": "StatisticsController_getUserStatistics",
         "parameters": [],
@@ -2817,6 +2817,23 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetUserStatisticsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistics/teacher-stats": {
+      "get": {
+        "operationId": "StatisticsController_getTeacherStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTeacherStatsResponse"
                 }
               }
             }
@@ -3287,7 +3304,7 @@
                 "type": "string"
               },
               {
-                "const": "tutor",
+                "const": "teacher",
                 "type": "string"
               }
             ]
@@ -3410,7 +3427,7 @@
                 "type": "string"
               },
               {
-                "const": "tutor",
+                "const": "teacher",
                 "type": "string"
               }
             ]
@@ -3537,7 +3554,7 @@
                 "type": "string"
               },
               {
-                "const": "tutor",
+                "const": "teacher",
                 "type": "string"
               }
             ]
@@ -4121,7 +4138,7 @@
           "pagination"
         ]
       },
-      "GetTutorCoursesResponse": {
+      "GetTeacherCoursesResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -7738,6 +7755,117 @@
               "lessons",
               "streak",
               "lastLesson"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetTeacherStatsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "fiveMostPopularCourses": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "courseName": {
+                      "type": "string"
+                    },
+                    "studentCount": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "courseName",
+                    "studentCount"
+                  ]
+                }
+              },
+              "totalCoursesCompletionStats": {
+                "type": "object",
+                "properties": {
+                  "completionPercentage": {
+                    "type": "number"
+                  },
+                  "totalCoursesCompletion": {
+                    "type": "number"
+                  },
+                  "totalCourses": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "completionPercentage",
+                  "totalCoursesCompletion",
+                  "totalCourses"
+                ]
+              },
+              "conversionAfterFreemiumLesson": {
+                "type": "object",
+                "properties": {
+                  "conversionPercentage": {
+                    "type": "number"
+                  },
+                  "purchasedCourses": {
+                    "type": "number"
+                  },
+                  "remainedOnFreemium": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "conversionPercentage",
+                  "purchasedCourses",
+                  "remainedOnFreemium"
+                ]
+              },
+              "courseStudentsStats": {
+                "type": "object",
+                "patternProperties": {
+                  "^(.*)$": {
+                    "type": "object",
+                    "properties": {
+                      "newStudentsCount": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "newStudentsCount"
+                    ]
+                  }
+                }
+              },
+              "avgQuizScore": {
+                "type": "object",
+                "properties": {
+                  "correctAnswerCount": {
+                    "type": "number"
+                  },
+                  "wrongAnswerCount": {
+                    "type": "number"
+                  },
+                  "answerCount": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "correctAnswerCount",
+                  "wrongAnswerCount",
+                  "answerCount"
+                ]
+              }
+            },
+            "required": [
+              "fiveMostPopularCourses",
+              "totalCoursesCompletionStats",
+              "conversionAfterFreemiumLesson",
+              "courseStudentsStats",
+              "avgQuizScore"
             ]
           }
         },

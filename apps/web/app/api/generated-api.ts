@@ -158,7 +158,7 @@ export interface UpdateUserBody {
   lastName?: string;
   /** @format email */
   email?: string;
-  role?: "admin" | "student" | "tutor";
+  role?: "admin" | "student" | "teacher";
   archived?: boolean;
 }
 
@@ -196,7 +196,7 @@ export interface AdminUpdateUserBody {
   lastName?: string;
   /** @format email */
   email?: string;
-  role?: "admin" | "student" | "tutor";
+  role?: "admin" | "student" | "teacher";
   archived?: boolean;
 }
 
@@ -249,7 +249,7 @@ export interface CreateUserBody {
    * @maxLength 64
    */
   lastName: string;
-  role: "admin" | "student" | "tutor";
+  role: "admin" | "student" | "teacher";
 }
 
 export interface CreateUserResponse {
@@ -404,7 +404,7 @@ export interface GetAvailableCoursesResponse {
   };
 }
 
-export interface GetTutorCoursesResponse {
+export interface GetTeacherCoursesResponse {
   data: {
     /** @format uuid */
     id: string;
@@ -1336,6 +1336,31 @@ export interface GetUserStatisticsResponse {
   };
 }
 
+export interface GetTeacherStatsResponse {
+  data: {
+    fiveMostPopularCourses: {
+      courseName: string;
+      studentCount: number;
+    }[];
+    totalCoursesCompletionStats: {
+      completionPercentage: number;
+      totalCoursesCompletion: number;
+      totalCourses: number;
+    };
+    conversionAfterFreemiumLesson: {
+      conversionPercentage: number;
+      purchasedCourses: number;
+      remainedOnFreemium: number;
+    };
+    courseStudentsStats: object;
+    avgQuizScore: {
+      correctAnswerCount: number;
+      wrongAnswerCount: number;
+      answerCount: number;
+    };
+  };
+}
+
 import type {
   AxiosInstance,
   AxiosRequestConfig,
@@ -2142,18 +2167,18 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetTutorCourses
-     * @request GET:/api/courses/tutor-courses
+     * @name CoursesControllerGetTeacherCourses
+     * @request GET:/api/courses/teacher-courses
      */
-    coursesControllerGetTutorCourses: (
+    coursesControllerGetTeacherCourses: (
       query: {
         /** @format uuid */
         authorId: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<GetTutorCoursesResponse, any>({
-        path: `/api/courses/tutor-courses`,
+      this.request<GetTeacherCoursesResponse, any>({
+        path: `/api/courses/teacher-courses`,
         method: "GET",
         query: query,
         format: "json",
@@ -3017,11 +3042,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name StatisticsControllerGetUserStatistics
-     * @request GET:/api/statistics
+     * @request GET:/api/statistics/user-stats
      */
     statisticsControllerGetUserStatistics: (params: RequestParams = {}) =>
       this.request<GetUserStatisticsResponse, any>({
-        path: `/api/statistics`,
+        path: `/api/statistics/user-stats`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StatisticsControllerGetTeacherStats
+     * @request GET:/api/statistics/teacher-stats
+     */
+    statisticsControllerGetTeacherStats: (params: RequestParams = {}) =>
+      this.request<GetTeacherStatsResponse, any>({
+        path: `/api/statistics/teacher-stats`,
         method: "GET",
         format: "json",
         ...params,

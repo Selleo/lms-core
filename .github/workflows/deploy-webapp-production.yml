@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/playwright-tests.yml
+    uses: ./.github/workflows/playwright-tests-production.yml
 
   build-web:
     needs: test

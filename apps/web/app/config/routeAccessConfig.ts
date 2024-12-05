@@ -74,9 +74,9 @@ const createRouteConfig = <T extends Record<string, UserRole[]>>(config: T): Rou
 
 const defineRoles = <R extends UserRole[]>(roles: [...R]) => roles;
 
-const ALL_ROLES = defineRoles([USER_ROLE.admin, USER_ROLE.tutor, USER_ROLE.student]);
+const ALL_ROLES = defineRoles([USER_ROLE.admin, USER_ROLE.teacher, USER_ROLE.student]);
 const ADMIN_ONLY = defineRoles([USER_ROLE.admin]);
-const ADMIN_AND_TUTOR = defineRoles([USER_ROLE.admin, USER_ROLE.tutor]);
+const ADMIN_AND_TEACHER = defineRoles([USER_ROLE.admin, USER_ROLE.teacher]);
 
 export const routeAccessConfig = createRouteConfig({
   "auth/login": ALL_ROLES,
@@ -90,24 +90,24 @@ export const routeAccessConfig = createRouteConfig({
   "course/:id": ALL_ROLES,
   "course/:courseId/lesson/:lessonId": ALL_ROLES,
   settings: ALL_ROLES,
-  "tutors/:id": ALL_ROLES,
+  "teachers/:id": ALL_ROLES,
 
   // Admin part
-  "admin/courses": ADMIN_AND_TUTOR,
-  "admin/courses/new": ADMIN_AND_TUTOR,
-  "admin/beta-courses/new": ADMIN_AND_TUTOR,
-  "admin/courses/:id": ADMIN_AND_TUTOR,
-  "admin/beta-courses/:id": ADMIN_AND_TUTOR,
+  "admin/courses": ADMIN_AND_TEACHER,
+  "admin/courses/new": ADMIN_AND_TEACHER,
+  "admin/beta-courses/new": ADMIN_AND_TEACHER,
+  "admin/courses/:id": ADMIN_AND_TEACHER,
+  "admin/beta-courses/:id": ADMIN_AND_TEACHER,
   "admin/users/*": ADMIN_ONLY,
-  "admin/categories": ADMIN_AND_TUTOR,
-  "admin/categories/:id": ADMIN_AND_TUTOR,
-  "admin/categories/new": ADMIN_AND_TUTOR,
-  "admin/lessons": ADMIN_AND_TUTOR,
-  "admin/lessons/:id": ADMIN_AND_TUTOR,
-  "admin/lessons/new": ADMIN_AND_TUTOR,
-  "admin/lesson-items": ADMIN_AND_TUTOR,
-  "admin/lesson-items/new-file": ADMIN_AND_TUTOR,
-  "admin/lesson-items/new-text-block": ADMIN_AND_TUTOR,
-  "admin/lesson-items/new-question": ADMIN_AND_TUTOR,
-  "admin/lesson-items/:id": ADMIN_AND_TUTOR,
+  "admin/categories": ADMIN_AND_TEACHER,
+  "admin/categories/:id": ADMIN_AND_TEACHER,
+  "admin/categories/new": ADMIN_AND_TEACHER,
+  "admin/lessons": ADMIN_AND_TEACHER,
+  "admin/lessons/:id": ADMIN_AND_TEACHER,
+  "admin/lessons/new": ADMIN_AND_TEACHER,
+  "admin/lesson-items": ADMIN_AND_TEACHER,
+  "admin/lesson-items/new-file": ADMIN_AND_TEACHER,
+  "admin/lesson-items/new-text-block": ADMIN_AND_TEACHER,
+  "admin/lesson-items/new-question": ADMIN_AND_TEACHER,
+  "admin/lesson-items/:id": ADMIN_AND_TEACHER,
 });

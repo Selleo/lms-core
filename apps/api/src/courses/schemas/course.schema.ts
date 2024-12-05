@@ -24,7 +24,7 @@ export const courseSchema = Type.Object({
 });
 
 export const allCoursesSchema = Type.Array(courseSchema);
-export const allCoursesForTutorSchema = Type.Array(
+export const allCoursesForTeacherSchema = Type.Array(
   Type.Object({
     ...courseSchema.properties,
     authorId: UUIDSchema,
@@ -33,4 +33,4 @@ export const allCoursesForTutorSchema = Type.Array(
 );
 
 export type AllCoursesResponse = Static<typeof allCoursesSchema>;
-export type AllCoursesForTutorResponse = Static<typeof allCoursesForTutorSchema>;
+export type AllCoursesForTeacherResponse = Static<typeof allCoursesForTeacherSchema>;

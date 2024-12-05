@@ -18,7 +18,7 @@ describe("RouteGuard", () => {
     vi.mocked(useUserRole).mockReturnValue({
       role: "admin",
       isAdmin: true,
-      isTutor: false,
+      isTeacher: false,
     });
 
     const RemixStub = createRemixStub([
@@ -46,7 +46,7 @@ describe("RouteGuard", () => {
     vi.mocked(useUserRole).mockReturnValue({
       role: "student",
       isAdmin: false,
-      isTutor: false,
+      isTeacher: false,
     });
 
     const RemixStub = createRemixStub([

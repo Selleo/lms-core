@@ -21,7 +21,7 @@ const NavigationTabs = ({ setNavigationTabState }: NavigationTabsProps) => {
   };
 
   return (
-    <Tabs.Root className="flex flex-col" defaultValue="Settings" onValueChange={handleValueChange}>
+    <Tabs.Root className="flex flex-col" defaultValue="Lesson" onValueChange={handleValueChange}>
       <Tabs.List className="flex items-center gap-5 border-b border-gray-200">
         <TabTrigger value="Settings">Settings</TabTrigger>
         <TabTrigger value="Lesson">Curriculum</TabTrigger>

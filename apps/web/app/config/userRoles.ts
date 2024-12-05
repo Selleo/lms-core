@@ -1,7 +1,7 @@
 export enum USER_ROLE {
   "admin" = "admin",
   "student" = "student",
-  "tutor" = "tutor",
+  "teacher" = "teacher",
 }
 
 export type UserRole = `${USER_ROLE}`;

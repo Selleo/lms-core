@@ -57,6 +57,44 @@ export const UserStatsSchema = Type.Object({
   ]),
 });
 
+export const PopularCourseStatsSchema = Type.Object({
+  courseName: Type.String(),
+  studentCount: Type.Number(),
+});
+
+const MonthlyCourseStudentsStatsSchema = Type.Object({
+  newStudentsCount: Type.Number(),
+});
+
+const CourseStudentsStatsByMonthSchema = Type.Object({
+  month: Type.String(),
+  ...MonthlyCourseStudentsStatsSchema.properties,
+});
+
+const CourseStudentsStatsSchema = Type.Record(Type.String(), MonthlyCourseStudentsStatsSchema);
+
+const QuizScoreSchema = Type.Object({
+  correctAnswerCount: Type.Number(),
+  wrongAnswerCount: Type.Number(),
+  answerCount: Type.Number(),
+});
+
+export const TeacherStatsSchema = Type.Object({
+  fiveMostPopularCourses: Type.Array(PopularCourseStatsSchema),
+  totalCoursesCompletionStats: Type.Object({
+    completionPercentage: Type.Number(),
+    totalCoursesCompletion: Type.Number(),
+    totalCourses: Type.Number(),
+  }),
+  conversionAfterFreemiumLesson: Type.Object({
+    conversionPercentage: Type.Number(),
+    purchasedCourses: Type.Number(),
+    remainedOnFreemium: Type.Number(),
+  }),
+  courseStudentsStats: CourseStudentsStatsSchema,
+  avgQuizScore: QuizScoreSchema,
+});
+
 const UserStatisticSchema = Type.Object({
   currentStreak: Type.Number(),
   longestStreak: Type.Number(),
@@ -67,3 +105,5 @@ const UserStatisticSchema = Type.Object({
 export type UserStats = Static<typeof UserStatsSchema>;
 export type StatsByMonth = Static<typeof StatsByMonthSchema>;
 export type UserStatistic = Static<typeof UserStatisticSchema>;
+export type TeacherStats = Static<typeof TeacherStatsSchema>;
+export type CourseStudentsStatsByMonth = Static<typeof CourseStudentsStatsByMonthSchema>;

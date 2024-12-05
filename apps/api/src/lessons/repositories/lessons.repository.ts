@@ -641,6 +641,20 @@ export class LessonsRepository {
     );
   }
 
+  async getLessonsProgressByCourseId(courseId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return await dbInstance
+      .select({
+        lessonId: studentLessonsProgress.lessonId,
+        completedLessonItemCount: studentLessonsProgress.completedLessonItemCount,
+        quizCompleted: studentLessonsProgress.quizCompleted,
+        quizScore: studentLessonsProgress.quizScore,
+      })
+      .from(studentLessonsProgress)
+      .where(eq(studentLessonsProgress.courseId, courseId));
+  }
+
   async setCorrectAnswerForStudentAnswer(
     courseId: UUIDType,
     lessonId: UUIDType,
@@ -692,6 +706,7 @@ export class LessonsRepository {
     userId: UUIDType,
     trx?: PostgresJsDatabase<typeof schema>,
   ) {
+    // TODO: remove this function, not deleting from the database, only clearing variables
     const dbInstance = trx ?? this.db;
 
     return await dbInstance
@@ -726,11 +741,20 @@ export class LessonsRepository {
       .returning();
   }
 
-  async completeLessonProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
-    return await this.db
+  async completeLessonProgress(
+    courseId: UUIDType,
+    lessonId: UUIDType,
+    userId: UUIDType,
+    completedAsFreemium: boolean,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
+    const dbInstance = trx ?? this.db;
+
+    return await dbInstance
       .update(studentLessonsProgress)
       .set({
         completedAt: sql<string>`now()`,
+        completedAsFreemium,
       })
       .where(
         and(

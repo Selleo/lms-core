@@ -1,6 +1,6 @@
 {
-  "id": "6958f78c-a267-432b-9dd4-684ad10f8073",
-  "prevId": "d48d87ab-5629-4747-8536-3ea9ac7d7be6",
+  "id": "ea538fee-94e4-4f60-ad43-ff8984cacc1f",
+  "prevId": "e8a9b941-a70e-434f-b34e-623c04f805a3",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -284,7 +284,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "cascade",
+          "onDelete": "no action",
           "onUpdate": "no action"
         }
       },
@@ -422,6 +422,119 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
+    },
+    "public.courses_summary_stats": {
+      "name": "courses_summary_stats",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author_id": {
+          "name": "author_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "free_purchased_count": {
+          "name": "free_purchased_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "paid_purchased_count": {
+          "name": "paid_purchased_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "paid_purchased_after_freemium_count": {
+          "name": "paid_purchased_after_freemium_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "completed_freemium_student_count": {
+          "name": "completed_freemium_student_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "completed_course_student_count": {
+          "name": "completed_course_student_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "courses_summary_stats_course_id_courses_id_fk": {
+          "name": "courses_summary_stats_course_id_courses_id_fk",
+          "tableFrom": "courses_summary_stats",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "courses_summary_stats_author_id_users_id_fk": {
+          "name": "courses_summary_stats_author_id_users_id_fk",
+          "tableFrom": "courses_summary_stats",
+          "tableTo": "users",
+          "columnsFrom": [
+            "author_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "courses_summary_stats_course_id_unique": {
+          "name": "courses_summary_stats_course_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "course_id"
+          ]
+        }
+      }
     },
     "public.create_tokens": {
       "name": "create_tokens",
@@ -585,12 +698,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "body": {
-          "name": "body",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "state": {
           "name": "state",
@@ -1545,6 +1652,13 @@
           "type": "timestamp(3) with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "completed_as_freemium": {
+          "name": "completed_as_freemium",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

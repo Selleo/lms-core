@@ -28,6 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { USER_ROLE } from "~/config/userRoles";
 import { cn } from "~/lib/utils";
 import {
   type FilterConfig,
@@ -70,9 +71,9 @@ const Users = () => {
       type: "select",
       placeholder: "Roles",
       options: [
-        { value: "admin", label: "Admin" },
-        { value: "student", label: "Student" },
-        { value: "tutor", label: "Tutor" },
+        { value: USER_ROLE.admin, label: "Admin" },
+        { value: USER_ROLE.student, label: "Student" },
+        { value: USER_ROLE.teacher, label: "Teacher" },
       ],
     },
     {

@@ -13,11 +13,7 @@ export interface LeafMenuItem extends BaseMenuItem {
   iconName: IconName;
 }
 
-export interface ParentMenuItem extends BaseMenuItem {
-  children: MenuItemType[];
-}
-
-export type MenuItemType = LeafMenuItem | ParentMenuItem;
+export type MenuItemType = LeafMenuItem;
 
 export type NavigationItem = {
   label: string;
@@ -35,11 +31,6 @@ export const navigationConfig: NavigationItem[] = [
     label: "courses",
     path: "courses",
     iconName: "Course",
-  },
-  {
-    label: "settings",
-    path: "settings",
-    iconName: "Settings",
   },
 ];
 

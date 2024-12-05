@@ -12,7 +12,7 @@ export class AuthFixture {
     this.emailInput = page.getByLabel("email");
     this.passwordInput = page.getByLabel("password");
     this.loginButton = page.getByRole("button", { name: /login/i });
-    this.logoutButton = page.getByRole("button", { name: /log out/i });
+    this.logoutButton = page.getByRole("button", { name: /logout/i }).nth(1);
   }
 
   async login(email: string, password: string) {

@@ -12,6 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { USER_ROLE } from "~/config/userRoles";
 
 import type { GetUserByIdResponse, UpdateUserBody } from "~/api/generated-api";
 
@@ -50,7 +51,7 @@ export const UserInfo = memo<{
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {["student", "admin", "tutor"].map((role) => (
+                  {[USER_ROLE.student, USER_ROLE.admin, USER_ROLE.teacher].map((role) => (
                     <SelectItem className="capitalize" value={role} key={role}>
                       {role}
                     </SelectItem>

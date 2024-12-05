@@ -58,3 +58,12 @@ export const coursesFilterSchema = Type.Object({
 });
 
 export type CoursesFilterSchema = Static<typeof coursesFilterSchema>;
+
+export type CoursesQuery = {
+  filters?: CoursesFilterSchema;
+  page?: number;
+  perPage?: number;
+  sort?: SortCourseFieldsOptions;
+  currentUserId?: string;
+  currentUserRole?: string;
+};

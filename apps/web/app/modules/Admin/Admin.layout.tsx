@@ -1,14 +1,14 @@
-import { type MetaFunction, Outlet, redirect, useNavigate } from "@remix-run/react";
+import { type MetaFunction, Outlet, redirect, useLocation, useNavigate } from "@remix-run/react";
 import { Suspense, useLayoutEffect } from "react";
 
 import { currentUserQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
+import { Navigation } from "~/components/Navigation";
 import { adminNavigationConfig, mapNavigationItems } from "~/config/navigationConfig";
 import { RouteGuard } from "~/Guards/RouteGuard";
 import { useUserRole } from "~/hooks/useUserRole";
 
 import Loader from "../common/Loader/Loader";
-import { DashboardNavigation } from "../Dashboard/DashboardNavigation/DashboardNavigation";
 
 export const meta: MetaFunction = () => {
   return [{ title: "Admin" }];
@@ -29,10 +29,10 @@ export const clientLoader = async () => {
 };
 
 const AdminGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isAdmin, isTutor } = useUserRole();
+  const { isAdmin, isTeacher } = useUserRole();
   const navigate = useNavigate();
 
-  const isAllowed = isAdmin || isTutor;
+  const isAllowed = isAdmin || isTeacher;
 
   useLayoutEffect(() => {
     if (!isAllowed) {
@@ -46,10 +46,15 @@ const AdminGuard = ({ children }: { children: React.ReactNode }) => {
 };
 
 const AdminLayout = () => {
+  const location = useLocation();
+  const hideTopbarAndSidebar = location.pathname === "/admin/beta-courses/new";
+
   return (
     <div className="flex h-screen flex-col">
-      <div className="flex flex-1 overflow-hidden">
-        <DashboardNavigation menuItems={mapNavigationItems(adminNavigationConfig)} />
+      <div className="flex flex-1 flex-col 2xl:flex-row overflow-hidden">
+        {!hideTopbarAndSidebar && (
+          <Navigation menuItems={mapNavigationItems(adminNavigationConfig)} />
+        )}
         <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
           <Suspense fallback={<Loader />}>
             <AdminGuard>

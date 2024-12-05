@@ -1,5 +1,5 @@
 {
-  "id": "d48d87ab-5629-4747-8536-3ea9ac7d7be6",
+  "id": "e8a9b941-a70e-434f-b34e-623c04f805a3",
   "prevId": "1baff279-0f61-40d1-90f4-be5e22542735",
   "version": "7",
   "dialect": "postgresql",
@@ -585,12 +585,6 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
-        },
-        "body": {
-          "name": "body",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "state": {
           "name": "state",
@@ -1545,6 +1539,13 @@
           "type": "timestamp(3) with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "completed_as_freemium": {
+          "name": "completed_as_freemium",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         }
       },
       "indexes": {},

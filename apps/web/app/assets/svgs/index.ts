@@ -1,5 +1,6 @@
 export { default as CaretDown } from "./carret-down.svg?react";
 export { default as SelleoLogo } from "./selleo-logo.svg?react";
+export { default as SelleoSignet } from "./selleo-signet.svg?react";
 export { default as Directory } from "./directory.svg?react";
 export { default as Dashboard } from "./dashboard.svg?react";
 export { default as Logout } from "./logout.svg?react";
@@ -39,3 +40,4 @@ export { default as Presentation } from "./presentation.svg?react";
 export { default as Video } from "./video.svg?react";
 export { default as Quiz } from "./quiz.svg?react";
 export { default as Warning } from "./warning.svg?react";
+export { default as Admin } from "./admin.svg?react";
