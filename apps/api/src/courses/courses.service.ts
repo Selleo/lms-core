@@ -483,7 +483,7 @@ export class CoursesService {
       courseLessonList?.map(async (lesson) => {
         const lessonItemsWithContent =
           Array.isArray(lesson?.lessonItems) && lesson.lessonItems.length > 0
-            ? await this.lessonRepository.getLessonItems(lesson.id)
+            ? await this.lessonRepository.getBetaLessons(lesson.id)
             : [];
 
         const processedLessonItems = await this.lessonService.processLessonItems(

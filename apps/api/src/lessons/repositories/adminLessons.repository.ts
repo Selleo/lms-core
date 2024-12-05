@@ -197,6 +197,45 @@ export class AdminLessonsRepository {
       .from(lessonItems)
       .leftJoin(
         questions,
+        and(
+          eq(lessonItems.lessonItemId, questions.id),
+          eq(lessonItems.lessonItemType, "question"),
+          eq(questions.state, "published"),
+        ),
+      )
+      .leftJoin(
+        textBlocks,
+        and(
+          eq(lessonItems.lessonItemId, textBlocks.id),
+          eq(lessonItems.lessonItemType, "text_block"),
+          eq(questions.state, "published"),
+        ),
+      )
+      .leftJoin(
+        files,
+        and(
+          eq(lessonItems.lessonItemId, files.id),
+          eq(lessonItems.lessonItemType, "file"),
+          eq(files.state, "published"),
+        ),
+      )
+      .where(eq(lessonItems.lessonId, lessonId))
+      .orderBy(lessonItems.displayOrder);
+  }
+
+  async getBetaLessons(lessonId: UUIDType) {
+    return await this.db
+      .select({
+        lessonItemType: lessonItems.lessonItemType,
+        lessonItemId: lessonItems.id,
+        questionData: questions,
+        textBlockData: textBlocks,
+        fileData: files,
+        displayOrder: lessonItems.displayOrder,
+      })
+      .from(lessonItems)
+      .leftJoin(
+        questions,
         and(eq(lessonItems.lessonItemId, questions.id), eq(lessonItems.lessonItemType, "question")),
       )
       .leftJoin(
