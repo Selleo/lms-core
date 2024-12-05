@@ -22,7 +22,7 @@ import {
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { STATES } from "src/common/states";
-import { S3Service } from "src/file/s3.service";
+import { FilesService } from "src/file/files.service";
 import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/lessons/lesson.type";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
@@ -61,7 +61,7 @@ import type { LessonProgressType } from "src/lessons/schemas/lesson.types";
 export class CoursesService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly s3Service: S3Service,
+    private readonly filesService: FilesService,
     private readonly statisticsRepository: StatisticsRepository,
   ) {}
 
@@ -387,7 +387,7 @@ export class CoursesService {
 
     const getImageUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url;
-      return await this.s3Service.getSignedUrl(url);
+      return await this.filesService.getFileUrl(url);
     };
 
     const imageUrl = await getImageUrl(course.imageUrl);
@@ -445,7 +445,7 @@ export class CoursesService {
 
     const getImageUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url;
-      return await this.s3Service.getSignedUrl(url);
+      return await this.filesService.getFileUrl(url);
     };
 
     const imageUrl = await getImageUrl(course.imageUrl);
@@ -538,7 +538,7 @@ export class CoursesService {
       }
 
       if (newCourse.imageUrl) {
-        newCourse.imageUrl = await this.s3Service.getSignedUrl(newCourse.imageUrl);
+        newCourse.imageUrl = await this.filesService.getFileUrl(newCourse.imageUrl);
       }
 
       await trx.insert(coursesSummaryStats).values({ courseId: newCourse.id, authorId });
@@ -579,8 +579,8 @@ export class CoursesService {
       if (image) {
         try {
           const fileExtension = image.originalname.split(".").pop();
-          imageKey = `courses/${crypto.randomUUID()}.${fileExtension}`;
-          await this.s3Service.uploadFile(image.buffer, imageKey, image.mimetype);
+          const resource = `courses/${crypto.randomUUID()}.${fileExtension}`;
+          imageKey = await this.filesService.uploadFile(image, resource);
         } catch (error) {
           throw new ConflictException("Failed to upload course image");
         }
@@ -588,7 +588,7 @@ export class CoursesService {
 
       const updateData = {
         ...updateCourseBody,
-        ...(imageKey && { imageUrl: imageKey }),
+        ...(imageKey && { imageUrl: imageKey.fileUrl }),
       };
 
       const [updatedCourse] = await tx
@@ -602,7 +602,7 @@ export class CoursesService {
       }
 
       if (updatedCourse.imageUrl) {
-        updatedCourse.imageUrl = await this.s3Service.getSignedUrl(updatedCourse.imageUrl);
+        updatedCourse.imageUrl = await this.filesService.getFileUrl(updatedCourse.imageUrl);
       }
 
       return updatedCourse;
@@ -751,7 +751,7 @@ export class CoursesService {
           if (item.imageUrl.startsWith("https://")) return item;
 
           try {
-            const signedUrl = await this.s3Service.getSignedUrl(item.imageUrl);
+            const signedUrl = await this.filesService.getFileUrl(item.imageUrl);
             return { ...item, imageUrl: signedUrl };
           } catch (error) {
             console.error(`Failed to get signed URL for ${item.imageUrl}:`, error);

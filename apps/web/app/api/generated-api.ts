@@ -563,6 +563,90 @@ export interface EnrollCourseResponse {
 
 export type UnenrollCourseResponse = null;
 
+export interface FileUploadResponse {
+  fileKey: string;
+  fileUrl: string;
+}
+
+export interface GetUserStatisticsResponse {
+  data: {
+    averageStats: {
+      lessonStats: {
+        started: number;
+        completed: number;
+        completionRate: number;
+      };
+      courseStats: {
+        started: number;
+        completed: number;
+        completionRate: number;
+      };
+    };
+    quizzes: {
+      totalAttempts: number;
+      totalCorrectAnswers: number;
+      totalWrongAnswers: number;
+      totalQuestions: number;
+      averageScore: number;
+      uniqueQuizzesTaken: number;
+    };
+    courses: object;
+    lessons: object;
+    streak: {
+      current: number;
+      longest: number;
+      activityHistory: object;
+    };
+    lastLesson: null | {
+      /** @format uuid */
+      id: string;
+      title: string;
+      imageUrl?: string;
+      description: string;
+      itemsCount: number;
+      itemsCompletedCount?: number;
+      lessonProgress?: "completed" | "in_progress" | "not_started";
+      isFree?: boolean;
+      enrolled?: boolean;
+      state?: string;
+      archived?: boolean;
+      isSubmitted?: boolean;
+      type?: string;
+      createdAt?: string;
+      quizScore?: number;
+      /** @format uuid */
+      courseId: string;
+      courseTitle: string;
+      courseDescription: string;
+    };
+  };
+}
+
+export interface GetTeacherStatsResponse {
+  data: {
+    fiveMostPopularCourses: {
+      courseName: string;
+      studentCount: number;
+    }[];
+    totalCoursesCompletionStats: {
+      completionPercentage: number;
+      totalCoursesCompletion: number;
+      totalCourses: number;
+    };
+    conversionAfterFreemiumLesson: {
+      conversionPercentage: number;
+      purchasedCourses: number;
+      remainedOnFreemium: number;
+    };
+    courseStudentsStats: object;
+    avgQuizScore: {
+      correctAnswerCount: number;
+      wrongAnswerCount: number;
+      answerCount: number;
+    };
+  };
+}
+
 export interface GetAllLessonsResponse {
   data: {
     /** @format uuid */
@@ -1133,93 +1217,9 @@ export interface MarkLessonItemAsCompletedResponse {
   };
 }
 
-export interface FileUploadResponse {
-  fileKey: string;
-  fileUrl: string;
-}
-
 export interface CreatePaymentIntentResponse {
   data: {
     clientSecret: string;
-  };
-}
-
-export interface GetUserStatisticsResponse {
-  data: {
-    averageStats: {
-      lessonStats: {
-        started: number;
-        completed: number;
-        completionRate: number;
-      };
-      courseStats: {
-        started: number;
-        completed: number;
-        completionRate: number;
-      };
-    };
-    quizzes: {
-      totalAttempts: number;
-      totalCorrectAnswers: number;
-      totalWrongAnswers: number;
-      totalQuestions: number;
-      averageScore: number;
-      uniqueQuizzesTaken: number;
-    };
-    courses: object;
-    lessons: object;
-    streak: {
-      current: number;
-      longest: number;
-      activityHistory: object;
-    };
-    lastLesson: null | {
-      /** @format uuid */
-      id: string;
-      title: string;
-      imageUrl?: string;
-      description: string;
-      itemsCount: number;
-      itemsCompletedCount?: number;
-      lessonProgress?: "completed" | "in_progress" | "not_started";
-      isFree?: boolean;
-      enrolled?: boolean;
-      state?: string;
-      archived?: boolean;
-      isSubmitted?: boolean;
-      type?: string;
-      createdAt?: string;
-      quizScore?: number;
-      /** @format uuid */
-      courseId: string;
-      courseTitle: string;
-      courseDescription: string;
-    };
-  };
-}
-
-export interface GetTeacherStatsResponse {
-  data: {
-    fiveMostPopularCourses: {
-      courseName: string;
-      studentCount: number;
-    }[];
-    totalCoursesCompletionStats: {
-      completionPercentage: number;
-      totalCoursesCompletion: number;
-      totalCourses: number;
-    };
-    conversionAfterFreemiumLesson: {
-      conversionPercentage: number;
-      purchasedCourses: number;
-      remainedOnFreemium: number;
-    };
-    courseStudentsStats: object;
-    avgQuizScore: {
-      correctAnswerCount: number;
-      wrongAnswerCount: number;
-      answerCount: number;
-    };
   };
 }
 
@@ -2154,6 +2154,78 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name FilesControllerUploadFile
+     * @request POST:/api/files
+     */
+    filesControllerUploadFile: (
+      data: {
+        /** @format binary */
+        file?: File;
+        /** Optional resource type */
+        resource?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<FileUploadResponse, any>({
+        path: `/api/files`,
+        method: "POST",
+        body: data,
+        type: ContentType.FormData,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name FilesControllerDeleteFile
+     * @request DELETE:/api/files
+     */
+    filesControllerDeleteFile: (
+      query: {
+        /** Key of the file to delete */
+        fileKey: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/files`,
+        method: "DELETE",
+        query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StatisticsControllerGetUserStatistics
+     * @request GET:/api/statistics/user-stats
+     */
+    statisticsControllerGetUserStatistics: (params: RequestParams = {}) =>
+      this.request<GetUserStatisticsResponse, any>({
+        path: `/api/statistics/user-stats`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StatisticsControllerGetTeacherStats
+     * @request GET:/api/statistics/teacher-stats
+     */
+    statisticsControllerGetTeacherStats: (params: RequestParams = {}) =>
+      this.request<GetTeacherStatsResponse, any>({
+        path: `/api/statistics/teacher-stats`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LessonsControllerGetAllLessons
      * @request GET:/api/lessons
      */
@@ -2691,50 +2763,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name S3ControllerUploadFile
-     * @request POST:/api/files
-     */
-    s3ControllerUploadFile: (
-      data: {
-        /** @format binary */
-        file?: File;
-        /** Optional resource type */
-        resource?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<FileUploadResponse, any>({
-        path: `/api/files`,
-        method: "POST",
-        body: data,
-        type: ContentType.FormData,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name S3ControllerDeleteFile
-     * @request DELETE:/api/files
-     */
-    s3ControllerDeleteFile: (
-      query: {
-        /** Key of the file to delete */
-        fileKey: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<void, any>({
-        path: `/api/files`,
-        method: "DELETE",
-        query: query,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @name StripeControllerCreatePaymentIntent
      * @request POST:/api/stripe
      */
@@ -2765,34 +2793,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/stripe/webhook`,
         method: "POST",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name StatisticsControllerGetUserStatistics
-     * @request GET:/api/statistics/user-stats
-     */
-    statisticsControllerGetUserStatistics: (params: RequestParams = {}) =>
-      this.request<GetUserStatisticsResponse, any>({
-        path: `/api/statistics/user-stats`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name StatisticsControllerGetTeacherStats
-     * @request GET:/api/statistics/teacher-stats
-     */
-    statisticsControllerGetTeacherStats: (params: RequestParams = {}) =>
-      this.request<GetTeacherStatsResponse, any>({
-        path: `/api/statistics/teacher-stats`,
-        method: "GET",
-        format: "json",
         ...params,
       }),
   };

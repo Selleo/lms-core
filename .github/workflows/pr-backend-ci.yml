@@ -9,6 +9,7 @@ env:
   CORS_ORIGIN: ""
   EMAIL_ADAPTER: "mailhog"
   DATABASE_URL: ""
+  REDIS_URL: ""
   SMTP_HOST: ""
   SMTP_PORT: "1025"
   SMTP_USER: ""
