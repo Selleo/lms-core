@@ -46,8 +46,8 @@ import {
 import {
   type CoursesFilterSchema,
   type CourseSortField,
-  type CoursesQuery,
   CourseSortFields,
+  type CoursesQuery,
 } from "./schemas/courseQuery";
 
 import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas/course.schema";
@@ -798,7 +798,7 @@ export class CoursesService {
       conditions.push(like(categories.title, `%${filters.category}%`));
     }
     if (filters.author) {
-      const authorNameConcat = sql`CONCAT(${users.firstName} || ' ' || ${users.lastName})`;
+      const authorNameConcat = sql`CONCAT(${users.firstName}, ' ' , ${users.lastName})`;
       conditions.push(sql`${authorNameConcat} LIKE ${`%${filters.author}%`}`);
     }
     if (filters.creationDateRange) {
@@ -818,7 +818,7 @@ export class CoursesService {
       conditions.push(eq(courses.state, STATES.published));
     }
 
-    return conditions;
+    return conditions ?? undefined;
   }
 
   private getColumnToSortBy(sort: CourseSortField) {

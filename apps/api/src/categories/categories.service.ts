@@ -141,6 +141,6 @@ export class CategoriesService {
       conditions.push(eq(categories.archived, filters.archived === "true"));
     }
 
-    return conditions;
+    return conditions ?? undefined;
   }
 }

@@ -43,9 +43,14 @@ import type { GetAllCoursesResponse } from "~/api/generated-api";
 type TCourse = GetAllCoursesResponse["data"][number];
 
 export const clientLoader = async (_: ClientLoaderFunctionArgs) => {
-  const { data } = await queryClient.fetchQuery(categoriesQueryOptions());
+  try {
+    const { data } = await queryClient.fetchQuery(categoriesQueryOptions());
+    return data;
+  } catch (error) {
+    console.error("Error fetching categories:", error);
 
-  return data;
+    throw new Error("Failed to load categories.");
+  }
 };
 
 const Courses = () => {

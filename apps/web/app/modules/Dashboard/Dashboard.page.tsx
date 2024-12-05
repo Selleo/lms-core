@@ -15,7 +15,7 @@ import { queryClient } from "~/api/queryClient";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
 import { PageWrapper } from "~/components/PageWrapper";
-import { useUserRole } from "~/hooks/useUserRole"; // Mock function for getting user roles.
+import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
 

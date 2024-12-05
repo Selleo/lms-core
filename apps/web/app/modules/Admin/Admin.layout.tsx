@@ -30,9 +30,7 @@ export const clientLoader = async () => {
   return null;
 };
 
-type AdminGuardProps = PropsWithChildren;
-
-const AdminGuard = ({ children }: AdminGuardProps) => {
+const AdminGuard = ({ children }: PropsWithChildren) => {
   const { isAdmin, isTeacher } = useUserRole();
   const navigate = useNavigate();
 

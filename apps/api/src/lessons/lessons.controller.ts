@@ -25,9 +25,9 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
 
-import { AdminLessonItemsService } from "../adminLessonItems.service";
-import { AdminLessonsService } from "../adminLessons.service";
-import { LessonsService } from "../lessons.service";
+import { AdminLessonItemsService } from "./adminLessonItems.service";
+import { AdminLessonsService } from "./adminLessons.service";
+import { LessonsService } from "./lessons.service";
 import {
   type AllLessonsResponse,
   allLessonsSchema,
@@ -39,7 +39,7 @@ import {
   showLessonSchema,
   type UpdateLessonBody,
   updateLessonSchema,
-} from "../schemas/lesson.schema";
+} from "./schemas/lesson.schema";
 import {
   type FileInsertType,
   fileUpdateSchema,
@@ -54,12 +54,12 @@ import {
   type UpdateFileBody,
   type UpdateQuestionBody,
   type UpdateTextBlockBody,
-} from "../schemas/lessonItem.schema";
+} from "./schemas/lessonItem.schema";
 import {
   type LessonsFilterSchema,
   sortLessonFieldsOptions,
   type SortLessonFieldsOptions,
-} from "../schemas/lessonQuery";
+} from "./schemas/lessonQuery";
 
 @Controller("lessons")
 @UseGuards(RolesGuard)

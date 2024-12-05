@@ -72,19 +72,12 @@ export class CategoriesController {
   }
 
   @Get(":id")
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  @Roles(USER_ROLES.admin)
   @Validate({
     response: baseResponse(categorySchema),
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
   })
-  async getCategoryById(
-    @Param("id") id: UUIDType,
-    @CurrentUser("role") currentUserRole: UserRole,
-  ): Promise<BaseResponse<CategorySchema>> {
-    if (currentUserRole !== USER_ROLES.admin && currentUserRole !== USER_ROLES.teacher) {
-      throw new UnauthorizedException("You don't have permission to get category");
-    }
-
+  async getCategoryById(@Param("id") id: UUIDType): Promise<BaseResponse<CategorySchema>> {
     const category = await this.categoriesService.getCategoryById(id);
 
     return new BaseResponse(category);

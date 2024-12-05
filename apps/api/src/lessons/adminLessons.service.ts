@@ -15,22 +15,12 @@ import {
   type LessonsFilterSchema,
   type LessonSortField,
   LessonSortFields,
-  type SortLessonFieldsOptions,
+  type LessonsQuery,
 } from "./schemas/lessonQuery";
 
 import type { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
 import type { LessonItemResponse } from "./schemas/lessonItem.schema";
 import type { UUIDType } from "src/common";
-import type { UserRole } from "src/users/schemas/user-roles";
-
-interface LessonsQuery {
-  filters?: LessonsFilterSchema;
-  sort?: SortLessonFieldsOptions;
-  page?: number;
-  perPage?: number;
-  currentUserRole?: UserRole;
-  currentUserId?: UUIDType;
-}
 
 @Injectable()
 export class AdminLessonsService {
@@ -225,7 +215,7 @@ export class AdminLessonsService {
       conditions.push(eq(lessons.archived, filters.archived));
     }
 
-    return conditions;
+    return conditions ?? undefined;
   }
 
   private getColumnToSortBy(sort: LessonSortField) {
