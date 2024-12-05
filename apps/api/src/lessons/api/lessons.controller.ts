@@ -31,33 +31,33 @@ import { LessonsService } from "../lessons.service";
 import {
   type AllLessonsResponse,
   allLessonsSchema,
+  type CreateLessonBody,
   createLessonSchema,
   lessonWithCountItems,
-  showLessonSchema,
-  updateLessonSchema,
-  type CreateLessonBody,
-  type ShowLessonResponse,
-  type UpdateLessonBody,
   type LessonWithCountItems,
+  type ShowLessonResponse,
+  showLessonSchema,
+  type UpdateLessonBody,
+  updateLessonSchema,
 } from "../schemas/lesson.schema";
 import {
-  fileUpdateSchema,
-  GetAllLessonItemsResponseSchema,
-  GetSingleLessonItemsResponseSchema,
-  questionUpdateSchema,
-  textBlockUpdateSchema,
   type FileInsertType,
+  fileUpdateSchema,
   type GetAllLessonItemsResponse,
+  GetAllLessonItemsResponseSchema,
   type GetSingleLessonItemsResponse,
+  GetSingleLessonItemsResponseSchema,
   type QuestionInsertType,
+  questionUpdateSchema,
   type TextBlockInsertType,
+  textBlockUpdateSchema,
   type UpdateFileBody,
   type UpdateQuestionBody,
   type UpdateTextBlockBody,
 } from "../schemas/lessonItem.schema";
 import {
-  sortLessonFieldsOptions,
   type LessonsFilterSchema,
+  sortLessonFieldsOptions,
   type SortLessonFieldsOptions,
 } from "../schemas/lessonQuery";
 
@@ -89,7 +89,9 @@ export class LessonsController {
     @Query("sort") sort: SortLessonFieldsOptions,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
-    @Query("archived") archived?: string,
+    @Query("archived") archived: string,
+    @CurrentUser("role") currentUserRole: UserRole,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<PaginatedResponse<AllLessonsResponse>> {
     const filters: LessonsFilterSchema = {
       title,
@@ -97,7 +99,7 @@ export class LessonsController {
       archived: archived === "true",
     };
 
-    const query = { filters, sort, page, perPage };
+    const query = { filters, sort, page, perPage, currentUserRole, currentUserId };
 
     return new PaginatedResponse(await this.adminLessonsService.getAllLessons(query));
   }
