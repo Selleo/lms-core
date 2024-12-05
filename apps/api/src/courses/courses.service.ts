@@ -441,8 +441,8 @@ export class CoursesService {
       .select({
         id: lessons.id,
         title: lessons.title,
-        description: lessons?.description ? sql<string>`${lessons.description}` : sql<string>`NULL`,
-        imageUrl: lessons?.imageUrl ? sql<string>`${lessons.imageUrl}` : sql<string>`NULL`,
+        description: sql<string>`COALESCE(${lessons.description}, '')`,
+        imageUrl: sql<string>`COALESCE(${lessons.imageUrl}, '')`,
         displayOrder: courseLessons.displayOrder,
         itemsCount: sql<number>`
           (SELECT COUNT(*)

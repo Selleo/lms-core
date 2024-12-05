@@ -67,11 +67,11 @@ export const useFileLessonForm = ({
     try {
       if (lessonToEdit) {
         updateFileItem({ data: { ...values }, fileId: lessonToEdit.content.id });
-        setContentTypeToDisplay(ContentTypes.EMPTY);
       } else {
         await createFile({
           data: { ...values, authorId: currentUser.id, lessonId: chapterToEdit.id },
         });
+        setContentTypeToDisplay(ContentTypes.EMPTY);
       }
 
       queryClient.invalidateQueries({ queryKey: [COURSE_QUERY_KEY, { id: courseId }] });

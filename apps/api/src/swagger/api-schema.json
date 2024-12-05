@@ -1415,7 +1415,13 @@
         ],
         "responses": {
           "200": {
-            "description": ""
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBetaCourseByIdResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -4368,6 +4374,166 @@
         ]
       },
       "GetCourseByIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "categoryId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "authorEmail": {
+                "type": "string"
+              },
+              "courseLessonCount": {
+                "type": "number"
+              },
+              "completedLessonCount": {
+                "type": "number"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "courseId": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "itemsCount": {
+                      "type": "number"
+                    },
+                    "itemsCompletedCount": {
+                      "type": "number"
+                    },
+                    "lessonProgress": {
+                      "anyOf": [
+                        {
+                          "const": "completed",
+                          "type": "string"
+                        },
+                        {
+                          "const": "in_progress",
+                          "type": "string"
+                        },
+                        {
+                          "const": "not_started",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "isFree": {
+                      "type": "boolean"
+                    },
+                    "enrolled": {
+                      "type": "boolean"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "archived": {
+                      "type": "boolean"
+                    },
+                    "isSubmitted": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "quizScore": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "itemsCount"
+                  ]
+                }
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
+              },
+              "hasFreeLessons": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "description",
+              "category",
+              "courseLessonCount",
+              "state",
+              "lessons",
+              "priceInCents",
+              "currency"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetBetaCourseByIdResponse": {
         "type": "object",
         "properties": {
           "data": {

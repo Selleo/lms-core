@@ -517,6 +517,50 @@ export interface GetCourseByIdResponse {
   };
 }
 
+export interface GetBetaCourseByIdResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    imageUrl?: string;
+    description: string;
+    category: string;
+    /** @format uuid */
+    categoryId?: string;
+    /** @format uuid */
+    authorId?: string;
+    author?: string;
+    authorEmail?: string;
+    courseLessonCount: number;
+    completedLessonCount?: number;
+    enrolled?: boolean;
+    state: string | null;
+    lessons: {
+      /** @format uuid */
+      id: string;
+      title: string;
+      courseId?: string;
+      imageUrl?: string;
+      description?: string;
+      itemsCount: number;
+      itemsCompletedCount?: number;
+      lessonProgress?: "completed" | "in_progress" | "not_started";
+      isFree?: boolean;
+      enrolled?: boolean;
+      state?: string;
+      archived?: boolean;
+      isSubmitted?: boolean;
+      type?: string;
+      createdAt?: string;
+      quizScore?: number;
+    }[];
+    priceInCents: number;
+    currency: string;
+    archived?: boolean;
+    hasFreeLessons?: boolean;
+  };
+}
+
 export type CreateCourseBody = {
   title: string;
   description: string;
@@ -2171,10 +2215,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<void, any>({
+      this.request<GetBetaCourseByIdResponse, any>({
         path: `/api/courses/beta-course-by-id`,
         method: "GET",
         query: query,
+        format: "json",
         ...params,
       }),
 
@@ -2426,15 +2471,15 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name LessonsControllerRemoveChapter
-     * @request DELETE:/api/lessons/chapter/{courseId}/{lessonId}
+     * @request DELETE:/api/lessons/chapter/{courseId}/{chapterId}
      */
     lessonsControllerRemoveChapter: (
       courseId: string,
-      lessonId: string,
+      chapterId: string,
       params: RequestParams = {},
     ) =>
       this.request<RemoveChapterResponse, any>({
-        path: `/api/lessons/chapter/${courseId}/${lessonId}`,
+        path: `/api/lessons/chapter/${courseId}/${chapterId}`,
         method: "DELETE",
         format: "json",
         ...params,
