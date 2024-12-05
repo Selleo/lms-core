@@ -10,7 +10,7 @@ import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";
-import { type UserRole, USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES, type UserRole } from "src/users/schemas/user-roles";
 
 import {
   type CategoryFilterSchema,
@@ -55,7 +55,7 @@ export class CategoriesService {
       const queryDB = tx
         .select(selectedColumns)
         .from(categories)
-        .where(and(...conditions))
+        .where(and(...conditions, eq(categories.archived, false)))
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CategorySortField, isAdmin)));
 
       const dynamicQuery = queryDB.$dynamic();
@@ -67,7 +67,7 @@ export class CategoriesService {
       const [{ totalItems }] = await tx
         .select({ totalItems: count() })
         .from(categories)
-        .where(and(eq(categories.archived, false), ...conditions));
+        .where(and(...conditions, eq(categories.archived, false)));
 
       return {
         data: this.serializeCategories(data, isAdmin),
@@ -77,7 +77,10 @@ export class CategoriesService {
   }
 
   public async getCategoryById(id: string) {
-    const [category] = await this.db.select().from(categories).where(eq(categories.id, id));
+    const [category] = await this.db
+      .select()
+      .from(categories)
+      .where(and(eq(categories.id, id)));
 
     return category;
   }
