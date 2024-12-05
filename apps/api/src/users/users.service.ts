@@ -255,7 +255,7 @@ export class UsersService {
         from: process.env.SES_EMAIL || "",
       });
 
-      if (USER_ROLES.tutor === createdUser.role || USER_ROLES.admin === createdUser.role)
+      if (USER_ROLES.teacher === createdUser.role || USER_ROLES.admin === createdUser.role)
         await trx
           .insert(userDetails)
           .values({ userId: createdUser.id, contactEmail: createdUser.email });

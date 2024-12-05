@@ -29,10 +29,10 @@ export const clientLoader = async () => {
 };
 
 const AdminGuard = ({ children }: { children: React.ReactNode }) => {
-  const { isAdmin, isTutor } = useUserRole();
+  const { isAdmin, isTeacher } = useUserRole();
   const navigate = useNavigate();
 
-  const isAllowed = isAdmin || isTutor;
+  const isAllowed = isAdmin || isTeacher;
 
   useLayoutEffect(() => {
     if (!isAllowed) {

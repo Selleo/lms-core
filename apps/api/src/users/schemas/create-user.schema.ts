@@ -9,7 +9,7 @@ export const createUserSchema = Type.Object({
   role: Type.Union([
     Type.Literal(USER_ROLES.admin),
     Type.Literal(USER_ROLES.student),
-    Type.Literal(USER_ROLES.tutor),
+    Type.Literal(USER_ROLES.teacher),
   ]),
 });
 

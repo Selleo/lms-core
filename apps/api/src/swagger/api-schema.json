@@ -1318,9 +1318,9 @@
         }
       }
     },
-    "/api/courses/tutor-courses": {
+    "/api/courses/teacher-courses": {
       "get": {
-        "operationId": "CoursesController_getTutorCourses",
+        "operationId": "CoursesController_getTeacherCourses",
         "parameters": [
           {
             "name": "authorId",
@@ -1337,7 +1337,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetTutorCoursesResponse"
+                  "$ref": "#/components/schemas/GetTeacherCoursesResponse"
                 }
               }
             }
@@ -3087,7 +3087,7 @@
                 "type": "string"
               },
               {
-                "const": "tutor",
+                "const": "teacher",
                 "type": "string"
               }
             ]
@@ -3210,7 +3210,7 @@
                 "type": "string"
               },
               {
-                "const": "tutor",
+                "const": "teacher",
                 "type": "string"
               }
             ]
@@ -3337,7 +3337,7 @@
                 "type": "string"
               },
               {
-                "const": "tutor",
+                "const": "teacher",
                 "type": "string"
               }
             ]
@@ -3921,7 +3921,7 @@
           "pagination"
         ]
       },
-      "GetTutorCoursesResponse": {
+      "GetTeacherCoursesResponse": {
         "type": "object",
         "properties": {
           "data": {

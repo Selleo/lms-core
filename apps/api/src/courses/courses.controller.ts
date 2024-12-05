@@ -29,20 +29,19 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
-import { CoursesService } from "../courses.service";
+import { CoursesService } from "./courses.service";
 import {
   type AllCoursesResponse,
-  type AllCoursesForTutorResponse,
+  type AllCoursesForTeacherResponse,
   allCoursesSchema,
-} from "../schemas/course.schema";
-import { SortCourseFieldsOptions } from "../schemas/courseQuery";
-import { type CreateCourseBody, createCourseSchema } from "../schemas/createCourse.schema";
-import { type CommonShowCourse, commonShowCourseSchema } from "../schemas/showCourseCommon.schema";
-import { type UpdateCourseBody, updateCourseSchema } from "../schemas/updateCourse.schema";
+} from "./schemas/course.schema";
+import { SortCourseFieldsOptions } from "./schemas/courseQuery";
+import { type CreateCourseBody, createCourseSchema } from "./schemas/createCourse.schema";
+import { type CommonShowCourse, commonShowCourseSchema } from "./schemas/showCourseCommon.schema";
+import { type UpdateCourseBody, updateCourseSchema } from "./schemas/updateCourse.schema";
+import { allCoursesValidation } from "./validations/validations";
 
-import { allCoursesValidation } from "./validations";
-
-import type { CoursesFilterSchema } from "../schemas/courseQuery";
+import type { CoursesFilterSchema } from "./schemas/courseQuery";
 
 @Controller("courses")
 @UseGuards(RolesGuard)
@@ -64,6 +63,7 @@ export class CoursesController {
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
     @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("role") currentUserRole: string,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
@@ -83,6 +83,7 @@ export class CoursesController {
       perPage,
       sort,
       currentUserId,
+      currentUserRole,
     };
 
     const data = await this.coursesService.getAllCourses(query);
@@ -134,7 +135,7 @@ export class CoursesController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
-    @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
@@ -152,16 +153,16 @@ export class CoursesController {
     return new PaginatedResponse(data);
   }
 
-  @Get("tutor-courses")
+  @Get("teacher-courses")
   @Validate({
     request: [{ type: "query", name: "authorId", schema: UUIDSchema, required: true }],
     response: baseResponse(allCoursesSchema),
   })
-  async getTutorCourses(
+  async getTeacherCourses(
     @Query("authorId") authorId: string,
     @CurrentUser("userId") currentUserId: string,
-  ): Promise<BaseResponse<AllCoursesForTutorResponse>> {
-    return new BaseResponse(await this.coursesService.getTutorCourses(authorId, currentUserId));
+  ): Promise<BaseResponse<AllCoursesForTeacherResponse>> {
+    return new BaseResponse(await this.coursesService.getTeacherCourses(authorId, currentUserId));
   }
 
   @Get("course")
@@ -177,7 +178,7 @@ export class CoursesController {
   }
 
   @Get("course-by-id")
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
@@ -187,7 +188,7 @@ export class CoursesController {
   }
 
   @Post()
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Validate({
     request: [{ type: "body", schema: createCourseSchema }],
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
@@ -203,7 +204,7 @@ export class CoursesController {
 
   @Patch(":id")
   @UseInterceptors(FileInterceptor("image"))
-  @Roles(USER_ROLES.tutor, USER_ROLES.admin)
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
       { type: "param", name: "id", schema: UUIDSchema },
@@ -215,8 +216,9 @@ export class CoursesController {
     @Param("id") id: string,
     @Body() updateCourseBody: UpdateCourseBody,
     @UploadedFile() image: Express.Multer.File,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.coursesService.updateCourse(id, updateCourseBody, image);
+    await this.coursesService.updateCourse(id, updateCourseBody, image, currentUserId);
 
     return new BaseResponse({ message: "Course updated successfully" });
   }
