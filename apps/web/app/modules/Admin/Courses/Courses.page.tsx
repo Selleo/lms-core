@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@remix-run/react";
+import { Link, useLoaderData, useNavigate } from "@remix-run/react";
 import {
   type ColumnDef,
   flexRender,
@@ -11,14 +11,10 @@ import {
 import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
-import React, { startTransition } from "react";
+import { startTransition, useState } from "react";
 
-import { useCategories } from "~/api/queries";
-import {
-  ALL_COURSES_QUERY_KEY,
-  allCoursesQueryOptions,
-  useCoursesSuspense,
-} from "~/api/queries/useCourses";
+import { categoriesQueryOptions } from "~/api/queries";
+import { ALL_COURSES_QUERY_KEY, useCoursesSuspense } from "~/api/queries/useCourses";
 import { queryClient } from "~/api/queryClient";
 import SortButton from "~/components/TableSortButton/TableSortButton";
 import { Badge } from "~/components/ui/badge";
@@ -41,28 +37,30 @@ import {
   SearchFilter,
 } from "~/modules/common/SearchFilter/SearchFilter";
 
+import type { ClientLoaderFunctionArgs } from "@remix-run/react";
 import type { GetAllCoursesResponse } from "~/api/generated-api";
 
 type TCourse = GetAllCoursesResponse["data"][number];
 
-export const clientLoader = async () => {
-  await queryClient.prefetchQuery(allCoursesQueryOptions());
+export const clientLoader = async (_: ClientLoaderFunctionArgs) => {
+  const { data } = await queryClient.fetchQuery(categoriesQueryOptions());
 
-  return null;
+  return data;
 };
 
 const Courses = () => {
+  const categories = useLoaderData<typeof clientLoader>();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = React.useState<{
+  const [searchParams, setSearchParams] = useState<{
     title?: string;
     category?: string;
     state?: string;
     archived?: boolean;
+    author?: string;
   }>({});
-  const { data: categories, isLoading: isCategoriesLoading } = useCategories();
   const { data } = useCoursesSuspense(searchParams);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   const filterConfig: FilterConfig[] = [
     {
@@ -74,9 +72,9 @@ const Courses = () => {
       name: "category",
       type: "select",
       placeholder: "Categories",
-      options: categories?.map((cat) => ({
-        value: cat.title,
-        label: cat.title,
+      options: categories?.map(({ title }) => ({
+        value: title,
+        label: title,
       })),
     },
     {
@@ -198,7 +196,7 @@ const Courses = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
         <Link to="new">
           <Button variant="outline">Create New</Button>
         </Link>
@@ -206,9 +204,9 @@ const Courses = () => {
           filters={filterConfig}
           values={searchParams}
           onChange={handleFilterChange}
-          isLoading={isCategoriesLoading}
+          isLoading={false}
         />
-        <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
+        <div className="ml-auto flex items-center gap-x-2 px-4 py-2">
           <p
             className={cn("text-sm", {
               "text-neutral-900": !isEmpty(selectedCourses),
@@ -223,17 +221,17 @@ const Courses = () => {
             className="flex items-center gap-x-2"
             disabled={isEmpty(selectedCourses)}
           >
-            <Trash className="w-3 h-3" />
+            <Trash className="h-3 w-3" />
             <span className="text-xs">Delete selected</span>
           </Button>
         </div>
       </div>
-      <Table className="bg-neutral-50 border">
+      <Table className="border bg-neutral-50">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+              {headerGroup.headers.map((header, index) => (
+                <TableHead key={header.id} className={cn({ "size-12": index === 0 })}>
                   {flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
@@ -248,8 +246,8 @@ const Courses = () => {
               onClick={() => handleRowClick(row.original.id)}
               className="cursor-pointer hover:bg-neutral-100"
             >
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
+              {row.getVisibleCells().map((cell, index) => (
+                <TableCell key={cell.id} className={cn({ "size-12": index === 0 })}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}

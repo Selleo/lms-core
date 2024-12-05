@@ -16,7 +16,7 @@ import type { UpdateCategoryBody } from "~/api/generated-api";
 const displayedFields: Array<keyof UpdateCategoryBody> = ["title", "archived"];
 
 const Category = () => {
-  const { id } = useParams<{ id: string }>();
+  const { id = "" } = useParams();
 
   if (!id) throw new Error("Category ID not found");
 
