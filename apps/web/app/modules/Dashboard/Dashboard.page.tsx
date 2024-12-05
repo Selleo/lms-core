@@ -2,6 +2,11 @@ import { isEmpty } from "lodash-es";
 import { useReducer } from "react";
 import { match } from "ts-pattern";
 
+import {
+  availableCoursesQueryOptions,
+  currentUserQueryOptions,
+  studentCoursesQueryOptions,
+} from "~/api/queries";
 import { useAvailableCourses } from "~/api/queries/useAvailableCourses";
 import { categoriesQueryOptions, useCategoriesSuspense } from "~/api/queries/useCategories";
 import { allCoursesQueryOptions, useCourses } from "~/api/queries/useCourses";
@@ -10,7 +15,7 @@ import { queryClient } from "~/api/queryClient";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
 import { PageWrapper } from "~/components/PageWrapper";
-import { useUserRole } from "~/hooks/useUserRole";
+import { useUserRole } from "~/hooks/useUserRole"; // Mock function for getting user roles.
 import { cn } from "~/lib/utils";
 import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
 
@@ -44,8 +49,17 @@ export const meta: MetaFunction = () => {
 };
 
 export const clientLoader = async () => {
-  await queryClient.prefetchQuery(allCoursesQueryOptions());
+  const { data: user } = await queryClient.fetchQuery(currentUserQueryOptions);
+
   await queryClient.prefetchQuery(categoriesQueryOptions());
+
+  if (user.role === "admin" || user.role === "teacher") {
+    await queryClient.prefetchQuery(allCoursesQueryOptions());
+  } else {
+    await queryClient.prefetchQuery(availableCoursesQueryOptions());
+    await queryClient.prefetchQuery(studentCoursesQueryOptions());
+  }
+
   return null;
 };
 
@@ -67,7 +81,7 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function DashboardPage() {
-  const { isAdmin } = useUserRole();
+  const { isAdmin, isTeacher } = useUserRole();
   const [state, dispatch] = useReducer(reducer, {
     searchTitle: undefined,
     sort: undefined,
@@ -82,11 +96,14 @@ export default function DashboardPage() {
     sort: state.sort,
   });
 
-  const { data: allCourses, isLoading: isAllCoursesLoading } = useCourses({
-    title: state.searchTitle,
-    category: state.category,
-    sort: state.sort,
-  });
+  const { data: allCourses, isLoading: isAllCoursesLoading } = useCourses(
+    {
+      title: state.searchTitle,
+      category: state.category,
+      sort: state.sort,
+    },
+    { enabled: isAdmin || isTeacher },
+  );
 
   const availableCourses = match(isAdmin)
     .with(true, () => allCourses ?? [])
