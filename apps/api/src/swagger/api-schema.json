@@ -2809,6 +2809,88 @@
           }
         }
       }
+    },
+    "/api/statistics/user-stats": {
+      "get": {
+        "operationId": "StatisticsController_getUserStatistics",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserStatisticsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/statistics/teacher-stats": {
+      "get": {
+        "operationId": "StatisticsController_getTeacherStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTeacherStatsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scorm/upload": {
+      "post": {
+        "operationId": "ScormController_uploadScormPackage",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/scorm/{courseId}/content/*": {
+      "get": {
+        "operationId": "ScormController_serveScormContent",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "0",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "info": {

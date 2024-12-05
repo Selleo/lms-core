@@ -426,3 +426,17 @@ export const courseStudentsStats = pgTable(
     unq: unique().on(table.courseId, table.month, table.year),
   }),
 );
+
+export const scormMetadata = pgTable("scorm_metadata", {
+  ...id,
+  ...timestamps,
+  courseId: uuid("course_id")
+    .references(() => courses.id)
+    .notNull(),
+  fileId: uuid("file_id")
+    .references(() => files.id)
+    .notNull(),
+  version: text("version").notNull(),
+  entryPoint: text("entry_point").notNull(),
+  s3Key: text("s3_key").notNull(),
+});
