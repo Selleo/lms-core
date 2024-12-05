@@ -11,6 +11,7 @@ import {
   studentQuestionAnswers,
 } from "src/storage/schema";
 
+import type { LessonItemTypes } from "../schemas/lesson.types";
 import type {
   LessonItemToAdd,
   LessonItemToRemove,
@@ -70,6 +71,20 @@ export class AdminLessonItemsRepository {
       .select()
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));
+  }
+
+  async getLessonItem(lessonItemId: string) {
+    const lessonItem = await this.db
+      .select()
+      .from(lessonItems)
+      .where(eq(lessonItems.lessonItemId, lessonItemId))
+      .limit(1);
+
+    if (!lessonItem || lessonItem.length === 0) {
+      throw new Error(`Lesson item with ID ${lessonItemId} not found`);
+    }
+
+    return lessonItem[0];
   }
 
   async getQuestionStudentAnswers(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
@@ -152,6 +167,7 @@ export class AdminLessonItemsRepository {
         title: content.title,
         type: content.type,
         url: content.url,
+        body: content.body,
         state: content.state,
         authorId: userId,
       })
@@ -238,6 +254,61 @@ export class AdminLessonItemsRepository {
         ),
       ),
     );
+  }
+
+  async updateLessonItemDisplayOrder(chapterId: UUIDType, lessonId: UUIDType) {
+    await this.db.transaction(async (trx) => {
+      await trx.execute(sql`
+        UPDATE ${lessonItems}
+        SET display_order = display_order - 1
+        WHERE lesson_id = ${chapterId}
+          AND display_order > (
+            SELECT display_order
+            FROM ${lessonItems}
+            WHERE lesson_id = ${chapterId}
+              AND lesson_item_id = ${lessonId}
+          )
+      `);
+
+      await trx.execute(sql`
+        WITH ranked_lesson_items AS (
+          SELECT lesson_item_id, row_number() OVER (ORDER BY display_order) AS new_display_order
+          FROM ${lessonItems}
+          WHERE lesson_id = ${chapterId}
+        )
+        UPDATE ${lessonItems} li
+        SET display_order = rl.new_display_order
+        FROM ranked_lesson_items rl
+        WHERE li.lesson_item_id = rl.lesson_item_id
+          AND li.lesson_id = ${chapterId}
+      `);
+    });
+  }
+
+  async removeLesson(lessonItemId: string, lessonItemType: LessonItemTypes) {
+    return await this.db.transaction(async (trx) => {
+      switch (lessonItemType) {
+        case "text_block":
+          await trx.delete(textBlocks).where(eq(textBlocks.id, lessonItemId));
+          break;
+
+        case "questions":
+          await trx.delete(questions).where(eq(questions.id, lessonItemId));
+          break;
+
+        case "file":
+          await trx.delete(files).where(eq(files.id, lessonItemId));
+          break;
+
+        default:
+          throw new Error(`Unsupported lesson item type: ${lessonItemType}`);
+      }
+
+      return await trx
+        .delete(lessonItems)
+        .where(eq(lessonItems.lessonItemId, lessonItemId))
+        .returning();
+    });
   }
 
   async removeQuestionAnswerOptions(

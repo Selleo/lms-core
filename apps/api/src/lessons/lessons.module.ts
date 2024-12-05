@@ -22,6 +22,6 @@ import { LessonsRepository } from "./repositories/lessons.repository";
     AdminLessonsRepository,
     AdminLessonItemsRepository,
   ],
-  exports: [LessonsRepository],
+  exports: [LessonsRepository, AdminLessonsService, AdminLessonsRepository],
 })
 export class LessonsModule {}

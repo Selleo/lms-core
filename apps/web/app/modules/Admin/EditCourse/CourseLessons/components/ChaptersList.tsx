@@ -6,47 +6,118 @@ import {
 } from "@radix-ui/react-accordion";
 import * as Switch from "@radix-ui/react-switch";
 import * as Tooltip from "@radix-ui/react-tooltip";
-import { useState } from "react";
+import { useParams } from "@remix-run/react";
+import { useCallback, useMemo, useState } from "react";
 
+import { useUpdateLessonPremiumStatus } from "~/api/mutations/admin/useUpdateLessonPremiumStatus";
+import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
+import { queryClient } from "~/api/queryClient";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { cn } from "~/lib/utils";
 
 import { ContentTypes } from "../../EditCourse.types";
 
 import LessonCard from "./LessonCard";
 
-import type { Chapter } from "../../EditCourse.types";
+import type { Chapter, LessonItem } from "../../EditCourse.types";
 import type React from "react";
 
-interface ChaptersListProps {
-  chapters: Chapter[];
-  setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
-  setSelectedChapter: (selectedChapter: Chapter) => void;
-}
-
-const ChapterCard: React.FC<{
+interface ChapterCardProps {
   chapter: Chapter;
   isOpen: boolean;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
-}> = ({ chapter, isOpen, setContentTypeToDisplay, setSelectedChapter }) => {
-  const handleAddLessonClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setContentTypeToDisplay(ContentTypes.SELECT_LESSON_TYPE);
-    setSelectedChapter(chapter);
-  };
+  setSelectedLesson: (selectedLesson?: LessonItem) => void;
+}
 
-  const onClickChapterCard = () => {
-    setContentTypeToDisplay(ContentTypes.EDIT_CHAPTER);
-    setSelectedChapter(chapter);
-  };
+const ChapterCard = ({
+  chapter,
+  isOpen,
+  setContentTypeToDisplay,
+  setSelectedChapter,
+  setSelectedLesson,
+}: ChapterCardProps) => {
+  const { mutateAsync: updatePremiumStatus } = useUpdateLessonPremiumStatus();
+  const { id } = useParams();
 
-  const lessonItems = chapter.lessonItems;
+  const handleAddLessonClick = useCallback(
+    (event: React.MouseEvent) => {
+      event.stopPropagation();
+      setSelectedLesson(undefined);
+      setContentTypeToDisplay(ContentTypes.SELECT_LESSON_TYPE);
+      setSelectedChapter(chapter);
+    },
+    [chapter, setContentTypeToDisplay, setSelectedChapter, setSelectedLesson],
+  );
+
+  const onClickChapterCard = useCallback(() => {
+    setContentTypeToDisplay(ContentTypes.CHAPTER_FORM);
+    setSelectedChapter(chapter);
+  }, [chapter, setContentTypeToDisplay, setSelectedChapter]);
+
+  const onClickLessonCard = useCallback(
+    (lesson: LessonItem) => {
+      const contentType =
+        lesson.lessonItemType === "file" ? lesson.content.type : lesson.lessonItemType;
+      setSelectedLesson(lesson);
+      switch (contentType) {
+        case "video":
+          setContentTypeToDisplay(ContentTypes.VIDEO_LESSON_FORM);
+          break;
+        case "text_block":
+          setContentTypeToDisplay(ContentTypes.TEXT_LESSON_FORM);
+          break;
+        case "presentation":
+          setContentTypeToDisplay(ContentTypes.PRESENTATION_FORM);
+          break;
+        default:
+          setContentTypeToDisplay(ContentTypes.EMPTY);
+      }
+    },
+    [setContentTypeToDisplay, setSelectedLesson],
+  );
+
+  const onAccordionClick = useCallback(
+    (event: React.MouseEvent) => {
+      setSelectedChapter(chapter);
+      event.stopPropagation();
+    },
+    [chapter, setSelectedChapter],
+  );
+
+  const onSwitchClick = useCallback(
+    async (event: React.MouseEvent) => {
+      event.stopPropagation();
+      try {
+        await updatePremiumStatus({
+          lessonId: chapter.id,
+          data: { isFree: !chapter.isFree },
+        });
+        queryClient.invalidateQueries({
+          queryKey: [COURSE_QUERY_KEY, { id }],
+        });
+      } catch (error) {
+        console.error("Failed to update chapter premium status:", error);
+      }
+    },
+    [chapter, updatePremiumStatus, id],
+  );
+
+  const lessonItems = useMemo(() => chapter.lessonItems, [chapter.lessonItems]);
 
   return (
-    <AccordionItem value={`item-${chapter.id}`} className="p-0" draggable>
-      <Card className="mb-4 h-full flex p-4" onClick={() => onClickChapterCard()}>
+    <AccordionItem
+      key={`chapter-${chapter.id}`}
+      value={`item-${chapter.id}`}
+      className="p-0"
+      draggable
+    >
+      <Card
+        className={cn("mb-4 h-full flex p-4 border", isOpen ? "border-[#5D84D4]" : "")}
+        onClick={onClickChapterCard}
+      >
         <div className="flex w-full">
           <div className="w-1/10 flex mt-2.5">
             <Icon name="DragAndDropIcon" />
@@ -54,21 +125,25 @@ const ChapterCard: React.FC<{
           <div className="flex-1 flex flex-col justify-between ml-2">
             <div className="flex justify-between items-center">
               <div className="text-gray-600 text-sm">Chapter {chapter.displayOrder}</div>
-              <AccordionTrigger className="cursor-pointer">
+              <AccordionTrigger className="cursor-pointer" onClick={onAccordionClick}>
                 <Icon name={isOpen ? "ArrowUp" : "ArrowDown"} className="text-gray-600" />
               </AccordionTrigger>
             </div>
-            <h3 className="text-m text-black">{chapter.title}</h3>
+            <h3 className="text-xl text-black">{chapter.title}</h3>
             <AccordionContent className="mt-2 text-gray-700">
               <div className="mt-4 grid grid-cols-1 gap-4">
-                {lessonItems?.length === 0 ? (
+                {lessonItems.length === 0 ? (
                   <p>No items for this lesson</p>
                 ) : (
-                  lessonItems?.map((item) => <LessonCard key={item.id} item={item} />)
+                  lessonItems.map((item) => {
+                    const key = item.content.id || `lesson-${item.content.id || Math.random()}`;
+                    return (
+                      <LessonCard key={key} item={item} onClickLessonCard={onClickLessonCard} />
+                    );
+                  })
                 )}
               </div>
             </AccordionContent>
-
             <div className="mt-4 flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <Button
@@ -81,10 +156,19 @@ const ChapterCard: React.FC<{
               </div>
               <div className="flex items-center">
                 <Switch.Root
-                  className="w-10 h-6 bg-gray-200 mr-2 rounded-full relative"
-                  checked={false}
+                  className={cn(
+                    "w-10 h-6 mr-2 rounded-full relative transition-colors",
+                    chapter.isFree ? "bg-blue-500" : "bg-gray-200",
+                  )}
+                  onClick={onSwitchClick}
+                  checked={chapter.isFree}
                 >
-                  <Switch.Thumb className="block w-4 h-4 bg-white rounded-full transition-transform transform translate-x-1 data-[state=checked]:translate-x-6" />
+                  <Switch.Thumb
+                    className={cn(
+                      "block w-4 h-4 bg-white rounded-full transition-transform transform translate-x-1",
+                      chapter.isFree ? "translate-x-6" : "",
+                    )}
+                  />
                 </Switch.Root>
                 <span className="mr-2 text-gray-600">Freemium</span>
                 <Tooltip.Provider>
@@ -115,25 +199,40 @@ const ChapterCard: React.FC<{
   );
 };
 
+interface ChaptersListProps {
+  chapters: Chapter[];
+  setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
+  setSelectedChapter: (selectedChapter: Chapter) => void;
+  setSelectedLesson: (selectedLesson?: LessonItem) => void;
+}
+
 const ChaptersList = ({
   chapters,
   setContentTypeToDisplay,
   setSelectedChapter,
+  setSelectedLesson,
 }: ChaptersListProps) => {
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
+
+  const chapterCards = useMemo(
+    () =>
+      chapters.map((chapter) => (
+        <ChapterCard
+          key={chapter.id}
+          chapter={chapter}
+          isOpen={openItem === `item-${chapter.id}`}
+          setContentTypeToDisplay={setContentTypeToDisplay}
+          setSelectedChapter={setSelectedChapter}
+          setSelectedLesson={setSelectedLesson}
+        />
+      )),
+    [chapters, openItem, setContentTypeToDisplay, setSelectedChapter, setSelectedLesson],
+  );
 
   return (
     <div>
       <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem}>
-        {chapters?.map((chapter) => (
-          <ChapterCard
-            key={chapter.id}
-            chapter={chapter}
-            isOpen={openItem === `item-${chapter.id}`}
-            setContentTypeToDisplay={setContentTypeToDisplay}
-            setSelectedChapter={setSelectedChapter}
-          />
-        ))}
+        {chapterCards}
       </Accordion>
     </div>
   );

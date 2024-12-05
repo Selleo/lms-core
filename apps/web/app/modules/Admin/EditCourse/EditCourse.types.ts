@@ -1,9 +1,16 @@
 export type NavigationTab = "Settings" | "Lesson" | "Pricing" | "Status";
 export interface LessonItem {
-  id: string;
-  title: string;
   lessonItemType: string;
   displayOrder: number;
+  lessonItemId: string;
+  content: {
+    id: string;
+    title: string;
+    type?: string;
+    state?: "draft" | "published";
+    body?: string;
+    url?: string;
+  };
 }
 
 export interface Chapter {
@@ -19,8 +26,11 @@ export interface Chapter {
 
 export const ContentTypes = {
   EMPTY: "EMPTY",
-  NEW_CHAPTER: "NEW_CHAPTER",
-  EDIT_CHAPTER: "EDIT_CHAPTER",
+  CHAPTER_FORM: "CHAPTER_FORM",
   SELECT_LESSON_TYPE: "SELECT_LESSON_TYPE",
-  ADD_TEXT_LESSON: "ADD_TEXT_LESSON",
+  TEXT_LESSON_FORM: "TEXT_LESSON_FORM",
+  VIDEO_LESSON_FORM: "VIDEO_LESSON_FORM",
+  PRESENTATION_FORM: "PRESENTATION_FORM",
 };
+
+export type LessonIcons = "Text" | "Video" | "Presentation" | "Quiz";

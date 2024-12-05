@@ -1860,6 +1860,78 @@
         }
       }
     },
+    "/api/lessons/chapter/{courseId}/{chapterId}": {
+      "delete": {
+        "operationId": "LessonsController_removeChapter",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/lesson/{courseId}/{lessonId}": {
+      "delete": {
+        "operationId": "LessonsController_removeLesson",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lessons/course-lesson": {
       "patch": {
         "operationId": "LessonsController_toggleLessonAsFree",
@@ -2440,6 +2512,43 @@
         }
       }
     },
+    "/api/lessons/course-lesson/premium-status": {
+      "patch": {
+        "operationId": "LessonsController_updateLessonPremiumStatus",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLessonPremiumStatusBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateLessonPremiumStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lessons/create-file": {
       "post": {
         "operationId": "LessonsController_createFile",
@@ -2460,6 +2569,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateFileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/beta-create-file": {
+      "post": {
+        "operationId": "LessonsController_betaCreateFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BetaCreateFileBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BetaCreateFileResponse"
                 }
               }
             }
@@ -4962,13 +5098,24 @@
                             },
                             "url": {
                               "type": "string"
+                            },
+                            "body": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
                             }
                           },
                           "required": [
                             "id",
                             "title",
                             "type",
-                            "url"
+                            "url",
+                            "body"
                           ]
                         }
                       ]
@@ -5238,13 +5385,24 @@
                             },
                             "url": {
                               "type": "string"
+                            },
+                            "body": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
                             }
                           },
                           "required": [
                             "id",
                             "title",
                             "type",
-                            "url"
+                            "url",
+                            "body"
                           ]
                         }
                       ]
@@ -5573,6 +5731,44 @@
           "data"
         ]
       },
+      "RemoveChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RemoveLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "ToggleLessonAsFreeBody": {
         "type": "object",
         "properties": {
@@ -5776,6 +5972,16 @@
                         "url": {
                           "type": "string"
                         },
+                        "body": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "type": {
                           "type": "string"
                         }
@@ -5784,6 +5990,7 @@
                         "itemType",
                         "title",
                         "url",
+                        "body",
                         "type"
                       ]
                     }
@@ -6001,6 +6208,16 @@
                         "url": {
                           "type": "string"
                         },
+                        "body": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "type": {
                           "type": "string"
                         }
@@ -6009,6 +6226,7 @@
                         "itemType",
                         "title",
                         "url",
+                        "body",
                         "type"
                       ]
                     }
@@ -6204,6 +6422,16 @@
                       "url": {
                         "type": "string"
                       },
+                      "body": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "type": {
                         "type": "string"
                       }
@@ -6212,6 +6440,7 @@
                       "itemType",
                       "title",
                       "url",
+                      "body",
                       "type"
                     ]
                   }
@@ -6557,6 +6786,16 @@
             "format": "uuid",
             "type": "string"
           },
+          "body": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "state": {
             "type": "string"
           },
@@ -6817,6 +7056,36 @@
           "data"
         ]
       },
+      "UpdateLessonPremiumStatusBody": {
+        "type": "object",
+        "properties": {
+          "isFree": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isFree"
+        ]
+      },
+      "UpdateLessonPremiumStatusResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "CreateFileBody": {
         "type": "object",
         "properties": {
@@ -6846,6 +7115,60 @@
         ]
       },
       "CreateFileResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BetaCreateFileBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "lessonId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "state",
+          "authorId",
+          "type",
+          "lessonId"
+        ]
+      },
+      "BetaCreateFileResponse": {
         "type": "object",
         "properties": {
           "data": {

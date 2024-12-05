@@ -11,4 +11,6 @@ export const LessonProgress = {
   completed: "completed",
 } as const;
 
+export type LessonItemTypes = "text_block" | "questions" | "file";
+
 export type LessonProgressType = (typeof LessonProgress)[keyof typeof LessonProgress];

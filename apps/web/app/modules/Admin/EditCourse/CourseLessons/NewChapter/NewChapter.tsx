@@ -18,19 +18,25 @@ type NewChapterProps = {
 
 const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
   const { id: courseId } = useParams();
-  const { form, onSubmit } = useNewChapterForm({ courseId, chapter });
+  const { form, onSubmit, onClickDelete } = useNewChapterForm({
+    courseId,
+    chapter,
+    setContentTypeToDisplay,
+  });
+
+  const buttonStyles = "bg-transparent text-red-500 border border-red-500 hover:bg-red-100";
+  const saveButtonStyles = "bg-[#3F58B6] hover:bg-blue-600 text-white";
 
   return (
     <div className="w-full max-w-full">
       <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-6">
         <div className="text-xl font-semibold mb-6 text-gray-800">Chapter</div>
         <div className="text-xl font-semibold mb-6 text-gray-800">
-          {chapter ? (
+          {chapter && (
             <>
-              <span className="text-gray-500">Edit: </span> {chapter.title}
+              <span className="text-gray-500">Edit: </span>
+              {chapter.title}
             </>
-          ) : (
-            ""
           )}
         </div>
         <Form {...form}>
@@ -41,8 +47,7 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
               render={({ field }) => (
                 <FormItem>
                   <Label htmlFor="title" className="text-right">
-                    <span className="text-red-500 mr-1">*</span>
-                    Title
+                    <span className="text-red-500 mr-1">*</span> Title
                   </Label>
                   <FormControl>
                     <Input id="title" {...field} required />
@@ -52,13 +57,24 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
               )}
             />
             <div className="flex space-x-4 mt-4">
-              <Button
-                onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
-                className="bg-transparent text-red-500 border border-red-500 hover:bg-red-100"
-              >
-                Cancel
-              </Button>
-              <Button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white">
+              {chapter ? (
+                <Button
+                  aria-label="Delete chapter"
+                  className={buttonStyles}
+                  onClick={onClickDelete}
+                >
+                  Delete
+                </Button>
+              ) : (
+                <Button
+                  aria-label="Cancel editing"
+                  className={buttonStyles}
+                  onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
+                >
+                  Cancel
+                </Button>
+              )}
+              <Button type="submit" className={saveButtonStyles}>
                 Save
               </Button>
             </div>

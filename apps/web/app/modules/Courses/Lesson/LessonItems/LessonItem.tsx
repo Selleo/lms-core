@@ -25,7 +25,9 @@ export const LessonItem = ({
   lessonType,
   updateLessonItemCompletion,
 }: LessonItemsSwitchProps) => {
-  if ("body" in content) return <TextBlock content={content} />;
+  // temporary solution
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if ("body" in content) return <TextBlock content={content as any} />;
 
   if ("questionBody" in content) {
     return (

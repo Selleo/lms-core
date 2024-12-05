@@ -85,6 +85,20 @@
       "when": 1732502961161,
       "tag": "0011_update_courses_table",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1733213033624,
+      "tag": "0012_add_body_column_to_files",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1733227291812,
+      "tag": "0013_add_on_cascade_to_course_lessons",
+      "breakpoints": true
     }
   ]
 }

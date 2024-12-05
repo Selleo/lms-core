@@ -23,7 +23,9 @@ import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { STATES } from "src/common/states";
 import { S3Service } from "src/file/s3.service";
+import { AdminLessonsService } from "src/lessons/adminLessons.service";
 import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/lessons/lesson.type";
+import { AdminLessonsRepository } from "src/lessons/repositories/adminLessons.repository";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
@@ -52,12 +54,15 @@ import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { Pagination, UUIDType } from "src/common";
 import type { LessonProgressType } from "src/lessons/schemas/lesson.types";
+import type { LessonItemWithContentSchema } from "src/lessons/schemas/lessonItem.schema";
 
 @Injectable()
 export class CoursesService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly s3Service: S3Service,
+    private readonly lessonService: AdminLessonsService,
+    private readonly lessonRepository: AdminLessonsRepository,
   ) {}
 
   async getAllCourses(query: CoursesQuery): Promise<{
@@ -417,10 +422,10 @@ export class CoursesService {
         categoryId: categories.id,
         description: sql<string>`${courses.description}`,
         courseLessonCount: sql<number>`
-        (SELECT COUNT(*)
-        FROM ${courseLessons}
-        JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-        WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.archived} = false)::INTEGER`,
+          (SELECT COUNT(*)
+          FROM ${courseLessons}
+          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
+          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.archived} = false)::INTEGER`,
         state: courses.state,
         priceInCents: courses.priceInCents,
         currency: courses.currency,
@@ -440,20 +445,20 @@ export class CoursesService {
         imageUrl: lessons?.imageUrl ? sql<string>`${lessons.imageUrl}` : sql<string>`NULL`,
         displayOrder: courseLessons.displayOrder,
         itemsCount: sql<number>`
-        (SELECT COUNT(*)
-        FROM ${lessonItems}
+          (SELECT COUNT(*)
+          FROM ${lessonItems}
         WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
         isFree: courseLessons.isFree,
         lessonItems: sql`
-        (SELECT json_agg(
-            json_build_object(
-              'id', ${lessonItems.id},
-              'lessonItemType', ${lessonItems.lessonItemType},
-              'displayOrder', ${lessonItems.displayOrder}
+          (SELECT json_agg(
+              json_build_object(
+                'id', ${lessonItems.id},
+                'lessonItemType', ${lessonItems.lessonItemType},
+                'displayOrder', ${lessonItems.displayOrder}
+              )
             )
-          )
-        FROM ${lessonItems}
-        WHERE ${lessonItems.lessonId} = ${lessons.id}) AS lessonItems`,
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id}) AS lessonItems`,
       })
       .from(courseLessons)
       .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
@@ -464,7 +469,8 @@ export class CoursesService {
           isNotNull(lessons.id),
           isNotNull(lessons.title),
         ),
-      );
+      )
+      .orderBy(courseLessons.displayOrder);
 
     const getImageUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url;
@@ -473,10 +479,28 @@ export class CoursesService {
 
     const imageUrl = await getImageUrl(course.imageUrl);
 
+    const updatedCourseLessonList = await Promise.all(
+      courseLessonList?.map(async (lesson) => {
+        const lessonItemsWithContent =
+          Array.isArray(lesson?.lessonItems) && lesson.lessonItems.length > 0
+            ? await this.lessonRepository.getLessonItems(lesson.id)
+            : [];
+
+        const processedLessonItems = await this.lessonService.processLessonItems(
+          lessonItemsWithContent as LessonItemWithContentSchema[],
+        );
+
+        return {
+          ...lesson,
+          lessonItems: processedLessonItems,
+        };
+      }),
+    );
+
     return {
       ...course,
       imageUrl,
-      lessons: courseLessonList ?? [],
+      lessons: updatedCourseLessonList ?? [],
     };
   }
 

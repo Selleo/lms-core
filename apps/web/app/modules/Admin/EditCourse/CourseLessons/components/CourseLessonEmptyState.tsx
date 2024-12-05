@@ -2,7 +2,7 @@ import CourseLessonEmptyStateImage from "~/assets/svgs/course-empty-state.svg";
 
 const CourseLessonEmptyState = () => {
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-white">
+    <div className="h-[70vh] flex flex-col items-center justify-center bg-white">
       <div className="w-1/3 flex items-center justify-center mt-4">
         <img
           src={CourseLessonEmptyStateImage}

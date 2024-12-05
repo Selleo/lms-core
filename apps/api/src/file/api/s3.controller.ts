@@ -77,7 +77,9 @@ export class S3Controller {
 
     if (!allowedMimeTypes.includes(file.mimetype)) {
       throw new BadRequestException(
-        `File type ${file.mimetype} is not allowed. Allowed types are: ${allowedMimeTypes.join(", ")}`,
+        `File type ${file.mimetype} is not allowed. Allowed types are: ${allowedMimeTypes.join(
+          ", ",
+        )}`,
       );
     }
 

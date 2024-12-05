@@ -447,6 +447,7 @@ export class LessonsService {
           id: item.fileData.id,
           title: item.fileData.title,
           type: item.fileData.type,
+          body: item.fileData.body,
           url: (item.fileData.url as string).startsWith("https://")
             ? item.fileData.url
             : await this.s3Service.getSignedUrl(item.fileData.url),

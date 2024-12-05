@@ -662,6 +662,7 @@ export interface GetLessonResponse {
             title: string;
             type: string;
             url: string;
+            body: string | null;
           };
     }[];
   };
@@ -724,6 +725,7 @@ export interface GetLessonByIdResponse {
             title: string;
             type: string;
             url: string;
+            body: string | null;
           };
     }[];
   };
@@ -819,6 +821,18 @@ export interface RemoveLessonFromCourseResponse {
   };
 }
 
+export interface RemoveChapterResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface RemoveLessonResponse {
+  data: {
+    message: string;
+  };
+}
+
 export interface ToggleLessonAsFreeBody {
   /** @format uuid */
   courseId: string;
@@ -872,6 +886,7 @@ export interface GetAllLessonItemsResponse {
         itemType: "file";
         title: string;
         url: string;
+        body: string | null;
         type: string;
       })
     | ({
@@ -920,6 +935,7 @@ export interface GetAvailableLessonItemsResponse {
         itemType: "file";
         title: string;
         url: string;
+        body: string | null;
         type: string;
       })
     | ({
@@ -963,6 +979,7 @@ export interface GetLessonItemByIdResponse {
         itemType: "file";
         title: string;
         url: string;
+        body: string | null;
         type: string;
       })
     | ({
@@ -1053,6 +1070,7 @@ export interface UpdateFileItemBody {
   url?: string;
   /** @format uuid */
   authorId?: string;
+  body?: string | null;
   state?: string;
   archived?: boolean;
 }
@@ -1137,6 +1155,16 @@ export interface UpsertQuestionOptionsResponse {
   };
 }
 
+export interface UpdateLessonPremiumStatusBody {
+  isFree: boolean;
+}
+
+export interface UpdateLessonPremiumStatusResponse {
+  data: {
+    message: string;
+  };
+}
+
 export interface CreateFileBody {
   title: string;
   type: string;
@@ -1147,6 +1175,23 @@ export interface CreateFileBody {
 }
 
 export interface CreateFileResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    message: string;
+  };
+}
+
+export interface BetaCreateFileBody {
+  title: string;
+  state: string;
+  authorId: string;
+  type: string;
+  body?: string;
+  lessonId: string;
+}
+
+export interface BetaCreateFileResponse {
   data: {
     /** @format uuid */
     id: string;
@@ -2380,6 +2425,42 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name LessonsControllerRemoveChapter
+     * @request DELETE:/api/lessons/chapter/{courseId}/{lessonId}
+     */
+    lessonsControllerRemoveChapter: (
+      courseId: string,
+      lessonId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<RemoveChapterResponse, any>({
+        path: `/api/lessons/chapter/${courseId}/${lessonId}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerRemoveLesson
+     * @request DELETE:/api/lessons/lesson/{courseId}/{lessonId}
+     */
+    lessonsControllerRemoveLesson: (
+      courseId: string,
+      lessonId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<RemoveLessonResponse, any>({
+        path: `/api/lessons/lesson/${courseId}/${lessonId}`,
+        method: "DELETE",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LessonsControllerToggleLessonAsFree
      * @request PATCH:/api/lessons/course-lesson
      */
@@ -2714,12 +2795,52 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name LessonsControllerUpdateLessonPremiumStatus
+     * @request PATCH:/api/lessons/course-lesson/premium-status
+     */
+    lessonsControllerUpdateLessonPremiumStatus: (
+      data: UpdateLessonPremiumStatusBody,
+      query?: {
+        /** @format uuid */
+        lessonId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateLessonPremiumStatusResponse, any>({
+        path: `/api/lessons/course-lesson/premium-status`,
+        method: "PATCH",
+        query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LessonsControllerCreateFile
      * @request POST:/api/lessons/create-file
      */
     lessonsControllerCreateFile: (data: CreateFileBody, params: RequestParams = {}) =>
       this.request<CreateFileResponse, any>({
         path: `/api/lessons/create-file`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonsControllerBetaCreateFile
+     * @request POST:/api/lessons/beta-create-file
+     */
+    lessonsControllerBetaCreateFile: (data: BetaCreateFileBody, params: RequestParams = {}) =>
+      this.request<BetaCreateFileResponse, any>({
+        path: `/api/lessons/beta-create-file`,
         method: "POST",
         body: data,
         type: ContentType.Json,

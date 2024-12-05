@@ -2,6 +2,7 @@ import { useParams } from "@remix-run/react";
 import { useState } from "react";
 
 import { useBetaCourseById } from "~/api/queries/admin/useBetaCourse";
+import { Icon } from "~/components/Icon";
 import { Card, CardHeader, CardContent } from "~/components/ui/card";
 
 import NavigationTabs from "./compontents/NavigationTabs";
@@ -59,8 +60,14 @@ const EditCourse = () => {
     <div className="p-6">
       <Card className="shadow-md border border-gray-200">
         <CardHeader>
-          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
+          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1 flex items-center">
             {course?.title || ""}
+            {course?.state === "draft" && (
+              <span className="ml-2 flex items-center text-yellow-600 bg-[#FEFDE8] px-2 py-1 rounded-sm text-sm">
+                <Icon name="Warning" className="mr-1" />
+                Draft
+              </span>
+            )}
           </h4>
         </CardHeader>
         <CardContent>

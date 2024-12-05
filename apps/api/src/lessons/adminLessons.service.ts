@@ -18,7 +18,7 @@ import {
 } from "./schemas/lessonQuery";
 
 import type { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
-import type { LessonItemResponse } from "./schemas/lessonItem.schema";
+import type { LessonItemResponse, LessonItemWithContentSchema } from "./schemas/lessonItem.schema";
 import type { UUIDType } from "src/common";
 
 interface LessonsQuery {
@@ -76,15 +76,12 @@ export class AdminLessonsService {
       },
     };
   }
-
-  async getLessonById(id: string) {
-    const lesson = await this.adminLessonsRepository.getLessonById(id);
-
-    if (!lesson) throw new NotFoundException("Lesson not found");
-
-    const lessonItemsList = await this.adminLessonsRepository.getLessonItems(id);
-
-    const items = await Promise.all(
+  async processLessonItems(lessonItemsList: LessonItemWithContentSchema[]) {
+    const getFileUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.s3Service.getSignedUrl(url);
+    };
+    return await Promise.all(
       lessonItemsList.map(async (item) => {
         const content = await match(item)
           .returnType<Promise<LessonItemResponse["content"]>>()
@@ -106,7 +103,7 @@ export class AdminLessonsService {
             async (item) => ({
               id: item.textBlockData.id,
               body: item.textBlockData.body || "",
-              state: item.textBlockData.state,
+              state: item.textBlockData.state || "draft",
               title: item.textBlockData.title,
             }),
           )
@@ -114,8 +111,9 @@ export class AdminLessonsService {
             id: item.fileData.id,
             title: item.fileData.title,
             type: item.fileData.type,
-            url: item.fileData.url,
+            url: (await getFileUrl(item.fileData.url)) as string,
             state: item.fileData.state,
+            body: item.fileData.body,
           }))
           .otherwise(() => {
             throw new Error(`Unknown item type: ${item.lessonItemType}`);
@@ -129,6 +127,16 @@ export class AdminLessonsService {
         };
       }),
     );
+  }
+
+  async getLessonById(id: string) {
+    const lesson = await this.adminLessonsRepository.getLessonById(id);
+
+    if (!lesson) throw new NotFoundException("Lesson not found");
+
+    const lessonItemsList = await this.adminLessonsRepository.getLessonItems(id);
+
+    const items = await this.processLessonItems(lessonItemsList as LessonItemWithContentSchema[]);
 
     return {
       ...lesson,
@@ -233,6 +241,21 @@ export class AdminLessonsService {
     }
 
     await this.adminLessonsRepository.updateDisplayOrderLessonsInCourse(courseId, lessonId);
+  }
+
+  async removeChapter(courseId: string, chapterId: string) {
+    const lessonItemsList = await this.adminLessonsRepository.getLessonItems(chapterId);
+
+    const result = await this.adminLessonsRepository.removeChapterAndReferences(
+      chapterId,
+      lessonItemsList as LessonItemWithContentSchema[],
+    );
+
+    if (result.length === 0) {
+      throw new NotFoundException("Lesson not found in this course");
+    }
+
+    await this.adminLessonsRepository.updateChapterDisplayOrder(courseId, chapterId);
   }
 
   private getFiltersConditions(filters: LessonsFilterSchema) {

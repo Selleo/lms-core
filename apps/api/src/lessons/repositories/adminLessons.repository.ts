@@ -13,6 +13,7 @@ import {
 } from "src/storage/schema";
 
 import type { CreateLessonBody, UpdateLessonBody } from "../schemas/lesson.schema";
+import type { LessonItemWithContentSchema } from "../schemas/lessonItem.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
@@ -25,8 +26,8 @@ export class AdminLessonsRepository {
       .select({
         id: lessons.id,
         title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
+        description: sql<string>`COALESCE(${lessons.description}, '')`,
+        imageUrl: sql<string>`COALESCE(${lessons.imageUrl}, '')`,
         state: lessons.state,
         archived: lessons.archived,
         itemsCount: sql<number>`CAST(COUNT(DISTINCT ${lessonItems.id}) AS INTEGER)`,
@@ -44,8 +45,8 @@ export class AdminLessonsRepository {
       .select({
         id: lessons.id,
         title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
+        description: sql<string>`COALESCE(${lessons.description}, '')`,
+        imageUrl: sql<string>`COALESCE(${lessons.imageUrl}, '')`,
         state: lessons.state,
         archived: lessons.archived,
         type: lessons.type,
@@ -86,7 +87,7 @@ export class AdminLessonsRepository {
       );
   }
 
-  async updateDisplayOrderLessonsInCourse(courseId: UUIDType, lessonId: UUIDType) {
+  async updateDisplayOrderLessonsInCourse(courseId: UUIDType, chapterId: UUIDType) {
     await this.db.execute(sql`
       UPDATE ${courseLessons}
       SET display_order = display_order - 1
@@ -95,9 +96,38 @@ export class AdminLessonsRepository {
           SELECT display_order
           FROM ${courseLessons}
           WHERE course_id = ${courseId}
-            AND lesson_id = ${lessonId}
+            AND lesson_id = ${chapterId}
         )
     `);
+  }
+
+  async updateChapterDisplayOrder(courseId: UUIDType, lessonId: UUIDType) {
+    await this.db.transaction(async (trx) => {
+      await trx.execute(sql`
+        UPDATE ${courseLessons}
+        SET display_order = display_order - 1
+        WHERE course_id = ${courseId}
+          AND display_order > (
+            SELECT display_order
+            FROM ${courseLessons}
+            WHERE course_id = ${courseId}
+              AND lesson_id = ${lessonId}
+          )
+      `);
+
+      await trx.execute(sql`
+        WITH ranked_lessons AS (
+          SELECT lesson_id, row_number() OVER (ORDER BY display_order) AS new_display_order
+          FROM ${courseLessons}
+          WHERE course_id = ${courseId}
+        )
+        UPDATE ${courseLessons} cl
+        SET display_order = rl.new_display_order
+        FROM ranked_lessons rl
+        WHERE cl.lesson_id = rl.lesson_id
+          AND cl.course_id = ${courseId}
+      `);
+    });
   }
 
   async removeCourseLesson(courseId: string, lessonId: string) {
@@ -105,6 +135,44 @@ export class AdminLessonsRepository {
       .delete(courseLessons)
       .where(and(eq(courseLessons.courseId, courseId), eq(courseLessons.lessonId, lessonId)))
       .returning();
+  }
+
+  async removeChapterAndReferences(
+    chapterId: string,
+    lessonItemsList: LessonItemWithContentSchema[],
+  ) {
+    return await this.db.transaction(async (trx) => {
+      for (const lessonItem of lessonItemsList) {
+        const { lessonItemType } = lessonItem;
+        switch (lessonItemType) {
+          case "text_block":
+            if (lessonItem.textBlockData?.id) {
+              await trx.delete(textBlocks).where(eq(textBlocks.id, lessonItem.textBlockData.id));
+            }
+            break;
+
+          case "questions":
+            if (lessonItem.questionData?.id) {
+              await trx.delete(questions).where(eq(questions.id, lessonItem.questionData.id));
+            }
+            break;
+
+          case "file":
+            if (lessonItem.fileData?.id) {
+              await trx.delete(files).where(eq(files.id, lessonItem.fileData.id));
+            }
+            break;
+
+          default:
+            throw new Error(`Unsupported lesson item type: ${lessonItemType}`);
+        }
+      }
+      await trx.delete(lessonItems).where(eq(lessonItems.lessonId, chapterId));
+
+      await trx.delete(courseLessons).where(eq(courseLessons.lessonId, chapterId));
+
+      return await trx.delete(lessons).where(eq(lessons.id, chapterId)).returning();
+    });
   }
 
   async getMaxOrderLessonsInCourse(courseId: UUIDType) {
@@ -129,27 +197,18 @@ export class AdminLessonsRepository {
       .from(lessonItems)
       .leftJoin(
         questions,
-        and(
-          eq(lessonItems.lessonItemId, questions.id),
-          eq(lessonItems.lessonItemType, "question"),
-          eq(questions.state, "published"),
-        ),
+        and(eq(lessonItems.lessonItemId, questions.id), eq(lessonItems.lessonItemType, "question")),
       )
       .leftJoin(
         textBlocks,
         and(
           eq(lessonItems.lessonItemId, textBlocks.id),
           eq(lessonItems.lessonItemType, "text_block"),
-          eq(textBlocks.state, "published"),
         ),
       )
       .leftJoin(
         files,
-        and(
-          eq(lessonItems.lessonItemId, files.id),
-          eq(lessonItems.lessonItemType, "file"),
-          eq(files.state, "published"),
-        ),
+        and(eq(lessonItems.lessonItemId, files.id), eq(lessonItems.lessonItemType, "file")),
       )
       .where(eq(lessonItems.lessonId, lessonId))
       .orderBy(lessonItems.displayOrder);
@@ -172,6 +231,18 @@ export class AdminLessonsRepository {
       lessonId,
       displayOrder,
     });
+  }
+
+  async updatePremiumStatus(lessonId: string, isFree: boolean) {
+    const [updatedPremiumStatus] = await this.db
+      .update(courseLessons)
+      .set({
+        isFree,
+      })
+      .where(eq(courseLessons.lessonId, lessonId))
+      .returning();
+
+    return updatedPremiumStatus;
   }
 
   async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {
