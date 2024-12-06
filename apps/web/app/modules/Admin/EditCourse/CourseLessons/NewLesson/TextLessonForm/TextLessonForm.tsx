@@ -116,7 +116,7 @@ const TextLessonForm = ({
                   Cancel
                 </Button>
               )}
-              <Button type="submit" className="bg-[#3F58B6] hover:bg-blue-600 text-white">
+              <Button type="submit" className="bg-primary-700hover:bg-blue-600 text-white">
                 Save
               </Button>
             </div>

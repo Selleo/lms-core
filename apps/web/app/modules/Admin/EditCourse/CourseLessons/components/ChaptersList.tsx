@@ -115,7 +115,7 @@ const ChapterCard = ({
       draggable
     >
       <Card
-        className={cn("mb-4 h-full flex p-4 border", isOpen ? "border-[#5D84D4]" : "")}
+        className={cn("mb-4 h-full flex p-4 border", { "border-primary-500": isOpen })}
         onClick={onClickChapterCard}
       >
         <div className="flex w-full">
@@ -135,8 +135,8 @@ const ChapterCard = ({
                 {lessonItems.length === 0 ? (
                   <p>No items for this lesson</p>
                 ) : (
-                  lessonItems.map((item) => {
-                    const key = item.content.id || `lesson-${item.content.id || Math.random()}`;
+                  lessonItems.map((item, index) => {
+                    const key = item.content.id || `lesson-${index}`;
                     return (
                       <LessonCard key={key} item={item} onClickLessonCard={onClickLessonCard} />
                     );
@@ -156,10 +156,10 @@ const ChapterCard = ({
               </div>
               <div className="flex items-center">
                 <Switch.Root
-                  className={cn(
-                    "w-10 h-6 mr-2 rounded-full relative transition-colors",
-                    chapter.isFree ? "bg-blue-500" : "bg-gray-200",
-                  )}
+                  className={cn("w-10 h-6 mr-2 rounded-full relative transition-colors", {
+                    "bg-blue-500": chapter.isFree,
+                    "bg-gray-200": !chapter.isFree,
+                  })}
                   onClick={onSwitchClick}
                   checked={chapter.isFree}
                 >
@@ -200,7 +200,7 @@ const ChapterCard = ({
 };
 
 interface ChaptersListProps {
-  chapters: Chapter[];
+  chapters?: Chapter[];
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
   setSelectedLesson: (selectedLesson?: LessonItem) => void;
@@ -216,7 +216,7 @@ const ChaptersList = ({
 
   const chapterCards = useMemo(
     () =>
-      chapters.map((chapter) => (
+      chapters?.map((chapter) => (
         <ChapterCard
           key={chapter.id}
           chapter={chapter}

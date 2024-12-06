@@ -279,11 +279,11 @@ export class LessonsController {
     });
   }
 
-  @Delete("lesson/:courseId/:lessonId")
+  @Delete("lesson/:chapterId/:lessonId")
   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
     request: [
-      { type: "param", name: "courseId", schema: UUIDSchema },
+      { type: "param", name: "chapterId", schema: UUIDSchema },
       { type: "param", name: "lessonId", schema: UUIDSchema },
     ],
     response: baseResponse(Type.Object({ message: Type.String() })),

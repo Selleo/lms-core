@@ -5,7 +5,7 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 
-type UpdateCourseOptions = {
+type UpdateLessonPremiumStatusOptions = {
   data: { isFree: boolean };
   lessonId: string;
 };
@@ -14,7 +14,7 @@ export function useUpdateLessonPremiumStatus() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: UpdateCourseOptions) => {
+    mutationFn: async (options: UpdateLessonPremiumStatusOptions) => {
       const response = await ApiClient.api.lessonsControllerUpdateLessonPremiumStatus(
         { isFree: options.data.isFree },
         { lessonId: options.lessonId },

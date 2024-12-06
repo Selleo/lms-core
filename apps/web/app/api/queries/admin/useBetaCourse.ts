@@ -13,9 +13,7 @@ export const courseQueryOptions = (id: string) =>
       const response = await ApiClient.api.coursesControllerGetBetaCourseById({
         id,
       });
-      // temporary solution
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return response.data as any;
+      return response.data;
     },
     select: (data: GetCourseByIdResponse) => data.data,
   });

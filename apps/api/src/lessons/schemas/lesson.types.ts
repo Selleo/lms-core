@@ -1,3 +1,5 @@
+import type { LESSON_ITEM_TYPE } from "../lesson.type";
+
 export const LessonTypes = {
   presentation: "Presentation",
   external_presentation: "External Presentation",
@@ -11,6 +13,6 @@ export const LessonProgress = {
   completed: "completed",
 } as const;
 
-export type LessonItemTypes = "text_block" | "questions" | "file";
+export type LessonItemTypes = keyof typeof LESSON_ITEM_TYPE;
 
 export type LessonProgressType = (typeof LessonProgress)[keyof typeof LessonProgress];

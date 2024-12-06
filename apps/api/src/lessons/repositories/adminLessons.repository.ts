@@ -12,6 +12,8 @@ import {
   questionAnswerOptions,
 } from "src/storage/schema";
 
+import { LESSON_ITEM_TYPE } from "../lesson.type";
+
 import type { CreateLessonBody, UpdateLessonBody } from "../schemas/lesson.schema";
 import type { LessonItemWithContentSchema } from "../schemas/lessonItem.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
@@ -145,19 +147,19 @@ export class AdminLessonsRepository {
       for (const lessonItem of lessonItemsList) {
         const { lessonItemType } = lessonItem;
         switch (lessonItemType) {
-          case "text_block":
+          case LESSON_ITEM_TYPE.text_block.key:
             if (lessonItem.textBlockData?.id) {
               await trx.delete(textBlocks).where(eq(textBlocks.id, lessonItem.textBlockData.id));
             }
             break;
 
-          case "questions":
+          case LESSON_ITEM_TYPE.question.key:
             if (lessonItem.questionData?.id) {
               await trx.delete(questions).where(eq(questions.id, lessonItem.questionData.id));
             }
             break;
 
-          case "file":
+          case LESSON_ITEM_TYPE.file.key:
             if (lessonItem.fileData?.id) {
               await trx.delete(files).where(eq(files.id, lessonItem.fileData.id));
             }

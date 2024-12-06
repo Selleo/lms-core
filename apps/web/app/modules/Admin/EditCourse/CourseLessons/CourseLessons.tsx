@@ -69,7 +69,7 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
     <div className="flex bg-white h-full">
       <div className="w-full md:w-2/5 h-full flex flex-col">
         <ChaptersList
-          chapters={chapters as Chapter[]}
+          chapters={chapters}
           setContentTypeToDisplay={setContentTypeToDisplay}
           setSelectedChapter={setSelectedChapter}
           setSelectedLesson={setSelectedLesson}
@@ -77,7 +77,7 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
         <div className="flex-grow" />
         <Button
           onClick={addChapter}
-          className="bg-[#3F58B6] text-white py-2 px-4 rounded-lg hover:bg-blue-600 mb-4"
+          className="bg-primary-700 text-white py-2 px-4 rounded-lg hover:bg-blue-600 mb-4"
         >
           <Icon name="Plus" className="mr-2" />
           Add Chapter

@@ -39,7 +39,7 @@ export const createLessonSchema = Type.Omit(lessonSchema, [
 export const createLessonWithCourseIdSchema = Type.Intersect([
   createLessonSchema,
   Type.Object({
-    courseId: Type.String(),
+    courseId: UUIDSchema,
   }),
 ]);
 

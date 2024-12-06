@@ -63,7 +63,7 @@ const EditCourse = () => {
           <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1 flex items-center">
             {course?.title || ""}
             {course?.state === "draft" && (
-              <span className="ml-2 flex items-center text-yellow-600 bg-[#FEFDE8] px-2 py-1 rounded-sm text-sm">
+              <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
                 <Icon name="Warning" className="mr-1" />
                 Draft
               </span>

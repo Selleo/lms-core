@@ -74,17 +74,17 @@ export class AdminLessonItemsRepository {
   }
 
   async getLessonItem(lessonItemId: string) {
-    const lessonItem = await this.db
+    const [lessonItem] = await this.db
       .select()
       .from(lessonItems)
       .where(eq(lessonItems.lessonItemId, lessonItemId))
       .limit(1);
 
-    if (!lessonItem || lessonItem.length === 0) {
+    if (!lessonItem) {
       throw new Error(`Lesson item with ID ${lessonItemId} not found`);
     }
 
-    return lessonItem[0];
+    return lessonItem;
   }
 
   async getQuestionStudentAnswers(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
@@ -292,7 +292,7 @@ export class AdminLessonItemsRepository {
           await trx.delete(textBlocks).where(eq(textBlocks.id, lessonItemId));
           break;
 
-        case "questions":
+        case "question":
           await trx.delete(questions).where(eq(questions.id, lessonItemId));
           break;
 

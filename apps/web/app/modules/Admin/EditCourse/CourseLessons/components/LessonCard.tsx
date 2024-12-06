@@ -15,7 +15,7 @@ interface LessonCardProps {
 const LessonCard = ({ item, onClickLessonCard }: LessonCardProps) => {
   const contentType = item.lessonItemType === "file" ? item.content.type : item.lessonItemType;
 
-  const mappedItemType = useMemo(() => mapItemType(contentType as string), [contentType]);
+  const mappedItemType = useMemo(() => mapItemType(contentType), [contentType]);
   const getIcon = useMemo(() => mapTypeToIcon(contentType as string), [contentType]);
 
   const handleClick = (event: React.MouseEvent) => {
@@ -51,7 +51,7 @@ const LessonCard = ({ item, onClickLessonCard }: LessonCardProps) => {
               <p className="text-l">{item.content.title}</p>
             </div>
             {item?.content.state === "draft" && (
-              <span className="ml-2 flex items-center text-yellow-600 bg-[#FEFDE8] px-2 py-1 rounded-sm text-sm">
+              <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
                 <Icon name="Warning" className="mr-1" />
                 Draft
               </span>

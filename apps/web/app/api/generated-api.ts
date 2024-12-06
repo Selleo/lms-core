@@ -2514,15 +2514,15 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name LessonsControllerRemoveLesson
-     * @request DELETE:/api/lessons/lesson/{courseId}/{lessonId}
+     * @request DELETE:/api/lessons/lesson/{chapterId}/{lessonId}
      */
     lessonsControllerRemoveLesson: (
-      courseId: string,
+      chapterId: string,
       lessonId: string,
       params: RequestParams = {},
     ) =>
       this.request<RemoveLessonResponse, any>({
-        path: `/api/lessons/lesson/${courseId}/${lessonId}`,
+        path: `/api/lessons/lesson/${chapterId}/${lessonId}`,
         method: "DELETE",
         format: "json",
         ...params,

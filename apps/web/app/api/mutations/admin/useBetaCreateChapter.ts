@@ -7,7 +7,7 @@ import { ApiClient } from "../../api-client";
 
 import type { CreateLessonBody } from "../../generated-api";
 
-type CreateLessonOptions = {
+type CreateChapterOptions = {
   data: CreateLessonBody;
 };
 
@@ -15,7 +15,7 @@ export function useBetaCreateChapter() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: CreateLessonOptions) => {
+    mutationFn: async (options: CreateChapterOptions) => {
       const response = await ApiClient.api.lessonsControllerBetaCreateLesson(options.data);
 
       return response.data;

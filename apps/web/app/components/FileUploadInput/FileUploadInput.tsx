@@ -1,10 +1,9 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useEffect, useState } from "react";
 
-import { cn } from "~/lib/utils";
 import { ContentTypes } from "~/modules/Admin/EditCourse/EditCourse.types";
 
-import { Icon } from "../Icon";
+import EmptyStateUpload from "./EmptyStateUpload";
 
 import type React from "react";
 
@@ -58,32 +57,12 @@ const FileUploadInput = ({
     <div className="flex  flex-col gap-y-2">
       <div className="w-3/5 h-[200px] md:h-[350px] xl:h-[500px] rounded-lg border-solid border-2 border-gray-300 flex bg-gray-100 relative cursor-pointer overflow-hidden flex-col">
         {!videoPreview && !file ? (
-          <>
-            <div
-              className={cn(
-                "absolute inset-0 flex flex-col items-center justify-center text-center",
-              )}
-            >
-              <Icon name="UploadImageIcon" />
-              <div className="flex items-center justify-center mt-2">
-                <span className={`text-lg font-semibold text-[#7CA3DE]`}>Click to upload</span>
-                <span className="ml-2 text-lg font-semibold">or drag and drop</span>
-              </div>
-              <div className="text-sm w-full px-2 mt-2 text-gray-600">
-                Supported formats:{" "}
-                {contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM
-                  ? "MP4, AVI, MOV"
-                  : "PPTX, PPT, ODP"}
-              </div>
-            </div>
-            <input
-              type="file"
-              accept={acceptedTypes}
-              onChange={handleFileChange}
-              disabled={isUploading}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-          </>
+          <EmptyStateUpload
+            acceptedTypes={acceptedTypes}
+            handleFileChange={handleFileChange}
+            isUploading={isUploading}
+            contentTypeToDisplay={ContentTypes.VIDEO_LESSON_FORM}
+          />
         ) : contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? (
           <video src={videoPreview as string} controls className="w-full h-full object-cover">
             <track kind="captions" />

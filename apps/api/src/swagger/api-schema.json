@@ -1902,12 +1902,12 @@
         }
       }
     },
-    "/api/lessons/lesson/{courseId}/{lessonId}": {
+    "/api/lessons/lesson/{chapterId}/{lessonId}": {
       "delete": {
         "operationId": "LessonsController_removeLesson",
         "parameters": [
           {
-            "name": "courseId",
+            "name": "chapterId",
             "required": true,
             "in": "path",
             "schema": {

@@ -25,7 +25,7 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
   });
 
   const buttonStyles = "bg-transparent text-red-500 border border-red-500 hover:bg-red-100";
-  const saveButtonStyles = "bg-[#3F58B6] hover:bg-blue-600 text-white";
+  const saveButtonStyles = "bg-primary-700 hover:bg-blue-600 text-white";
 
   return (
     <div className="w-full max-w-full">
