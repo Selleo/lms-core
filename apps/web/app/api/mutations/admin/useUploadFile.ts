@@ -18,7 +18,7 @@ export function useUploadFile() {
       formData.append("file", file);
       resource && formData.append("resource", resource);
 
-      const response = await ApiClient.api.s3ControllerUploadFile(
+      const response = await ApiClient.api.filesControllerUploadFile(
         { file },
         {
           headers: { "Content-Type": "multipart/form-data" },

@@ -5,12 +5,12 @@ import {
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 
-type TutorPageBreadcrumbsProps = {
+type TeacherPageBreadcrumbsProps = {
   id: string;
   username: string;
 };
 
-export const TeacherPageBreadcrumbs = ({ id, username }: TutorPageBreadcrumbsProps) => {
+export const TeacherPageBreadcrumbs = ({ id, username }: TeacherPageBreadcrumbsProps) => {
   return (
     <div className="bg-primary-50 mb-4">
       <BreadcrumbList>

@@ -1,14 +1,14 @@
 import { Module } from "@nestjs/common";
 
-import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
+import { StatisticsModule } from "src/statistics/statistics.module";
 
 import { StudentCompletedLessonItemsController } from "./api/studentCompletedLessonItems.controller";
 import { StudentCompletedLessonItemsService } from "./studentCompletedLessonItems.service";
 
 @Module({
-  imports: [],
+  imports: [StatisticsModule],
   controllers: [StudentCompletedLessonItemsController],
-  providers: [StudentCompletedLessonItemsService, StatisticsRepository],
+  providers: [StudentCompletedLessonItemsService],
   exports: [StudentCompletedLessonItemsService],
 })
 export class StudentCompletedLessonItemsModule {}
