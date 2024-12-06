@@ -1368,6 +1368,33 @@
         }
       }
     },
+    "/api/courses/beta-course-by-id": {
+      "get": {
+        "operationId": "CoursesController_getBetaCourseById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetBetaCourseByIdResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/courses/{id}": {
       "patch": {
         "operationId": "CoursesController_updateCourse",
@@ -1809,6 +1836,33 @@
         }
       }
     },
+    "/api/lessons/beta-create-lesson": {
+      "post": {
+        "operationId": "LessonsController_betaCreateLesson",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BetaCreateLessonBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BetaCreateLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lessons/add": {
       "post": {
         "operationId": "LessonsController_addLessonToCourse",
@@ -1865,6 +1919,78 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RemoveLessonFromCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/chapter/{courseId}/{chapterId}": {
+      "delete": {
+        "operationId": "LessonsController_removeChapter",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/lesson/{chapterId}/{lessonId}": {
+      "delete": {
+        "operationId": "LessonsController_removeLesson",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveLessonResponse"
                 }
               }
             }
@@ -2336,6 +2462,33 @@
         }
       }
     },
+    "/api/lessons/create-beta-text-block": {
+      "post": {
+        "operationId": "LessonsController_createBetaTextBlock",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBetaTextBlockBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateBetaTextBlockResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lessons/create-question": {
       "post": {
         "operationId": "LessonsController_createQuestion",
@@ -2425,6 +2578,43 @@
         }
       }
     },
+    "/api/lessons/course-lesson/freemium-status": {
+      "patch": {
+        "operationId": "LessonsController_updateLessonFreemiumStatus",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLessonFreemiumStatusBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateLessonFreemiumStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lessons/create-file": {
       "post": {
         "operationId": "LessonsController_createFile",
@@ -2445,6 +2635,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CreateFileResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lessons/beta-create-file": {
+      "post": {
+        "operationId": "LessonsController_betaCreateFile",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BetaCreateFileBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BetaCreateFileResponse"
                 }
               }
             }
@@ -4049,6 +4266,9 @@
                     "title": {
                       "type": "string"
                     },
+                    "courseId": {
+                      "type": "string"
+                    },
                     "imageUrl": {
                       "type": "string"
                     },
@@ -4105,7 +4325,6 @@
                   "required": [
                     "id",
                     "title",
-                    "description",
                     "itemsCount"
                   ]
                 }
@@ -4207,6 +4426,9 @@
                     "title": {
                       "type": "string"
                     },
+                    "courseId": {
+                      "type": "string"
+                    },
                     "imageUrl": {
                       "type": "string"
                     },
@@ -4263,7 +4485,166 @@
                   "required": [
                     "id",
                     "title",
-                    "description",
+                    "itemsCount"
+                  ]
+                }
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "currency": {
+                "type": "string"
+              },
+              "archived": {
+                "type": "boolean"
+              },
+              "hasFreeLessons": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "description",
+              "category",
+              "courseLessonCount",
+              "state",
+              "lessons",
+              "priceInCents",
+              "currency"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetBetaCourseByIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "categoryId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "authorId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "author": {
+                "type": "string"
+              },
+              "authorEmail": {
+                "type": "string"
+              },
+              "courseLessonCount": {
+                "type": "number"
+              },
+              "completedLessonCount": {
+                "type": "number"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "state": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "courseId": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "itemsCount": {
+                      "type": "number"
+                    },
+                    "itemsCompletedCount": {
+                      "type": "number"
+                    },
+                    "lessonProgress": {
+                      "anyOf": [
+                        {
+                          "const": "completed",
+                          "type": "string"
+                        },
+                        {
+                          "const": "in_progress",
+                          "type": "string"
+                        },
+                        {
+                          "const": "not_started",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "isFree": {
+                      "type": "boolean"
+                    },
+                    "enrolled": {
+                      "type": "boolean"
+                    },
+                    "state": {
+                      "type": "string"
+                    },
+                    "archived": {
+                      "type": "boolean"
+                    },
+                    "isSubmitted": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "quizScore": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
                     "itemsCount"
                   ]
                 }
@@ -4654,6 +5035,10 @@
                       "title": {
                         "type": "string"
                       },
+                      "courseId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
                       "imageUrl": {
                         "type": "string"
                       },
@@ -4706,10 +5091,6 @@
                       "quizScore": {
                         "type": "number"
                       },
-                      "courseId": {
-                        "format": "uuid",
-                        "type": "string"
-                      },
                       "courseTitle": {
                         "type": "string"
                       },
@@ -4720,9 +5101,8 @@
                     "required": [
                       "id",
                       "title",
-                      "description",
-                      "itemsCount",
                       "courseId",
+                      "itemsCount",
                       "courseTitle",
                       "courseDescription"
                     ]
@@ -4870,6 +5250,9 @@
                 "title": {
                   "type": "string"
                 },
+                "courseId": {
+                  "type": "string"
+                },
                 "imageUrl": {
                   "type": "string"
                 },
@@ -4926,7 +5309,6 @@
               "required": [
                 "id",
                 "title",
-                "description",
                 "itemsCount"
               ]
             }
@@ -5024,6 +5406,9 @@
               "title": {
                 "type": "string"
               },
+              "courseId": {
+                "type": "string"
+              },
               "imageUrl": {
                 "type": "string"
               },
@@ -5251,13 +5636,24 @@
                             },
                             "url": {
                               "type": "string"
+                            },
+                            "body": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
                             }
                           },
                           "required": [
                             "id",
                             "title",
                             "type",
-                            "url"
+                            "url",
+                            "body"
                           ]
                         }
                       ]
@@ -5275,7 +5671,6 @@
             "required": [
               "id",
               "title",
-              "description",
               "itemsCount",
               "lessonItems"
             ]
@@ -5298,6 +5693,9 @@
               "title": {
                 "type": "string"
               },
+              "courseId": {
+                "type": "string"
+              },
               "imageUrl": {
                 "type": "string"
               },
@@ -5525,13 +5923,24 @@
                             },
                             "url": {
                               "type": "string"
+                            },
+                            "body": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
                             }
                           },
                           "required": [
                             "id",
                             "title",
                             "type",
-                            "url"
+                            "url",
+                            "body"
                           ]
                         }
                       ]
@@ -5549,7 +5958,6 @@
             "required": [
               "id",
               "title",
-              "description",
               "itemsCount",
               "lessonItems"
             ]
@@ -5563,6 +5971,9 @@
         "type": "object",
         "properties": {
           "title": {
+            "type": "string"
+          },
+          "courseId": {
             "type": "string"
           },
           "imageUrl": {
@@ -5613,11 +6024,94 @@
           }
         },
         "required": [
-          "title",
-          "description"
+          "title"
         ]
       },
       "CreateLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BetaCreateLessonBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "lessonProgress": {
+            "anyOf": [
+              {
+                "const": "completed",
+                "type": "string"
+              },
+              {
+                "const": "in_progress",
+                "type": "string"
+              },
+              {
+                "const": "not_started",
+                "type": "string"
+              }
+            ]
+          },
+          "isFree": {
+            "type": "boolean"
+          },
+          "enrolled": {
+            "type": "boolean"
+          },
+          "state": {
+            "type": "string"
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "isSubmitted": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "quizScore": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "BetaCreateLessonResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -5645,6 +6139,9 @@
         "type": "object",
         "properties": {
           "title": {
+            "type": "string"
+          },
+          "courseId": {
             "type": "string"
           },
           "imageUrl": {
@@ -5754,6 +6251,44 @@
         ]
       },
       "RemoveLessonFromCourseResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RemoveChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RemoveLessonResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -5975,6 +6510,16 @@
                         "url": {
                           "type": "string"
                         },
+                        "body": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "type": {
                           "type": "string"
                         }
@@ -5983,6 +6528,7 @@
                         "itemType",
                         "title",
                         "url",
+                        "body",
                         "type"
                       ]
                     }
@@ -6200,6 +6746,16 @@
                         "url": {
                           "type": "string"
                         },
+                        "body": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "type": {
                           "type": "string"
                         }
@@ -6208,6 +6764,7 @@
                         "itemType",
                         "title",
                         "url",
+                        "body",
                         "type"
                       ]
                     }
@@ -6403,6 +6960,16 @@
                       "url": {
                         "type": "string"
                       },
+                      "body": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
                       "type": {
                         "type": "string"
                       }
@@ -6411,6 +6978,7 @@
                       "itemType",
                       "title",
                       "url",
+                      "body",
                       "type"
                     ]
                   }
@@ -6629,6 +7197,9 @@
           "authorId": {
             "format": "uuid",
             "type": "string"
+          },
+          "lessonId": {
+            "type": "string"
           }
         }
       },
@@ -6753,6 +7324,16 @@
             "format": "uuid",
             "type": "string"
           },
+          "body": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "state": {
             "type": "string"
           },
@@ -6805,6 +7386,58 @@
         ]
       },
       "CreateTextBlockResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "CreateBetaTextBlockBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "authorId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "lessonId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body",
+          "state",
+          "authorId",
+          "lessonId"
+        ]
+      },
+      "CreateBetaTextBlockResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -6961,6 +7594,36 @@
           "data"
         ]
       },
+      "UpdateLessonFreemiumStatusBody": {
+        "type": "object",
+        "properties": {
+          "isFreemium": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isFreemium"
+        ]
+      },
+      "UpdateLessonFreemiumStatusResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "CreateFileBody": {
         "type": "object",
         "properties": {
@@ -6990,6 +7653,60 @@
         ]
       },
       "CreateFileResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BetaCreateFileBody": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "authorId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "body": {
+            "type": "string"
+          },
+          "lessonId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "state",
+          "authorId",
+          "type",
+          "lessonId"
+        ]
+      },
+      "BetaCreateFileResponse": {
         "type": "object",
         "properties": {
           "data": {

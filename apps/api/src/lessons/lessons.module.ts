@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 
 import { FilesModule } from "src/file/files.module";
+import { S3Service } from "src/s3/s3.service";
 
 import { AdminLessonItemsService } from "./adminLessonItems.service";
 import { AdminLessonsService } from "./adminLessons.service";
@@ -17,10 +18,11 @@ import { LessonsRepository } from "./repositories/lessons.repository";
     LessonsService,
     AdminLessonsService,
     AdminLessonItemsService,
+    S3Service,
     LessonsRepository,
     AdminLessonsRepository,
     AdminLessonItemsRepository,
   ],
-  exports: [LessonsRepository],
+  exports: [LessonsRepository, AdminLessonsService, AdminLessonsRepository],
 })
 export class LessonsModule {}

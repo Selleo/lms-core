@@ -8,7 +8,7 @@ type NavigationTabsProps = {
 
 const TabTrigger = ({ value, children }: { value: string; children: React.ReactNode }) => (
   <Tabs.Trigger
-    className="text-gray-700 hover:text-black text-lg px-4 py-2 data-[state=active]:border-b-2 data-[state=active]:border-black"
+    className="text-gray-700 hover:text-black text-lg px-4 py-2 data-[state=active]:text-primary-800 data-[state=active]:border-none"
     value={value}
   >
     {children}

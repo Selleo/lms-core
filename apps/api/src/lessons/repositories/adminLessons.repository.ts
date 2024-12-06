@@ -12,7 +12,10 @@ import {
   questionAnswerOptions,
 } from "src/storage/schema";
 
+import { LESSON_ITEM_TYPE } from "../lesson.type";
+
 import type { CreateLessonBody, UpdateLessonBody } from "../schemas/lesson.schema";
+import type { LessonItemWithContentSchema } from "../schemas/lessonItem.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
@@ -25,8 +28,8 @@ export class AdminLessonsRepository {
       .select({
         id: lessons.id,
         title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
+        description: sql<string>`COALESCE(${lessons.description}, '')`,
+        imageUrl: sql<string>`COALESCE(${lessons.imageUrl}, '')`,
         state: lessons.state,
         archived: lessons.archived,
         itemsCount: sql<number>`CAST(COUNT(DISTINCT ${lessonItems.id}) AS INTEGER)`,
@@ -44,8 +47,8 @@ export class AdminLessonsRepository {
       .select({
         id: lessons.id,
         title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        imageUrl: sql<string>`${lessons.imageUrl}`,
+        description: sql<string>`COALESCE(${lessons.description}, '')`,
+        imageUrl: sql<string>`COALESCE(${lessons.imageUrl}, '')`,
         state: lessons.state,
         archived: lessons.archived,
         type: lessons.type,
@@ -86,7 +89,7 @@ export class AdminLessonsRepository {
       );
   }
 
-  async updateDisplayOrderLessonsInCourse(courseId: UUIDType, lessonId: UUIDType) {
+  async updateDisplayOrderLessonsInCourse(courseId: UUIDType, chapterId: UUIDType) {
     await this.db.execute(sql`
       UPDATE ${courseLessons}
       SET display_order = display_order - 1
@@ -95,9 +98,38 @@ export class AdminLessonsRepository {
           SELECT display_order
           FROM ${courseLessons}
           WHERE course_id = ${courseId}
-            AND lesson_id = ${lessonId}
+            AND lesson_id = ${chapterId}
         )
     `);
+  }
+
+  async updateChapterDisplayOrder(courseId: UUIDType, lessonId: UUIDType) {
+    await this.db.transaction(async (trx) => {
+      await trx.execute(sql`
+        UPDATE ${courseLessons}
+        SET display_order = display_order - 1
+        WHERE course_id = ${courseId}
+          AND display_order > (
+            SELECT display_order
+            FROM ${courseLessons}
+            WHERE course_id = ${courseId}
+              AND lesson_id = ${lessonId}
+          )
+      `);
+
+      await trx.execute(sql`
+        WITH ranked_lessons AS (
+          SELECT lesson_id, row_number() OVER (ORDER BY display_order) AS new_display_order
+          FROM ${courseLessons}
+          WHERE course_id = ${courseId}
+        )
+        UPDATE ${courseLessons} cl
+        SET display_order = rl.new_display_order
+        FROM ranked_lessons rl
+        WHERE cl.lesson_id = rl.lesson_id
+          AND cl.course_id = ${courseId}
+      `);
+    });
   }
 
   async removeCourseLesson(courseId: string, lessonId: string) {
@@ -105,6 +137,44 @@ export class AdminLessonsRepository {
       .delete(courseLessons)
       .where(and(eq(courseLessons.courseId, courseId), eq(courseLessons.lessonId, lessonId)))
       .returning();
+  }
+
+  async removeChapterAndReferences(
+    chapterId: string,
+    lessonItemsList: LessonItemWithContentSchema[],
+  ) {
+    return await this.db.transaction(async (trx) => {
+      for (const lessonItem of lessonItemsList) {
+        const { lessonItemType } = lessonItem;
+        switch (lessonItemType) {
+          case LESSON_ITEM_TYPE.text_block.key:
+            if (lessonItem.textBlockData?.id) {
+              await trx.delete(textBlocks).where(eq(textBlocks.id, lessonItem.textBlockData.id));
+            }
+            break;
+
+          case LESSON_ITEM_TYPE.question.key:
+            if (lessonItem.questionData?.id) {
+              await trx.delete(questions).where(eq(questions.id, lessonItem.questionData.id));
+            }
+            break;
+
+          case LESSON_ITEM_TYPE.file.key:
+            if (lessonItem.fileData?.id) {
+              await trx.delete(files).where(eq(files.id, lessonItem.fileData.id));
+            }
+            break;
+
+          default:
+            throw new Error(`Unsupported lesson item type: ${lessonItemType}`);
+        }
+      }
+      await trx.delete(lessonItems).where(eq(lessonItems.lessonId, chapterId));
+
+      await trx.delete(courseLessons).where(eq(courseLessons.lessonId, chapterId));
+
+      return await trx.delete(lessons).where(eq(lessons.id, chapterId)).returning();
+    });
   }
 
   async getMaxOrderLessonsInCourse(courseId: UUIDType) {
@@ -131,7 +201,7 @@ export class AdminLessonsRepository {
         questions,
         and(
           eq(lessonItems.lessonItemId, questions.id),
-          eq(lessonItems.lessonItemType, "question"),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.question.key),
           eq(questions.state, "published"),
         ),
       )
@@ -139,7 +209,7 @@ export class AdminLessonsRepository {
         textBlocks,
         and(
           eq(lessonItems.lessonItemId, textBlocks.id),
-          eq(lessonItems.lessonItemType, "text_block"),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.text_block.key),
           eq(textBlocks.state, "published"),
         ),
       )
@@ -147,8 +217,44 @@ export class AdminLessonsRepository {
         files,
         and(
           eq(lessonItems.lessonItemId, files.id),
-          eq(lessonItems.lessonItemType, "file"),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.file.key),
           eq(files.state, "published"),
+        ),
+      )
+      .where(eq(lessonItems.lessonId, lessonId))
+      .orderBy(lessonItems.displayOrder);
+  }
+
+  async getBetaLessons(lessonId: UUIDType) {
+    return await this.db
+      .select({
+        lessonItemType: lessonItems.lessonItemType,
+        lessonItemId: lessonItems.id,
+        questionData: questions,
+        textBlockData: textBlocks,
+        fileData: files,
+        displayOrder: lessonItems.displayOrder,
+      })
+      .from(lessonItems)
+      .leftJoin(
+        questions,
+        and(
+          eq(lessonItems.lessonItemId, questions.id),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.question.key),
+        ),
+      )
+      .leftJoin(
+        textBlocks,
+        and(
+          eq(lessonItems.lessonItemId, textBlocks.id),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.text_block.key),
+        ),
+      )
+      .leftJoin(
+        files,
+        and(
+          eq(lessonItems.lessonItemId, files.id),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.file.key),
         ),
       )
       .where(eq(lessonItems.lessonId, lessonId))
@@ -172,6 +278,18 @@ export class AdminLessonsRepository {
       lessonId,
       displayOrder,
     });
+  }
+
+  async updateFreemiumStatus(lessonId: string, isFreemium: boolean) {
+    const [updateFreemiumStatus] = await this.db
+      .update(courseLessons)
+      .set({
+        isFree: isFreemium,
+      })
+      .where(eq(courseLessons.lessonId, lessonId))
+      .returning();
+
+    return updateFreemiumStatus;
   }
 
   async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {

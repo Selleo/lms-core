@@ -41,6 +41,10 @@ import {
   updateLessonSchema,
 } from "./schemas/lesson.schema";
 import {
+  BetaFileLessonType,
+  betaFileSelectSchema,
+  betaTextLessonSchema,
+  BetaTextLessonType,
   type FileInsertType,
   fileUpdateSchema,
   type GetAllLessonItemsResponse,
@@ -143,7 +147,7 @@ export class LessonsController {
     response: baseResponse(showLessonSchema),
   })
   async getLessonById(@Param("id") id: string): Promise<BaseResponse<ShowLessonResponse>> {
-    return new BaseResponse(await this.adminLessonsService.getLessonById(id));
+    return new BaseResponse(await this.adminLessonsService.getLessonWithItemsById(id));
   }
 
   @Post("create-lesson")
@@ -159,9 +163,32 @@ export class LessonsController {
   })
   async createLesson(
     @Body() createLessonBody: CreateLessonBody,
-    @CurrentUser("userId") userId: string,
+    @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const { id } = await this.adminLessonsService.createLesson(createLessonBody, userId);
+
+    return new BaseResponse({ id, message: "Lesson created successfully" });
+  }
+
+  @Post("beta-create-lesson")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: createLessonSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
+  })
+  async betaCreateLesson(
+    @Body() createLessonBody: CreateLessonBody,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonsService.createLessonAndAddToCourse(
+      createLessonBody,
+      userId,
+    );
 
     return new BaseResponse({ id, message: "Lesson created successfully" });
   }
@@ -235,6 +262,44 @@ export class LessonsController {
     });
   }
 
+  @Delete("chapter/:courseId/:chapterId")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      { type: "param", name: "courseId", schema: UUIDSchema },
+      { type: "param", name: "chapterId", schema: UUIDSchema },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async removeChapter(
+    @Query("courseId") courseId: UUIDType,
+    @Query("chapterId") chapterId: UUIDType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonsService.removeChapter(courseId, chapterId);
+    return new BaseResponse({
+      message: "Lesson removed from course successfully",
+    });
+  }
+
+  @Delete("lesson/:chapterId/:lessonId")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      { type: "param", name: "chapterId", schema: UUIDSchema },
+      { type: "param", name: "lessonId", schema: UUIDSchema },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async removeLesson(
+    @Param("chapterId") chapterId: string,
+    @Param("lessonId") lessonId: string,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonItemsService.removeLesson(chapterId, lessonId);
+    return new BaseResponse({
+      message: "Lesson removed from course successfully",
+    });
+  }
+
   @Patch("course-lesson")
   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
@@ -278,7 +343,7 @@ export class LessonsController {
   async evaluationQuiz(
     @Query("courseId") courseId: string,
     @Query("lessonId") lessonId: string,
-    @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
     await this.lessonsService.evaluationQuiz(courseId, lessonId, currentUserId);
     return new BaseResponse({
@@ -298,7 +363,7 @@ export class LessonsController {
   async clearQuizProgress(
     @Query("courseId") courseId: string,
     @Query("lessonId") lessonId: string,
-    @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
     const result = await this.lessonsService.clearQuizProgress(courseId, lessonId, currentUserId);
     if (result)
@@ -556,9 +621,32 @@ export class LessonsController {
   })
   async createTextBlock(
     @Body() body: TextBlockInsertType,
-    @CurrentUser("userId") userId: string,
+    @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const { id } = await this.adminLessonItemsService.createTextBlock(body, userId);
+
+    return new BaseResponse({ id, message: "Text block created successfully" });
+  }
+
+  @Post("create-beta-text-block")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: betaTextLessonSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
+  })
+  async createBetaTextBlock(
+    @Body() body: BetaTextLessonType,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonItemsService.createTextBlockAndAssignToLesson(
+      body,
+      userId,
+    );
 
     return new BaseResponse({ id, message: "Text block created successfully" });
   }
@@ -583,7 +671,7 @@ export class LessonsController {
   async createQuestion(
     @Body()
     body: QuestionInsertType,
-    @CurrentUser("userId") userId: string,
+    @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ message: string; questionId: string }>> {
     const { id } = await this.adminLessonItemsService.createQuestion(body, userId);
 
@@ -671,6 +759,34 @@ export class LessonsController {
     });
   }
 
+  @Patch("course-lesson/freemium-status")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "lessonId",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: Type.Object({
+          isFreemium: Type.Boolean(),
+        }),
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateLessonFreemiumStatus(
+    @Query("lessonId") lessonId: string,
+    @Body() body: { isFreemium: boolean },
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonItemsService.updateFreemiumStatus(lessonId, body.isFreemium);
+    return new BaseResponse({
+      message: "Course lesson free status updated successfully",
+    });
+  }
+
   @Post("create-file")
   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
@@ -690,9 +806,29 @@ export class LessonsController {
   })
   async createFile(
     @Body() body: FileInsertType,
-    @CurrentUser("userId") userId: string,
+    @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const { id } = await this.adminLessonItemsService.createFile(body, userId);
+
+    return new BaseResponse({ id, message: "File created successfully" });
+  }
+
+  @Post("beta-create-file")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: betaFileSelectSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
+  })
+  async betaCreateFile(
+    @Body() body: BetaFileLessonType,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const { id } = await this.adminLessonItemsService.createFileAndAssignToLesson(body, userId);
 
     return new BaseResponse({ id, message: "File created successfully" });
   }

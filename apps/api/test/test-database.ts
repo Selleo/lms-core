@@ -27,7 +27,9 @@ export async function setupTestDatabase(): Promise<{
     })
     .start();
 
-  const connectionString = `postgresql://testuser:testpass@${container.getHost()}:${container.getMappedPort(5432)}/testdb`;
+  const connectionString = `postgresql://testuser:testpass@${container.getHost()}:${container.getMappedPort(
+    5432,
+  )}/testdb`;
 
   sql = postgres(connectionString);
   db = drizzle(sql, { schema }) as DatabasePg;

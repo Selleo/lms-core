@@ -7,7 +7,8 @@ import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { FilesService } from "src/file/files.service";
-import { lessonItems, lessons } from "src/storage/schema";
+import { S3Service } from "src/s3/s3.service";
+import { courseLessons, lessonItems, lessons } from "src/storage/schema";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
@@ -19,7 +20,7 @@ import {
 } from "./schemas/lessonQuery";
 
 import type { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
-import type { LessonItemResponse } from "./schemas/lessonItem.schema";
+import type { LessonItemResponse, LessonItemWithContentSchema } from "./schemas/lessonItem.schema";
 import type { UUIDType } from "src/common";
 
 @Injectable()
@@ -27,6 +28,7 @@ export class AdminLessonsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly filesService: FilesService,
+    private readonly s3Service: S3Service,
     private readonly adminLessonsRepository: AdminLessonsRepository,
   ) {}
 
@@ -75,15 +77,12 @@ export class AdminLessonsService {
       },
     };
   }
-
-  async getLessonById(id: string) {
-    const lesson = await this.adminLessonsRepository.getLessonById(id);
-
-    if (!lesson) throw new NotFoundException("Lesson not found");
-
-    const lessonItemsList = await this.adminLessonsRepository.getLessonItems(id);
-
-    const items = await Promise.all(
+  async processLessonItems(lessonItemsList: LessonItemWithContentSchema[]) {
+    const getFileUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.s3Service.getSignedUrl(url);
+    };
+    return await Promise.all(
       lessonItemsList.map(async (item) => {
         const content = await match(item)
           .returnType<Promise<LessonItemResponse["content"]>>()
@@ -105,7 +104,7 @@ export class AdminLessonsService {
             async (item) => ({
               id: item.textBlockData.id,
               body: item.textBlockData.body || "",
-              state: item.textBlockData.state,
+              state: item.textBlockData.state || "draft",
               title: item.textBlockData.title,
             }),
           )
@@ -113,8 +112,9 @@ export class AdminLessonsService {
             id: item.fileData.id,
             title: item.fileData.title,
             type: item.fileData.type,
-            url: item.fileData.url,
+            url: (await getFileUrl(item.fileData.url)) as string,
             state: item.fileData.state,
+            body: item.fileData.body,
           }))
           .otherwise(() => {
             throw new Error(`Unknown item type: ${item.lessonItemType}`);
@@ -128,6 +128,16 @@ export class AdminLessonsService {
         };
       }),
     );
+  }
+
+  async getLessonWithItemsById(id: string) {
+    const lesson = await this.adminLessonsRepository.getLessonById(id);
+
+    if (!lesson) throw new NotFoundException("Lesson not found");
+
+    const lessonItemsList = await this.adminLessonsRepository.getLessonItems(id);
+
+    const items = await this.processLessonItems(lessonItemsList as LessonItemWithContentSchema[]);
 
     return {
       ...lesson,
@@ -161,6 +171,38 @@ export class AdminLessonsService {
     if (!lesson) throw new NotFoundException("Lesson not found");
 
     return { id: lesson.id };
+  }
+
+  async createLessonAndAddToCourse(
+    body: CreateLessonBody & { courseId?: string },
+    authorId: string,
+  ) {
+    return await this.db.transaction(async (tx) => {
+      const [lesson] = await tx
+        .insert(lessons)
+        .values({ ...body, authorId })
+        .returning();
+
+      if (!lesson) throw new NotFoundException("Lesson not found");
+
+      if (body.courseId) {
+        const existingLessons = await tx
+          .select()
+          .from(courseLessons)
+          .where(eq(courseLessons.courseId, body.courseId))
+          .orderBy(courseLessons.displayOrder);
+
+        const newLessonDisplayOrder = (existingLessons.length > 0 ? existingLessons.length : 0) + 1;
+
+        await tx.insert(courseLessons).values({
+          courseId: body.courseId,
+          lessonId: lesson.id,
+          displayOrder: newLessonDisplayOrder,
+        });
+      }
+
+      return { id: lesson.id };
+    });
   }
 
   async updateLesson(id: string, body: UpdateLessonBody) {
@@ -200,6 +242,21 @@ export class AdminLessonsService {
     }
 
     await this.adminLessonsRepository.updateDisplayOrderLessonsInCourse(courseId, lessonId);
+  }
+
+  async removeChapter(courseId: string, chapterId: string) {
+    const lessonItemsList = await this.adminLessonsRepository.getBetaLessons(chapterId);
+
+    const result = await this.adminLessonsRepository.removeChapterAndReferences(
+      chapterId,
+      lessonItemsList as LessonItemWithContentSchema[],
+    );
+
+    if (result.length === 0) {
+      throw new NotFoundException("Lesson not found in this course");
+    }
+
+    await this.adminLessonsRepository.updateChapterDisplayOrder(courseId, chapterId);
   }
 
   private getFiltersConditions(filters: LessonsFilterSchema) {

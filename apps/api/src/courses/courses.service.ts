@@ -23,7 +23,9 @@ import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { STATES } from "src/common/states";
 import { FilesService } from "src/file/files.service";
+import { AdminLessonsService } from "src/lessons/adminLessons.service";
 import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/lessons/lesson.type";
+import { AdminLessonsRepository } from "src/lessons/repositories/adminLessons.repository";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import { USER_ROLES } from "src/users/schemas/user-roles";
@@ -56,11 +58,14 @@ import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { Pagination, UUIDType } from "src/common";
 import type { LessonProgressType } from "src/lessons/schemas/lesson.types";
+import type { LessonItemWithContentSchema } from "src/lessons/schemas/lessonItem.schema";
 
 @Injectable()
 export class CoursesService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
+    private readonly lessonService: AdminLessonsService,
+    private readonly lessonRepository: AdminLessonsRepository,
     private readonly filesService: FilesService,
     private readonly statisticsRepository: StatisticsRepository,
   ) {}
@@ -396,6 +401,91 @@ export class CoursesService {
       ...course,
       imageUrl,
       lessons: courseLessonList,
+    };
+  }
+
+  async getBetaCourseById(id: string) {
+    const [course] = await this.db
+      .select({
+        id: courses.id,
+        title: courses.title,
+        imageUrl: sql<string>`${courses.imageUrl}`,
+        category: categories.title,
+        categoryId: categories.id,
+        description: sql<string>`${courses.description}`,
+        courseLessonCount: courses.lessonsCount,
+        state: courses.state,
+        priceInCents: courses.priceInCents,
+        currency: courses.currency,
+        archived: courses.archived,
+      })
+      .from(courses)
+      .innerJoin(categories, eq(courses.categoryId, categories.id))
+      .where(and(eq(courses.id, id)));
+
+    if (!course) throw new NotFoundException("Course not found");
+
+    const courseLessonList = await this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        description: sql<string>`COALESCE(${lessons.description}, '')`,
+        imageUrl: sql<string>`COALESCE(${lessons.imageUrl}, '')`,
+        displayOrder: courseLessons.displayOrder,
+        itemsCount: lessons.itemsCount,
+        isFree: courseLessons.isFree,
+        lessonItems: sql`
+          (SELECT json_agg(
+              json_build_object(
+                'id', ${lessonItems.id},
+                'lessonItemType', ${lessonItems.lessonItemType},
+                'displayOrder', ${lessonItems.displayOrder}
+              )
+            )
+          FROM ${lessonItems}
+          WHERE ${lessonItems.lessonId} = ${lessons.id}) AS lessonItems`,
+      })
+      .from(courseLessons)
+      .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
+      .where(
+        and(
+          eq(courseLessons.courseId, id),
+          eq(lessons.archived, false),
+          isNotNull(lessons.id),
+          isNotNull(lessons.title),
+        ),
+      )
+      .orderBy(courseLessons.displayOrder);
+
+    const getImageUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.filesService.getFileUrl(url);
+    };
+
+    const imageUrl = await getImageUrl(course.imageUrl);
+
+    const updatedCourseLessonList = await Promise.all(
+      courseLessonList?.map(async (lesson) => {
+        const lessonItemsWithContent =
+          Array.isArray(lesson?.lessonItems) && lesson.lessonItems.length > 0
+            ? await this.lessonRepository.getBetaLessons(lesson.id)
+            : [];
+
+        const processedLessonItems = await this.lessonService.processLessonItems(
+          lessonItemsWithContent as LessonItemWithContentSchema[],
+        );
+
+        return {
+          ...lesson,
+          lessonItems: processedLessonItems,
+        };
+      }),
+    );
+
+    return {
+      ...course,
+      imageUrl,
+      lessons: updatedCourseLessonList ?? [],
     };
   }
 

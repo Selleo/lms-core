@@ -24,7 +24,7 @@ const ImageUploadInput = ({ field, handleImageUpload, isUploading }: ImageUpload
           <Icon name="UploadImageIcon" />
 
           <div className="flex items-center justify-center mt-2">
-            <span className={`text-lg font-semibold text-[#7CA3DE]`}>
+            <span className={`text-lg font-semibold text-primary-400`}>
               {field.value ? "Click to replace" : "Click to upload"}
             </span>
             <span className="ml-2 text-lg font-semibold">or drag and drop</span>

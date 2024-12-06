@@ -230,6 +230,7 @@ export const files = pgTable("files", {
   title: varchar("title", { length: 100 }).notNull(),
   type: text("type").notNull(),
   url: text("url").notNull(),
+  body: text("body"),
   state: text("state").notNull().default("draft"),
   authorId: uuid("author_id")
     .references(() => users.id)
@@ -282,7 +283,7 @@ export const courseLessons = pgTable(
       .references(() => courses.id)
       .notNull(),
     lessonId: uuid("lesson_id")
-      .references(() => lessons.id)
+      .references(() => lessons.id, { onDelete: "cascade" })
       .notNull(),
     displayOrder: integer("display_order"),
     isFree: boolean("is_free").notNull().default(false),

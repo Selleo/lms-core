@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, inArray } from "drizzle-orm";
+import { eq, and, inArray, sql, max } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import {
@@ -11,6 +11,7 @@ import {
   studentQuestionAnswers,
 } from "src/storage/schema";
 
+import type { LessonItemTypes } from "../schemas/lesson.types";
 import type {
   LessonItemToAdd,
   LessonItemToRemove,
@@ -46,6 +47,22 @@ export class AdminLessonItemsRepository {
       .where(eq(questionAnswerOptions.questionId, questionId));
   }
 
+  async getHighestDisplayOrder(
+    lessonId: string,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ): Promise<number> {
+    const dbInstance = trx ?? this.db;
+
+    const [result] = await dbInstance
+      .select({
+        highestOrder: max(lessonItems.displayOrder),
+      })
+      .from(lessonItems)
+      .where(eq(lessonItems.lessonId, lessonId));
+
+    return result?.highestOrder ? result.highestOrder : 0;
+  }
+
   async getQuestionAnswerOptions(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
@@ -53,6 +70,19 @@ export class AdminLessonItemsRepository {
       .select()
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));
+  }
+
+  async getLessonItem(lessonItemId: string) {
+    const [lessonItem] = await this.db
+      .select()
+      .from(lessonItems)
+      .where(eq(lessonItems.lessonItemId, lessonItemId));
+
+    if (!lessonItem) {
+      throw new Error(`Lesson item with ID ${lessonItemId} not found`);
+    }
+
+    return lessonItem;
   }
 
   async getQuestionStudentAnswers(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
@@ -99,6 +129,20 @@ export class AdminLessonItemsRepository {
     return textBlock;
   }
 
+  async createBetaTextBlock(content: any, userId: UUIDType) {
+    const [textBlock] = await this.db
+      .insert(textBlocks)
+      .values({
+        title: content.title,
+        body: content.body,
+        state: content.state,
+        authorId: userId,
+      })
+      .returning();
+
+    return textBlock;
+  }
+
   async createQuestion(content: any, userId: UUIDType) {
     const [question] = await this.db
       .insert(questions)
@@ -121,6 +165,7 @@ export class AdminLessonItemsRepository {
         title: content.title,
         type: content.type,
         url: content.url,
+        body: content.body,
         state: content.state,
         authorId: userId,
       })
@@ -207,6 +252,61 @@ export class AdminLessonItemsRepository {
         ),
       ),
     );
+  }
+
+  async updateLessonItemDisplayOrder(chapterId: UUIDType, lessonId: UUIDType) {
+    await this.db.transaction(async (trx) => {
+      await trx.execute(sql`
+        UPDATE ${lessonItems}
+        SET display_order = display_order - 1
+        WHERE lesson_id = ${chapterId}
+          AND display_order > (
+            SELECT display_order
+            FROM ${lessonItems}
+            WHERE lesson_id = ${chapterId}
+              AND lesson_item_id = ${lessonId}
+          )
+      `);
+
+      await trx.execute(sql`
+        WITH ranked_lesson_items AS (
+          SELECT lesson_item_id, row_number() OVER (ORDER BY display_order) AS new_display_order
+          FROM ${lessonItems}
+          WHERE lesson_id = ${chapterId}
+        )
+        UPDATE ${lessonItems} li
+        SET display_order = rl.new_display_order
+        FROM ranked_lesson_items rl
+        WHERE li.lesson_item_id = rl.lesson_item_id
+          AND li.lesson_id = ${chapterId}
+      `);
+    });
+  }
+
+  async removeLesson(lessonItemId: string, lessonItemType: LessonItemTypes) {
+    return await this.db.transaction(async (trx) => {
+      switch (lessonItemType) {
+        case "text_block":
+          await trx.delete(textBlocks).where(eq(textBlocks.id, lessonItemId));
+          break;
+
+        case "question":
+          await trx.delete(questions).where(eq(questions.id, lessonItemId));
+          break;
+
+        case "file":
+          await trx.delete(files).where(eq(files.id, lessonItemId));
+          break;
+
+        default:
+          throw new Error(`Unsupported lesson item type: ${lessonItemType}`);
+      }
+
+      return await trx
+        .delete(lessonItems)
+        .where(eq(lessonItems.lessonItemId, lessonItemId))
+        .returning();
+    });
   }
 
   async removeQuestionAnswerOptions(

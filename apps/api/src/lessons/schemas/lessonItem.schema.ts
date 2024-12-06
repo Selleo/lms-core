@@ -44,6 +44,7 @@ export const textBlockSchema = Type.Object({
   state: Type.Optional(Type.String()),
   archived: Type.Optional(Type.Boolean()),
   authorId: UUIDSchema,
+  lessonId: Type.Optional(Type.String()),
 });
 
 export const lessonItemFileSchema = Type.Object({
@@ -52,6 +53,7 @@ export const lessonItemFileSchema = Type.Object({
   type: Type.String(),
   url: Type.String(),
   authorId: UUIDSchema,
+  body: Type.Union([Type.String(), Type.Null()]),
   state: Type.Optional(Type.String()),
   archived: Type.Optional(Type.Boolean()),
 });
@@ -117,6 +119,7 @@ export const fileContentResponse = Type.Object({
   title: Type.String(),
   type: Type.String(),
   url: Type.String(),
+  body: Type.Union([Type.String(), Type.Null()]),
 });
 
 export const textBlockUpdateSchema = Type.Partial(Type.Omit(textBlockSchema, ["id"]));
@@ -191,7 +194,30 @@ export const fileSelectSchema = Type.Object({
   updatedAt: Type.String(),
 });
 
+export const betaTextLessonSchema = Type.Object({
+  title: Type.String(),
+  body: Type.String(),
+  state: Type.String(),
+  authorId: UUIDSchema,
+  lessonId: Type.String(),
+});
+
+export const betaFileSelectSchema = Type.Object({
+  title: Type.String(),
+  state: Type.String(),
+  authorId: Type.String(),
+  type: Type.String(),
+  body: Type.Optional(Type.String()),
+  lessonId: Type.String(),
+});
+
+export type BetaTextLessonType = Static<typeof betaTextLessonSchema>;
+export type BetaFileLessonType = Static<typeof betaFileSelectSchema>;
+
 export type TextBlockInsertType = InferInsertModel<typeof textBlocks>;
+export type TextBlockWithLessonId = TextBlockInsertType & {
+  lessonId: string;
+};
 export type QuestionInsertType = InferInsertModel<typeof questions>;
 export type FileInsertType = InferInsertModel<typeof files>;
 
@@ -234,6 +260,7 @@ const FileItem = Type.Intersect([
     itemType: Type.Literal("file"),
     title: Type.String(),
     url: Type.String(),
+    body: Type.Union([Type.String(), Type.Null()]),
     type: Type.String(),
   }),
 ]);

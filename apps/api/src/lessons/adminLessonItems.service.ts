@@ -16,7 +16,9 @@ import { AdminLessonItemsRepository } from "./repositories/adminLessonItems.repo
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
 
 import type { LessonItemType } from "./lessonItems.type";
+import type { LessonItemTypes } from "./schemas/lesson.types";
 import type {
+  BetaFileLessonType,
   FileInsertType,
   FileSelectType,
   LessonItemToAdd,
@@ -26,6 +28,7 @@ import type {
   SingleLessonItemResponse,
   TextBlockInsertType,
   TextBlockSelectType,
+  TextBlockWithLessonId,
   UpdateFileBody,
   UpdateQuestionBody,
   UpdateTextBlockBody,
@@ -290,8 +293,80 @@ export class AdminLessonItemsService {
     return question;
   }
 
+  async createTextBlockAndAssignToLesson(content: TextBlockWithLessonId, userId: UUIDType) {
+    return await this.db.transaction(async (trx) => {
+      const textBlock = await this.adminLessonItemsRepository.createBetaTextBlock(content, userId);
+      const highestDisplayOrder = await this.adminLessonItemsRepository.getHighestDisplayOrder(
+        content.lessonId,
+        trx,
+      );
+
+      const newDisplayOrder = highestDisplayOrder + 1;
+
+      const items: LessonItemToAdd[] = [
+        {
+          id: textBlock.id,
+          type: "text_block",
+          displayOrder: newDisplayOrder,
+        },
+      ];
+
+      await this.assignItemsToLesson(content.lessonId, items);
+
+      if (!textBlock) throw new NotFoundException("Text block not found");
+
+      return textBlock;
+    });
+  }
+
+  async createFileAndAssignToLesson(content: BetaFileLessonType, userId: UUIDType) {
+    return await this.db.transaction(async (trx) => {
+      const file = await this.adminLessonItemsRepository.createFile(content, userId);
+
+      if (!file) throw new NotFoundException("File not found");
+
+      const highestDisplayOrder = await this.adminLessonItemsRepository.getHighestDisplayOrder(
+        content.lessonId,
+        trx,
+      );
+
+      const newDisplayOrder = highestDisplayOrder + 1;
+
+      const items: LessonItemToAdd[] = [
+        {
+          id: file.id,
+          type: "file",
+          displayOrder: newDisplayOrder,
+        },
+      ];
+
+      await this.assignItemsToLesson(content.lessonId, items);
+
+      return file;
+    });
+  }
+
   async getQuestionAnswers(questionId: UUIDType) {
     return await this.adminLessonItemsRepository.getQuestionAnswers(questionId);
+  }
+
+  async removeLesson(chapterId: string, lessonId: string) {
+    const lessonItem = await this.adminLessonItemsRepository.getLessonItem(lessonId);
+
+    const result = await this.adminLessonItemsRepository.removeLesson(
+      lessonId,
+      lessonItem.lessonItemType as LessonItemTypes,
+    );
+
+    if (result.length === 0) {
+      throw new NotFoundException("Lesson not found in this course");
+    }
+
+    await this.adminLessonItemsRepository.updateLessonItemDisplayOrder(chapterId, lessonId);
+  }
+
+  async updateFreemiumStatus(lessonId: string, isFreemium: boolean) {
+    await this.adminLessonsRepository.updateFreemiumStatus(lessonId, isFreemium);
   }
 
   async upsertQuestionOptions(
@@ -375,6 +450,7 @@ export class AdminLessonItemsService {
           ]);
           break;
         case "file":
+        case "video":
           result = await this.adminLessonItemsRepository.getFiles([eq(files.id, item.id)]);
           break;
         case "question":

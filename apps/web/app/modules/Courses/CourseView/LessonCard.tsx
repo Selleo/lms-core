@@ -150,7 +150,7 @@ export const LessonCard = ({
             <div className="flex flex-col gap-y-2 pb-4">
               <h4 className="font-medium text-sm text-neutral-950 mt-2">{title}</h4>
               <Viewer
-                content={description}
+                content={description || ""}
                 className="text-xs text-neutral-900 mt-1 line-clamp-3 flex-grow leading-5"
               />
             </div>

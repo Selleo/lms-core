@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
-import { courseQueryOptions } from "~/api/queries/admin/useCourseById";
+import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 
 import { courseStatusFormSchema } from "../validators/courseStatusFormSchema";
@@ -28,7 +28,7 @@ export const useCourseStatusForm = ({ courseId, state }: UseCourseStatusFormProp
       data: { ...data },
       courseId,
     }).then(() => {
-      queryClient.invalidateQueries(courseQueryOptions(courseId));
+      queryClient.invalidateQueries({ queryKey: [COURSE_QUERY_KEY, { id: courseId }] });
     });
   };
 

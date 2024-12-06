@@ -45,6 +45,7 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_FILE_TYPE.external_video.key,
             url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
             state: STATUS.published.key,
+            body: "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,
@@ -175,6 +176,7 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_FILE_TYPE.external_presentation.key,
             url: "https://res.cloudinary.com/dinpapxzv/raw/upload/v1727104719/presentation_gp0o3d.pptx",
             state: STATUS.published.key,
+            body: "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,
@@ -702,6 +704,7 @@ export const niceCourses: NiceCourseData[] = [
             url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
             title: "Introduction to JavaScript",
             state: STATUS.published.key,
+            body: "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,
@@ -717,6 +720,7 @@ export const niceCourses: NiceCourseData[] = [
             title: "JavaScript Data Types Overview",
             state: STATUS.published.key,
             type: LESSON_FILE_TYPE.presentation.key,
+            body: "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,
@@ -787,6 +791,7 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_FILE_TYPE.external_video.key,
             url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
             state: STATUS.published.key,
+            body: "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,
@@ -877,6 +882,7 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_FILE_TYPE.external_presentation.key,
             url: "https://res.cloudinary.com/dinpapxzv/raw/upload/v1727104719/presentation_gp0o3d.pptx",
             state: STATUS.published.key,
+            body: "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
           },
           {
             itemType: LESSON_ITEM_TYPE.question.key,

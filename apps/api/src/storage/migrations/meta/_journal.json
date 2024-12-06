@@ -120,6 +120,13 @@
       "when": 1733286481379,
       "tag": "0016_add_default_state_for_completed_lesson_item_count_to_student_lessons_progress",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1733396749135,
+      "tag": "0017_update_courses_references",
+      "breakpoints": true
     }
   ]
 }
