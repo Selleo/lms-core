@@ -4,11 +4,20 @@ import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 
-const QuestionSelector = () => {
+type QuestionSelectorProps = {
+  setCurrentAddingQuiz: (currentAddingQuiz: string) => void;
+};
+
+const QuestionSelector = ({ setCurrentAddingQuiz }: QuestionSelectorProps) => {
   const [showOptions, setShowOptions] = useState(false);
 
   const toggleOptions = () => {
     setShowOptions(!showOptions);
+  };
+
+  const onClickSingleSelect = () => {
+    setShowOptions(!showOptions);
+    setCurrentAddingQuiz("singleSelect");
   };
 
   return (
@@ -28,6 +37,7 @@ const QuestionSelector = () => {
           <Button
             className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start"
             type="button"
+            onClick={onClickSingleSelect}
           >
             <Icon name="SingleSelect" className="mr-2" />
             Single Select

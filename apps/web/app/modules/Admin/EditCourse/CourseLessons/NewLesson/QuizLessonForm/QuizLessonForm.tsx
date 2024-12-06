@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
@@ -5,10 +7,13 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
 import QuestionSelector from "./components/QuestionSelector";
+import SingleSelectQuiz from "./components/SingleSelectQuiz";
 import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
 
 const QuizLessonForm = () => {
   const { form } = useQuizLessonForm();
+  const [currentAddingQuiz, setCurrentAddingQuiz] = useState("");
+
   return (
     <div className="w-full max-w-full">
       <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-6">
@@ -55,7 +60,8 @@ const QuizLessonForm = () => {
                 </FormItem>
               )}
             />
-            <QuestionSelector />
+            {currentAddingQuiz === "singleSelect" && <SingleSelectQuiz form={form} />}
+            <QuestionSelector setCurrentAddingQuiz={setCurrentAddingQuiz} />
             <div className="flex space-x-4 mt-4">
               <Button
                 //   onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
