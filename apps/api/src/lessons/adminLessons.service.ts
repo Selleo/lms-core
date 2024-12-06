@@ -9,25 +9,19 @@ import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { FilesService } from "src/file/files.service";
 import { S3Service } from "src/s3/s3.service";
 import { courseLessons, lessonItems, lessons } from "src/storage/schema";
+import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";
 import {
   type LessonsFilterSchema,
   type LessonSortField,
   LessonSortFields,
-  type SortLessonFieldsOptions,
+  type LessonsQuery,
 } from "./schemas/lessonQuery";
 
 import type { CreateLessonBody, UpdateLessonBody } from "./schemas/lesson.schema";
 import type { LessonItemResponse, LessonItemWithContentSchema } from "./schemas/lessonItem.schema";
 import type { UUIDType } from "src/common";
-
-interface LessonsQuery {
-  filters?: LessonsFilterSchema;
-  sort?: SortLessonFieldsOptions;
-  page?: number;
-  perPage?: number;
-}
 
 @Injectable()
 export class AdminLessonsService {
@@ -48,6 +42,11 @@ export class AdminLessonsService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
     const conditions = this.getFiltersConditions(filters);
+
+    if (query.currentUserRole === USER_ROLES.teacher && query.currentUserId) {
+      conditions.push(eq(lessons.authorId, query.currentUserId));
+    }
+
     const sortOrderQuery = sortOrder(this.getColumnToSortBy(sortedField as LessonSortField));
 
     const lessonsData = await this.adminLessonsRepository.getLessons(conditions, sortOrderQuery);
@@ -273,7 +272,7 @@ export class AdminLessonsService {
       conditions.push(eq(lessons.archived, filters.archived));
     }
 
-    return conditions.length ? conditions : [sql`1=1`];
+    return conditions ?? undefined;
   }
 
   private getColumnToSortBy(sort: LessonSortField) {

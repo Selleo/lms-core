@@ -182,8 +182,8 @@ const Categories = () => {
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+              {headerGroup.headers.map((header, index) => (
+                <TableHead key={header.id} className={cn({ "size-12": index === 0 })}>
                   {flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
@@ -198,8 +198,8 @@ const Categories = () => {
               onClick={() => handleRowClick(row.original.id)}
               className="cursor-pointer hover:bg-neutral-100"
             >
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
+              {row.getVisibleCells().map((cell, index) => (
+                <TableCell key={cell.id} className={cn({ "size-12": index === 0 })}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}

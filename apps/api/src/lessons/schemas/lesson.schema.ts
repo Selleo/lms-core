@@ -36,13 +36,6 @@ export const createLessonSchema = Type.Omit(lessonSchema, [
   "itemsCompletedCount",
 ]);
 
-export const createLessonWithCourseIdSchema = Type.Intersect([
-  createLessonSchema,
-  Type.Object({
-    courseId: UUIDSchema,
-  }),
-]);
-
 export const updateLessonSchema = Type.Partial(createLessonSchema);
 
 export const lesson = Type.Object({
@@ -83,5 +76,4 @@ export type LessonResponse = Static<typeof lessonSchema>;
 export type ShowLessonResponse = Static<typeof showLessonSchema>;
 export type AllLessonsResponse = Static<typeof allLessonsSchema>;
 export type CreateLessonBody = Static<typeof createLessonSchema>;
-export type CreateLessonWithCourseId = Static<typeof createLessonWithCourseIdSchema>;
 export type UpdateLessonBody = Static<typeof updateLessonSchema>;

@@ -11,7 +11,7 @@ import {
 import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
-import React from "react";
+import { useState, useTransition } from "react";
 
 import { useAllLessonsSuspense } from "~/api/queries/admin/useAllLessons";
 import SortButton from "~/components/TableSortButton/TableSortButton";
@@ -40,15 +40,15 @@ type TLesson = GetAllLessonsResponse["data"][number];
 
 const Lessons = () => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = React.useState<{
+  const [searchParams, setSearchParams] = useState<{
     title?: string;
     state?: string;
     archived?: boolean;
   }>({});
-  const [isPending, startTransition] = React.useTransition();
+  const [isPending, startTransition] = useTransition();
   const { data: lessons } = useAllLessonsSuspense(searchParams);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
   const filterConfig: FilterConfig[] = [
     {
@@ -162,7 +162,7 @@ const Lessons = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
         <Link to="new">
           <Button variant="outline">Create New</Button>
         </Link>
@@ -172,7 +172,7 @@ const Lessons = () => {
           onChange={handleFilterChange}
           isLoading={isPending}
         />
-        <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
+        <div className="ml-auto flex items-center gap-x-2 px-4 py-2">
           <p
             className={cn("text-sm", {
               "text-neutral-900": !isEmpty(selectedLessons),
@@ -187,17 +187,17 @@ const Lessons = () => {
             className="flex items-center gap-x-2"
             disabled={isEmpty(selectedLessons)}
           >
-            <Trash className="w-3 h-3" />
+            <Trash className="h-3 w-3" />
             <span className="text-xs">Delete selected</span>
           </Button>
         </div>
       </div>
-      <Table className="bg-neutral-50 border">
+      <Table className="border bg-neutral-50">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+              {headerGroup.headers.map((header, index) => (
+                <TableHead key={header.id} className={cn({ "size-12": index === 0 })}>
                   {flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               ))}
@@ -212,8 +212,8 @@ const Lessons = () => {
               onClick={() => handleRowClick(row.original.id)}
               className="cursor-pointer hover:bg-neutral-100"
             >
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
+              {row.getVisibleCells().map((cell, index) => (
+                <TableCell key={cell.id} className={cn({ "size-12": index === 0 })}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}

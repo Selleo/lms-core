@@ -2088,6 +2088,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     coursesControllerGetStudentCourses: (
       query?: {
+        perPage?: number;
         title?: string;
         category?: string;
         author?: string;
@@ -2097,7 +2098,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         archived?: string;
         /** @min 1 */
         page?: number;
-        perPage?: number;
         sort?:
           | "title"
           | "category"
@@ -2130,6 +2130,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     coursesControllerGetAvailableCourses: (
       query?: {
+        perPage?: number;
         title?: string;
         category?: string;
         author?: string;
@@ -2139,7 +2140,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         archived?: string;
         /** @min 1 */
         page?: number;
-        perPage?: number;
         sort?:
           | "title"
           | "category"

@@ -5,7 +5,7 @@ import { S3Service } from "src/s3/s3.service";
 
 import { AdminLessonItemsService } from "./adminLessonItems.service";
 import { AdminLessonsService } from "./adminLessons.service";
-import { LessonsController } from "./api/lessons.controller";
+import { LessonsController } from "./lessons.controller";
 import { LessonsService } from "./lessons.service";
 import { AdminLessonItemsRepository } from "./repositories/adminLessonItems.repository";
 import { AdminLessonsRepository } from "./repositories/adminLessons.repository";

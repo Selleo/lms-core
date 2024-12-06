@@ -3,6 +3,7 @@ import { AxiosError } from "axios";
 
 import { useToast } from "~/components/ui/use-toast";
 import { useAuthStore } from "~/modules/Auth/authStore";
+import { useCurrentUserStore } from "~/modules/common/store/useCurrentUserStore";
 
 import { ApiClient } from "../api-client";
 
@@ -14,6 +15,7 @@ type LoginUserOptions = {
 
 export function useLoginUser() {
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
+  const setCurrentUser = useCurrentUserStore(({ setCurrentUser }) => setCurrentUser);
   const { toast } = useToast();
 
   return useMutation({
@@ -22,8 +24,9 @@ export function useLoginUser() {
 
       return response.data;
     },
-    onSuccess: () => {
+    onSuccess: ({ data }) => {
       setLoggedIn(true);
+      setCurrentUser(data);
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
