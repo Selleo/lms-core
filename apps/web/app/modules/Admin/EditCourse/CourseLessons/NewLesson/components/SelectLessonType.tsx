@@ -29,12 +29,13 @@ const lessonTypes = [
     title: "Presentation",
     description: "Choose this type if you want to embed presentations files like PPTX.",
   },
-  // {
-  //   type: ContentTypes.EMPTY,
-  //   icon: "Quiz",
-  //   title: "Quiz",
-  //   description: "This type allows you to build quizzes for your chapter using different types of questions.",
-  // },
+  {
+    type: ContentTypes.QUIZ_FORM,
+    icon: "Quiz",
+    title: "Quiz",
+    description:
+      "This type allows you to build quizzes for your chapter using different types of questions.",
+  },
 ];
 
 const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) => {

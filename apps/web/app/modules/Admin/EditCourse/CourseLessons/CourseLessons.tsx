@@ -10,6 +10,7 @@ import CourseLessonEmptyState from "./components/CourseLessonEmptyState";
 import NewChapter from "./NewChapter/NewChapter";
 import SelectLessonType from "./NewLesson/components/SelectLessonType";
 import FileLessonForm from "./NewLesson/FileLessonForm/FileLessonForm";
+import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
 import TextLessonForm from "./NewLesson/TextLessonForm/TextLessonForm";
 
 import type { Chapter, LessonItem } from "../EditCourse.types";
@@ -57,6 +58,7 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
           lessonToEdit={selectedLesson}
         />
       ),
+      [ContentTypes.QUIZ_FORM]: <QuizLessonForm />,
       [ContentTypes.SELECT_LESSON_TYPE]: (
         <SelectLessonType setContentTypeToDisplay={setContentTypeToDisplay} />
       ),

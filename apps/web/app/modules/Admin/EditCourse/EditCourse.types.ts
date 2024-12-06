@@ -31,6 +31,7 @@ export const ContentTypes = {
   TEXT_LESSON_FORM: "TEXT_LESSON_FORM",
   VIDEO_LESSON_FORM: "VIDEO_LESSON_FORM",
   PRESENTATION_FORM: "PRESENTATION_FORM",
+  QUIZ_FORM: "QUIZ_FORM",
 };
 
 export type LessonIcons = "Text" | "Video" | "Presentation" | "Quiz";
