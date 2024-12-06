@@ -46,8 +46,8 @@ import {
 import {
   type CoursesFilterSchema,
   type CourseSortField,
-  type CoursesQuery,
   CourseSortFields,
+  type CoursesQuery,
 } from "./schemas/courseQuery";
 
 import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas/course.schema";
@@ -458,7 +458,7 @@ export class CoursesService {
   }
 
   async getTeacherCourses(authorId: UUIDType): Promise<AllCoursesForTeacherResponse> {
-    return await this.db
+    return this.db
       .select(this.getSelectField())
       .from(courses)
       .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
@@ -772,7 +772,7 @@ export class CoursesService {
       authorId: sql<string>`${courses.authorId}`,
       author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
       authorEmail: sql<string>`${users.email}`,
-      category: sql<string>`categories.title`,
+      category: sql<string>`${categories.title}`,
       enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
       enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
       courseLessonCount: courses.lessonsCount,
@@ -798,7 +798,7 @@ export class CoursesService {
       conditions.push(like(categories.title, `%${filters.category}%`));
     }
     if (filters.author) {
-      const authorNameConcat = `${users.firstName} || ' ' || ${users.lastName}`;
+      const authorNameConcat = sql`CONCAT(${users.firstName}, ' ' , ${users.lastName})`;
       conditions.push(sql`${authorNameConcat} LIKE ${`%${filters.author}%`}`);
     }
     if (filters.creationDateRange) {
@@ -814,12 +814,11 @@ export class CoursesService {
     if (filters.archived) {
       conditions.push(eq(courses.archived, filters.archived === "true"));
     }
-
     if (publishedOnly) {
       conditions.push(eq(courses.state, STATES.published));
     }
 
-    return conditions;
+    return conditions ?? undefined;
   }
 
   private getColumnToSortBy(sort: CourseSortField) {

@@ -1,4 +1,7 @@
-import { Type, type Static } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
+
+import type { UUIDType } from "src/common";
+import type { UserRole } from "src/users/schemas/user-roles";
 
 export const courseSortFields = [
   "title",
@@ -64,6 +67,6 @@ export type CoursesQuery = {
   page?: number;
   perPage?: number;
   sort?: SortCourseFieldsOptions;
-  currentUserId?: string;
-  currentUserRole?: string;
+  currentUserId?: UUIDType;
+  currentUserRole?: UserRole;
 };

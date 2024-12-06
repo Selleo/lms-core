@@ -37,11 +37,11 @@ import {
 } from "../schemas/update-user.schema";
 import { USER_ROLES } from "../schemas/user-roles";
 import {
-  allUsersSchema,
-  userDetailsSchema,
   type AllUsersResponse,
-  type UserResponse,
+  allUsersSchema,
   type UserDetails,
+  userDetailsSchema,
+  type UserResponse,
 } from "../schemas/user.schema";
 import { SortUserFieldsOptions } from "../schemas/userQuery";
 import { UsersService } from "../users.service";

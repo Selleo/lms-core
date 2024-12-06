@@ -20,28 +20,28 @@ import {
   baseResponse,
   BaseResponse,
   nullResponse,
-  UUIDSchema,
   PaginatedResponse,
+  UUIDSchema,
   type UUIDType,
 } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { CoursesService } from "src/courses/courses.service";
+import { allCoursesSchema } from "src/courses/schemas/course.schema";
+import { SortCourseFieldsOptions } from "src/courses/schemas/courseQuery";
+import { CreateCourseBody, createCourseSchema } from "src/courses/schemas/createCourse.schema";
+import { commonShowCourseSchema } from "src/courses/schemas/showCourseCommon.schema";
+import { UpdateCourseBody, updateCourseSchema } from "src/courses/schemas/updateCourse.schema";
+import { allCoursesValidation, coursesValidation } from "src/courses/validations/validations";
+import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
 
-import { CoursesService } from "./courses.service";
-import {
-  type AllCoursesResponse,
-  type AllCoursesForTeacherResponse,
-  allCoursesSchema,
-} from "./schemas/course.schema";
-import { SortCourseFieldsOptions } from "./schemas/courseQuery";
-import { type CreateCourseBody, createCourseSchema } from "./schemas/createCourse.schema";
-import { type CommonShowCourse, commonShowCourseSchema } from "./schemas/showCourseCommon.schema";
-import { type UpdateCourseBody, updateCourseSchema } from "./schemas/updateCourse.schema";
-import { allCoursesValidation } from "./validations/validations";
-
-import type { CoursesFilterSchema } from "./schemas/courseQuery";
+import type {
+  AllCoursesForTeacherResponse,
+  AllCoursesResponse,
+} from "src/courses/schemas/course.schema";
+import type { CoursesFilterSchema } from "src/courses/schemas/courseQuery";
+import type { CommonShowCourse } from "src/courses/schemas/showCourseCommon.schema";
 
 @Controller("courses")
 @UseGuards(RolesGuard)
@@ -49,7 +49,7 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Get()
-  @Roles(...Object.values(USER_ROLES))
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   @Validate(allCoursesValidation)
   async getAllCourses(
     @Query("title") title: string,
@@ -62,8 +62,8 @@ export class CoursesController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
-    @CurrentUser("userId") currentUserId: string,
-    @CurrentUser("role") currentUserRole: string,
+    @CurrentUser("userId") currentUserId: UUIDType,
+    @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
@@ -92,15 +92,13 @@ export class CoursesController {
   }
 
   @Get("get-student-courses")
-  @Validate(allCoursesValidation)
+  @Validate(coursesValidation)
   async getStudentCourses(
     @Query("title") title: string,
     @Query("category") category: string,
     @Query("author") author: string,
     @Query("creationDateRange[0]") creationDateRangeStart: string,
     @Query("creationDateRange[1]") creationDateRangeEnd: string,
-    @Query("state") state: string,
-    @Query("archived") archived: string,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
@@ -123,15 +121,13 @@ export class CoursesController {
   }
 
   @Get("available-courses")
-  @Validate(allCoursesValidation)
+  @Validate(coursesValidation)
   async getAvailableCourses(
     @Query("title") title: string,
     @Query("category") category: string,
     @Query("author") author: string,
     @Query("creationDateRange[0]") creationDateRangeStart: string,
     @Query("creationDateRange[1]") creationDateRangeEnd: string,
-    @Query("state") state: string,
-    @Query("archived") archived: string,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,

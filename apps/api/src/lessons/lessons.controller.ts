@@ -25,41 +25,41 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
 
-import { AdminLessonItemsService } from "../adminLessonItems.service";
-import { AdminLessonsService } from "../adminLessons.service";
-import { LessonsService } from "../lessons.service";
+import { AdminLessonItemsService } from "./adminLessonItems.service";
+import { AdminLessonsService } from "./adminLessons.service";
+import { LessonsService } from "./lessons.service";
 import {
   type AllLessonsResponse,
   allLessonsSchema,
+  type CreateLessonBody,
   createLessonSchema,
   lessonWithCountItems,
-  showLessonSchema,
-  updateLessonSchema,
-  type CreateLessonBody,
-  type ShowLessonResponse,
-  type UpdateLessonBody,
   type LessonWithCountItems,
-} from "../schemas/lesson.schema";
+  type ShowLessonResponse,
+  showLessonSchema,
+  type UpdateLessonBody,
+  updateLessonSchema,
+} from "./schemas/lesson.schema";
 import {
-  fileUpdateSchema,
-  GetAllLessonItemsResponseSchema,
-  GetSingleLessonItemsResponseSchema,
-  questionUpdateSchema,
-  textBlockUpdateSchema,
   type FileInsertType,
+  fileUpdateSchema,
   type GetAllLessonItemsResponse,
+  GetAllLessonItemsResponseSchema,
   type GetSingleLessonItemsResponse,
+  GetSingleLessonItemsResponseSchema,
   type QuestionInsertType,
+  questionUpdateSchema,
   type TextBlockInsertType,
+  textBlockUpdateSchema,
   type UpdateFileBody,
   type UpdateQuestionBody,
   type UpdateTextBlockBody,
-} from "../schemas/lessonItem.schema";
+} from "./schemas/lessonItem.schema";
 import {
-  sortLessonFieldsOptions,
   type LessonsFilterSchema,
+  sortLessonFieldsOptions,
   type SortLessonFieldsOptions,
-} from "../schemas/lessonQuery";
+} from "./schemas/lessonQuery";
 
 @Controller("lessons")
 @UseGuards(RolesGuard)
@@ -89,7 +89,9 @@ export class LessonsController {
     @Query("sort") sort: SortLessonFieldsOptions,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
-    @Query("archived") archived?: string,
+    @Query("archived") archived: string,
+    @CurrentUser("role") currentUserRole: UserRole,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<PaginatedResponse<AllLessonsResponse>> {
     const filters: LessonsFilterSchema = {
       title,
@@ -97,7 +99,7 @@ export class LessonsController {
       archived: archived === "true",
     };
 
-    const query = { filters, sort, page, perPage };
+    const query = { filters, sort, page, perPage, currentUserRole, currentUserId };
 
     return new PaginatedResponse(await this.adminLessonsService.getAllLessons(query));
   }

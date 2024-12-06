@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Patch,
   Post,
   Query,
@@ -35,7 +36,8 @@ import {
   sortCategoryFieldsOptions,
 } from "../schemas/categoryQuery";
 import { categoryCreateSchema, type CategoryInsert } from "../schemas/createCategorySchema";
-import { categoryUpdateSchema, type CategoryUpdateBody } from "../schemas/updateCategorySchema";
+import { type CategoryUpdateBody, categoryUpdateSchema } from "../schemas/updateCategorySchema";
+
 @UseGuards(RolesGuard)
 @Controller("categories")
 export class CategoriesController {
@@ -73,16 +75,9 @@ export class CategoriesController {
   @Roles(USER_ROLES.admin)
   @Validate({
     response: baseResponse(categorySchema),
-    request: [{ type: "param", name: "id", schema: Type.String() }],
+    request: [{ type: "param", name: "id", schema: UUIDSchema }],
   })
-  async getCategoryById(
-    @Query("id") id: string,
-    @CurrentUser("role") currentUserRole: UserRole,
-  ): Promise<BaseResponse<CategorySchema>> {
-    if (currentUserRole !== USER_ROLES.admin) {
-      throw new UnauthorizedException("You don't have permission to get category");
-    }
-
+  async getCategoryById(@Param("id") id: UUIDType): Promise<BaseResponse<CategorySchema>> {
     const category = await this.categoriesService.getCategoryById(id);
 
     return new BaseResponse(category);
