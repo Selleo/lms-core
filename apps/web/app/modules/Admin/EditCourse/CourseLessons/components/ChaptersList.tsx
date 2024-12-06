@@ -9,7 +9,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { useParams } from "@remix-run/react";
 import { useCallback, useMemo, useState } from "react";
 
-import { useUpdateLessonFreemiumStatus } from "~/api/mutations/admin/useUpdateLessonPremiumStatus";
+import { useUpdateLessonFreemiumStatus } from "~/api/mutations/admin/useUpdateLessonFreemiumStatus";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 import { Icon } from "~/components/Icon";
