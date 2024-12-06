@@ -193,7 +193,7 @@ export class CoursesController {
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
   })
-  async getBetaCourseById(@Query("id") id: string): Promise<BaseResponse<CommonShowCourse>> {
+  async getBetaCourseById(@Query("id") id: UUIDType): Promise<BaseResponse<CommonShowCourse>> {
     return new BaseResponse(await this.coursesService.getBetaCourseById(id));
   }
 

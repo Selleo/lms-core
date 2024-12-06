@@ -5,18 +5,18 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 
-type UpdateLessonPremiumStatusOptions = {
-  data: { isFree: boolean };
+type UpdateLessonFreemiumStatusOptions = {
+  data: { isFreemium: boolean };
   lessonId: string;
 };
 
-export function useUpdateLessonPremiumStatus() {
+export function useUpdateLessonFreemiumStatus() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: UpdateLessonPremiumStatusOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateLessonPremiumStatus(
-        { isFree: options.data.isFree },
+    mutationFn: async (options: UpdateLessonFreemiumStatusOptions) => {
+      const response = await ApiClient.api.lessonsControllerUpdateLessonFreemiumStatus(
+        { isFreemium: options.data.isFreemium },
         { lessonId: options.lessonId },
       );
 

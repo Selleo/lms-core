@@ -201,7 +201,7 @@ export class AdminLessonsRepository {
         questions,
         and(
           eq(lessonItems.lessonItemId, questions.id),
-          eq(lessonItems.lessonItemType, "question"),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.question.key),
           eq(questions.state, "published"),
         ),
       )
@@ -209,15 +209,15 @@ export class AdminLessonsRepository {
         textBlocks,
         and(
           eq(lessonItems.lessonItemId, textBlocks.id),
-          eq(lessonItems.lessonItemType, "text_block"),
-          eq(questions.state, "published"),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.text_block.key),
+          eq(textBlocks.state, "published"),
         ),
       )
       .leftJoin(
         files,
         and(
           eq(lessonItems.lessonItemId, files.id),
-          eq(lessonItems.lessonItemType, "file"),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.file.key),
           eq(files.state, "published"),
         ),
       )
@@ -238,18 +238,24 @@ export class AdminLessonsRepository {
       .from(lessonItems)
       .leftJoin(
         questions,
-        and(eq(lessonItems.lessonItemId, questions.id), eq(lessonItems.lessonItemType, "question")),
+        and(
+          eq(lessonItems.lessonItemId, questions.id),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.question.key),
+        ),
       )
       .leftJoin(
         textBlocks,
         and(
           eq(lessonItems.lessonItemId, textBlocks.id),
-          eq(lessonItems.lessonItemType, "text_block"),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.text_block.key),
         ),
       )
       .leftJoin(
         files,
-        and(eq(lessonItems.lessonItemId, files.id), eq(lessonItems.lessonItemType, "file")),
+        and(
+          eq(lessonItems.lessonItemId, files.id),
+          eq(lessonItems.lessonItemType, LESSON_ITEM_TYPE.file.key),
+        ),
       )
       .where(eq(lessonItems.lessonId, lessonId))
       .orderBy(lessonItems.displayOrder);
@@ -274,16 +280,16 @@ export class AdminLessonsRepository {
     });
   }
 
-  async updatePremiumStatus(lessonId: string, isFree: boolean) {
-    const [updatedPremiumStatus] = await this.db
+  async updateFreemiumStatus(lessonId: string, isFreemium: boolean) {
+    const [updateFreemiumStatus] = await this.db
       .update(courseLessons)
       .set({
-        isFree,
+        isFree: isFreemium,
       })
       .where(eq(courseLessons.lessonId, lessonId))
       .returning();
 
-    return updatedPremiumStatus;
+    return updateFreemiumStatus;
   }
 
   async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {

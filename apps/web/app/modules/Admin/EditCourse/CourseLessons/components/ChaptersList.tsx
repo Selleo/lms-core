@@ -9,7 +9,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { useParams } from "@remix-run/react";
 import { useCallback, useMemo, useState } from "react";
 
-import { useUpdateLessonPremiumStatus } from "~/api/mutations/admin/useUpdateLessonPremiumStatus";
+import { useUpdateLessonFreemiumStatus } from "~/api/mutations/admin/useUpdateLessonPremiumStatus";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 import { Icon } from "~/components/Icon";
@@ -39,7 +39,7 @@ const ChapterCard = ({
   setSelectedChapter,
   setSelectedLesson,
 }: ChapterCardProps) => {
-  const { mutateAsync: updatePremiumStatus } = useUpdateLessonPremiumStatus();
+  const { mutateAsync: updateFreemiumStatus } = useUpdateLessonFreemiumStatus();
   const { id } = useParams();
 
   const handleAddLessonClick = useCallback(
@@ -91,9 +91,9 @@ const ChapterCard = ({
     async (event: React.MouseEvent) => {
       event.stopPropagation();
       try {
-        await updatePremiumStatus({
+        await updateFreemiumStatus({
           lessonId: chapter.id,
-          data: { isFree: !chapter.isFree },
+          data: { isFreemium: !chapter.isFree },
         });
         queryClient.invalidateQueries({
           queryKey: [COURSE_QUERY_KEY, { id }],
@@ -102,7 +102,7 @@ const ChapterCard = ({
         console.error("Failed to update chapter premium status:", error);
       }
     },
-    [chapter, updatePremiumStatus, id],
+    [chapter, updateFreemiumStatus, id],
   );
 
   const lessonItems = useMemo(() => chapter.lessonItems, [chapter.lessonItems]);

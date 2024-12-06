@@ -27,7 +27,6 @@ import { AdminLessonsService } from "src/lessons/adminLessons.service";
 import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/lessons/lesson.type";
 import { AdminLessonsRepository } from "src/lessons/repositories/adminLessons.repository";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
-import { S3Service } from "src/s3/s3.service";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
@@ -65,7 +64,6 @@ import type { LessonItemWithContentSchema } from "src/lessons/schemas/lessonItem
 export class CoursesService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly s3Service: S3Service,
     private readonly lessonService: AdminLessonsService,
     private readonly lessonRepository: AdminLessonsRepository,
     private readonly filesService: FilesService,
@@ -415,11 +413,7 @@ export class CoursesService {
         category: categories.title,
         categoryId: categories.id,
         description: sql<string>`${courses.description}`,
-        courseLessonCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${courseLessons}
-          JOIN ${lessons} ON ${courseLessons.lessonId} = ${lessons.id}
-          WHERE ${courseLessons.courseId} = ${courses.id} AND ${lessons.archived} = false)::INTEGER`,
+        courseLessonCount: courses.lessonsCount,
         state: courses.state,
         priceInCents: courses.priceInCents,
         currency: courses.currency,
@@ -438,10 +432,7 @@ export class CoursesService {
         description: sql<string>`COALESCE(${lessons.description}, '')`,
         imageUrl: sql<string>`COALESCE(${lessons.imageUrl}, '')`,
         displayOrder: courseLessons.displayOrder,
-        itemsCount: sql<number>`
-          (SELECT COUNT(*)
-          FROM ${lessonItems}
-        WHERE ${lessonItems.lessonId} = ${lessons.id} AND ${lessonItems.lessonItemType} != ${LESSON_ITEM_TYPE.text_block.key})::INTEGER`,
+        itemsCount: lessons.itemsCount,
         isFree: courseLessons.isFree,
         lessonItems: sql`
           (SELECT json_agg(
@@ -468,7 +459,7 @@ export class CoursesService {
 
     const getImageUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url;
-      return await this.s3Service.getSignedUrl(url);
+      return await this.filesService.getFileUrl(url);
     };
 
     const imageUrl = await getImageUrl(course.imageUrl);

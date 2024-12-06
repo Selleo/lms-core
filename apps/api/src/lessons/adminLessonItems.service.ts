@@ -357,6 +357,7 @@ export class AdminLessonItemsService {
       lessonId,
       lessonItem.lessonItemType as LessonItemTypes,
     );
+
     if (result.length === 0) {
       throw new NotFoundException("Lesson not found in this course");
     }
@@ -364,8 +365,8 @@ export class AdminLessonItemsService {
     await this.adminLessonItemsRepository.updateLessonItemDisplayOrder(chapterId, lessonId);
   }
 
-  async updatePremiumStatus(lessonId: string, isFree: boolean) {
-    await this.adminLessonsRepository.updatePremiumStatus(lessonId, isFree);
+  async updateFreemiumStatus(lessonId: string, isFreemium: boolean) {
+    await this.adminLessonsRepository.updateFreemiumStatus(lessonId, isFreemium);
   }
 
   async upsertQuestionOptions(
@@ -449,8 +450,6 @@ export class AdminLessonItemsService {
           ]);
           break;
         case "file":
-          result = await this.adminLessonItemsRepository.getFiles([eq(files.id, item.id)]);
-          break;
         case "video":
           result = await this.adminLessonItemsRepository.getFiles([eq(files.id, item.id)]);
           break;

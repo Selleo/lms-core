@@ -1962,7 +1962,7 @@
         "operationId": "LessonsController_removeChapter",
         "parameters": [
           {
-            "name": "courseId",
+            "name": "chapterId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1971,7 +1971,7 @@
             }
           },
           {
-            "name": "chapterId",
+            "name": "courseId",
             "required": true,
             "in": "path",
             "schema": {
@@ -2609,9 +2609,9 @@
         }
       }
     },
-    "/api/lessons/course-lesson/premium-status": {
+    "/api/lessons/course-lesson/freemium-status": {
       "patch": {
-        "operationId": "LessonsController_updateLessonPremiumStatus",
+        "operationId": "LessonsController_updateLessonFreemiumStatus",
         "parameters": [
           {
             "name": "lessonId",
@@ -2628,7 +2628,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateLessonPremiumStatusBody"
+                "$ref": "#/components/schemas/UpdateLessonFreemiumStatusBody"
               }
             }
           }
@@ -2638,7 +2638,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateLessonPremiumStatusResponse"
+                  "$ref": "#/components/schemas/UpdateLessonFreemiumStatusResponse"
                 }
               }
             }
@@ -7625,18 +7625,18 @@
           "data"
         ]
       },
-      "UpdateLessonPremiumStatusBody": {
+      "UpdateLessonFreemiumStatusBody": {
         "type": "object",
         "properties": {
-          "isFree": {
+          "isFreemium": {
             "type": "boolean"
           }
         },
         "required": [
-          "isFree"
+          "isFreemium"
         ]
       },
-      "UpdateLessonPremiumStatusResponse": {
+      "UpdateLessonFreemiumStatusResponse": {
         "type": "object",
         "properties": {
           "data": {

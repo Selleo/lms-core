@@ -131,7 +131,7 @@ export class AdminLessonsService {
     );
   }
 
-  async getLessonById(id: string) {
+  async getLessonWithItemsById(id: string) {
     const lesson = await this.adminLessonsRepository.getLessonById(id);
 
     if (!lesson) throw new NotFoundException("Lesson not found");
@@ -246,7 +246,7 @@ export class AdminLessonsService {
   }
 
   async removeChapter(courseId: string, chapterId: string) {
-    const lessonItemsList = await this.adminLessonsRepository.getLessonItems(chapterId);
+    const lessonItemsList = await this.adminLessonsRepository.getBetaLessons(chapterId);
 
     const result = await this.adminLessonsRepository.removeChapterAndReferences(
       chapterId,

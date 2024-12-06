@@ -647,8 +647,10 @@ export interface GetUserStatisticsResponse {
       /** @format uuid */
       id: string;
       title: string;
+      /** @format uuid */
+      courseId: string;
       imageUrl?: string;
-      description: string;
+      description?: string;
       itemsCount: number;
       itemsCompletedCount?: number;
       lessonProgress?: "completed" | "in_progress" | "not_started";
@@ -660,8 +662,6 @@ export interface GetUserStatisticsResponse {
       type?: string;
       createdAt?: string;
       quizScore?: number;
-      /** @format uuid */
-      courseId: string;
       courseTitle: string;
       courseDescription: string;
     };
@@ -1283,11 +1283,11 @@ export interface UpsertQuestionOptionsResponse {
   };
 }
 
-export interface UpdateLessonPremiumStatusBody {
-  isFree: boolean;
+export interface UpdateLessonFreemiumStatusBody {
+  isFreemium: boolean;
 }
 
-export interface UpdateLessonPremiumStatusResponse {
+export interface UpdateLessonFreemiumStatusResponse {
   data: {
     message: string;
   };
@@ -2571,8 +2571,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/api/lessons/chapter/{courseId}/{chapterId}
      */
     lessonsControllerRemoveChapter: (
-      courseId: string,
       chapterId: string,
+      courseId: string,
       params: RequestParams = {},
     ) =>
       this.request<RemoveChapterResponse, any>({
@@ -2937,19 +2937,19 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name LessonsControllerUpdateLessonPremiumStatus
-     * @request PATCH:/api/lessons/course-lesson/premium-status
+     * @name LessonsControllerUpdateLessonFreemiumStatus
+     * @request PATCH:/api/lessons/course-lesson/freemium-status
      */
-    lessonsControllerUpdateLessonPremiumStatus: (
-      data: UpdateLessonPremiumStatusBody,
+    lessonsControllerUpdateLessonFreemiumStatus: (
+      data: UpdateLessonFreemiumStatusBody,
       query?: {
         /** @format uuid */
         lessonId?: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<UpdateLessonPremiumStatusResponse, any>({
-        path: `/api/lessons/course-lesson/premium-status`,
+      this.request<UpdateLessonFreemiumStatusResponse, any>({
+        path: `/api/lessons/course-lesson/freemium-status`,
         method: "PATCH",
         query: query,
         body: data,

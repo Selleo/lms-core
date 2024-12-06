@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, inArray, sql } from "drizzle-orm";
+import { eq, and, inArray, sql, max } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import {
@@ -53,15 +53,14 @@ export class AdminLessonItemsRepository {
   ): Promise<number> {
     const dbInstance = trx ?? this.db;
 
-    const result = await dbInstance
+    const [result] = await dbInstance
       .select({
-        highestOrder: sql<number>`MAX(${lessonItems.displayOrder})`,
+        highestOrder: max(lessonItems.displayOrder),
       })
       .from(lessonItems)
-      .where(eq(lessonItems.lessonId, lessonId))
-      .limit(1);
+      .where(eq(lessonItems.lessonId, lessonId));
 
-    return result.length > 0 && result[0].highestOrder !== null ? result[0].highestOrder : 0;
+    return result?.highestOrder ? result.highestOrder : 0;
   }
 
   async getQuestionAnswerOptions(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
@@ -77,8 +76,7 @@ export class AdminLessonItemsRepository {
     const [lessonItem] = await this.db
       .select()
       .from(lessonItems)
-      .where(eq(lessonItems.lessonItemId, lessonItemId))
-      .limit(1);
+      .where(eq(lessonItems.lessonItemId, lessonItemId));
 
     if (!lessonItem) {
       throw new Error(`Lesson item with ID ${lessonItemId} not found`);
