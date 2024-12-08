@@ -127,6 +127,13 @@
       "when": 1733396749135,
       "tag": "0017_update_courses_references",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1733695650729,
+      "tag": "0018_create_scorm_metadata",
+      "breakpoints": true
     }
   ]
 }
