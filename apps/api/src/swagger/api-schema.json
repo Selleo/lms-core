@@ -2810,40 +2810,6 @@
         }
       }
     },
-    "/api/statistics/user-stats": {
-      "get": {
-        "operationId": "StatisticsController_getUserStatistics",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserStatisticsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/statistics/teacher-stats": {
-      "get": {
-        "operationId": "StatisticsController_getTeacherStats",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetTeacherStatsResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/scorm/upload": {
       "post": {
         "operationId": "ScormController_uploadScormPackage",

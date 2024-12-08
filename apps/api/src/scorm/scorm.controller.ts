@@ -8,6 +8,7 @@ import {
   Get,
   Param,
   Res,
+  BadRequestException,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from "express";
@@ -18,7 +19,7 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
-import { ScormService } from "./scorm.service";
+import { ScormService } from "./services/scorm.service";
 
 @Controller("scorm")
 @UseGuards(RolesGuard)
@@ -27,12 +28,20 @@ export class ScormController {
 
   @Post("upload")
   @UseInterceptors(FileInterceptor("file"))
-  @Roles(USER_ROLES.admin, USER_ROLES.tutor)
+  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
   async uploadScormPackage(
     @UploadedFile() file: Express.Multer.File,
     @Query("courseId") courseId: UUIDType,
     @CurrentUser("userId") userId: UUIDType,
   ) {
+    if (!courseId) {
+      throw new BadRequestException("courseId is required");
+    }
+
+    if (!file) {
+      throw new BadRequestException("file is required");
+    }
+
     const metadata = await this.scormService.processScormPackage(file, courseId, userId);
 
     return new BaseResponse({
@@ -49,6 +58,10 @@ export class ScormController {
     @Res() res: Response,
     @CurrentUser("userId") userId: UUIDType,
   ) {
+    if (!filePath) {
+      throw new BadRequestException("filePath is required");
+    }
+
     const url = await this.scormService.serveContent(courseId, filePath, userId);
     return res.redirect(url);
   }
