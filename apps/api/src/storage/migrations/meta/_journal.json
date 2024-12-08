@@ -15,6 +15,13 @@
       "when": 1733915188531,
       "tag": "0001_create_scorm_metadata",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1733695650729,
+      "tag": "0018_create_scorm_metadata",
+      "breakpoints": true
     }
   ]
 }
