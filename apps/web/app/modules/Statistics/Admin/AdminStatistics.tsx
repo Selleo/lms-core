@@ -105,7 +105,7 @@ export const AdminStatistics = () => {
         fill: "var(--primary-300)",
       },
     ],
-    [correctAnswers, wrongAnswers],
+    [],
   );
 
   return (

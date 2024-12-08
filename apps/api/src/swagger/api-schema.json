@@ -2823,14 +2823,41 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "resource": {
+                    "type": "string",
+                    "description": "Optional resource type"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": ""
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScormUploadResponse"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/scorm/{courseId}/content/*": {
+    "/api/scorm/{courseId}/content": {
       "get": {
         "operationId": "ScormController_serveScormContent",
         "parameters": [
@@ -2839,13 +2866,14 @@
             "required": true,
             "in": "path",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           },
           {
-            "name": "0",
-            "required": true,
-            "in": "path",
+            "name": "path",
+            "required": false,
+            "in": "query",
             "schema": {
               "type": "string"
             }
@@ -7888,6 +7916,60 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "ScormMetadata": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "entryPoint": {
+            "type": "string"
+          },
+          "s3Key": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "courseId",
+          "fileId",
+          "version",
+          "entryPoint",
+          "s3Key"
+        ]
+      },
+      "ScormUploadResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/ScormMetadata"
+          }
+        },
+        "required": [
+          "message",
+          "metadata"
         ]
       }
     }
