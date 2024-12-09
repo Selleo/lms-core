@@ -1,6 +1,7 @@
 import { BadRequestException, ConflictException, Inject, Injectable } from "@nestjs/common";
 
 import { S3Service } from "src/s3/s3.service";
+import { withTimeout } from "src/utils/with-timeout";
 
 import type { createCache } from "cache-manager";
 
@@ -13,11 +14,13 @@ export class FilesService {
 
   async getFileUrl(fileKey: string): Promise<string> {
     try {
-      const cachedUrl = await this.cacheManager.get<string>(fileKey);
+      const cachedUrl = await withTimeout(this.cacheManager.get<string>(fileKey), 1000);
+
       if (cachedUrl) return cachedUrl;
 
       const signedUrl = await this.s3Service.getSignedUrl(fileKey);
-      await this.cacheManager.set(fileKey, signedUrl);
+
+      await withTimeout(this.cacheManager.set(fileKey, signedUrl, 3500000), 1000);
 
       return signedUrl;
     } catch (error) {

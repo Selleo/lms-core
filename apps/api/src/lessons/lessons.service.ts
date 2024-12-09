@@ -14,6 +14,7 @@ import { QuizCompletedEvent } from "src/events";
 import { FilesService } from "src/file/files.service";
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import { QUESTION_TYPE } from "src/questions/schema/questions.types";
+import { getImageUrl } from "src/utils/get-image-url";
 
 import { LESSON_ITEM_TYPE, LESSON_TYPE } from "./lesson.type";
 import { LessonsRepository } from "./repositories/lessons.repository";
@@ -54,11 +55,6 @@ export class LessonsService {
       throw new UnauthorizedException("You don't have access to this lesson");
 
     if (!lesson) throw new NotFoundException("Lesson not found");
-
-    const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url;
-      return await this.filesService.getFileUrl(url);
-    };
 
     const imageUrl = await getImageUrl(lesson.imageUrl);
 

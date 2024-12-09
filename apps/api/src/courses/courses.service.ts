@@ -29,6 +29,7 @@ import { AdminLessonsRepository } from "src/lessons/repositories/adminLessons.re
 import { LessonProgress } from "src/lessons/schemas/lesson.types";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import { USER_ROLES } from "src/users/schemas/user-roles";
+import { getImageUrl } from "src/utils/get-image-url";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
 import {
@@ -390,11 +391,6 @@ export class CoursesService {
         ),
       );
 
-    const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url;
-      return await this.filesService.getFileUrl(url);
-    };
-
     const imageUrl = await getImageUrl(course.imageUrl);
 
     return {
@@ -456,11 +452,6 @@ export class CoursesService {
         ),
       )
       .orderBy(courseLessons.displayOrder);
-
-    const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url;
-      return await this.filesService.getFileUrl(url);
-    };
 
     const imageUrl = await getImageUrl(course.imageUrl);
 
@@ -532,11 +523,6 @@ export class CoursesService {
           isNotNull(lessons.imageUrl),
         ),
       );
-
-    const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url;
-      return await this.filesService.getFileUrl(url);
-    };
 
     const imageUrl = await getImageUrl(course.imageUrl);
 

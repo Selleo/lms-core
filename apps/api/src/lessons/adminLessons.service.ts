@@ -7,7 +7,6 @@ import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { FilesService } from "src/file/files.service";
-import { S3Service } from "src/s3/s3.service";
 import { courseLessons, lessonItems, lessons } from "src/storage/schema";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
@@ -28,7 +27,6 @@ export class AdminLessonsService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly filesService: FilesService,
-    private readonly s3Service: S3Service,
     private readonly adminLessonsRepository: AdminLessonsRepository,
   ) {}
 
@@ -80,7 +78,7 @@ export class AdminLessonsService {
   async processLessonItems(lessonItemsList: LessonItemWithContentSchema[]) {
     const getFileUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url;
-      return await this.s3Service.getSignedUrl(url);
+      return await this.filesService.getFileUrl(url);
     };
     return await Promise.all(
       lessonItemsList.map(async (item) => {
