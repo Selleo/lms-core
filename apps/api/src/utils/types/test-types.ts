@@ -26,7 +26,7 @@ const niceCourseData = Type.Intersect([
           items: Type.Array(
             Type.Union([
               Type.Intersect([
-                Type.Omit(lessonItemFileSchema, ["id", "archived", "authorId"]),
+                Type.Omit(lessonItemFileSchema, ["id", "archived", "authorId", "url"]),
                 Type.Object({
                   itemType: Type.Literal(LESSON_ITEM_TYPE.file.key),
                 }),

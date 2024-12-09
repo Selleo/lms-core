@@ -13,19 +13,25 @@ import {
   textBlocks,
 } from "src/storage/schema";
 
-import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
-import { QUESTION_TYPE } from "./questions/schema/questions.types";
+import { LESSON_FILE_TYPE, LESSON_ITEM_TYPE } from "../lessons/lesson.type";
+import { QUESTION_TYPE } from "../questions/schema/questions.types";
 
-import type { DatabasePg } from "./common";
-import type { NiceCourseData } from "./utils/types/test-types";
+import type { DatabasePg } from "../common";
+import type { NiceCourseData } from "../utils/types/test-types";
 
 export async function createNiceCourses(
-  adminUserId: string,
+  creatorUserIds: string[],
   db: DatabasePg,
   data: NiceCourseData[],
 ) {
-  for (const courseData of data) {
-    const [category] = await db
+  const createdCourses = [];
+
+  for (let i = 0; i < data.length; i++) {
+    const courseData = data[i];
+    const creatorIndex = i % creatorUserIds.length;
+    const creatorUserId = creatorUserIds[creatorIndex];
+
+    await db
       .insert(categories)
       .values({
         id: crypto.randomUUID(),
@@ -34,8 +40,14 @@ export async function createNiceCourses(
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       })
-      .returning();
+      .onConflictDoNothing();
 
+    const [category] = await db
+      .select()
+      .from(categories)
+      .where(eq(categories.title, courseData.category));
+
+    const createdAt = faker.date.past({ years: 1, refDate: new Date() }).toISOString();
     const [course] = await db
       .insert(courses)
       .values({
@@ -45,10 +57,10 @@ export async function createNiceCourses(
         imageUrl: courseData.imageUrl,
         state: courseData.state,
         priceInCents: courseData.priceInCents,
-        authorId: adminUserId,
+        authorId: creatorUserId,
         categoryId: category.id,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        createdAt: createdAt,
+        updatedAt: createdAt,
       })
       .returning();
 
@@ -61,10 +73,10 @@ export async function createNiceCourses(
           type: lessonData.type,
           description: lessonData.description,
           imageUrl: faker.image.urlPicsumPhotos(),
-          authorId: adminUserId,
+          authorId: creatorUserId,
           state: lessonData.state,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          createdAt: createdAt,
+          updatedAt: createdAt,
           itemsCount: lessonData.items.filter(
             (item) => item.itemType !== LESSON_ITEM_TYPE.text_block.key,
           ).length,
@@ -88,7 +100,7 @@ export async function createNiceCourses(
               body: item.body,
               archived: false,
               state: item.state,
-              authorId: adminUserId,
+              authorId: creatorUserId,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             })
@@ -108,9 +120,9 @@ export async function createNiceCourses(
               id: crypto.randomUUID(),
               title: item.title,
               type: item.type,
-              url: item.url,
+              url: getFileUrl(item.type),
               state: item.state,
-              authorId: adminUserId,
+              authorId: creatorUserId,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             })
@@ -155,7 +167,7 @@ export async function createNiceCourses(
                   ? item.solutionExplanation || "Explanation will be provided after answering."
                   : null,
               state: item.state,
-              authorId: adminUserId,
+              authorId: creatorUserId,
               createdAt: new Date().toISOString(),
               updatedAt: new Date().toISOString(),
             })
@@ -185,7 +197,9 @@ export async function createNiceCourses(
         }
       }
     }
+    createdCourses.push(course);
   }
+  return createdCourses;
 }
 
 export async function seedTruncateAllTables(db: DatabasePg): Promise<void> {
@@ -207,4 +221,34 @@ export async function seedTruncateAllTables(db: DatabasePg): Promise<void> {
 
     await tx.execute(sql`SET CONSTRAINTS ALL IMMEDIATE`);
   });
+}
+
+const external_video_urls = [
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+];
+
+const external_presentation_urls = [
+  "https://res.cloudinary.com/dinpapxzv/raw/upload/v1727104719/presentation_gp0o3d.pptx",
+];
+
+function getFileUrl(fileType: string) {
+  if (fileType === LESSON_FILE_TYPE.external_video.key) {
+    return faker.helpers.arrayElement(external_video_urls);
+  } else if (fileType === LESSON_FILE_TYPE.external_presentation.key) {
+    return faker.helpers.arrayElement(external_presentation_urls);
+  } else {
+    return faker.internet.url();
+  }
 }

@@ -6,35 +6,33 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { flatMap, now, sampleSize } from "lodash";
 import postgres from "postgres";
 
-import hashPassword from "./common/helpers/hashPassword";
-import { STATES } from "./common/states";
-import { e2eCourses } from "./e2e-data-seeds";
-import { LESSON_FILE_TYPE, LESSON_ITEM_TYPE, LESSON_TYPE } from "./lessons/lesson.type";
-import { niceCourses } from "./nice-data-seeds";
-import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
+import hashPassword from "../common/helpers/hashPassword";
+import { STATES } from "../common/states";
+import { LESSON_ITEM_TYPE, LESSON_TYPE } from "../lessons/lesson.type";
 import {
-  categories,
   courseLessons,
   courses,
   coursesSummaryStats,
   courseStudentsStats,
   credentials,
-  files,
   lessonItems,
   lessons,
-  questionAnswerOptions,
-  questions,
   quizAttempts,
   studentCourses,
   studentLessonsProgress,
-  textBlocks,
   userDetails,
   users,
-} from "./storage/schema";
-import { STATUS } from "./storage/schema/utils";
-import { USER_ROLES } from "./users/schemas/user-roles";
+} from "../storage/schema";
+import { STATUS } from "../storage/schema/utils";
+import { USER_ROLES } from "../users/schemas/user-roles";
 
-import type { DatabasePg, UUIDType } from "./common";
+import { e2eCourses } from "./e2e-data-seeds";
+import { niceCourses } from "./nice-data-seeds";
+import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
+import { admin, students, teachers } from "./users-seed";
+
+import type { UsersSeed } from "./seed.type";
+import type { DatabasePg, UUIDType } from "../common";
 
 dotenv.config({ path: "./.env" });
 
@@ -46,25 +44,25 @@ const connectionString = process.env.DATABASE_URL!;
 const sqlConnect = postgres(connectionString);
 const db = drizzle(sqlConnect) as DatabasePg;
 
-const external_video_urls = [
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
-];
+async function createUsers(users: UsersSeed, password = faker.internet.password()) {
+  return Promise.all(
+    users.map(async (userData) => {
+      const userToCreate = {
+        id: faker.string.uuid(),
+        email: userData.email || faker.internet.email(),
+        firstName: userData.firstName || faker.person.firstName(),
+        lastName: userData.lastName || faker.person.lastName(),
+        role: userData.role || USER_ROLES.student,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
 
-const external_presentation_urls = [
-  "https://res.cloudinary.com/dinpapxzv/raw/upload/v1727104719/presentation_gp0o3d.pptx",
-];
+      const user = await createOrFindUser(userToCreate.email, password, userToCreate);
+
+      return user;
+    }),
+  );
+}
 
 async function createOrFindUser(email: string, password: string, userData: any) {
   const [existingUser] = await db.select().from(users).where(eq(users.email, email));
@@ -99,25 +97,6 @@ async function insertUserDetails(userId: string) {
     contactPhoneNumber: faker.phone.number(),
     jobTitle: faker.person.jobTitle(),
   });
-}
-
-async function createUsers(count: number) {
-  return Promise.all(
-    Array.from({ length: count }, async () => {
-      const userData = {
-        id: faker.string.uuid(),
-        email: faker.internet.email(),
-        firstName: faker.person.firstName(),
-        lastName: faker.person.lastName(),
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      const [user] = await db.insert(users).values(userData).returning();
-      const password = faker.internet.password();
-      const credential = await insertCredential(user.id, password);
-      return { ...user, credentials: { ...credential, password } };
-    }),
-  );
 }
 
 async function createEntities<T = any>(
@@ -269,20 +248,27 @@ function createLessonItems(lessonId: string, files: any[], textBlocks: any[], qu
   }));
 }
 
-async function createStudentCourses(courses: any[], studentId: string) {
-  const studentCoursesList = courses.map((course) => ({
-    id: faker.string.uuid(),
-    studentId: studentId,
-    courseId: course.id,
-    numberOfAssignments: faker.number.int({ min: 0, max: 10 }),
-    numberOfFinishedAssignments: faker.number.int({ min: 0, max: 10 }),
-    state: "not_started",
-    archived: false,
-    createdAt: course.createdAt,
-    updatedAt: course.updatedAt,
-  }));
+async function createStudentCourses(courses: any[], studentIds: string[]) {
+  const studentsCoursesList = studentIds.flatMap((studentId) => {
+    const courseCount = Math.floor(courses.length * 0.5);
+    const selectedCourses = sampleSize(courses, courseCount);
 
-  return db.insert(studentCourses).values(studentCoursesList).returning();
+    return selectedCourses.map((course) => {
+      return {
+        id: faker.string.uuid(),
+        studentId: studentId,
+        courseId: course.id,
+        numberOfAssignments: faker.number.int({ min: 0, max: 10 }),
+        numberOfFinishedAssignments: faker.number.int({ min: 0, max: 10 }),
+        state: "not_started",
+        archived: false,
+        createdAt: course.createdAt,
+        updatedAt: course.updatedAt,
+      };
+    });
+  });
+
+  return db.insert(studentCourses).values(studentsCoursesList).returning();
 }
 
 async function createLessonProgress(userId: string) {
@@ -392,176 +378,58 @@ async function createCourseStudentsStats() {
   await db.insert(courseStudentsStats).values(createdTwelveMonthsAgoStats);
 }
 
-async function seed() {
+async function seedStaging() {
   await seedTruncateAllTables(db);
 
   try {
-    const adminUser = await createOrFindUser("admin@example.com", "password", {
-      id: faker.string.uuid(),
-      email: "admin@example.com",
-      firstName: "Admin",
-      lastName: "User",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      role: USER_ROLES.admin,
-    });
+    const createdStudents = await createUsers(students, "password");
+    const [createdAdmin] = await createUsers(admin, "password");
+    const createdTeachers = await createUsers(teachers, "password");
+    await createUsers(
+      [
+        {
+          email: "student0@example.com",
+          firstName: faker.person.firstName(),
+          lastName: "Student",
+          role: USER_ROLES.student,
+        },
+      ],
+      "password",
+    );
 
-    const studentUser = await createOrFindUser("user@example.com", "password", {
-      id: faker.string.uuid(),
-      email: "user@example.com",
-      firstName: "Student",
-      lastName: "User",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      role: USER_ROLES.student,
-    });
+    const createdStudentIds = createdStudents.map((student) => student.id);
+    const creatorCourseIds = [createdAdmin.id, ...createdTeachers.map((teacher) => teacher.id)];
 
-    const teacherUser = await createOrFindUser("teacher@example.com", "password", {
-      id: faker.string.uuid(),
-      email: "teacher@example.com",
-      firstName: "Teacher",
-      lastName: "User",
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      role: USER_ROLES.teacher,
-    });
+    console.log("Created or found admin user:", createdAdmin);
+    console.log("Created or found students user:", createdStudents);
+    console.log("Created or found teachers user:", createdTeachers);
 
-    console.log("Created or found admin user:", adminUser);
-    console.log("Created or found student user:", studentUser);
-    console.log("Created or found teacher user:", teacherUser);
-
-    await createUsers(5);
-    console.log("Created users with credentials");
-
-    await createNiceCourses(adminUser.id, db, niceCourses);
+    const createdCourses = await createNiceCourses(creatorCourseIds, db, niceCourses);
     console.log("✨✨✨Created created nice courses✨✨✨");
-    await createNiceCourses(adminUser.id, db, e2eCourses);
+    await createNiceCourses([createdAdmin.id], db, e2eCourses);
     console.log("🧪 Created e2e courses");
 
-    const createdCategories = await createEntities(
-      categories,
-      8,
-      (() => {
-        let index = 0;
-        return () => ({
-          id: faker.string.uuid(),
-          title: faker.lorem.sentence(3),
-          archived: index++ % 2 === 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        });
-      })(),
-    );
-    console.log("Created categories");
-
-    const createdTextBlocks = await createEntities(
-      textBlocks,
-      10,
-      (() => {
-        let index = 0;
-        return () => ({
-          id: faker.string.uuid(),
-          title: faker.lorem.words(4),
-          body: faker.lorem.paragraph(3),
-          archived: index++ % 3 === 0,
-          state: index % 2 === 0 ? STATES.published : STATES.draft,
-          authorId: adminUser.id,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        });
-      })(),
-    );
-    const createdTextBlocksStatePublished = createdTextBlocks.filter(
-      (textBlock) => textBlock.state === STATES.published,
-    );
-    console.log("Created text blocks");
-
-    const createdQuestions = await createEntities(
-      questions,
-      10,
-      (() => {
-        let index = 0;
-        return () => ({
-          id: faker.string.uuid(),
-          questionType: faker.helpers.arrayElement(["single_choice", "multiple_choice"]),
-          questionBody: faker.lorem.paragraph(3),
-          solutionExplanation: faker.lorem.paragraph(3),
-          state: index++ % 2 === 0 ? STATES.published : STATES.draft,
-          authorId: adminUser.id,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        });
-      })(),
-    );
-    const createdQuestionsStatePublished = createdQuestions.filter(
-      (question) => question.state === STATES.published,
-    );
-    console.log("Created questions");
-
-    for (const question of createdQuestions) {
-      await createEntities(questionAnswerOptions, 4, () => ({
-        id: faker.string.uuid(),
-        questionId: question.id,
-        optionText: faker.lorem.sentence(3),
-        isCorrect: faker.datatype.boolean(),
-        position: faker.number.int({ min: 1, max: 4 }),
-      }));
-    }
-    console.log("Created question answer options");
-
-    const createdFiles = await createEntities(files, 10, () => {
-      const fileType = faker.helpers.arrayElement([
-        LESSON_FILE_TYPE.external_presentation.key,
-        LESSON_FILE_TYPE.external_video.key,
-      ]);
-
-      let url;
-      if (fileType === LESSON_FILE_TYPE.external_video.key) {
-        url = faker.helpers.arrayElement(external_video_urls);
-      } else if (fileType === LESSON_FILE_TYPE.external_presentation.key) {
-        url = faker.helpers.arrayElement(external_presentation_urls);
-      } else {
-        url = faker.internet.url();
-      }
-
-      return {
-        id: faker.string.uuid(),
-        title: faker.lorem.sentence(3),
-        type: fileType,
-        url: url,
-        state: faker.helpers.arrayElement([STATUS.draft.key, STATUS.published.key]),
-        authorId: adminUser.id,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-    });
-    const createdFilesStatePublished = createdFiles.filter(
-      (file) => file.state === STATES.published,
-    );
-    console.log("Created files");
-
-    const createdCourses = await createCoursesWithLessons(
-      [adminUser.id, teacherUser.id],
-      createdCategories,
-      createdFilesStatePublished,
-      createdTextBlocksStatePublished,
-      createdQuestionsStatePublished,
-    );
-    console.log("Created courses with lessons and lesson items");
-
-    const courseCount = Math.floor(createdCourses.length * 0.7);
-    const selectedCourses = sampleSize(createdCourses, courseCount);
     console.log("Selected random courses for student from createdCourses");
-    await createStudentCourses(selectedCourses, studentUser.id);
+    await createStudentCourses(createdCourses, createdStudentIds);
     console.log("Created student courses");
-    await createLessonProgress(studentUser.id);
+
+    await Promise.all(
+      createdStudentIds.map(async (studentId) => {
+        await createLessonProgress(studentId);
+      }),
+    );
     console.log("Created student lesson progress");
+
     // TODO: change to function working on data from database as in real app
-    await createCoursesSummaryStats(selectedCourses);
-    await createQuizAttempts(studentUser.id);
+    await createCoursesSummaryStats(createdCourses);
+
+    await Promise.all(
+      createdStudentIds.map(async (studentId) => {
+        await createQuizAttempts(studentId);
+      }),
+    );
     await createCourseStudentsStats();
     console.log("Created student course students stats");
-
     console.log("Seeding completed successfully");
   } catch (error) {
     console.error("Seeding failed:", error);
@@ -577,7 +445,7 @@ async function seed() {
 }
 
 if (require.main === module) {
-  seed()
+  seedStaging()
     .then(() => process.exit(0))
     .catch((error) => {
       console.error("An error occurred:", error);
@@ -585,4 +453,4 @@ if (require.main === module) {
     });
 }
 
-export default seed;
+export default seedStaging;

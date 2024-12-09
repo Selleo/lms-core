@@ -4,7 +4,7 @@ import postgres from "postgres";
 
 import { seedTruncateAllTables } from "./seed-helpers";
 
-import type { DatabasePg } from "./common";
+import type { DatabasePg } from "../common";
 
 dotenv.config({ path: "./.env" });
 

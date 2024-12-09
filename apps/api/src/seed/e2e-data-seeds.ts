@@ -1,7 +1,7 @@
-import { LESSON_ITEM_TYPE, LESSON_TYPE } from "./lessons/lesson.type";
-import { STATUS } from "./storage/schema/utils";
+import { LESSON_ITEM_TYPE, LESSON_TYPE } from "../lessons/lesson.type";
+import { STATUS } from "../storage/schema/utils";
 
-import type { NiceCourseData } from "./utils/types/test-types";
+import type { NiceCourseData } from "../utils/types/test-types";
 
 export const e2eCourses: NiceCourseData[] = [
   {

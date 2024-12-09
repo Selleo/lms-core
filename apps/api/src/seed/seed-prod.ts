@@ -4,11 +4,11 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import hashPassword from "./common/helpers/hashPassword";
-import { credentials, users } from "./storage/schema";
-import { USER_ROLES } from "./users/schemas/user-roles";
+import hashPassword from "../common/helpers/hashPassword";
+import { credentials, users } from "../storage/schema";
+import { USER_ROLES } from "../users/schemas/user-roles";
 
-import type { DatabasePg } from "./common";
+import type { DatabasePg } from "../common";
 
 dotenv.config({ path: "./.env" });
 
