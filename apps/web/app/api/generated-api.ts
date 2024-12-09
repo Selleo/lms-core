@@ -1361,6 +1361,22 @@ export interface CreatePaymentIntentResponse {
   };
 }
 
+export interface ScormMetadata {
+  id: string;
+  createdAt: string;
+  updatedAt: string;
+  courseId: string;
+  fileId: string;
+  version: string;
+  entryPoint: string;
+  s3Key: string;
+}
+
+export interface ScormUploadResponse {
+  message: string;
+  metadata: ScormMetadata;
+}
+
 import type {
   AxiosInstance,
   AxiosRequestConfig,
@@ -2088,16 +2104,14 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     coursesControllerGetStudentCourses: (
       query?: {
-        perPage?: number;
         title?: string;
         category?: string;
         author?: string;
         "creationDateRange[0]"?: string;
         "creationDateRange[1]"?: string;
-        state?: string;
-        archived?: string;
         /** @min 1 */
         page?: number;
+        perPage?: number;
         sort?:
           | "title"
           | "category"
@@ -2130,16 +2144,14 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     coursesControllerGetAvailableCourses: (
       query?: {
-        perPage?: number;
         title?: string;
         category?: string;
         author?: string;
         "creationDateRange[0]"?: string;
         "creationDateRange[1]"?: string;
-        state?: string;
-        archived?: string;
         /** @min 1 */
         page?: number;
+        perPage?: number;
         sort?:
           | "title"
           | "category"
@@ -3063,6 +3075,54 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/stripe/webhook`,
         method: "POST",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ScormControllerUploadScormPackage
+     * @request POST:/api/scorm/upload
+     */
+    scormControllerUploadScormPackage: (
+      query: {
+        courseId: string;
+      },
+      data: {
+        /** @format binary */
+        file?: File;
+        /** Optional resource type */
+        resource?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ScormUploadResponse, any>({
+        path: `/api/scorm/upload`,
+        method: "POST",
+        query: query,
+        body: data,
+        type: ContentType.FormData,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ScormControllerServeScormContent
+     * @request GET:/api/scorm/{courseId}/content
+     */
+    scormControllerServeScormContent: (
+      courseId: string,
+      query?: {
+        path?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/api/scorm/${courseId}/content`,
+        method: "GET",
+        query: query,
         ...params,
       }),
   };

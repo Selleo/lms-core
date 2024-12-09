@@ -27,6 +27,7 @@ import { HealthModule } from "./health/health.module";
 import { LessonsModule } from "./lessons/lessons.module";
 import { QuestionsModule } from "./questions/questions.module";
 import { S3Module } from "./s3/s3.module";
+import { ScormModule } from "./scorm/scorm.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import * as schema from "./storage/schema";
 import { StripeModule } from "./stripe/stripe.module";
@@ -81,6 +82,7 @@ import { TestConfigModule } from "./test-config/test-config.module";
     StripeModule,
     EventsModule,
     StatisticsModule,
+    ScormModule,
     CacheModule,
   ],
   controllers: [],
