@@ -44,7 +44,7 @@ const Lesson = () => {
     setValue,
     getValues,
     formState: { isDirty },
-  } = useForm<UpdateLessonBody>();
+  } = useForm<UpdateLessonBody & { showImageUrl: string }>();
 
   if (isLoading) {
     return (
@@ -77,7 +77,8 @@ const Lesson = () => {
     setIsUploading(true);
     try {
       const result = await uploadFile({ file, resource: "lesson" });
-      setValue("imageUrl", result.fileUrl, { shouldValidate: true, shouldDirty: true });
+      setValue("imageUrl", result.fileKey, { shouldValidate: true, shouldDirty: true });
+      setValue("showImageUrl", result.fileUrl, { shouldValidate: true, shouldDirty: true });
     } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
