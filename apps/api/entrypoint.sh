@@ -9,13 +9,16 @@ if [ $COMMAND = "server" ]; then
 elif [ $COMMAND = "migrate" ]; then
   echo "Running migrations..."
   npm run db:migrate
-elif [ $COMMAND = "seed" ]; then
+elif [ $COMMAND = "seed-staging" ]; then
+  echo "Running seeds..."
+  npm run db:seed-staging
+elif [ $COMMAND = "seed-prod" ]; then
   echo "Running seeds..."
   npm run db:seed-prod
 elif [ $COMMAND = "truncate-tables" ]; then
   echo "Truncating tables..."
   npm run db:truncate-tables
 else
-  echo "Usage: entrypoint.sh [server|migrate|seed|truncate-tables]"
+  echo "Usage: entrypoint.sh [server|migrate|seed-staging|seed-prod|truncate-tables]"
   exit 1
 fi

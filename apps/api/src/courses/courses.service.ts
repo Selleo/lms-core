@@ -14,7 +14,6 @@ import {
   ilike,
   inArray,
   isNotNull,
-  isNull,
   like,
   sql,
 } from "drizzle-orm";
@@ -85,14 +84,14 @@ export class CoursesService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    return await this.db.transaction(async (tx) => {
+    return await this.db.transaction(async (trx) => {
       const conditions = this.getFiltersConditions(filters, false);
 
       if (currentUserRole === USER_ROLES.teacher && currentUserId) {
         conditions.push(eq(courses.authorId, currentUserId));
       }
 
-      const queryDB = tx
+      const queryDB = trx
         .select({
           id: courses.id,
           description: sql<string>`${courses.description}`,
@@ -163,11 +162,11 @@ export class CoursesService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    return this.db.transaction(async (tx) => {
+    return this.db.transaction(async (trx) => {
       const conditions = [eq(studentCourses.studentId, userId)];
       conditions.push(...this.getFiltersConditions(filters));
 
-      const queryDB = tx
+      const queryDB = trx
         .select(this.getSelectField())
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
@@ -196,7 +195,7 @@ export class CoursesService {
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
-      const [{ totalItems }] = await tx
+      const [{ totalItems }] = await trx
         .select({ totalItems: countDistinct(courses.id) })
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
@@ -220,8 +219,10 @@ export class CoursesService {
     });
   }
 
+  // TODO: remove unused select fields
   async getAvailableCourses(
     query: CoursesQuery,
+    currentUserId: UUIDType,
   ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
     const {
       sort = CourseSortFields.title,
@@ -231,18 +232,49 @@ export class CoursesService {
     } = query;
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    return this.db.transaction(async (tx) => {
-      const conditions = [
-        eq(courses.state, STATES.published),
-        eq(courses.archived, false),
-        isNull(studentCourses.studentId),
-      ];
+    return this.db.transaction(async (trx) => {
+      const notEnrolledCourses: Record<string, string>[] = await trx.execute(sql`
+        SELECT id AS "courseId"
+        FROM courses
+        WHERE id NOT IN (
+          SELECT DISTINCT course_id
+          FROM student_courses
+          WHERE student_id = ${currentUserId}
+        )`);
+      const notEnrolledCourseIds = notEnrolledCourses.map(({ courseId }) => courseId);
+
+      const conditions = [eq(courses.state, STATES.published), eq(courses.archived, false)];
       conditions.push(...this.getFiltersConditions(filters));
 
-      const queryDB = tx
-        .select(this.getSelectField())
+      if (notEnrolledCourses.length > 0) {
+        conditions.push(inArray(courses.id, notEnrolledCourseIds));
+      }
+
+      const queryDB = trx
+        .select({
+          id: courses.id,
+          description: sql<string>`${courses.description}`,
+          title: courses.title,
+          imageUrl: courses.imageUrl,
+          authorId: sql<string>`${courses.authorId}`,
+          author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+          authorEmail: sql<string>`${users.email}`,
+          category: sql<string>`${categories.title}`,
+          enrolled: sql<boolean>`FALSE`,
+          enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
+          courseLessonCount: courses.lessonsCount,
+          completedLessonCount: sql<number>`0`,
+          priceInCents: courses.priceInCents,
+          currency: courses.currency,
+          hasFreeLessons: sql<boolean>`
+        EXISTS (
+          SELECT 1
+          FROM ${courseLessons}
+          WHERE ${courseLessons.courseId} = ${courses.id}
+            AND ${courseLessons.isFree} = true
+        )`,
+        })
         .from(courses)
-        .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(courseLessons, eq(courses.id, courseLessons.courseId))
@@ -257,18 +289,16 @@ export class CoursesService {
           users.firstName,
           users.lastName,
           users.email,
-          studentCourses.studentId,
           categories.title,
           coursesSummaryStats.freePurchasedCount,
           coursesSummaryStats.paidPurchasedCount,
-          studentCourses.finishedLessonsCount,
         )
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
-      const [{ totalItems }] = await tx
+      const [{ totalItems }] = await trx
         .select({ totalItems: countDistinct(courses.id) })
         .from(courses)
         .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
@@ -643,8 +673,8 @@ export class CoursesService {
     image?: Express.Multer.File,
     currentUserId?: UUIDType,
   ) {
-    return this.db.transaction(async (tx) => {
-      const [existingCourse] = await tx.select().from(courses).where(eq(courses.id, id));
+    return this.db.transaction(async (trx) => {
+      const [existingCourse] = await trx.select().from(courses).where(eq(courses.id, id));
 
       if (!existingCourse) {
         throw new NotFoundException("Course not found");
@@ -655,7 +685,7 @@ export class CoursesService {
       }
 
       if (updateCourseBody.categoryId) {
-        const [category] = await tx
+        const [category] = await trx
           .select()
           .from(categories)
           .where(eq(categories.id, updateCourseBody.categoryId));
@@ -681,7 +711,7 @@ export class CoursesService {
         ...(imageKey && { imageUrl: imageKey.fileUrl }),
       };
 
-      const [updatedCourse] = await tx
+      const [updatedCourse] = await trx
         .update(courses)
         .set(updateData)
         .where(eq(courses.id, id))

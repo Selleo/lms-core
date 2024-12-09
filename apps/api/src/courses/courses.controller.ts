@@ -144,7 +144,7 @@ export class CoursesController {
     };
     const query = { filters, page, perPage, sort };
 
-    const data = await this.coursesService.getAvailableCourses(query);
+    const data = await this.coursesService.getAvailableCourses(query, currentUserId);
 
     return new PaginatedResponse(data);
   }
