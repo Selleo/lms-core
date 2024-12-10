@@ -43,7 +43,7 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-export default function CreateNewCourse() {
+export default function CreateNewScormCourse() {
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: createCourse } = useCreateCourse();
   const { data: categories } = useCategoriesSuspense();
