@@ -2809,6 +2809,82 @@
           }
         }
       }
+    },
+    "/api/scorm/upload": {
+      "post": {
+        "operationId": "ScormController_uploadScormPackage",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "resource": {
+                    "type": "string",
+                    "description": "Optional resource type"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "File uploaded successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScormUploadResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/scorm/{courseId}/content": {
+      "get": {
+        "operationId": "ScormController_serveScormContent",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "path",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "info": {
@@ -7840,6 +7916,60 @@
         },
         "required": [
           "data"
+        ]
+      },
+      "ScormMetadata": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "courseId": {
+            "type": "string"
+          },
+          "fileId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "entryPoint": {
+            "type": "string"
+          },
+          "s3Key": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "courseId",
+          "fileId",
+          "version",
+          "entryPoint",
+          "s3Key"
+        ]
+      },
+      "ScormUploadResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/ScormMetadata"
+          }
+        },
+        "required": [
+          "message",
+          "metadata"
         ]
       }
     }
