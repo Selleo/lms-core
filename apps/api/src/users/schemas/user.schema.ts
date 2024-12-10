@@ -1,9 +1,11 @@
-import { Type, type Static } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
 
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
 
 export const allUsersSchema = Type.Array(commonUserSchema);
 export const userDetailsSchema = Type.Object({
+  firstName: Type.Union([Type.String(), Type.Null()]),
+  lastName: Type.Union([Type.String(), Type.Null()]),
   id: Type.String({ format: "uuid" }),
   description: Type.Union([Type.String(), Type.Null()]),
   contactEmail: Type.Union([Type.String(), Type.Null()]),

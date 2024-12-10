@@ -51,7 +51,7 @@ export default function CoursesViewPage() {
     <PageWrapper className="flex flex-col gap-y-4 md:gap-y-6">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
+          <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

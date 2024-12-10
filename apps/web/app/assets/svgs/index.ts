@@ -35,9 +35,7 @@ export { default as ArrowUp } from "./arrow-up.svg?react";
 export { default as ArrowDown } from "./arrow-down.svg?react";
 export { default as DragAndDropIcon } from "./drag-and-drop.svg?react";
 export { default as Info } from "./info.svg?react";
-export { default as Text } from "./text.svg?react";
-export { default as Presentation } from "./presentation.svg?react";
-export { default as Video } from "./video.svg?react";
-export { default as Quiz } from "./quiz.svg?react";
 export { default as Warning } from "./warning.svg?react";
 export { default as Admin } from "./admin.svg?react";
+
+export * from "./lesson-types";

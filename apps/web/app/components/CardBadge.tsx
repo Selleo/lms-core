@@ -13,6 +13,7 @@ const badgeVariants = cva(
         default: "text-neutral-900",
         primary: "text-primary-950",
         secondary: "text-secondary-700",
+        secondaryFilled: "text-secondary-700 bg-secondary-50",
         successOutlined: "text-success-800",
         successFilled: "text-white bg-success-600",
       },

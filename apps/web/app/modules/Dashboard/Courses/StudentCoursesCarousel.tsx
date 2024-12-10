@@ -37,7 +37,7 @@ export const StudentCoursesCarousel = ({ studentCourses }: StudentCoursesCarouse
 
   return (
     <Carousel className="w-full" opts={{ slidesToScroll: "auto" }}>
-      <CarouselContent className="flex lg:bg-white w-full rounded-lg ">
+      <CarouselContent className="flex lg:bg-white w-full rounded-lg">
         {carouselItems}
       </CarouselContent>
       <div className="lg:absolute lg:-right-8 lg:-top-[96px] sr-only lg:not-sr-only">

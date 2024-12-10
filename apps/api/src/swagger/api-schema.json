@@ -3191,6 +3191,26 @@
           "data": {
             "type": "object",
             "properties": {
+              "firstName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "id": {
                 "format": "uuid",
                 "type": "string"
@@ -3237,6 +3257,8 @@
               }
             },
             "required": [
+              "firstName",
+              "lastName",
               "id",
               "description",
               "contactEmail",

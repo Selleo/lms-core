@@ -4,7 +4,7 @@ import { ApiClient } from "../api-client";
 
 import type { GetTeacherCoursesResponse } from "../generated-api";
 
-export const teacherCourses = (authorId: string) => {
+export const teacherCoursesOptions = (authorId: string) => {
   return {
     queryKey: ["teacher-courses", authorId],
     queryFn: async () => {
@@ -17,5 +17,5 @@ export const teacherCourses = (authorId: string) => {
 };
 
 export function useTeacherCourses(authorId: string) {
-  return useQuery(teacherCourses(authorId));
+  return useQuery(teacherCoursesOptions(authorId));
 }

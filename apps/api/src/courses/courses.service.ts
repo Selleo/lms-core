@@ -547,9 +547,32 @@ export class CoursesService {
     };
   }
 
+  // TODO: Needs to be refactored
   async getTeacherCourses(authorId: UUIDType): Promise<AllCoursesForTeacherResponse> {
     return this.db
-      .select(this.getSelectField())
+      .select({
+        id: courses.id,
+        description: sql<string>`${courses.description}`,
+        title: courses.title,
+        imageUrl: courses.imageUrl,
+        authorId: sql<string>`${courses.authorId}`,
+        author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+        authorEmail: sql<string>`${users.email}`,
+        category: sql<string>`${categories.title}`,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+        enrolledParticipantCount: sql<number>`0`,
+        courseLessonCount: courses.lessonsCount,
+        completedLessonCount: sql<number>`0`,
+        priceInCents: courses.priceInCents,
+        currency: courses.currency,
+        hasFreeLessons: sql<boolean>`
+        EXISTS (
+          SELECT 1
+          FROM ${courseLessons}
+          WHERE ${courseLessons.courseId} = ${courses.id}
+            AND ${courseLessons.isFree} = true
+        )`,
+      })
       .from(courses)
       .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
       .leftJoin(categories, eq(courses.categoryId, categories.id))
@@ -573,8 +596,6 @@ export class CoursesService {
         users.email,
         studentCourses.studentId,
         categories.title,
-        coursesSummaryStats.freePurchasedCount,
-        coursesSummaryStats.paidPurchasedCount,
       )
       .orderBy(
         sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NULL THEN true ELSE false END`,
