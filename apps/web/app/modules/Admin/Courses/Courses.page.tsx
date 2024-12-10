@@ -201,10 +201,15 @@ const Courses = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex gap-3 ml-auto">
+        <Link to="new-scorm">
+          <Button variant="outline">Upload SCORM</Button>
+        </Link>
         <Link to="/admin/beta-courses/new">
           <Button variant="outline">Create New</Button>
         </Link>
+      </div>
+      <div className="flex items-center justify-between gap-2">
         <SearchFilter
           filters={filterConfig}
           values={searchParams}
