@@ -1,5 +1,7 @@
 import { useMemo } from "react";
 
+import { cn } from "~/lib/utils";
+
 import { FormGroup } from "./FormGroup";
 import { Step } from "./Step";
 import { StepperContext } from "./StepperContext";
@@ -53,7 +55,7 @@ const Stepper = ({
         ...currentStepInfo,
       }}
     >
-      <div className={`w-full ${className}`}>{children}</div>
+      <div className={cn("w-full", className)}>{children}</div>
     </StepperContext.Provider>
   );
 };

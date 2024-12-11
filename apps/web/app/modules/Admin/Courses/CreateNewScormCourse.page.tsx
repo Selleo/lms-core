@@ -3,6 +3,8 @@ import { useState } from "react";
 import Stepper from "~/components/Stepper/Stepper";
 
 import { ComponentsWrapper } from "./scorm/ComponentsWrapper";
+import { Pricing } from "./scorm/steps/Pricing";
+import { SetupCourse } from "./scorm/steps/SetupCourse";
 import { UploadStep } from "./scorm/steps/Upload";
 
 import type { FormGroupConfig, Step } from "~/components/Stepper/types";
@@ -18,26 +20,18 @@ export default function CreateNewScormCourse() {
       content: <UploadStep />,
     },
     {
-      title: "Basic Settings",
-      description: "Configure basic course settings",
+      title: "Set up Course",
+      description: "Provide the details to set up a new course.",
       stepId: 2,
-      content: (
-        <div className="space-y-4">
-          <input type="text" className="w-full p-2 border rounded" placeholder="Course name" />
-        </div>
-      ),
+      content: <SetupCourse />,
     },
     {
       steps: [
         {
-          title: "Form Part 1",
-          description: "First part of the form",
+          title: "Pricing",
+          description: "Set pricing for the course",
           stepId: 3,
-          content: (
-            <div className="space-y-4">
-              <input type="text" className="w-full p-2 border rounded" placeholder="Form field 1" />
-            </div>
-          ),
+          content: <Pricing />,
         },
         {
           title: "Form Part 2",
@@ -103,7 +97,10 @@ export default function CreateNewScormCourse() {
 
     return (
       <Stepper.Step key={index} stepId={step.stepId}>
-        <ComponentsWrapper leftContent={step.content} rightContent={<h2>test</h2>} />
+        <ComponentsWrapper
+          leftContent={step.content}
+          rightContent={<h2 className="w-full">test</h2>}
+        />
       </Stepper.Step>
     );
   });
@@ -112,7 +109,7 @@ export default function CreateNewScormCourse() {
   const handlePrev = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
   return (
-    <div className="w-full max-w-3xl mx-auto p-8 space-y-8">
+    <div className="w-full p-8 space-y-8">
       <Stepper
         currentStep={currentStep}
         totalSteps={7}

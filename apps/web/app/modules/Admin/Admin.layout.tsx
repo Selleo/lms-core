@@ -1,5 +1,6 @@
 import { type MetaFunction, Outlet, redirect, useLocation, useNavigate } from "@remix-run/react";
 import { Suspense, useLayoutEffect } from "react";
+import { match } from "ts-pattern";
 
 import { currentUserQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -48,8 +49,13 @@ const AdminGuard = ({ children }: PropsWithChildren) => {
 };
 
 const AdminLayout = () => {
-  const location = useLocation();
-  const hideTopbarAndSidebar = location.pathname === "/admin/beta-courses/new";
+  const { pathname } = useLocation();
+  // const hideTopbarAndSidebar = pathname === "/admin/beta-courses/new";
+
+  const hideTopbarAndSidebar = match(pathname)
+    .with("/admin/beta-courses/new", () => true)
+    .with("/admin/courses/new-scorm", () => true)
+    .otherwise(() => false);
 
   return (
     <div className="flex h-screen flex-col">
