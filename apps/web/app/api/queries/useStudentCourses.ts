@@ -15,7 +15,7 @@ type CourseParams = {
 export const studentCoursesQueryOptions = (searchParams?: CourseParams) => ({
   queryKey: ["get-student-courses", searchParams],
   queryFn: async () => {
-    const response = await ApiClient.api.coursesControllerGetStudentCourses({
+    const response = await ApiClient.api.courseControllerGetStudentCourses({
       page: 1,
       perPage: 100,
       ...(searchParams?.title && { title: searchParams.title }),

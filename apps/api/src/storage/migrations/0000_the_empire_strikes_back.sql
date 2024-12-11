@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS "categories" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"title" text NOT NULL,
 	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"title" text NOT NULL,
 	"archived" boolean DEFAULT false NOT NULL,
 	CONSTRAINT "categories_title_unique" UNIQUE("title")
 );
@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS "chapters" (
 	"author_id" uuid NOT NULL,
 	"is_published" boolean DEFAULT false NOT NULL,
 	"is_freemium" boolean DEFAULT false NOT NULL,
-	"lesson_count" integer DEFAULT 0 NOT NULL,
-	"display_order" integer
+	"display_order" integer,
+	"lesson_count" integer DEFAULT 0 NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "course_students_stats" (
@@ -34,17 +34,17 @@ CREATE TABLE IF NOT EXISTS "course_students_stats" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "courses" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"title" varchar(100) NOT NULL,
 	"description" varchar(1000),
 	"thumbnail_s3_key" varchar(200),
 	"is_published" boolean DEFAULT false NOT NULL,
 	"price_in_cents" integer DEFAULT 0 NOT NULL,
 	"currency" varchar DEFAULT 'usd' NOT NULL,
-	"author_id" uuid NOT NULL,
-	"category_id" uuid NOT NULL,
 	"chapter_count" integer DEFAULT 0 NOT NULL,
-	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+	"author_id" uuid NOT NULL,
+	"category_id" uuid NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "courses_summary_stats" (
@@ -63,11 +63,11 @@ CREATE TABLE IF NOT EXISTS "courses_summary_stats" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "create_tokens" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"user_id" uuid NOT NULL,
 	"create_token" text NOT NULL,
-	"expiry_date" timestamp (3) with time zone NOT NULL,
-	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+	"expiry_date" timestamp (3) with time zone NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "credentials" (
@@ -80,14 +80,15 @@ CREATE TABLE IF NOT EXISTS "credentials" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "lessons" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"type" varchar(20) NOT NULL,
+	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"chapter_id" uuid NOT NULL,
+	"type" varchar(20) NOT NULL,
 	"title" varchar(100) NOT NULL,
-	"is_published" boolean DEFAULT false NOT NULL,
 	"description" varchar(1000),
+	"display_order" integer,
 	"file_s3_key" varchar(200),
-	"file_type" varchar(20),
-	"display_order" integer
+	"file_type" varchar(20)
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "question_answer_options" (
@@ -126,11 +127,11 @@ CREATE TABLE IF NOT EXISTS "quiz_attempts" (
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "reset_tokens" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"user_id" uuid NOT NULL,
 	"reset_token" text NOT NULL,
-	"expiry_date" timestamp (3) with time zone NOT NULL,
-	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL
+	"expiry_date" timestamp (3) with time zone NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "student_chapter_progress" (
@@ -140,22 +141,10 @@ CREATE TABLE IF NOT EXISTS "student_chapter_progress" (
 	"student_id" uuid NOT NULL,
 	"course_id" uuid NOT NULL,
 	"chapter_id" uuid NOT NULL,
-	"completed_lesson_item_count" integer DEFAULT 0 NOT NULL,
-	"quiz_completed" boolean,
-	"quiz_score" integer,
+	"completed_lesson_count" integer DEFAULT 0 NOT NULL,
 	"completed_at" timestamp(3) with time zone,
 	"completed_as_freemium" boolean DEFAULT false NOT NULL,
 	CONSTRAINT "student_chapter_progress_student_id_course_id_chapter_id_unique" UNIQUE("student_id","course_id","chapter_id")
-);
---> statement-breakpoint
-CREATE TABLE IF NOT EXISTS "student_completed_lessons" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-	"student_id" uuid NOT NULL,
-	"lesson_id" uuid NOT NULL,
-	"course_id" uuid NOT NULL,
-	CONSTRAINT "student_completed_lessons_student_id_lesson_id_course_id_unique" UNIQUE("student_id","lesson_id","course_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "student_courses" (
@@ -164,11 +153,23 @@ CREATE TABLE IF NOT EXISTS "student_courses" (
 	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
 	"student_id" uuid NOT NULL,
 	"course_id" uuid NOT NULL,
-	"finished_chapter_count" integer DEFAULT 0 NOT NULL,
 	"progress" varchar DEFAULT 'not_started' NOT NULL,
-	"payment_id" varchar(50),
+	"finished_chapter_count" integer DEFAULT 0 NOT NULL,
 	"completed_at" timestamp(3) with time zone,
+	"payment_id" varchar(50),
 	CONSTRAINT "student_courses_student_id_course_id_unique" UNIQUE("student_id","course_id")
+);
+--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "student_lesson_progress" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+	"created_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"updated_at" timestamp(3) with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+	"student_id" uuid NOT NULL,
+	"lesson_id" uuid NOT NULL,
+	"completed_question_count" integer DEFAULT 0 NOT NULL,
+	"quiz_score" integer,
+	"completed_at" timestamp(3) with time zone,
+	CONSTRAINT "student_lesson_progress_student_id_lesson_id_unique" UNIQUE("student_id","lesson_id")
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "student_question_answers" (
@@ -345,24 +346,6 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 DO $$ BEGIN
- ALTER TABLE "student_completed_lessons" ADD CONSTRAINT "student_completed_lessons_student_id_users_id_fk" FOREIGN KEY ("student_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "student_completed_lessons" ADD CONSTRAINT "student_completed_lessons_lesson_id_lessons_id_fk" FOREIGN KEY ("lesson_id") REFERENCES "public"."lessons"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "student_completed_lessons" ADD CONSTRAINT "student_completed_lessons_course_id_courses_id_fk" FOREIGN KEY ("course_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
  ALTER TABLE "student_courses" ADD CONSTRAINT "student_courses_student_id_users_id_fk" FOREIGN KEY ("student_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -370,6 +353,18 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "student_courses" ADD CONSTRAINT "student_courses_course_id_courses_id_fk" FOREIGN KEY ("course_id") REFERENCES "public"."courses"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "student_lesson_progress" ADD CONSTRAINT "student_lesson_progress_student_id_users_id_fk" FOREIGN KEY ("student_id") REFERENCES "public"."users"("id") ON DELETE set null ON UPDATE no action;
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
+ ALTER TABLE "student_lesson_progress" ADD CONSTRAINT "student_lesson_progress_lesson_id_lessons_id_fk" FOREIGN KEY ("lesson_id") REFERENCES "public"."lessons"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

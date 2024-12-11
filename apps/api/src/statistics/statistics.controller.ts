@@ -17,24 +17,25 @@ import type { TeacherStats, UserStats } from "./schemas/userStats.schema";
 export class StatisticsController {
   constructor(private statisticsService: StatisticsService) {}
 
-  @Get("user-stats")
-  @Validate({
-    response: baseResponse(UserStatsSchema),
-  })
-  async getUserStatistics(
-    @CurrentUser("userId") currentUserId: UUIDType,
-  ): Promise<BaseResponse<UserStats>> {
-    return new BaseResponse(await this.statisticsService.getUserStats(currentUserId));
-  }
+  // TODO: repair this
+  // @Get("user-stats")
+  // @Validate({
+  //   response: baseResponse(UserStatsSchema),
+  // })
+  // async getUserStatistics(
+  //   @CurrentUser("userId") currentUserId: UUIDType,
+  // ): Promise<BaseResponse<UserStats>> {
+  //   return new BaseResponse(await this.statisticsService.getUserStats(currentUserId));
+  // }
 
-  @Get("teacher-stats")
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
-  @Validate({
-    response: baseResponse(TeacherStatsSchema),
-  })
-  async getTeacherStats(
-    @CurrentUser("userId") currentUserId: UUIDType,
-  ): Promise<BaseResponse<TeacherStats>> {
-    return new BaseResponse(await this.statisticsService.getTeacherStats(currentUserId));
-  }
+  // @Get("teacher-stats")
+  // @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  // @Validate({
+  //   response: baseResponse(TeacherStatsSchema),
+  // })
+  // async getTeacherStats(
+  //   @CurrentUser("userId") currentUserId: UUIDType,
+  // ): Promise<BaseResponse<TeacherStats>> {
+  //   return new BaseResponse(await this.statisticsService.getTeacherStats(currentUserId));
+  // }
 }

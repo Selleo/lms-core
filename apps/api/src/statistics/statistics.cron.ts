@@ -7,8 +7,9 @@ import { StatisticsService } from "./statistics.service";
 export class StatisticsCron {
   constructor(private statisticsService: StatisticsService) {}
 
-  @Cron("0 0 * * *")
-  async refreshCourseStudentsStats() {
-    await this.statisticsService.refreshCourseStudentsStats();
-  }
+  //TODO: repair this
+  // @Cron("0 0 * * *")
+  // async refreshCourseStudentsStats() {
+  //   await this.statisticsService.refreshCourseStudentsStats();
+  // }
 }

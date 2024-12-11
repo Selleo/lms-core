@@ -1,9 +1,9 @@
 import { Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
-import { lessonSchema } from "src/lessons/schemas/lesson.schema";
 
 import type { Static } from "@sinclair/typebox";
+import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 
 export const ActivityHistorySchema = Type.Record(Type.String(), Type.Boolean());
 
@@ -49,7 +49,7 @@ export const UserStatsSchema = Type.Object({
   lastLesson: Type.Union([
     Type.Null(),
     Type.Object({
-      ...lessonSchema.properties,
+      ...chapterSchema.properties,
       courseId: UUIDSchema,
       courseTitle: Type.String(),
       courseDescription: Type.String(),

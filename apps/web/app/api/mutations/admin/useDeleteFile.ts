@@ -19,7 +19,7 @@ export function useDeleteFile() {
   return useMutation({
     mutationFn: async (url: string) => {
       const fileKey = extractFileKeyFromUrl(url);
-      return await ApiClient.api.filesControllerDeleteFile({
+      return await ApiClient.api.fileControllerDeleteFile({
         fileKey,
       });
     },

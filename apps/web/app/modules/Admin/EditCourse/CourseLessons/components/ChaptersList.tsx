@@ -21,7 +21,7 @@ import { ContentTypes } from "../../EditCourse.types";
 
 import LessonCard from "./LessonCard";
 
-import type { Chapter, LessonItem } from "../../EditCourse.types";
+import type { Chapter, Lesson } from "../../EditCourse.types";
 import type React from "react";
 
 interface ChapterCardProps {
@@ -29,7 +29,7 @@ interface ChapterCardProps {
   isOpen: boolean;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
-  setSelectedLesson: (selectedLesson?: LessonItem) => void;
+  setSelectedLesson: (selectedLesson?: Lesson) => void;
 }
 
 const ChapterCard = ({
@@ -58,9 +58,8 @@ const ChapterCard = ({
   }, [chapter, setContentTypeToDisplay, setSelectedChapter]);
 
   const onClickLessonCard = useCallback(
-    (lesson: LessonItem) => {
-      const contentType =
-        lesson.lessonItemType === "file" ? lesson.content.type : lesson.lessonItemType;
+    (lesson: Lesson) => {
+      const contentType = lesson.type;
       setSelectedLesson(lesson);
       switch (contentType) {
         case "video":
@@ -99,13 +98,13 @@ const ChapterCard = ({
           queryKey: [COURSE_QUERY_KEY, { id }],
         });
       } catch (error) {
-        console.error("Failed to update chapter premium status:", error);
+        console.error("Failed to update chapter freemium status:", error);
       }
     },
     [chapter, updateFreemiumStatus, id],
   );
 
-  const lessonItems = useMemo(() => chapter.lessonItems, [chapter.lessonItems]);
+  const lessons = useMemo(() => chapter.lessons, [chapter.lessons]);
 
   return (
     <AccordionItem
@@ -132,11 +131,11 @@ const ChapterCard = ({
             <h3 className="text-xl text-black">{chapter.title}</h3>
             <AccordionContent className="mt-2 text-gray-700">
               <div className="mt-4 grid grid-cols-1 gap-4">
-                {lessonItems.length === 0 ? (
-                  <p>No items for this lesson</p>
+                {lessons === null || lessons?.length === 0 ? (
+                  <p>No lessons for this chapter</p>
                 ) : (
-                  lessonItems.map((item, index) => {
-                    const key = item.content.id || `lesson-${index}`;
+                  lessons.map((item, index) => {
+                    const key = item.id || `lesson-${index}`;
                     return (
                       <LessonCard key={key} item={item} onClickLessonCard={onClickLessonCard} />
                     );
@@ -203,7 +202,7 @@ interface ChaptersListProps {
   chapters?: Chapter[];
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
-  setSelectedLesson: (selectedLesson?: LessonItem) => void;
+  setSelectedLesson: (selectedLesson?: Lesson) => void;
 }
 
 const ChaptersList = ({

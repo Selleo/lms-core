@@ -1,27 +1,38 @@
 export type NavigationTab = "Settings" | "Lesson" | "Pricing" | "Status";
-export interface LessonItem {
-  lessonItemType: string;
+// export interface LessonItem {
+//   lessonItemType: string;
+//   displayOrder: number;
+//   lessonItemId: string;
+//   content: {
+//     id: string;
+//     title: string;
+//     type?: string;
+//     state?: "draft" | "published";
+//     description?: string;
+//     url?: string;
+//   };
+// }
+
+export interface Lesson {
+  type: string;
   displayOrder: number;
-  lessonItemId: string;
-  content: {
-    id: string;
-    title: string;
-    type?: string;
-    state?: "draft" | "published";
-    body?: string;
-    url?: string;
-  };
+  id: string;
+  title: string;
+  description: string;
+  fileS3Key?: string;
+  fileType?: string;
+  chapterId?: string;
 }
 
 export interface Chapter {
   id: string;
   title: string;
-  description: string | null;
-  imageUrl: string | null;
+  // description: string | null;
+  // imageUrl: string | null;
   displayOrder: number;
   isFree: boolean;
-  itemsCount: number;
-  lessonItems: LessonItem[];
+  lessonCount: number;
+  lessons: Lesson[];
 }
 
 export const ContentTypes = {

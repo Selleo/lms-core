@@ -70,8 +70,7 @@ export class ScormService {
           {
             title: file.originalname,
             type: "scorm-package",
-            url: s3BaseKey,
-            authorId: userId,
+            s3KeyPath: s3BaseKey,
           },
           tx,
         );

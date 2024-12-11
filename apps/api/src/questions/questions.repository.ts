@@ -3,7 +3,6 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import {
-  lessonItems,
   lessons,
   questionAnswerOptions,
   questions,
@@ -18,7 +17,7 @@ import type * as schema from "src/storage/schema";
 export class QuestionsRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  async fetchQuestionData(
+  async getQuestions(
     answerQuestion: AnswerQuestionSchema,
     trx?: PostgresJsDatabase<typeof schema>,
   ): Promise<QuestionSchema> {
@@ -28,32 +27,11 @@ export class QuestionsRepository {
       .select({
         lessonId: lessons.id,
         questionId: sql<string>`${questions.id}`,
-        questionType: sql<string>`${questions.questionType}`,
-        lessonItemAssociationId: lessonItems.id,
+        questionType: sql<string>`${questions.type}`,
       })
       .from(lessons)
-      .innerJoin(
-        lessonItems,
-        and(
-          eq(lessonItems.lessonId, answerQuestion.lessonId),
-          eq(lessonItems.lessonItemId, answerQuestion.questionId),
-        ),
-      )
-      .leftJoin(
-        questions,
-        and(
-          eq(questions.id, lessonItems.lessonItemId),
-          eq(questions.archived, false),
-          eq(questions.state, "published"),
-        ),
-      )
-      .where(
-        and(
-          eq(lessons.id, lessonItems.lessonId),
-          eq(lessons.archived, false),
-          eq(lessons.state, "published"),
-        ),
-      );
+      .leftJoin(questions, and(eq(questions.lessonId, lessons.id)))
+      .where(and(eq(lessons.id, answerQuestion.lessonId)));
 
     return questionData;
   }
@@ -61,8 +39,6 @@ export class QuestionsRepository {
   async findExistingAnswer(
     userId: UUIDType,
     questionId: UUIDType,
-    lessonId: UUIDType,
-    courseId: UUIDType,
     trx?: PostgresJsDatabase<typeof schema>,
   ): Promise<UUIDType | null> {
     const dbInstance = trx ?? this.db;
@@ -75,8 +51,6 @@ export class QuestionsRepository {
         and(
           eq(studentQuestionAnswers.studentId, userId),
           eq(studentQuestionAnswers.questionId, questionId),
-          eq(studentQuestionAnswers.lessonId, lessonId),
-          eq(studentQuestionAnswers.courseId, courseId),
         ),
       );
 
@@ -112,8 +86,6 @@ export class QuestionsRepository {
   }
 
   async upsertAnswer(
-    courseId: UUIDType,
-    lessonId: UUIDType,
     questionId: UUIDType,
     userId: UUIDType,
     answerId: UUIDType | null,
@@ -137,8 +109,6 @@ export class QuestionsRepository {
       questionId,
       answer: sql`json_build_object(${sql.raw(jsonBuildObjectArgs)})`,
       studentId: userId,
-      lessonId,
-      courseId,
     });
 
     return;

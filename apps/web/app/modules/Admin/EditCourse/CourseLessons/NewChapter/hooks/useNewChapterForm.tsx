@@ -14,7 +14,7 @@ import { newChapterFormSchema } from "../validators/newChapterFormSchema";
 import type { NewChapterFormValues } from "../validators/newChapterFormSchema";
 
 type UseNewChapterFormProps = {
-  courseId?: string;
+  courseId: string;
   chapter?: Chapter;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
 };

@@ -2,7 +2,7 @@ import { Injectable, Inject } from "@nestjs/common";
 import { eq } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-import { files, scormMetadata } from "src/storage/schema";
+import { scormFiles, scormMetadata } from "src/storage/schema";
 
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { UUIDType } from "src/common";
@@ -22,10 +22,13 @@ export class ScormRepository {
    *
    * @param trx - Optional transaction for atomic operations with metadata
    */
-  async createScormFile(data: typeof files.$inferInsert, trx?: PostgresJsDatabase<typeof schema>) {
+  async createScormFile(
+    data: typeof schema.scormFiles.$inferInsert,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
     const dbInstance = trx ?? this.db;
 
-    const [file] = await dbInstance.insert(files).values(data).returning();
+    const [file] = await dbInstance.insert(scormFiles).values(data).returning();
 
     return file;
   }

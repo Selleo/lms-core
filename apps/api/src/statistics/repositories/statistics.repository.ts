@@ -2,15 +2,15 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-import { LessonProgress } from "src/lessons/schemas/lesson.types";
+
 import {
   courses,
   coursesSummaryStats,
   courseStudentsStats,
   lessons,
   quizAttempts,
+  studentChapterProgress,
   studentCourses,
-  studentLessonsProgress,
   userStatistics,
 } from "src/storage/schema";
 
@@ -18,6 +18,7 @@ import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { StatsByMonth, UserStatistic } from "src/statistics/schemas/userStats.schema";
 import type * as schema from "src/storage/schema";
 
+// TODO: repair this
 @Injectable()
 export class StatisticsRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
@@ -38,80 +39,80 @@ export class StatisticsRepository {
     return quizStatsResult;
   }
 
-  async getCoursesStatsByMonth(userId: string): Promise<StatsByMonth[]> {
-    return this.db.execute(sql`
-      WITH completed_courses AS (
-        SELECT
-          date_trunc('month', ${studentCourses.completedAt}) AS "month",
-          COUNT(*)::INTEGER AS "completed_courses_count"
-        FROM
-          ${studentCourses}
-        WHERE
-        ${studentCourses.studentId} = ${userId}
-          AND ${studentCourses.state} = ${LessonProgress.completed}
-          AND ${studentCourses.completedAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
-        GROUP BY
-          date_trunc('month', ${studentCourses.completedAt})
-      ),
-      month_stats AS (
-        SELECT
-          to_char(date_trunc('month', ${studentCourses.createdAt}), 'YYYY-MM') AS month,
-          COUNT(DISTINCT ${studentCourses.courseId})::INTEGER AS started,
-          (CASE WHEN completed_courses.completed_courses_count IS NOT NULL THEN completed_courses.completed_courses_count ELSE 0 END)::INTEGER AS completed
-        FROM
-        ${studentCourses}
-          LEFT JOIN completed_courses ON date_trunc('month', ${studentCourses.createdAt}) = completed_courses.month
-        WHERE
-        ${studentCourses.studentId} = ${userId}
-          AND ${studentCourses.createdAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
-        GROUP BY
-          date_trunc('month', ${studentCourses.createdAt}), completed_courses.month, completed_courses.completed_courses_count
-        ORDER BY
-          date_trunc('month', ${studentCourses.createdAt})
-      )
-      SELECT
-        month_stats.month AS month,
-        month_stats.started AS started,
-        month_stats.completed AS completed,
-        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2), 0)::INTEGER AS "completionRate"
-      FROM
-        month_stats
-    `);
-  }
+  // async getCoursesStatsByMonth(userId: string): Promise<StatsByMonth[]> {
+  //   return this.db.execute(sql`
+  //     WITH completed_courses AS (
+  //       SELECT
+  //         date_trunc('month', ${studentCourses.completedAt}) AS "month",
+  //         COUNT(*)::INTEGER AS "completed_courses_count"
+  //       FROM
+  //         ${studentCourses}
+  //       WHERE
+  //       ${studentCourses.studentId} = ${userId}
+  //         AND ${studentCourses.state} = ${LessonProgress.completed}
+  //         AND ${studentCourses.completedAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
+  //       GROUP BY
+  //         date_trunc('month', ${studentCourses.completedAt})
+  //     ),
+  //     month_stats AS (
+  //       SELECT
+  //         to_char(date_trunc('month', ${studentCourses.createdAt}), 'YYYY-MM') AS month,
+  //         COUNT(DISTINCT ${studentCourses.courseId})::INTEGER AS started,
+  //         (CASE WHEN completed_courses.completed_courses_count IS NOT NULL THEN completed_courses.completed_courses_count ELSE 0 END)::INTEGER AS completed
+  //       FROM
+  //       ${studentCourses}
+  //         LEFT JOIN completed_courses ON date_trunc('month', ${studentCourses.createdAt}) = completed_courses.month
+  //       WHERE
+  //       ${studentCourses.studentId} = ${userId}
+  //         AND ${studentCourses.createdAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
+  //       GROUP BY
+  //         date_trunc('month', ${studentCourses.createdAt}), completed_courses.month, completed_courses.completed_courses_count
+  //       ORDER BY
+  //         date_trunc('month', ${studentCourses.createdAt})
+  //     )
+  //     SELECT
+  //       month_stats.month AS month,
+  //       month_stats.started AS started,
+  //       month_stats.completed AS completed,
+  //       COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2), 0)::INTEGER AS "completionRate"
+  //     FROM
+  //       month_stats
+  //   `);
+  // }
 
   async getLessonsStatsByMonth(userId: string): Promise<StatsByMonth[]> {
     return this.db.execute(sql`
       WITH completed_lessons AS (
         SELECT
           date_trunc('month',
-              ${studentLessonsProgress.completedAt}) AS month,
-          COUNT(${studentLessonsProgress.id}) AS completed_lessons_count
+              ${studentChapterProgress.completedAt}) AS month,
+          COUNT(${studentChapterProgress.id}) AS completed_lessons_count
         FROM
-          ${studentLessonsProgress}
+          ${studentChapterProgress}
         WHERE
-          ${studentLessonsProgress.studentId} = ${userId}
-          AND ${studentLessonsProgress.completedAt} IS NOT NULL
-          AND ${studentLessonsProgress.completedAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
+          ${studentChapterProgress.studentId} = ${userId}
+          AND ${studentChapterProgress.completedAt} IS NOT NULL
+          AND ${studentChapterProgress.completedAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
         GROUP BY
           date_trunc('month',
-            ${studentLessonsProgress.completedAt})
+            ${studentChapterProgress.completedAt})
       ),
       month_stats AS (
         SELECT
-          to_char(date_trunc('month', ${studentLessonsProgress.createdAt}), 'YYYY-MM') AS month,
-          COUNT(DISTINCT ${studentLessonsProgress.lessonId})::INTEGER AS started,
+          to_char(date_trunc('month', ${studentChapterProgress.createdAt}), 'YYYY-MM') AS month,
+          COUNT(DISTINCT ${studentChapterProgress.chapterId})::INTEGER AS started,
           (CASE WHEN completed_lessons.month IS NOT NULL THEN completed_lessons.completed_lessons_count ELSE 0 END)::INTEGER AS completed
         FROM
-          ${studentLessonsProgress}
-          LEFT JOIN ${lessons} ON ${studentLessonsProgress.lessonId} = ${lessons.id}
-          LEFT JOIN completed_lessons ON date_trunc('month', ${studentLessonsProgress.createdAt}) = completed_lessons.month
+          ${studentChapterProgress}
+          LEFT JOIN ${lessons} ON ${studentChapterProgress.chapterId} = ${lessons.id}
+          LEFT JOIN completed_lessons ON date_trunc('month', ${studentChapterProgress.createdAt}) = completed_lessons.month
         WHERE
-          ${studentLessonsProgress.studentId} = ${userId}
-          AND ${studentLessonsProgress.createdAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
+          ${studentChapterProgress.studentId} = ${userId}
+          AND ${studentChapterProgress.createdAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
         GROUP BY
-          date_trunc('month', ${studentLessonsProgress.createdAt}), completed_lessons.month, completed_lessons.completed_lessons_count
+          date_trunc('month', ${studentChapterProgress.createdAt}), completed_lessons.month, completed_lessons.completed_lessons_count
         ORDER BY
-          date_trunc('month', ${studentLessonsProgress.createdAt})
+          date_trunc('month', ${studentChapterProgress.createdAt})
       )
       SELECT
         month_stats.month AS month,

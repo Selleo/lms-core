@@ -1,5 +1,5 @@
 {
-  "id": "53850ae6-f988-4c11-affa-6f503fc870e0",
+  "id": "5f90d10a-1d5a-4464-923b-31e5eb0f339d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -15,12 +15,6 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp(3) with time zone",
@@ -34,6 +28,12 @@
           "primaryKey": false,
           "notNull": true,
           "default": "CURRENT_TIMESTAMP"
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
         },
         "archived": {
           "name": "archived",
@@ -113,18 +113,18 @@
           "notNull": true,
           "default": false
         },
+        "display_order": {
+          "name": "display_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "lesson_count": {
           "name": "lesson_count",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
-        },
-        "display_order": {
-          "name": "display_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {},
@@ -269,6 +269,20 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
         "title": {
           "name": "title",
           "type": "varchar(100)",
@@ -308,6 +322,13 @@
           "notNull": true,
           "default": "'usd'"
         },
+        "chapter_count": {
+          "name": "chapter_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
         "author_id": {
           "name": "author_id",
           "type": "uuid",
@@ -319,27 +340,6 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
-        },
-        "chapter_count": {
-          "name": "chapter_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {},
@@ -498,6 +498,20 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -515,20 +529,6 @@
           "type": "timestamp (3) with time zone",
           "primaryKey": false,
           "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {},
@@ -618,15 +618,29 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "type": {
-          "name": "type",
-          "type": "varchar(20)",
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
         },
         "chapter_id": {
           "name": "chapter_id",
           "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true
         },
@@ -636,16 +650,15 @@
           "primaryKey": false,
           "notNull": true
         },
-        "is_published": {
-          "name": "is_published",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": false
-        },
         "description": {
           "name": "description",
           "type": "varchar(1000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "display_order": {
+          "name": "display_order",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -658,12 +671,6 @@
         "file_type": {
           "name": "file_type",
           "type": "varchar(20)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "display_order": {
-          "name": "display_order",
-          "type": "integer",
           "primaryKey": false,
           "notNull": false
         }
@@ -968,6 +975,20 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -985,20 +1006,6 @@
           "type": "timestamp (3) with time zone",
           "primaryKey": false,
           "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
         }
       },
       "indexes": {},
@@ -1063,24 +1070,12 @@
           "primaryKey": false,
           "notNull": true
         },
-        "completed_lesson_item_count": {
-          "name": "completed_lesson_item_count",
+        "completed_lesson_count": {
+          "name": "completed_lesson_count",
           "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "default": 0
-        },
-        "quiz_completed": {
-          "name": "quiz_completed",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "quiz_score": {
-          "name": "quiz_score",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
         },
         "completed_at": {
           "name": "completed_at",
@@ -1151,105 +1146,6 @@
         }
       }
     },
-    "public.student_completed_lessons": {
-      "name": "student_completed_lessons",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "CURRENT_TIMESTAMP"
-        },
-        "student_id": {
-          "name": "student_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "lesson_id": {
-          "name": "lesson_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "course_id": {
-          "name": "course_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "student_completed_lessons_student_id_users_id_fk": {
-          "name": "student_completed_lessons_student_id_users_id_fk",
-          "tableFrom": "student_completed_lessons",
-          "tableTo": "users",
-          "columnsFrom": [
-            "student_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "student_completed_lessons_lesson_id_lessons_id_fk": {
-          "name": "student_completed_lessons_lesson_id_lessons_id_fk",
-          "tableFrom": "student_completed_lessons",
-          "tableTo": "lessons",
-          "columnsFrom": [
-            "lesson_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "student_completed_lessons_course_id_courses_id_fk": {
-          "name": "student_completed_lessons_course_id_courses_id_fk",
-          "tableFrom": "student_completed_lessons",
-          "tableTo": "courses",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "student_completed_lessons_student_id_lesson_id_course_id_unique": {
-          "name": "student_completed_lessons_student_id_lesson_id_course_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "student_id",
-            "lesson_id",
-            "course_id"
-          ]
-        }
-      }
-    },
     "public.student_courses": {
       "name": "student_courses",
       "schema": "",
@@ -1287,13 +1183,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "finished_chapter_count": {
-          "name": "finished_chapter_count",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 0
-        },
         "progress": {
           "name": "progress",
           "type": "varchar",
@@ -1301,15 +1190,22 @@
           "notNull": true,
           "default": "'not_started'"
         },
-        "payment_id": {
-          "name": "payment_id",
-          "type": "varchar(50)",
+        "finished_chapter_count": {
+          "name": "finished_chapter_count",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": 0
         },
         "completed_at": {
           "name": "completed_at",
           "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "payment_id": {
+          "name": "payment_id",
+          "type": "varchar(50)",
           "primaryKey": false,
           "notNull": false
         }
@@ -1351,6 +1247,104 @@
           "columns": [
             "student_id",
             "course_id"
+          ]
+        }
+      }
+    },
+    "public.student_lesson_progress": {
+      "name": "student_lesson_progress",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "CURRENT_TIMESTAMP"
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lesson_id": {
+          "name": "lesson_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "completed_question_count": {
+          "name": "completed_question_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "quiz_score": {
+          "name": "quiz_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "student_lesson_progress_student_id_users_id_fk": {
+          "name": "student_lesson_progress_student_id_users_id_fk",
+          "tableFrom": "student_lesson_progress",
+          "tableTo": "users",
+          "columnsFrom": [
+            "student_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "student_lesson_progress_lesson_id_lessons_id_fk": {
+          "name": "student_lesson_progress_lesson_id_lessons_id_fk",
+          "tableFrom": "student_lesson_progress",
+          "tableTo": "lessons",
+          "columnsFrom": [
+            "lesson_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "student_lesson_progress_student_id_lesson_id_unique": {
+          "name": "student_lesson_progress_student_id_lesson_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "student_id",
+            "lesson_id"
           ]
         }
       }

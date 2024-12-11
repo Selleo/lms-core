@@ -15,7 +15,7 @@ export function useUpdateLessonFreemiumStatus() {
 
   return useMutation({
     mutationFn: async (options: UpdateLessonFreemiumStatusOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateLessonFreemiumStatus(
+      const response = await ApiClient.api.lessonControllerUpdateLessonFreemiumStatus(
         { isFreemium: options.data.isFreemium },
         { lessonId: options.lessonId },
       );

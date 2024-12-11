@@ -5,11 +5,11 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 
-import type { UpdateFileItemBody } from "../../generated-api";
+import type { BetaUpdateLessonBody } from "../../generated-api";
 
 type UpdateFileOptions = {
-  data: UpdateFileItemBody;
-  fileId: string;
+  data: BetaUpdateLessonBody;
+  fileLessonId: string;
 };
 
 export function useUpdateFileItem() {
@@ -17,8 +17,8 @@ export function useUpdateFileItem() {
 
   return useMutation({
     mutationFn: async (options: UpdateFileOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateFileItem(options.data, {
-        id: options.fileId,
+      const response = await ApiClient.api.lessonControllerBetaUpdateLesson(options.data, {
+        id: options.fileLessonId,
       });
 
       return response.data;

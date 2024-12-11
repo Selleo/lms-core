@@ -14,7 +14,7 @@ export function useEnrollCourse() {
 
   return useMutation({
     mutationFn: async (options: EnrollCourseOptions) => {
-      const response = await ApiClient.api.coursesControllerEnrollCourse({
+      const response = await ApiClient.api.courseControllerEnrollCourse({
         id: options.id,
       });
 

@@ -319,21 +319,20 @@ export interface GetAllCoursesResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string | null;
+    thumbnailUrl: string | null;
     description: string;
     /** @format uuid */
     authorId?: string;
     author: string;
     authorEmail?: string;
     category: string;
-    courseLessonCount: number;
-    completedLessonCount: number;
+    courseChapterCount: number;
+    completedChapterCount: number;
     enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
-    state?: string;
-    archived?: boolean;
+    isPublished?: boolean;
     createdAt?: string;
     hasFreeLessons?: boolean;
   }[];
@@ -349,21 +348,20 @@ export interface GetStudentCoursesResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string | null;
+    thumbnailUrl: string | null;
     description: string;
     /** @format uuid */
     authorId?: string;
     author: string;
     authorEmail?: string;
     category: string;
-    courseLessonCount: number;
-    completedLessonCount: number;
+    courseChapterCount: number;
+    completedChapterCount: number;
     enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
-    state?: string;
-    archived?: boolean;
+    isPublished?: boolean;
     createdAt?: string;
     hasFreeLessons?: boolean;
   }[];
@@ -379,21 +377,20 @@ export interface GetAvailableCoursesResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string | null;
+    thumbnailUrl: string | null;
     description: string;
     /** @format uuid */
     authorId?: string;
     author: string;
     authorEmail?: string;
     category: string;
-    courseLessonCount: number;
-    completedLessonCount: number;
+    courseChapterCount: number;
+    completedChapterCount: number;
     enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
-    state?: string;
-    archived?: boolean;
+    isPublished?: boolean;
     createdAt?: string;
     hasFreeLessons?: boolean;
   }[];
@@ -409,21 +406,20 @@ export interface GetTeacherCoursesResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl: string | null;
+    thumbnailUrl: string | null;
     description: string;
     /** @format uuid */
     authorId?: string;
     author: string;
     authorEmail?: string;
     category: string;
-    courseLessonCount: number;
-    completedLessonCount: number;
+    courseChapterCount: number;
+    completedChapterCount: number;
     enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
-    state?: string;
-    archived?: boolean;
+    isPublished?: boolean;
     createdAt?: string;
     hasFreeLessons?: boolean;
   }[];
@@ -434,7 +430,7 @@ export interface GetCourseResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl?: string;
+    thumbnailUrl?: string;
     description: string;
     category: string;
     /** @format uuid */
@@ -443,33 +439,28 @@ export interface GetCourseResponse {
     authorId?: string;
     author?: string;
     authorEmail?: string;
-    courseLessonCount: number;
-    completedLessonCount?: number;
+    courseChapterCount: number;
+    completedChapterCount?: number;
     enrolled?: boolean;
-    state: string | null;
-    lessons: {
+    isPublished: boolean | null;
+    chapters: {
       /** @format uuid */
       id: string;
       title: string;
-      courseId?: string;
-      imageUrl?: string;
-      description?: string;
-      itemsCount: number;
-      itemsCompletedCount?: number;
-      lessonProgress?: "completed" | "in_progress" | "not_started";
-      isFree?: boolean;
+      lessonCount: number;
+      completedLessonCount?: number;
+      chapterProgress?: "completed" | "in_progress" | "not_started";
+      isFreemium?: boolean;
       enrolled?: boolean;
-      state?: string;
-      archived?: boolean;
+      isPublished?: boolean;
       isSubmitted?: boolean;
-      type?: string;
       createdAt?: string;
       quizScore?: number;
     }[];
     priceInCents: number;
     currency: string;
     archived?: boolean;
-    hasFreeLessons?: boolean;
+    hasFreeChapter?: boolean;
   };
 }
 
@@ -478,7 +469,7 @@ export interface GetCourseByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl?: string;
+    thumbnailUrl?: string;
     description: string;
     category: string;
     /** @format uuid */
@@ -487,33 +478,28 @@ export interface GetCourseByIdResponse {
     authorId?: string;
     author?: string;
     authorEmail?: string;
-    courseLessonCount: number;
-    completedLessonCount?: number;
+    courseChapterCount: number;
+    completedChapterCount?: number;
     enrolled?: boolean;
-    state: string | null;
-    lessons: {
+    isPublished: boolean | null;
+    chapters: {
       /** @format uuid */
       id: string;
       title: string;
-      courseId?: string;
-      imageUrl?: string;
-      description?: string;
-      itemsCount: number;
-      itemsCompletedCount?: number;
-      lessonProgress?: "completed" | "in_progress" | "not_started";
-      isFree?: boolean;
+      lessonCount: number;
+      completedLessonCount?: number;
+      chapterProgress?: "completed" | "in_progress" | "not_started";
+      isFreemium?: boolean;
       enrolled?: boolean;
-      state?: string;
-      archived?: boolean;
+      isPublished?: boolean;
       isSubmitted?: boolean;
-      type?: string;
       createdAt?: string;
       quizScore?: number;
     }[];
     priceInCents: number;
     currency: string;
     archived?: boolean;
-    hasFreeLessons?: boolean;
+    hasFreeChapter?: boolean;
   };
 }
 
@@ -522,7 +508,7 @@ export interface GetBetaCourseByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    imageUrl?: string;
+    thumbnailUrl?: string;
     description: string;
     category: string;
     /** @format uuid */
@@ -531,47 +517,42 @@ export interface GetBetaCourseByIdResponse {
     authorId?: string;
     author?: string;
     authorEmail?: string;
-    courseLessonCount: number;
-    completedLessonCount?: number;
+    courseChapterCount: number;
+    completedChapterCount?: number;
     enrolled?: boolean;
-    state: string | null;
-    lessons: {
+    isPublished: boolean | null;
+    chapters: {
       /** @format uuid */
       id: string;
       title: string;
-      courseId?: string;
-      imageUrl?: string;
-      description?: string;
-      itemsCount: number;
-      itemsCompletedCount?: number;
-      lessonProgress?: "completed" | "in_progress" | "not_started";
-      isFree?: boolean;
+      lessonCount: number;
+      completedLessonCount?: number;
+      chapterProgress?: "completed" | "in_progress" | "not_started";
+      isFreemium?: boolean;
       enrolled?: boolean;
-      state?: string;
-      archived?: boolean;
+      isPublished?: boolean;
       isSubmitted?: boolean;
-      type?: string;
       createdAt?: string;
       quizScore?: number;
     }[];
     priceInCents: number;
     currency: string;
     archived?: boolean;
-    hasFreeLessons?: boolean;
+    hasFreeChapter?: boolean;
   };
 }
 
 export type CreateCourseBody = {
   title: string;
   description: string;
-  state: "draft" | "published";
-  imageUrl?: string;
+  isPublished?: boolean;
+  thumbnailS3Key?: string;
   priceInCents?: number;
   currency?: string;
   /** @format uuid */
   categoryId: string;
 } & {
-  lessons?: string[];
+  chapters?: string[];
 };
 
 export interface CreateCourseResponse {
@@ -585,13 +566,13 @@ export interface CreateCourseResponse {
 export interface UpdateCourseBody {
   title?: string;
   description?: string;
-  imageUrl?: string;
-  state?: "draft" | "published";
+  thumbnailS3Key?: string;
+  isPublished?: boolean;
   priceInCents?: number;
   currency?: string;
   /** @format uuid */
   categoryId?: string;
-  lessons?: string[];
+  chapters?: string[];
   archived?: boolean;
 }
 
@@ -614,290 +595,17 @@ export interface FileUploadResponse {
   fileUrl: string;
 }
 
-export interface GetUserStatisticsResponse {
-  data: {
-    averageStats: {
-      lessonStats: {
-        started: number;
-        completed: number;
-        completionRate: number;
-      };
-      courseStats: {
-        started: number;
-        completed: number;
-        completionRate: number;
-      };
-    };
-    quizzes: {
-      totalAttempts: number;
-      totalCorrectAnswers: number;
-      totalWrongAnswers: number;
-      totalQuestions: number;
-      averageScore: number;
-      uniqueQuizzesTaken: number;
-    };
-    courses: object;
-    lessons: object;
-    streak: {
-      current: number;
-      longest: number;
-      activityHistory: object;
-    };
-    lastLesson: null | {
-      /** @format uuid */
-      id: string;
-      title: string;
-      /** @format uuid */
-      courseId: string;
-      imageUrl?: string;
-      description?: string;
-      itemsCount: number;
-      itemsCompletedCount?: number;
-      lessonProgress?: "completed" | "in_progress" | "not_started";
-      isFree?: boolean;
-      enrolled?: boolean;
-      state?: string;
-      archived?: boolean;
-      isSubmitted?: boolean;
-      type?: string;
-      createdAt?: string;
-      quizScore?: number;
-      courseTitle: string;
-      courseDescription: string;
-    };
-  };
-}
-
-export interface GetTeacherStatsResponse {
-  data: {
-    fiveMostPopularCourses: {
-      courseName: string;
-      studentCount: number;
-    }[];
-    totalCoursesCompletionStats: {
-      completionPercentage: number;
-      totalCoursesCompletion: number;
-      totalCourses: number;
-    };
-    conversionAfterFreemiumLesson: {
-      conversionPercentage: number;
-      purchasedCourses: number;
-      remainedOnFreemium: number;
-    };
-    courseStudentsStats: object;
-    avgQuizScore: {
-      correctAnswerCount: number;
-      wrongAnswerCount: number;
-      answerCount: number;
-    };
-  };
-}
-
-export interface GetAllLessonsResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    courseId?: string;
-    imageUrl?: string;
-    description?: string;
-    itemsCount: number;
-    itemsCompletedCount?: number;
-    lessonProgress?: "completed" | "in_progress" | "not_started";
-    isFree?: boolean;
-    enrolled?: boolean;
-    state?: string;
-    archived?: boolean;
-    isSubmitted?: boolean;
-    type?: string;
-    createdAt?: string;
-    quizScore?: number;
-  }[];
-  pagination: {
-    totalItems: number;
-    page: number;
-    perPage: number;
-  };
-}
-
-export interface GetAvailableLessonsResponse {
-  data: ({
-    /** @format uuid */
-    id: string;
-    title: string;
-    imageUrl: string;
-    description: string;
-    isFree: boolean;
-  } & {
-    itemsCount: number;
-  })[];
-}
-
-export interface GetLessonResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    courseId?: string;
-    imageUrl?: string;
-    description?: string;
-    itemsCount: number;
-    itemsCompletedCount?: number;
-    lessonProgress?: "completed" | "in_progress" | "not_started";
-    isFree?: boolean;
-    enrolled?: boolean;
-    state?: string;
-    archived?: boolean;
-    isSubmitted?: boolean;
-    type?: string;
-    createdAt?: string;
-    quizScore?: number;
-    lessonItems: {
-      /** @format uuid */
-      lessonItemId: string;
-      lessonItemType: string;
-      displayOrder: number | null;
-      passQuestion?: null;
-      isCompleted?: boolean;
-      content:
-        | {
-            /** @format uuid */
-            id: string;
-            questionType: string;
-            questionBody: string;
-            questionAnswers: {
-              /** @format uuid */
-              id: string;
-              optionText: string;
-              position: number | null;
-              isStudentAnswer?: boolean | null;
-              isCorrect?: boolean | null;
-              studentAnswerText?: string | null;
-            }[];
-            solutionExplanation?: string | null;
-            passQuestion?: boolean | null;
-          }
-        | {
-            /** @format uuid */
-            id: string;
-            title: string;
-            body: string;
-            state: string;
-          }
-        | {
-            /** @format uuid */
-            id: string;
-            title: string;
-            type: string;
-            url: string;
-            body: string | null;
-          };
-    }[];
-  };
-}
-
-export interface GetLessonByIdResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    courseId?: string;
-    imageUrl?: string;
-    description?: string;
-    itemsCount: number;
-    itemsCompletedCount?: number;
-    lessonProgress?: "completed" | "in_progress" | "not_started";
-    isFree?: boolean;
-    enrolled?: boolean;
-    state?: string;
-    archived?: boolean;
-    isSubmitted?: boolean;
-    type?: string;
-    createdAt?: string;
-    quizScore?: number;
-    lessonItems: {
-      /** @format uuid */
-      lessonItemId: string;
-      lessonItemType: string;
-      displayOrder: number | null;
-      passQuestion?: null;
-      isCompleted?: boolean;
-      content:
-        | {
-            /** @format uuid */
-            id: string;
-            questionType: string;
-            questionBody: string;
-            questionAnswers: {
-              /** @format uuid */
-              id: string;
-              optionText: string;
-              position: number | null;
-              isStudentAnswer?: boolean | null;
-              isCorrect?: boolean | null;
-              studentAnswerText?: string | null;
-            }[];
-            solutionExplanation?: string | null;
-            passQuestion?: boolean | null;
-          }
-        | {
-            /** @format uuid */
-            id: string;
-            title: string;
-            body: string;
-            state: string;
-          }
-        | {
-            /** @format uuid */
-            id: string;
-            title: string;
-            type: string;
-            url: string;
-            body: string | null;
-          };
-    }[];
-  };
-}
-
-export interface CreateLessonBody {
+export type BetaCreateLessonBody = {
   title: string;
-  courseId?: string;
-  imageUrl?: string;
-  description?: string;
-  lessonProgress?: "completed" | "in_progress" | "not_started";
-  isFree?: boolean;
-  enrolled?: boolean;
-  state?: string;
-  archived?: boolean;
-  isSubmitted?: boolean;
-  type?: string;
-  createdAt?: string;
-  quizScore?: number;
-}
-
-export interface CreateLessonResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    message: string;
-  };
-}
-
-export interface BetaCreateLessonBody {
-  title: string;
-  courseId?: string;
-  imageUrl?: string;
-  description?: string;
-  lessonProgress?: "completed" | "in_progress" | "not_started";
-  isFree?: boolean;
-  enrolled?: boolean;
-  state?: string;
-  archived?: boolean;
-  isSubmitted?: boolean;
-  type?: string;
-  createdAt?: string;
-  quizScore?: number;
-}
+  type: string;
+  description: string;
+  fileS3Key?: string;
+  fileType?: string;
+} & {
+  /** @format uuid */
+  chapterId: string;
+  displayOrder?: number;
+};
 
 export interface BetaCreateLessonResponse {
   data: {
@@ -907,317 +615,39 @@ export interface BetaCreateLessonResponse {
   };
 }
 
-export interface UpdateLessonBody {
+export type BetaUpdateLessonBody = {
   title?: string;
-  courseId?: string;
-  imageUrl?: string;
-  description?: string;
-  lessonProgress?: "completed" | "in_progress" | "not_started";
-  isFree?: boolean;
-  enrolled?: boolean;
-  state?: string;
-  archived?: boolean;
-  isSubmitted?: boolean;
   type?: string;
+  description?: string;
+  fileS3Key?: string;
+  fileType?: string;
+} & {
+  /** @format uuid */
+  chapterId?: string;
+  displayOrder?: number;
+};
+
+export interface BetaUpdateLessonResponse {
+  data: {
+    message: string;
+  };
+}
+
+export type BetaCreateChapterBody = {
+  title: string;
+  chapterProgress?: "completed" | "in_progress" | "not_started";
+  isFreemium?: boolean;
+  enrolled?: boolean;
+  isPublished?: boolean;
+  isSubmitted?: boolean;
   createdAt?: string;
   quizScore?: number;
-}
-
-export interface UpdateLessonResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface AddLessonToCourseBody {
+} & {
   /** @format uuid */
   courseId: string;
-  /** @format uuid */
-  lessonId: string;
-  displayOrder?: number;
-}
+};
 
-export interface AddLessonToCourseResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface RemoveLessonFromCourseResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface RemoveChapterResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface RemoveLessonResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface ToggleLessonAsFreeBody {
-  /** @format uuid */
-  courseId: string;
-  /** @format uuid */
-  lessonId: string;
-  isFree: boolean;
-}
-
-export interface ToggleLessonAsFreeResponse {
-  data: {
-    isFree: boolean;
-    message: string;
-  };
-}
-
-export interface EvaluationQuizResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface ClearQuizProgressResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface GetAllLessonItemsResponse {
-  data: (
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "question";
-        questionType: string;
-        questionBody: string;
-        solutionExplanation: string | null;
-      })
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "file";
-        title: string;
-        url: string;
-        body: string | null;
-        type: string;
-      })
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "text_block";
-        title: string;
-        body: string | null;
-      })
-  )[];
-  pagination: {
-    totalItems: number;
-    page: number;
-    perPage: number;
-  };
-}
-
-export interface GetAvailableLessonItemsResponse {
-  data: (
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "question";
-        questionType: string;
-        questionBody: string;
-        solutionExplanation: string | null;
-      })
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "file";
-        title: string;
-        url: string;
-        body: string | null;
-        type: string;
-      })
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "text_block";
-        title: string;
-        body: string | null;
-      })
-  )[];
-}
-
-export interface GetLessonItemByIdResponse {
-  data:
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "question";
-        questionType: string;
-        questionBody: string;
-        solutionExplanation: string | null;
-      })
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "file";
-        title: string;
-        url: string;
-        body: string | null;
-        type: string;
-      })
-    | ({
-        id: string;
-        state: string;
-        archived: boolean;
-        authorId: string;
-        createdAt: string;
-        updatedAt: string;
-      } & {
-        itemType: "text_block";
-        title: string;
-        body: string | null;
-      });
-}
-
-export interface AssignItemsToLessonBody {
-  items: {
-    /** @format uuid */
-    id: string;
-    type: "text_block" | "file" | "question";
-  }[];
-}
-
-export interface AssignItemsToLessonResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface UnassignItemsFromLessonBody {
-  items: {
-    /** @format uuid */
-    id: string;
-    type: "text_block" | "file" | "question";
-  }[];
-}
-
-export interface UnassignItemsFromLessonResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface UpdateTextBlockItemBody {
-  title?: string;
-  body?: string | null;
-  state?: string;
-  archived?: boolean;
-  /** @format uuid */
-  authorId?: string;
-  lessonId?: string;
-}
-
-export interface UpdateTextBlockItemResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface UpdateQuestionItemBody {
-  questionType?: string;
-  questionBody?: string;
-  solutionExplanation?: string | null;
-  state?: string;
-  questionAnswers?: {
-    /** @format uuid */
-    id?: string;
-    optionText: string;
-    position: number | null;
-    isStudentAnswer?: boolean;
-    isCorrect?: boolean;
-    /** @format uuid */
-    questionId: string;
-  }[];
-  archived?: boolean;
-}
-
-export interface UpdateQuestionItemResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface UpdateFileItemBody {
-  title?: string;
-  type?: string;
-  url?: string;
-  /** @format uuid */
-  authorId?: string;
-  body?: string | null;
-  state?: string;
-  archived?: boolean;
-}
-
-export interface UpdateFileItemResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface CreateTextBlockBody {
-  title: string;
-  body: string;
-  state: string;
-  /** @format uuid */
-  authorId: string;
-}
-
-export interface CreateTextBlockResponse {
+export interface BetaCreateChapterResponse {
   data: {
     /** @format uuid */
     id: string;
@@ -1225,131 +655,7 @@ export interface CreateTextBlockResponse {
   };
 }
 
-export interface CreateBetaTextBlockBody {
-  title: string;
-  body: string;
-  state: string;
-  /** @format uuid */
-  authorId: string;
-  lessonId: string;
-}
-
-export interface CreateBetaTextBlockResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    message: string;
-  };
-}
-
-export interface CreateQuestionBody {
-  questionType: string;
-  questionBody: string;
-  state: string;
-  /** @format uuid */
-  authorId: string;
-  solutionExplanation?: string;
-}
-
-export interface CreateQuestionResponse {
-  data: {
-    message: string;
-    /** @format uuid */
-    questionId: string;
-  };
-}
-
-export interface GetQuestionAnswersResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    optionText: string;
-    isCorrect: boolean;
-    position: number | null;
-  }[];
-}
-
-export type UpsertQuestionOptionsBody = {
-  /** @format uuid */
-  id?: string;
-  optionText?: string;
-  isCorrect?: boolean;
-  position?: number;
-}[];
-
-export interface UpsertQuestionOptionsResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface UpdateLessonFreemiumStatusBody {
-  isFreemium: boolean;
-}
-
-export interface UpdateLessonFreemiumStatusResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface CreateFileBody {
-  title: string;
-  type: string;
-  url: string;
-  state: string;
-  /** @format uuid */
-  authorId: string;
-}
-
-export interface CreateFileResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    message: string;
-  };
-}
-
-export interface BetaCreateFileBody {
-  title: string;
-  state: string;
-  authorId: string;
-  type: string;
-  body?: string;
-  lessonId: string;
-}
-
-export interface BetaCreateFileResponse {
-  data: {
-    /** @format uuid */
-    id: string;
-    message: string;
-  };
-}
-
-export interface AnswerQuestionBody {
-  /** @format uuid */
-  courseId: string;
-  /** @format uuid */
-  lessonId: string;
-  /** @format uuid */
-  questionId: string;
-  answer:
-    | string[]
-    | string
-    | {
-        index: number;
-        value: string;
-      }[];
-}
-
-export interface AnswerQuestionResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface MarkLessonItemAsCompletedResponse {
+export interface MarkLessonAsCompletedResponse {
   data: {
     message: string;
   };
@@ -2041,11 +1347,24 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetAllCourses
-     * @request GET:/api/courses
+     * @name CourseControllerGetAllCourses
+     * @request GET:/api/course
      */
-    coursesControllerGetAllCourses: (
+    courseControllerGetAllCourses: (
       query?: {
+        sort?:
+          | "title"
+          | "category"
+          | "creationDate"
+          | "author"
+          | "chapterCount"
+          | "enrolledParticipantsCount"
+          | "-title"
+          | "-category"
+          | "-creationDate"
+          | "-author"
+          | "-chapterCount"
+          | "-enrolledParticipantsCount";
         title?: string;
         category?: string;
         author?: string;
@@ -2056,24 +1375,11 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @min 1 */
         page?: number;
         perPage?: number;
-        sort?:
-          | "title"
-          | "category"
-          | "creationDate"
-          | "author"
-          | "lessonsCount"
-          | "enrolledParticipantsCount"
-          | "-title"
-          | "-category"
-          | "-creationDate"
-          | "-author"
-          | "-lessonsCount"
-          | "-enrolledParticipantsCount";
       },
       params: RequestParams = {},
     ) =>
       this.request<GetAllCoursesResponse, any>({
-        path: `/api/courses`,
+        path: `/api/course`,
         method: "GET",
         query: query,
         format: "json",
@@ -2083,12 +1389,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerCreateCourse
-     * @request POST:/api/courses
+     * @name CourseControllerCreateCourse
+     * @request POST:/api/course
      */
-    coursesControllerCreateCourse: (data: CreateCourseBody, params: RequestParams = {}) =>
+    courseControllerCreateCourse: (data: CreateCourseBody, params: RequestParams = {}) =>
       this.request<CreateCourseResponse, any>({
-        path: `/api/courses`,
+        path: `/api/course`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -2099,10 +1405,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetStudentCourses
-     * @request GET:/api/courses/get-student-courses
+     * @name CourseControllerGetStudentCourses
+     * @request GET:/api/course/get-student-courses
      */
-    coursesControllerGetStudentCourses: (
+    courseControllerGetStudentCourses: (
       query?: {
         title?: string;
         category?: string;
@@ -2117,19 +1423,19 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | "category"
           | "creationDate"
           | "author"
-          | "lessonsCount"
+          | "chapterCount"
           | "enrolledParticipantsCount"
           | "-title"
           | "-category"
           | "-creationDate"
           | "-author"
-          | "-lessonsCount"
+          | "-chapterCount"
           | "-enrolledParticipantsCount";
       },
       params: RequestParams = {},
     ) =>
       this.request<GetStudentCoursesResponse, any>({
-        path: `/api/courses/get-student-courses`,
+        path: `/api/course/get-student-courses`,
         method: "GET",
         query: query,
         format: "json",
@@ -2139,10 +1445,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetAvailableCourses
-     * @request GET:/api/courses/available-courses
+     * @name CourseControllerGetAvailableCourses
+     * @request GET:/api/course/available-courses
      */
-    coursesControllerGetAvailableCourses: (
+    courseControllerGetAvailableCourses: (
       query?: {
         title?: string;
         category?: string;
@@ -2157,19 +1463,19 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | "category"
           | "creationDate"
           | "author"
-          | "lessonsCount"
+          | "chapterCount"
           | "enrolledParticipantsCount"
           | "-title"
           | "-category"
           | "-creationDate"
           | "-author"
-          | "-lessonsCount"
+          | "-chapterCount"
           | "-enrolledParticipantsCount";
       },
       params: RequestParams = {},
     ) =>
       this.request<GetAvailableCoursesResponse, any>({
-        path: `/api/courses/available-courses`,
+        path: `/api/course/available-courses`,
         method: "GET",
         query: query,
         format: "json",
@@ -2179,10 +1485,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetTeacherCourses
-     * @request GET:/api/courses/teacher-courses
+     * @name CourseControllerGetTeacherCourses
+     * @request GET:/api/course/teacher-courses
      */
-    coursesControllerGetTeacherCourses: (
+    courseControllerGetTeacherCourses: (
       query: {
         /** @format uuid */
         authorId: string;
@@ -2190,7 +1496,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetTeacherCoursesResponse, any>({
-        path: `/api/courses/teacher-courses`,
+        path: `/api/course/teacher-courses`,
         method: "GET",
         query: query,
         format: "json",
@@ -2200,10 +1506,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetCourse
-     * @request GET:/api/courses/course
+     * @name CourseControllerGetCourse
+     * @request GET:/api/course/course
      */
-    coursesControllerGetCourse: (
+    courseControllerGetCourse: (
       query: {
         /** @format uuid */
         id: string;
@@ -2211,7 +1517,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetCourseResponse, any>({
-        path: `/api/courses/course`,
+        path: `/api/course/course`,
         method: "GET",
         query: query,
         format: "json",
@@ -2221,10 +1527,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetCourseById
-     * @request GET:/api/courses/course-by-id
+     * @name CourseControllerGetCourseById
+     * @request GET:/api/course/course-by-id
      */
-    coursesControllerGetCourseById: (
+    courseControllerGetCourseById: (
       query: {
         /** @format uuid */
         id: string;
@@ -2232,7 +1538,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetCourseByIdResponse, any>({
-        path: `/api/courses/course-by-id`,
+        path: `/api/course/course-by-id`,
         method: "GET",
         query: query,
         format: "json",
@@ -2242,10 +1548,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerGetBetaCourseById
-     * @request GET:/api/courses/beta-course-by-id
+     * @name CourseControllerGetBetaCourseById
+     * @request GET:/api/course/beta-course-by-id
      */
-    coursesControllerGetBetaCourseById: (
+    courseControllerGetBetaCourseById: (
       query: {
         /** @format uuid */
         id: string;
@@ -2253,7 +1559,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetBetaCourseByIdResponse, any>({
-        path: `/api/courses/beta-course-by-id`,
+        path: `/api/course/beta-course-by-id`,
         method: "GET",
         query: query,
         format: "json",
@@ -2263,16 +1569,16 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerUpdateCourse
-     * @request PATCH:/api/courses/{id}
+     * @name CourseControllerUpdateCourse
+     * @request PATCH:/api/course/{id}
      */
-    coursesControllerUpdateCourse: (
+    courseControllerUpdateCourse: (
       id: string,
       data: UpdateCourseBody,
       params: RequestParams = {},
     ) =>
       this.request<UpdateCourseResponse, any>({
-        path: `/api/courses/${id}`,
+        path: `/api/course/${id}`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,
@@ -2283,10 +1589,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerEnrollCourse
-     * @request POST:/api/courses/enroll-course
+     * @name CourseControllerEnrollCourse
+     * @request POST:/api/course/enroll-course
      */
-    coursesControllerEnrollCourse: (
+    courseControllerEnrollCourse: (
       query?: {
         /** @format uuid */
         id?: string;
@@ -2294,7 +1600,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<EnrollCourseResponse, any>({
-        path: `/api/courses/enroll-course`,
+        path: `/api/course/enroll-course`,
         method: "POST",
         query: query,
         format: "json",
@@ -2304,10 +1610,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CoursesControllerUnenrollCourse
-     * @request DELETE:/api/courses/unenroll-course
+     * @name CourseControllerUnenrollCourse
+     * @request DELETE:/api/course/unenroll-course
      */
-    coursesControllerUnenrollCourse: (
+    courseControllerUnenrollCourse: (
       query?: {
         /** @format uuid */
         id?: string;
@@ -2315,7 +1621,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<UnenrollCourseResponse, any>({
-        path: `/api/courses/unenroll-course`,
+        path: `/api/course/unenroll-course`,
         method: "DELETE",
         query: query,
         format: "json",
@@ -2325,10 +1631,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name FilesControllerUploadFile
-     * @request POST:/api/files
+     * @name FileControllerUploadFile
+     * @request POST:/api/file
      */
-    filesControllerUploadFile: (
+    fileControllerUploadFile: (
       data: {
         /** @format binary */
         file?: File;
@@ -2338,7 +1644,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<FileUploadResponse, any>({
-        path: `/api/files`,
+        path: `/api/file`,
         method: "POST",
         body: data,
         type: ContentType.FormData,
@@ -2349,10 +1655,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name FilesControllerDeleteFile
-     * @request DELETE:/api/files
+     * @name FileControllerDeleteFile
+     * @request DELETE:/api/file
      */
-    filesControllerDeleteFile: (
+    fileControllerDeleteFile: (
       query: {
         /** Key of the file to delete */
         fileKey: string;
@@ -2360,7 +1666,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<void, any>({
-        path: `/api/files`,
+        path: `/api/file`,
         method: "DELETE",
         query: query,
         ...params,
@@ -2369,172 +1675,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name StatisticsControllerGetUserStatistics
-     * @request GET:/api/statistics/user-stats
+     * @name LessonControllerBetaCreateLesson
+     * @request POST:/api/lesson/beta-create-lesson
      */
-    statisticsControllerGetUserStatistics: (params: RequestParams = {}) =>
-      this.request<GetUserStatisticsResponse, any>({
-        path: `/api/statistics/user-stats`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name StatisticsControllerGetTeacherStats
-     * @request GET:/api/statistics/teacher-stats
-     */
-    statisticsControllerGetTeacherStats: (params: RequestParams = {}) =>
-      this.request<GetTeacherStatsResponse, any>({
-        path: `/api/statistics/teacher-stats`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerGetAllLessons
-     * @request GET:/api/lessons
-     */
-    lessonsControllerGetAllLessons: (
-      query?: {
-        title?: string;
-        state?: string;
-        sort?:
-          | "title"
-          | "createdAt"
-          | "state"
-          | "itemsCount"
-          | "-title"
-          | "-createdAt"
-          | "-state"
-          | "-itemsCount";
-        /** @min 1 */
-        page?: number;
-        perPage?: number;
-        archived?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAllLessonsResponse, any>({
-        path: `/api/lessons`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerGetAvailableLessons
-     * @request GET:/api/lessons/available-lessons
-     */
-    lessonsControllerGetAvailableLessons: (
-      query: {
-        /** @format uuid */
-        courseId: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAvailableLessonsResponse, any>({
-        path: `/api/lessons/available-lessons`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerGetLesson
-     * @request GET:/api/lessons/lesson
-     */
-    lessonsControllerGetLesson: (
-      query: {
-        /** @format uuid */
-        id: string;
-        /** @format uuid */
-        courseId: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetLessonResponse, any>({
-        path: `/api/lessons/lesson`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerUpdateLesson
-     * @request PATCH:/api/lessons/lesson
-     */
-    lessonsControllerUpdateLesson: (
-      data: UpdateLessonBody,
-      query?: {
-        /** @format uuid */
-        id?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateLessonResponse, any>({
-        path: `/api/lessons/lesson`,
-        method: "PATCH",
-        query: query,
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerGetLessonById
-     * @request GET:/api/lessons/lesson/{id}
-     */
-    lessonsControllerGetLessonById: (id: string, params: RequestParams = {}) =>
-      this.request<GetLessonByIdResponse, any>({
-        path: `/api/lessons/lesson/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerCreateLesson
-     * @request POST:/api/lessons/create-lesson
-     */
-    lessonsControllerCreateLesson: (data: CreateLessonBody, params: RequestParams = {}) =>
-      this.request<CreateLessonResponse, any>({
-        path: `/api/lessons/create-lesson`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerBetaCreateLesson
-     * @request POST:/api/lessons/beta-create-lesson
-     */
-    lessonsControllerBetaCreateLesson: (data: BetaCreateLessonBody, params: RequestParams = {}) =>
+    lessonControllerBetaCreateLesson: (data: BetaCreateLessonBody, params: RequestParams = {}) =>
       this.request<BetaCreateLessonResponse, any>({
-        path: `/api/lessons/beta-create-lesson`,
+        path: `/api/lesson/beta-create-lesson`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -2545,111 +1691,23 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name LessonsControllerAddLessonToCourse
-     * @request POST:/api/lessons/add
+     * @name LessonControllerBetaUpdateLesson
+     * @request PATCH:/api/lesson/beta-update-lesson
      */
-    lessonsControllerAddLessonToCourse: (data: AddLessonToCourseBody, params: RequestParams = {}) =>
-      this.request<AddLessonToCourseResponse, any>({
-        path: `/api/lessons/add`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerRemoveLessonFromCourse
-     * @request DELETE:/api/lessons/{courseId}/{lessonId}
-     */
-    lessonsControllerRemoveLessonFromCourse: (
-      courseId: string,
-      lessonId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<RemoveLessonFromCourseResponse, any>({
-        path: `/api/lessons/${courseId}/${lessonId}`,
-        method: "DELETE",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerRemoveChapter
-     * @request DELETE:/api/lessons/chapter/{courseId}/{chapterId}
-     */
-    lessonsControllerRemoveChapter: (
-      chapterId: string,
-      courseId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<RemoveChapterResponse, any>({
-        path: `/api/lessons/chapter/${courseId}/${chapterId}`,
-        method: "DELETE",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerRemoveLesson
-     * @request DELETE:/api/lessons/lesson/{chapterId}/{lessonId}
-     */
-    lessonsControllerRemoveLesson: (
-      chapterId: string,
-      lessonId: string,
-      params: RequestParams = {},
-    ) =>
-      this.request<RemoveLessonResponse, any>({
-        path: `/api/lessons/lesson/${chapterId}/${lessonId}`,
-        method: "DELETE",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerToggleLessonAsFree
-     * @request PATCH:/api/lessons/course-lesson
-     */
-    lessonsControllerToggleLessonAsFree: (
-      data: ToggleLessonAsFreeBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<ToggleLessonAsFreeResponse, any>({
-        path: `/api/lessons/course-lesson`,
-        method: "PATCH",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerEvaluationQuiz
-     * @request POST:/api/lessons/evaluation-quiz
-     */
-    lessonsControllerEvaluationQuiz: (
+    lessonControllerBetaUpdateLesson: (
+      data: BetaUpdateLessonBody,
       query?: {
         /** @format uuid */
-        courseId?: string;
-        /** @format uuid */
-        lessonId?: string;
+        id?: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<EvaluationQuizResponse, any>({
-        path: `/api/lessons/evaluation-quiz`,
-        method: "POST",
+      this.request<BetaUpdateLessonResponse, any>({
+        path: `/api/lesson/beta-update-lesson`,
+        method: "PATCH",
         query: query,
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2657,385 +1715,36 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name LessonsControllerClearQuizProgress
-     * @request DELETE:/api/lessons/clear-quiz-progress
+     * @name ChapterControllerBetaCreateChapter
+     * @request POST:/api/chapter/beta-create-chapter
      */
-    lessonsControllerClearQuizProgress: (
+    chapterControllerBetaCreateChapter: (data: BetaCreateChapterBody, params: RequestParams = {}) =>
+      this.request<BetaCreateChapterResponse, any>({
+        path: `/api/chapter/beta-create-chapter`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StudentLessonProgressControllerMarkLessonAsCompleted
+     * @request POST:/api/studentLessonProgress
+     */
+    studentLessonProgressControllerMarkLessonAsCompleted: (
       query: {
-        /** @format uuid */
-        courseId: string;
         /** @format uuid */
         lessonId: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<ClearQuizProgressResponse, any>({
-        path: `/api/lessons/clear-quiz-progress`,
-        method: "DELETE",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerGetAllLessonItems
-     * @request GET:/api/lessons/lesson-items
-     */
-    lessonsControllerGetAllLessonItems: (
-      query?: {
-        type?: "text_block" | "question" | "file";
-        title?: string;
-        state?: string;
-        archived?: string;
-        sort?: string;
-        /** @min 1 */
-        page?: number;
-        perPage?: number;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAllLessonItemsResponse, any>({
-        path: `/api/lessons/lesson-items`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerGetAvailableLessonItems
-     * @request GET:/api/lessons/available-lesson-items
-     */
-    lessonsControllerGetAvailableLessonItems: (
-      query?: {
-        type?: "text_block" | "question" | "file";
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetAvailableLessonItemsResponse, any>({
-        path: `/api/lessons/available-lesson-items`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerGetLessonItemById
-     * @request GET:/api/lessons/lesson-items/{id}
-     */
-    lessonsControllerGetLessonItemById: (id: string, params: RequestParams = {}) =>
-      this.request<GetLessonItemByIdResponse, any>({
-        path: `/api/lessons/lesson-items/${id}`,
-        method: "GET",
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerAssignItemsToLesson
-     * @request POST:/api/lessons/{lessonId}/assign-items
-     */
-    lessonsControllerAssignItemsToLesson: (
-      lessonId: string,
-      data: AssignItemsToLessonBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<AssignItemsToLessonResponse, any>({
-        path: `/api/lessons/${lessonId}/assign-items`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerUnassignItemsFromLesson
-     * @request POST:/api/lessons/{lessonId}/unassign-items
-     */
-    lessonsControllerUnassignItemsFromLesson: (
-      lessonId: string,
-      data: UnassignItemsFromLessonBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<UnassignItemsFromLessonResponse, any>({
-        path: `/api/lessons/${lessonId}/unassign-items`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerUpdateTextBlockItem
-     * @request PATCH:/api/lessons/text-block-item
-     */
-    lessonsControllerUpdateTextBlockItem: (
-      data: UpdateTextBlockItemBody,
-      query?: {
-        /** @format uuid */
-        id?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateTextBlockItemResponse, any>({
-        path: `/api/lessons/text-block-item`,
-        method: "PATCH",
-        query: query,
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerUpdateQuestionItem
-     * @request PATCH:/api/lessons/question-item
-     */
-    lessonsControllerUpdateQuestionItem: (
-      data: UpdateQuestionItemBody,
-      query?: {
-        /** @format uuid */
-        id?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateQuestionItemResponse, any>({
-        path: `/api/lessons/question-item`,
-        method: "PATCH",
-        query: query,
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerUpdateFileItem
-     * @request PATCH:/api/lessons/file-item
-     */
-    lessonsControllerUpdateFileItem: (
-      data: UpdateFileItemBody,
-      query?: {
-        /** @format uuid */
-        id?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateFileItemResponse, any>({
-        path: `/api/lessons/file-item`,
-        method: "PATCH",
-        query: query,
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerCreateTextBlock
-     * @request POST:/api/lessons/create-text-block
-     */
-    lessonsControllerCreateTextBlock: (data: CreateTextBlockBody, params: RequestParams = {}) =>
-      this.request<CreateTextBlockResponse, any>({
-        path: `/api/lessons/create-text-block`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerCreateBetaTextBlock
-     * @request POST:/api/lessons/create-beta-text-block
-     */
-    lessonsControllerCreateBetaTextBlock: (
-      data: CreateBetaTextBlockBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<CreateBetaTextBlockResponse, any>({
-        path: `/api/lessons/create-beta-text-block`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerCreateQuestion
-     * @request POST:/api/lessons/create-question
-     */
-    lessonsControllerCreateQuestion: (data: CreateQuestionBody, params: RequestParams = {}) =>
-      this.request<CreateQuestionResponse, any>({
-        path: `/api/lessons/create-question`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerGetQuestionAnswers
-     * @request GET:/api/lessons/question-options
-     */
-    lessonsControllerGetQuestionAnswers: (
-      query?: {
-        /** @format uuid */
-        questionId?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetQuestionAnswersResponse, any>({
-        path: `/api/lessons/question-options`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerUpsertQuestionOptions
-     * @request PATCH:/api/lessons/question-options
-     */
-    lessonsControllerUpsertQuestionOptions: (
-      data: UpsertQuestionOptionsBody,
-      query?: {
-        /** @format uuid */
-        questionId?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpsertQuestionOptionsResponse, any>({
-        path: `/api/lessons/question-options`,
-        method: "PATCH",
-        query: query,
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerUpdateLessonFreemiumStatus
-     * @request PATCH:/api/lessons/course-lesson/freemium-status
-     */
-    lessonsControllerUpdateLessonFreemiumStatus: (
-      data: UpdateLessonFreemiumStatusBody,
-      query?: {
-        /** @format uuid */
-        lessonId?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateLessonFreemiumStatusResponse, any>({
-        path: `/api/lessons/course-lesson/freemium-status`,
-        method: "PATCH",
-        query: query,
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerCreateFile
-     * @request POST:/api/lessons/create-file
-     */
-    lessonsControllerCreateFile: (data: CreateFileBody, params: RequestParams = {}) =>
-      this.request<CreateFileResponse, any>({
-        path: `/api/lessons/create-file`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name LessonsControllerBetaCreateFile
-     * @request POST:/api/lessons/beta-create-file
-     */
-    lessonsControllerBetaCreateFile: (data: BetaCreateFileBody, params: RequestParams = {}) =>
-      this.request<BetaCreateFileResponse, any>({
-        path: `/api/lessons/beta-create-file`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name QuestionsControllerAnswerQuestion
-     * @request POST:/api/questions/answer
-     */
-    questionsControllerAnswerQuestion: (data: AnswerQuestionBody, params: RequestParams = {}) =>
-      this.request<AnswerQuestionResponse, any>({
-        path: `/api/questions/answer`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name StudentCompletedLessonItemsControllerMarkLessonItemAsCompleted
-     * @request POST:/api/studentCompletedLessonItems
-     */
-    studentCompletedLessonItemsControllerMarkLessonItemAsCompleted: (
-      query: {
         /** @format uuid */
         id: string;
-        /** @format uuid */
-        lessonId: string;
-        courseId: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<MarkLessonItemAsCompletedResponse, any>({
-        path: `/api/studentCompletedLessonItems`,
+      this.request<MarkLessonAsCompletedResponse, any>({
+        path: `/api/studentLessonProgress`,
         method: "POST",
         query: query,
         format: "json",
