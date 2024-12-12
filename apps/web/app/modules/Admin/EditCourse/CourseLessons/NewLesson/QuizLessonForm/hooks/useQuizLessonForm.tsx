@@ -11,20 +11,7 @@ export const useQuizLessonForm = () => {
     defaultValues: {
       title: "",
       state: "draft",
-      questions: [
-        {
-          questionType: "single_choice",
-          questionBody: "",
-          state: "draft",
-          options: [
-            {
-              value: "",
-              isCorrect: false,
-              position: 1,
-            },
-          ],
-        },
-      ],
+      questions: [],
     },
   });
 

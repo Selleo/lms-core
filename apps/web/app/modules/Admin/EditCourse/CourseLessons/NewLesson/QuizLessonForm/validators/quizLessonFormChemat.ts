@@ -6,8 +6,11 @@ export const quizLessonFormSchema = z.object({
   questions: z.array(
     z.object({
       questionType: z.enum(["single_choice", "multiple_choice"]),
-      questionBody: z.string().min(10, "Question body must be at least 10 characters."),
+      questionBody: z.optional(z.string().min(10, "Question body must be at least 10 characters.")),
       state: z.enum(["draft", "published"]),
+      imageUrl: z.optional(z.string()),
+      photoQuestionType: z.optional(z.enum(["single_choice", "multiple_choice"])),
+      questionTitle: z.string(),
       options: z
         .array(
           z.object({

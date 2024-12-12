@@ -48,3 +48,4 @@ export { default as MultiSelect } from "./multi-select.svg?react";
 export { default as SingleSelect } from "./single-select.svg?react";
 export { default as PhotoQuestion } from "./photo-question.svg?react";
 export { default as TrueOrFalse } from "./true-or-false.svg?react";
+export { default as Success } from "./success.svg?react";
