@@ -1,10 +1,6 @@
-import { Type } from "@sinclair/typebox";
 
-import { baseCourseSchema } from "src/courses/schemas/createCourse.schema";
 
-import { STATUS } from "../../storage/schema/utils";
 
-import type { Static } from "@sinclair/typebox";
 
 // const niceCourseData = Type.Intersect([
 //   Type.Omit(baseCourseSchema, ["categoryId"]),

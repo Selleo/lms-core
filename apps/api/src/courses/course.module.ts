@@ -1,12 +1,11 @@
 import { Module } from "@nestjs/common";
 
+import { ChapterModule } from "src/chapter/chapter.module";
 import { FileModule } from "src/file/files.module";
-import { S3Service } from "src/s3/s3.service";
 import { StatisticsModule } from "src/statistics/statistics.module";
 
-import { CourseService } from "./course.service";
-import { ChapterModule } from "src/chapter/chapter.module";
 import { CourseController } from "./course.controller";
+import { CourseService } from "./course.service";
 
 @Module({
   imports: [FileModule, StatisticsModule, ChapterModule],

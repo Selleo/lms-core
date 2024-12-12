@@ -1,5 +1,8 @@
-import { Static, Type } from "@sinclair/typebox";
+import { Type } from "@sinclair/typebox";
+
 import { UUIDSchema } from "src/common";
+
+import type { Static} from "@sinclair/typebox";
 
 export const lessonSchema = Type.Object({
   id: UUIDSchema,

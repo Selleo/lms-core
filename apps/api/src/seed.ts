@@ -1,34 +1,23 @@
 import { faker } from "@faker-js/faker";
 // import { format, subMonths } from "date-fns";
 import * as dotenv from "dotenv";
-import { and, eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 // import { flatMap, now, sampleSize } from "lodash";
 import postgres from "postgres";
 
 import hashPassword from "./common/helpers/hashPassword";
-import { STATES } from "./common/states";
 // import { e2eCourses } from "./e2e-data-seeds";
 // import { niceCourses } from "./nice-data-seeds";
 import { seedTruncateAllTables } from "./seed-helpers";
 import {
-  categories,
-  courses,
-  coursesSummaryStats,
-  courseStudentsStats,
   credentials,
-  lessons,
-  questionAnswerOptions,
-  questions,
-  quizAttempts,
-  studentCourses,
   userDetails,
   users,
 } from "./storage/schema";
-import { STATUS } from "./storage/schema/utils";
 import { USER_ROLES } from "./users/schemas/user-roles";
 
-import type { DatabasePg, UUIDType } from "./common";
+import type { DatabasePg } from "./common";
 
 dotenv.config({ path: "./.env" });
 

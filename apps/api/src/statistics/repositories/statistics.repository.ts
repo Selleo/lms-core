@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, desc, eq, gte, lt, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-
 import {
   courses,
   coursesSummaryStats,

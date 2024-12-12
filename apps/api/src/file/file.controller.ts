@@ -15,8 +15,8 @@ import { Roles } from "src/common/decorators/roles.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
-import { FileUploadResponse } from "./schemas/file.schema";
 import { FileService } from "./file.service";
+import { FileUploadResponse } from "./schemas/file.schema";
 
 @UseGuards(RolesGuard)
 @Controller("file")

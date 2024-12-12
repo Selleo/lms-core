@@ -14,16 +14,19 @@ import {
   eq,
   ilike,
   inArray,
-  is,
   isNotNull,
   isNull,
   like,
   sql,
 } from "drizzle-orm";
 
+import { LESSON_ITEM_TYPE } from "src/chapter/chapter.type";
+import { AdminChapterRepository } from "src/chapter/repositories/adminChapter.repository";
+import { ChapterProgress } from "src/chapter/schemas/chapter.types";
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { FileService } from "src/file/file.service";
+import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
@@ -53,13 +56,9 @@ import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
+import type { ChapterProgressType} from "src/chapter/schemas/chapter.types";
 import type { Pagination, UUIDType } from "src/common";
-import { AdminChapterService } from "src/chapter/adminChapter.service";
-import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/chapter/chapter.type";
-import { AdminChapterRepository } from "src/chapter/repositories/adminChapter.repository";
-import { ChapterProgressType, ChapterProgress } from "src/chapter/schemas/chapter.types";
-import { LessonItemWithContentSchema } from "src/lesson/lessonItem.schema";
-import { LESSON_TYPES } from "src/lesson/lesson.type";
+import type { LessonItemWithContentSchema } from "src/lesson/lessonItem.schema";
 
 @Injectable()
 export class CourseService {

@@ -1,14 +1,8 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
-import { Type } from "@sinclair/typebox";
-import { Validate } from "nestjs-typebox";
+import { Controller, UseGuards } from "@nestjs/common";
 
-import { baseResponse, BaseResponse } from "src/common";
-import { Roles } from "src/common/decorators/roles.decorator";
-import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+
 import { QuestionService } from "./question.service";
-import { answerQuestionSchema, AnswerQuestionSchema } from "./schema/question.schema";
 
 @UseGuards(RolesGuard)
 @Controller("question")

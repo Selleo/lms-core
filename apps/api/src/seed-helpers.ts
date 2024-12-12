@@ -1,7 +1,5 @@
-import { faker } from "@faker-js/faker";
-import { eq, sql } from "drizzle-orm/sql";
+import { sql } from "drizzle-orm/sql";
 
-import { categories, courses, lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
 // import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
 // import { QUESTION_TYPE } from "./questions/schema/questions.types";

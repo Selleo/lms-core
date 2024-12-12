@@ -1,22 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import {
-  differenceInDays,
-  eachDayOfInterval,
-  endOfMonth,
-  format,
-  startOfDay,
-  startOfMonth,
-  subDays,
-} from "date-fns";
+
+
 
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
-import type {
-  CourseStudentsStatsByMonth,
-  StatsByMonth,
-  UserStats,
-} from "./schemas/userStats.schema";
-import { LessonRepository } from "src/lesson/lesson.repository";
+
+
 
 // TODO: repair this
 @Injectable()

@@ -1,27 +1,17 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, ilike, sql } from "drizzle-orm";
-import { isEmpty } from "lodash";
-import { match, P } from "ts-pattern";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-import { getSortOptions } from "src/common/helpers/getSortOptions";
-import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
-
-import { S3Service } from "src/s3/s3.service";
-import { USER_ROLES } from "src/users/schemas/user-roles";
-
-import {
-  type LessonsFilterSchema,
-  type LessonSortField,
-  LessonSortFields,
-  type LessonsQuery,
-} from "./schemas/chapterQuery";
-
-import type { UUIDType } from "src/common";
 import { FileService } from "src/file/file.service";
-import { AdminChapterRepository } from "./repositories/adminChapter.repository";
-import { CreateChapterBody } from "./schemas/chapter.schema";
 import { chapters } from "src/storage/schema";
+
+import { AdminChapterRepository } from "./repositories/adminChapter.repository";
+
+import type { CreateChapterBody } from "./schemas/chapter.schema";
+import type { UUIDType } from "src/common";
+
+
+
 
 @Injectable()
 export class AdminChapterService {

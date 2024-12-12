@@ -1,6 +1,6 @@
 import { type Static, Type } from "@sinclair/typebox";
-import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 
+import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 import { UUIDSchema } from "src/common";
 
 export const commonShowCourseSchema = Type.Object({

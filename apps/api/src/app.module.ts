@@ -31,9 +31,8 @@ import { ScormModule } from "./scorm/scorm.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import * as schema from "./storage/schema";
 import { StripeModule } from "./stripe/stripe.module";
-
-import { TestConfigModule } from "./test-config/test-config.module";
 import { StudentLessonProgressModule } from "./studentLessonProgress/studentLessonProgress.module";
+import { TestConfigModule } from "./test-config/test-config.module";
 
 @Module({
   imports: [

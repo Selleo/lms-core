@@ -1,10 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, sql, isNotNull, count } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, lessons } from "src/storage/schema";
-import { id } from "src/storage/schema/utils";
-import { chapter } from "../schemas/chapter.schema";
+
 
 @Injectable()
 export class AdminChapterRepository {

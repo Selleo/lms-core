@@ -1,9 +1,9 @@
 import { Type } from "@sinclair/typebox";
 
+import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 import { UUIDSchema } from "src/common";
 
 import type { Static } from "@sinclair/typebox";
-import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 
 export const ActivityHistorySchema = Type.Record(Type.String(), Type.Boolean());
 

@@ -1,6 +1,7 @@
 import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 
+import { LESSON_ITEM_TYPE } from "src/chapter/chapter.type";
 import { DatabasePg } from "src/common";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import {
@@ -14,7 +15,6 @@ import {
 import { studentCoursesStates } from "./schemas/studentCompletedLesson.schema";
 
 import type { UUIDType } from "src/common";
-import { LESSON_ITEM_TYPE } from "src/chapter/chapter.type";
 
 @Injectable()
 export class StudentLessonProgressService {

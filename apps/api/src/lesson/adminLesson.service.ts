@@ -1,21 +1,21 @@
 import {
   BadRequestException,
-  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { eq, ilike, isNotNull } from "drizzle-orm";
+
+
 
 import { DatabasePg } from "src/common";
 
-import type { UUIDType } from "src/common";
-import { AdminChapterRepository } from "src/chapter/repositories/adminChapter.repository";
 import { AdminLessonRepository } from "./adminLesson.repository";
-import { LESSON_TYPES, LessonTypes } from "./lesson.type";
-import { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
 import { LessonRepository } from "./lesson.repository";
-import { da } from "@faker-js/faker";
+import { LESSON_TYPES } from "./lesson.type";
+
+import type { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
+import type { LessonTypes } from "./lesson.type";
+import type { UUIDType } from "src/common";
 
 type GetLessonItemsQuery = {
   type?: LessonTypes;

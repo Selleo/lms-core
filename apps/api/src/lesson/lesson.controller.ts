@@ -1,9 +1,6 @@
 import {
   Body,
   Controller,
-  Delete,
-  Get,
-  Param,
   Patch,
   Post,
   Query,
@@ -15,15 +12,14 @@ import { Validate } from "nestjs-typebox";
 import {
   baseResponse,
   BaseResponse,
-  paginatedResponse,
-  PaginatedResponse,
   UUIDSchema,
   type UUIDType,
 } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/users/schemas/user-roles";
+
 import { AdminLessonService } from "./adminLesson.service";
 import {
   CreateLessonBody,

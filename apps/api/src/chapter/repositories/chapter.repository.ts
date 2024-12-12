@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-
 import { chapters, studentChapterProgress, studentCourses } from "src/storage/schema";
 
 @Injectable()

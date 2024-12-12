@@ -1,8 +1,9 @@
 import { Module } from "@nestjs/common";
 
 import { StatisticsModule } from "src/statistics/statistics.module";
-import { StudentLessonProgressService } from "./studentLessonProgress.service";
+
 import { StudentLessonProgressController } from "./studentLessonProgress.controller";
+import { StudentLessonProgressService } from "./studentLessonProgress.service";
 
 @Module({
   imports: [StatisticsModule],

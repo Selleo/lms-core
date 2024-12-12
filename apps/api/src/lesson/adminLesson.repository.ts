@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, inArray, sql, max } from "drizzle-orm";
+import { eq, and, inArray, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import {
@@ -8,9 +8,10 @@ import {
   studentQuestionAnswers,
   lessons,
 } from "src/storage/schema";
+
+import type { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
-import { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
 
 @Injectable()
 export class AdminLessonRepository {

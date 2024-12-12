@@ -1,20 +1,13 @@
 import {
-  ConflictException,
   Inject,
   Injectable,
-  NotFoundException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { EventBus } from "@nestjs/cqrs";
 
 import { DatabasePg } from "src/common";
-
-import { LESSON_ITEM_TYPE, LESSON_TYPE } from "./chapter.type";
-
-import type { UUIDType } from "src/common";
 import { FileService } from "src/file/file.service";
+
 import { ChapterRepository } from "./repositories/chapter.repository";
-import { ShowChapterResponse } from "./schemas/chapter.schema";
 
 @Injectable()
 export class ChapterService {

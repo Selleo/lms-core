@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ConflictException,
   Inject,
   Injectable,
   NotAcceptableException,
@@ -8,16 +7,13 @@ import {
 } from "@nestjs/common";
 
 import { DatabasePg } from "src/common";
-import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
 import { QuestionsRepository } from "./questions.repository";
-import { QUESTION_TYPE } from "./schema/questions.types";
 
 import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
-import { StudentLessonProgressService } from "src/studentLessonProgress/studentLessonProgress.service";
-import { LessonRepository } from "src/lesson/lesson.repository";
+
 
 @Injectable()
 export class QuestionService {
