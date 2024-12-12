@@ -127,6 +127,7 @@ export interface GetUsersResponse {
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetUserByIdResponse {
@@ -273,6 +274,7 @@ export interface GetAllCategoriesResponse {
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetCategoryByIdResponse {
@@ -341,6 +343,7 @@ export interface GetAllCoursesResponse {
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetStudentCoursesResponse {
@@ -370,6 +373,7 @@ export interface GetStudentCoursesResponse {
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetAvailableCoursesResponse {
@@ -399,6 +403,7 @@ export interface GetAvailableCoursesResponse {
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetTeacherCoursesResponse {
@@ -633,6 +638,12 @@ export interface BetaUpdateLessonResponse {
   };
 }
 
+export interface RemoveLessonResponse {
+  data: {
+    message: string;
+  };
+}
+
 export type BetaCreateChapterBody = {
   title: string;
   chapterProgress?: "completed" | "in_progress" | "not_started";
@@ -651,6 +662,12 @@ export interface BetaCreateChapterResponse {
   data: {
     /** @format uuid */
     id: string;
+    message: string;
+  };
+}
+
+export interface RemoveChapterResponse {
+  data: {
     message: string;
   };
 }
@@ -1725,6 +1742,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name LessonControllerRemoveLesson
+     * @request DELETE:/api/lesson
+     */
+    lessonControllerRemoveLesson: (
+      query: {
+        /** @format uuid */
+        lessonId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<RemoveLessonResponse, any>({
+        path: `/api/lesson`,
+        method: "DELETE",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ChapterControllerBetaCreateChapter
      * @request POST:/api/chapter/beta-create-chapter
      */
@@ -1734,6 +1772,27 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerRemoveChapter
+     * @request DELETE:/api/chapter
+     */
+    chapterControllerRemoveChapter: (
+      query: {
+        /** @format uuid */
+        chapterId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<RemoveChapterResponse, any>({
+        path: `/api/chapter`,
+        method: "DELETE",
+        query: query,
         format: "json",
         ...params,
       }),

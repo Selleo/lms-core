@@ -17,6 +17,10 @@ import type * as schema from "src/storage/schema";
 export class AdminLessonRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
+  async getLesson(id: UUIDType) {
+    return await this.db.select().from(lessons).where(eq(lessons.id, id));
+  }
+
   async createLessonForChapter(data: CreateLessonBody, authorId: UUIDType) {
     const [lesson] = await this.db.insert(lessons).values(data).returning();
     return lesson;
@@ -108,6 +112,29 @@ export class AdminLessonRepository {
       .select()
       .from(studentQuestionAnswers)
       .where(eq(studentQuestionAnswers.questionId, questionId));
+  }
+
+  async removeLesson(lessonId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return await dbInstance.delete(lessons).where(eq(lessons.id, lessonId)).returning();
+  }
+
+  async updateLessonDisplayOrder(chapterId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return await dbInstance.execute(sql`
+        WITH ranked_chapters AS (
+          SELECT id, row_number() OVER (ORDER BY display_order) AS new_display_order
+          FROM ${lessons}
+          WHERE chapter_id = ${chapterId}
+        )
+        UPDATE ${lessons} cc
+        SET display_order = rc.new_display_order
+        FROM ranked_chapters rc
+        WHERE cc.id = rc.id
+          AND cc.chapter_id = ${chapterId}
+      `);
   }
 
   // async getLessonStudentAnswers(lessonId: UUIDType) {

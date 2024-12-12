@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -179,24 +179,20 @@ export class ChapterController {
   //   });
   // }
 
-  // @Delete("chapter/:courseId/:chapterId")
-  // @Roles(USER_ROLES.teacher, USER_ROLES.admin)
-  // @Validate({
-  //   request: [
-  //     { type: "param", name: "courseId", schema: UUIDSchema },
-  //     { type: "param", name: "chapterId", schema: UUIDSchema },
-  //   ],
-  //   response: baseResponse(Type.Object({ message: Type.String() })),
-  // })
-  // async removeChapter(
-  //   @Query("courseId") courseId: UUIDType,
-  //   @Query("chapterId") chapterId: UUIDType,
-  // ): Promise<BaseResponse<{ message: string }>> {
-  //   await this.adminLessonsService.removeChapter(courseId, chapterId);
-  //   return new BaseResponse({
-  //     message: "Lesson removed from course successfully",
-  //   });
-  // }
+  @Delete()
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [{ type: "query", name: "chapterId", schema: UUIDSchema, required: true }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async removeChapter(
+    @Query("chapterId") chapterId: UUIDType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminChapterService.removeChapter(chapterId);
+    return new BaseResponse({
+      message: "Lesson removed from course successfully",
+    });
+  }
 
   // @Delete("lesson/:chapterId/:lessonId")
   // @Roles(USER_ROLES.teacher, USER_ROLES.admin)

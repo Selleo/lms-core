@@ -1615,6 +1615,33 @@
         }
       }
     },
+    "/api/lesson": {
+      "delete": {
+        "operationId": "LessonController_removeLesson",
+        "parameters": [
+          {
+            "name": "lessonId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/chapter/beta-create-chapter": {
       "post": {
         "operationId": "ChapterController_betaCreateChapter",
@@ -1635,6 +1662,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BetaCreateChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chapter": {
+      "delete": {
+        "operationId": "ChapterController_removeChapter",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveChapterResponse"
                 }
               }
             }
@@ -3994,6 +4048,25 @@
           "data"
         ]
       },
+      "RemoveLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "BetaCreateChapterBody": {
         "type": "object",
         "allOf": [
@@ -4072,6 +4145,25 @@
             },
             "required": [
               "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RemoveChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
               "message"
             ]
           }

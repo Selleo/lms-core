@@ -234,20 +234,16 @@ export class AdminChapterService {
   //   await this.adminChapterRepository.updateDisplayOrderLessonsInCourse(courseId, lessonId);
   // }
 
-  // async removeChapter(courseId: string, chapterId: string) {
-  //   const lessonItemsList = await this.adminChapterRepository.getBetaLessons(chapterId);
+  async removeChapter(chapterId: UUIDType) {
+    const [chapter] = await this.adminChapterRepository.getChapterById(chapterId);
 
-  //   const result = await this.adminChapterRepository.removeChapterAndReferences(
-  //     chapterId,
-  //     lessonItemsList as LessonItemWithContentSchema[],
-  //   );
+    if (!chapter) throw new NotFoundException("Chapter not found");
 
-  //   if (result.length === 0) {
-  //     throw new NotFoundException("Lesson not found in this course");
-  //   }
-
-  //   await this.adminChapterRepository.updateChapterDisplayOrder(courseId, chapterId);
-  // }
+    await this.db.transaction(async (trx) => {
+      await this.adminChapterRepository.removeChapter(chapterId, trx);
+      await this.adminChapterRepository.updateChapterDisplayOrder(chapter.courseId, trx);
+    });
+  }
 
   // private getFiltersConditions(filters: LessonsFilterSchema) {
   //   const conditions = [];
