@@ -196,13 +196,13 @@ const Courses = () => {
   };
 
   const handleRowClick = (courseId: string) => {
-    navigate(courseId);
+    navigate(`/admin/beta-courses/${courseId}`);
   };
 
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between gap-2">
-        <Link to="new">
+        <Link to="/admin/beta-courses/new">
           <Button variant="outline">Create New</Button>
         </Link>
         <SearchFilter
