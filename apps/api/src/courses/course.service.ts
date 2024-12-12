@@ -327,7 +327,7 @@ export class CourseService {
             WHERE ${studentChapterProgress.chapterId} = ${chapters.id}
               AND ${studentChapterProgress.courseId} = ${course.id}
               AND ${studentChapterProgress.studentId} = ${userId}
-              AND ${studentChapterProgress.completedAt}
+              AND ${studentChapterProgress.completedAt} IS NOT NULL
           )::BOOLEAN`,
         lessonCount: chapters.lessonCount,
         completedLessonCount: sql<number>`COALESCE(${studentChapterProgress.completedLessonCount}, 0)`,
@@ -342,6 +342,7 @@ export class CourseService {
             ) = (
               SELECT COUNT(*)
               FROM ${studentLessonProgress}
+              LEFT JOIN ${lessons} ON ${lessons.chapterId} = ${chapters.id}
               WHERE ${studentLessonProgress.lessonId} = ${lessons.id}
                 AND ${studentLessonProgress.studentId} = ${userId}
             )
@@ -349,6 +350,7 @@ export class CourseService {
             WHEN (
               SELECT COUNT(*)
               FROM ${studentLessonProgress}
+              LEFT JOIN ${lessons} ON ${lessons.id} = ${studentLessonProgress.lessonId}     
               WHERE ${studentLessonProgress.lessonId} = ${lessons.id}
                 AND ${studentLessonProgress.studentId} = ${userId}
             ) > 0
@@ -520,9 +522,32 @@ export class CourseService {
     };
   }
 
+  //TODO: Needs to be refactored
   async getTeacherCourses(authorId: UUIDType): Promise<AllCoursesForTeacherResponse> {
     return this.db
-      .select(this.getSelectField())
+      .select({
+        id: courses.id,
+        description: sql<string>`${courses.description}`,
+        title: courses.title,
+        thumbnailUrl: courses.thumbnailS3Key,
+        authorId: sql<string>`${courses.authorId}`,
+        author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+        authorEmail: sql<string>`${users.email}`,
+        category: sql<string>`${categories.title}`,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+        enrolledParticipantCount: sql<number>`0`,
+        courseChapterCount: courses.chapterCount,
+        completedChapterCount: sql<number>`0`,
+        priceInCents: courses.priceInCents,
+        currency: courses.currency,
+        hasFreeChapters: sql<boolean>`
+        EXISTS (
+          SELECT 1
+          FROM ${chapters}
+          WHERE ${chapters.courseId} = ${courses.id}
+            AND ${chapters.isFreemium} = true
+        )`,
+      })
       .from(courses)
       .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
       .leftJoin(categories, eq(courses.categoryId, categories.id))
@@ -545,8 +570,6 @@ export class CourseService {
         users.email,
         studentCourses.studentId,
         categories.title,
-        coursesSummaryStats.freePurchasedCount,
-        coursesSummaryStats.paidPurchasedCount,
       )
       .orderBy(
         sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NULL THEN TRUE ELSE FALSE END`,

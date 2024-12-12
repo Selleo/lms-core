@@ -60,7 +60,7 @@ export default function CoursesViewPage() {
       </BreadcrumbList>
       <div className="flex flex-col md:flex-row h-full gap-6">
         <CourseViewMainCard {...course} />
-        <LessonsList lessons={course.lessons} isEnrolled={course.enrolled || isAdmin} />
+        <LessonsList lessons={course.chapters} isEnrolled={course.enrolled || isAdmin} />
       </div>
     </PageWrapper>
   );

@@ -19,7 +19,7 @@ export const courseSchema = Type.Object({
   currency: Type.String(),
   isPublished: Type.Optional(Type.Boolean()),
   createdAt: Type.Optional(Type.String()),
-  hasFreeLessons: Type.Optional(Type.Boolean()),
+  hasFreeChapters: Type.Optional(Type.Boolean()),
 });
 
 export const allCoursesSchema = Type.Array(courseSchema);
