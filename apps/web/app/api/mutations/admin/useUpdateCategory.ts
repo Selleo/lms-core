@@ -17,7 +17,7 @@ export function useUpdateCategory() {
 
   return useMutation({
     mutationFn: async (options: UpdateCategoryOptions) => {
-      const response = await ApiClient.api.categoriesControllerUpdateCategory(
+      const response = await ApiClient.api.categoryControllerUpdateCategory(
         options.categoryId,
         options.data,
       );

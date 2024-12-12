@@ -4,7 +4,6 @@ import { eq, and, sql } from "drizzle-orm";
 import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, lessons } from "src/storage/schema";
 
-
 @Injectable()
 export class AdminChapterRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}

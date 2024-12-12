@@ -1,6 +1,5 @@
 import { sql } from "drizzle-orm/sql";
 
-
 // import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
 // import { QUESTION_TYPE } from "./questions/schema/questions.types";
 

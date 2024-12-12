@@ -13,11 +13,12 @@ export class BaseResponse<T> {
   }
 }
 
-export class PaginatedResponse<T, K extends Pagination = Pagination> {
+export class PaginatedResponse<T, K extends Pagination = Pagination, F = Record<string, unknown>> {
   data: T;
   pagination: K;
+  appliedFilters?: F;
 
-  constructor(data: { data: T; pagination: K }) {
+  constructor(data: { data: T; pagination: K; appliedFilters?: F }) {
     Object.assign(this, data);
   }
 }
@@ -40,6 +41,7 @@ export function paginatedResponse(data: TSchema) {
   return Type.Object({
     data,
     pagination: pagination,
+    appliedFilters: Type.Optional(Type.Record(Type.String(), Type.Any(), Type.Undefined())),
   });
 }
 

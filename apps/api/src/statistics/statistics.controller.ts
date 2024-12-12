@@ -4,7 +4,6 @@ import { RolesGuard } from "src/common/guards/roles.guard";
 
 import { StatisticsService } from "./statistics.service";
 
-
 @UseGuards(RolesGuard)
 @Controller("statistics")
 export class StatisticsController {

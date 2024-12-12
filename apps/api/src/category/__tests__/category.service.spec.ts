@@ -5,25 +5,25 @@ import { createUnitTest, type TestContext } from "test/create-unit-test";
 import { createCategoryFactory } from "test/factory/category.factory";
 import { truncateAllTables } from "test/helpers/test-helpers";
 
-import { CategoriesService } from "../categories.service";
+import { CategoryService } from "../category.service";
 
-import type { CategoriesQuery } from "../api/categories.types";
+import type { CategoryQuery } from "../schemas/category.types";
 import type { DatabasePg } from "src/common";
 import type { UserRole } from "src/users/schemas/user-roles";
 
 const CATEGORIES_COUNT = 20;
 
-describe("CategoriesService", () => {
+describe("CategoryService", () => {
   let testContext: TestContext;
-  let categoriesServices: CategoriesService;
+  let categoryServices: CategoryService;
   let db: DatabasePg;
   let categoryFactory: ReturnType<typeof createCategoryFactory>;
-  let query: CategoriesQuery;
+  let query: CategoryQuery;
   let userRole: UserRole;
 
   beforeAll(async () => {
     testContext = await createUnitTest();
-    categoriesServices = testContext.module.get(CategoriesService);
+    categoryServices = testContext.module.get(CategoryService);
     db = testContext.db;
     categoryFactory = createCategoryFactory(db);
     await categoryFactory.createList(CATEGORIES_COUNT);
@@ -41,7 +41,7 @@ describe("CategoriesService", () => {
         const perPage = 5;
         const page = 2,
           query = { page, perPage };
-        const categories = await categoriesServices.getCategories(query, userRole);
+        const categories = await categoryServices.getCategories(query, userRole);
 
         expect(categories.data).toHaveLength(perPage);
         expect(categories.pagination.page).toBe(page);
@@ -53,7 +53,7 @@ describe("CategoriesService", () => {
     describe("when request don't provide any query params", () => {
       it("returns correct data format", async () => {
         query = {};
-        const categories = await categoriesServices.getCategories(query, userRole);
+        const categories = await categoryServices.getCategories(query, userRole);
 
         expect(categories.data).toBeDefined();
         expect(categories.pagination).toBeDefined();
@@ -64,7 +64,7 @@ describe("CategoriesService", () => {
 
       it("returns all categories with default pagination data", async () => {
         query = {};
-        const categories = await categoriesServices.getCategories(query, userRole);
+        const categories = await categoryServices.getCategories(query, userRole);
 
         expect(categories.data).toHaveLength(DEFAULT_PAGE_SIZE);
         expect(categories.pagination.page).toBe(1);
@@ -79,7 +79,7 @@ describe("CategoriesService", () => {
         const biologyCategory = categoryFactory.build({ title: "biology" });
         const mathCategory = categoryFactory.build({ title: "math" });
         await db.insert(categories).values([historyCategory, biologyCategory, mathCategory]);
-        const sortedCategories = await categoriesServices.getCategories(query, userRole);
+        const sortedCategories = await categoryServices.getCategories(query, userRole);
 
         expect(sortedCategories.data[0].title).toBe(biologyCategory.title);
       });
@@ -93,7 +93,7 @@ describe("CategoriesService", () => {
         const mathCategory = categoryFactory.build({ title: "math" });
         await db.insert(categories).values([historyCategory, biologyCategory, mathCategory]);
         query = { filters: { title: "ath" } };
-        const filterCategories = await categoriesServices.getCategories(query, userRole);
+        const filterCategories = await categoryServices.getCategories(query, userRole);
         expect(filterCategories.data[0].title).toBe("math");
         expect(filterCategories.data).toHaveLength(1);
       });
@@ -102,7 +102,7 @@ describe("CategoriesService", () => {
     describe("when there is no data", () => {
       it("returns empty array", async () => {
         await truncateAllTables(db);
-        const categories = await categoriesServices.getCategories(query, userRole);
+        const categories = await categoryServices.getCategories(query, userRole);
 
         expect(categories.data).toHaveLength(0);
         expect(categories.data).toBeDefined();

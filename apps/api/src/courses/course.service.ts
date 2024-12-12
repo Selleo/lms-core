@@ -56,7 +56,7 @@ import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
-import type { ChapterProgressType} from "src/chapter/schemas/chapter.types";
+import type { ChapterProgressType } from "src/chapter/schemas/chapter.types";
 import type { Pagination, UUIDType } from "src/common";
 import type { LessonItemWithContentSchema } from "src/lesson/lessonItem.schema";
 

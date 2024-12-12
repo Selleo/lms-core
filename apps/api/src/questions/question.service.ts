@@ -14,7 +14,6 @@ import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.sch
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
-
 @Injectable()
 export class QuestionService {
   constructor(

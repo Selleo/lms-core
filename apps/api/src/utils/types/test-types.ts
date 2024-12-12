@@ -1,7 +1,3 @@
-
-
-
-
 // const niceCourseData = Type.Intersect([
 //   Type.Omit(baseCourseSchema, ["categoryId"]),
 //   Type.Object({

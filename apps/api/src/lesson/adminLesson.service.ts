@@ -1,11 +1,4 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from "@nestjs/common";
-
-
+import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
 
 import { DatabasePg } from "src/common";
 

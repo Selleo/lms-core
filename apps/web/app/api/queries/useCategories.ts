@@ -14,7 +14,7 @@ export const CATEGORIES_QUERY_KEY = ["categories"];
 export const categoriesQueryOptions = (searchParams?: CategorySearchParams) => ({
   queryKey: [...CATEGORIES_QUERY_KEY, searchParams],
   queryFn: async () => {
-    const response = await ApiClient.api.categoriesControllerGetAllCategories({
+    const response = await ApiClient.api.categoryControllerGetAllCategories({
       page: 1,
       perPage: 100,
       ...(searchParams?.title && { title: searchParams.title }),

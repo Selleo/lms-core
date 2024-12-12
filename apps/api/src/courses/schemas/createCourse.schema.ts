@@ -1,6 +1,5 @@
 import { type Static, Type } from "@sinclair/typebox";
 
-
 export const baseCourseSchema = Type.Object({
   title: Type.String(),
   description: Type.String(),

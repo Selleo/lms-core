@@ -25,23 +25,20 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
 
-import { CategoriesService } from "../categories.service";
+import { CategoryService } from "./category.service";
 import {
   type AllCategoriesResponse,
   type CategorySchema,
   categorySchema,
-} from "../schemas/category.schema";
-import {
-  type SortCategoryFieldsOptions,
-  sortCategoryFieldsOptions,
-} from "../schemas/categoryQuery";
-import { categoryCreateSchema, type CategoryInsert } from "../schemas/createCategorySchema";
-import { type CategoryUpdateBody, categoryUpdateSchema } from "../schemas/updateCategorySchema";
+} from "./schemas/category.schema";
+import { type SortCategoryFieldsOptions, sortCategoryFieldsOptions } from "./schemas/categoryQuery";
+import { categoryCreateSchema, type CategoryInsert } from "./schemas/createCategorySchema";
+import { type CategoryUpdateBody, categoryUpdateSchema } from "./schemas/updateCategorySchema";
 
 @UseGuards(RolesGuard)
-@Controller("categories")
-export class CategoriesController {
-  constructor(private readonly categoriesService: CategoriesService) {}
+@Controller("category")
+export class CategoryController {
+  constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
   @Roles(...Object.values(USER_ROLES))
@@ -66,7 +63,7 @@ export class CategoriesController {
     const filters = { archived, title };
     const query = { filters, page, perPage, sort };
 
-    const data = await this.categoriesService.getCategories(query, currentUserRole);
+    const data = await this.categoryService.getCategories(query, currentUserRole);
 
     return new PaginatedResponse(data);
   }
@@ -78,7 +75,7 @@ export class CategoriesController {
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
   })
   async getCategoryById(@Param("id") id: UUIDType): Promise<BaseResponse<CategorySchema>> {
-    const category = await this.categoriesService.getCategoryById(id);
+    const category = await this.categoryService.getCategoryById(id);
 
     return new BaseResponse(category);
   }
@@ -97,7 +94,7 @@ export class CategoriesController {
   async createCategory(
     @Body() createCategoryBody: CategoryInsert,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
-    const { id } = await this.categoriesService.createCategory(createCategoryBody);
+    const { id } = await this.categoryService.createCategory(createCategoryBody);
 
     return new BaseResponse({ id, message: "Category created" });
   }
@@ -120,7 +117,7 @@ export class CategoriesController {
       throw new UnauthorizedException("You don't have permission to update category");
     }
 
-    const category = await this.categoriesService.updateCategory(id, updateCategoryBody);
+    const category = await this.categoryService.updateCategory(id, updateCategoryBody);
 
     return new BaseResponse(category);
   }

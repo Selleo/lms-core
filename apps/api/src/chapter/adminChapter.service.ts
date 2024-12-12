@@ -10,9 +10,6 @@ import { AdminChapterRepository } from "./repositories/adminChapter.repository";
 import type { CreateChapterBody } from "./schemas/chapter.schema";
 import type { UUIDType } from "src/common";
 
-
-
-
 @Injectable()
 export class AdminChapterService {
   constructor(
@@ -225,26 +222,6 @@ export class AdminChapterService {
 
   // async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {
   //   return await this.adminChapterRepository.toggleLessonAsFree(courseId, lessonId, isFree);
-  // }
-
-  // async addLessonToCourse(courseId: string, lessonId: string, displayOrder?: number) {
-  //   try {
-  //     if (displayOrder === undefined) {
-  //       const maxOrderResult = await this.adminChapterRepository.getMaxOrderLessonsInCourse(
-  //         courseId,
-  //       );
-
-  //       displayOrder = maxOrderResult + 1;
-  //     }
-
-  //     await this.adminChapterRepository.assignLessonToCourse(courseId, lessonId, displayOrder);
-  //   } catch (error) {
-  //     if (error.code === "23505") {
-  //       // postgres uniq error code
-  //       throw new ConflictException("This lesson is already added to the course");
-  //     }
-  //     throw error;
-  //   }
   // }
 
   // async removeLessonFromCourse(courseId: string, lessonId: string) {

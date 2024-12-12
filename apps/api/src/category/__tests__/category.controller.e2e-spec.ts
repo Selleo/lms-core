@@ -12,7 +12,7 @@ import type { DatabasePg } from "src/common";
 
 const CATEGORIES_COUNT = 10;
 
-describe("CategoriesController (e2e)", () => {
+describe("CategoryController (e2e)", () => {
   let app: INestApplication;
   let categoryFactory: ReturnType<typeof createCategoryFactory>;
   let db: DatabasePg;

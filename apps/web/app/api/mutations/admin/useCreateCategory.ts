@@ -16,7 +16,7 @@ export function useCreateCategory() {
 
   return useMutation({
     mutationFn: async (options: CreateCategoryOptions) => {
-      const response = await ApiClient.api.categoriesControllerCreateCategory(options.data);
+      const response = await ApiClient.api.categoryControllerCreateCategory(options.data);
 
       return response.data;
     },

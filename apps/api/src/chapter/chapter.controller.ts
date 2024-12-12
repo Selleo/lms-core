@@ -1,20 +1,8 @@
-import {
-  Body,
-  Controller,
-  Patch,
-  Post,
-  Query,
-  UseGuards,
-} from "@nestjs/common";
+import { Body, Controller, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
-import {
-  baseResponse,
-  BaseResponse,
-  UUIDSchema,
-  type UUIDType,
-} from "src/common";
+import { baseResponse, BaseResponse, UUIDSchema, type UUIDType } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
@@ -22,12 +10,7 @@ import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { AdminChapterService } from "./adminChapter.service";
 import { ChapterService } from "./chapter.service";
-import {
-  CreateChapterBody,
-  createChapterSchema,
-} from "./schemas/chapter.schema";
-
-
+import { CreateChapterBody, createChapterSchema } from "./schemas/chapter.schema";
 
 @Controller("chapter")
 @UseGuards(RolesGuard)
@@ -175,32 +158,6 @@ export class ChapterController {
   // ): Promise<BaseResponse<{ message: string }>> {
   //   await this.adminLessonsService.updateLesson(id, body);
   //   return new BaseResponse({ message: "Text block updated successfully" });
-  // }
-
-  // @Post("add")
-  // @Roles(USER_ROLES.teacher, USER_ROLES.admin)
-  // @Validate({
-  //   request: [
-  //     {
-  //       type: "body",
-  //       schema: Type.Object({
-  //         courseId: UUIDSchema,
-  //         lessonId: UUIDSchema,
-  //         displayOrder: Type.Optional(Type.Number()),
-  //       }),
-  //     },
-  //   ],
-  //   response: baseResponse(Type.Object({ message: Type.String() })),
-  // })
-  // async addLessonToCourse(
-  //   @Body() body: { courseId: string; lessonId: string; displayOrder?: number },
-  // ): Promise<BaseResponse<{ message: string }>> {
-  //   await this.adminLessonsService.addLessonToCourse(
-  //     body.courseId,
-  //     body.lessonId,
-  //     body.displayOrder,
-  //   );
-  //   return new BaseResponse({ message: "Lesson added to course successfully" });
   // }
 
   // @Delete(":courseId/:lessonId")
