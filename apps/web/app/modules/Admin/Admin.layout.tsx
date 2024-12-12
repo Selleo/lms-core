@@ -8,6 +8,7 @@ import { Navigation } from "~/components/Navigation";
 import { adminNavigationConfig, mapNavigationItems } from "~/config/navigationConfig";
 import { RouteGuard } from "~/Guards/RouteGuard";
 import { useUserRole } from "~/hooks/useUserRole";
+import { cn } from "~/lib/utils";
 
 import Loader from "../common/Loader/Loader";
 
@@ -50,7 +51,6 @@ const AdminGuard = ({ children }: PropsWithChildren) => {
 
 const AdminLayout = () => {
   const { pathname } = useLocation();
-  // const hideTopbarAndSidebar = pathname === "/admin/beta-courses/new";
 
   const hideTopbarAndSidebar = match(pathname)
     .with("/admin/beta-courses/new", () => true)
@@ -63,7 +63,11 @@ const AdminLayout = () => {
         {!hideTopbarAndSidebar && (
           <Navigation menuItems={mapNavigationItems(adminNavigationConfig)} />
         )}
-        <main className="bg-primary-50 flex-1 overflow-y-auto p-6">
+        <main
+          className={cn("bg-primary-50 flex-1 overflow-y-auto p-6", {
+            "bg-white p-0": hideTopbarAndSidebar,
+          })}
+        >
           <Suspense fallback={<Loader />}>
             <AdminGuard>
               <RouteGuard>

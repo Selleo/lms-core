@@ -1,28 +1,27 @@
+import { Icon } from "~/components/Icon";
 import { cn } from "~/lib/utils";
 
-import { Icon } from "../Icon";
+import type { STEPS } from "../constants/scorm.consts";
 
 interface ProgressProps {
   currentStep: number;
-  totalSteps: number;
+  steps: typeof STEPS;
 }
 
-export const Progress = ({ currentStep, totalSteps }: ProgressProps) => {
-  const steps = Array.from({ length: totalSteps }, (_, index) => index);
-
+export const Progress = ({ currentStep, steps }: ProgressProps) => {
   return (
     <div className="w-full flex items-center justify-between mb-8">
-      {steps.map((index) => {
+      {steps.map((step, index) => {
         const state = (() => {
-          if (currentStep === index + 1) return "current";
-          if (currentStep > index + 1) return "previous";
+          if (currentStep === index) return "current";
+          if (currentStep > index) return "previous";
           return "upcoming";
         })();
 
-        const isLastStep = index === totalSteps - 1;
+        const isLastStep = index === steps.length - 1;
 
         return (
-          <div key={index} className="flex items-center">
+          <div key={step.id} className={cn("flex items-center", !isLastStep && "flex-1")}>
             <div
               className={cn(
                 "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ease-in-out bg-primary-50 relative",
@@ -71,16 +70,18 @@ export const Progress = ({ currentStep, totalSteps }: ProgressProps) => {
             </div>
 
             {!isLastStep && (
-              <div className="mx-4 w-12 h-1 rounded-full bg-primary-100">
-                <div
-                  className={cn(
-                    "h-full bg-success-200 transition-all duration-500 ease-in-out rounded-full",
-                    {
-                      "w-full": currentStep > index + 1,
-                      "w-0": currentStep <= index + 1,
-                    },
-                  )}
-                />
+              <div className="flex-1 mx-4">
+                <div className="h-1 rounded-full bg-primary-100">
+                  <div
+                    className={cn(
+                      "h-full bg-success-200 transition-all duration-500 ease-in-out rounded-full",
+                      {
+                        "w-full": currentStep > index,
+                        "w-0": currentStep <= index,
+                      },
+                    )}
+                  />
+                </div>
               </div>
             )}
           </div>
