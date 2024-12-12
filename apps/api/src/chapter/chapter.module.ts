@@ -9,7 +9,6 @@ import { ChapterService } from "./chapter.service";
 import { AdminChapterRepository } from "./repositories/adminChapter.repository";
 import { ChapterRepository } from "./repositories/chapter.repository";
 
-
 @Module({
   imports: [FileModule, LessonModule],
   controllers: [ChapterController],

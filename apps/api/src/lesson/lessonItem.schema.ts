@@ -2,7 +2,6 @@ import { type Static, Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
 
-
 // export const lessonItemToAdd = Type.Object({
 //   id: UUIDSchema,
 //   type: Type.Union(LESSON_TYPES.map((type) => Type.Literal(type))),

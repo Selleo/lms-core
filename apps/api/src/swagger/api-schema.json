@@ -688,9 +688,9 @@
         }
       }
     },
-    "/api/categories": {
+    "/api/category": {
       "get": {
-        "operationId": "CategoriesController_getAllCategories",
+        "operationId": "CategoryController_getAllCategories",
         "parameters": [
           {
             "name": "title",
@@ -764,7 +764,7 @@
         }
       },
       "post": {
-        "operationId": "CategoriesController_createCategory",
+        "operationId": "CategoryController_createCategory",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -789,9 +789,9 @@
         }
       }
     },
-    "/api/categories/{id}": {
+    "/api/category/{id}": {
       "get": {
-        "operationId": "CategoriesController_getCategoryById",
+        "operationId": "CategoryController_getCategoryById",
         "parameters": [
           {
             "name": "id",
@@ -816,7 +816,7 @@
         }
       },
       "patch": {
-        "operationId": "CategoriesController_updateCategory",
+        "operationId": "CategoryController_updateCategory",
         "parameters": [
           {
             "name": "id",
@@ -2182,6 +2182,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -2673,6 +2679,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -2924,6 +2936,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -3033,6 +3051,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -3142,6 +3166,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [

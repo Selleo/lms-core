@@ -1,7 +1,4 @@
-import {
-  Inject,
-  Injectable,
-} from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { EventBus } from "@nestjs/cqrs";
 
 import { DatabasePg } from "src/common";

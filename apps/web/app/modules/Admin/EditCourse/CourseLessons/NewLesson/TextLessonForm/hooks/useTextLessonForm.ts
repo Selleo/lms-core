@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 
 import { useCreateBetaTextLesson } from "~/api/mutations/admin/useBetaCreateTextLesson";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
-import { useUpdateTextBlockItem } from "~/api/mutations/admin/useUpdateTextBlockItem";
+import { useUpdateTextLesson } from "~/api/mutations/admin/useUpdateTextLesson";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
@@ -32,7 +32,7 @@ export const useTextLessonForm = ({
 }: TextLessonFormProps) => {
   const { id: courseId } = useParams();
   const { mutateAsync: createTextBlock } = useCreateBetaTextLesson();
-  const { mutateAsync: updateTextBlockItem } = useUpdateTextBlockItem();
+  const { mutateAsync: updateTextBlockItem } = useUpdateTextLesson();
   const { data: currentUser } = useCurrentUserSuspense();
   const { mutateAsync: deleteLesson } = useDeleteLesson();
 

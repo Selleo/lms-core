@@ -235,23 +235,6 @@ export class AdminLessonRepository {
   //   return file;
   // }
 
-  // async addLessonItemToLesson(
-  //   lessonId: UUIDType,
-  //   items: LessonItemToAdd[],
-  //   trx?: PostgresJsDatabase<typeof schema>,
-  // ) {
-  //   const dbInstance = trx ?? this.db;
-
-  //   return await dbInstance.insert(lessonItems).values(
-  //     items.map((item) => ({
-  //       lessonId,
-  //       lessonItemId: item.id,
-  //       lessonItemType: item.type,
-  //       displayOrder: item.displayOrder,
-  //     })),
-  //   );
-  // }
-
   // async removeLessonItemFromLesson(
   //   lessonId: UUIDType,
   //   items: LessonItemToRemove[],

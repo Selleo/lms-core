@@ -12,7 +12,7 @@ import type { DatabasePg } from "src/common";
 
 const CATEGORIES_COUNT = 10;
 
-describe("CategoriesController (e2e)", () => {
+describe("CategoryController (e2e)", () => {
   let app: INestApplication;
   let categoryFactory: ReturnType<typeof createCategoryFactory>;
   let db: DatabasePg;
@@ -33,7 +33,7 @@ describe("CategoriesController (e2e)", () => {
 
   const password = "password123";
 
-  describe("POST /api/categories", () => {
+  describe("POST /api/category", () => {
     describe("when user is a student", () => {
       it("returns archived and createdAt equal to null", async () => {
         const user = await userFactory
@@ -41,7 +41,7 @@ describe("CategoriesController (e2e)", () => {
           .create({ role: USER_ROLES.student });
 
         const response = await request(app.getHttpServer())
-          .get("/api/categories")
+          .get("/api/category")
           .set("Cookie", await cookieFor(user, app))
           .expect(200);
 
@@ -61,7 +61,7 @@ describe("CategoriesController (e2e)", () => {
           .create({ role: USER_ROLES.admin });
 
         const response = await request(app.getHttpServer())
-          .get("/api/categories")
+          .get("/api/category")
           .set("Cookie", await cookieFor(user, app))
           .expect(200);
 
@@ -84,7 +84,7 @@ describe("CategoriesController (e2e)", () => {
           .create({ role: USER_ROLES.student });
 
         const response = await request(app.getHttpServer())
-          .get(`/api/categories?perPage=${perPage}&page=${page}`)
+          .get(`/api/category?perPage=${perPage}&page=${page}`)
           .set("Cookie", await cookieFor(user, app))
           .expect(200);
 
@@ -99,7 +99,7 @@ describe("CategoriesController (e2e)", () => {
         page = 2;
 
         const res = await request(app.getHttpServer())
-          .get(`/api/categories?perPage=${perPage}&page=${page}`)
+          .get(`/api/category?perPage=${perPage}&page=${page}`)
           .set("Cookie", await cookieFor(user, app))
           .expect(200);
 
@@ -110,7 +110,7 @@ describe("CategoriesController (e2e)", () => {
 
     describe("when the request is unauthenticated", () => {
       it("returns 401 ", async () => {
-        await request(app.getHttpServer()).get("/api/categories").expect(401);
+        await request(app.getHttpServer()).get("/api/category").expect(401);
       });
     });
   });

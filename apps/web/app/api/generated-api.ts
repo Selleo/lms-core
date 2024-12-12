@@ -1282,10 +1282,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategoriesControllerGetAllCategories
-     * @request GET:/api/categories
+     * @name CategoryControllerGetAllCategories
+     * @request GET:/api/category
      */
-    categoriesControllerGetAllCategories: (
+    categoryControllerGetAllCategories: (
       query?: {
         title?: string;
         archived?: string;
@@ -1297,7 +1297,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetAllCategoriesResponse, any>({
-        path: `/api/categories`,
+        path: `/api/category`,
         method: "GET",
         query: query,
         format: "json",
@@ -1307,12 +1307,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategoriesControllerCreateCategory
-     * @request POST:/api/categories
+     * @name CategoryControllerCreateCategory
+     * @request POST:/api/category
      */
-    categoriesControllerCreateCategory: (data: CreateCategoryBody, params: RequestParams = {}) =>
+    categoryControllerCreateCategory: (data: CreateCategoryBody, params: RequestParams = {}) =>
       this.request<CreateCategoryResponse, any>({
-        path: `/api/categories`,
+        path: `/api/category`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -1323,12 +1323,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategoriesControllerGetCategoryById
-     * @request GET:/api/categories/{id}
+     * @name CategoryControllerGetCategoryById
+     * @request GET:/api/category/{id}
      */
-    categoriesControllerGetCategoryById: (id: string, params: RequestParams = {}) =>
+    categoryControllerGetCategoryById: (id: string, params: RequestParams = {}) =>
       this.request<GetCategoryByIdResponse, any>({
-        path: `/api/categories/${id}`,
+        path: `/api/category/${id}`,
         method: "GET",
         format: "json",
         ...params,
@@ -1337,16 +1337,16 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategoriesControllerUpdateCategory
-     * @request PATCH:/api/categories/{id}
+     * @name CategoryControllerUpdateCategory
+     * @request PATCH:/api/category/{id}
      */
-    categoriesControllerUpdateCategory: (
+    categoryControllerUpdateCategory: (
       id: string,
       data: UpdateCategoryBody,
       params: RequestParams = {},
     ) =>
       this.request<UpdateCategoryResponse, any>({
-        path: `/api/categories/${id}`,
+        path: `/api/category/${id}`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,

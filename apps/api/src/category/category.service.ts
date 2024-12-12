@@ -18,20 +18,23 @@ import {
   CategorySortFields,
 } from "./schemas/categoryQuery";
 
-import type { CategoriesQuery } from "./api/categories.types";
 import type { AllCategoriesResponse } from "./schemas/category.schema";
+import type { CategoryQuery } from "./schemas/category.types";
 import type { CategoryInsert } from "./schemas/createCategorySchema";
 import type { CategoryUpdateBody } from "./schemas/updateCategorySchema";
 import type { Pagination } from "src/common";
 
 @Injectable()
-export class CategoriesService {
+export class CategoryService {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
   public async getCategories(
-    query: CategoriesQuery,
+    query: CategoryQuery,
     userRole: UserRole,
-  ): Promise<{ data: AllCategoriesResponse; pagination: Pagination }> {
+  ): Promise<{
+    data: AllCategoriesResponse;
+    pagination: Pagination;
+  }> {
     const {
       sort = CategorySortFields.title,
       perPage = DEFAULT_PAGE_SIZE,
@@ -55,7 +58,7 @@ export class CategoriesService {
       const queryDB = tx
         .select(selectedColumns)
         .from(categories)
-        .where(and(...conditions, eq(categories.archived, false)))
+        .where(and(...conditions))
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CategorySortField, isAdmin)));
 
       const dynamicQuery = queryDB.$dynamic();
@@ -67,11 +70,12 @@ export class CategoriesService {
       const [{ totalItems }] = await tx
         .select({ totalItems: count() })
         .from(categories)
-        .where(and(...conditions, eq(categories.archived, false)));
+        .where(and(...conditions));
 
       return {
         data: this.serializeCategories(data, isAdmin),
         pagination: { totalItems: totalItems, page, perPage },
+        appliedFilters: filters,
       };
     });
   }

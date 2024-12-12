@@ -10,11 +10,7 @@ import hashPassword from "./common/helpers/hashPassword";
 // import { e2eCourses } from "./e2e-data-seeds";
 // import { niceCourses } from "./nice-data-seeds";
 import { seedTruncateAllTables } from "./seed-helpers";
-import {
-  credentials,
-  userDetails,
-  users,
-} from "./storage/schema";
+import { credentials, userDetails, users } from "./storage/schema";
 import { USER_ROLES } from "./users/schemas/user-roles";
 
 import type { DatabasePg } from "./common";

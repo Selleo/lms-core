@@ -14,4 +14,3 @@ import { LessonRepository } from "./lesson.repository";
   exports: [AdminLessonService, AdminLessonRepository, LessonRepository],
 })
 export class LessonModule {}
-
