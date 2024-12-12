@@ -17,7 +17,6 @@ export const questionSchema = Type.Object({
   lessonId: UUIDSchema,
   questionId: UUIDSchema,
   questionType: Type.String(),
-  lessonItemAssociationId: UUIDSchema,
 });
 
 export type AnswerQuestionSchema = Static<typeof answerQuestionSchema>;

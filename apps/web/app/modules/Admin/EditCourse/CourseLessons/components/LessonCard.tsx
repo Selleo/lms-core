@@ -4,16 +4,16 @@ import { Icon } from "~/components/Icon";
 
 import { mapItemType, mapTypeToIcon } from "../CourseLessons.helpers";
 
-import type { LessonItem } from "../../EditCourse.types";
+import type { Lesson } from "../../EditCourse.types";
 import type { IconName } from "~/types/shared";
 
 interface LessonCardProps {
-  item: LessonItem;
-  onClickLessonCard: (lesson: LessonItem) => void;
+  item: Lesson;
+  onClickLessonCard: (lesson: Lesson) => void;
 }
 
 const LessonCard = ({ item, onClickLessonCard }: LessonCardProps) => {
-  const contentType = item.lessonItemType === "file" ? item.content.type : item.lessonItemType;
+  const contentType = item.type;
 
   const mappedItemType = useMemo(() => mapItemType(contentType), [contentType]);
   const getIcon = useMemo(() => mapTypeToIcon(contentType as string), [contentType]);
@@ -29,16 +29,17 @@ const LessonCard = ({ item, onClickLessonCard }: LessonCardProps) => {
       handleClick({} as React.MouseEvent);
     }
   };
+
   return (
     <div
-      key={item.content.id}
+      key={item.id}
       className="h-auto p-4 shadow-sm border border-gray-300 bg-white rounded-md cursor-pointer"
       draggable
       onClick={handleClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="button"
-      aria-label={`Lesson: ${item.content.title}`}
+      aria-label={`Lesson: ${item.title}`}
     >
       <div className="flex w-full">
         <div className="w-1/10 flex">
@@ -48,14 +49,8 @@ const LessonCard = ({ item, onClickLessonCard }: LessonCardProps) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Icon name={getIcon as IconName} className="mr-2" />
-              <p className="text-l">{item.content.title}</p>
+              <p className="text-l">{item.title}</p>
             </div>
-            {item?.content.state === "draft" && (
-              <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
-                <Icon name="Warning" className="mr-1" />
-                Draft
-              </span>
-            )}
           </div>
           <p className="text-m ml-8 text-gray-500 mt-2">{mappedItemType}</p>
         </div>

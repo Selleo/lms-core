@@ -18,7 +18,7 @@ export function useCreateCourse() {
 
   return useMutation({
     mutationFn: async (options: CreateCourseOptions) => {
-      const response = await ApiClient.api.coursesControllerCreateCourse(options.data);
+      const response = await ApiClient.api.courseControllerCreateCourse(options.data);
 
       return response.data;
     },

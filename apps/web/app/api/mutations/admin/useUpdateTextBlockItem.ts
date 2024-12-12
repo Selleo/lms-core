@@ -5,20 +5,20 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 
-import type { UpdateTextBlockItemBody } from "../../generated-api";
+import type { BetaUpdateLessonBody } from "../../generated-api";
 
-type UpdateTextBlockOptions = {
-  data: UpdateTextBlockItemBody;
-  textBlockId: string;
+type UpdateTextLessonOptions = {
+  data: BetaUpdateLessonBody;
+  lessonId: string;
 };
 
 export function useUpdateTextBlockItem() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: UpdateTextBlockOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateTextBlockItem(options.data, {
-        id: options.textBlockId,
+    mutationFn: async (options: UpdateTextLessonOptions) => {
+      const response = await ApiClient.api.lessonControllerBetaUpdateLesson(options.data, {
+        id: options.lessonId,
       });
 
       return response.data;

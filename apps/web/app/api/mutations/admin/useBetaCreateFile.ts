@@ -5,10 +5,10 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 
-import type { BetaCreateFileBody } from "../../generated-api";
+import type { BetaCreateLessonBody } from "../../generated-api";
 
 type CreateFileOptions = {
-  data: BetaCreateFileBody;
+  data: BetaCreateLessonBody;
 };
 
 export function useBetaCreateFileItem() {
@@ -16,7 +16,7 @@ export function useBetaCreateFileItem() {
 
   return useMutation({
     mutationFn: async (options: CreateFileOptions) => {
-      const response = await ApiClient.api.lessonsControllerBetaCreateFile(options.data);
+      const response = await ApiClient.api.lessonControllerBetaCreateLesson(options.data);
 
       return response.data;
     },

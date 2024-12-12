@@ -1,255 +1,357 @@
 import { Injectable } from "@nestjs/common";
-import {
-  differenceInDays,
-  eachDayOfInterval,
-  endOfMonth,
-  format,
-  startOfDay,
-  startOfMonth,
-  subDays,
-} from "date-fns";
 
-import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
+
+
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
-import type {
-  CourseStudentsStatsByMonth,
-  StatsByMonth,
-  UserStats,
-} from "./schemas/userStats.schema";
 
+
+
+// TODO: repair this
 @Injectable()
 export class StatisticsService {
-  constructor(
-    private statisticsRepository: StatisticsRepository,
-    private lessonsRepository: LessonsRepository,
-  ) {}
+  constructor(private statisticsRepository: StatisticsRepository) {}
 
-  async getUserStats(userId: string): Promise<UserStats> {
-    const coursesStatsByMonth: StatsByMonth[] =
-      await this.statisticsRepository.getCoursesStatsByMonth(userId);
-    const coursesTotalStats = this.calculateTotalStats(coursesStatsByMonth);
+  // async getUserStats(userId: string): Promise<UserStats> {
+  //   const coursesStatsByMonth: StatsByMonth[] =
+  //     await this.statisticsRepository.getCoursesStatsByMonth(userId);
+  //   const coursesTotalStats = this.calculateTotalStats(coursesStatsByMonth);
 
-    const lessonsStatsByMonth: StatsByMonth[] =
-      await this.statisticsRepository.getLessonsStatsByMonth(userId);
-    const lessonsTotalStats = this.calculateTotalStats(lessonsStatsByMonth);
+  //   const lessonsStatsByMonth: StatsByMonth[] =
+  //     await this.statisticsRepository.getLessonsStatsByMonth(userId);
+  //   const lessonsTotalStats = this.calculateTotalStats(lessonsStatsByMonth);
 
-    const quizStats = await this.statisticsRepository.getQuizStats(userId);
-    const lastLesson = await this.getLastLesson(userId);
-    const activityStats = await this.statisticsRepository.getActivityStats(userId);
+  //   const quizStats = await this.statisticsRepository.getQuizStats(userId);
+  //   const lastLesson = await this.getLastLesson(userId);
+  //   const activityStats = await this.statisticsRepository.getActivityStats(userId);
 
-    return {
-      courses: this.formatStats(coursesStatsByMonth),
-      lessons: this.formatStats(lessonsStatsByMonth),
-      quizzes: {
-        totalAttempts: quizStats.totalAttempts,
-        totalCorrectAnswers: quizStats.totalCorrectAnswers,
-        totalWrongAnswers: quizStats.totalWrongAnswers,
-        totalQuestions: quizStats.totalQuestions,
-        averageScore: quizStats.averageScore,
-        uniqueQuizzesTaken: quizStats.uniqueQuizzesTaken,
-      },
-      averageStats: {
-        lessonStats: lessonsTotalStats,
-        courseStats: coursesTotalStats,
-      },
-      lastLesson,
-      streak: {
-        current: activityStats.currentStreak ?? 0,
-        longest: activityStats.longestStreak ?? 0,
-        activityHistory: activityStats?.activityHistory || {},
-      },
-    };
-  }
+  //   // TODO: add last lesson
+  //   return {
+  //     courses: this.formatStats(coursesStatsByMonth),
+  //     lessons: this.formatStats(lessonsStatsByMonth),
+  //     quizzes: {
+  //       totalAttempts: quizStats.totalAttempts,
+  //       totalCorrectAnswers: quizStats.totalCorrectAnswers,
+  //       totalWrongAnswers: quizStats.totalWrongAnswers,
+  //       totalQuestions: quizStats.totalQuestions,
+  //       averageScore: quizStats.averageScore,
+  //       uniqueQuizzesTaken: quizStats.uniqueQuizzesTaken,
+  //     },
+  //     averageStats: {
+  //       lessonStats: lessonsTotalStats,
+  //       courseStats: coursesTotalStats,
+  //     },
+  //     // lastLesson,
+  //     lastLesson: null,
+  //     streak: {
+  //       current: activityStats.currentStreak ?? 0,
+  //       longest: activityStats.longestStreak ?? 0,
+  //       activityHistory: activityStats?.activityHistory || {},
+  //     },
+  //   };
+  // }
 
-  async getTeacherStats(userId: string) {
-    const fiveMostPopularCourses =
-      await this.statisticsRepository.getFiveMostPopularCourses(userId);
-    const [totalCoursesCompletionStats] =
-      await this.statisticsRepository.getTotalCoursesCompletion(userId);
-    const [conversionAfterFreemiumLesson] =
-      await this.statisticsRepository.getConversionAfterFreemiumLesson(userId);
-    const courseStudentsStats = await this.statisticsRepository.getCourseStudentsStats(userId);
-    const [avgQuizScore] = await this.statisticsRepository.getAvgQuizScore(userId);
+  // async getTeacherStats(userId: string) {
+  //   const fiveMostPopularCourses = await this.statisticsRepository.getFiveMostPopularCourses(
+  //     userId,
+  //   );
+  //   const [totalCoursesCompletionStats] = await this.statisticsRepository.getTotalCoursesCompletion(
+  //     userId,
+  //   );
+  //   const [conversionAfterFreemiumLesson] =
+  //     await this.statisticsRepository.getConversionAfterFreemiumLesson(userId);
+  //   const courseStudentsStats = await this.statisticsRepository.getCourseStudentsStats(userId);
+  //   const [avgQuizScore] = await this.statisticsRepository.getAvgQuizScore(userId);
 
-    return {
-      fiveMostPopularCourses,
-      totalCoursesCompletionStats,
-      conversionAfterFreemiumLesson,
-      courseStudentsStats: this.formatCourseStudentStats(courseStudentsStats),
-      avgQuizScore: {
-        correctAnswerCount: avgQuizScore.correctAnswersCount,
-        wrongAnswerCount: avgQuizScore.wrongAnswersCount,
-        answerCount: avgQuizScore.correctAnswersCount + avgQuizScore.wrongAnswersCount,
-      },
-    };
-  }
+  //   return {
+  //     fiveMostPopularCourses,
+  //     totalCoursesCompletionStats,
+  //     conversionAfterFreemiumLesson,
 
-  async createQuizAttempt(data: {
-    userId: string;
-    courseId: string;
-    lessonId: string;
-    correctAnswers: number;
-    wrongAnswers: number;
-    score: number;
-  }) {
-    await this.statisticsRepository.createQuizAttempt(data);
-  }
+  // async getUserStats(userId: string): Promise<UserStats> {
+  //   const coursesStatsByMonth: StatsByMonth[] =
+  //     await this.statisticsRepository.getCoursesStatsByMonth(userId);
+  //   const coursesTotalStats = this.calculateTotalStats(coursesStatsByMonth);
 
-  async updateUserActivity(userId: string) {
-    const today = startOfDay(new Date());
-    const formattedTodayDate = format(today, "yyyy-MM-dd");
+  //   const lessonsStatsByMonth: StatsByMonth[] =
+  //     await this.statisticsRepository.getLessonsStatsByMonth(userId);
+  //   const lessonsTotalStats = this.calculateTotalStats(lessonsStatsByMonth);
 
-    const currentStats = await this.statisticsRepository.getActivityStats(userId);
+  //   const quizStats = await this.statisticsRepository.getQuizStats(userId);
+  //   const lastLesson = await this.getLastLesson(userId);
+  //   const activityStats = await this.statisticsRepository.getActivityStats(userId);
 
-    const lastActivityDate = currentStats?.lastActivityDate
-      ? startOfDay(new Date(currentStats.lastActivityDate))
-      : null;
+  //   // TODO: add last lesson
+  //   return {
+  //     courses: this.formatStats(coursesStatsByMonth),
+  //     lessons: this.formatStats(lessonsStatsByMonth),
+  //     quizzes: {
+  //       totalAttempts: quizStats.totalAttempts,
+  //       totalCorrectAnswers: quizStats.totalCorrectAnswers,
+  //       totalWrongAnswers: quizStats.totalWrongAnswers,
+  //       totalQuestions: quizStats.totalQuestions,
+  //       averageScore: quizStats.averageScore,
+  //       uniqueQuizzesTaken: quizStats.uniqueQuizzesTaken,
+  //     },
+  //     averageStats: {
+  //       lessonStats: lessonsTotalStats,
+  //       courseStats: coursesTotalStats,
+  //     },
+  //     // lastLesson,
+  //     lastLesson: null,
+  //     streak: {
+  //       current: activityStats.currentStreak ?? 0,
+  //       longest: activityStats.longestStreak ?? 0,
+  //       activityHistory: activityStats?.activityHistory || {},
+  //     },
+  //   };
+  // }
 
-    const newCurrentStreak = (() => {
-      if (!lastActivityDate) return 1;
+  // async getTeacherStats(userId: string) {
+  //   const fiveMostPopularCourses = await this.statisticsRepository.getFiveMostPopularCourses(
+  //     userId,
+  //   );
+  //   const [totalCoursesCompletionStats] = await this.statisticsRepository.getTotalCoursesCompletion(
+  //     userId,
+  //   );
+  //   const [conversionAfterFreemiumLesson] =
+  //     await this.statisticsRepository.getConversionAfterFreemiumLesson(userId);
+  //   const courseStudentsStats = await this.statisticsRepository.getCourseStudentsStats(userId);
+  //   const [avgQuizScore] = await this.statisticsRepository.getAvgQuizScore(userId);
 
-      const daysDiff = differenceInDays(today, lastActivityDate);
+  //   return {
+  //     fiveMostPopularCourses,
+  //     totalCoursesCompletionStats,
+  //     conversionAfterFreemiumLesson,
 
-      switch (daysDiff) {
-        case 0:
-          return currentStats?.currentStreak ?? 1;
-        case 1:
-          return (currentStats?.currentStreak ?? 0) + 1;
-        default:
-          return 1;
-      }
-    })();
+  // async getUserStats(userId: string): Promise<UserStats> {
+  //   const coursesStatsByMonth: StatsByMonth[] =
+  //     await this.statisticsRepository.getCoursesStatsByMonth(userId);
+  //   const coursesTotalStats = this.calculateTotalStats(coursesStatsByMonth);
 
-    const newLongestStreak = Math.max(newCurrentStreak, currentStats?.longestStreak ?? 0);
+  //   const lessonsStatsByMonth: StatsByMonth[] =
+  //     await this.statisticsRepository.getLessonsStatsByMonth(userId);
+  //   const lessonsTotalStats = this.calculateTotalStats(lessonsStatsByMonth);
 
-    const isUserLoggedInToday = currentStats?.activityHistory?.[formattedTodayDate] ?? false;
-    if (isUserLoggedInToday) {
-      return;
-    }
+  //   const quizStats = await this.statisticsRepository.getQuizStats(userId);
+  //   const lastLesson = await this.getLastLesson(userId);
+  //   const activityStats = await this.statisticsRepository.getActivityStats(userId);
 
-    const dateRange = lastActivityDate
-      ? eachDayOfInterval({ start: lastActivityDate, end: today })
-      : [today];
+  //   // TODO: add last lesson
+  //   return {
+  //     courses: this.formatStats(coursesStatsByMonth),
+  //     lessons: this.formatStats(lessonsStatsByMonth),
+  //     quizzes: {
+  //       totalAttempts: quizStats.totalAttempts,
+  //       totalCorrectAnswers: quizStats.totalCorrectAnswers,
+  //       totalWrongAnswers: quizStats.totalWrongAnswers,
+  //       totalQuestions: quizStats.totalQuestions,
+  //       averageScore: quizStats.averageScore,
+  //       uniqueQuizzesTaken: quizStats.uniqueQuizzesTaken,
+  //     },
+  //     averageStats: {
+  //       lessonStats: lessonsTotalStats,
+  //       courseStats: coursesTotalStats,
+  //     },
+  //     // lastLesson,
+  //     lastLesson: null,
+  //     streak: {
+  //       current: activityStats.currentStreak ?? 0,
+  //       longest: activityStats.longestStreak ?? 0,
+  //       activityHistory: activityStats?.activityHistory || {},
+  //     },
+  //   };
+  // }
 
-    const newActivityHistory = dateRange.reduce(
-      (acc, date) => {
-        const dateStr = format(date, "yyyy-MM-dd");
-        if (!acc[dateStr]) {
-          acc[dateStr] = dateStr === formattedTodayDate;
-        }
-        return acc;
-      },
-      { ...(currentStats?.activityHistory ?? {}) },
-    );
+  // async getTeacherStats(userId: string) {
+  //   const fiveMostPopularCourses = await this.statisticsRepository.getFiveMostPopularCourses(
+  //     userId,
+  //   );
+  //   const [totalCoursesCompletionStats] = await this.statisticsRepository.getTotalCoursesCompletion(
+  //     userId,
+  //   );
+  //   const [conversionAfterFreemiumLesson] =
+  //     await this.statisticsRepository.getConversionAfterFreemiumLesson(userId);
+  //   const courseStudentsStats = await this.statisticsRepository.getCourseStudentsStats(userId);
+  //   const [avgQuizScore] = await this.statisticsRepository.getAvgQuizScore(userId);
 
-    await this.statisticsRepository.upsertUserStatistic(userId, {
-      currentStreak: newCurrentStreak,
-      longestStreak: newLongestStreak,
-      lastActivityDate: today,
-      activityHistory: newActivityHistory,
-    });
-  }
+  //   return {
+  //     fiveMostPopularCourses,
+  //     totalCoursesCompletionStats,
+  //     conversionAfterFreemiumLesson,
+  //     courseStudentsStats: this.formatCourseStudentStats(courseStudentsStats),
+  //     avgQuizScore: {
+  //       correctAnswerCount: avgQuizScore.correctAnswersCount,
+  //       wrongAnswerCount: avgQuizScore.wrongAnswersCount,
+  //       answerCount: avgQuizScore.correctAnswersCount + avgQuizScore.wrongAnswersCount,
+  //     },
+  //   };
+  // }
 
-  async refreshCourseStudentsStats() {
-    const yesterday = subDays(new Date(), 1);
-    const startDate = startOfMonth(yesterday).toISOString();
-    const endDate = endOfMonth(yesterday).toISOString();
+  // async createQuizAttempt(data: {
+  //   userId: string;
+  //   courseId: string;
+  //   lessonId: string;
+  //   correctAnswers: number;
+  //   wrongAnswers: number;
+  //   score: number;
+  // }) {
+  //   await this.statisticsRepository.createQuizAttempt(data);
+  // }
 
-    await this.statisticsRepository.calculateCoursesStudentsStats(startDate, endDate);
-  }
+  // async updateUserActivity(userId: string) {
+  //   const today = startOfDay(new Date());
+  //   const formattedTodayDate = format(today, "yyyy-MM-dd");
 
-  private calculateTotalStats(coursesStatsByMonth: StatsByMonth[]) {
-    const totalStats = coursesStatsByMonth.reduce(
-      (acc, curr) => {
-        acc.started += curr.started;
-        acc.completed += curr.completed;
-        return acc;
-      },
-      { started: 0, completed: 0, completionRate: 0 },
-    );
+  //   const currentStats = await this.statisticsRepository.getActivityStats(userId);
 
-    totalStats.completionRate =
-      totalStats.started > 0 ? Math.round((totalStats.completed / totalStats.started) * 100) : 0;
+  //   const lastActivityDate = currentStats?.lastActivityDate
+  //     ? startOfDay(new Date(currentStats.lastActivityDate))
+  //     : null;
 
-    return totalStats;
-  }
+  //   const newCurrentStreak = (() => {
+  //     if (!lastActivityDate) return 1;
 
-  private formatStats = (stats: StatsByMonth[]) => {
-    const monthlyStats: { [key: string]: Omit<StatsByMonth, "month"> } = {};
+  //     const daysDiff = differenceInDays(today, lastActivityDate);
 
-    const currentDate = new Date();
-    for (let index = 11; index >= 0; index--) {
-      const month = format(
-        new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
-        "MMMM",
-      );
-      monthlyStats[month] = {
-        started: 0,
-        completed: 0,
-        completionRate: 0,
-      };
-    }
+  //     switch (daysDiff) {
+  //       case 0:
+  //         return currentStats?.currentStreak ?? 1;
+  //       case 1:
+  //         return (currentStats?.currentStreak ?? 0) + 1;
+  //       default:
+  //         return 1;
+  //     }
+  //   })();
 
-    for (const stat of stats) {
-      const month = format(new Date(stat.month), "MMMM");
-      monthlyStats[month] = {
-        started: stat.started,
-        completed: stat.completed,
-        completionRate: stat.completionRate,
-      };
-    }
+  //   const newLongestStreak = Math.max(newCurrentStreak, currentStats?.longestStreak ?? 0);
 
-    return monthlyStats;
-  };
+  //   const isUserLoggedInToday = currentStats?.activityHistory?.[formattedTodayDate] ?? false;
+  //   if (isUserLoggedInToday) {
+  //     return;
+  //   }
 
-  private formatCourseStudentStats(stats: CourseStudentsStatsByMonth[]) {
-    const monthlyStats: { [key: string]: Omit<CourseStudentsStatsByMonth, "month"> } = {};
+  //   const dateRange = lastActivityDate
+  //     ? eachDayOfInterval({ start: lastActivityDate, end: today })
+  //     : [today];
 
-    const currentDate = new Date();
-    for (let index = 11; index >= 0; index--) {
-      const month = format(
-        new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
-        "MMMM",
-      );
-      monthlyStats[month] = {
-        newStudentsCount: 0,
-      };
-    }
+  //   const newActivityHistory = dateRange.reduce(
+  //     (acc, date) => {
+  //       const dateStr = format(date, "yyyy-MM-dd");
+  //       if (!acc[dateStr]) {
+  //         acc[dateStr] = dateStr === formattedTodayDate;
+  //       }
+  //       return acc;
+  //     },
+  //     { ...(currentStats?.activityHistory ?? {}) },
+  //   );
 
-    for (const stat of stats) {
-      const month = format(new Date(stat.month), "MMMM");
-      monthlyStats[month] = {
-        newStudentsCount: stat.newStudentsCount,
-      };
-    }
+  //   await this.statisticsRepository.upsertUserStatistic(userId, {
+  //     currentStreak: newCurrentStreak,
+  //     longestStreak: newLongestStreak,
+  //     lastActivityDate: today,
+  //     activityHistory: newActivityHistory,
+  //   });
+  // }
 
-    return monthlyStats;
-  }
+  // async refreshCourseStudentsStats() {
+  //   const yesterday = subDays(new Date(), 1);
+  //   const startDate = startOfMonth(yesterday).toISOString();
+  //   const endDate = endOfMonth(yesterday).toISOString();
 
-  private async getLastLesson(userId: string) {
-    const lastLessonItem =
-      await this.lessonsRepository.getLastInteractedOrNextLessonItemForUser(userId);
+  //   await this.statisticsRepository.calculateCoursesStudentsStats(startDate, endDate);
+  // }
 
-    if (!lastLessonItem) return null;
+  // private calculateTotalStats(coursesStatsByMonth: StatsByMonth[]) {
+  //   const totalStats = coursesStatsByMonth.reduce(
+  //     (acc, curr) => {
+  //       acc.started += curr.started;
+  //       acc.completed += curr.completed;
+  //       return acc;
+  //     },
+  //     { started: 0, completed: 0, completionRate: 0 },
+  //   );
 
-    const [lastLessonDetails] = await this.lessonsRepository.getLessonsDetails(
-      userId,
-      lastLessonItem.courseId,
-      lastLessonItem.lessonId,
-    );
-    const lastLessonUserDetails = await this.lessonsRepository.getLessonForUser(
-      lastLessonItem.courseId,
-      lastLessonItem.lessonId,
-      userId,
-    );
+  //   totalStats.completionRate =
+  //     totalStats.started > 0 ? Math.round((totalStats.completed / totalStats.started) * 100) : 0;
 
-    return {
-      ...lastLessonDetails,
-      enrolled: lastLessonUserDetails.enrolled,
-      courseId: lastLessonItem.courseId,
-      courseTitle: lastLessonItem.courseTitle,
-      courseDescription: lastLessonItem.courseDescription,
-    };
-  }
+  //   return totalStats;
+  // }
+
+  // private formatStats = (stats: StatsByMonth[]) => {
+  //   const monthlyStats: { [key: string]: Omit<StatsByMonth, "month"> } = {};
+
+  //   const currentDate = new Date();
+  //   for (let index = 11; index >= 0; index--) {
+  //     const month = format(
+  //       new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
+  //       "MMMM",
+  //     );
+  //     monthlyStats[month] = {
+  //       started: 0,
+  //       completed: 0,
+  //       completionRate: 0,
+  //     };
+  //   }
+
+  //   for (const stat of stats) {
+  //     const month = format(new Date(stat.month), "MMMM");
+  //     monthlyStats[month] = {
+  //       started: stat.started,
+  //       completed: stat.completed,
+  //       completionRate: stat.completionRate,
+  //     };
+  //   }
+
+  //   return monthlyStats;
+  // };
+
+  // private formatCourseStudentStats(stats: CourseStudentsStatsByMonth[]) {
+  //   const monthlyStats: { [key: string]: Omit<CourseStudentsStatsByMonth, "month"> } = {};
+
+  //   const currentDate = new Date();
+  //   for (let index = 11; index >= 0; index--) {
+  //     const month = format(
+  //       new Date(currentDate.getFullYear(), currentDate.getMonth() - index, 1),
+  //       "MMMM",
+  //     );
+  //     monthlyStats[month] = {
+  //       newStudentsCount: 0,
+  //     };
+  //   }
+
+  //   for (const stat of stats) {
+  //     const month = format(new Date(stat.month), "MMMM");
+  //     monthlyStats[month] = {
+  //       newStudentsCount: stat.newStudentsCount,
+  //     };
+  //   }
+
+  //   return monthlyStats;
+  // }
+
+  // private async getLastLesson(userId: string) {
+  //   //TODO: repair this
+  //   // const lastLessonItem = await this.lessonRepository.getLastInteractedOrNextLessonItemForUser(
+  //   //   userId,
+  //   // );
+  //   // if (!lastLessonItem) return null;
+  //   // const [lastLessonDetails] = await this.lessonRepository.getLessonsDetails(
+  //   //   userId,
+  //   //   lastLessonItem.courseId,
+  //   //   lastLessonItem.lessonId,
+  //   // );
+  //   // const lastLessonUserDetails = await this.lessonRepository.getLessonForUser(
+  //   //   lastLessonItem.courseId,
+  //   //   lastLessonItem.lessonId,
+  //   //   userId,
+  //   // );
+  //   // return {
+  //   //   ...lastLessonDetails,
+  //   //   enrolled: lastLessonUserDetails.enrolled,
+  //   //   courseId: lastLessonItem.courseId,
+  //   //   courseTitle: lastLessonItem.courseTitle,
+  //   //   courseDescription: lastLessonItem.courseDescription,
+  //   // };
+  // }
 }

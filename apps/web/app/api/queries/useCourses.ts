@@ -26,7 +26,7 @@ export const allCoursesQueryOptions = (
 ) => ({
   queryKey: [...ALL_COURSES_QUERY_KEY, searchParams],
   queryFn: async () => {
-    const response = await ApiClient.api.coursesControllerGetAllCourses({
+    const response = await ApiClient.api.courseControllerGetAllCourses({
       page: 1,
       perPage: 100,
       ...(searchParams?.title && { title: searchParams.title }),

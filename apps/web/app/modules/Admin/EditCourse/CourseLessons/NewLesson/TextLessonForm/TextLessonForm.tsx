@@ -9,12 +9,13 @@ import { ContentTypes } from "../../../EditCourse.types";
 
 import { useTextLessonForm } from "./hooks/useTextLessonForm";
 
-import type { Chapter, LessonItem } from "../../../EditCourse.types";
+import type { Chapter, Lesson } from "../../../EditCourse.types";
+import { set } from "date-fns";
 
 type TextLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   chapterToEdit?: Chapter;
-  lessonToEdit?: LessonItem;
+  lessonToEdit?: Lesson;
 };
 
 const TextLessonForm = ({
@@ -23,46 +24,22 @@ const TextLessonForm = ({
   lessonToEdit,
 }: TextLessonProps) => {
   const { form, onSubmit, onClickDelete } = useTextLessonForm({
+    setContentTypeToDisplay,
     chapterToEdit,
     lessonToEdit,
-    setContentTypeToDisplay,
   });
+
+  const lessonType = "text_block";
 
   return (
     <div className="w-full max-w-full">
       <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-6">
         <h1 className="text-grey-500 mb-2">Text</h1>
         {lessonToEdit && (
-          <div className="text-xl font-semibold text-gray-800">
-            Edit: {lessonToEdit?.content.title}
-          </div>
+          <div className="text-xl font-semibold text-gray-800">Edit: {lessonToEdit?.title}</div>
         )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex items-center justify-end">
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem className="flex items-center">
-                    <FormControl className="flex items-center">
-                      <Checkbox
-                        id="state"
-                        checked={field.value === "draft"}
-                        onCheckedChange={(checked) =>
-                          field.onChange(checked ? "draft" : "published")
-                        }
-                        className="mr-2 w-5 h-5"
-                      />
-                    </FormControl>
-                    <Label htmlFor="state" className="text-right text-l leading-[1] mt-[2px]">
-                      Draft
-                    </Label>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <FormField
               control={form.control}
               name="title"
@@ -81,7 +58,7 @@ const TextLessonForm = ({
             />
             <FormField
               control={form.control}
-              name="body"
+              name="description"
               render={({ field }) => (
                 <FormItem className="mt-5">
                   <Label htmlFor="description" className="text-right">
@@ -100,6 +77,9 @@ const TextLessonForm = ({
                 </FormItem>
               )}
             />
+            {/* TODO: refactor this */}
+            <input type="hidden" {...form.register("chapterId")} value={chapterToEdit?.id} />
+            <input type="hidden" {...(form.register("type"), { value: lessonType })} />
             <div className="flex space-x-4 mt-4">
               {lessonToEdit ? (
                 <Button

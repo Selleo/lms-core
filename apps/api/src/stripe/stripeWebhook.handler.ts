@@ -5,17 +5,14 @@ import { isEmpty } from "lodash";
 import Stripe from "stripe";
 
 import { DatabasePg } from "src/common";
-import { STATES } from "src/common/states";
-import { LESSON_TYPE } from "src/lessons/lesson.type";
-import { LessonsRepository } from "src/lessons/repositories/lessons.repository";
+import { LessonRepository } from "src/lesson/lesson.repository";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import {
-  courseLessons,
+  chapters,
   courses,
-  lessonItems,
   lessons,
+  studentChapterProgress,
   studentCourses,
-  studentLessonsProgress,
   users,
 } from "src/storage/schema";
 
@@ -24,7 +21,7 @@ export class StripeWebhookHandler {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly statisticsRepository: StatisticsRepository,
-    private readonly lessonsRepository: LessonsRepository,
+    private readonly lessonRepository: LessonRepository,
   ) {}
 
   @StripeWebhookHandlerDecorator("payment_intent.succeeded")
@@ -55,38 +52,30 @@ export class StripeWebhookHandler {
     if (!payment) return null;
 
     await this.db.transaction(async (trx) => {
-      const courseLessonList = await trx
+      const courseChapterList = await trx
         .select({
-          id: lessons.id,
-          lessonType: lessons.type,
-          itemCount: lessons.itemsCount,
+          id: chapters.id,
+          type: lessons.type,
+          itemCount: chapters.lessonCount,
         })
-        .from(courseLessons)
-        .innerJoin(lessons, eq(courseLessons.lessonId, lessons.id))
-        .leftJoin(lessonItems, eq(lessons.id, lessonItems.lessonId))
-        .where(
-          and(
-            eq(courseLessons.courseId, course.id),
-            eq(lessons.archived, false),
-            eq(lessons.state, STATES.published),
-          ),
-        )
-        .groupBy(lessons.id);
+        .from(chapters)
+        .leftJoin(lessons, eq(lessons.chapterId, chapters.id))
+        .where(and(eq(chapters.courseId, course.id), eq(chapters.isPublished, true)))
+        .groupBy(chapters.id);
 
-      if (courseLessonList.length > 0) {
-        await trx.insert(studentLessonsProgress).values(
-          courseLessonList.map((lesson) => ({
+      if (courseChapterList.length > 0) {
+        await trx.insert(studentChapterProgress).values(
+          courseChapterList.map((chapter) => ({
             studentId: userId,
-            lessonId: lesson.id,
+            chapterId: chapter.id,
             courseId: course.id,
-            quizCompleted: lesson.lessonType === LESSON_TYPE.quiz.key ? false : null,
-            quizScore: lesson.lessonType === LESSON_TYPE.quiz.key ? 0 : null,
             completedLessonItemCount: 0,
           })),
         );
       }
-      const existingLessonProgress = await this.lessonsRepository.getLessonsProgressByCourseId(
+      const existingLessonProgress = await this.lessonRepository.getLessonsProgressByCourseId(
         course.id,
+        userId,
         trx,
       );
 

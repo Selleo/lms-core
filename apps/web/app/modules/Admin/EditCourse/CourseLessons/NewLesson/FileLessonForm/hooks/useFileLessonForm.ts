@@ -15,11 +15,11 @@ import { fileLessonFormSchema } from "../validators/fileLessonFormSchema";
 
 import type { LessonTypes } from "../../../CourseLessons.types";
 import type { FileLessonFormValues } from "../validators/fileLessonFormSchema";
-import type { Chapter, LessonItem } from "~/modules/Admin/EditCourse/EditCourse.types";
+import type { Chapter, Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type FileLessonFormProps = {
   chapterToEdit?: Chapter;
-  lessonToEdit?: LessonItem;
+  lessonToEdit?: Lesson;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
 };
 
@@ -37,11 +37,9 @@ export const useFileLessonForm = ({
   const form = useForm<FileLessonFormValues>({
     resolver: zodResolver(fileLessonFormSchema),
     defaultValues: {
-      title: lessonToEdit?.content.title || "",
-      state: lessonToEdit?.content.state || "draft",
-      body: lessonToEdit?.content.body || "",
-      type: (lessonToEdit?.content.type as LessonTypes) || "video",
-      url: lessonToEdit?.content.url || "",
+      title: lessonToEdit?.title || "",
+      description: lessonToEdit?.description || "",
+      type: (lessonToEdit?.type as LessonTypes) || "video",
     },
   });
 
@@ -50,11 +48,9 @@ export const useFileLessonForm = ({
   useEffect(() => {
     if (lessonToEdit) {
       reset({
-        title: lessonToEdit.content.title,
-        body: lessonToEdit?.content.body,
-        type: (lessonToEdit.content.type as LessonTypes) || "video",
-        url: lessonToEdit.content.url,
-        state: lessonToEdit?.content.state || "draft",
+        title: lessonToEdit.title,
+        description: lessonToEdit?.description,
+        type: (lessonToEdit.type as LessonTypes) || "video",
       });
     }
   }, [lessonToEdit, reset]);
@@ -66,10 +62,10 @@ export const useFileLessonForm = ({
 
     try {
       if (lessonToEdit) {
-        updateFileItem({ data: { ...values }, fileId: lessonToEdit.content.id });
+        updateFileItem({ data: { ...values }, fileLessonId: lessonToEdit.id });
       } else {
         await createFile({
-          data: { ...values, authorId: currentUser.id, lessonId: chapterToEdit.id },
+          data: { ...values },
         });
         setContentTypeToDisplay(ContentTypes.EMPTY);
       }
@@ -81,13 +77,13 @@ export const useFileLessonForm = ({
   };
 
   const onClickDelete = async () => {
-    if (!chapterToEdit?.id || !lessonToEdit?.content.id) {
+    if (!chapterToEdit?.id || !lessonToEdit?.id) {
       console.error("Course ID or Chapter ID is missing.");
       return;
     }
 
     try {
-      await deleteLesson({ chapterId: chapterToEdit?.id, lessonId: lessonToEdit.content.id });
+      await deleteLesson({ chapterId: chapterToEdit?.id, lessonId: lessonToEdit.id });
       queryClient.invalidateQueries({
         queryKey: [COURSE_QUERY_KEY, { id: courseId }],
       });

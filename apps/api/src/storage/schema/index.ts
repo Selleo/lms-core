@@ -82,13 +82,14 @@ export const credentials = pgTable("credentials", {
 
 export const categories = pgTable("categories", {
   ...id,
-  title: text("title").notNull().unique(),
   ...timestamps,
+  title: text("title").notNull().unique(),
   archived,
 });
 
 export const createTokens = pgTable("create_tokens", {
   ...id,
+  ...timestamps,
   userId: uuid("user_id")
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
@@ -97,11 +98,11 @@ export const createTokens = pgTable("create_tokens", {
     precision: 3,
     withTimezone: true,
   }).notNull(),
-  ...timestamps,
 });
 
 export const resetTokens = pgTable("reset_tokens", {
   ...id,
+  ...timestamps,
   userId: uuid("user_id")
     .references(() => users.id, { onDelete: "cascade" })
     .notNull(),
@@ -110,186 +111,99 @@ export const resetTokens = pgTable("reset_tokens", {
     precision: 3,
     withTimezone: true,
   }).notNull(),
-  ...timestamps,
 });
 
 export const courses = pgTable("courses", {
   ...id,
+  ...timestamps,
   title: varchar("title", { length: 100 }).notNull(),
   description: varchar("description", { length: 1000 }),
-  imageUrl: varchar("image_url"),
-  state: varchar("state").notNull().default("draft"),
+  thumbnailS3Key: varchar("thumbnail_s3_key", { length: 200 }),
+  isPublished: boolean("is_published").notNull().default(false),
   priceInCents: integer("price_in_cents").notNull().default(0),
   currency: varchar("currency").notNull().default("usd"),
+  chapterCount: integer("chapter_count").notNull().default(0),
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
   categoryId: uuid("category_id")
     .references(() => categories.id)
     .notNull(),
-  archived: boolean("archived").notNull().default(false),
-  lessonsCount: integer("lessons_count").notNull().default(0),
+});
+
+export const chapters = pgTable("chapters", {
+  ...id,
   ...timestamps,
+  title: varchar("title", { length: 100 }).notNull(),
+  courseId: uuid("course_id")
+    .references(() => courses.id, { onDelete: "cascade" })
+    .notNull(),
+  authorId: uuid("author_id")
+    .references(() => users.id)
+    .notNull(),
+  isPublished: boolean("is_published").notNull().default(false),
+  isFreemium: boolean("is_freemium").notNull().default(false),
+  displayOrder: integer("display_order"),
+  lessonCount: integer("lesson_count").notNull().default(0),
 });
 
 export const lessons = pgTable("lessons", {
   ...id,
   ...timestamps,
+  chapterId: uuid("chapter_id")
+    .references(() => chapters.id, { onDelete: "cascade" })
+    .notNull(),
+  type: varchar("type", { length: 20 }).notNull(),
   title: varchar("title", { length: 100 }).notNull(),
   description: varchar("description", { length: 1000 }),
-  imageUrl: text("image_url"),
-  authorId: uuid("author_id")
-    .references(() => users.id)
-    .notNull(),
-  state: text("state").notNull().default("draft"),
-  archived,
-  type: text("type").notNull().default("multimedia"),
-  itemsCount: integer("items_count").notNull().default(0),
-});
-
-export const conversations = pgTable("conversations", {
-  ...id,
-  ...timestamps,
-  participant1Id: uuid("participant1_id")
-    .references(() => users.id)
-    .notNull(),
-  participant2Id: uuid("participant2_id")
-    .references(() => users.id)
-    .notNull(),
-});
-
-export const conversationMessages = pgTable("conversation_messages", {
-  ...id,
-  ...timestamps,
-  message: text("message").notNull(),
-  conversationId: uuid("conversation_id")
-    .references(() => conversations.id)
-    .notNull(),
-  authorId: uuid("author_id")
-    .references(() => users.id)
-    .notNull(),
-  readAt: timestamp("read_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
+  displayOrder: integer("display_order"),
+  fileS3Key: varchar("file_s3_key", { length: 200 }),
+  fileType: varchar("file_type", { length: 20 }),
 });
 
 export const questions = pgTable("questions", {
   ...id,
   ...timestamps,
-  questionType: text("question_type").notNull(),
-  questionBody: text("question_body").notNull(),
-  solutionExplanation: text("solution_explanation"),
-  state: text("state").notNull().default("draft"),
-  authorId: uuid("author_id")
-    .references(() => users.id)
+  lessonId: uuid("lesson_id")
+    .references(() => lessons.id, { onDelete: "cascade" })
     .notNull(),
-  archived,
+  authorId: uuid("author_id")
+    .references(() => users.id, { onDelete: "cascade" })
+    .notNull(),
+  type: text("type").notNull(),
+  title: varchar("title", { length: 200 }).notNull(),
+  description: text("description"),
+  solutionExplanation: text("solution_explanation"),
 });
 
 export const questionAnswerOptions = pgTable("question_answer_options", {
   ...id,
   ...timestamps,
   questionId: uuid("question_id")
-    .references(() => questions.id)
+    .references(() => questions.id, { onDelete: "cascade" })
     .notNull(),
-  optionText: text("option_text").notNull(),
+  optionText: varchar("option_text", { length: 100 }).notNull(),
   isCorrect: boolean("is_correct").notNull(),
   position: integer("position"),
 });
 
+// TODO: add cascade on delete?
 export const studentQuestionAnswers = pgTable(
   "student_question_answers",
   {
     ...id,
     ...timestamps,
-    courseId: uuid("course_id")
-      .references(() => courses.id)
-      .notNull(),
-    lessonId: uuid("lesson_id")
-      .references(() => lessons.id)
-      .notNull(),
     questionId: uuid("question_id")
-      .references(() => questions.id)
+      .references(() => questions.id, { onDelete: "cascade" })
       .notNull(),
     studentId: uuid("student_id")
-      .references(() => users.id)
+      .references(() => users.id, { onDelete: "cascade" })
       .notNull(),
     answer: jsonb("answer").default({}),
     isCorrect: boolean("is_correct"),
   },
   (table) => ({
-    unq: unique().on(table.lessonId, table.questionId, table.studentId),
-  }),
-);
-
-export const files = pgTable("files", {
-  ...id,
-  ...timestamps,
-  title: varchar("title", { length: 100 }).notNull(),
-  type: text("type").notNull(),
-  url: text("url").notNull(),
-  body: text("body"),
-  state: text("state").notNull().default("draft"),
-  authorId: uuid("author_id")
-    .references(() => users.id)
-    .notNull(),
-  archived,
-});
-
-export const textBlocks = pgTable("text_blocks", {
-  ...id,
-  ...timestamps,
-  title: varchar("title", { length: 100 }).notNull(),
-  body: text("body"),
-  state: text("state").notNull().default("draft"),
-  authorId: uuid("author_id")
-    .references(() => users.id)
-    .notNull(),
-  archived,
-});
-
-export const lessonItems = pgTable("lesson_items", {
-  ...id,
-  lessonId: uuid("lesson_id")
-    .references(() => lessons.id)
-    .notNull(),
-  lessonItemId: uuid("lesson_item_id").notNull(),
-  lessonItemType: text("lesson_item_type").notNull(),
-  displayOrder: integer("display_order"),
-});
-
-export const notifications = pgTable("notifications", {
-  ...id,
-  ...timestamps,
-  studentId: uuid("student_id")
-    .references(() => users.id)
-    .notNull(),
-  text: text("text").notNull(),
-  readAt: timestamp("read_at", {
-    mode: "string",
-    withTimezone: true,
-    precision: 3,
-  }),
-});
-
-export const courseLessons = pgTable(
-  "course_lessons",
-  {
-    ...id,
-    ...timestamps,
-    courseId: uuid("course_id")
-      .references(() => courses.id)
-      .notNull(),
-    lessonId: uuid("lesson_id")
-      .references(() => lessons.id, { onDelete: "cascade" })
-      .notNull(),
-    displayOrder: integer("display_order"),
-    isFree: boolean("is_free").notNull().default(false),
-  },
-  (table) => ({
-    unq: unique().on(table.courseId, table.lessonId),
+    unq: unique().on(table.questionId, table.studentId),
   }),
 );
 
@@ -304,78 +218,59 @@ export const studentCourses = pgTable(
     courseId: uuid("course_id")
       .references(() => courses.id)
       .notNull(),
-    finishedLessonsCount: integer("finished_lessons_count").default(0).notNull(),
-    state: text("state").notNull().default("not_started"),
-    paymentId: text("payment_id"),
+    progress: varchar("progress").notNull().default("not_started"),
+    finishedChapterCount: integer("finished_chapter_count").default(0).notNull(),
     completedAt: timestamp("completed_at", {
       mode: "string",
       withTimezone: true,
       precision: 3,
     }),
-    archived,
+    paymentId: varchar("payment_id", { length: 50 }),
   },
   (table) => ({
     unq: unique().on(table.studentId, table.courseId),
   }),
 );
 
-export const studentFavouritedCourses = pgTable(
-  "student_favourited_courses",
+export const studentLessonProgress = pgTable(
+  "student_lesson_progress",
   {
     ...id,
     ...timestamps,
     studentId: uuid("student_id")
-      .references(() => users.id)
-      .notNull(),
-    courseId: uuid("course_id")
-      .references(() => courses.id)
-      .notNull(),
-  },
-  (table) => ({
-    unq: unique().on(table.studentId, table.courseId),
-  }),
-);
-
-export const studentCompletedLessonItems = pgTable(
-  "student_completed_lesson_items",
-  {
-    ...id,
-    ...timestamps,
-    studentId: uuid("student_id")
-      .references(() => users.id)
-      .notNull(),
-    lessonItemId: uuid("lesson_item_id")
-      .references(() => lessonItems.id)
+      .references(() => users.id, { onDelete: "set null" })
       .notNull(),
     lessonId: uuid("lesson_id")
-      .references(() => lessons.id)
+      .references(() => lessons.id, { onDelete: "cascade" })
       .notNull(),
-    courseId: uuid("course_id")
-      .references(() => courses.id)
-      .notNull(),
-  },
-  (table) => ({
-    unq: unique().on(table.studentId, table.lessonItemId, table.lessonId, table.courseId),
-  }),
-);
-
-export const studentLessonsProgress = pgTable(
-  "student_lessons_progress",
-  {
-    ...id,
-    ...timestamps,
-    studentId: uuid("student_id")
-      .references(() => users.id)
-      .notNull(),
-    courseId: uuid("course_id")
-      .references(() => courses.id)
-      .notNull(),
-    lessonId: uuid("lesson_id")
-      .references(() => lessons.id)
-      .notNull(),
-    completedLessonItemCount: integer("completed_lesson_item_count").default(0).notNull(),
-    quizCompleted: boolean("quiz_completed"),
+    completedQuestionCount: integer("completed_question_count").default(0).notNull(),
     quizScore: integer("quiz_score"),
+    completedAt: timestamp("completed_at", {
+      mode: "string",
+      withTimezone: true,
+      precision: 3,
+    }),
+  },
+  (table) => ({
+    unq: unique().on(table.studentId, table.lessonId),
+  }),
+);
+
+export const studentChapterProgress = pgTable(
+  "student_chapter_progress",
+  {
+    ...id,
+    ...timestamps,
+    studentId: uuid("student_id")
+      .references(() => users.id)
+      .notNull(),
+    courseId: uuid("course_id")
+      .references(() => courses.id)
+      .notNull(),
+    chapterId: uuid("chapter_id")
+      .references(() => chapters.id)
+      .notNull(),
+    completedLessonCount: integer("completed_lesson_count").default(0).notNull(),
     completedAt: timestamp("completed_at", {
       mode: "string",
       withTimezone: true,
@@ -384,7 +279,7 @@ export const studentLessonsProgress = pgTable(
     completedAsFreemium: boolean("completed_as_freemium").notNull().default(false),
   },
   (table) => ({
-    unq: unique().on(table.studentId, table.lessonId, table.courseId),
+    unq: unique().on(table.studentId, table.courseId, table.chapterId),
   }),
 );
 
@@ -434,9 +329,17 @@ export const scormMetadata = pgTable("scorm_metadata", {
     .references(() => courses.id)
     .notNull(),
   fileId: uuid("file_id")
-    .references(() => files.id)
+    .references(() => scormFiles.id)
     .notNull(),
   version: text("version").notNull(),
   entryPoint: text("entry_point").notNull(),
   s3Key: text("s3_key").notNull(),
+});
+
+export const scormFiles = pgTable("scorm_files", {
+  ...id,
+  ...timestamps,
+  title: text("title").notNull(),
+  type: text("type").notNull(),
+  s3KeyPath: text("s3_key_path").notNull(),
 });

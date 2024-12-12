@@ -20,18 +20,18 @@ import stripeConfig from "./common/configuration/stripe";
 import { EmailModule } from "./common/emails/emails.module";
 import { JwtAuthGuard } from "./common/guards/jwt-auth.guard";
 import { StagingGuard } from "./common/guards/staging.guard";
-import { CoursesModule } from "./courses/courses.module";
+import { CourseModule } from "./courses/course.module";
 import { EventsModule } from "./events/events.module";
-import { FilesModule } from "./file/files.module";
+import { FileModule } from "./file/files.module";
 import { HealthModule } from "./health/health.module";
-import { LessonsModule } from "./lessons/lessons.module";
-import { QuestionsModule } from "./questions/questions.module";
+import { LessonModule } from "./lesson/lesson.module";
+import { QuestionsModule } from "./questions/question.module";
 import { S3Module } from "./s3/s3.module";
 import { ScormModule } from "./scorm/scorm.module";
 import { StatisticsModule } from "./statistics/statistics.module";
 import * as schema from "./storage/schema";
 import { StripeModule } from "./stripe/stripe.module";
-import { StudentCompletedLessonItemsModule } from "./studentCompletedLessonItem/studentCompletedLessonItems.module";
+import { StudentLessonProgressModule } from "./studentLessonProgress/studentLessonProgress.module";
 import { TestConfigModule } from "./test-config/test-config.module";
 
 @Module({
@@ -73,11 +73,11 @@ import { TestConfigModule } from "./test-config/test-config.module";
     TestConfigModule,
     CategoriesModule,
     ConditionalModule.registerWhen(ScheduleModule.forRoot(), (env) => env.NODE_ENV !== "test"),
-    CoursesModule,
-    LessonsModule,
+    CourseModule,
+    LessonModule,
     QuestionsModule,
-    StudentCompletedLessonItemsModule,
-    FilesModule,
+    StudentLessonProgressModule,
+    FileModule,
     S3Module,
     StripeModule,
     EventsModule,

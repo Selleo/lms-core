@@ -3,7 +3,7 @@ import { useParams } from "@remix-run/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { useCreateBetaTextBlockItem } from "~/api/mutations/admin/useBetaCreateTextBlockItem";
+import { useCreateBetaTextLesson } from "~/api/mutations/admin/useBetaCreateTextLesson";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
 import { useUpdateTextBlockItem } from "~/api/mutations/admin/useUpdateTextBlockItem";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
@@ -12,7 +12,7 @@ import { queryClient } from "~/api/queryClient";
 import {
   ContentTypes,
   type Chapter,
-  type LessonItem,
+  type Lesson,
 } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import { textLessonFormSchema } from "../validators/useTextLessonFormSchema";
@@ -21,7 +21,7 @@ import type { TextLessonFormValues } from "../validators/useTextLessonFormSchema
 
 type TextLessonFormProps = {
   chapterToEdit?: Chapter;
-  lessonToEdit?: LessonItem;
+  lessonToEdit?: Lesson;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
 };
 
@@ -31,7 +31,7 @@ export const useTextLessonForm = ({
   setContentTypeToDisplay,
 }: TextLessonFormProps) => {
   const { id: courseId } = useParams();
-  const { mutateAsync: createTextBlock } = useCreateBetaTextBlockItem();
+  const { mutateAsync: createTextBlock } = useCreateBetaTextLesson();
   const { mutateAsync: updateTextBlockItem } = useUpdateTextBlockItem();
   const { data: currentUser } = useCurrentUserSuspense();
   const { mutateAsync: deleteLesson } = useDeleteLesson();
@@ -39,9 +39,9 @@ export const useTextLessonForm = ({
   const form = useForm<TextLessonFormValues>({
     resolver: zodResolver(textLessonFormSchema),
     defaultValues: {
-      title: lessonToEdit?.content.title || "",
-      body: lessonToEdit?.content.body || "",
-      state: "draft",
+      title: lessonToEdit?.title || "",
+      description: lessonToEdit?.description || "",
+      type: lessonToEdit?.type || "text_block",
     },
   });
 
@@ -50,9 +50,9 @@ export const useTextLessonForm = ({
   useEffect(() => {
     if (lessonToEdit) {
       reset({
-        title: lessonToEdit.content.title,
-        body: lessonToEdit?.content.body,
-        state: lessonToEdit?.content.state || "draft",
+        title: lessonToEdit.title,
+        description: lessonToEdit?.description,
+        type: "text_block",
       });
     }
   }, [lessonToEdit, reset]);
@@ -63,10 +63,10 @@ export const useTextLessonForm = ({
     }
     try {
       if (lessonToEdit) {
-        await updateTextBlockItem({ data: { ...values }, textBlockId: lessonToEdit.content?.id });
+        await updateTextBlockItem({ data: { ...values }, lessonId: lessonToEdit.id });
       } else {
         await createTextBlock({
-          data: { ...values, authorId: currentUser.id, lessonId: chapterToEdit.id },
+          data: { ...values, chapterId: chapterToEdit.id },
         });
         setContentTypeToDisplay(ContentTypes.EMPTY);
       }
@@ -78,13 +78,13 @@ export const useTextLessonForm = ({
   };
 
   const onClickDelete = async () => {
-    if (!chapterToEdit?.id || !lessonToEdit?.content.id) {
+    if (!chapterToEdit?.id || !lessonToEdit?.id) {
       console.error("Course ID or Chapter ID is missing.");
       return;
     }
 
     try {
-      await deleteLesson({ chapterId: chapterToEdit?.id, lessonId: lessonToEdit.content.id });
+      await deleteLesson({ chapterId: chapterToEdit?.id, lessonId: lessonToEdit.id });
       queryClient.invalidateQueries({
         queryKey: [COURSE_QUERY_KEY, { id: courseId }],
       });
