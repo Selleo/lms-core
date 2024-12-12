@@ -1,47 +1,44 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
-
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { cn } from "~/lib/utils";
-
 import { useCourseStatusForm } from "./hooks/useCourseStatusForm";
 
-type CourseStateProps = {
+type CoursePublishStatusProps = {
   courseId: string;
-  state?: string;
+  isPublished?: boolean;
 };
 
-const CourseState = ({ courseId, state }: CourseStateProps) => {
-  const { form, onSubmit } = useCourseStatusForm({ courseId, state });
+const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps) => {
+  const { form, onSubmit } = useCourseStatusForm({ courseId, isPublished });
 
   return (
     <div className="w-full flex gap-4">
       <Card className="w-full max-w-3xl">
         <CardHeader>
-          <h5 className="text-xl font-semibold">State</h5>
+          <h5 className="text-xl font-semibold">Publication Status</h5>
         </CardHeader>
         <CardContent>
-          <p>Set state for the course</p>
+          <p>Set the publication status for the course</p>
           <Form {...form}>
             <form className="mt-10 space-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
-                name="state"
+                name="isPublished"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
                     <RadioGroup.Root
-                      {...field}
                       className="flex flex-col space-y-4"
-                      value={field.value}
-                      onValueChange={field.onChange}
+                      value={field.value ? "published" : "draft"}
+                      onValueChange={(value) => field.onChange(value === "published")}
                     >
                       <RadioGroup.Item
                         value="draft"
                         id="draft"
                         className={cn("p-4 border rounded-md cursor-pointer text-left", {
-                          "border-blue-500": field.value === "draft",
-                          "border-gray-300": field.value !== "draft",
+                          "border-blue-500": !field.value,
+                          "border-gray-300": field.value,
                         })}
                       >
                         <div className="flex items-start">
@@ -54,8 +51,8 @@ const CourseState = ({ courseId, state }: CourseStateProps) => {
                             </label>
                             <p
                               className={cn("mt-1 text-sm", {
-                                "text-black": field.value === "draft",
-                                "text-gray-500": field.value !== "draft",
+                                "text-black": !field.value,
+                                "text-gray-500": field.value,
                               })}
                             >
                               Students cannot purchase or enroll in this course. For those already
@@ -68,8 +65,8 @@ const CourseState = ({ courseId, state }: CourseStateProps) => {
                         value="published"
                         id="published"
                         className={cn("p-4 border rounded-md cursor-pointer text-left", {
-                          "border-blue-500": field.value === "published",
-                          "border-gray-300": field.value !== "published",
+                          "border-blue-500": field.value,
+                          "border-gray-300": !field.value,
                         })}
                       >
                         <div className="flex items-start">
@@ -82,8 +79,8 @@ const CourseState = ({ courseId, state }: CourseStateProps) => {
                             </label>
                             <p
                               className={cn("mt-1 text-sm", {
-                                "text-black": field.value === "published",
-                                "text-gray-500": field.value !== "published",
+                                "text-black": field.value,
+                                "text-gray-500": !field.value,
                               })}
                             >
                               Students can purchase, enroll in, and access the course content. Once
@@ -106,4 +103,4 @@ const CourseState = ({ courseId, state }: CourseStateProps) => {
   );
 };
 
-export default CourseState;
+export default CoursePublishStatus;
