@@ -7,7 +7,6 @@ import { ApiClient } from "../../api-client";
 
 type DeleteChapterOptions = {
   chapterId: string;
-  courseId: string;
 };
 
 export function useDeleteChapter() {
@@ -15,10 +14,9 @@ export function useDeleteChapter() {
 
   return useMutation({
     mutationFn: async (options: DeleteChapterOptions) => {
-      const response = await ApiClient.api.lessonsControllerRemoveChapter(
-        options.chapterId,
-        options.courseId,
-      );
+      const response = await ApiClient.api.chapterControllerRemoveChapter({
+        chapterId: options.chapterId,
+      });
 
       return response.data;
     },

@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -187,6 +187,22 @@ export class LessonController {
   ): Promise<BaseResponse<{ message: string }>> {
     await this.adminLessonsService.updateLesson(id, data);
     return new BaseResponse({ message: "Text block updated successfully" });
+  }
+
+  @Delete()
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [{ type: "query", name: "lessonId", schema: UUIDSchema, required: true }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async removeLesson(
+    @Query("lessonId") lessonId: UUIDType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonsService.removeLesson(lessonId);
+
+    return new BaseResponse({
+      message: "Lesson removed from course successfully",
+    });
   }
 
   //   @Patch("lesson")

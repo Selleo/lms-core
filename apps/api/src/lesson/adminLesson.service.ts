@@ -63,6 +63,19 @@ export class AdminLessonService {
     return updatedLesson.id;
   }
 
+  async removeLesson(lessonId: UUIDType) {
+    const [lesson] = await this.adminLessonRepository.getLesson(lessonId);
+
+    if (!lesson) {
+      throw new NotFoundException("Lesson not found");
+    }
+
+    await this.db.transaction(async (trx) => {
+      await this.adminLessonRepository.removeLesson(lessonId, trx);
+      await this.adminLessonRepository.updateLessonDisplayOrder(lesson.chapterId, trx);
+    });
+  }
+
   // async getAllLessonItems(query: GetLessonItemsQuery = {}) {
   //   const {
   //     type,
