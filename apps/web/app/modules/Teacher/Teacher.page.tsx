@@ -10,7 +10,8 @@ import { PageWrapper } from "~/components/PageWrapper";
 import { Avatar } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import CourseCard from "~/modules/Dashboard/Courses/CourseCard";
-import { TeacherPageBreadcrumbs } from "~/modules/Teacher/TeacherPageBreadcrumbs";
+
+import { TeacherPageBreadcrumbs } from "./TeacherPageBreadcrumbs";
 
 export default function TeacherPage() {
   const { id = "" } = useParams();

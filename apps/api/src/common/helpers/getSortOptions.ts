@@ -10,7 +10,7 @@ export function getSortOptions<T extends string = string>(
   sortedField: RemoveDescSign<T>;
 } {
   return {
-    sortOrder: sort.startsWith("-") ? desc : asc,
-    sortedField: (sort.startsWith("-") ? sort.slice(1) : sort) as RemoveDescSign<T>,
+    sortOrder: sort?.startsWith("-") ? desc : asc,
+    sortedField: (sort?.startsWith("-") ? sort?.slice(1) : sort) as RemoveDescSign<T>,
   };
 }

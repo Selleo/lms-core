@@ -14,12 +14,19 @@ type CourseParams = {
   userId?: string;
 };
 
+type QueryOptions = {
+  enabled?: boolean;
+};
+
 export const ALL_COURSES_QUERY_KEY = ["courses"];
 
-export const allCoursesQueryOptions = (searchParams?: CourseParams) => ({
+export const allCoursesQueryOptions = (
+  searchParams?: CourseParams,
+  options: QueryOptions = { enabled: true },
+) => ({
   queryKey: [...ALL_COURSES_QUERY_KEY, searchParams],
   queryFn: async () => {
-    const response = await ApiClient.api.coursesControllerGetAllCourses({
+    const response = await ApiClient.api.courseControllerGetAllCourses({
       page: 1,
       perPage: 100,
       ...(searchParams?.title && { title: searchParams.title }),
@@ -34,12 +41,13 @@ export const allCoursesQueryOptions = (searchParams?: CourseParams) => ({
     return response.data;
   },
   select: (data: GetAllCoursesResponse) => data.data,
+  ...options,
 });
 
-export function useCourses(searchParams?: CourseParams) {
-  return useQuery(allCoursesQueryOptions(searchParams));
+export function useCourses(searchParams?: CourseParams, options?: QueryOptions) {
+  return useQuery(allCoursesQueryOptions(searchParams, options));
 }
 
-export function useCoursesSuspense(searchParams?: CourseParams) {
-  return useSuspenseQuery(allCoursesQueryOptions(searchParams));
+export function useCoursesSuspense(searchParams?: CourseParams, options?: QueryOptions) {
+  return useSuspenseQuery(allCoursesQueryOptions(searchParams, options));
 }

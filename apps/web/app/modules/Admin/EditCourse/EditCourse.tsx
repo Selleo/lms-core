@@ -36,11 +36,11 @@ const EditCourse = () => {
             title={course?.title}
             description={course?.description}
             categoryId={course?.categoryId}
-            imageUrl={course?.imageUrl}
+            imageUrl={course?.thumbnailUrl}
           />
         );
       case "Lesson":
-        return <CourseLessons chapters={course?.lessons as Chapter[]} />;
+        return <CourseLessons chapters={course?.chapters as Chapter[]} />;
       case "Pricing":
         return (
           <CoursePricing
@@ -50,7 +50,12 @@ const EditCourse = () => {
           />
         );
       case "Status":
-        return <CourseStatus courseId={course?.id || ""} state={course?.state || "draft"} />;
+        return (
+          <CourseStatus
+            courseId={course?.id || ""}
+            state={course?.isPublished ? "published" : "draft"}
+          />
+        );
       default:
         return <div className="text-gray-700 text-lg">Select a tab to view content.</div>;
     }
@@ -62,8 +67,8 @@ const EditCourse = () => {
         <CardHeader>
           <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1 flex items-center">
             {course?.title || ""}
-            {course?.state === "draft" && (
-              <span className="ml-2 flex items-center text-yellow-600 bg-[#FEFDE8] px-2 py-1 rounded-sm text-sm">
+            {course?.isPublished === false && (
+              <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
                 <Icon name="Warning" className="mr-1" />
                 Draft
               </span>

@@ -13,13 +13,13 @@ import { ContentTypes } from "../../../EditCourse.types";
 
 import { useFileLessonForm } from "./hooks/useFileLessonForm";
 
-import type { Chapter, LessonItem } from "../../../EditCourse.types";
+import type { Chapter, Lesson } from "../../../EditCourse.types";
 
 type FileLessonProps = {
   contentTypeToDisplay: string;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   chapterToEdit?: Chapter;
-  lessonToEdit?: LessonItem;
+  lessonToEdit?: Lesson;
 };
 
 const FileLessonForm = ({
@@ -35,15 +35,16 @@ const FileLessonForm = ({
   });
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
-  const [url, setUrl] = useState(lessonToEdit?.content.url || "");
+  //TODO: it not working correct, keep first lesson state
+  const [url, setUrl] = useState(lessonToEdit?.fileS3Key || "");
 
   const handleFileUpload = useCallback(
     async (file: File) => {
       setIsUploading(true);
       try {
-        const result = await uploadFile({ file, resource: "lessonItem" });
+        const result = await uploadFile({ file, resource: "lesson" });
         setUrl(result.fileUrl);
-        form.setValue("url", result.fileKey);
+        form.setValue("fileS3Key", result.fileKey);
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {
@@ -58,7 +59,12 @@ const FileLessonForm = ({
       "type",
       contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "video" : "presentation",
     );
-  }, [contentTypeToDisplay, form]);
+    form.setValue(
+      "fileType",
+      contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "video" : "presentation",
+    );
+    form.setValue("chapterId", chapterToEdit?.id || "");
+  }, [contentTypeToDisplay, form, chapterToEdit]);
 
   return (
     <div className="w-full max-w-full">
@@ -67,36 +73,10 @@ const FileLessonForm = ({
           {contentTypeToDisplay === ContentTypes.PRESENTATION_FORM ? "Presentation" : "Video"}
         </h1>
         {lessonToEdit && (
-          <div className="text-xl font-semibold text-gray-800">
-            Edit: {lessonToEdit?.content.title}
-          </div>
+          <div className="text-xl font-semibold text-gray-800">Edit: {lessonToEdit?.title}</div>
         )}
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
-            <div className="flex items-center justify-end">
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem className="flex items-center">
-                    <FormControl className="flex items-center">
-                      <Checkbox
-                        id="state"
-                        checked={field.value === "draft"}
-                        onCheckedChange={(checked) =>
-                          field.onChange(checked ? "draft" : "published")
-                        }
-                        className="mr-2 w-5 h-5"
-                      />
-                    </FormControl>
-                    <Label htmlFor="state" className="text-right text-l leading-[1] mt-[2px]">
-                      Draft
-                    </Label>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <FormField
               control={form.control}
               name="title"
@@ -113,9 +93,8 @@ const FileLessonForm = ({
                 </FormItem>
               )}
             />
-
             <FormItem>
-              <Label htmlFor="file">
+              <Label htmlFor="fileS3Key">
                 {" "}
                 <span className="text-red-500">*</span>
                 {contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM
@@ -135,7 +114,7 @@ const FileLessonForm = ({
             </FormItem>
             <FormField
               control={form.control}
-              name="body"
+              name="description"
               render={({ field }) => (
                 <FormItem className="mt-5">
                   <Label htmlFor="body" className="text-right">
@@ -164,7 +143,7 @@ const FileLessonForm = ({
                   Cancel
                 </Button>
               )}
-              <Button type="submit" className="bg-[#3F58B6] hover:bg-blue-600 text-white">
+              <Button type="submit" className="bg-primary-700 hover:bg-blue-600 text-white">
                 Save
               </Button>
             </div>

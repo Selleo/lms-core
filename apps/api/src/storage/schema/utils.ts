@@ -31,6 +31,7 @@ export const archived = boolean("archived").default(false).notNull();
 export const STATUS = {
   draft: { key: "draft", value: "Draft" },
   published: { key: "published", value: "Published" },
+  archived: { key: "archived", value: "Archived" },
 } as const;
 
 export const STATUS_KEYS = Object.fromEntries(

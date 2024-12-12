@@ -9,7 +9,7 @@ import * as Tooltip from "@radix-ui/react-tooltip";
 import { useParams } from "@remix-run/react";
 import { useCallback, useMemo, useState } from "react";
 
-import { useUpdateLessonPremiumStatus } from "~/api/mutations/admin/useUpdateLessonPremiumStatus";
+import { useUpdateLessonFreemiumStatus } from "~/api/mutations/admin/useUpdateLessonFreemiumStatus";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 import { Icon } from "~/components/Icon";
@@ -21,7 +21,7 @@ import { ContentTypes } from "../../EditCourse.types";
 
 import LessonCard from "./LessonCard";
 
-import type { Chapter, LessonItem } from "../../EditCourse.types";
+import type { Chapter, Lesson } from "../../EditCourse.types";
 import type React from "react";
 
 interface ChapterCardProps {
@@ -29,7 +29,7 @@ interface ChapterCardProps {
   isOpen: boolean;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
-  setSelectedLesson: (selectedLesson?: LessonItem) => void;
+  setSelectedLesson: (selectedLesson?: Lesson) => void;
 }
 
 const ChapterCard = ({
@@ -39,7 +39,7 @@ const ChapterCard = ({
   setSelectedChapter,
   setSelectedLesson,
 }: ChapterCardProps) => {
-  const { mutateAsync: updatePremiumStatus } = useUpdateLessonPremiumStatus();
+  const { mutateAsync: updateFreemiumStatus } = useUpdateLessonFreemiumStatus();
   const { id } = useParams();
 
   const handleAddLessonClick = useCallback(
@@ -58,9 +58,8 @@ const ChapterCard = ({
   }, [chapter, setContentTypeToDisplay, setSelectedChapter]);
 
   const onClickLessonCard = useCallback(
-    (lesson: LessonItem) => {
-      const contentType =
-        lesson.lessonItemType === "file" ? lesson.content.type : lesson.lessonItemType;
+    (lesson: Lesson) => {
+      const contentType = lesson.type;
       setSelectedLesson(lesson);
       switch (contentType) {
         case "video":
@@ -91,21 +90,21 @@ const ChapterCard = ({
     async (event: React.MouseEvent) => {
       event.stopPropagation();
       try {
-        await updatePremiumStatus({
-          lessonId: chapter.id,
-          data: { isFree: !chapter.isFree },
+        await updateFreemiumStatus({
+          chapterId: chapter.id,
+          data: { isFreemium: !chapter.isFree },
         });
         queryClient.invalidateQueries({
           queryKey: [COURSE_QUERY_KEY, { id }],
         });
       } catch (error) {
-        console.error("Failed to update chapter premium status:", error);
+        console.error("Failed to update chapter freemium status:", error);
       }
     },
-    [chapter, updatePremiumStatus, id],
+    [chapter, updateFreemiumStatus, id],
   );
 
-  const lessonItems = useMemo(() => chapter.lessonItems, [chapter.lessonItems]);
+  const lessons = useMemo(() => chapter.lessons, [chapter.lessons]);
 
   return (
     <AccordionItem
@@ -115,7 +114,7 @@ const ChapterCard = ({
       draggable
     >
       <Card
-        className={cn("mb-4 h-full flex p-4 border", isOpen ? "border-[#5D84D4]" : "")}
+        className={cn("mb-4 h-full flex p-4 border", { "border-primary-500": isOpen })}
         onClick={onClickChapterCard}
       >
         <div className="flex w-full">
@@ -132,11 +131,11 @@ const ChapterCard = ({
             <h3 className="text-xl text-black">{chapter.title}</h3>
             <AccordionContent className="mt-2 text-gray-700">
               <div className="mt-4 grid grid-cols-1 gap-4">
-                {lessonItems.length === 0 ? (
-                  <p>No items for this lesson</p>
+                {lessons === null || lessons?.length === 0 ? (
+                  <p>No lessons for this chapter</p>
                 ) : (
-                  lessonItems.map((item) => {
-                    const key = item.content.id || `lesson-${item.content.id || Math.random()}`;
+                  lessons.map((item, index) => {
+                    const key = item.id || `lesson-${index}`;
                     return (
                       <LessonCard key={key} item={item} onClickLessonCard={onClickLessonCard} />
                     );
@@ -156,10 +155,10 @@ const ChapterCard = ({
               </div>
               <div className="flex items-center">
                 <Switch.Root
-                  className={cn(
-                    "w-10 h-6 mr-2 rounded-full relative transition-colors",
-                    chapter.isFree ? "bg-blue-500" : "bg-gray-200",
-                  )}
+                  className={cn("w-10 h-6 mr-2 rounded-full relative transition-colors", {
+                    "bg-blue-500": chapter.isFree,
+                    "bg-gray-200": !chapter.isFree,
+                  })}
                   onClick={onSwitchClick}
                   checked={chapter.isFree}
                 >
@@ -200,10 +199,10 @@ const ChapterCard = ({
 };
 
 interface ChaptersListProps {
-  chapters: Chapter[];
+  chapters?: Chapter[];
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
-  setSelectedLesson: (selectedLesson?: LessonItem) => void;
+  setSelectedLesson: (selectedLesson?: Lesson) => void;
 }
 
 const ChaptersList = ({
@@ -216,7 +215,7 @@ const ChaptersList = ({
 
   const chapterCards = useMemo(
     () =>
-      chapters.map((chapter) => (
+      chapters?.map((chapter) => (
         <ChapterCard
           key={chapter.id}
           chapter={chapter}

@@ -10,12 +10,10 @@ export const courseQueryOptions = (id: string) =>
   queryOptions({
     queryKey: [COURSE_QUERY_KEY, { id }],
     queryFn: async () => {
-      const response = await ApiClient.api.coursesControllerGetBetaCourseById({
+      const response = await ApiClient.api.courseControllerGetBetaCourseById({
         id,
       });
-      // temporary solution
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return response.data as any;
+      return response.data;
     },
     select: (data: GetCourseByIdResponse) => data.data,
   });

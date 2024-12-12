@@ -8,7 +8,7 @@ export const teacherCourses = (authorId: string) => {
   return {
     queryKey: ["teacher-courses", authorId],
     queryFn: async () => {
-      const response = await ApiClient.api.coursesControllerGetTeacherCourses({ authorId });
+      const response = await ApiClient.api.courseControllerGetTeacherCourses({ authorId });
 
       return response.data;
     },

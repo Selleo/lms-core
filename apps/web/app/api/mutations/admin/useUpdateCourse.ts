@@ -17,7 +17,7 @@ export function useUpdateCourse() {
 
   return useMutation({
     mutationFn: async (options: UpdateCourseOptions) => {
-      const response = await ApiClient.api.coursesControllerUpdateCourse(
+      const response = await ApiClient.api.courseControllerUpdateCourse(
         options.courseId,
         options.data,
       );

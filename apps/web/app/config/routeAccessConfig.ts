@@ -99,7 +99,7 @@ export const routeAccessConfig = createRouteConfig({
   "admin/courses/:id": ADMIN_AND_TEACHER,
   "admin/beta-courses/:id": ADMIN_AND_TEACHER,
   "admin/users/*": ADMIN_ONLY,
-  "admin/categories": ADMIN_AND_TEACHER,
+  "admin/categories": ADMIN_ONLY,
   "admin/categories/:id": ADMIN_AND_TEACHER,
   "admin/categories/new": ADMIN_AND_TEACHER,
   "admin/lessons": ADMIN_AND_TEACHER,

@@ -10,6 +10,8 @@ import { useUserRole } from "~/hooks/useUserRole";
 
 import Loader from "../common/Loader/Loader";
 
+import type { PropsWithChildren } from "react";
+
 export const meta: MetaFunction = () => {
   return [{ title: "Admin" }];
 };
@@ -28,7 +30,7 @@ export const clientLoader = async () => {
   return null;
 };
 
-const AdminGuard = ({ children }: { children: React.ReactNode }) => {
+const AdminGuard = ({ children }: PropsWithChildren) => {
   const { isAdmin, isTeacher } = useUserRole();
   const navigate = useNavigate();
 
@@ -51,11 +53,11 @@ const AdminLayout = () => {
 
   return (
     <div className="flex h-screen flex-col">
-      <div className="flex flex-1 flex-col 2xl:flex-row overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden 2xl:flex-row">
         {!hideTopbarAndSidebar && (
           <Navigation menuItems={mapNavigationItems(adminNavigationConfig)} />
         )}
-        <main className="flex-1 overflow-y-auto p-6 bg-primary-50">
+        <main className="bg-primary-50 flex-1 overflow-y-auto p-6">
           <Suspense fallback={<Loader />}>
             <AdminGuard>
               <RouteGuard>

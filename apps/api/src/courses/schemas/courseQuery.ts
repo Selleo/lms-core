@@ -1,11 +1,14 @@
-import { Type, type Static } from "@sinclair/typebox";
+import { type Static, Type } from "@sinclair/typebox";
+
+import type { UUIDType } from "src/common";
+import type { UserRole } from "src/users/schemas/user-roles";
 
 export const courseSortFields = [
   "title",
   "category",
   "creationDate",
   "author",
-  "lessonsCount",
+  "chapterCount",
   "enrolledParticipantsCount",
 ] as const;
 
@@ -14,7 +17,7 @@ export const CourseSortFields: Record<CourseSortField, CourseSortField> = {
   category: "category",
   creationDate: "creationDate",
   author: "author",
-  lessonsCount: "lessonsCount",
+  chapterCount: "chapterCount",
   enrolledParticipantsCount: "enrolledParticipantsCount",
 };
 
@@ -25,13 +28,13 @@ export const sortCourseFieldsOptions = Type.Union([
   Type.Literal("category"),
   Type.Literal("creationDate"),
   Type.Literal("author"),
-  Type.Literal("lessonsCount"),
+  Type.Literal("chapterCount"),
   Type.Literal("enrolledParticipantsCount"),
   Type.Literal("-title"),
   Type.Literal("-category"),
   Type.Literal("-creationDate"),
   Type.Literal("-author"),
-  Type.Literal("-lessonsCount"),
+  Type.Literal("-chapterCount"),
   Type.Literal("-enrolledParticipantsCount"),
 ]);
 
@@ -49,8 +52,7 @@ export type CoursesFilterFiled = Static<typeof coursesFilterFiled>;
 export const coursesFilterSchema = Type.Object({
   title: Type.Optional(Type.String()),
   category: Type.Optional(Type.String()),
-  state: Type.Optional(Type.String()),
-  archived: Type.Optional(Type.String()),
+  isPublished: Type.Optional(Type.Boolean()),
   creationDateRange: Type.Optional(
     Type.Tuple([Type.String({ format: "date-time" }), Type.String({ format: "date-time" })]),
   ),
@@ -64,6 +66,6 @@ export type CoursesQuery = {
   page?: number;
   perPage?: number;
   sort?: SortCourseFieldsOptions;
-  currentUserId?: string;
-  currentUserRole?: string;
+  currentUserId?: UUIDType;
+  currentUserRole?: UserRole;
 };

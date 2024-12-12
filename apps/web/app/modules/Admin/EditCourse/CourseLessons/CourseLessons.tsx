@@ -10,10 +10,10 @@ import CourseLessonEmptyState from "./components/CourseLessonEmptyState";
 import NewChapter from "./NewChapter/NewChapter";
 import SelectLessonType from "./NewLesson/components/SelectLessonType";
 import FileLessonForm from "./NewLesson/FileLessonForm/FileLessonForm";
-import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
 import TextLessonForm from "./NewLesson/TextLessonForm/TextLessonForm";
 
-import type { Chapter, LessonItem } from "../EditCourse.types";
+import type { Chapter, Lesson } from "../EditCourse.types";
+import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
 
 interface CourseLessonsProps {
   chapters?: Chapter[];
@@ -22,7 +22,7 @@ interface CourseLessonsProps {
 const CourseLessons = ({ chapters }: CourseLessonsProps) => {
   const [contentTypeToDisplay, setContentTypeToDisplay] = useState(ContentTypes.EMPTY);
   const [selectedChapter, setSelectedChapter] = useState<Chapter>();
-  const [selectedLesson, setSelectedLesson] = useState<LessonItem>();
+  const [selectedLesson, setSelectedLesson] = useState<Lesson>();
 
   const addChapter = () => {
     setContentTypeToDisplay(ContentTypes.CHAPTER_FORM);
@@ -58,10 +58,10 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
           lessonToEdit={selectedLesson}
         />
       ),
-      [ContentTypes.QUIZ_FORM]: <QuizLessonForm />,
       [ContentTypes.SELECT_LESSON_TYPE]: (
         <SelectLessonType setContentTypeToDisplay={setContentTypeToDisplay} />
       ),
+      [ContentTypes.QUIZ_FORM]: <QuizLessonForm />,
     };
 
     return contentMap[contentTypeToDisplay] || null;
@@ -71,7 +71,7 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
     <div className="flex bg-white h-full">
       <div className="w-full md:w-2/5 h-full flex flex-col">
         <ChaptersList
-          chapters={chapters as Chapter[]}
+          chapters={chapters}
           setContentTypeToDisplay={setContentTypeToDisplay}
           setSelectedChapter={setSelectedChapter}
           setSelectedLesson={setSelectedLesson}
@@ -79,7 +79,7 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
         <div className="flex-grow" />
         <Button
           onClick={addChapter}
-          className="bg-[#3F58B6] text-white py-2 px-4 rounded-lg hover:bg-blue-600 mb-4"
+          className="bg-primary-700 text-white py-2 px-4 rounded-lg hover:bg-blue-600 mb-4"
         >
           <Icon name="Plus" className="mr-2" />
           Add Chapter

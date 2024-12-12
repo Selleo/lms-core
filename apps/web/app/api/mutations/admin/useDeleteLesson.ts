@@ -5,7 +5,7 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 
-type UpdateCourseOptions = {
+type DeleteLessonOptions = {
   chapterId: string;
   lessonId: string;
 };
@@ -14,7 +14,7 @@ export function useDeleteLesson() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: UpdateCourseOptions) => {
+    mutationFn: async (options: DeleteLessonOptions) => {
       const response = await ApiClient.api.lessonsControllerRemoveLesson(
         options.chapterId,
         options.lessonId,

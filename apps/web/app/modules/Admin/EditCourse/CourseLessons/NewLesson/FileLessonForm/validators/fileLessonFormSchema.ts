@@ -2,10 +2,12 @@ import { z } from "zod";
 
 export const fileLessonFormSchema = z.object({
   title: z.string(),
-  body: z.optional(z.string()),
-  state: z.enum(["draft", "published"]),
+  description: z.string(),
   type: z.enum(["presentation", "external_presentation", "video", "external_video"]),
-  url: z.string(),
+  displayOrder: z.number().optional(),
+  fileS3Key: z.string(),
+  fileType: z.string(),
+  chapterId: z.string(),
 });
 
 export type FileLessonFormValues = z.infer<typeof fileLessonFormSchema>;

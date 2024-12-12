@@ -4,11 +4,10 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
-
-import type { CreateTextBlockBody } from "./../../generated-api";
+import { BetaCreateLessonBody } from "~/api/generated-api";
 
 type CreateTextBlockOptions = {
-  data: CreateTextBlockBody;
+  data: BetaCreateLessonBody;
 };
 
 export function useCreateTextBlockItem() {
@@ -16,7 +15,7 @@ export function useCreateTextBlockItem() {
 
   return useMutation({
     mutationFn: async (options: CreateTextBlockOptions) => {
-      const response = await ApiClient.api.lessonsControllerCreateTextBlock(options.data);
+      const response = await ApiClient.api.lessonControllerBetaCreateLesson(options.data);
 
       return response.data;
     },

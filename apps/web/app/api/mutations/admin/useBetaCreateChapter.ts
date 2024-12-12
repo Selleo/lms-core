@@ -4,19 +4,18 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
+import { BetaCreateChapterBody } from "~/api/generated-api";
 
-import type { CreateLessonBody } from "../../generated-api";
-
-type CreateLessonOptions = {
-  data: CreateLessonBody;
+type CreateChapterOptions = {
+  data: BetaCreateChapterBody;
 };
 
 export function useBetaCreateChapter() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: CreateLessonOptions) => {
-      const response = await ApiClient.api.lessonsControllerBetaCreateLesson(options.data);
+    mutationFn: async (options: CreateChapterOptions) => {
+      const response = await ApiClient.api.chapterControllerBetaCreateChapter(options.data);
 
       return response.data;
     },
