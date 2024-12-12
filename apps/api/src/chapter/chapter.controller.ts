@@ -729,33 +729,33 @@ export class ChapterController {
   //   });
   // }
 
-  // @Patch("course-lesson/freemium-status")
-  // @Roles(USER_ROLES.teacher, USER_ROLES.admin)
-  // @Validate({
-  //   request: [
-  //     {
-  //       type: "query",
-  //       name: "lessonId",
-  //       schema: UUIDSchema,
-  //     },
-  //     {
-  //       type: "body",
-  //       schema: Type.Object({
-  //         isFreemium: Type.Boolean(),
-  //       }),
-  //     },
-  //   ],
-  //   response: baseResponse(Type.Object({ message: Type.String() })),
-  // })
-  // async updateLessonFreemiumStatus(
-  //   @Query("lessonId") lessonId: string,
-  //   @Body() body: { isFreemium: boolean },
-  // ): Promise<BaseResponse<{ message: string }>> {
-  //   await this.adminLessonItemsService.updateFreemiumStatus(lessonId, body.isFreemium);
-  //   return new BaseResponse({
-  //     message: "Course lesson free status updated successfully",
-  //   });
-  // }
+  @Patch("freemium-status")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "chapterId",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: Type.Object({
+          isFreemium: Type.Boolean(),
+        }),
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateFreemiumStatus(
+    @Query("chapterId") chapterId: UUIDType,
+    @Body() body: { isFreemium: boolean },
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminChapterService.updateFreemiumStatus(chapterId, body.isFreemium);
+    return new BaseResponse({
+      message: "Course lesson free status updated successfully",
+    });
+  }
 
   // @Post("create-file")
   // @Roles(USER_ROLES.teacher, USER_ROLES.admin)

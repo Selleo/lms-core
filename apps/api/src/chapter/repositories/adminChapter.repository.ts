@@ -2,8 +2,9 @@ import { Inject, Injectable } from "@nestjs/common";
 import { eq, and, sql, isNotNull, count } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-import { lessons } from "src/storage/schema";
+import { chapters, lessons } from "src/storage/schema";
 import { id } from "src/storage/schema/utils";
+import { chapter } from "../schemas/chapter.schema";
 
 @Injectable()
 export class AdminChapterRepository {
@@ -225,6 +226,10 @@ export class AdminChapterRepository {
       .from(lessons)
       .where(and(eq(lessons.chapterId, chapterId)))
       .orderBy(lessons.displayOrder);
+  }
+
+  async updateFreemiumStatus(chapterId: string, isFreemium: boolean) {
+    return await this.db.update(chapters).set({ isFreemium }).where(eq(chapters.id, chapterId));
   }
 
   // async getQuestionAnswers(questionId: UUIDType) {

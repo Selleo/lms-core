@@ -91,7 +91,7 @@ const ChapterCard = ({
       event.stopPropagation();
       try {
         await updateFreemiumStatus({
-          lessonId: chapter.id,
+          chapterId: chapter.id,
           data: { isFreemium: !chapter.isFree },
         });
         queryClient.invalidateQueries({

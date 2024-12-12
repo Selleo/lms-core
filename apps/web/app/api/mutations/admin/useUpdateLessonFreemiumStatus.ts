@@ -7,7 +7,7 @@ import { ApiClient } from "../../api-client";
 
 type UpdateLessonFreemiumStatusOptions = {
   data: { isFreemium: boolean };
-  lessonId: string;
+  chapterId: string;
 };
 
 export function useUpdateLessonFreemiumStatus() {
@@ -15,9 +15,9 @@ export function useUpdateLessonFreemiumStatus() {
 
   return useMutation({
     mutationFn: async (options: UpdateLessonFreemiumStatusOptions) => {
-      const response = await ApiClient.api.lessonControllerUpdateLessonFreemiumStatus(
+      const response = await ApiClient.api.chapterControllerUpdateFreemiumStatus(
         { isFreemium: options.data.isFreemium },
-        { lessonId: options.lessonId },
+        { chapterId: options.chapterId },
       );
 
       return response.data;

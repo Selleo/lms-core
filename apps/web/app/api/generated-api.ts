@@ -655,6 +655,16 @@ export interface BetaCreateChapterResponse {
   };
 }
 
+export interface UpdateFreemiumStatusBody {
+  isFreemium: boolean;
+}
+
+export interface UpdateFreemiumStatusResponse {
+  data: {
+    message: string;
+  };
+}
+
 export interface MarkLessonAsCompletedResponse {
   data: {
     message: string;
@@ -1722,6 +1732,30 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<BetaCreateChapterResponse, any>({
         path: `/api/chapter/beta-create-chapter`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerUpdateFreemiumStatus
+     * @request PATCH:/api/chapter/freemium-status
+     */
+    chapterControllerUpdateFreemiumStatus: (
+      data: UpdateFreemiumStatusBody,
+      query?: {
+        /** @format uuid */
+        chapterId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateFreemiumStatusResponse, any>({
+        path: `/api/chapter/freemium-status`,
+        method: "PATCH",
+        query: query,
         body: data,
         type: ContentType.Json,
         format: "json",

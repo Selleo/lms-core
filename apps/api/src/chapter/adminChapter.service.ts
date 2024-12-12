@@ -223,6 +223,10 @@ export class AdminChapterService {
     });
   }
 
+  async updateFreemiumStatus(chapterId: UUIDType, isFreemium: boolean) {
+    return await this.adminChapterRepository.updateFreemiumStatus(chapterId, isFreemium);
+  }
+
   // async updateLesson(id: string, body: UpdateLessonBody) {
   //   const [lesson] = await this.adminChapterRepository.updateLesson(id, body);
 

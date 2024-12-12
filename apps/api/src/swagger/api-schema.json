@@ -1642,6 +1642,43 @@
         }
       }
     },
+    "/api/chapter/freemium-status": {
+      "patch": {
+        "operationId": "ChapterController_updateFreemiumStatus",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFreemiumStatusBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateFreemiumStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/studentLessonProgress": {
       "post": {
         "operationId": "StudentLessonProgressController_markLessonAsCompleted",
@@ -4005,6 +4042,36 @@
             },
             "required": [
               "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateFreemiumStatusBody": {
+        "type": "object",
+        "properties": {
+          "isFreemium": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isFreemium"
+        ]
+      },
+      "UpdateFreemiumStatusResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
               "message"
             ]
           }
