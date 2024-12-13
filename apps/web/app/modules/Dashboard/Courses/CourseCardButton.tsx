@@ -7,9 +7,16 @@ type CourseCardButtonProps = {
   enrolled: boolean;
   isAdmin: boolean;
   priceInCents: number;
+  isScormCreatePage?: boolean;
 };
 
-const CourseCardButton = ({ currency, enrolled, isAdmin, priceInCents }: CourseCardButtonProps) => {
+const CourseCardButton = ({
+  currency,
+  enrolled,
+  isAdmin,
+  priceInCents,
+  isScormCreatePage,
+}: CourseCardButtonProps) => {
   const getButtonLabel = (enrolled: boolean, isAdmin: boolean) => {
     if (enrolled) {
       return (
@@ -18,6 +25,8 @@ const CourseCardButton = ({ currency, enrolled, isAdmin, priceInCents }: CourseC
         </span>
       );
     }
+
+    if (isScormCreatePage) return "Read More";
 
     if (isAdmin) return "View";
 
