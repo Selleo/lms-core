@@ -44,6 +44,6 @@ export interface CourseFormActions {
 export type CourseFormStore = CourseFormState & CourseFormActions;
 
 export interface StepComponentProps {
-  title: string;
-  description: string;
+  handleNext?: () => void;
+  handleBack?: () => void;
 }

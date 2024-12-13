@@ -1,11 +1,11 @@
 import { Icon } from "~/components/Icon";
 import { cn } from "~/lib/utils";
 
-import type { STEPS } from "../constants/scorm.consts";
+import type { SCORM_CONFIG } from "../scorm.config";
 
 interface ProgressProps {
   currentStep: number;
-  steps: typeof STEPS;
+  steps: typeof SCORM_CONFIG;
 }
 
 export const Progress = ({ currentStep, steps }: ProgressProps) => {
@@ -21,7 +21,7 @@ export const Progress = ({ currentStep, steps }: ProgressProps) => {
         const isLastStep = index === steps.length - 1;
 
         return (
-          <div key={step.id} className={cn("flex items-center", !isLastStep && "flex-1")}>
+          <div key={step.id} className={cn("flex items-center", { "flex-1": !isLastStep })}>
             <div
               className={cn(
                 "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ease-in-out bg-primary-50 relative",

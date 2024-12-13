@@ -1,4 +1,9 @@
-import { STEPS } from "../constants/scorm.consts";
+import { useNavigate } from "@remix-run/react";
+
+import { Icon } from "~/components/Icon";
+import { Button } from "~/components/ui/button";
+
+import { SCORM_CONFIG } from "../scorm.config";
 import { useScormFormStore } from "../store/scormForm.store";
 
 import { Progress } from "./Progress";
@@ -11,17 +16,22 @@ interface StepWrapperProps {
 }
 
 export function StepWrapper({ title, description, children }: PropsWithChildren<StepWrapperProps>) {
+  const navigate = useNavigate();
   const { currentStep } = useScormFormStore();
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold">{title}</h1>
-        <p className="text-muted-foreground">{description}</p>
+        <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
+          <Icon name="ArrowRight" className="w-4 h-4 mr-2 rotate-180" />
+          <span>Back</span>
+        </Button>
       </div>
-
-      <Progress currentStep={currentStep} steps={STEPS} />
-
+      <div className="flex flex-col gap-2">
+        <h1 className="text-3xl font-bold text-neutral-950">{title}</h1>
+        <p className="text-neutral-800 text-lg">{description}</p>
+      </div>
+      <Progress currentStep={currentStep} steps={SCORM_CONFIG} />
       {children}
     </div>
   );

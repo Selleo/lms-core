@@ -1,21 +1,21 @@
+import { useNavigate } from "@remix-run/react";
 import { useFormContext } from "react-hook-form";
 
-import { Card } from "~/components/ui/card";
-
-import { StepWrapper } from "./StepWrapper";
+import { Icon } from "~/components/Icon";
+import { Button } from "~/components/ui/button";
 
 import type { CourseFormData, StepComponentProps } from "../types/scorm.types";
 
-export function ScormUploadStep({ title, description }: StepComponentProps) {
+export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProps) {
+  const navigate = useNavigate();
+
   const {
     setValue,
     watch,
     formState: { errors },
   } = useFormContext<CourseFormData>();
-  const file = watch("scorm.file");
-  const fileMetadata = watch("scorm.fileMetadata");
 
-  const needsReupload = !file && fileMetadata;
+  const file = watch("scorm.file");
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -32,54 +32,43 @@ export function ScormUploadStep({ title, description }: StepComponentProps) {
   };
 
   return (
-    <div className="space-y-6">
-      {needsReupload && (
-        <div className="rounded-md bg-yellow-50 p-4">
-          <div className="flex">
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-yellow-800">Please re-upload your file</h3>
-              <div className="mt-2 text-sm text-yellow-700">
-                <p>Previous file: {fileMetadata.name}</p>
-                <p>Size: {(fileMetadata.size / (1024 * 1024)).toFixed(2)} MB</p>
-              </div>
-            </div>
+    <div className="p-6 flex flex-col gap-8">
+      <input
+        type="file"
+        accept=".zip"
+        onChange={handleFileChange}
+        className="hidden"
+        id="scorm-upload"
+      />
+      <label
+        htmlFor="scorm-upload"
+        className="cursor-pointer block border-2 border-dashed rounded-lg p-12 text-center hover:border-primary transition-colors"
+      >
+        {file ? (
+          <div className="space-y-2">
+            <p className="font-medium">{file.name}</p>
+            <p className="text-sm text-muted-foreground">
+              {(file.size / (1024 * 1024)).toFixed(2)} MB
+            </p>
           </div>
-        </div>
+        ) : (
+          <div className="space-y-2">
+            <p className="font-medium">Click to upload or drag and drop</p>
+            <p className="text-sm text-muted-foreground">SCORM .zip file (max. to 500MB)</p>
+          </div>
+        )}
+      </label>
+
+      {errors.scorm?.file && (
+        <p className="mt-2 text-sm text-destructive">{errors.scorm.file.message}</p>
       )}
-
-      <StepWrapper title={title} description={description}>
-        <Card className="p-6">
-          <input
-            type="file"
-            accept=".zip"
-            onChange={handleFileChange}
-            className="hidden"
-            id="scorm-upload"
-          />
-          <label
-            htmlFor="scorm-upload"
-            className="cursor-pointer block border-2 border-dashed rounded-lg p-12 text-center hover:border-primary transition-colors"
-          >
-            {file ? (
-              <div className="space-y-2">
-                <p className="font-medium">{file.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {(file.size / (1024 * 1024)).toFixed(2)} MB
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <p className="font-medium">Click to upload or drag and drop</p>
-                <p className="text-sm text-muted-foreground">SCORM .zip file (max. to 500MB)</p>
-              </div>
-            )}
-          </label>
-
-          {errors.scorm?.file && (
-            <p className="mt-2 text-sm text-destructive">{errors.scorm.file.message}</p>
-          )}
-        </Card>
-      </StepWrapper>
+      <div className="flex gap-3">
+        <Button variant="outline" onClick={() => navigate(-1)}>
+          <Icon name="ArrowRight" className="w-4 h-4 mr-2 rotate-180" />
+          <span>Cancel</span>
+        </Button>
+        <Button onClick={handleNext}>Set up Course</Button>
+      </div>
     </div>
   );
 }

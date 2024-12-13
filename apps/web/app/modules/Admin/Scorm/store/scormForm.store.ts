@@ -13,7 +13,7 @@ const initialState: CourseFormState = {
       description: "",
       thumbnail: null,
     },
-    pricing: { type: "free" },
+    pricing: { type: "free", price: undefined, currency: "PLN" },
     status: "draft",
   },
 };
