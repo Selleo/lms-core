@@ -336,7 +336,7 @@ export interface GetAllCoursesResponse {
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
-    hasFreeLessons?: boolean;
+    hasFreeChapters?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -366,7 +366,7 @@ export interface GetStudentCoursesResponse {
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
-    hasFreeLessons?: boolean;
+    hasFreeChapters?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -396,7 +396,7 @@ export interface GetAvailableCoursesResponse {
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
-    hasFreeLessons?: boolean;
+    hasFreeChapters?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -426,7 +426,7 @@ export interface GetTeacherCoursesResponse {
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
-    hasFreeLessons?: boolean;
+    hasFreeChapters?: boolean;
   }[];
 }
 
