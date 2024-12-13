@@ -51,10 +51,7 @@ const EditCourse = () => {
         );
       case "Status":
         return (
-          <CourseStatus
-            courseId={course?.id || ""}
-            state={course?.isPublished ? "published" : "draft"}
-          />
+          <CourseStatus courseId={course?.id || ""} isPublished={course?.isPublished ?? false} />
         );
       default:
         return <div className="text-gray-700 text-lg">Select a tab to view content.</div>;

@@ -2,7 +2,6 @@ import { Inject, Injectable } from "@nestjs/common";
 import { EventBus } from "@nestjs/cqrs";
 
 import { DatabasePg } from "src/common";
-import { FileService } from "src/file/file.service";
 
 import { ChapterRepository } from "./repositories/chapter.repository";
 
@@ -10,10 +9,19 @@ import { ChapterRepository } from "./repositories/chapter.repository";
 export class ChapterService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly fileService: FileService,
     private readonly chapterRepository: ChapterRepository,
     private readonly eventBus: EventBus,
   ) {}
+
+  // async getChapterWithDetails(id: UUIDType, userId: UUIDType, isStudent: boolean) {
+  //   const hasCourseAccess = await this.chapterRepository.checkChapterAssignment(id, userId);
+  //   if (!hasCourseAccess && isStudent) throw new Error("You don't have access to this chapter");
+
+  //   const [chapter] = await this.chapterRepository.getChapterWithDetails(id, userId);
+  //   if (!chapter) throw new Error("Chapter not found");
+
+  //   return chapter;
+  // }
 
   // async getChapter(
   //   id: UUIDType,

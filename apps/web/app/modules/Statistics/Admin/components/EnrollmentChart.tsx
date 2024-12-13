@@ -45,7 +45,7 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
 
   if (isLoading) {
     return (
-      <div className="w-full bg-white rounded-lg gap-4 drop-shadow-card p-8 flex flex-col">
+      <div className="w-full bg-white rounded-lg gap-4 md:col-span-2 drop-shadow-card p-8 flex flex-col">
         <hgroup className="gap-y-[5px] flex flex-col items-center py-3">
           <Skeleton className="h-6 w-[240px] rounded-lg" />
           <Skeleton className="w-40 h-4 rounded-lg" />

@@ -7,7 +7,7 @@ import { LessonCard } from "~/modules/Courses/CourseView/LessonCard";
 import type { GetCourseResponse } from "~/api/generated-api";
 
 type LessonsListProps = {
-  lessons: GetCourseResponse["data"]["lessons"];
+  lessons: GetCourseResponse["data"]["chapters"];
   isEnrolled: GetCourseResponse["data"]["enrolled"];
 };
 
@@ -25,15 +25,13 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
 
       if (!type) return setFilteredLessons(lessons);
 
-      const lessonsByType = lessons.filter((lesson) => lesson.type === type);
-
-      setFilteredLessons(lessonsByType);
+      setFilteredLessons(lessons);
     },
     [lessons],
   );
 
   const lessonCards = useMemo(() => {
-    return filteredLessons.map((lesson, index) => (
+    return filteredLessons?.map((lesson, index) => (
       <LessonCard
         {...lesson}
         key={lesson.id}
@@ -48,7 +46,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
     <div className="grow flex flex-col gap-y-4 rounded-2xl bg-white drop-shadow-primary relative p-6 lg:p-8">
       <h3 className="text-xl font-semibold">
         Lessons
-        <span className="text-primary-700"> ({lessons.length})</span>
+        <span className="text-primary-700"> ({lessons?.length})</span>
       </h3>
       <ButtonGroup
         className="sr-only lg:not-sr-only"

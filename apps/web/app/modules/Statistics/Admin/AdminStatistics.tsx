@@ -15,7 +15,6 @@ import type { ChartConfig } from "~/components/ui/chart";
 export const AdminStatistics = () => {
   const { data: user } = useCurrentUser();
   const { data: statistics, isLoading } = useTeacherStatistics();
-  console.log({ statistics });
   const totalCoursesCompletion =
     statistics?.totalCoursesCompletionStats.totalCoursesCompletion ?? 0;
   const totalCourses = statistics?.totalCoursesCompletionStats.totalCourses ?? 0;
@@ -24,7 +23,6 @@ export const AdminStatistics = () => {
   const remainedOnFreemium = statistics?.conversionAfterFreemiumLesson.remainedOnFreemium ?? 0;
 
   const correctAnswers = statistics?.avgQuizScore.correctAnswerCount ?? 0;
-  const wrongAnswers = statistics?.avgQuizScore.wrongAnswerCount ?? 0;
   const totalAnswers = statistics?.avgQuizScore.answerCount ?? 0;
 
   const coursesCompletionChartConfig = {

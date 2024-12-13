@@ -2953,7 +2953,7 @@
                 "createdAt": {
                   "type": "string"
                 },
-                "hasFreeLessons": {
+                "hasFreeChapters": {
                   "type": "boolean"
                 }
               },
@@ -3068,7 +3068,7 @@
                 "createdAt": {
                   "type": "string"
                 },
-                "hasFreeLessons": {
+                "hasFreeChapters": {
                   "type": "boolean"
                 }
               },
@@ -3183,7 +3183,7 @@
                 "createdAt": {
                   "type": "string"
                 },
-                "hasFreeLessons": {
+                "hasFreeChapters": {
                   "type": "boolean"
                 }
               },
@@ -3298,7 +3298,7 @@
                 "createdAt": {
                   "type": "string"
                 },
-                "hasFreeLessons": {
+                "hasFreeChapters": {
                   "type": "boolean"
                 }
               },

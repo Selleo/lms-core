@@ -12,15 +12,15 @@ import type { UpdateCourseBody } from "~/api/generated-api";
 
 type UseCourseStatusFormProps = {
   courseId: string;
-  state?: string;
+  isPublished?: boolean;
 };
 
-export const useCourseStatusForm = ({ courseId, state }: UseCourseStatusFormProps) => {
+export const useCourseStatusForm = ({ courseId, isPublished }: UseCourseStatusFormProps) => {
   const { mutateAsync: updateCourse } = useUpdateCourse();
   const form = useForm<CourseStatusFormValues>({
     resolver: zodResolver(courseStatusFormSchema),
     defaultValues: {
-      state: (state || "draft") as "draft" | "published",
+      isPublished: isPublished || false,
     },
   });
   const onSubmit = async (data: UpdateCourseBody) => {
