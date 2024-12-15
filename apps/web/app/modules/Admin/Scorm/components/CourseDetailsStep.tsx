@@ -1,5 +1,6 @@
 import { useFormContext } from "react-hook-form";
 
+import { useCategoriesSuspense } from "~/api/queries";
 import { Button } from "~/components/ui/button";
 import { FormField } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
@@ -16,6 +17,7 @@ import { Textarea } from "~/components/ui/textarea";
 import type { CourseFormData, StepComponentProps } from "../types/scorm.types";
 
 export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps) {
+  const { data: categories } = useCategoriesSuspense();
   const {
     register,
     formState: { errors },
@@ -51,9 +53,11 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Development">Development</SelectItem>
-                  <SelectItem value="Business">Business</SelectItem>
-                  <SelectItem value="Design">Design</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem value={category.id} key={category.id}>
+                      {category.title}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             )}

@@ -1,47 +1,68 @@
+import { useNavigate } from "@remix-run/react";
 import { useFormContext } from "react-hook-form";
 
+import { useCreateCourse } from "~/api/mutations";
+import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
+import { useUploadScormPackage } from "~/api/mutations/admin/useUploadScormPackage";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Label } from "~/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "~/components/ui/radio-group";
 import { cn } from "~/lib/utils";
 
+import { useScormFormStore } from "../store/scormForm.store";
+
 import type { CourseFormData, CourseStatus, StepComponentProps } from "../types/scorm.types";
 
 export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
+  const navigate = useNavigate();
   const { setValue, watch, handleSubmit } = useFormContext<CourseFormData>();
+  const { mutateAsync: createCourse, isPending: isCreateCoursePending } = useCreateCourse();
+  const { mutateAsync: uploadFile, isPending: isUploadFilePending } = useUploadFile();
+  const { mutateAsync: uploadScormPackage, isPending: isUploadScormPending } =
+    useUploadScormPackage();
+
   const status = watch("status");
 
-  // TODO:
-  // const createCourse = useMutation({
-  //   mutationFn: (data: Omit<CourseFormData, "scorm">) => api.courses.createCourse(data),
-  // });
-
-  // TODO:
-  // const uploadScorm = useMutation({
-  // mutationFn: ({ courseId, file }: { courseId: string; file: File }) =>
-  // api.scorm.scormControllerUploadScormPackage({ courseId }, { file }),
-  // });
+  const { resetForm } = useScormFormStore();
 
   const onSubmit = async (data: CourseFormData) => {
-    console.log(data);
-    // TODO:
-    // try {
-    //   const course = await createCourse.mutateAsync({
-    //     details: data.details,
-    //     pricing: data.pricing,
-    //     status: data.status,
-    //   });
-    //   if (data.scorm.file && course.id) {
-    //     await uploadScorm.mutateAsync({
-    //       courseId: course.id,
-    //       file: data.scorm.file,
-    //     });
-    //   }
-    //   // router.push("/courses");
-    // } catch (error) {
-    //   console.error("Error creating course:", error);
-    // }
+    try {
+      const thumbnailResult = data.details.thumbnail
+        ? await uploadFile({
+            file: data.details.thumbnail,
+            resource: "course",
+          })
+        : null;
+
+      const courseResult = await createCourse({
+        data: {
+          categoryId: data.details.category,
+          description: data.details.description,
+          title: data.details.title,
+          thumbnailS3Key: thumbnailResult?.fileKey,
+        },
+      });
+
+      if (!courseResult?.data?.id) {
+        throw new Error("Course creation failed - no course ID received");
+      }
+
+      if (!data.scorm.file) {
+        throw new Error("No SCORM file provided");
+      }
+
+      await uploadScormPackage({
+        file: data.scorm.file,
+        courseId: courseResult.data.id,
+      });
+
+      resetForm();
+      navigate("/courses");
+    } catch (error) {
+      console.error("Error creating course:", error);
+      throw error;
+    }
   };
 
   return (
@@ -93,7 +114,16 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
         <Button variant="outline" onClick={handleBack}>
           Back
         </Button>
-        <Button onClick={handleSubmit(onSubmit)}>Create Course</Button>
+        <Button
+          onClick={() => {
+            handleSubmit(onSubmit)();
+          }}
+          disabled={isCreateCoursePending || isUploadFilePending || isUploadScormPending}
+        >
+          {isCreateCoursePending || isUploadFilePending || isUploadScormPending
+            ? "Creating course..."
+            : "Create Course"}
+        </Button>
       </div>
     </div>
   );

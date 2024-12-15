@@ -28,7 +28,7 @@ const CourseCard = ({
   enrolled = false,
   hasFreeLessons,
   id,
-  imageUrl,
+  thumbnailUrl,
   priceInCents,
   title,
 }: CourseCardProps) => {
@@ -49,7 +49,7 @@ const CourseCard = ({
     >
       <div className="relative">
         <img
-          src={imageUrl || DefaultPhotoCourse}
+          src={thumbnailUrl || DefaultPhotoCourse}
           alt="Course"
           loading="eager"
           decoding="async"
