@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import { useCategoriesSuspense } from "~/api/queries";
 import { Icon } from "~/components/Icon";
 import { useCurrentUserStore } from "~/modules/common/store/useCurrentUserStore";
 import CourseCard from "~/modules/Dashboard/Courses/CourseCard";
@@ -34,9 +35,11 @@ export const SCORM_CONFIG = [
     description: "Provide the details to set up a new course.",
     Component: CourseDetailsStep,
     SideComponent: (props: SideComponentProps) => {
+      const { data: categories } = useCategoriesSuspense();
+
       const { currentUser: { email, firstName, lastName } = {} } = useCurrentUserStore.getState();
       const {
-        formData: { details: { title, description, category, thumbnail } = {} },
+        formData: { details: { title, description, category: categoryId, thumbnail } = {} },
       } = useScormFormStore.getState();
 
       const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
@@ -49,15 +52,17 @@ export const SCORM_CONFIG = [
         }
       }, [thumbnail]);
 
+      const categoryName = categories.find((category) => category.id === categoryId)?.title;
+
       return (
         <CourseCard
           id={"scorm-card"}
           title={title || "Untitled..."}
-          imageUrl={thumbnailUrl ?? ""}
+          thumbnailUrl={thumbnailUrl ?? ""}
           description={description || "No description yet."}
           author={`${firstName} ${lastName}`}
           authorEmail={email ?? ""}
-          category={category ?? ""}
+          category={categoryName ?? ""}
           courseLessonCount={0}
           completedLessonCount={0}
           enrolledParticipantCount={0}

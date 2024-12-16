@@ -63,7 +63,9 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
                   <div className="relative">
                     <Input
                       id="price"
-                      {...register("pricing.price")}
+                      {...register("pricing.price", {
+                        valueAsNumber: true,
+                      })}
                       placeholder="Amount"
                       type="number"
                     />
