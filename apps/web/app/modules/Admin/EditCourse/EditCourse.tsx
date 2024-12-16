@@ -1,23 +1,29 @@
-import { useParams } from "@remix-run/react";
-import { useState } from "react";
+import { useParams, useSearchParams } from "@remix-run/react";
 
 import { useBetaCourseById } from "~/api/queries/admin/useBetaCourse";
 import { Icon } from "~/components/Icon";
-import { Card, CardHeader, CardContent } from "~/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
-import NavigationTabs from "./compontents/NavigationTabs";
 import CourseLessons from "./CourseLessons/CourseLessons";
 import CoursePricing from "./CoursePricing/CoursePricing";
 import CourseSettings from "./CourseSettings/CourseSettings";
 import CourseStatus from "./CourseStatus/CourseStatus";
 
-import type { Chapter, NavigationTab } from "./EditCourse.types";
+import type { Chapter } from "./EditCourse.types";
 
 const EditCourse = () => {
-  const [navigationTabState, setNavigationTabState] = useState<NavigationTab>("Lesson");
   const { id } = useParams();
+  const params = new URLSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   if (!id) throw new Error("Course ID not found");
+
   const { data: course, isLoading } = useBetaCourseById(id);
+
+  const handleTabChange = (tabValue: string) => {
+    params.set("tab", tabValue);
+    setSearchParams(params);
+  };
 
   if (isLoading) {
     return (
@@ -27,58 +33,55 @@ const EditCourse = () => {
     );
   }
 
-  const renderContent = () => {
-    switch (navigationTabState) {
-      case "Settings":
-        return (
-          <CourseSettings
-            courseId={course?.id || ""}
-            title={course?.title}
-            description={course?.description}
-            categoryId={course?.categoryId}
-            imageUrl={course?.thumbnailUrl}
-          />
-        );
-      case "Lesson":
-        return <CourseLessons chapters={course?.chapters as Chapter[]} />;
-      case "Pricing":
-        return (
-          <CoursePricing
-            courseId={course?.id || ""}
-            currency={course?.currency}
-            priceInCents={course?.priceInCents}
-          />
-        );
-      case "Status":
-        return (
-          <CourseStatus courseId={course?.id || ""} isPublished={course?.isPublished ?? false} />
-        );
-      default:
-        return <div className="text-gray-700 text-lg">Select a tab to view content.</div>;
-    }
-  };
-
   return (
-    <div className="p-6">
-      <Card className="shadow-md border border-gray-200">
-        <CardHeader>
-          <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1 flex items-center">
-            {course?.title || ""}
-            {course?.isPublished === false && (
-              <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
-                <Icon name="Warning" className="mr-1" />
-                Draft
-              </span>
-            )}
-          </h4>
-        </CardHeader>
-        <CardContent>
-          <NavigationTabs setNavigationTabState={setNavigationTabState} />
-        </CardContent>
-      </Card>
-
-      <div className="mt-6">{renderContent()}</div>
-    </div>
+    <Tabs
+      defaultValue={searchParams.get("tab") ?? "Settings"}
+      className="flex flex-col gap-y-4 h-full"
+    >
+      <div className="py-6 px-8 flex flex-col gap-y-4 shadow-md w-full border bg-white rounded-lg border-gray-200">
+        <h4 className="text-neutral-950 h4 flex items-center">
+          {course?.title || ""}
+          {!course?.isPublished && (
+            <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
+              <Icon name="Warning" className="mr-1" />
+              Draft
+            </span>
+          )}
+        </h4>
+        <TabsList className="w-min">
+          {["Settings", "Lesson", "Pricing", "Status"].map((tab) => (
+            <TabsTrigger key={tab} value={tab} onClick={() => handleTabChange(tab)}>
+              {tab}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </div>
+      <TabsContent value="Settings">
+        <CourseSettings
+          courseId={course?.id || ""}
+          title={course?.title}
+          description={course?.description}
+          categoryId={course?.categoryId}
+          imageUrl={course?.thumbnailUrl}
+        />
+      </TabsContent>
+      <TabsContent value="Lesson" className="h-full overflow-hidden">
+        <CourseLessons chapters={course?.chapters as Chapter[]} />
+      </TabsContent>
+      <TabsContent value="Pricing">
+        <CoursePricing
+          courseId={course?.id || ""}
+          currency={course?.currency}
+          priceInCents={course?.priceInCents}
+        />
+      </TabsContent>
+      <TabsContent value="Status">
+        <CourseStatus
+          courseId={course?.id || ""}
+          isPublished={!!course?.isPublished}
+        />
+      </TabsContent>
+    </Tabs>
   );
 };
 

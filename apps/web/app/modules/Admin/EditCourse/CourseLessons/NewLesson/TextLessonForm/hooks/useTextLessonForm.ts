@@ -7,11 +7,10 @@ import { useCreateBetaTextLesson } from "~/api/mutations/admin/useBetaCreateText
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
 import { useUpdateTextLesson } from "~/api/mutations/admin/useUpdateTextLesson";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
-import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
 import {
-  ContentTypes,
   type Chapter,
+  ContentTypes,
   type Lesson,
 } from "~/modules/Admin/EditCourse/EditCourse.types";
 
@@ -33,7 +32,6 @@ export const useTextLessonForm = ({
   const { id: courseId } = useParams();
   const { mutateAsync: createTextBlock } = useCreateBetaTextLesson();
   const { mutateAsync: updateTextBlockItem } = useUpdateTextLesson();
-  const { data: currentUser } = useCurrentUserSuspense();
   const { mutateAsync: deleteLesson } = useDeleteLesson();
 
   const form = useForm<TextLessonFormValues>({
@@ -58,9 +56,8 @@ export const useTextLessonForm = ({
   }, [lessonToEdit, reset]);
 
   const onSubmit = async (values: TextLessonFormValues) => {
-    if (!chapterToEdit) {
-      return;
-    }
+    if (!chapterToEdit) return;
+
     try {
       if (lessonToEdit) {
         await updateTextBlockItem({ data: { ...values }, lessonId: lessonToEdit.id });
@@ -71,7 +68,7 @@ export const useTextLessonForm = ({
         setContentTypeToDisplay(ContentTypes.EMPTY);
       }
 
-      queryClient.invalidateQueries({ queryKey: [COURSE_QUERY_KEY, { id: courseId }] });
+      await queryClient.invalidateQueries({ queryKey: [COURSE_QUERY_KEY, { id: courseId }] });
     } catch (error) {
       console.error("Error creating text block:", error);
     }
