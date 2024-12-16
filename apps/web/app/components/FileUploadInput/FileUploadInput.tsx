@@ -1,17 +1,26 @@
 import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 import { useEffect, useState } from "react";
 
+import { FileUploadLoading } from "~/components/FileUploadInput/FileUploadLoading";
+import { Icon } from "~/components/Icon";
+import { Button } from "~/components/ui/button";
 import { ContentTypes } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import EmptyStateUpload from "./EmptyStateUpload";
 
-import type React from "react";
+import type { ChangeEvent } from "react";
 
-type FileUploadProps = {
+type FileUploadInputProps = {
   handleFileUpload: (file: File) => Promise<void>;
   isUploading: boolean;
   contentTypeToDisplay: string;
   url?: string;
+};
+
+const ACCEPTED_TYPE_FORMATS = {
+  [ContentTypes.VIDEO_LESSON_FORM]: ".mp4,.avi,.mov",
+  [ContentTypes.PRESENTATION_FORM]: ".pptx,.ppt,.odp",
+  ["Image"]: ".svg,.png,.jpg",
 };
 
 const FileUploadInput = ({
@@ -19,11 +28,9 @@ const FileUploadInput = ({
   isUploading,
   contentTypeToDisplay,
   url,
-}: FileUploadProps) => {
+}: FileUploadInputProps) => {
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
-  const acceptedTypes =
-    contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? ".mp4,.avi,.mov" : ".pptx,.ppt,.odp";
 
   useEffect(() => {
     if (url) {
@@ -31,7 +38,9 @@ const FileUploadInput = ({
     }
   }, [url]);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const acceptedTypes = ACCEPTED_TYPE_FORMATS[contentTypeToDisplay];
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0];
     if (uploadedFile) {
       setFile(uploadedFile);
@@ -46,53 +55,129 @@ const FileUploadInput = ({
   const docs = url
     ? [
         {
-          uri: url as string,
+          uri: url,
           fileType: "pptx",
           fileName: "Presentation",
         },
       ]
     : [];
 
-  return (
-    <div className="flex  flex-col gap-y-2">
-      <div className="w-3/5 h-[200px] md:h-[350px] xl:h-[500px] rounded-lg border-solid border-2 border-gray-300 flex bg-gray-100 relative cursor-pointer overflow-hidden flex-col">
-        {!videoPreview && !file ? (
-          <EmptyStateUpload
-            acceptedTypes={acceptedTypes}
-            handleFileChange={handleFileChange}
-            isUploading={isUploading}
-            contentTypeToDisplay={ContentTypes.VIDEO_LESSON_FORM}
-          />
-        ) : contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? (
-          <video src={videoPreview as string} controls className="w-full h-full object-cover">
-            <track kind="captions" />
-          </video>
-        ) : (
-          <div className="w-full h-full overflow-auto relative">
-            <DocViewer
-              documents={docs}
-              pluginRenderers={DocViewerRenderers}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "contain",
-              }}
-              config={{
-                header: {
-                  disableFileName: true,
-                  disableHeader: true,
-                },
-              }}
-            />
-          </div>
-        )}
+  const renderFilePreview = () => {
+    if (isUploading) return <FileUploadLoading />;
 
-        {isUploading && (
-          <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center">
-            <p className="text-lg font-semibold text-gray-600">Uploading...</p>
+    if (contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM) {
+      return (
+        <div className="relative size-full">
+          <video src={videoPreview ?? ""} className="w-full h-auto">
+            <track kind="captions" className="sr-only" />
+          </video>
+          <label
+            htmlFor="file-upload"
+            className="flex flex-col items-center h-full w-full inset-0 absolute justify-center gap-y-3 bg-[rgba(18,21,33,0.8)] border border-neutral-200 rounded-lg"
+          >
+            <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
+            <div className="flex flex-col gap-y-1 body-sm">
+              <div className="text-center">
+                <span className="text-primary-400">Click to replace</span>{" "}
+                <span className="text-white">or drag and drop</span>
+              </div>
+              <div className="details text-neutral-200">
+                MP4, MOV, MPEG-2 or Hevc (max. to 100MB)
+              </div>
+            </div>
+            <input
+              type="file"
+              id="file-upload"
+              accept={acceptedTypes}
+              onChange={handleFileChange}
+              disabled={isUploading}
+              className="sr-only"
+            />
+            <Button
+              variant="destructive"
+              className="gap-x-1 mt-2"
+              onClick={() => {
+                setFile(null);
+                setVideoPreview(null);
+              }}
+            >
+              <Icon name="TrashIcon" /> Remove video
+            </Button>
+          </label>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full h-auto">
+        <DocViewer
+          documents={docs}
+          pluginRenderers={DocViewerRenderers}
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "contain",
+          }}
+          config={{
+            header: {
+              disableFileName: true,
+              disableHeader: true,
+            },
+          }}
+        />
+        <label
+          htmlFor="file-upload"
+          className="flex flex-col items-center h-full w-full inset-0 absolute justify-center gap-y-3 bg-[rgba(18,21,33,0.8)] border border-neutral-200 rounded-lg"
+        >
+          <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
+          <div className="flex flex-col gap-y-1 body-sm">
+            <div className="text-center">
+              <span className="text-primary-400">Click to replace</span>{" "}
+              <span className="text-white">or drag and drop</span>
+            </div>
+            <div className="details text-neutral-200">
+              PPT/PPTX, KEY, ODP or PDF (max. to 100MB)
+            </div>
           </div>
-        )}
+          <input
+            type="file"
+            id="file-upload"
+            accept={acceptedTypes}
+            onChange={handleFileChange}
+            disabled={isUploading}
+            className="sr-only"
+          />
+          <Button
+            variant="destructive"
+            className="gap-x-1 mt-2"
+            onClick={() => {
+              setFile(null);
+              setVideoPreview(null);
+            }}
+          >
+            <Icon name="TrashIcon" /> Remove presentation
+          </Button>
+        </label>
       </div>
+    );
+  };
+
+  const filePreview = renderFilePreview();
+
+  if (!videoPreview && !file) {
+    return (
+      <EmptyStateUpload
+        acceptedTypes={acceptedTypes}
+        handleFileChange={handleFileChange}
+        isUploading={isUploading}
+        contentTypeToDisplay={contentTypeToDisplay}
+      />
+    );
+  }
+
+  return (
+    <div className="h-[240px] relative w-full max-w-[440px] rounded-lg overflow-hidden border border-neutral-200">
+      {filePreview}
     </div>
   );
 };
