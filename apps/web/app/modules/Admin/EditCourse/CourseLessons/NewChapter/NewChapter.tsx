@@ -1,7 +1,7 @@
 import { useParams } from "@remix-run/react";
 
 import { Button } from "~/components/ui/button";
-import { Form, FormField, FormItem, FormControl, FormMessage } from "~/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
@@ -19,7 +19,7 @@ type NewChapterProps = {
 const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
   const { id: courseId } = useParams();
   const { form, onSubmit, onClickDelete } = useNewChapterForm({
-    courseId,
+    courseId: courseId ?? "",
     chapter,
     setContentTypeToDisplay,
   });
@@ -28,59 +28,53 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
   const saveButtonStyles = "bg-primary-700 hover:bg-blue-600 text-white";
 
   return (
-    <div className="w-full max-w-full">
-      <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-6">
-        <div className="text-xl font-semibold mb-6 text-gray-800">Chapter</div>
-        <div className="text-xl font-semibold mb-6 text-gray-800">
-          {chapter && (
-            <>
-              <span className="text-gray-500">Edit: </span>
-              {chapter.title}
-            </>
-          )}
-        </div>
-        <Form {...form}>
-          <form className="mt-4" onSubmit={form.handleSubmit(onSubmit)}>
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <Label htmlFor="title" className="text-right">
-                    <span className="text-red-500 mr-1">*</span> Title
-                  </Label>
-                  <FormControl>
-                    <Input id="title" {...field} required />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex space-x-4 mt-4">
-              {chapter ? (
-                <Button
-                  aria-label="Delete chapter"
-                  className={buttonStyles}
-                  onClick={onClickDelete}
-                >
-                  Delete
-                </Button>
-              ) : (
-                <Button
-                  aria-label="Cancel editing"
-                  className={buttonStyles}
-                  onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
-                >
-                  Cancel
-                </Button>
-              )}
-              <Button type="submit" className={saveButtonStyles}>
-                Save
+    <div className="w-full h-min p-8 flex flex-col bg-white rounded-lg gap-y-6">
+      <hgroup className="flex flex-col-reverse w-full gap-y-1">
+        {chapter && (
+          <h3 className="h5 text-neutral-950">
+            <span className="text-neutral-800 h5">Edit: </span>
+            {chapter.title}
+          </h3>
+        )}
+        <p className="body-base-md text-neutral-800">Chapter</p>
+      </hgroup>
+      <Form {...form}>
+        <form className="" onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <Label htmlFor="title" className="body-base-md text-neutral-950">
+                  <span className="text-error-600">*</span> Title
+                </Label>
+                <FormControl>
+                  <Input id="title" {...field} required />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex space-x-4 mt-4">
+            <Button type="submit" className={saveButtonStyles}>
+              Save
+            </Button>
+            {chapter ? (
+              <Button aria-label="Delete chapter" className={buttonStyles} onClick={onClickDelete}>
+                Delete
               </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
+            ) : (
+              <Button
+                aria-label="Cancel editing"
+                className={buttonStyles}
+                onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
+        </form>
+      </Form>
     </div>
   );
 };

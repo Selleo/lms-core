@@ -12,7 +12,7 @@ import SelectLessonType from "./NewLesson/components/SelectLessonType";
 import FileLessonForm from "./NewLesson/FileLessonForm/FileLessonForm";
 import TextLessonForm from "./NewLesson/TextLessonForm/TextLessonForm";
 
-import type { Chapter, LessonItem } from "../EditCourse.types";
+import type { Chapter, Lesson } from "../EditCourse.types";
 
 interface CourseLessonsProps {
   chapters?: Chapter[];
@@ -21,7 +21,7 @@ interface CourseLessonsProps {
 const CourseLessons = ({ chapters }: CourseLessonsProps) => {
   const [contentTypeToDisplay, setContentTypeToDisplay] = useState(ContentTypes.EMPTY);
   const [selectedChapter, setSelectedChapter] = useState<Chapter>();
-  const [selectedLesson, setSelectedLesson] = useState<LessonItem>();
+  const [selectedLesson, setSelectedLesson] = useState<Lesson>();
 
   const addChapter = () => {
     setContentTypeToDisplay(ContentTypes.CHAPTER_FORM);
@@ -66,24 +66,25 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
   }, [contentTypeToDisplay, selectedChapter, selectedLesson]);
 
   return (
-    <div className="flex bg-white h-full">
-      <div className="w-full md:w-2/5 h-full flex flex-col">
-        <ChaptersList
-          chapters={chapters}
-          setContentTypeToDisplay={setContentTypeToDisplay}
-          setSelectedChapter={setSelectedChapter}
-          setSelectedLesson={setSelectedLesson}
-        />
-        <div className="flex-grow" />
+    <div className="flex h-full rounded-lg gap-x-8 basis-full">
+      <div className="w-full md:max-w-[480px] justify-between h-full flex flex-col">
+        <div className="flex h-full flex-col overflow-y-auto">
+          <ChaptersList
+            chapters={chapters}
+            setContentTypeToDisplay={setContentTypeToDisplay}
+            setSelectedChapter={setSelectedChapter}
+            setSelectedLesson={setSelectedLesson}
+          />
+        </div>
         <Button
           onClick={addChapter}
-          className="bg-primary-700 text-white py-2 px-4 rounded-lg hover:bg-blue-600 mb-4"
+          className="bg-primary-700 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
         >
           <Icon name="Plus" className="mr-2" />
           Add Chapter
         </Button>
       </div>
-      <div className="w-full md:w-3/5 h-full bg-gray-100 ml-5">{renderContent}</div>
+      <div className="w-full h-auto">{renderContent}</div>
     </div>
   );
 };

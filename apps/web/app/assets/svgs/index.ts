@@ -1,4 +1,3 @@
-export { default as Admin } from "./admin.svg?react";
 export { default as ArrowDown } from "./arrow-down.svg?react";
 export { default as ArrowRight } from "./arrow-right.svg?react";
 export { default as ArrowUp } from "./arrow-up.svg?react";
@@ -29,18 +28,18 @@ export { default as NoData } from "./no-data.svg?react";
 export { default as NotStartedRounded } from "./not-startet-rounded.svg?react";
 export { default as Phone } from "./phone.svg?react";
 export { default as Plus } from "./plus.svg?react";
-export { default as Presentation } from "./presentation.svg?react";
 export { default as PricingIllustration } from "./pricing-illustration.svg?react";
 export { default as QuizStar } from "./quiz-star.svg?react";
-export { default as Quiz } from "./quiz.svg?react";
 export { default as SelleoLogo } from "./selleo-logo.svg?react";
 export { default as SelleoSignet } from "./selleo-signet.svg?react";
 export { default as Settings } from "./settings.svg?react";
 export { default as StatusIllustration } from "./status-illustration.svg?react";
-export { default as Text } from "./text.svg?react";
 export { default as TrashIcon } from "./trash-icon.svg?react";
 export { default as UploadIllustration } from "./upload-illustration.svg?react";
 export { default as UploadImageIcon } from "./upload-image.svg?react";
 export { default as User } from "./user.svg?react";
-export { default as Video } from "./video.svg?react";
 export { default as Warning } from "./warning.svg?react";
+export { default as Admin } from "./admin.svg?react";
+export { default as CourseEmptyState } from "./course-empty-state.svg?react";
+
+export * from "./lesson-types";

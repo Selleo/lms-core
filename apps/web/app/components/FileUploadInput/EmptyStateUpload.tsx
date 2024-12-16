@@ -1,16 +1,20 @@
-import { cn } from "~/lib/utils";
 import { ContentTypes } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import { Icon } from "../Icon";
 
-import type React from "react";
+import type { ChangeEvent } from "react";
 
 interface EmptyStateUploadProps {
   acceptedTypes: string;
-  handleFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
   isUploading: boolean;
   contentTypeToDisplay: string;
 }
+
+const contentTypeFormats = {
+  [ContentTypes.VIDEO_LESSON_FORM]: "MP4, MOV, MPEG-2, or Hevc (max. 100MB)",
+  [ContentTypes.PRESENTATION_FORM]: "PPT/PPTX, KEY, ODP, or PDF (max. 100MB)",
+};
 
 const EmptyStateUpload = ({
   acceptedTypes,
@@ -19,28 +23,27 @@ const EmptyStateUpload = ({
   contentTypeToDisplay,
 }: EmptyStateUploadProps) => {
   return (
-    <>
-      <div className={cn("absolute inset-0 flex flex-col items-center justify-center text-center")}>
-        <Icon name="UploadImageIcon" />
-        <div className="flex items-center justify-center mt-2">
-          <span className={`text-lg font-semibold text-[#7CA3DE]`}>Click to upload</span>
-          <span className="ml-2 text-lg font-semibold">or drag and drop</span>
+    <label
+      htmlFor="file-upload"
+      className="flex flex-col items-center h-[240px] w-full max-w-[440px] justify-center gap-y-3 bg-white border border-neutral-200 rounded-lg"
+    >
+      <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
+      <div className="flex flex-col gap-y-1 body-sm">
+        <div className="text-center">
+          <span className="text-primary-700">Click to upload</span>{" "}
+          <span className="text-neutral-950">or drag and drop</span>
         </div>
-        <div className="text-sm w-full px-2 mt-2 text-gray-600">
-          Supported formats:{" "}
-          {contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM
-            ? "MP4, AVI, MOV"
-            : "PPTX, PPT, ODP"}
-        </div>
+        <div className="details text-neutral-600">{contentTypeFormats[contentTypeToDisplay]}</div>
       </div>
       <input
         type="file"
+        id="file-upload"
         accept={acceptedTypes}
         onChange={handleFileChange}
         disabled={isUploading}
-        className="absolute inset-0 opacity-0 cursor-pointer"
+        className="sr-only"
       />
-    </>
+    </label>
   );
 };
 

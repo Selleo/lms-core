@@ -87,6 +87,77 @@ export class ChapterController {
     return new BaseResponse({ id, message: "Chapter created successfully" });
   }
 
+  @Patch("chapter-display-order")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: Type.Object({
+          chapterId: UUIDSchema,
+          displayOrder: Type.Number(),
+        }),
+        required: true,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateChapterDisplayOrder(
+    @Body()
+    body: {
+      chapterId: UUIDType;
+      displayOrder: number;
+    },
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminChapterService.updateChapterDisplayOrder(body);
+
+    return new BaseResponse({
+      message: "Chapter display order updated successfully",
+    });
+  }
+
+  // @Patch("lesson")
+  // @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  // @Validate({
+  //   request: [
+  //     {
+  //       type: "query",
+  //       name: "id",
+  //       schema: UUIDSchema,
+  //     },
+  //     {
+  //       type: "body",
+  //       schema: updateLessonSchema,
+  //     },
+  //   ],
+  //   response: baseResponse(Type.Object({ message: Type.String() })),
+  // })
+  // async updateLesson(
+  //   @Query() id: UUIDType,
+  //   @Body() body: UpdateLessonBody,
+  // ): Promise<BaseResponse<{ message: string }>> {
+  //   await this.adminLessonsService.updateLesson(id, body);
+  //   return new BaseResponse({ message: "Text block updated successfully" });
+  // }
+
+  // @Delete(":courseId/:lessonId")
+  // @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  // @Validate({
+  //   request: [
+  //     { type: "param", name: "courseId", schema: UUIDSchema },
+  //     { type: "param", name: "lessonId", schema: UUIDSchema },
+  //   ],
+  //   response: baseResponse(Type.Object({ message: Type.String() })),
+  // })
+  // async removeLessonFromCourse(
+  //   @Param("courseId") courseId: string,
+  //   @Param("lessonId") lessonId: string,
+  // ): Promise<BaseResponse<{ message: string }>> {
+  //   await this.adminLessonsService.removeLessonFromCourse(courseId, lessonId);
+  //   return new BaseResponse({
+  //     message: "Lesson removed from course successfully",
+  //   });
+  // }
   @Delete()
   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({

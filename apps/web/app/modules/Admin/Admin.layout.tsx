@@ -64,7 +64,7 @@ const AdminLayout = () => {
           <Navigation menuItems={mapNavigationItems(adminNavigationConfig)} />
         )}
         <main
-          className={cn("bg-primary-50 flex-1 overflow-y-auto p-6", {
+          className={cn("bg-primary-50 flex-1 overflow-y-auto max-h-dvh p-6", {
             "bg-white p-0": hideTopbarAndSidebar,
           })}
         >
