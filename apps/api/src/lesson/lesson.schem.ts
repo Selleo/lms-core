@@ -2,6 +2,8 @@ import { Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
 
+import { PhotoQuestionType, QuestionType } from "./lesson.type";
+
 import type { Static } from "@sinclair/typebox";
 
 export const optionSchema = Type.Object({
@@ -13,24 +15,11 @@ export const optionSchema = Type.Object({
 
 export const questionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
-  type: Type.Enum({
-    single_choice: "single_choice",
-    multiple_choice: "multiple_choice",
-    true_or_false: "true_or_false",
-    photo_question: "photo_question",
-    fill_in_the_blanks: "fill_in_the_blanks",
-    brief_response: "brief_response",
-    detailed_response: "detailed_response",
-  }),
+  type: Type.Enum(QuestionType),
   description: Type.Optional(Type.String()),
   title: Type.String(),
-  photoQuestionType: Type.Optional(
-    Type.Enum({
-      single_choice: "single_choice",
-      multiple_choice: "multiple_choice",
-    }),
-  ),
-  thumbnailS3Key: Type.Optional(Type.String()),
+  photoQuestionType: Type.Optional(Type.Enum(PhotoQuestionType)),
+  imageS3Key: Type.Optional(Type.String()),
   options: Type.Optional(Type.Array(optionSchema)),
 });
 

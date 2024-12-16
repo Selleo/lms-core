@@ -26,7 +26,7 @@ export const questionSchema = Type.Object({
   id: UUIDSchema,
   questionType: Type.String(),
   questionBody: Type.String(),
-  thumbnailS3Key: Type.Optional(Type.String()),
+  imageS3Key: Type.Optional(Type.String()),
   solutionExplanation: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   state: Type.Optional(Type.String()),
   questionAnswers: Type.Optional(Type.Array(questionAnswerOptionsSchema)),

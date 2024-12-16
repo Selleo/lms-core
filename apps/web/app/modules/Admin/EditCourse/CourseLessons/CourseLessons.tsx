@@ -92,7 +92,7 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
           Add Chapter
         </Button>
       </div>
-      <div className="w-full h-auto">{renderContent}</div>
+      <div className="w-full h-auto overflow-y-auto">{renderContent}</div>
     </div>
   );
 };

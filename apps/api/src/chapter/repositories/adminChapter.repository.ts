@@ -2,10 +2,10 @@ import { Inject, Injectable } from "@nestjs/common";
 import { eq, and, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-import { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lessonItem.schema";
-import { chapters, lessons } from "src/storage/schema";
+import { chapters, lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 
 @Injectable()
@@ -190,33 +190,32 @@ export class AdminChapterRepository {
         fileType: sql<string>`${lessons.fileType}`,
         displayOrder: sql<number>`${lessons.displayOrder}`,
         questions: sql<QuestionSchema[]>`
-  (
-    SELECT ARRAY(
-      SELECT json_build_object(
-        'id', q.id,
-        'title', q.title,
-        'type', q.type,
-        'description', q.description,
-        'thumbnailS3Key', q.thumbnail_s3_key,
-        'photoQuestionType', q.photo_question_type,
-        'options', (
+        (
           SELECT ARRAY(
             SELECT json_build_object(
-              'id', qo.id,
-              'optionText', qo.option_text,
-              'isCorrect', qo.is_correct,
-              'position', qo.position
+              'id', ${questions}.id,
+              'title', ${questions}.title,
+              'type', ${questions}.type,
+              'description', ${questions}.description,
+              'imageS3Key', ${questions}.image_s3_key,
+              'photoQuestionType', ${questions}.photo_question_type,
+              'options', (
+                SELECT ARRAY(
+                  SELECT json_build_object(
+                    'id', ${questionAnswerOptions}.id,
+                    'optionText', ${questionAnswerOptions}.option_text,
+                    'isCorrect', ${questionAnswerOptions}.is_correct,
+                    'position', ${questionAnswerOptions}.position
+                  )
+                  FROM question_answer_options ${questionAnswerOptions}
+                  WHERE ${questionAnswerOptions}.question_id = ${questions}.id
+                )
+              )
             )
-            FROM question_answer_options qo
-            WHERE qo.question_id = q.id
+            FROM questions ${questions}
+            WHERE ${questions}.lesson_id = lessons.id
           )
-        )
-      )
-      FROM questions q
-      WHERE q.lesson_id = lessons.id
-    )
-  )
-`,
+        )`,
       })
       .from(lessons)
       .where(and(eq(lessons.chapterId, chapterId)))

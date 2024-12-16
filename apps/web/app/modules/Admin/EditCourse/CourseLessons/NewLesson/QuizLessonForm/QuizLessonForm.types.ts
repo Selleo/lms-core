@@ -21,8 +21,7 @@ export type Question = {
   id?: string;
   type: QuestionType;
   description?: string;
-  thumbnailS3SingedUrl?: string;
-  thumbnailS3Key?: string;
+  imageS3Key?: string;
   photoQuestionType?: PhotoQuestionType;
   title: string;
   options?: QuestionOption[];

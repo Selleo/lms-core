@@ -335,7 +335,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                 name={`questions.${questionIndex}.description`}
                 render={() => (
                   <FormItem className="mt-5">
-                    <Label htmlFor="description" className="text-right body-sm-md">
+                    <Label htmlFor="description" className="body-sm-md">
                       <span className="text-red-500 mr-1">*</span>
                       Sentence
                     </Label>

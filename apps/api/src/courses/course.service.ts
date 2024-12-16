@@ -58,7 +58,7 @@ import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { ChapterProgressType } from "src/chapter/schemas/chapter.types";
 import type { Pagination, UUIDType } from "src/common";
-import type { LessonItemWithContentSchema } from "src/lesson/lessonItem.schema";
+import type { LessonItemWithContentSchema } from "src/lesson/lesson.schema";
 
 @Injectable()
 export class CourseService {
@@ -454,17 +454,16 @@ export class CourseService {
         displayOrder: chapters.displayOrder,
         lessonCount: chapters.lessonCount,
         isFree: chapters.isFreemium,
-        // TODO: it not working, what is that???
         lessons: sql<string>`
-  COALESCE(
-    (
-      SELECT array_agg(lessons.id)
-      FROM ${lessons}
-      WHERE lessons.chapter_id = ${chapters.id}
-    ),
-    '{}'
-  )
-`,
+        COALESCE(
+          (
+            SELECT array_agg(${lessons}.id)
+            FROM ${lessons}
+            WHERE ${lessons}.chapter_id = ${chapters}.id
+          ),
+          '{}'
+        )
+      `,
       })
       .from(chapters)
       .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
@@ -902,7 +901,7 @@ export class CourseService {
   private async addS3SignedUrlsToLessonsAndQuestions(lessons: LessonItemWithContentSchema[]) {
     return await Promise.all(
       lessons.map(async (lesson) => {
-        let updatedLesson = { ...lesson };
+        const updatedLesson = { ...lesson };
         if (
           lesson.fileS3Key &&
           (lesson.type === LESSON_TYPES.video || lesson.type === LESSON_TYPES.presentation)
@@ -920,14 +919,14 @@ export class CourseService {
         if (lesson.questions && Array.isArray(lesson.questions)) {
           const questionsWithSignedUrls = await Promise.all(
             lesson.questions.map(async (question) => {
-              if (question.thumbnailS3Key) {
-                if (!question.thumbnailS3Key.startsWith("https://")) {
+              if (question.imageS3Key) {
+                if (!question.imageS3Key.startsWith("https://")) {
                   try {
-                    const signedUrl = await this.fileService.getFileUrl(question.thumbnailS3Key);
+                    const signedUrl = await this.fileService.getFileUrl(question.imageS3Key);
                     return { ...question, thumbnailS3SingedUrl: signedUrl };
                   } catch (error) {
                     console.error(
-                      `Failed to get signed URL for question thumbnail ${question.thumbnailS3Key}:`,
+                      `Failed to get signed URL for question thumbnail ${question.imageS3Key}:`,
                       error,
                     );
                   }
@@ -943,7 +942,6 @@ export class CourseService {
       }),
     );
   }
-  // }
 
   private getSelectField() {
     return {

@@ -4121,7 +4121,7 @@
                         }
                       ]
                     },
-                    "thumbnailS3Key": {
+                    "imageS3Key": {
                       "type": "string"
                     },
                     "options": {
@@ -4285,7 +4285,7 @@
                         }
                       ]
                     },
-                    "thumbnailS3Key": {
+                    "imageS3Key": {
                       "type": "string"
                     },
                     "options": {
@@ -4448,7 +4448,7 @@
                         }
                       ]
                     },
-                    "thumbnailS3Key": {
+                    "imageS3Key": {
                       "type": "string"
                     },
                     "options": {
@@ -4599,7 +4599,7 @@
                         }
                       ]
                     },
-                    "thumbnailS3Key": {
+                    "imageS3Key": {
                       "type": "string"
                     },
                     "options": {

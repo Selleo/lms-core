@@ -110,7 +110,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
       try {
         const result = await uploadFile({ file, resource: "lesson" });
         setDisplayImageUrl(result.fileUrl);
-        form.setValue(`questions.${questionIndex}.thumbnailS3Key`, result.fileKey, {
+        form.setValue(`questions.${questionIndex}.imageS3Key`, result.fileKey, {
           shouldValidate: true,
         });
       } catch (error) {
@@ -142,10 +142,10 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             <div className="ml-14">
               <FormField
                 control={form.control}
-                name={`questions.${questionIndex}.thumbnailS3Key`}
+                name={`questions.${questionIndex}.imageS3Key`}
                 render={({ field }) => (
                   <FormItem className="mt-5 w-1/3">
-                    <Label htmlFor="imageUrl" className="text-right body-base-md ">
+                    <Label htmlFor="imageUrl" className="body-base-md ">
                       <span className="text-red-500 mr-1">*</span>
                       Image
                     </Label>
@@ -168,7 +168,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 name={`questions.${questionIndex}.photoQuestionType`}
                 render={({ field }) => (
                   <FormItem className="w-1/6 mt-4">
-                    <Label htmlFor="type" className="text-right body-base-md">
+                    <Label htmlFor="type" className="body-base-md">
                       <span className="text-red-500 mr-1">*</span>
                       Type
                     </Label>

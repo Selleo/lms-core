@@ -176,6 +176,7 @@ export class LessonController {
       {
         type: "body",
         schema: createQuizLessonSchema,
+        required: true,
       },
     ],
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
@@ -184,10 +185,7 @@ export class LessonController {
     @Body() createQuizLessonBody: CreateQuizLessonBody,
     @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
-    const id = await this.adminLessonsService.createQuizLessonForChapter(
-      createQuizLessonBody,
-      userId,
-    );
+    const id = await this.adminLessonsService.createQuizLesson(createQuizLessonBody, userId);
 
     return new BaseResponse({ id, message: "Lesson created successfully" }) as any;
   }
@@ -213,7 +211,7 @@ export class LessonController {
     @Body() data: UpdateQuizLessonBody,
     @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonsService.updateQuizLessonWithQuestionsAndOptions(id, data, userId);
+    await this.adminLessonsService.updateQuizLesson(id, data, userId);
     return new BaseResponse({ message: "Text block updated successfully" });
   }
 

@@ -72,7 +72,7 @@ export const useQuizLessonForm = ({
               id: question.id,
               type: question.type as QuestionType,
               description: processedDescription || undefined,
-              thumbnailS3Key: question.thumbnailS3Key || undefined,
+              imageS3Key: question.imageS3Key || undefined,
               photoQuestionType: question.photoQuestionType || undefined,
               title: question.title,
               options: question.options?.map((option: QuestionOption) => ({

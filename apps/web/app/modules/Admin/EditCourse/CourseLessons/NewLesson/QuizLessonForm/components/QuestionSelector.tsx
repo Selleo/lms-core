@@ -54,12 +54,12 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
         Add question{" "}
         <Icon
           name={showOptions ? "ArrowUp" : "ArrowDown"}
-          className="text-color-white ml-2 mt-0.75"
+          className="text-color-white ml-2"
         />
       </Button>
 
       {showOptions && (
-        <Card className="absolute bottom-full mb-2 w-64 p-2 bg-white text-black rounded shadow-lg">
+        <Card className="absolute top-full mb-2 w-64 p-2 bg-white text-black rounded shadow-lg z-10">
           <p className="block p-2 text-left text-black border-b border-gray-300 body-base-md w-full">
             Select question type:
           </p>

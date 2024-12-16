@@ -8,7 +8,7 @@ export const quizLessonFormSchema = z.object({
       id: z.optional(z.string()),
       type: z.nativeEnum(QuestionType),
       description: z.optional(z.string().min(10, "Question body must be at least 10 characters.")),
-      thumbnailS3Key: z.optional(z.string()),
+      imageS3Key: z.optional(z.string()),
       thumbnailS3: z.optional(
         z.object({
           value: z.string(),
