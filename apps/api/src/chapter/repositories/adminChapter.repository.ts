@@ -2,6 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { eq, and, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
+import { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lessonItem.schema";
 import { chapters, lessons } from "src/storage/schema";
 
 @Injectable()
@@ -210,7 +211,12 @@ export class AdminChapterRepository {
   //     .orderBy(lessonItems.displayOrder);
   // }
 
-  async getBetaChapterLessons(chapterId: UUIDType) {
+  // imageUrl: lesson.imageUrl.startsWith("https://")
+  // //           ? lesson.imageUrl
+  // //           : await this.fileService.getFileUrl(lesson.imageUrl),
+  // //       };
+
+  async getBetaChapterLessons(chapterId: UUIDType): Promise<LessonItemWithContentSchema[]> {
     return await this.db
       .select({
         id: lessons.id,
@@ -219,7 +225,35 @@ export class AdminChapterRepository {
         description: sql<string>`${lessons.description}`,
         fileS3Key: sql<string>`${lessons.fileS3Key}`,
         fileType: sql<string>`${lessons.fileType}`,
-        displayOrder: sql<number>`(${lessons.displayOrder})`,
+        displayOrder: sql<number>`${lessons.displayOrder}`,
+        questions: sql<QuestionSchema[]>`
+  (
+    SELECT ARRAY(
+      SELECT json_build_object(
+        'id', q.id,
+        'title', q.title,
+        'type', q.type,
+        'description', q.description,
+        'thumbnailS3Key', q.thumbnail_s3_key,
+        'photoQuestionType', q.photo_question_type,
+        'options', (
+          SELECT ARRAY(
+            SELECT json_build_object(
+              'id', qo.id,
+              'optionText', qo.option_text,
+              'isCorrect', qo.is_correct,
+              'position', qo.position
+            )
+            FROM question_answer_options qo
+            WHERE qo.question_id = q.id
+          )
+        )
+      )
+      FROM questions q
+      WHERE q.lesson_id = lessons.id
+    )
+  )
+`,
       })
       .from(lessons)
       .where(and(eq(lessons.chapterId, chapterId)))

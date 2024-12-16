@@ -17,7 +17,7 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
-import { ContentTypes } from "../../EditCourse.types";
+import { ContentTypes, LessonType } from "../../EditCourse.types";
 
 import LessonCard from "./LessonCard";
 
@@ -61,15 +61,19 @@ const ChapterCard = ({
     (lesson: Lesson) => {
       const contentType = lesson.type;
       setSelectedLesson(lesson);
+
       switch (contentType) {
-        case "video":
+        case LessonType.VIDEO:
           setContentTypeToDisplay(ContentTypes.VIDEO_LESSON_FORM);
           break;
-        case "text_block":
+        case LessonType.TEXT_BLOCK:
           setContentTypeToDisplay(ContentTypes.TEXT_LESSON_FORM);
           break;
-        case "presentation":
+        case LessonType.PRESENTATION:
           setContentTypeToDisplay(ContentTypes.PRESENTATION_FORM);
+          break;
+        case LessonType.QUIZ:
+          setContentTypeToDisplay(ContentTypes.QUIZ_FORM);
           break;
         default:
           setContentTypeToDisplay(ContentTypes.EMPTY);

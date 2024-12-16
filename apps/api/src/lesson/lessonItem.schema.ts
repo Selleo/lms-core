@@ -26,6 +26,7 @@ export const questionSchema = Type.Object({
   id: UUIDSchema,
   questionType: Type.String(),
   questionBody: Type.String(),
+  thumbnailS3Key: Type.Optional(Type.String()),
   solutionExplanation: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   state: Type.Optional(Type.String()),
   questionAnswers: Type.Optional(Type.Array(questionAnswerOptionsSchema)),
@@ -61,6 +62,7 @@ export const lessonItemSchema = Type.Object({
   description: Type.String(),
   fileS3Key: Type.Optional(Type.String()),
   fileType: Type.Optional(Type.String()),
+  questions: Type.Optional(Type.Array(questionSchema)),
 });
 
 export const lessonItemWithContent = Type.Object({
@@ -154,6 +156,7 @@ export const lessonItemSelectSchema = Type.Object({
 export type LessonItemResponse = Static<typeof lessonItemSelectSchema>;
 export type QuestionAnswer = Static<typeof questionAnswer>;
 export type QuestionResponse = Static<typeof questionResponse>;
+export type QuestionSchema = Static<typeof questionSchema>;
 export type QuestionWithContent = Static<typeof questionWithContent>;
 export type LessonItemWithContentSchema = Static<typeof lessonItemSchema>;
 export type AllLessonItemsResponse = Static<typeof allLessonItemsResponse>;

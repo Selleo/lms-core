@@ -6,9 +6,15 @@ import { AdminLessonRepository } from "./adminLesson.repository";
 import { LessonRepository } from "./lesson.repository";
 import { LESSON_TYPES } from "./lesson.type";
 
-import type { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
+import type {
+  CreateLessonBody,
+  CreateQuizLessonBody,
+  UpdateLessonBody,
+  UpdateQuizLessonBody,
+} from "./lesson.schem";
 import type { LessonTypes } from "./lesson.type";
 import type { UUIDType } from "src/common";
+import { max } from "lodash";
 
 type GetLessonItemsQuery = {
   type?: LessonTypes;
@@ -43,6 +49,48 @@ export class AdminLessonService {
       authorId,
     );
     return lesson.id;
+  }
+
+  async createQuizLessonForChapter(data: CreateQuizLessonBody, authorId: UUIDType) {
+    const maxDisplayOrder = await this.adminLessonRepository.getMaxDisplayOrder(data.chapterId);
+
+    const lesson = await this.adminLessonRepository.createQuizLessonWithQuestionsAndOptions(
+      { ...data },
+      authorId,
+      maxDisplayOrder + 1,
+    );
+    return lesson?.id;
+  }
+
+  async removeLesson(chapterId: UUIDType, lessonId: UUIDType) {
+    const lesson = await this.lessonRepository.getLesson(lessonId);
+
+    if (!lesson) {
+      throw new NotFoundException("Lesson not found");
+    }
+
+    await this.adminLessonRepository.removeLesson(lessonId);
+    await this.adminLessonRepository.updateLessonItemDisplayOrder(chapterId, lessonId);
+  }
+
+  async updateQuizLessonWithQuestionsAndOptions(
+    id: UUIDType,
+    data: UpdateQuizLessonBody,
+    authorId: UUIDType,
+  ) {
+    const lesson = await this.lessonRepository.getLesson(id);
+
+    if (!lesson) {
+      throw new NotFoundException("Lesson not found");
+    }
+
+    const updatedLessonId =
+      await this.adminLessonRepository.updateQuizLessonWithQuestionsAndOptions(
+        id,
+        { ...data },
+        authorId,
+      );
+    return updatedLessonId;
   }
 
   async updateLesson(id: string, data: UpdateLessonBody) {

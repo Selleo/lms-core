@@ -7,7 +7,6 @@ import { useCreateBetaTextLesson } from "~/api/mutations/admin/useBetaCreateText
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
 import { useUpdateTextBlockItem } from "~/api/mutations/admin/useUpdateTextBlockItem";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
-import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
 import {
   ContentTypes,
@@ -33,7 +32,6 @@ export const useTextLessonForm = ({
   const { id: courseId } = useParams();
   const { mutateAsync: createTextBlock } = useCreateBetaTextLesson();
   const { mutateAsync: updateTextBlockItem } = useUpdateTextBlockItem();
-  const { data: currentUser } = useCurrentUserSuspense();
   const { mutateAsync: deleteLesson } = useDeleteLesson();
 
   const form = useForm<TextLessonFormValues>({

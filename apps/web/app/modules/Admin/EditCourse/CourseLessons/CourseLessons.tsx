@@ -61,7 +61,13 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
       [ContentTypes.SELECT_LESSON_TYPE]: (
         <SelectLessonType setContentTypeToDisplay={setContentTypeToDisplay} />
       ),
-      [ContentTypes.QUIZ_FORM]: <QuizLessonForm />,
+      [ContentTypes.QUIZ_FORM]: (
+        <QuizLessonForm
+          setContentTypeToDisplay={setContentTypeToDisplay}
+          chapterToEdit={selectedChapter}
+          lessonToEdit={selectedLesson}
+        />
+      ),
     };
 
     return contentMap[contentTypeToDisplay] || null;

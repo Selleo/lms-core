@@ -1,5 +1,5 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useEffect, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
@@ -18,81 +18,99 @@ import {
 
 import QuestionTitle from "./QuestionTitle";
 
-import type { QuizLessonFormValues } from "../validators/quizLessonFormChemat";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
+import { QuestionOption, QuestionType } from "../QuizLessonForm.types";
+import { cn } from "~/lib/utils";
+import { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
   questionIndex: number;
+  lessonToEdit?: Lesson;
 };
 
-type Option = {
-  value: string;
-  isCorrect: boolean;
-  position: number;
-};
-
-const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
+const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const questionType = form.getValues(`questions.${questionIndex}.questionType`);
+  const questionType = form.getValues(`questions.${questionIndex}.type`);
 
-  const photoQuestionType = form.getValues(`questions.${questionIndex}.photoQuestionType`);
+  const photoQuestionType = form.watch(`questions.${questionIndex}.photoQuestionType`);
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
-  const imageUrl = form.getValues(`questions.${questionIndex}.imageUrl`);
+  const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(undefined);
 
-  const isOptionEmpty =
-    !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
-    form.getValues(`questions.${questionIndex}.options`)?.length === 0;
+  useEffect(() => {
+    setDisplayImageUrl(lessonToEdit?.questions?.[questionIndex]?.thumbnailS3SingedUrl);
+  }, [lessonToEdit]);
 
-  const handleAddOption = () => {
-    const currentOptions: Option[] = form.getValues(`questions.${questionIndex}.options`) || [];
-    const newOption: Option = { value: "", isCorrect: false, position: currentOptions.length + 1 };
+  const isOptionEmpty = useMemo(() => {
+    return (
+      !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
+      form.getValues(`questions.${questionIndex}.options`)?.length === 0
+    );
+  }, [form, questionIndex]);
+
+  const handleAddOption = useCallback(() => {
+    const currentOptions: QuestionOption[] =
+      form.getValues(`questions.${questionIndex}.options`) || [];
+    const newOption: QuestionOption = {
+      optionText: "",
+      isCorrect: false,
+      position: currentOptions.length + 1,
+    };
     form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption]);
-  };
+  }, [form, questionIndex]);
 
-  const handleRemoveOption = (optionIndex: number) => {
-    const currentOptions: Option[] = form.getValues(`questions.${questionIndex}.options`) || [];
-    const updatedOptions = currentOptions.filter((_, index) => index !== optionIndex);
-    form.setValue(`questions.${questionIndex}.options`, updatedOptions);
-  };
+  const handleRemoveOption = useCallback(
+    (optionIndex: number) => {
+      const currentOptions: QuestionOption[] =
+        form.getValues(`questions.${questionIndex}.options`) || [];
+      const updatedOptions = currentOptions.filter((_, index) => index !== optionIndex);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+    },
+    [form, questionIndex],
+  );
 
-  const handleRemoveQuestion = () => {
+  const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
     form.setValue("questions", updatedQuestions);
-  };
+  }, [form, questionIndex]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleOptionChange = (optionIndex: number, field: "value" | "isCorrect", value: any) => {
-    const currentOptions: Option[] = form.getValues(`questions.${questionIndex}.options`) || [];
-    const updatedOptions = [...currentOptions];
+  const handleOptionChange = useCallback(
+    (optionIndex: number, field: "optionText" | "isCorrect", value: string | boolean) => {
+      const currentOptions: QuestionOption[] =
+        form.getValues(`questions.${questionIndex}.options`) || [];
+      const updatedOptions = [...currentOptions];
 
-    if (field === "isCorrect") {
-      if (photoQuestionType === "single_choice") {
-        updatedOptions.forEach((option, index) => {
-          option.isCorrect = index === optionIndex;
-        });
-      } else if (photoQuestionType === "multiple_choice") {
-        updatedOptions[optionIndex].isCorrect = value;
+      if (field === "isCorrect") {
+        if (photoQuestionType === QuestionType.SINGLE_CHOICE) {
+          updatedOptions.forEach((option, index) => {
+            option.isCorrect = index === optionIndex;
+          });
+        } else if (photoQuestionType === QuestionType.MULTIPLE_CHOICE) {
+          updatedOptions[optionIndex].isCorrect = value as boolean;
+        }
+      } else {
+        updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], [field]: value as string };
       }
-    } else {
-      updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], [field]: value };
-    }
 
-    form.setValue(`questions.${questionIndex}.options`, updatedOptions);
-  };
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+    },
+    [form, questionIndex, photoQuestionType],
+  );
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
+  const handleToggle = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
 
   const handleImageUpload = useCallback(
     async (file: File) => {
       setIsUploading(true);
       try {
         const result = await uploadFile({ file, resource: "lesson" });
-        form.setValue(`questions.${questionIndex}.imageUrl`, result.fileUrl, {
+        setDisplayImageUrl(result.fileUrl);
+        form.setValue(`questions.${questionIndex}.thumbnailS3Key`, result.fileKey, {
           shouldValidate: true,
         });
       } catch (error) {
@@ -105,17 +123,13 @@ const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
   );
 
   return (
-    <Accordion.Root
-      key={questionIndex}
-      type="single"
-      collapsible
-      defaultValue={`item-${questionIndex}`}
-    >
+    <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
         <div
-          className={`border p-4 mt-4 rounded-xl transition-all duration-300 ${
-            isOpen ? "border-gray-200" : "border-blue-500"
-          }`}
+          className={cn("border p-4 mt-4 rounded-xl transition-all duration-300", {
+            "border-blue-500": isOpen,
+            "border-gray-200": !isOpen,
+          })}
         >
           <QuestionTitle
             questionIndex={questionIndex}
@@ -124,14 +138,14 @@ const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
             isOpen={isOpen}
             handleToggle={handleToggle}
           />
-          <Accordion.Content className="mt-4">
+          <Accordion.Content className="mt-8">
             <div className="ml-14">
               <FormField
                 control={form.control}
-                name={`questions.${questionIndex}.imageUrl`}
+                name={`questions.${questionIndex}.thumbnailS3Key`}
                 render={({ field }) => (
                   <FormItem className="mt-5 w-1/3">
-                    <Label htmlFor="imageUrl" className="text-right">
+                    <Label htmlFor="imageUrl" className="text-right body-base-md ">
                       <span className="text-red-500 mr-1">*</span>
                       Image
                     </Label>
@@ -140,7 +154,7 @@ const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
                         field={field}
                         handleImageUpload={handleImageUpload}
                         isUploading={isUploading}
-                        imageUrl={imageUrl}
+                        imageUrl={displayImageUrl}
                       />
                     </FormControl>
 
@@ -153,15 +167,17 @@ const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
                 control={form.control}
                 name={`questions.${questionIndex}.photoQuestionType`}
                 render={({ field }) => (
-                  <FormItem className="w-1/6">
-                    <Label htmlFor="type" className="text-right body-base mt-4">
+                  <FormItem className="w-1/6 mt-4">
+                    <Label htmlFor="type" className="text-right body-base-md">
+                      <span className="text-red-500 mr-1">*</span>
                       Type
                     </Label>
                     <FormControl>
                       <Select
                         {...field}
                         onValueChange={(value) => field.onChange(value)}
-                        value={field.value || "single_choice"}
+                        defaultValue={QuestionType.SINGLE_CHOICE}
+                        value={field.value || QuestionType.SINGLE_CHOICE}
                       >
                         <SelectTrigger>
                           <SelectValue
@@ -174,10 +190,16 @@ const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
                           />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="single_choice" className="text-left body-base-md">
+                          <SelectItem
+                            value={QuestionType.SINGLE_CHOICE}
+                            className="text-left body-base-md"
+                          >
                             Single select
                           </SelectItem>
-                          <SelectItem value="multiple_choice" className="text-left body-base-md">
+                          <SelectItem
+                            value={QuestionType.MULTIPLE_CHOICE}
+                            className="text-left body-base-md"
+                          >
                             Multi select
                           </SelectItem>
                         </SelectContent>
@@ -202,14 +224,16 @@ const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
                     <Icon name="DragAndDropIcon" className="h-7 w-7" />
                     <Input
                       type="text"
-                      value={option.value}
-                      onChange={(e) => handleOptionChange(optionIndex, "value", e.target.value)}
+                      value={option.optionText}
+                      onChange={(e) =>
+                        handleOptionChange(optionIndex, "optionText", e.target.value)
+                      }
                       placeholder={`Option ${optionIndex + 1}`}
                       required
                       className="flex-1"
                     />
                     <div className="flex items-center">
-                      {photoQuestionType === "single_choice" ? (
+                      {photoQuestionType === QuestionType.SINGLE_CHOICE ? (
                         <input
                           type="radio"
                           name={`questions.${questionIndex}.correctOption`}
@@ -230,7 +254,7 @@ const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
                       <Label className="ml-2 text-neutral-900 body-base">Correct</Label>
                       <Icon
                         name="TrashIcon"
-                        className="text-red-500 ml-2 cursor-pointer w-5 h-5"
+                        className="text-error-500 ml-2 cursor-pointer w-5 h-5"
                         onClick={() => handleRemoveOption(optionIndex)}
                       />
                     </div>
@@ -239,12 +263,12 @@ const PhotoQuestion = ({ form, questionIndex }: PhotoQuestionProps) => {
               ))}
             </div>
             <div className="mt-6 flex gap-2">
-              <Button type="button" onClick={handleAddOption}>
+              <Button className="bg-primary-700" type="button" onClick={handleAddOption}>
                 Add Option
               </Button>
               <Button
                 type="button"
-                className="text-red-500 bg-color-white border border-neutral-300"
+                className="text-error-700 bg-color-white border border-neutral-300"
                 onClick={handleRemoveQuestion}
               >
                 Delete Question

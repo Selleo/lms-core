@@ -4,13 +4,13 @@ import { Icon } from "~/components/Icon";
 import { FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 
-import type { QuestionIcons } from "../QuizLessonForm.types";
-import type { QuizLessonFormValues } from "../validators/quizLessonFormChemat";
+import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
 
 interface QuestionTitleProps {
   questionIndex: number;
-  questionType: "multiple_choice" | "single_choice" | "true_or_false";
+  questionType: QuestionType;
   form: UseFormReturn<QuizLessonFormValues>;
   isOpen?: boolean;
   handleToggle?: () => void;
@@ -23,40 +23,33 @@ const QuestionTitle = ({
   isOpen,
   handleToggle,
 }: QuestionTitleProps) => {
-  const getIconForQuestionType = (type: string): QuestionIcons => {
-    switch (type) {
-      case "multiple_choice":
-        return "MultiSelect";
-      case "single_choice":
-        return "SingleSelect";
-      case "true_or_false":
-        return "TrueOrFalse";
-      case "brief_response":
-        return "BriefResponse";
-      case "detailed_response":
-        return "DetailedResponse";
-      case "photo_question":
-        return "PhotoQuestion";
-      case "fill_in_the_blanks":
-        return "FillInTheBlanks";
-      default:
-        return "TrueOrFalse";
-    }
+  const questionTypeToIconMap: Record<QuestionType, QuestionIcons> = {
+    [QuestionType.MULTIPLE_CHOICE]: QuestionIcons.MultiSelect,
+    [QuestionType.SINGLE_CHOICE]: QuestionIcons.SingleSelect,
+    [QuestionType.TRUE_OR_FALSE]: QuestionIcons.TrueOrFalse,
+    [QuestionType.BRIEF_RESPONSE]: QuestionIcons.BriefResponse,
+    [QuestionType.DETAILED_RESPONSE]: QuestionIcons.DetailedResponse,
+    [QuestionType.PHOTO_QUESTION]: QuestionIcons.PhotoQuestion,
+    [QuestionType.FILL_IN_THE_BLANKS]: QuestionIcons.FillInTheBlanks,
+  };
+
+  const getIconForQuestionType = (type: QuestionType): QuestionIcons => {
+    return questionTypeToIconMap[type];
   };
 
   return (
     <div className="flex items-center gap-2 p-1">
       <Icon name="DragAndDropIcon" className="w-7 h-7" />
-      <Icon name={getIconForQuestionType(questionType)} className="w-5 h-5" />
+      <Icon name={getIconForQuestionType(questionType)} className="w-5 h-5 text-primary-700" />
 
       <FormField
         control={form.control}
-        name={`questions.${questionIndex}.questionTitle`}
+        name={`questions.${questionIndex}.title`}
         render={({ field }) => (
           <FormItem className="flex-1">
             <FormControl>
               <Input
-                id={`questionBody-${questionIndex}`}
+                id={`title-${questionIndex}`}
                 placeholder="Enter your question"
                 {...field}
                 required
@@ -69,7 +62,7 @@ const QuestionTitle = ({
 
       {handleToggle && (
         <AccordionTrigger className="ml-auto" onClick={handleToggle}>
-          <Icon name={isOpen ? "ArrowDown" : "ArrowUp"} />
+          <Icon name={!isOpen ? "ArrowDown" : "ArrowUp"} />
         </AccordionTrigger>
       )}
     </div>

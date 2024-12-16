@@ -5,36 +5,37 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 
-type DeleteLessonOptions = {
-  chapterId: string;
-  lessonId: string;
+import type { BetaCreateQuizLessonBody } from "~/api/generated-api";
+
+type CreateQuizLessonOptions = {
+  data: BetaCreateQuizLessonBody;
 };
 
-export function useDeleteLesson() {
+export function useCreateQuizLesson() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: DeleteLessonOptions) => {
-      const response = await ApiClient.api.lessonControllerRemoveLesson(
-        options.chapterId,
-        options.lessonId,
-      );
+    mutationFn: async (options: CreateQuizLessonOptions) => {
+      const response = await ApiClient.api.lessonControllerBetaCreateQuizLesson(options.data);
 
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "Course updated successfully" });
+      toast({
+        variant: "default",
+        description: "Text block created successfully",
+      });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
         return toast({
-          description: error.response?.data.message,
           variant: "destructive",
+          description: error.response?.data.message,
         });
       }
       toast({
-        description: error.message,
         variant: "destructive",
+        description: error.message,
       });
     },
   });

@@ -1,17 +1,6 @@
+import { Question } from "./CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
+
 export type NavigationTab = "Settings" | "Lesson" | "Pricing" | "Status";
-// export interface LessonItem {
-//   lessonItemType: string;
-//   displayOrder: number;
-//   lessonItemId: string;
-//   content: {
-//     id: string;
-//     title: string;
-//     type?: string;
-//     state?: "draft" | "published";
-//     description?: string;
-//     url?: string;
-//   };
-// }
 
 export interface Lesson {
   type: string;
@@ -22,13 +11,12 @@ export interface Lesson {
   fileS3Key?: string;
   fileType?: string;
   chapterId?: string;
+  questions?: Question[];
 }
 
 export interface Chapter {
   id: string;
   title: string;
-  // description: string | null;
-  // imageUrl: string | null;
   displayOrder: number;
   isFree: boolean;
   lessonCount: number;
@@ -46,3 +34,10 @@ export const ContentTypes = {
 };
 
 export type LessonIcons = "Text" | "Video" | "Presentation" | "Quiz";
+
+export enum LessonType {
+  VIDEO = "video",
+  TEXT_BLOCK = "text_block",
+  PRESENTATION = "presentation",
+  QUIZ = "quiz",
+}

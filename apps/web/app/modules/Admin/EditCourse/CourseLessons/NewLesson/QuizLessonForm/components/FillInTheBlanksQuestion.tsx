@@ -1,8 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { Color } from "@tiptap/extension-color";
-import Document from "@tiptap/extension-document";
 import Highlight from "@tiptap/extension-highlight";
-import Text from "@tiptap/extension-text";
 import TextStyle from "@tiptap/extension-text-style";
 import { EditorContent, useEditor, Node } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -16,8 +14,9 @@ import { Label } from "~/components/ui/label";
 
 import QuestionTitle from "./QuestionTitle";
 
-import type { QuizLessonFormValues } from "../validators/quizLessonFormChemat";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
+import { cn } from "~/lib/utils";
 
 type FillInTheBlankQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -50,7 +49,7 @@ const ButtonNode = Node.create({
 });
 
 const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestionProps) => {
-  const questionType = form.getValues(`questions.${questionIndex}.questionType`);
+  const questionType = form.getValues(`questions.${questionIndex}.type`);
   const [newWord, setNewWord] = useState("");
   const [isAddingWord, setIsAddingWord] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -61,12 +60,10 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       StarterKit,
       Color,
       TextStyle,
-      Text,
-      Document,
       ButtonNode,
       Highlight.configure({ multicolor: true }),
     ],
-    content: form.getValues(`questions.${questionIndex}.questionBody`) || "",
+    content: form.getValues(`questions.${questionIndex}.description`) || "",
   });
 
   const currentOptions = form.getValues(`questions.${questionIndex}.options`) || [];
@@ -76,7 +73,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   };
 
   function containsButtonWithWord(word: string) {
-    const currentValue = form.getValues(`questions.${questionIndex}.questionBody`);
+    const currentValue = form.getValues(`questions.${questionIndex}.description`);
 
     const escapedWord = word.replace(/[.*+?^=!:${}()|[\]/\\]/g, "\\$&");
 
@@ -110,7 +107,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     const regex = /<button[^>]*class="[^"]*bg-primary-200[^"]*"[^>]*>([^<]+)<\/button>/g;
 
-    const currentValue = form.getValues(`questions.${questionIndex}.questionBody`) as string;
+    const currentValue = form.getValues(`questions.${questionIndex}.description`) as string;
 
     const buttonValues = currentValue
       ? [...currentValue.matchAll(regex)]
@@ -121,7 +118,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     const updatedOptions = [...currentOptions];
 
     buttonValues.forEach((button: string, index: number) => {
-      const optionIndex = updatedOptions.findIndex((option) => option.value === button);
+      const optionIndex = updatedOptions.findIndex((option) => option.optionText === button);
 
       if (optionIndex !== -1) {
         updatedOptions[optionIndex] = {
@@ -146,9 +143,9 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   const handleAddWord = () => {
     const trimmedWord = newWord.trim();
 
-    if (trimmedWord !== "" && !currentOptions.some((option) => option.value === trimmedWord)) {
+    if (trimmedWord !== "" && !currentOptions.some((option) => option.optionText === trimmedWord)) {
       const newOption = {
-        value: trimmedWord,
+        optionText: trimmedWord,
         isCorrect: false,
         position: currentOptions.length + 1,
       };
@@ -175,7 +172,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     editor.on("update", () => {
       const html = editor.getHTML();
-      form.setValue(`questions.${questionIndex}.questionBody`, html);
+      form.setValue(`questions.${questionIndex}.description`, html);
     });
 
     return () => {
@@ -184,11 +181,11 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   }, [editor, form, questionIndex]);
 
   useEffect(() => {
-    if (editor && form.getValues(`questions.${questionIndex}.questionBody`) !== editor.getHTML()) {
-      const content = form.getValues(`questions.${questionIndex}.questionBody`);
+    if (editor && form.getValues(`questions.${questionIndex}.description`) !== editor.getHTML()) {
+      const content = form.getValues(`questions.${questionIndex}.description`);
       editor.commands.setContent(content as string);
     }
-  }, [form.getValues(`questions.${questionIndex}.questionBody`), editor, questionIndex, form]);
+  }, [form.getValues(`questions.${questionIndex}.description`), editor, questionIndex, form]);
 
   useEffect(() => {
     if (!editor) return;
@@ -200,8 +197,8 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
         button.removeAttribute("contenteditable");
         const buttonHtml = button.outerHTML;
         form.setValue(
-          `questions.${questionIndex}.questionBody`,
-          form.getValues(`questions.${questionIndex}.questionBody`)?.replace(buttonHtml, ""),
+          `questions.${questionIndex}.description`,
+          form.getValues(`questions.${questionIndex}.description`)?.replace(buttonHtml, ""),
         );
 
         const optionValue = button.innerText.trim().replace(/\s+/g, " ").split(" ")[0];
@@ -210,7 +207,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
           const updatedOptions = form
             .getValues(`questions.${questionIndex}.options`)
             ?.map((option) =>
-              option.value === optionValue ? { ...option, isCorrect: false } : option,
+              option.optionText === optionValue ? { ...option, isCorrect: false } : option,
             );
           form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
             shouldValidate: true,
@@ -218,7 +215,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
         }
         button.remove();
 
-        const currentValue = form.getValues(`questions.${questionIndex}.questionBody`) as string;
+        const currentValue = form.getValues(`questions.${questionIndex}.description`) as string;
 
         const regex = /<button[^>]*class="[^"]*bg-primary-200[^"]*"[^>]*>([^<]+)<\/button>/g;
 
@@ -233,16 +230,14 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
           ?.map((option) => {
             return {
               ...option,
-              position: buttonValues.indexOf(option.value) + 1,
-              isCorrect: buttonValues.includes(option.value),
+              position: buttonValues.indexOf(option.optionText) + 1,
+              isCorrect: buttonValues.includes(option.optionText),
             };
           });
 
         form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
           shouldValidate: true,
         });
-
-        console.log(form.getValues(`questions.${questionIndex}.options`));
       }
     };
 
@@ -254,15 +249,13 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   }, [editor, form, questionIndex]);
 
   return (
-    <Accordion.Root
-      key={questionIndex}
-      type="single"
-      collapsible
-      defaultValue={`item-${questionIndex}`}
-    >
-      <Accordion.Item value={`item-${questionIndex}`} className="overflow-y-auto">
+    <Accordion.Root key={questionIndex} type="single" collapsible>
+      <Accordion.Item value={`item-${questionIndex}`}>
         <div
-          className={`border p-4 mt-4 rounded-xl transition-all duration-300 ${!isOpen ? "border-blue-500" : "border-gray-200"}`}
+          className={cn("border p-4 mt-4 rounded-xl transition-all duration-300", {
+            "border-blue-500": isOpen,
+            "border-gray-200": !isOpen,
+          })}
         >
           <QuestionTitle
             form={form}
@@ -280,14 +273,14 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                   <div
                     key={index}
                     className={`px-4 rounded-full flex items-center justify-between space-x-2 ${
-                      containsButtonWithWord(option.value) ? "bg-success-100" : "bg-primary-200"
+                      option.isCorrect ? "bg-success-100" : "bg-primary-200"
                     }`}
-                    draggable={!containsButtonWithWord(option.value)}
-                    onDragStart={(e) => handleDragStart(option.value, e)}
+                    draggable={!containsButtonWithWord(option.optionText)}
+                    onDragStart={(e) => handleDragStart(option.optionText, e)}
                   >
                     <Icon name="DragAndDropIcon" />
-                    {addedWords.includes(option.value) && <Icon name="Success" />}
-                    <span>{option.value}</span>
+                    {addedWords.includes(option.optionText) && <Icon name="Success" />}
+                    <span>{option.optionText}</span>
                     <Button
                       onClick={() => handleRemoveWord(index)}
                       type="button"
@@ -339,17 +332,17 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
               <FormField
                 control={form.control}
-                name={`questions.${questionIndex}.questionBody`}
+                name={`questions.${questionIndex}.description`}
                 render={() => (
                   <FormItem className="mt-5">
-                    <Label htmlFor="questionBody" className="text-right body-sm-md">
-                      <span className="text-red-500">*</span>
+                    <Label htmlFor="description" className="text-right body-sm-md">
+                      <span className="text-red-500 mr-1">*</span>
                       Sentence
                     </Label>
                     <FormControl>
                       <EditorContent
                         editor={editor}
-                        className="w-full h-80 p-4 border border-gray-300 rounded-lg bg-white text-black"
+                        className="w-full h-40 p-4 border border-gray-300 rounded-lg bg-white text-black"
                         onDrop={handleDrop}
                       />
                     </FormControl>
@@ -359,7 +352,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               />
               <Button
                 type="button"
-                className="text-red-500 bg-color-white border border-neutral-300 mt-4"
+                className="text-error-700 bg-color-white border border-neutral-300 mt-4"
                 onClick={handleRemoveQuestion}
               >
                 Delete Question

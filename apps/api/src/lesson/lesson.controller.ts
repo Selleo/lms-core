@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -12,8 +12,12 @@ import { AdminLessonService } from "./adminLesson.service";
 import {
   CreateLessonBody,
   createLessonSchema,
+  CreateQuizLessonBody,
+  createQuizLessonSchema,
   UpdateLessonBody,
   updateLessonSchema,
+  UpdateQuizLessonBody,
+  updateQuizLessonSchema,
 } from "./lesson.schem";
 
 // import {
@@ -165,6 +169,54 @@ export class LessonController {
     return new BaseResponse({ id, message: "Lesson created successfully" });
   }
 
+  @Post("beta-create-lesson/quiz")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: createQuizLessonSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
+  })
+  async betaCreateQuizLesson(
+    @Body() createQuizLessonBody: CreateQuizLessonBody,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const id = await this.adminLessonsService.createQuizLessonForChapter(
+      createQuizLessonBody,
+      userId,
+    );
+
+    return new BaseResponse({ id, message: "Lesson created successfully" }) as any;
+  }
+
+  @Patch("beta-update-lesson/quiz")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "id",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: updateQuizLessonSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async betaUpdateQuizLesson(
+    @Query("id") id: string,
+    @Body() data: UpdateQuizLessonBody,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonsService.updateQuizLessonWithQuestionsAndOptions(id, data, userId);
+    return new BaseResponse({ message: "Text block updated successfully" });
+  }
+
   @Patch("beta-update-lesson")
   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
@@ -187,6 +239,25 @@ export class LessonController {
   ): Promise<BaseResponse<{ message: string }>> {
     await this.adminLessonsService.updateLesson(id, data);
     return new BaseResponse({ message: "Text block updated successfully" });
+  }
+
+  @Delete("lesson/:chapterId/:lessonId")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      { type: "param", name: "chapterId", schema: UUIDSchema },
+      { type: "param", name: "lessonId", schema: UUIDSchema },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async removeLesson(
+    @Param("chapterId") chapterId: string,
+    @Param("lessonId") lessonId: string,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonsService.removeLesson(chapterId, lessonId);
+    return new BaseResponse({
+      message: "Lesson removed from course successfully",
+    });
   }
 
   //   @Patch("lesson")

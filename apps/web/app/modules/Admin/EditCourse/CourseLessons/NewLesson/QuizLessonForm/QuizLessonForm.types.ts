@@ -1,29 +1,39 @@
-export type QuestionIcons =
-  | "MultiSelect"
-  | "SingleSelect"
-  | "TrueOrFalse"
-  | "BriefResponse"
-  | "DetailedResponse"
-  | "PhotoQuestion"
-  | "FillInTheBlanks";
+export enum QuestionIcons {
+  MultiSelect = "MultiSelect",
+  SingleSelect = "SingleSelect",
+  TrueOrFalse = "TrueOrFalse",
+  BriefResponse = "BriefResponse",
+  DetailedResponse = "DetailedResponse",
+  PhotoQuestion = "PhotoQuestion",
+  FillInTheBlanks = "FillInTheBlanks",
+}
+
+export type PhotoQuestionType = "single_choice" | "multiple_choice";
+
+export type QuestionOption = {
+  id?: string;
+  optionText: string;
+  isCorrect: boolean;
+  position: number;
+};
 
 export type Question = {
-  questionType:
-    | "single_choice"
-    | "multiple_choice"
-    | "true_or_false"
-    | "photo_question"
-    | "fill_in_the_blanks"
-    | "brief_response"
-    | "detailed_response";
-  questionBody?: string;
-  state: "draft" | "published";
-  imageUrl?: string;
-  photoQuestionType?: "single_choice" | "multiple_choice";
-  questionTitle: string;
-  options?: {
-    value: string;
-    isCorrect: boolean;
-    position: number;
-  }[];
+  id?: string;
+  type: QuestionType;
+  description?: string;
+  thumbnailS3SingedUrl?: string;
+  thumbnailS3Key?: string;
+  photoQuestionType?: PhotoQuestionType;
+  title: string;
+  options?: QuestionOption[];
 };
+
+export enum QuestionType {
+  SINGLE_CHOICE = "single_choice",
+  MULTIPLE_CHOICE = "multiple_choice",
+  TRUE_OR_FALSE = "true_or_false",
+  BRIEF_RESPONSE = "brief_response",
+  DETAILED_RESPONSE = "detailed_response",
+  PHOTO_QUESTION = "photo_question",
+  FILL_IN_THE_BLANKS = "fill_in_the_blanks",
+}

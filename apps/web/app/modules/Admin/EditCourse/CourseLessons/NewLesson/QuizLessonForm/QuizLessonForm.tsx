@@ -1,5 +1,4 @@
 import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -12,97 +11,92 @@ import QuestionSelector from "./components/QuestionSelector";
 import TrueOrFalseQuestion from "./components/TrueOrFalseQuestion";
 import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
 
-import type { Question } from "./QuizLessonForm.types";
-import type { QuizLessonFormValues } from "./validators/quizLessonFormChemat";
+import { PhotoQuestionType, Question, QuestionType } from "./QuizLessonForm.types";
+import type { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
+import { Chapter, ContentTypes, Lesson } from "../../../EditCourse.types";
+import { useCallback } from "react";
 
-const QuizLessonForm = () => {
-  const { form } = useQuizLessonForm();
+type QuizLessonProps = {
+  setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
+  chapterToEdit?: Chapter;
+  lessonToEdit?: Lesson;
+};
+
+const QuizLessonForm = ({
+  setContentTypeToDisplay,
+  chapterToEdit,
+  lessonToEdit,
+}: QuizLessonProps) => {
+  const { form, onSubmit, onClickDelete } = useQuizLessonForm({
+    setContentTypeToDisplay,
+    chapterToEdit,
+    lessonToEdit,
+  });
 
   const questions = form.watch("questions");
 
-  const addQuestion = (questionType: string) => {
-    const questions = form.getValues("questions") || [];
+  const addQuestion = useCallback(
+    (questionType: string) => {
+      const questions = form.getValues("questions") || [];
 
-    // const lastQuestionOptions =
-    //   questions.length > 0 && Array.isArray(questions[questions.length - 1].options)
-    //     ? questions[questions.length - 1].options
-    //     : [];
+      const newQuestion: Question = {
+        title: "",
+        type: questionType as QuestionType,
+        photoQuestionType:
+          questionType === QuestionType.PHOTO_QUESTION ? QuestionType.SINGLE_CHOICE : undefined,
+      };
 
-    // const newPosition = lastQuestionOptions
-    //   ? Math.max(...lastQuestionOptions.map((option) => option.position)) + 1
-    //   : 1;
+      form.setValue("questions", [...questions, newQuestion]);
+    },
+    [form],
+  );
 
-    const newQuestion = {
-      questionType,
-      questionBody: "",
-      state: "draft",
-    };
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    form.setValue("questions", [...questions, newQuestion as any]);
-  };
-
-  const renderQuestion = (
-    question: Question,
-    questionIndex: number,
-    form: UseFormReturn<QuizLessonFormValues>,
-  ) => {
-    switch (question.questionType) {
-      case "single_choice":
-      case "multiple_choice":
-        return (
-          <AnswerSelectQuestion key={questionIndex} questionIndex={questionIndex} form={form} />
-        );
-      case "true_or_false":
-        return (
-          <TrueOrFalseQuestion key={questionIndex} questionIndex={questionIndex} form={form} />
-        );
-      case "brief_response":
-      case "detailed_response":
-        return <OpenQuestion key={questionIndex} questionIndex={questionIndex} form={form} />;
-      case "photo_question":
-        return <PhotoQuestion key={questionIndex} questionIndex={questionIndex} form={form} />;
-      case "fill_in_the_blanks":
-        return (
-          <FillInTheBlanksQuestion key={questionIndex} questionIndex={questionIndex} form={form} />
-        );
-      default:
-        return null;
-    }
-  };
+  const renderQuestion = useCallback(
+    (question: Question, questionIndex: number, form: UseFormReturn<QuizLessonFormValues>) => {
+      switch (question.type) {
+        case QuestionType.SINGLE_CHOICE:
+        case QuestionType.MULTIPLE_CHOICE:
+          return (
+            <AnswerSelectQuestion key={questionIndex} questionIndex={questionIndex} form={form} />
+          );
+        case QuestionType.TRUE_OR_FALSE:
+          return (
+            <TrueOrFalseQuestion key={questionIndex} questionIndex={questionIndex} form={form} />
+          );
+        case QuestionType.BRIEF_RESPONSE:
+        case QuestionType.DETAILED_RESPONSE:
+          return <OpenQuestion key={questionIndex} questionIndex={questionIndex} form={form} />;
+        case QuestionType.PHOTO_QUESTION:
+          return (
+            <PhotoQuestion
+              key={questionIndex}
+              questionIndex={questionIndex}
+              form={form}
+              lessonToEdit={lessonToEdit}
+            />
+          );
+        case QuestionType.FILL_IN_THE_BLANKS:
+          return (
+            <FillInTheBlanksQuestion
+              key={questionIndex}
+              questionIndex={questionIndex}
+              form={form}
+            />
+          );
+        default:
+          return null;
+      }
+    },
+    [],
+  );
 
   return (
     <div className="w-full max-w-full">
       <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-6">
-        <h1 className="text-grey-500 mb-2">Quiz</h1>
+        {lessonToEdit && <h5 className="text-neutral-900 mb-2">Edit: {lessonToEdit.title}</h5>}
         <Form {...form}>
-          <form>
-            <div className="flex items-center justify-end">
-              <FormField
-                control={form.control}
-                name="state"
-                render={({ field }) => (
-                  <FormItem className="flex items-center">
-                    <FormControl className="flex items-center">
-                      <Checkbox
-                        id="state"
-                        checked={field.value === "draft"}
-                        onCheckedChange={(checked) =>
-                          field.onChange(checked ? "draft" : "published")
-                        }
-                        className="mr-2 w-5 h-5 mb"
-                      />
-                    </FormControl>
-                    <Label htmlFor="state" className="text-right text-l leading-[1] mt-[2px]">
-                      Draft
-                    </Label>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
               control={form.control}
               name="title"
@@ -122,22 +116,35 @@ const QuizLessonForm = () => {
             <div className="mt-5">
               <Label className="body-base-md">
                 <span className="text-red-500 mr-1 body-base-md">*</span> Questions (
-                {questions.length})
+                {questions?.length || 0})
               </Label>
             </div>
 
-            {questions.map((question, questionIndex) =>
+            {questions?.map((question, questionIndex) =>
               renderQuestion(question, questionIndex, form),
             )}
             <QuestionSelector addQuestion={addQuestion} />
 
             <div className="flex space-x-4 mt-4">
-              <Button type="submit" className="bg-[#3F58B6] hover:bg-blue-600 text-white">
+              <Button type="submit" className="bg-primary-700">
                 Save
               </Button>
-              <Button className="bg-transparent text-red-500 border border-red-500 hover:bg-red-100">
-                Cancel
-              </Button>
+              {lessonToEdit ? (
+                <Button
+                  onClick={onClickDelete}
+                  className="text-error-700 bg-color-white border border-neutral-300"
+                >
+                  Delete
+                </Button>
+              ) : (
+                <Button
+                  className="text-error-700 bg-color-white border border-neutral-300"
+                  type="button"
+                  onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
+                >
+                  Cancel
+                </Button>
+              )}
             </div>
           </form>
         </Form>

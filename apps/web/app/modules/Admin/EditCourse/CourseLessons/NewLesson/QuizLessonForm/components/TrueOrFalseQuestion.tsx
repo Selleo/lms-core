@@ -1,6 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { Label } from "@radix-ui/react-label";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -8,14 +8,10 @@ import { Input } from "~/components/ui/input";
 
 import QuestionTitle from "./QuestionTitle";
 
-import type { QuizLessonFormValues } from "../validators/quizLessonFormChemat";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-
-type Option = {
-  value: string;
-  isCorrect: boolean;
-  position: number;
-};
+import { QuestionOption } from "../QuizLessonForm.types";
+import { cn } from "~/lib/utils";
 
 type TrueOrFalseQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -23,60 +19,76 @@ type TrueOrFalseQuestionProps = {
 };
 
 const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) => {
-  const questionType = form.getValues(`questions.${questionIndex}.questionType`);
+  const questionType = form.getValues(`questions.${questionIndex}.type`);
 
   const [isOpen, setIsOpen] = useState(false);
+  const handleToggle = useCallback(() => {
+    setIsOpen((prevIsOpen) => !prevIsOpen);
+  }, []);
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  const handleAddOption = () => {
-    const currentOptions: Option[] = form.getValues(`questions.${questionIndex}.options`) || [];
-    const newOption: Option = { value: "", isCorrect: false, position: currentOptions.length + 1 };
+  const handleAddOption = useCallback(() => {
+    const currentOptions: QuestionOption[] =
+      form.getValues(`questions.${questionIndex}.options`) || [];
+    const newOption: QuestionOption = {
+      optionText: "",
+      isCorrect: false,
+      position: currentOptions.length + 1,
+    };
     form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption]);
-  };
+  }, [form, questionIndex]);
 
-  const handleRemoveOption = (optionIndex: number) => {
-    const currentOptions: Option[] = form.getValues(`questions.${questionIndex}.options`) || [];
-    const updatedOptions = currentOptions.filter((_, index) => index !== optionIndex);
-    form.setValue(`questions.${questionIndex}.options`, updatedOptions);
-  };
+  const handleRemoveOption = useCallback(
+    (optionIndex: number) => {
+      const currentOptions: QuestionOption[] =
+        form.getValues(`questions.${questionIndex}.options`) || [];
+      const updatedOptions = currentOptions.filter((_, index) => index !== optionIndex);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+    },
+    [form, questionIndex],
+  );
 
-  const handleRemoveQuestion = () => {
+  const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
     form.setValue("questions", updatedQuestions);
-  };
+  }, [form, questionIndex]);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleOptionChange = (optionIndex: number, field: "value" | "isCorrect", value: any) => {
-    const currentOptions: Option[] = form.getValues(`questions.${questionIndex}.options`) || [];
-    const updatedOptions = [...currentOptions];
+  const handleOptionChange = useCallback(
+    (optionIndex: number, field: "optionText" | "isCorrect", value: string | boolean) => {
+      const currentOptions: QuestionOption[] =
+        form.getValues(`questions.${questionIndex}.options`) || [];
+      const updatedOptions = [...currentOptions];
 
-    if (field === "isCorrect") {
-      updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], isCorrect: value };
-    } else {
-      updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], value: value };
-    }
+      if (field === "isCorrect") {
+        updatedOptions[optionIndex] = {
+          ...updatedOptions[optionIndex],
+          isCorrect: value as boolean,
+        };
+      } else {
+        updatedOptions[optionIndex] = {
+          ...updatedOptions[optionIndex],
+          optionText: value as string,
+        };
+      }
 
-    form.setValue(`questions.${questionIndex}.options`, updatedOptions);
-  };
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+    },
+    [form, questionIndex],
+  );
 
-  const isOptionEmpty =
-    !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
-    form.getValues(`questions.${questionIndex}.options`)?.length === 0;
+  const isOptionEmpty = useMemo(() => {
+    const options = form.getValues(`questions.${questionIndex}.options`);
+    return !Array.isArray(options) || options.length === 0;
+  }, [form, questionIndex]);
 
   return (
-    <Accordion.Root
-      key={questionIndex}
-      type="single"
-      collapsible
-      defaultValue={`item-${questionIndex}`}
-    >
+    <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
         <div
-          className={`border p-4 mt-4 rounded-xl transition-all duration-300 ${!isOpen ? "border-blue-500" : "border-gray-200"}`}
+          className={cn("border p-4 mt-4 rounded-xl transition-all duration-300", {
+            "border-blue-500": isOpen,
+            "border-gray-200": !isOpen,
+          })}
         >
           <QuestionTitle
             questionIndex={questionIndex}
@@ -100,8 +112,10 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                     <Icon name="DragAndDropIcon" className="h-7 w-7" />
                     <Input
                       type="text"
-                      value={option.value}
-                      onChange={(e) => handleOptionChange(optionIndex, "value", e.target.value)}
+                      value={option.optionText}
+                      onChange={(e) =>
+                        handleOptionChange(optionIndex, "optionText", e.target.value)
+                      }
                       placeholder={`Option ${optionIndex + 1}`}
                       required
                     />
@@ -125,7 +139,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
 
                       <Icon
                         name="TrashIcon"
-                        className="text-red-500 ml-2 cursor-pointer w-5 h-5"
+                        className="text-error-500 ml-2 cursor-pointer w-5 h-5"
                         onClick={() => handleRemoveOption(optionIndex)}
                       />
                     </div>
@@ -133,12 +147,12 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                 </div>
               ))}
               <div className="mt-4 flex gap-2">
-                <Button type="button" onClick={handleAddOption}>
+                <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
                   Add Option
                 </Button>
                 <Button
                   type="button"
-                  className="text-red-500 bg-color-white border border-neutral-300"
+                  className="text-error-700 bg-color-white border border-neutral-300"
                   onClick={handleRemoveQuestion}
                 >
                   Delete Question

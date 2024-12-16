@@ -9,7 +9,12 @@ import {
   lessons,
 } from "src/storage/schema";
 
-import type { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
+import type {
+  CreateLessonBody,
+  CreateQuizLessonBody,
+  UpdateLessonBody,
+  UpdateQuizLessonBody,
+} from "./lesson.schem";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
@@ -20,6 +25,241 @@ export class AdminLessonRepository {
   async createLessonForChapter(data: CreateLessonBody, authorId: UUIDType) {
     const [lesson] = await this.db.insert(lessons).values(data).returning();
     return lesson;
+  }
+
+  async createQuizLessonWithQuestionsAndOptions(
+    data: CreateQuizLessonBody,
+    authorId: UUIDType,
+    displayOrder: number,
+  ) {
+    return await this.db.transaction(async (trx) => {
+      const [lesson] = await trx
+        .insert(lessons)
+        .values({
+          title: data.title,
+          type: "quiz",
+          description: data.description,
+          chapterId: data?.chapterId,
+          displayOrder,
+        })
+        .returning();
+
+      if (!data.questions) return;
+
+      const questionsToInsert = data?.questions?.map((question) => ({
+        lessonId: lesson.id,
+        authorId,
+        type: question.type,
+        description: question.description || null,
+        title: question.title,
+        thumbnailS3Key: question.thumbnailS3Key,
+        photoQuestionType: question.photoQuestionType || null,
+      }));
+
+      const insertedQuestions = await trx.insert(questions).values(questionsToInsert).returning();
+
+      const optionsToInsert = insertedQuestions.flatMap(
+        (question, index) =>
+          data.questions?.[index].options?.map((option) => ({
+            questionId: question.id,
+            optionText: option.optionText,
+            isCorrect: option.isCorrect,
+            position: option.position,
+          })) || [],
+      );
+
+      if (optionsToInsert.length > 0) {
+        await trx.insert(questionAnswerOptions).values(optionsToInsert);
+      }
+
+      return lesson;
+    });
+  }
+
+  async removeLesson(lessonId: string) {
+    await this.db.delete(lessons).where(eq(lessons.id, lessonId)).returning();
+  }
+
+  // async updateQuizLessonWithQuestionsAndOptions(
+  //   id: UUIDType,
+  //   data: UpdateQuizLessonBody,
+  //   authorId: UUIDType,
+  // ) {
+  //   return await this.db.transaction(async (trx) => {
+  //     await trx
+  //       .update(lessons)
+  //       .set({
+  //         title: data.title,
+  //         type: "quiz",
+  //         description: data.description,
+  //         chapterId: data.chapterId,
+  //       })
+  //       .where(eq(lessons.id, id));
+
+  //     if (data.questions) {
+  //       for (const question of data.questions) {
+  //         const questionData = {
+  //           type: question.type,
+  //           description: question.description || null,
+  //           title: question.title,
+  //           thumbnailS3Key: question.thumbnailS3Key,
+  //           photoQuestionType: question.photoQuestionType || null,
+  //         };
+
+  //         const questionId: UUIDType =
+  //           question.id ||
+  //           ((
+  //             await trx
+  //               .insert(questions)
+  //               .values({
+  //                 lessonId: id,
+  //                 authorId,
+  //                 ...questionData,
+  //               })
+  //               .returning()
+  //           )[0].id as UUIDType);
+
+  //         if (question.id) {
+  //           await trx.update(questions).set(questionData).where(eq(questions.id, question.id));
+  //         }
+
+  //         if (question.options) {
+  //           for (const option of question.options) {
+  //             const optionData = {
+  //               optionText: option.optionText,
+  //               isCorrect: option.isCorrect,
+  //               position: option.position,
+  //             };
+
+  //             if (option.id) {
+  //               await trx
+  //                 .update(questionAnswerOptions)
+  //                 .set(optionData)
+  //                 .where(eq(questionAnswerOptions.id, option.id));
+  //             } else {
+  //               await trx.insert(questionAnswerOptions).values({
+  //                 questionId,
+  //                 ...optionData,
+  //               });
+  //             }
+  //           }
+  //         }
+  //       }
+  //     }
+
+  //     return id;
+  //   });
+  // }
+
+  async updateQuizLessonWithQuestionsAndOptions(
+    id: UUIDType,
+    data: UpdateQuizLessonBody,
+    authorId: UUIDType,
+  ) {
+    return await this.db.transaction(async (trx) => {
+      await trx
+        .update(lessons)
+        .set({
+          title: data.title,
+          type: "quiz",
+          description: data.description,
+          chapterId: data.chapterId,
+        })
+        .where(eq(lessons.id, id));
+
+      const existingQuestions = await trx
+        .select({ id: questions.id })
+        .from(questions)
+        .where(eq(questions.lessonId, id));
+
+      const existingQuestionIds = existingQuestions.map((question) => question.id);
+
+      const inputQuestionIds = data.questions
+        ? data.questions.map((question) => question.id).filter(Boolean)
+        : [];
+
+      const questionsToDelete = existingQuestionIds.filter(
+        (existingId) => !inputQuestionIds.includes(existingId),
+      );
+
+      if (questionsToDelete.length > 0) {
+        await trx.delete(questions).where(inArray(questions.id, questionsToDelete));
+        await trx
+          .delete(questionAnswerOptions)
+          .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
+      }
+
+      if (data.questions) {
+        for (const question of data.questions) {
+          const questionData = {
+            type: question.type,
+            description: question.description || null,
+            title: question.title,
+            thumbnailS3Key: question.thumbnailS3Key,
+            photoQuestionType: question.photoQuestionType || null,
+          };
+
+          const questionId =
+            question.id ??
+            ((
+              await trx
+                .insert(questions)
+                .values({
+                  lessonId: id,
+                  authorId,
+                  ...questionData,
+                })
+                .returning()
+            )[0].id as UUIDType);
+
+          if (question.id) {
+            await trx.update(questions).set(questionData).where(eq(questions.id, questionId));
+          }
+
+          if (question.options) {
+            const existingOptions = await trx
+              .select({ id: questionAnswerOptions.id })
+              .from(questionAnswerOptions)
+              .where(eq(questionAnswerOptions.questionId, questionId));
+
+            const existingOptionIds = existingOptions.map((option) => option.id);
+            const inputOptionIds = question.options.map((option) => option.id).filter(Boolean);
+
+            const optionsToDelete = existingOptionIds.filter(
+              (existingId) => !inputOptionIds.includes(existingId),
+            );
+
+            if (optionsToDelete.length > 0) {
+              await trx
+                .delete(questionAnswerOptions)
+                .where(inArray(questionAnswerOptions.id, optionsToDelete));
+            }
+
+            for (const option of question.options) {
+              const optionData = {
+                optionText: option.optionText,
+                isCorrect: option.isCorrect,
+                position: option.position,
+              };
+
+              if (option.id) {
+                await trx
+                  .update(questionAnswerOptions)
+                  .set(optionData)
+                  .where(eq(questionAnswerOptions.id, option.id));
+              } else {
+                await trx.insert(questionAnswerOptions).values({
+                  questionId,
+                  ...optionData,
+                });
+              }
+            }
+          }
+        }
+      }
+
+      return id;
+    });
   }
 
   async updateLesson(id: string, data: UpdateLessonBody) {
@@ -270,34 +510,34 @@ export class AdminLessonRepository {
   //   );
   // }
 
-  // async updateLessonItemDisplayOrder(chapterId: UUIDType, lessonId: UUIDType) {
-  //   await this.db.transaction(async (trx) => {
-  //     await trx.execute(sql`
-  //       UPDATE ${lessonItems}
-  //       SET display_order = display_order - 1
-  //       WHERE lesson_id = ${chapterId}
-  //         AND display_order > (
-  //           SELECT display_order
-  //           FROM ${lessonItems}
-  //           WHERE lesson_id = ${chapterId}
-  //             AND lesson_item_id = ${lessonId}
-  //         )
-  //     `);
+  async updateLessonItemDisplayOrder(chapterId: UUIDType, lessonId: UUIDType) {
+    await this.db.transaction(async (trx) => {
+      await trx.execute(sql`
+        UPDATE ${lessons}
+        SET display_order = display_order - 1
+        WHERE chapter_id = ${chapterId}
+          AND display_order > (
+            SELECT display_order
+            FROM ${lessons}
+            WHERE chapter_id = ${chapterId}
+              AND id = ${lessonId}
+          )
+      `);
 
-  //     await trx.execute(sql`
-  //       WITH ranked_lesson_items AS (
-  //         SELECT lesson_item_id, row_number() OVER (ORDER BY display_order) AS new_display_order
-  //         FROM ${lessonItems}
-  //         WHERE lesson_id = ${chapterId}
-  //       )
-  //       UPDATE ${lessonItems} li
-  //       SET display_order = rl.new_display_order
-  //       FROM ranked_lesson_items rl
-  //       WHERE li.lesson_item_id = rl.lesson_item_id
-  //         AND li.lesson_id = ${chapterId}
-  //     `);
-  //   });
-  // }
+      await trx.execute(sql`
+        WITH ranked_lesson AS (
+          SELECT id, row_number() OVER (ORDER BY display_order) AS new_display_order
+          FROM ${lessons}
+          WHERE chapter_id = ${chapterId}
+        )
+        UPDATE ${lessons} li
+        SET display_order = rl.new_display_order
+        FROM ranked_lesson rl
+        WHERE li.id = rl.id
+          AND li.chapter_id = ${chapterId}
+      `);
+    });
+  }
 
   // async removeLesson(lessonItemId: string, lessonItemType: LessonItemTypes) {
   //   return await this.db.transaction(async (trx) => {

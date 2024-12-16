@@ -130,15 +130,16 @@ const FileLessonForm = ({
             <div className="flex space-x-4 mt-4">
               {lessonToEdit ? (
                 <Button
-                  className="bg-transparent text-red-500 border border-red-500 hover:bg-red-100"
+                  className="text-error-700 bg-color-white border border-neutral-300"
                   onClick={onClickDelete}
                 >
                   Delete
                 </Button>
               ) : (
                 <Button
+                  type="button"
                   onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
-                  className="bg-transparent text-red-500 border border-red-500 hover:bg-red-100"
+                  className="text-error-700 bg-color-white border border-neutral-300"
                 >
                   Cancel
                 </Button>

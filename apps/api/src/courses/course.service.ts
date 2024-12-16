@@ -413,21 +413,15 @@ export class CourseService {
         isFree: chapters.isFreemium,
         // TODO: it not working, what is that???
         lessons: sql<string>`
-          COALESCE(
-            (
-              SELECT json_agg(
-                json_build_object(
-                  'id', lessons.id,
-                  'lessonType', lessons.type,
-                  'displayOrder', lessons.display_order
-                )
-              )
-              FROM ${lessons}
-              WHERE lessons.chapter_id = ${chapters.id}
-            ),
-            '[]'::json
-          )
-        `,
+  COALESCE(
+    (
+      SELECT array_agg(lessons.id)
+      FROM ${lessons}
+      WHERE lessons.chapter_id = ${chapters.id}
+    ),
+    '{}'
+  )
+`,
       })
       .from(chapters)
       .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
@@ -440,18 +434,12 @@ export class CourseService {
 
     const thumbnailUrl = await getImageUrl(course.thumbnailUrl);
 
-    // TODO: check if this is needed
     const updatedCourseLessonList = await Promise.all(
       courseChapterList?.map(async (chapter) => {
-        // const lessons: LessonItemWithContentSchema[] =
-        //   Array.isArray(chapter?.lessons) && chapter.lessons.length > 0
-        //     ? await this.adminChapterRepository.getBetaChapterLessons(chapter.id)
-        //     : [];
-
         const lessons: LessonItemWithContentSchema[] =
           await this.adminChapterRepository.getBetaChapterLessons(chapter.id);
 
-        const lessonsWithSignedUrls = await this.addS3SignedUrlsToLessons(lessons);
+        const lessonsWithSignedUrls = await this.addS3SignedUrlsToLessonsAndQuestions(lessons);
 
         return {
           ...chapter,
@@ -823,29 +811,75 @@ export class CourseService {
     );
   }
 
-  private async addS3SignedUrlsToLessons(lessons: LessonItemWithContentSchema[]) {
-    return await Promise.all(
-      lessons.map(async (item) => {
-        if (
-          item.fileS3Key &&
-          (item.type === LESSON_TYPES.video || item.type === LESSON_TYPES.presentation)
-        ) {
-          if (item.fileS3Key.startsWith("https://")) {
-            return item;
-          }
+  // private async addS3SignedUrlsToLessons(lessons: LessonItemWithContentSchema[]) {
+  //   return await Promise.all(
+  //     lessons.map(async (item) => {
+  //       if (
+  //         item.fileS3Key &&
+  //         (item.type === LESSON_TYPES.video || item.type === LESSON_TYPES.presentation)
+  //       ) {
+  //         if (item.fileS3Key.startsWith("https://")) {
+  //           return item;
+  //         }
 
-          try {
-            const signedUrl = await this.fileService.getFileUrl(item.fileS3Key);
-            return { ...item, fileS3Key: signedUrl };
-          } catch (error) {
-            console.error(`Failed to get signed URL for ${item.fileS3Key}:`, error);
-            return item;
+  //         try {
+  //           const signedUrl = await this.fileService.getFileUrl(item.fileS3Key);
+  //           return { ...item, fileS3Key: signedUrl };
+  //         } catch (error) {
+  //           console.error(`Failed to get signed URL for ${item.fileS3Key}:`, error);
+  //           return item;
+  //         }
+  //       }
+  //       return item;
+  //     }),
+  //   );
+  // }
+
+  private async addS3SignedUrlsToLessonsAndQuestions(lessons: LessonItemWithContentSchema[]) {
+    return await Promise.all(
+      lessons.map(async (lesson) => {
+        let updatedLesson = { ...lesson };
+        if (
+          lesson.fileS3Key &&
+          (lesson.type === LESSON_TYPES.video || lesson.type === LESSON_TYPES.presentation)
+        ) {
+          if (!lesson.fileS3Key.startsWith("https://")) {
+            try {
+              const signedUrl = await this.fileService.getFileUrl(lesson.fileS3Key);
+              updatedLesson.fileS3Key = signedUrl;
+            } catch (error) {
+              console.error(`Failed to get signed URL for ${lesson.fileS3Key}:`, error);
+            }
           }
         }
-        return item;
+
+        if (lesson.questions && Array.isArray(lesson.questions)) {
+          const questionsWithSignedUrls = await Promise.all(
+            lesson.questions.map(async (question) => {
+              if (question.thumbnailS3Key) {
+                if (!question.thumbnailS3Key.startsWith("https://")) {
+                  try {
+                    const signedUrl = await this.fileService.getFileUrl(question.thumbnailS3Key);
+                    return { ...question, thumbnailS3SingedUrl: signedUrl };
+                  } catch (error) {
+                    console.error(
+                      `Failed to get signed URL for question thumbnail ${question.thumbnailS3Key}:`,
+                      error,
+                    );
+                  }
+                }
+              }
+              return question;
+            }),
+          );
+          updatedLesson.questions = questionsWithSignedUrls;
+        }
+
+        return updatedLesson;
       }),
     );
   }
+  // }
 
   private getSelectField() {
     return {

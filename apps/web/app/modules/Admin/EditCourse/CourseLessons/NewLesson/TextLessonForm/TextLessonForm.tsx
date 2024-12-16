@@ -10,7 +10,6 @@ import { ContentTypes } from "../../../EditCourse.types";
 import { useTextLessonForm } from "./hooks/useTextLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
-import { set } from "date-fns";
 
 type TextLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -90,6 +89,7 @@ const TextLessonForm = ({
                 </Button>
               ) : (
                 <Button
+                  type="button"
                   onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
                   className="bg-transparent text-red-500 border border-red-500 hover:bg-red-100"
                 >

@@ -4,7 +4,7 @@ import { Icon } from "~/components/Icon";
 
 import { mapItemType, mapTypeToIcon } from "../CourseLessons.helpers";
 
-import type { Lesson } from "../../EditCourse.types";
+import { LessonType, type Lesson } from "../../EditCourse.types";
 import type { IconName } from "~/types/shared";
 
 interface LessonCardProps {
@@ -49,7 +49,11 @@ const LessonCard = ({ item, onClickLessonCard }: LessonCardProps) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <Icon name={getIcon as IconName} className="mr-2" />
-              <p className="text-l">{item.title}</p>
+              <p className="text-l">
+                {item.type === LessonType.QUIZ
+                  ? `${item.title} (${item.questions?.length || 0})`
+                  : item.title}
+              </p>
             </div>
           </div>
           <p className="text-m ml-8 text-gray-500 mt-2">{mappedItemType}</p>
