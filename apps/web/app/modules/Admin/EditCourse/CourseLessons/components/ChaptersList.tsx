@@ -1,25 +1,32 @@
-import {
-  Accordion,
-  AccordionItem,
-  AccordionContent,
-  AccordionTrigger,
-} from "@radix-ui/react-accordion";
 import * as Switch from "@radix-ui/react-switch";
-import * as Tooltip from "@radix-ui/react-tooltip";
 import { useParams } from "@remix-run/react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
+import { useChangeChapterDisplayOrder } from "~/api/mutations/admin/changeChapterDisplayOrder";
 import { useUpdateLessonFreemiumStatus } from "~/api/mutations/admin/useUpdateLessonFreemiumStatus";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 import { Icon } from "~/components/Icon";
+import { SortableList } from "~/components/SortableList/SortableList";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { cn } from "~/lib/utils";
+import { LessonCardList } from "~/modules/Admin/EditCourse/CourseLessons/components/LessonCardList";
 
 import { ContentTypes, LessonType } from "../../EditCourse.types";
-
-import LessonCard from "./LessonCard";
 
 import type { Chapter, Lesson } from "../../EditCourse.types";
 import type React from "react";
@@ -30,6 +37,7 @@ interface ChapterCardProps {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
   setSelectedLesson: (selectedLesson?: Lesson) => void;
+  dragTrigger: React.ReactNode;
 }
 
 const ChapterCard = ({
@@ -38,6 +46,7 @@ const ChapterCard = ({
   setContentTypeToDisplay,
   setSelectedChapter,
   setSelectedLesson,
+  dragTrigger,
 }: ChapterCardProps) => {
   const { mutateAsync: updateFreemiumStatus } = useUpdateLessonFreemiumStatus();
   const { id } = useParams();
@@ -102,64 +111,47 @@ const ChapterCard = ({
           queryKey: [COURSE_QUERY_KEY, { id }],
         });
       } catch (error) {
-        console.error("Failed to update chapter freemium status:", error);
+        console.error("Failed to update chapter premium status:", error);
       }
     },
     [chapter, updateFreemiumStatus, id],
   );
 
-  const lessons = useMemo(() => chapter.lessons, [chapter.lessons]);
-
   return (
-    <AccordionItem
-      key={`chapter-${chapter.id}`}
-      value={`item-${chapter.id}`}
-      className="p-0"
-      draggable
-    >
+    <AccordionItem key={`chapter-${chapter.id}`} value={`item-${chapter.id}`} className="p-0">
       <Card
         className={cn("mb-4 h-full flex p-4 border", { "border-primary-500": isOpen })}
         onClick={onClickChapterCard}
       >
         <div className="flex w-full">
-          <div className="w-1/10 flex mt-2.5">
-            <Icon name="DragAndDropIcon" />
-          </div>
           <div className="flex-1 flex flex-col justify-between ml-2">
-            <div className="flex justify-between items-center">
-              <div className="text-gray-600 text-sm">Chapter {chapter.displayOrder}</div>
-              <AccordionTrigger className="cursor-pointer" onClick={onAccordionClick}>
+            <div className="flex items-center gap-x-3">
+              {dragTrigger}
+              <hgroup className="flex flex-col-reverse w-full">
+                <h3 className="body-base-md text-neutral-950">{chapter.title}</h3>
+                <div className="text-neutral-800 body-sm-md">Chapter {chapter.displayOrder}</div>
+              </hgroup>
+              <AccordionTrigger className="cursor-pointer p-2" onClick={onAccordionClick}>
                 <Icon name={isOpen ? "ArrowUp" : "ArrowDown"} className="text-gray-600" />
               </AccordionTrigger>
             </div>
-            <h3 className="text-xl text-black">{chapter.title}</h3>
             <AccordionContent className="mt-2 text-gray-700">
-              <div className="mt-4 grid grid-cols-1 gap-4">
-                {lessons === null || lessons?.length === 0 ? (
-                  <p>No lessons for this chapter</p>
-                ) : (
-                  lessons.map((item, index) => {
-                    const key = item.id || `lesson-${index}`;
-                    return (
-                      <LessonCard key={key} item={item} onClickLessonCard={onClickLessonCard} />
-                    );
-                  })
-                )}
-              </div>
+              <LessonCardList
+                lessons={chapter.lessons}
+                setSelectedLesson={setSelectedLesson}
+                setContentTypeToDisplay={setContentTypeToDisplay}
+              />
             </AccordionContent>
-            <div className="mt-4 flex justify-between items-center">
-              <div className="flex items-center space-x-2">
-                <Button
-                  onClick={handleAddLessonClick}
-                  className="px-4 py-2 text-blue-600 bg-white border border-gray-300 rounded-md flex items-center"
-                >
-                  <Icon name="Plus" className="mr-2 text-blue-600" />
+            <div className="flex mt-3 justify-between items-center">
+              <div className={cn("flex items-center space-x-2", { "ml-9": !isOpen })}>
+                <Button variant="outline" onClick={handleAddLessonClick} className="">
+                  <Icon name="Plus" className="mr-2 text-primary-800" />
                   Add Lesson
                 </Button>
               </div>
-              <div className="flex items-center">
+              <div className="flex items-center gap-x-2">
                 <Switch.Root
-                  className={cn("w-10 h-6 mr-2 rounded-full relative transition-colors", {
+                  className={cn("w-11 h-6 rounded-full relative transition-colors", {
                     "bg-blue-500": chapter.isFree,
                     "bg-gray-200": !chapter.isFree,
                   })}
@@ -173,26 +165,24 @@ const ChapterCard = ({
                     )}
                   />
                 </Switch.Root>
-                <span className="mr-2 text-gray-600">Freemium</span>
-                <Tooltip.Provider>
-                  <Tooltip.Root delayDuration={0}>
-                    <Tooltip.Trigger asChild>
+                <span className="body-sm-md text-neutral-950">Freemium</span>
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
                       <span>
-                        <Icon name="Info" className="text-gray-600 cursor-default" />
+                        <Icon name="Info" className="text-neutral-800 cursor-default" />
                       </span>
-                    </Tooltip.Trigger>
-                    <Tooltip.Portal>
-                      <Tooltip.Content
-                        side="top"
-                        align="center"
-                        className="bg-black text-white text-sm px-2 py-1 rounded shadow-md"
-                      >
-                        Students can access freemium chapters without enrolling in the course.
-                        <Tooltip.Arrow className="fill-black" />
-                      </Tooltip.Content>
-                    </Tooltip.Portal>
-                  </Tooltip.Root>
-                </Tooltip.Provider>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="top"
+                      align="center"
+                      className="bg-black text-white text-sm px-2 py-1 rounded shadow-md"
+                    >
+                      Students can access freemium chapters without enrolling in the course.
+                      <TooltipArrow className="fill-black" />
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </div>
             </div>
           </div>
@@ -216,28 +206,52 @@ const ChaptersList = ({
   setSelectedLesson,
 }: ChaptersListProps) => {
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
+  const [items, setItems] = useState(chapters);
+  const mutation = useChangeChapterDisplayOrder();
 
-  const chapterCards = useMemo(
-    () =>
-      chapters?.map((chapter) => (
-        <ChapterCard
-          key={chapter.id}
-          chapter={chapter}
-          isOpen={openItem === `item-${chapter.id}`}
-          setContentTypeToDisplay={setContentTypeToDisplay}
-          setSelectedChapter={setSelectedChapter}
-          setSelectedLesson={setSelectedLesson}
-        />
-      )),
-    [chapters, openItem, setContentTypeToDisplay, setSelectedChapter, setSelectedLesson],
-  );
+  useEffect(() => {
+    setItems(chapters);
+  }, [chapters]);
+
+  if (!items) return;
 
   return (
-    <div>
-      <Accordion type="single" collapsible value={openItem} onValueChange={setOpenItem}>
-        {chapterCards}
-      </Accordion>
-    </div>
+    <Accordion
+      type="single"
+      collapsible
+      value={openItem}
+      onValueChange={setOpenItem}
+      defaultValue={`item-${openItem}`}
+    >
+      <SortableList
+        items={items}
+        onChange={(updatedItems, newPosition) => {
+          setItems(updatedItems);
+
+          mutation.mutate({
+            chapter: { chapterId: updatedItems[newPosition].id, displayOrder: newPosition },
+          });
+        }}
+        className="grid grid-cols-1"
+        renderItem={(chapter) => (
+          <SortableList.Item id={chapter.id}>
+            <ChapterCard
+              key={chapter.id}
+              chapter={chapter}
+              isOpen={openItem === `item-${chapter.id}`}
+              setContentTypeToDisplay={setContentTypeToDisplay}
+              setSelectedChapter={setSelectedChapter}
+              setSelectedLesson={setSelectedLesson}
+              dragTrigger={
+                <SortableList.DragHandle>
+                  <Icon name="DragAndDropIcon" className="cursor-move" />
+                </SortableList.DragHandle>
+              }
+            />
+          </SortableList.Item>
+        )}
+      />
+    </Accordion>
   );
 };
 

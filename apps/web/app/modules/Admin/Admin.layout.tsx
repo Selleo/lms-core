@@ -1,5 +1,6 @@
 import { type MetaFunction, Outlet, redirect, useLocation, useNavigate } from "@remix-run/react";
 import { Suspense, useLayoutEffect } from "react";
+import { match } from "ts-pattern";
 
 import { currentUserQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -7,6 +8,7 @@ import { Navigation } from "~/components/Navigation";
 import { adminNavigationConfig, mapNavigationItems } from "~/config/navigationConfig";
 import { RouteGuard } from "~/Guards/RouteGuard";
 import { useUserRole } from "~/hooks/useUserRole";
+import { cn } from "~/lib/utils";
 
 import Loader from "../common/Loader/Loader";
 
@@ -48,8 +50,12 @@ const AdminGuard = ({ children }: PropsWithChildren) => {
 };
 
 const AdminLayout = () => {
-  const location = useLocation();
-  const hideTopbarAndSidebar = location.pathname === "/admin/beta-courses/new";
+  const { pathname } = useLocation();
+
+  const hideTopbarAndSidebar = match(pathname)
+    .with("/admin/beta-courses/new", () => true)
+    .with("/admin/courses/new-scorm", () => true)
+    .otherwise(() => false);
 
   return (
     <div className="flex h-screen flex-col">
@@ -57,7 +63,11 @@ const AdminLayout = () => {
         {!hideTopbarAndSidebar && (
           <Navigation menuItems={mapNavigationItems(adminNavigationConfig)} />
         )}
-        <main className="bg-primary-50 flex-1 overflow-y-auto p-6">
+        <main
+          className={cn("bg-primary-50 flex-1 overflow-y-auto max-h-dvh p-6", {
+            "bg-white p-0": hideTopbarAndSidebar,
+          })}
+        >
           <Suspense fallback={<Loader />}>
             <AdminGuard>
               <RouteGuard>

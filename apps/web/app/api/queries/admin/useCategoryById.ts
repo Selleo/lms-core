@@ -8,7 +8,7 @@ export const categoryByIdQueryOptions = (id: string) =>
   queryOptions({
     queryKey: ["category", "admin", { id }],
     queryFn: async () => {
-      const response = await ApiClient.api.categoriesControllerGetCategoryById(id);
+      const response = await ApiClient.api.categoryControllerGetCategoryById(id);
       return response.data;
     },
     select: (data: GetCategoryByIdResponse) => data.data,

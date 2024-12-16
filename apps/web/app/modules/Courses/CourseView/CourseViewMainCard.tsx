@@ -29,16 +29,16 @@ export const CourseViewMainCard = ({
   authorEmail = "",
   authorId,
   category,
-  completedLessonCount = 0,
-  courseLessonCount,
+  completedChapterCount = 0,
+  courseChapterCount,
   currency,
   description,
   enrolled: isEnrolled,
-  hasFreeLessons = false,
-  imageUrl,
+  hasFreeChapter = false,
+  thumbnailUrl,
   priceInCents,
   title,
-  lessons,
+  chapters,
 }: CourseViewMainCardProps) => {
   const { mutateAsync: enrollCourse } = useEnrollCourse();
   const { mutateAsync: unenrollCourse } = useUnenrollCourse();
@@ -56,8 +56,8 @@ export const CourseViewMainCard = ({
   }
 
   const firstUncompletedLesson =
-    lessons.find((lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount)?.id ??
-    last(lessons)?.id;
+    chapters.find((lesson) => (lesson.itemsCompletedCount ?? 0) < lesson.itemsCount)?.id ??
+    last(chapters)?.id;
 
   const handleEnroll = () => {
     enrollCourse({ id: courseId }).then(() => {
@@ -75,7 +75,7 @@ export const CourseViewMainCard = ({
     <div className="md:w-[380px] xl:w-[480px] shrink-0 flex flex-col rounded-2xl bg-white drop-shadow-primary relative">
       <div className="absolute top-4 left-4 right-4 flex flex-col gap-y-1">
         <CategoryChip category={category} />
-        {hasFreeLessons && !isEnrolled && (
+        {hasFreeChapter && !isEnrolled && (
           <CardBadge variant="successFilled">
             <Icon name="FreeRight" className="w-4" />
             Free Lessons!
@@ -83,7 +83,7 @@ export const CourseViewMainCard = ({
         )}
       </div>
       <img
-        src={imageUrl || CardPlaceholder}
+        src={thumbnailUrl || CardPlaceholder}
         alt="Course"
         loading="eager"
         decoding="async"
@@ -95,8 +95,8 @@ export const CourseViewMainCard = ({
       <div className="flex flex-col h-full bg-white p-6 lg:p-8 pt-6 rounded-b-2xl min-h-0">
         <CourseProgress
           label="Course progress:"
-          completedLessonCount={completedLessonCount}
-          courseLessonCount={courseLessonCount}
+          completedLessonCount={completedChapterCount}
+          courseLessonCount={courseChapterCount}
         />
         <h4 className="text-2xl font-bold mt-4 lg:mt-6 leading-10 text-neutral-950">{title}</h4>
         <Link to={`/teachers/${authorId}`} className="flex items-center gap-x-1.5 mt-3 mb-4">

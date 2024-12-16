@@ -3,12 +3,11 @@ import { useCallback, useMemo, useState } from "react";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
+import { FormTextareaField } from "~/components/Form/FormTextareaFiled";
+import { FormTextField } from "~/components/Form/FormTextField";
 import { Icon } from "~/components/Icon";
-import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import {
   Select,
@@ -73,88 +72,59 @@ const CourseSettings = ({
   );
 
   return (
-    <div className="w-full flex gap-4 ">
-      <Card className="p-4 shadow-md border border-gray-200 w-7/10 flex-grow">
-        <CardHeader>
-          <h5 className="text-xl font-semibold">Basic settings</h5>
-        </CardHeader>
-        <CardContent>
-          <p>Fill in the details to create a new course.</p>
+    <div className="w-full flex h-full gap-x-6">
+      <div className="w-full basis-full">
+        <div className="p-8 shadow-md border overflow-y-auto bg-white h-full flex flex-col gap-y-6 rounded-lg border-gray-200 w-full">
+          <div className="flex flex-col gap-y-1">
+            <h5 className="text-neutral-950 h5">Basic settings</h5>
+            <p className="body-lg-md text-neutral-800">
+              Fill in the details to create a new course.
+            </p>
+          </div>
           <Form {...form}>
-            <form className="mt-10" onSubmit={form.handleSubmit(onSubmit)}>
-              <FormField
-                control={form.control}
-                name="title"
-                render={({ field }) => (
-                  <FormItem>
-                    <Label htmlFor="title" className="text-right">
-                      <span className="text-red-500 mr-1">*</span>
-                      Title
-                    </Label>
-                    <FormControl>
-                      <Input id="title" {...field} required />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
+            <form className="flex flex-col gap-y-6" onSubmit={form.handleSubmit(onSubmit)}>
+              <div className="flex gap-x-6 *:w-full">
+                <FormTextField control={form.control} name="title" required label="Course title" />
+                <FormField
+                  control={form.control}
+                  name="categoryId"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col gap-y-1.5">
+                      <Label htmlFor="categoryId">
+                        <span className="text-error-600 mr-1">*</span>
+                        Category
+                      </Label>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger id="categoryId">
+                            <SelectValue placeholder="Select category" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem value={category.id} key={category.id}>
+                              {category.title}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <FormTextareaField
                 control={form.control}
                 name="description"
-                render={({ field }) => (
-                  <FormItem className="mt-5">
-                    <Label htmlFor="description" className="text-right">
-                      <span className="text-red-500 mr-1">*</span>
-                      Description
-                    </Label>
-                    <FormControl>
-                      <Editor
-                        id="description"
-                        content={field.value}
-                        className="h-32 w-full"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="categoryId"
-                render={({ field }) => (
-                  <FormItem className="flex-1 mt-5">
-                    <Label htmlFor="categoryId" className="text-right">
-                      <span className="text-red-500 mr-1">*</span>
-                      Category
-                    </Label>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger id="categoryId">
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem value={category.id} key={category.id}>
-                            {category.title}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
+                label="Description"
+                required
               />
               <FormField
                 control={form.control}
                 name="imageUrl"
                 render={({ field }) => (
-                  <FormItem className="mt-5">
-                    <Label htmlFor="imageUrl" className="text-right">
-                      Thumbnail
-                    </Label>
+                  <FormItem className="max-h-[440px]">
+                    <Label htmlFor="imageUrl">Thumbnail</Label>
                     <FormControl>
                       <ImageUploadInput
                         field={field}
@@ -163,42 +133,39 @@ const CourseSettings = ({
                         imageUrl={imageUrl}
                       />
                     </FormControl>
-
                     {isUploading && <p>Uploading image...</p>}
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <div className="w-auto mx-auto">
+              <div className="flex items-center justify-start gap-x-2">
                 {watchedImageUrl && (
                   <Button
                     onClick={() => form.setValue("imageUrl", "")}
-                    className="bg-red-500 text-white py-2 px-6 rounded mb-4 mt-4"
+                    className="bg-red-500 text-white py-2 px-6"
                   >
                     <Icon name="TrashIcon" className="mr-2" />
                     Remove Thumbnail
                   </Button>
                 )}
-                <div className="flex space-x-5 mt-5">
-                  <Button
-                    type="submit"
-                    disabled={!isFormValid || isUploading}
-                    className="bg-blue-500 text-white py-2 px-6 mt-5 rounded"
-                  >
-                    Save
-                  </Button>
-                </div>
+              </div>
+              <div className="flex space-x-5">
+                <Button type="submit" disabled={!isFormValid || isUploading}>
+                  Save
+                </Button>
               </div>
             </form>
           </Form>
-        </CardContent>
-      </Card>
-      <CourseCardPreview
-        imageUrl={watchedImageUrl}
-        title={watchedTitle}
-        description={watchedDescription}
-        category={categoryName}
-      />
+        </div>
+      </div>
+      <div className="max-w-[480px] w-full">
+        <CourseCardPreview
+          imageUrl={watchedImageUrl}
+          title={watchedTitle}
+          description={watchedDescription}
+          category={categoryName}
+        />
+      </div>
     </div>
   );
 };

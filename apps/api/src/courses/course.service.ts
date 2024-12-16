@@ -20,7 +20,7 @@ import {
   sql,
 } from "drizzle-orm";
 
-import { LESSON_ITEM_TYPE } from "src/chapter/chapter.type";
+import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/chapter/chapter.type";
 import { AdminChapterRepository } from "src/chapter/repositories/adminChapter.repository";
 import { ChapterProgress } from "src/chapter/schemas/chapter.types";
 import { DatabasePg } from "src/common";
@@ -284,7 +284,7 @@ export class CourseService {
       .select({
         id: courses.id,
         title: courses.title,
-        imageUrl: sql<string>`${courses.thumbnailS3Key}`,
+        thumbnailS3Key: sql<string>`${courses.thumbnailS3Key}`,
         category: categories.title,
         description: sql<string>`${courses.description}`,
         courseChapterCount: courses.chapterCount,
@@ -294,7 +294,9 @@ export class CourseService {
         priceInCents: courses.priceInCents,
         currency: courses.currency,
         authorId: courses.authorId,
+        // is no needed on frontend *
         author: sql<string>`${users.firstName} || ' ' || ${users.lastName}`,
+        // is no needed on frontend *
         authorEmail: sql<string>`${users.email}`,
         hasFreeChapter: sql<boolean>`
           EXISTS (
@@ -327,9 +329,14 @@ export class CourseService {
             WHERE ${studentChapterProgress.chapterId} = ${chapters.id}
               AND ${studentChapterProgress.courseId} = ${course.id}
               AND ${studentChapterProgress.studentId} = ${userId}
-              AND ${studentChapterProgress.completedAt}
+              AND ${studentChapterProgress.completedAt} IS NOT NULL
           )::BOOLEAN`,
         lessonCount: chapters.lessonCount,
+        quizCount: sql<number>`
+          (SELECT COUNT(*)
+          FROM ${lessons}
+          WHERE ${lessons.chapterId} = ${chapters.id}
+            AND ${lessons.type} = ${LESSON_TYPE.quiz.key})::INTEGER`,
         completedLessonCount: sql<number>`COALESCE(${studentChapterProgress.completedLessonCount}, 0)`,
         // TODO: add lessonProgressState to student lessons progress table
         chapterProgress: sql<ChapterProgressType>`
@@ -342,6 +349,7 @@ export class CourseService {
             ) = (
               SELECT COUNT(*)
               FROM ${studentLessonProgress}
+              LEFT JOIN ${lessons} ON ${lessons.chapterId} = ${chapters.id}
               WHERE ${studentLessonProgress.lessonId} = ${lessons.id}
                 AND ${studentLessonProgress.studentId} = ${userId}
             )
@@ -349,6 +357,7 @@ export class CourseService {
             WHEN (
               SELECT COUNT(*)
               FROM ${studentLessonProgress}
+              LEFT JOIN ${lessons} ON ${lessons.id} = ${studentLessonProgress.lessonId}     
               WHERE ${studentLessonProgress.lessonId} = ${lessons.id}
                 AND ${studentLessonProgress.studentId} = ${userId}
             ) > 0
@@ -357,25 +366,59 @@ export class CourseService {
           END)
         `,
         isFree: chapters.isFreemium,
+        lessons: sql<string>`
+          COALESCE(
+            (
+              SELECT json_agg(lesson_data)
+              FROM (
+                SELECT
+                  ${lessons.id} AS id,
+                  ${lessons.title} AS title,
+                  ${lessons.type} AS type,
+                  ${lessons.displayOrder} AS "displayOrder",
+                  CASE 
+                    WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN 'completed' 
+                    WHEN ${studentLessonProgress.completedAt} IS NULL 
+                      AND ${studentLessonProgress.completedQuestionCount} > 0 THEN 'in_progress' 
+                    ELSE 'not_started' 
+                  END AS status,
+                  CASE 
+                    WHEN ${lessons.type} = ${LESSON_TYPES.quiz} THEN COUNT(${questions.id}) 
+                    ELSE NULL 
+                  END AS "quizQuestionCount"
+                FROM ${lessons}
+                LEFT JOIN ${studentLessonProgress} ON ${lessons.id} = ${studentLessonProgress.lessonId}
+                  AND ${studentLessonProgress.studentId} = ${userId}
+                LEFT JOIN ${questions} ON ${lessons.id} = ${questions.lessonId}
+                WHERE ${lessons.chapterId} = ${chapters.id}
+                GROUP BY 
+                  ${lessons.id}, 
+                  ${lessons.type}, 
+                  ${lessons.displayOrder}, 
+                  ${lessons.title},
+                  ${studentLessonProgress.completedAt},
+                  ${studentLessonProgress.completedQuestionCount}
+                ORDER BY ${lessons.displayOrder}
+              ) AS lesson_data
+            ),
+            '[]'::json
+          )
+        `,
       })
       .from(chapters)
       .leftJoin(studentChapterProgress, eq(studentChapterProgress.chapterId, chapters.id))
       .where(
-        and(
-          eq(chapters.courseId, id),
-          eq(chapters.isPublished, true),
-          isNotNull(chapters.id),
-          isNotNull(chapters.title),
-        ),
+        and(eq(chapters.courseId, id), eq(chapters.isPublished, true), isNotNull(chapters.title)),
       )
       .orderBy(chapters.displayOrder);
 
+    // TODO: temporary fix
     const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url;
+      if (!url || url.startsWith("https://")) return url ?? "";
       return await this.fileService.getFileUrl(url);
     };
 
-    const thumbnailUrl = await getImageUrl(course.imageUrl);
+    const thumbnailUrl = await getImageUrl(course.thumbnailS3Key);
 
     return {
       ...course,
@@ -508,9 +551,32 @@ export class CourseService {
     };
   }
 
+  //TODO: Needs to be refactored
   async getTeacherCourses(authorId: UUIDType): Promise<AllCoursesForTeacherResponse> {
     return this.db
-      .select(this.getSelectField())
+      .select({
+        id: courses.id,
+        description: sql<string>`${courses.description}`,
+        title: courses.title,
+        thumbnailUrl: courses.thumbnailS3Key,
+        authorId: sql<string>`${courses.authorId}`,
+        author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+        authorEmail: sql<string>`${users.email}`,
+        category: sql<string>`${categories.title}`,
+        enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN true ELSE false END`,
+        enrolledParticipantCount: sql<number>`0`,
+        courseChapterCount: courses.chapterCount,
+        completedChapterCount: sql<number>`0`,
+        priceInCents: courses.priceInCents,
+        currency: courses.currency,
+        hasFreeChapters: sql<boolean>`
+        EXISTS (
+          SELECT 1
+          FROM ${chapters}
+          WHERE ${chapters.courseId} = ${courses.id}
+            AND ${chapters.isFreemium} = true
+        )`,
+      })
       .from(courses)
       .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
       .leftJoin(categories, eq(courses.categoryId, categories.id))
@@ -533,8 +599,6 @@ export class CourseService {
         users.email,
         studentCourses.studentId,
         categories.title,
-        coursesSummaryStats.freePurchasedCount,
-        coursesSummaryStats.paidPurchasedCount,
       )
       .orderBy(
         sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NULL THEN TRUE ELSE FALSE END`,

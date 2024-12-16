@@ -127,6 +127,7 @@ export interface GetUsersResponse {
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetUserByIdResponse {
@@ -273,6 +274,7 @@ export interface GetAllCategoriesResponse {
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetCategoryByIdResponse {
@@ -334,13 +336,14 @@ export interface GetAllCoursesResponse {
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
-    hasFreeLessons?: boolean;
+    hasFreeChapters?: boolean;
   }[];
   pagination: {
     totalItems: number;
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetStudentCoursesResponse {
@@ -363,13 +366,14 @@ export interface GetStudentCoursesResponse {
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
-    hasFreeLessons?: boolean;
+    hasFreeChapters?: boolean;
   }[];
   pagination: {
     totalItems: number;
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetAvailableCoursesResponse {
@@ -392,13 +396,14 @@ export interface GetAvailableCoursesResponse {
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
-    hasFreeLessons?: boolean;
+    hasFreeChapters?: boolean;
   }[];
   pagination: {
     totalItems: number;
     page: number;
     perPage: number;
   };
+  appliedFilters?: object;
 }
 
 export interface GetTeacherCoursesResponse {
@@ -421,7 +426,7 @@ export interface GetTeacherCoursesResponse {
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
-    hasFreeLessons?: boolean;
+    hasFreeChapters?: boolean;
   }[];
 }
 
@@ -769,6 +774,18 @@ export interface RemoveLessonResponse {
   };
 }
 
+export interface UpdateLessonDisplayOrderBody {
+  /** @format uuid */
+  lessonId: string;
+  displayOrder: number;
+}
+
+export interface UpdateLessonDisplayOrderResponse {
+  data: {
+    message: string;
+  };
+}
+
 export type BetaCreateChapterBody = {
   title: string;
   chapterProgress?: "completed" | "in_progress" | "not_started";
@@ -787,6 +804,24 @@ export interface BetaCreateChapterResponse {
   data: {
     /** @format uuid */
     id: string;
+    message: string;
+  };
+}
+
+export interface UpdateChapterDisplayOrderBody {
+  /** @format uuid */
+  chapterId: string;
+  displayOrder: number;
+}
+
+export interface UpdateChapterDisplayOrderResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface RemoveChapterResponse {
+  data: {
     message: string;
   };
 }
@@ -1418,10 +1453,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategoriesControllerGetAllCategories
-     * @request GET:/api/categories
+     * @name CategoryControllerGetAllCategories
+     * @request GET:/api/category
      */
-    categoriesControllerGetAllCategories: (
+    categoryControllerGetAllCategories: (
       query?: {
         title?: string;
         archived?: string;
@@ -1433,7 +1468,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetAllCategoriesResponse, any>({
-        path: `/api/categories`,
+        path: `/api/category`,
         method: "GET",
         query: query,
         format: "json",
@@ -1443,12 +1478,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategoriesControllerCreateCategory
-     * @request POST:/api/categories
+     * @name CategoryControllerCreateCategory
+     * @request POST:/api/category
      */
-    categoriesControllerCreateCategory: (data: CreateCategoryBody, params: RequestParams = {}) =>
+    categoryControllerCreateCategory: (data: CreateCategoryBody, params: RequestParams = {}) =>
       this.request<CreateCategoryResponse, any>({
-        path: `/api/categories`,
+        path: `/api/category`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -1459,12 +1494,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategoriesControllerGetCategoryById
-     * @request GET:/api/categories/{id}
+     * @name CategoryControllerGetCategoryById
+     * @request GET:/api/category/{id}
      */
-    categoriesControllerGetCategoryById: (id: string, params: RequestParams = {}) =>
+    categoryControllerGetCategoryById: (id: string, params: RequestParams = {}) =>
       this.request<GetCategoryByIdResponse, any>({
-        path: `/api/categories/${id}`,
+        path: `/api/category/${id}`,
         method: "GET",
         format: "json",
         ...params,
@@ -1473,16 +1508,16 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CategoriesControllerUpdateCategory
-     * @request PATCH:/api/categories/{id}
+     * @name CategoryControllerUpdateCategory
+     * @request PATCH:/api/category/{id}
      */
-    categoriesControllerUpdateCategory: (
+    categoryControllerUpdateCategory: (
       id: string,
       data: UpdateCategoryBody,
       params: RequestParams = {},
     ) =>
       this.request<UpdateCategoryResponse, any>({
-        path: `/api/categories/${id}`,
+        path: `/api/category/${id}`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,
@@ -1905,16 +1940,38 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name LessonControllerRemoveLesson
-     * @request DELETE:/api/lesson/lesson/{chapterId}/{lessonId}
+     * @request DELETE:/api/lesson
      */
     lessonControllerRemoveLesson: (
-      chapterId: string,
-      lessonId: string,
+      query: {
+        /** @format uuid */
+        lessonId: string;
+      },
       params: RequestParams = {},
     ) =>
       this.request<RemoveLessonResponse, any>({
-        path: `/api/lesson/lesson/${chapterId}/${lessonId}`,
+        path: `/api/lesson`,
         method: "DELETE",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonControllerUpdateLessonDisplayOrder
+     * @request PATCH:/api/lesson/lesson-display-order
+     */
+    lessonControllerUpdateLessonDisplayOrder: (
+      data: UpdateLessonDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateLessonDisplayOrderResponse, any>({
+        path: `/api/lesson/lesson-display-order`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -1931,6 +1988,46 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "POST",
         body: data,
         type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerUpdateChapterDisplayOrder
+     * @request PATCH:/api/chapter/chapter-display-order
+     */
+    chapterControllerUpdateChapterDisplayOrder: (
+      data: UpdateChapterDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateChapterDisplayOrderResponse, any>({
+        path: `/api/chapter/chapter-display-order`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerRemoveChapter
+     * @request DELETE:/api/chapter
+     */
+    chapterControllerRemoveChapter: (
+      query: {
+        /** @format uuid */
+        chapterId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<RemoveChapterResponse, any>({
+        path: `/api/chapter`,
+        method: "DELETE",
+        query: query,
         format: "json",
         ...params,
       }),

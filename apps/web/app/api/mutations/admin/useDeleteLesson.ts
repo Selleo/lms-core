@@ -15,10 +15,9 @@ export function useDeleteLesson() {
 
   return useMutation({
     mutationFn: async (options: DeleteLessonOptions) => {
-      const response = await ApiClient.api.lessonControllerRemoveLesson(
-        options.chapterId,
-        options.lessonId,
-      );
+      const response = await ApiClient.api.lessonControllerRemoveLesson({
+        lessonId: options.lessonId,
+      });
 
       return response.data;
     },

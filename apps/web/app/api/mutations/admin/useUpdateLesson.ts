@@ -5,10 +5,10 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 
-import type { UpdateLessonBody } from "../../generated-api";
+import type { BetaUpdateLessonBody } from "../../generated-api";
 
-type UpdateLessonOptions = {
-  data: UpdateLessonBody;
+type UpdateTextLessonOptions = {
+  data: BetaUpdateLessonBody;
   lessonId: string;
 };
 
@@ -16,30 +16,26 @@ export function useUpdateLesson() {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (options: UpdateLessonOptions) => {
-      const response = await ApiClient.api.lessonsControllerUpdateLesson(options.data, {
+    mutationFn: async (options: UpdateTextLessonOptions) => {
+      const response = await ApiClient.api.lessonControllerBetaUpdateLesson(options.data, {
         id: options.lessonId,
       });
 
       return response.data;
     },
     onSuccess: () => {
-      toast({
-        variant: "default",
-        title: "Lesson updated successfully",
-        description: "Lesson updated successfully",
-      });
+      toast({ description: "Text block updated successfully" });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
         return toast({
-          variant: "destructive",
           description: error.response?.data.message,
+          variant: "destructive",
         });
       }
       toast({
-        variant: "destructive",
         description: error.message,
+        variant: "destructive",
       });
     },
   });

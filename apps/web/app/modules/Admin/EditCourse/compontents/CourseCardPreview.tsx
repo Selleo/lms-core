@@ -13,11 +13,13 @@ type CourseCardPreviewProps = {
 const CourseCardPreview = ({ imageUrl, title, description, category }: CourseCardPreviewProps) => {
   return (
     <Card className="p-6 shadow-md border border-gray-200 w-3/10">
-      <CardHeader className="relative">
-        <h5 className="text-xl font-semibold">Card Preview</h5>
+      <CardHeader className="relative flex flex-col !gap-y-1">
+        <h5 className="h5 text-neutral-950">Card Preview</h5>
+        <p className="text-neutral-800 body-lg-md">
+          This is how your Course will be visible to students.
+        </p>
       </CardHeader>
       <CardContent>
-        <p>This is how your Course will be visible to students.</p>
         <div className="flex justify-center">
           <Card className="mt-4 w-full max-w-xs rounded-lg shadow-md relative">
             <CardHeader className="p-0 rounded-t-lg overflow-hidden">

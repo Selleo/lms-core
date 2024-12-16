@@ -5,9 +5,16 @@ import { DatabasePg, type UUIDType } from "src/common";
 import { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lessonItem.schema";
 import { chapters, lessons } from "src/storage/schema";
 
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "src/storage/schema";
+
 @Injectable()
 export class AdminChapterRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
+
+  async getChapterById(chapterId: UUIDType) {
+    return await this.db.select().from(chapters).where(eq(chapters.id, chapterId));
+  }
 
   // async getLessons(conditions: any[], sortOrder: any) {
   //   return await this.db
@@ -89,34 +96,22 @@ export class AdminChapterRepository {
   //   `);
   // }
 
-  // async updateChapterDisplayOrder(courseId: UUIDType, lessonId: UUIDType) {
-  //   await this.db.transaction(async (trx) => {
-  //     await trx.execute(sql`
-  //       UPDATE ${courseLessons}
-  //       SET display_order = display_order - 1
-  //       WHERE course_id = ${courseId}
-  //         AND display_order > (
-  //           SELECT display_order
-  //           FROM ${courseLessons}
-  //           WHERE course_id = ${courseId}
-  //             AND lesson_id = ${lessonId}
-  //         )
-  //     `);
+  async updateChapterDisplayOrder(courseId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
 
-  //     await trx.execute(sql`
-  //       WITH ranked_lessons AS (
-  //         SELECT lesson_id, row_number() OVER (ORDER BY display_order) AS new_display_order
-  //         FROM ${courseLessons}
-  //         WHERE course_id = ${courseId}
-  //       )
-  //       UPDATE ${courseLessons} cl
-  //       SET display_order = rl.new_display_order
-  //       FROM ranked_lessons rl
-  //       WHERE cl.lesson_id = rl.lesson_id
-  //         AND cl.course_id = ${courseId}
-  //     `);
-  //   });
-  // }
+    return await dbInstance.execute(sql`
+        WITH ranked_chapters AS (
+          SELECT id, row_number() OVER (ORDER BY display_order) AS new_display_order
+          FROM ${chapters}
+          WHERE course_id = ${courseId}
+        )
+        UPDATE ${chapters} cc
+        SET display_order = rc.new_display_order
+        FROM ranked_chapters rc
+        WHERE cc.id = rc.id
+          AND cc.course_id = ${courseId}
+      `);
+  }
 
   // async removeCourseLesson(courseId: string, lessonId: string) {
   //   return await this.db
@@ -125,43 +120,11 @@ export class AdminChapterRepository {
   //     .returning();
   // }
 
-  // async removeChapterAndReferences(
-  //   chapterId: string,
-  //   lessonItemsList: LessonItemWithContentSchema[],
-  // ) {
-  //   return await this.db.transaction(async (trx) => {
-  //     for (const lessonItem of lessonItemsList) {
-  //       const { lessonItemType } = lessonItem;
-  //       switch (lessonItemType) {
-  //         case LESSON_ITEM_TYPE.text_block.key:
-  //           if (lessonItem.textBlockData?.id) {
-  //             await trx.delete(textBlocks).where(eq(textBlocks.id, lessonItem.textBlockData.id));
-  //           }
-  //           break;
+  async removeChapter(chapterId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
 
-  //         case LESSON_ITEM_TYPE.question.key:
-  //           if (lessonItem.questionData?.id) {
-  //             await trx.delete(questions).where(eq(questions.id, lessonItem.questionData.id));
-  //           }
-  //           break;
-
-  //         case LESSON_ITEM_TYPE.file.key:
-  //           if (lessonItem.fileData?.id) {
-  //             await trx.delete(files).where(eq(files.id, lessonItem.fileData.id));
-  //           }
-  //           break;
-
-  //         default:
-  //           throw new Error(`Unsupported lesson item type: ${lessonItemType}`);
-  //       }
-  //     }
-  //     await trx.delete(lessonItems).where(eq(lessonItems.lessonId, chapterId));
-
-  //     await trx.delete(courseLessons).where(eq(courseLessons.lessonId, chapterId));
-
-  //     return await trx.delete(lessons).where(eq(lessons.id, chapterId)).returning();
-  //   });
-  // }
+    return await dbInstance.delete(chapters).where(eq(chapters.id, chapterId)).returning();
+  }
 
   // async getMaxOrderLessonsInCourse(courseId: UUIDType) {
   //   const [maxOrderResult] = await this.db

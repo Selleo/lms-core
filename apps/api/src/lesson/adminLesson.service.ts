@@ -1,6 +1,8 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { eq, gte, lte, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
+import { lessons } from "src/storage/schema";
 
 import { AdminLessonRepository } from "./adminLesson.repository";
 import { LessonRepository } from "./lesson.repository";
@@ -62,17 +64,6 @@ export class AdminLessonService {
     return lesson?.id;
   }
 
-  async removeLesson(chapterId: UUIDType, lessonId: UUIDType) {
-    const lesson = await this.lessonRepository.getLesson(lessonId);
-
-    if (!lesson) {
-      throw new NotFoundException("Lesson not found");
-    }
-
-    await this.adminLessonRepository.removeLesson(lessonId);
-    await this.adminLessonRepository.updateLessonItemDisplayOrder(chapterId, lessonId);
-  }
-
   async updateQuizLessonWithQuestionsAndOptions(
     id: UUIDType,
     data: UpdateQuizLessonBody,
@@ -109,6 +100,55 @@ export class AdminLessonService {
 
     const updatedLesson = await this.adminLessonRepository.updateLesson(id, data);
     return updatedLesson.id;
+  }
+
+  async removeLesson(lessonId: UUIDType) {
+    const [lesson] = await this.adminLessonRepository.getLesson(lessonId);
+
+    if (!lesson) {
+      throw new NotFoundException("Lesson not found");
+    }
+
+    await this.db.transaction(async (trx) => {
+      await this.adminLessonRepository.removeLesson(lessonId, trx);
+      await this.adminLessonRepository.updateLessonDisplayOrder(lesson.chapterId, trx);
+    });
+  }
+
+  async updateLessonDisplayOrder(lessonObject: {
+    lessonId: UUIDType;
+    displayOrder: number;
+  }): Promise<void> {
+    const [lessonToUpdate] = await this.adminLessonRepository.getLesson(lessonObject.lessonId);
+
+    const oldDisplayOrder = lessonToUpdate.displayOrder;
+    if (!lessonToUpdate || oldDisplayOrder === null) {
+      throw new NotFoundException("Lesson not found");
+    }
+
+    const newDisplayOrder = lessonObject.displayOrder;
+
+    await this.db.transaction(async (trx) => {
+      await trx
+        .update(lessons)
+        .set({
+          displayOrder: sql`CASE
+            WHEN ${eq(lessons.id, lessonToUpdate.id)}
+              THEN ${newDisplayOrder}
+            WHEN ${newDisplayOrder < oldDisplayOrder}
+              AND ${gte(lessons.displayOrder, newDisplayOrder)}
+              AND ${lte(lessons.displayOrder, oldDisplayOrder)}
+              THEN ${lessons.displayOrder} + 1
+            WHEN ${newDisplayOrder > oldDisplayOrder}
+              AND ${lte(lessons.displayOrder, newDisplayOrder)}
+              AND ${gte(lessons.displayOrder, oldDisplayOrder)}
+              THEN ${lessons.displayOrder} - 1
+            ELSE ${lessons.displayOrder}
+          END
+          `,
+        })
+        .where(eq(lessons.chapterId, lessonToUpdate.chapterId));
+    });
   }
 
   // async getAllLessonItems(query: GetLessonItemsQuery = {}) {

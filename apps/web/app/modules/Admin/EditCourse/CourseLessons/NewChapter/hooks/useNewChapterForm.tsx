@@ -8,7 +8,7 @@ import { useUpdateLesson } from "~/api/mutations/admin/useUpdateLesson";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 
-import { ContentTypes, type Chapter } from "../../../EditCourse.types";
+import { type Chapter, ContentTypes } from "../../../EditCourse.types";
 import { newChapterFormSchema } from "../validators/newChapterFormSchema";
 
 import type { NewChapterFormValues } from "../validators/newChapterFormSchema";
@@ -70,7 +70,7 @@ export const useNewChapterForm = ({
     }
 
     try {
-      await deleteChapter({ courseId, chapterId: chapter.id });
+      await deleteChapter({ chapterId: chapter.id });
       setContentTypeToDisplay(ContentTypes.EMPTY);
       queryClient.invalidateQueries({
         queryKey: [COURSE_QUERY_KEY, { id: courseId }],

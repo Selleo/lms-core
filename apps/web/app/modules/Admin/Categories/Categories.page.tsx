@@ -11,7 +11,7 @@ import {
 import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
-import React from "react";
+import { useState, useTransition } from "react";
 
 import { useCategoriesSuspense, usersQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -47,13 +47,13 @@ export const clientLoader = async () => {
 
 const Categories = () => {
   const navigate = useNavigate();
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
-  const [searchParams, setSearchParams] = React.useState<{
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [searchParams, setSearchParams] = useState<{
     title?: string;
     archived?: boolean;
-  }>({});
-  const [isPending, startTransition] = React.useTransition();
+  }>({ archived: false });
+  const [isPending, startTransition] = useTransition();
   const { data } = useCategoriesSuspense(searchParams);
 
   const filterConfig: FilterConfig[] = [

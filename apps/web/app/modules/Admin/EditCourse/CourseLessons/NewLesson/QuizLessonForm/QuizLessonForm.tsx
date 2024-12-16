@@ -11,7 +11,7 @@ import QuestionSelector from "./components/QuestionSelector";
 import TrueOrFalseQuestion from "./components/TrueOrFalseQuestion";
 import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
 
-import { PhotoQuestionType, Question, QuestionType } from "./QuizLessonForm.types";
+import { Question, QuestionType } from "./QuizLessonForm.types";
 import type { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
 import { Chapter, ContentTypes, Lesson } from "../../../EditCourse.types";
@@ -102,7 +102,7 @@ const QuizLessonForm = ({
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <Label htmlFor="title" className="text-right body-base-md">
+                  <Label htmlFor="title" className="body-base-md">
                     <span className="text-red-500 mr-1">*</span>
                     Title
                   </Label>

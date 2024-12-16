@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, sql } from "drizzle-orm";
+import { eq, gte, lte, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
@@ -214,6 +214,44 @@ export class AdminChapterService {
     return await this.adminChapterRepository.updateFreemiumStatus(chapterId, isFreemium);
   }
 
+  async updateChapterDisplayOrder(chapterObject: {
+    chapterId: UUIDType;
+    displayOrder: number;
+  }): Promise<void> {
+    const [chapterToUpdate] = await this.adminChapterRepository.getChapterById(
+      chapterObject.chapterId,
+    );
+
+    const oldDisplayOrder = chapterToUpdate.displayOrder;
+
+    if (!chapterToUpdate || oldDisplayOrder === null) {
+      throw new NotFoundException("Chapter not found");
+    }
+
+    const newDisplayOrder = chapterObject.displayOrder;
+
+    await this.db.transaction(async (trx) => {
+      await trx
+        .update(chapters)
+        .set({
+          displayOrder: sql`CASE
+            WHEN ${eq(chapters.id, chapterToUpdate.id)}
+              THEN ${newDisplayOrder}
+            WHEN ${newDisplayOrder < oldDisplayOrder}
+              AND ${gte(chapters.displayOrder, newDisplayOrder)}
+              AND ${lte(chapters.displayOrder, oldDisplayOrder)}
+              THEN ${chapters.displayOrder} + 1
+            WHEN ${newDisplayOrder > oldDisplayOrder}
+              AND ${lte(chapters.displayOrder, newDisplayOrder)}
+              AND ${gte(chapters.displayOrder, oldDisplayOrder)}
+              THEN ${chapters.displayOrder} - 1
+            ELSE ${chapters.displayOrder}
+          END
+          `,
+        })
+        .where(eq(chapters.courseId, chapterToUpdate.courseId));
+    });
+  }
   // async updateLesson(id: string, body: UpdateLessonBody) {
   //   const [lesson] = await this.adminChapterRepository.updateLesson(id, body);
 
@@ -222,26 +260,6 @@ export class AdminChapterService {
 
   // async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {
   //   return await this.adminChapterRepository.toggleLessonAsFree(courseId, lessonId, isFree);
-  // }
-
-  // async addLessonToCourse(courseId: string, lessonId: string, displayOrder?: number) {
-  //   try {
-  //     if (displayOrder === undefined) {
-  //       const maxOrderResult = await this.adminChapterRepository.getMaxOrderLessonsInCourse(
-  //         courseId,
-  //       );
-
-  //       displayOrder = maxOrderResult + 1;
-  //     }
-
-  //     await this.adminChapterRepository.assignLessonToCourse(courseId, lessonId, displayOrder);
-  //   } catch (error) {
-  //     if (error.code === "23505") {
-  //       // postgres uniq error code
-  //       throw new ConflictException("This lesson is already added to the course");
-  //     }
-  //     throw error;
-  //   }
   // }
 
   // async removeLessonFromCourse(courseId: string, lessonId: string) {
@@ -254,20 +272,16 @@ export class AdminChapterService {
   //   await this.adminChapterRepository.updateDisplayOrderLessonsInCourse(courseId, lessonId);
   // }
 
-  // async removeChapter(courseId: string, chapterId: string) {
-  //   const lessonItemsList = await this.adminChapterRepository.getBetaLessons(chapterId);
+  async removeChapter(chapterId: UUIDType) {
+    const [chapter] = await this.adminChapterRepository.getChapterById(chapterId);
 
-  //   const result = await this.adminChapterRepository.removeChapterAndReferences(
-  //     chapterId,
-  //     lessonItemsList as LessonItemWithContentSchema[],
-  //   );
+    if (!chapter) throw new NotFoundException("Chapter not found");
 
-  //   if (result.length === 0) {
-  //     throw new NotFoundException("Lesson not found in this course");
-  //   }
-
-  //   await this.adminChapterRepository.updateChapterDisplayOrder(courseId, chapterId);
-  // }
+    await this.db.transaction(async (trx) => {
+      await this.adminChapterRepository.removeChapter(chapterId, trx);
+      await this.adminChapterRepository.updateChapterDisplayOrder(chapter.courseId, trx);
+    });
+  }
 
   // private getFiltersConditions(filters: LessonsFilterSchema) {
   //   const conditions = [];

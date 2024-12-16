@@ -688,9 +688,9 @@
         }
       }
     },
-    "/api/categories": {
+    "/api/category": {
       "get": {
-        "operationId": "CategoriesController_getAllCategories",
+        "operationId": "CategoryController_getAllCategories",
         "parameters": [
           {
             "name": "title",
@@ -764,7 +764,7 @@
         }
       },
       "post": {
-        "operationId": "CategoriesController_createCategory",
+        "operationId": "CategoryController_createCategory",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -789,9 +789,9 @@
         }
       }
     },
-    "/api/categories/{id}": {
+    "/api/category/{id}": {
       "get": {
-        "operationId": "CategoriesController_getCategoryById",
+        "operationId": "CategoryController_getCategoryById",
         "parameters": [
           {
             "name": "id",
@@ -816,7 +816,7 @@
         }
       },
       "patch": {
-        "operationId": "CategoriesController_updateCategory",
+        "operationId": "CategoryController_updateCategory",
         "parameters": [
           {
             "name": "id",
@@ -1679,23 +1679,14 @@
         }
       }
     },
-    "/api/lesson/lesson/{chapterId}/{lessonId}": {
+    "/api/lesson": {
       "delete": {
         "operationId": "LessonController_removeLesson",
         "parameters": [
           {
-            "name": "chapterId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          },
-          {
             "name": "lessonId",
             "required": true,
-            "in": "path",
+            "in": "query",
             "schema": {
               "format": "uuid",
               "type": "string"
@@ -1708,6 +1699,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RemoveLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/lesson/lesson-display-order": {
+      "patch": {
+        "operationId": "LessonController_updateLessonDisplayOrder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLessonDisplayOrderBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateLessonDisplayOrderResponse"
                 }
               }
             }
@@ -1735,6 +1753,60 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BetaCreateChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chapter/chapter-display-order": {
+      "patch": {
+        "operationId": "ChapterController_updateChapterDisplayOrder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChapterDisplayOrderBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateChapterDisplayOrderResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chapter": {
+      "delete": {
+        "operationId": "ChapterController_removeChapter",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveChapterResponse"
                 }
               }
             }
@@ -2282,6 +2354,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -2773,6 +2851,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -2987,7 +3071,7 @@
                 "createdAt": {
                   "type": "string"
                 },
-                "hasFreeLessons": {
+                "hasFreeChapters": {
                   "type": "boolean"
                 }
               },
@@ -3024,6 +3108,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -3096,7 +3186,7 @@
                 "createdAt": {
                   "type": "string"
                 },
-                "hasFreeLessons": {
+                "hasFreeChapters": {
                   "type": "boolean"
                 }
               },
@@ -3133,6 +3223,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -3205,7 +3301,7 @@
                 "createdAt": {
                   "type": "string"
                 },
-                "hasFreeLessons": {
+                "hasFreeChapters": {
                   "type": "boolean"
                 }
               },
@@ -3242,6 +3338,12 @@
               "page",
               "perPage"
             ]
+          },
+          "appliedFilters": {
+            "type": "object",
+            "patternProperties": {
+              "^(.*)$": {}
+            }
           }
         },
         "required": [
@@ -3314,7 +3416,7 @@
                 "createdAt": {
                   "type": "string"
                 },
-                "hasFreeLessons": {
+                "hasFreeChapters": {
                   "type": "boolean"
                 }
               },
@@ -4587,6 +4689,41 @@
           "data"
         ]
       },
+      "UpdateLessonDisplayOrderBody": {
+        "type": "object",
+        "properties": {
+          "lessonId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "lessonId",
+          "displayOrder"
+        ]
+      },
+      "UpdateLessonDisplayOrderResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "BetaCreateChapterBody": {
         "type": "object",
         "allOf": [
@@ -4665,6 +4802,60 @@
             },
             "required": [
               "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateChapterDisplayOrderBody": {
+        "type": "object",
+        "properties": {
+          "chapterId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "chapterId",
+          "displayOrder"
+        ]
+      },
+      "UpdateChapterDisplayOrderResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "RemoveChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
               "message"
             ]
           }

@@ -7,7 +7,6 @@ import { useBetaCreateFileItem } from "~/api/mutations/admin/useBetaCreateFile";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
 import { useUpdateFileItem } from "~/api/mutations/admin/useUpdateFileItem";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
-import { useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
 import { ContentTypes } from "~/modules/Admin/EditCourse/EditCourse.types";
 
@@ -29,7 +28,6 @@ export const useFileLessonForm = ({
   setContentTypeToDisplay,
 }: FileLessonFormProps) => {
   const { id: courseId } = useParams();
-  const { data: currentUser } = useCurrentUserSuspense();
   const { mutateAsync: createFile } = useBetaCreateFileItem();
   const { mutateAsync: updateFileItem } = useUpdateFileItem();
   const { mutateAsync: deleteLesson } = useDeleteLesson();
@@ -40,6 +38,7 @@ export const useFileLessonForm = ({
       title: lessonToEdit?.title || "",
       description: lessonToEdit?.description || "",
       type: (lessonToEdit?.type as LessonTypes) || "video",
+      fileType: lessonToEdit?.fileType || "mp4",
     },
   });
 
@@ -51,6 +50,7 @@ export const useFileLessonForm = ({
         title: lessonToEdit.title,
         description: lessonToEdit?.description,
         type: (lessonToEdit.type as LessonTypes) || "video",
+        fileType: lessonToEdit?.fileType || "mp4",
       });
     }
   }, [lessonToEdit, reset]);
@@ -62,15 +62,15 @@ export const useFileLessonForm = ({
 
     try {
       if (lessonToEdit) {
-        updateFileItem({ data: { ...values }, fileLessonId: lessonToEdit.id });
+        await updateFileItem({ data: { ...values }, fileLessonId: lessonToEdit.id });
       } else {
         await createFile({
-          data: { ...values },
+          data: { ...values, chapterId: chapterToEdit.id },
         });
         setContentTypeToDisplay(ContentTypes.EMPTY);
       }
 
-      queryClient.invalidateQueries({ queryKey: [COURSE_QUERY_KEY, { id: courseId }] });
+      await queryClient.invalidateQueries({ queryKey: [COURSE_QUERY_KEY, { id: courseId }] });
     } catch (error) {
       console.error("Error creating text block:", error);
     }
@@ -84,7 +84,7 @@ export const useFileLessonForm = ({
 
     try {
       await deleteLesson({ chapterId: chapterToEdit?.id, lessonId: lessonToEdit.id });
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: [COURSE_QUERY_KEY, { id: courseId }],
       });
       setContentTypeToDisplay(ContentTypes.EMPTY);

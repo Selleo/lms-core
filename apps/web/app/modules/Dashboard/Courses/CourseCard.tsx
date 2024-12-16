@@ -1,6 +1,6 @@
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 
-import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
+import DefaultPhotoCourse from "~/assets/svgs/default-photo-course.svg";
 import { CardBadge } from "~/components/CardBadge";
 import CourseProgress from "~/components/CourseProgress";
 import { Gravatar } from "~/components/Gravatar";
@@ -15,7 +15,7 @@ import { CourseCardTitle } from "./CourseCardTitle";
 
 import type { GetAllCoursesResponse } from "~/api/generated-api";
 
-type CourseCardProps = GetAllCoursesResponse["data"][number];
+export type CourseCardProps = GetAllCoursesResponse["data"][number];
 
 const CourseCard = ({
   author,
@@ -28,15 +28,17 @@ const CourseCard = ({
   enrolled = false,
   hasFreeLessons,
   id,
-  imageUrl,
+  thumbnailUrl,
   priceInCents,
   title,
 }: CourseCardProps) => {
   const { isAdmin } = useUserRole();
+  const { pathname } = useLocation();
+  const isScormCreatePage = pathname.includes("/admin/courses/new-scorm");
 
   return (
     <Link
-      to={`/course/${id}`}
+      to={isScormCreatePage ? "#" : `/course/${id}`}
       className={cn(
         "flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-auto bg-white lg:bg-none border",
         {
@@ -47,13 +49,13 @@ const CourseCard = ({
     >
       <div className="relative">
         <img
-          src={imageUrl || CardPlaceholder}
+          src={thumbnailUrl || DefaultPhotoCourse}
           alt="Course"
           loading="eager"
           decoding="async"
           className="w-full aspect-video object-cover rounded-t-lg"
           onError={(e) => {
-            (e.target as HTMLImageElement).src = CardPlaceholder;
+            (e.target as HTMLImageElement).src = DefaultPhotoCourse;
           }}
         />
         <div className="absolute top-4 left-4 flex flex-col gap-y-1 right-4">
@@ -84,12 +86,14 @@ const CourseCard = ({
           <div className={cn({ "mt-3": author })}>
             <CourseCardTitle title={title} />
           </div>
-          <div className="flex items-center gap-x-1.5 mt-1 mb-2">
-            <Avatar className="h-4 w-4">
-              <Gravatar email={authorEmail} />
-            </Avatar>
-            <span className="text-neutral-950">{author}</span>
-          </div>
+          {authorEmail && (
+            <div className="flex items-center gap-x-1.5 mt-1 mb-2">
+              <Avatar className="h-4 w-4">
+                <Gravatar email={authorEmail} />
+              </Avatar>
+              <span className="text-neutral-950">{author}</span>
+            </div>
+          )}
           <div className="text-neutral-500 text-sm flex-grow">
             <span className="line-clamp-3">
               <div dangerouslySetInnerHTML={{ __html: description }} />
@@ -102,6 +106,7 @@ const CourseCard = ({
             enrolled={enrolled}
             isAdmin={isAdmin}
             priceInCents={priceInCents}
+            isScormCreatePage={isScormCreatePage}
           />
         </div>
       </div>

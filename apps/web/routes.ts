@@ -25,23 +25,14 @@ export const routes: (
         index: true,
       });
       route("beta-courses/new", "modules/Admin/AddCourse/AddCourse.tsx");
+      route("courses/new-scorm", "modules/Admin/Scorm/CreateNewScormCourse.page.tsx");
       route("beta-courses/:id", "modules/Admin/EditCourse/EditCourse.tsx");
-      route("courses/new", "modules/Admin/Courses/CreateNewCourse.page.tsx");
-      route("courses/:id", "modules/Admin/Courses/Course.page.tsx");
       route("users", "modules/Admin/Users/Users.page.tsx");
       route("users/:id", "modules/Admin/Users/User.page.tsx");
       route("users/new", "modules/Admin/Users/CreateNewUser.page.tsx");
       route("categories", "modules/Admin/Categories/Categories.page.tsx");
       route("categories/:id", "modules/Admin/Categories/Category.page.tsx");
       route("categories/new", "modules/Admin/Categories/CreateNewCategory.page.tsx");
-      route("lessons", "modules/Admin/Lessons/Lessons.page.tsx");
-      route("lessons/:id", "modules/Admin/Lessons/Lesson.page.tsx");
-      route("lessons/new", "modules/Admin/Lessons/CreateNewLesson.page.tsx");
-      route("lesson-items", "modules/Admin/LessonItems/LessonItems.page.tsx");
-      route("lesson-items/new-file", "modules/Admin/LessonItems/CreateNewFile.page.tsx");
-      route("lesson-items/new-text-block", "modules/Admin/LessonItems/CreateNewTextBlock.page.tsx");
-      route("lesson-items/new-question", "modules/Admin/LessonItems/CreateNewQuestion.page.tsx");
-      route("lesson-items/:id", "modules/Admin/LessonItems/LessonItem.page.tsx");
     });
   });
 };

@@ -100,7 +100,7 @@ export class CourseController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
-    @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
@@ -153,8 +153,8 @@ export class CourseController {
     response: baseResponse(allCoursesSchema),
   })
   async getTeacherCourses(
-    @Query("authorId") authorId: string,
-    @CurrentUser("userId") currentUserId: string,
+    @Query("authorId") authorId: UUIDType,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<AllCoursesForTeacherResponse>> {
     return new BaseResponse(await this.courseService.getTeacherCourses(authorId));
   }
@@ -165,8 +165,8 @@ export class CourseController {
     response: baseResponse(commonShowCourseSchema),
   })
   async getCourse(
-    @Query("id") id: string,
-    @CurrentUser("userId") currentUserId: string,
+    @Query("id") id: UUIDType,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<CommonShowCourse>> {
     return new BaseResponse(await this.courseService.getCourse(id, currentUserId));
   }
@@ -177,7 +177,7 @@ export class CourseController {
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
   })
-  async getCourseById(@Query("id") id: string): Promise<BaseResponse<CommonShowCourse>> {
+  async getCourseById(@Query("id") id: UUIDType): Promise<BaseResponse<CommonShowCourse>> {
     return new BaseResponse(await this.courseService.getCourseById(id));
   }
 
@@ -199,7 +199,7 @@ export class CourseController {
   })
   async createCourse(
     @Body() createCourseBody: CreateCourseBody,
-    @CurrentUser("userId") currentUserId: string,
+    @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const { id } = await this.courseService.createCourse(createCourseBody, currentUserId);
 
@@ -217,7 +217,7 @@ export class CourseController {
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async updateCourse(
-    @Param("id") id: string,
+    @Param("id") id: UUIDType,
     @Body() updateCourseBody: UpdateCourseBody,
     @UploadedFile() image: Express.Multer.File,
     @CurrentUser("userId") currentUserId: UUIDType,

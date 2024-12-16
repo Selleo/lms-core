@@ -9,7 +9,7 @@ import { UsersModule } from "src/users/users.module";
 
 import { AuthModule } from "./auth/auth.module";
 import { CacheModule } from "./cache/cache.module";
-import { CategoriesModule } from "./categories/categories.module";
+import { CategoryModule } from "./category/category.module";
 import awsConfig from "./common/configuration/aws";
 import database from "./common/configuration/database";
 import emailConfig from "./common/configuration/email";
@@ -71,7 +71,7 @@ import { TestConfigModule } from "./test-config/test-config.module";
     UsersModule,
     EmailModule,
     TestConfigModule,
-    CategoriesModule,
+    CategoryModule,
     ConditionalModule.registerWhen(ScheduleModule.forRoot(), (env) => env.NODE_ENV !== "test"),
     CourseModule,
     LessonModule,

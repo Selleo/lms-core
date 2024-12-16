@@ -46,19 +46,9 @@ export const adminNavigationConfig: NavigationItem[] = [
     iconName: "Category",
   },
   {
-    label: "lessons",
-    path: "admin/lessons",
-    iconName: "Lesson",
-  },
-  {
     label: "users",
     path: "admin/users",
     iconName: "User",
-  },
-  {
-    label: "Lesson Content",
-    path: "admin/lesson-items",
-    iconName: "LessonContent",
   },
 ];
 

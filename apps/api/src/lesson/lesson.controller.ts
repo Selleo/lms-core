@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -241,20 +241,17 @@ export class LessonController {
     return new BaseResponse({ message: "Text block updated successfully" });
   }
 
-  @Delete("lesson/:chapterId/:lessonId")
+  @Delete()
   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   @Validate({
-    request: [
-      { type: "param", name: "chapterId", schema: UUIDSchema },
-      { type: "param", name: "lessonId", schema: UUIDSchema },
-    ],
+    request: [{ type: "query", name: "lessonId", schema: UUIDSchema, required: true }],
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async removeLesson(
-    @Param("chapterId") chapterId: string,
-    @Param("lessonId") lessonId: string,
+    @Query("lessonId") lessonId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonsService.removeLesson(chapterId, lessonId);
+    await this.adminLessonsService.removeLesson(lessonId);
+
     return new BaseResponse({
       message: "Lesson removed from course successfully",
     });
@@ -282,32 +279,6 @@ export class LessonController {
   //   ): Promise<BaseResponse<{ message: string }>> {
   //     await this.adminLessonsService.updateLesson(id, body);
   //     return new BaseResponse({ message: "Text block updated successfully" });
-  //   }
-
-  //   @Post("add")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
-  //   @Validate({
-  //     request: [
-  //       {
-  //         type: "body",
-  //         schema: Type.Object({
-  //           courseId: UUIDSchema,
-  //           lessonId: UUIDSchema,
-  //           displayOrder: Type.Optional(Type.Number()),
-  //         }),
-  //       },
-  //     ],
-  //     response: baseResponse(Type.Object({ message: Type.String() })),
-  //   })
-  //   async addLessonToCourse(
-  //     @Body() body: { courseId: string; lessonId: string; displayOrder?: number },
-  //   ): Promise<BaseResponse<{ message: string }>> {
-  //     await this.adminLessonsService.addLessonToCourse(
-  //       body.courseId,
-  //       body.lessonId,
-  //       body.displayOrder,
-  //     );
-  //     return new BaseResponse({ message: "Lesson added to course successfully" });
   //   }
 
   //   @Delete(":courseId/:lessonId")
@@ -899,4 +870,33 @@ export class LessonController {
 
   //     return new BaseResponse({ id, message: "File created successfully" });
   //   }
+
+  @Patch("lesson-display-order")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: Type.Object({
+          lessonId: UUIDSchema,
+          displayOrder: Type.Number(),
+        }),
+        required: true,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateLessonDisplayOrder(
+    @Body()
+    body: {
+      lessonId: UUIDType;
+      displayOrder: number;
+    },
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonsService.updateLessonDisplayOrder(body);
+
+    return new BaseResponse({
+      message: "Chapter display order updated successfully",
+    });
+  }
 }
