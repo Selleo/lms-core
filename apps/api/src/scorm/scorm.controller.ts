@@ -9,20 +9,20 @@ import {
   Param,
   Res,
   BadRequestException,
+  Header,
+  Req,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
-import { Type } from "@sinclair/typebox";
-import { Response } from "express";
-import { Validate } from "nestjs-typebox";
+import { Response, Request } from "express";
 
-import { BaseResponse, UUIDSchema, UUIDType } from "src/common";
+import { BaseResponse, UUIDType } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
-import { ScormUploadResponse } from "./schemas/scorm.schema";
+import { ScormMetadata, ScormUploadResponse } from "./schemas/scorm.schema";
 import { ScormService } from "./services/scorm.service";
 
 @Controller("scorm")
@@ -77,22 +77,46 @@ export class ScormController {
 
   @Roles(...Object.values(USER_ROLES))
   @Get(":courseId/content")
-  @Validate({
-    request: [
-      { type: "param", name: "courseId", schema: UUIDSchema },
-      { type: "query", name: "path", schema: Type.String() },
-    ],
-  })
+  @Header("Cache-Control", "no-store")
   async serveScormContent(
     @Param("courseId") courseId: UUIDType,
     @Query("path") filePath: string,
     @Res() res: Response,
+    @Req() req: Request,
   ) {
     if (!filePath) {
       throw new BadRequestException("filePath is required");
     }
 
-    const url = await this.scormService.serveContent(courseId, filePath);
-    return res.redirect(url);
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const content = await this.scormService.serveContent(courseId, filePath, baseUrl);
+
+    if (filePath.endsWith(".html")) {
+      res.setHeader("Content-Type", "text/html");
+      return res.send(content);
+    }
+
+    const contentType = this.scormService.getContentType(filePath);
+    res.setHeader("Content-Type", contentType);
+
+    if (typeof content === "string") {
+      return res.redirect(content);
+    }
+
+    return res.send(content);
+  }
+
+  @Get(":courseId/metadata")
+  @Roles(...Object.values(USER_ROLES))
+  @ApiResponse({
+    status: 200,
+    description: "Returns SCORM metadata including entry point path",
+    type: ScormMetadata,
+  })
+  async getScormMetadata(@Param("courseId") courseId: UUIDType) {
+    const metadata = await this.scormService.getCourseScormMetadata(courseId);
+    return new BaseResponse({
+      metadata,
+    });
   }
 }

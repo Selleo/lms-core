@@ -15,6 +15,7 @@ import {
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 import { useUserRole } from "~/hooks/useUserRole";
+import { cn } from "~/lib/utils";
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 
 import { CourseViewMainCard } from "./CourseViewMainCard";
@@ -48,7 +49,11 @@ export default function CoursesViewPage() {
   }
 
   return (
-    <PageWrapper className="flex flex-col gap-y-4 md:gap-y-6">
+    <PageWrapper
+      className={cn("flex flex-col gap-y-4 md:gap-y-6", {
+        "h-full": course.isScorm,
+      })}
+    >
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
@@ -59,8 +64,20 @@ export default function CoursesViewPage() {
         </BreadcrumbItem>
       </BreadcrumbList>
       <div className="flex flex-col md:flex-row h-full gap-6">
-        <CourseViewMainCard {...course} />
-        <LessonsList lessons={course.chapters} isEnrolled={course.enrolled || isAdmin} />
+        {course.isScorm ? (
+          <iframe
+            title="Playing"
+            src="https://api.lms.localhost/api/scorm/dd284185-2e3b-4a06-8736-403a421a32a5/content?path=Playing/Playing.html"
+            width="100%"
+            height="100%"
+            className="w-full h-full"
+          ></iframe>
+        ) : (
+          <>
+            <CourseViewMainCard {...course} />
+            <LessonsList lessons={course.chapters} isEnrolled={course.enrolled || isAdmin} />
+          </>
+        )}
       </div>
     </PageWrapper>
   );
