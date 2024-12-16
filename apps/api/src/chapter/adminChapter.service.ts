@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, sql } from "drizzle-orm";
+import { eq, gte, lte, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
@@ -214,6 +214,44 @@ export class AdminChapterService {
     return await this.adminChapterRepository.updateFreemiumStatus(chapterId, isFreemium);
   }
 
+  async updateChapterDisplayOrder(chapterObject: {
+    chapterId: UUIDType;
+    displayOrder: number;
+  }): Promise<void> {
+    const [chapterToUpdate] = await this.adminChapterRepository.getChapterById(
+      chapterObject.chapterId,
+    );
+
+    const oldDisplayOrder = chapterToUpdate.displayOrder;
+
+    if (!chapterToUpdate || oldDisplayOrder === null) {
+      throw new NotFoundException("Chapter not found");
+    }
+
+    const newDisplayOrder = chapterObject.displayOrder;
+
+    await this.db.transaction(async (trx) => {
+      await trx
+        .update(chapters)
+        .set({
+          displayOrder: sql`CASE
+            WHEN ${eq(chapters.id, chapterToUpdate.id)}
+              THEN ${newDisplayOrder}
+            WHEN ${newDisplayOrder < oldDisplayOrder}
+              AND ${gte(chapters.displayOrder, newDisplayOrder)}
+              AND ${lte(chapters.displayOrder, oldDisplayOrder)}
+              THEN ${chapters.displayOrder} + 1
+            WHEN ${newDisplayOrder > oldDisplayOrder}
+              AND ${lte(chapters.displayOrder, newDisplayOrder)}
+              AND ${gte(chapters.displayOrder, oldDisplayOrder)}
+              THEN ${chapters.displayOrder} - 1
+            ELSE ${chapters.displayOrder}
+          END
+          `,
+        })
+        .where(eq(chapters.courseId, chapterToUpdate.courseId));
+    });
+  }
   // async updateLesson(id: string, body: UpdateLessonBody) {
   //   const [lesson] = await this.adminChapterRepository.updateLesson(id, body);
 

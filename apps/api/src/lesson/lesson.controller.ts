@@ -818,4 +818,33 @@ export class LessonController {
 
   //     return new BaseResponse({ id, message: "File created successfully" });
   //   }
+
+  @Patch("lesson-display-order")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: Type.Object({
+          lessonId: UUIDSchema,
+          displayOrder: Type.Number(),
+        }),
+        required: true,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateLessonDisplayOrder(
+    @Body()
+    body: {
+      lessonId: UUIDType;
+      displayOrder: number;
+    },
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonsService.updateLessonDisplayOrder(body);
+
+    return new BaseResponse({
+      message: "Chapter display order updated successfully",
+    });
+  }
 }

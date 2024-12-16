@@ -644,6 +644,18 @@ export interface RemoveLessonResponse {
   };
 }
 
+export interface UpdateLessonDisplayOrderBody {
+  /** @format uuid */
+  lessonId: string;
+  displayOrder: number;
+}
+
+export interface UpdateLessonDisplayOrderResponse {
+  data: {
+    message: string;
+  };
+}
+
 export type BetaCreateChapterBody = {
   title: string;
   chapterProgress?: "completed" | "in_progress" | "not_started";
@@ -662,6 +674,18 @@ export interface BetaCreateChapterResponse {
   data: {
     /** @format uuid */
     id: string;
+    message: string;
+  };
+}
+
+export interface UpdateChapterDisplayOrderBody {
+  /** @format uuid */
+  chapterId: string;
+  displayOrder: number;
+}
+
+export interface UpdateChapterDisplayOrderResponse {
+  data: {
     message: string;
   };
 }
@@ -1763,6 +1787,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name LessonControllerUpdateLessonDisplayOrder
+     * @request PATCH:/api/lesson/lesson-display-order
+     */
+    lessonControllerUpdateLessonDisplayOrder: (
+      data: UpdateLessonDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateLessonDisplayOrderResponse, any>({
+        path: `/api/lesson/lesson-display-order`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ChapterControllerBetaCreateChapter
      * @request POST:/api/chapter/beta-create-chapter
      */
@@ -1770,6 +1813,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<BetaCreateChapterResponse, any>({
         path: `/api/chapter/beta-create-chapter`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerUpdateChapterDisplayOrder
+     * @request PATCH:/api/chapter/chapter-display-order
+     */
+    chapterControllerUpdateChapterDisplayOrder: (
+      data: UpdateChapterDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateChapterDisplayOrderResponse, any>({
+        path: `/api/chapter/chapter-display-order`,
+        method: "PATCH",
         body: data,
         type: ContentType.Json,
         format: "json",
