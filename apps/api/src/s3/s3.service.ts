@@ -33,6 +33,16 @@ export class S3Service {
     return getSignedUrl(this.s3Client, command, { expiresIn });
   }
 
+  async getFileContent(key: string): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: key,
+    });
+
+    const response = await this.s3Client.send(command);
+    return response.Body?.transformToString() || "";
+  }
+
   async uploadFile(fileBuffer: Buffer, key: string, contentType: string): Promise<void> {
     const command = new PutObjectCommand({
       Bucket: this.bucketName,

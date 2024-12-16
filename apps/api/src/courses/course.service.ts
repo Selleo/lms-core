@@ -291,6 +291,7 @@ export class CourseService {
         completedChapterCount: sql<number>`COALESCE(${studentCourses.finishedChapterCount}, 0)`,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NOT NULL THEN TRUE ELSE FALSE END`,
         isPublished: courses.isPublished,
+        isScorm: courses.isScorm,
         priceInCents: courses.priceInCents,
         currency: courses.currency,
         authorId: courses.authorId,
@@ -357,7 +358,7 @@ export class CourseService {
             WHEN (
               SELECT COUNT(*)
               FROM ${studentLessonProgress}
-              LEFT JOIN ${lessons} ON ${lessons.id} = ${studentLessonProgress.lessonId}     
+              LEFT JOIN ${lessons} ON ${lessons.id} = ${studentLessonProgress.lessonId}
               WHERE ${studentLessonProgress.lessonId} = ${lessons.id}
                 AND ${studentLessonProgress.studentId} = ${userId}
             ) > 0
@@ -376,25 +377,25 @@ export class CourseService {
                   ${lessons.title} AS title,
                   ${lessons.type} AS type,
                   ${lessons.displayOrder} AS "displayOrder",
-                  CASE 
-                    WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN 'completed' 
-                    WHEN ${studentLessonProgress.completedAt} IS NULL 
-                      AND ${studentLessonProgress.completedQuestionCount} > 0 THEN 'in_progress' 
-                    ELSE 'not_started' 
+                  CASE
+                    WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN 'completed'
+                    WHEN ${studentLessonProgress.completedAt} IS NULL
+                      AND ${studentLessonProgress.completedQuestionCount} > 0 THEN 'in_progress'
+                    ELSE 'not_started'
                   END AS status,
-                  CASE 
-                    WHEN ${lessons.type} = ${LESSON_TYPES.quiz} THEN COUNT(${questions.id}) 
-                    ELSE NULL 
+                  CASE
+                    WHEN ${lessons.type} = ${LESSON_TYPES.quiz} THEN COUNT(${questions.id})
+                    ELSE NULL
                   END AS "quizQuestionCount"
                 FROM ${lessons}
                 LEFT JOIN ${studentLessonProgress} ON ${lessons.id} = ${studentLessonProgress.lessonId}
                   AND ${studentLessonProgress.studentId} = ${userId}
                 LEFT JOIN ${questions} ON ${lessons.id} = ${questions.lessonId}
                 WHERE ${lessons.chapterId} = ${chapters.id}
-                GROUP BY 
-                  ${lessons.id}, 
-                  ${lessons.type}, 
-                  ${lessons.displayOrder}, 
+                GROUP BY
+                  ${lessons.id},
+                  ${lessons.type},
+                  ${lessons.displayOrder},
                   ${lessons.title},
                   ${studentLessonProgress.completedAt},
                   ${studentLessonProgress.completedQuestionCount}
@@ -638,6 +639,7 @@ export class CourseService {
           isPublished: createCourseBody.isPublished,
           priceInCents: createCourseBody.priceInCents,
           currency: createCourseBody.currency || "usd",
+          isScorm: createCourseBody.isScorm,
           authorId,
           categoryId: createCourseBody.categoryId,
         })

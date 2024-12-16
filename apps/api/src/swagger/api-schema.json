@@ -1949,13 +1949,12 @@
             "required": true,
             "in": "path",
             "schema": {
-              "format": "uuid",
               "type": "string"
             }
           },
           {
             "name": "path",
-            "required": false,
+            "required": true,
             "in": "query",
             "schema": {
               "type": "string"
@@ -1965,6 +1964,33 @@
         "responses": {
           "200": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/api/scorm/{courseId}/metadata": {
+      "get": {
+        "operationId": "ScormController_getScormMetadata",
+        "parameters": [
+          {
+            "name": "courseId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns SCORM metadata including entry point path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScormMetadata"
+                }
+              }
+            }
           }
         }
       }
@@ -3431,6 +3457,9 @@
                   }
                 ]
               },
+              "isScorm": {
+                "type": "boolean"
+              },
               "chapters": {
                 "type": "array",
                 "items": {
@@ -3575,6 +3604,9 @@
                     "type": "null"
                   }
                 ]
+              },
+              "isScorm": {
+                "type": "boolean"
               },
               "chapters": {
                 "type": "array",
@@ -3721,6 +3753,9 @@
                   }
                 ]
               },
+              "isScorm": {
+                "type": "boolean"
+              },
               "chapters": {
                 "type": "array",
                 "items": {
@@ -3838,6 +3873,9 @@
               "categoryId": {
                 "format": "uuid",
                 "type": "string"
+              },
+              "isScorm": {
+                "type": "boolean"
               }
             },
             "required": [

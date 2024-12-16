@@ -8,6 +8,7 @@ export const baseCourseSchema = Type.Object({
   priceInCents: Type.Optional(Type.Integer()),
   currency: Type.Optional(Type.String()),
   categoryId: Type.String({ format: "uuid" }),
+  isScorm: Type.Optional(Type.Boolean()),
 });
 
 export const createCourseSchema = Type.Intersect([

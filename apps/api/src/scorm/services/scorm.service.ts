@@ -1,10 +1,13 @@
 import { randomUUID } from "crypto";
+import path from "path";
 
 import { Injectable, Inject, BadRequestException, NotFoundException } from "@nestjs/common";
 import AdmZip from "adm-zip";
+import { JSDOM } from "jsdom";
 import xml2js from "xml2js";
 
 import { DatabasePg } from "src/common";
+import { FileService } from "src/file/file.service";
 import { S3Service } from "src/s3/s3.service";
 
 import { SCORM } from "../constants/scorm.consts";
@@ -17,6 +20,7 @@ export class ScormService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly s3Service: S3Service,
+    private readonly fileService: FileService,
     private readonly scormRepository: ScormRepository,
   ) {}
 
@@ -113,15 +117,157 @@ export class ScormService {
    * @param filePath - Original path of file inside SCORM package
    * @returns Signed S3 URL for the file
    */
-  async serveContent(courseId: UUIDType, filePath: string): Promise<string> {
+  async serveContent(
+    courseId: UUIDType,
+    filePath: string,
+    baseUrl: string,
+  ): Promise<string | Buffer> {
     const metadata = await this.scormRepository.getScormMetadata(courseId);
-
     if (!metadata) {
       throw new NotFoundException("SCORM content not found");
     }
 
+    if (filePath.endsWith(".html")) {
+      const s3Key = `${metadata.s3Key}/${filePath}`;
+      const htmlContent = await this.s3Service.getFileContent(s3Key);
+
+      const dom = new JSDOM(htmlContent, {
+        url: `${baseUrl}/api/scorm/${courseId}/content`,
+      });
+      const document = dom.window.document;
+      const styles = document.querySelectorAll("style");
+      for (const style of styles) {
+        if (style.textContent) {
+          style.textContent = await this.processStyleContent(
+            style.textContent,
+            filePath,
+            metadata.s3Key,
+          );
+        }
+      }
+
+      const linkStyles = document.querySelectorAll('link[rel="stylesheet"]');
+      for (const link of linkStyles) {
+        const href = link.getAttribute("href");
+        if (href) {
+          const absolutePath = this.resolveRelativePath(filePath, href);
+          const signedUrl = await this.s3Service.getSignedUrl(`${metadata.s3Key}/${absolutePath}`);
+          link.setAttribute("href", signedUrl);
+        }
+      }
+
+      const elements = document.querySelectorAll("[src]");
+      for (const element of elements) {
+        const src = element.getAttribute("src");
+        if (src) {
+          const absolutePath = this.resolveRelativePath(filePath, src);
+          const signedUrl = await this.s3Service.getSignedUrl(`${metadata.s3Key}/${absolutePath}`);
+          element.setAttribute("src", signedUrl);
+        }
+      }
+
+      return dom.serialize();
+    }
+
     const s3Key = `${metadata.s3Key}/${filePath}`;
-    return await this.s3Service.getSignedUrl(s3Key);
+    return await this.s3Service.getFileContent(s3Key);
+  }
+
+  /**
+   * Process CSS content to handle @import rules and url() functions
+   */
+  private async processStyleContent(
+    css: string,
+    basePath: string,
+    s3KeyPrefix: string,
+  ): Promise<string> {
+    return await this.replaceAsync(
+      css,
+      /@import\s+(?:url\(['"]?([^'"]+)['"]?\)|['"]([^'"]+)['"]);/g,
+      async (fullMatch, urlImport, stringImport) => {
+        const importPath = (urlImport || stringImport)?.trim();
+        if (!importPath) return fullMatch;
+
+        const absolutePath = this.resolveRelativePath(basePath, importPath);
+        try {
+          const importedContent = await this.s3Service.getFileContent(
+            `${s3KeyPrefix}/${absolutePath}`,
+          );
+
+          const processedCss = await this.processStyleContent(
+            importedContent.toString(),
+            absolutePath,
+            s3KeyPrefix,
+          );
+
+          return processedCss;
+        } catch (error) {
+          console.warn(`Failed to process CSS import: ${importPath}`, error);
+          return fullMatch;
+        }
+      },
+    );
+  }
+
+  /**
+   * Get SCORM metadata for a specific course
+   *
+   * @param courseId - Course ID to get SCORM metadata for
+   * @throws NotFoundException if no SCORM content exists for the course
+   * @returns SCORM metadata including version, entry point, and file location
+   */
+  async getCourseScormMetadata(courseId: UUIDType) {
+    try {
+      const metadata = await this.scormRepository.getScormMetadata(courseId);
+
+      if (!metadata) {
+        throw new NotFoundException(`No SCORM content found for course ${courseId}`);
+      }
+
+      return metadata;
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      console.error("Error fetching SCORM metadata:", error);
+      throw new NotFoundException(`No SCORM content found for course ${courseId}`);
+    }
+  }
+
+  private resolveRelativePath(basePath: string, relativePath: string): string {
+    basePath = basePath.trim();
+    relativePath = relativePath.trim();
+
+    if (relativePath.startsWith("/")) {
+      return relativePath.slice(1);
+    }
+
+    const baseDir = path.dirname(basePath);
+    if (relativePath.startsWith("../")) {
+      const parts = baseDir.split("/");
+      const relParts = relativePath.split("/");
+
+      const upCount = relParts.reduce((count, part) => (part === ".." ? count + 1 : count), 0);
+
+      const newBase = parts.slice(0, Math.max(0, parts.length - upCount));
+      return [...newBase, ...relParts.slice(upCount)].join("/");
+    }
+
+    return path.join(path.dirname(basePath), relativePath);
+  }
+
+  private async replaceAsync(
+    str: string,
+    regex: RegExp,
+    asyncFn: (...args: string[]) => Promise<string>,
+  ) {
+    const promises: Promise<string>[] = [];
+    str.replace(regex, (match, ...args) => {
+      promises.push(asyncFn(match, ...args));
+      return match;
+    });
+    const data = await Promise.all(promises);
+    return str.replace(regex, () => data.shift() || "");
   }
 
   /**
@@ -229,7 +375,7 @@ export class ScormService {
    * - .css - Styling
    * - .jpg/.png - Images
    */
-  private getContentType(filename: string): string {
+  public getContentType(filename: string): string {
     const map: Record<string, string> = {
       ".html": "text/html",
       ".js": "application/javascript",
