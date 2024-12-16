@@ -9,10 +9,7 @@ import {
   lessons,
 } from "src/storage/schema";
 
-import type {
-  CreateLessonBody,
-  UpdateLessonBody,
-} from "./lesson.schem";
+import type { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 

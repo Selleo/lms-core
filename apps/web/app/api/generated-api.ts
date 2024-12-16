@@ -620,7 +620,7 @@ export type BetaCreateLessonBody = {
     description?: string;
     title: string;
     photoQuestionType?: "single_choice" | "multiple_choice";
-    imageS3Key?: string;
+    photoS3Key?: string;
     options?: {
       /** @format uuid */
       id?: string;
@@ -663,7 +663,7 @@ export type BetaCreateQuizLessonBody = {
     description?: string;
     title: string;
     photoQuestionType?: "single_choice" | "multiple_choice";
-    imageS3Key?: string;
+    photoS3Key?: string;
     options?: {
       /** @format uuid */
       id?: string;
@@ -706,7 +706,7 @@ export type BetaUpdateQuizLessonBody = {
     description?: string;
     title: string;
     photoQuestionType?: "single_choice" | "multiple_choice";
-    imageS3Key?: string;
+    photoS3Key?: string;
     options?: {
       /** @format uuid */
       id?: string;
@@ -747,7 +747,7 @@ export type BetaUpdateLessonBody = {
     description?: string;
     title: string;
     photoQuestionType?: "single_choice" | "multiple_choice";
-    imageS3Key?: string;
+    photoS3Key?: string;
     options?: {
       /** @format uuid */
       id?: string;

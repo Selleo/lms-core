@@ -193,27 +193,27 @@ export class AdminChapterRepository {
         (
           SELECT ARRAY(
             SELECT json_build_object(
-              'id', ${questions}.id,
-              'title', ${questions}.title,
-              'type', ${questions}.type,
-              'description', ${questions}.description,
-              'imageS3Key', ${questions}.image_s3_key,
-              'photoQuestionType', ${questions}.photo_question_type,
+              'id', ${questions.id},
+              'title', ${questions.title},
+              'type', ${questions.type},
+              'description', ${questions.description},
+              'photoS3Key', ${questions.photoS3Key},
+              'photoQuestionType', ${questions.photoQuestionType},
               'options', (
                 SELECT ARRAY(
                   SELECT json_build_object(
-                    'id', ${questionAnswerOptions}.id,
-                    'optionText', ${questionAnswerOptions}.option_text,
-                    'isCorrect', ${questionAnswerOptions}.is_correct,
-                    'position', ${questionAnswerOptions}.position
+                    'id', ${questionAnswerOptions.id},
+                    'optionText', ${questionAnswerOptions.optionText},
+                    'isCorrect', ${questionAnswerOptions.isCorrect},
+                    'position', ${questionAnswerOptions.position}
                   )
-                  FROM question_answer_options ${questionAnswerOptions}
-                  WHERE ${questionAnswerOptions}.question_id = ${questions}.id
+                  FROM ${questionAnswerOptions}
+                  WHERE ${questionAnswerOptions.questionId} = ${questions.id}
                 )
               )
             )
-            FROM questions ${questions}
-            WHERE ${questions}.lesson_id = lessons.id
+            FROM ${questions}
+            WHERE ${questions.lessonId} = lessons.id
           )
         )`,
       })

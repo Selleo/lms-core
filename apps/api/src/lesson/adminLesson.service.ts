@@ -45,7 +45,7 @@ export class AdminLessonService {
     const maxDisplayOrder = await this.adminLessonRepository.getMaxDisplayOrder(data.chapterId);
 
     const lesson = await this.createQuizLessonWithQuestionsAndOptions(
-      { ...data },
+      data,
       authorId,
       maxDisplayOrder + 1,
     );
@@ -155,7 +155,7 @@ export class AdminLessonService {
         type: question.type,
         description: question.description || null,
         title: question.title,
-        imageS3Key: question.imageS3Key,
+        photoS3Key: question.photoS3Key,
         photoQuestionType: question.photoQuestionType || null,
       }));
 
@@ -223,7 +223,7 @@ export class AdminLessonService {
             type: question.type,
             description: question.description || null,
             title: question.title,
-            imageS3Key: question.imageS3Key,
+            photoS3Key: question.photoS3Key,
             photoQuestionType: question.photoQuestionType || null,
           };
 

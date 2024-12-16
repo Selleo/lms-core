@@ -19,7 +19,7 @@ export const questionSchema = Type.Object({
   description: Type.Optional(Type.String()),
   title: Type.String(),
   photoQuestionType: Type.Optional(Type.Enum(PhotoQuestionType)),
-  imageS3Key: Type.Optional(Type.String()),
+  photoS3Key: Type.Optional(Type.String()),
   options: Type.Optional(Type.Array(optionSchema)),
 });
 

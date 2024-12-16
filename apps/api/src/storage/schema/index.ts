@@ -172,7 +172,7 @@ export const questions = pgTable("questions", {
     .notNull(),
   type: text("type").notNull(),
   title: varchar("title", { length: 200 }).notNull(),
-  imageS3Key: varchar("image_s3_key", { length: 200 }),
+  photoS3Key: varchar("photo_s3_key", { length: 200 }),
   photoQuestionType: text("photo_question_type"),
   description: text("description"),
   solutionExplanation: text("solution_explanation"),

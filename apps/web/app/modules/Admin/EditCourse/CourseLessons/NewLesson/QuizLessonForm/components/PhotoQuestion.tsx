@@ -40,7 +40,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
-    setDisplayImageUrl(lessonToEdit?.questions?.[questionIndex]?.thumbnailS3SingedUrl);
+    setDisplayImageUrl(lessonToEdit?.questions?.[questionIndex]?.photoS3SingedUrl);
   }, [lessonToEdit]);
 
   const isOptionEmpty = useMemo(() => {
@@ -110,7 +110,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
       try {
         const result = await uploadFile({ file, resource: "lesson" });
         setDisplayImageUrl(result.fileUrl);
-        form.setValue(`questions.${questionIndex}.imageS3Key`, result.fileKey, {
+        form.setValue(`questions.${questionIndex}.photoS3Key`, result.fileKey, {
           shouldValidate: true,
         });
       } catch (error) {
@@ -142,7 +142,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             <div className="ml-14">
               <FormField
                 control={form.control}
-                name={`questions.${questionIndex}.imageS3Key`}
+                name={`questions.${questionIndex}.photoS3Key`}
                 render={({ field }) => (
                   <FormItem className="mt-5 w-1/3">
                     <Label htmlFor="imageUrl" className="body-base-md ">

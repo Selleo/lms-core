@@ -52,10 +52,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
     <div className="relative mt-4">
       <Button type="button" className="mt-3 mb-4 bg-primary-700" onClick={toggleOptions}>
         Add question{" "}
-        <Icon
-          name={showOptions ? "ArrowUp" : "ArrowDown"}
-          className="text-color-white ml-2"
-        />
+        <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
       </Button>
 
       {showOptions && (

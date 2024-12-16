@@ -919,14 +919,14 @@ export class CourseService {
         if (lesson.questions && Array.isArray(lesson.questions)) {
           const questionsWithSignedUrls = await Promise.all(
             lesson.questions.map(async (question) => {
-              if (question.imageS3Key) {
-                if (!question.imageS3Key.startsWith("https://")) {
+              if (question.photoS3Key) {
+                if (!question.photoS3Key.startsWith("https://")) {
                   try {
-                    const signedUrl = await this.fileService.getFileUrl(question.imageS3Key);
-                    return { ...question, thumbnailS3SingedUrl: signedUrl };
+                    const signedUrl = await this.fileService.getFileUrl(question.photoS3Key);
+                    return { ...question, photoS3SingedUrl: signedUrl };
                   } catch (error) {
                     console.error(
-                      `Failed to get signed URL for question thumbnail ${question.imageS3Key}:`,
+                      `Failed to get signed URL for question thumbnail ${question.photoS3Key}:`,
                       error,
                     );
                   }

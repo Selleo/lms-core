@@ -202,6 +202,7 @@ export class LessonController {
       {
         type: "body",
         schema: updateQuizLessonSchema,
+        required: true,
       },
     ],
     response: baseResponse(Type.Object({ message: Type.String() })),
