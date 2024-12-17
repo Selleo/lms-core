@@ -6,8 +6,6 @@ import { QUESTION_TYPE } from "../questions/schema/questions.types";
 
 import type { NiceCourseData } from "src/utils/types/test-types";
 
-
-
 export const niceCourses: NiceCourseData[] = [
   {
     title: "Introduction to Web Development: Building Your First Website",

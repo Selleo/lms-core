@@ -4,7 +4,7 @@ import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 import { baseCourseSchema } from "src/courses/schemas/createCourse.schema";
 import { lessonSchema } from "src/lesson/lesson.schem";
 
-import type { Static} from "@sinclair/typebox";
+import type { Static } from "@sinclair/typebox";
 
 const niceCourseData = Type.Intersect([
   Type.Omit(baseCourseSchema, ["categoryId"]),

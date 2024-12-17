@@ -3,7 +3,7 @@ import { format, subMonths } from "date-fns";
 import * as dotenv from "dotenv";
 import { and, count, eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { flatMap, sampleSize, sum } from "lodash";
+import { flatMap, sampleSize } from "lodash";
 import postgres from "postgres";
 
 import { LESSON_ITEM_TYPE } from "src/chapter/chapter.type";
@@ -26,13 +26,13 @@ import {
 } from "../storage/schema";
 import { USER_ROLES } from "../users/schemas/user-roles";
 
+import { e2eCourses } from "./e2e-data-seeds";
 import { niceCourses } from "./nice-data-seeds";
 import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import { admin, students, teachers } from "./users-seed";
 
 import type { UsersSeed } from "./seed.types";
 import type { DatabasePg } from "../common";
-import { e2eCourses } from "./e2e-data-seeds";
 
 dotenv.config({ path: "./.env" });
 
