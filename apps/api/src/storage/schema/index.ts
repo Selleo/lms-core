@@ -148,6 +148,7 @@ export const chapters = pgTable("chapters", {
   lessonCount: integer("lesson_count").notNull().default(0),
 });
 
+// TODO: add itemCount for this
 export const lessons = pgTable("lessons", {
   ...id,
   ...timestamps,

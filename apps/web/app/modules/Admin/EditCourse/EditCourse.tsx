@@ -76,10 +76,7 @@ const EditCourse = () => {
         />
       </TabsContent>
       <TabsContent value="Status">
-        <CourseStatus
-          courseId={course?.id || ""}
-          isPublished={!!course?.isPublished}
-        />
+        <CourseStatus courseId={course?.id || ""} isPublished={!!course?.isPublished} />
       </TabsContent>
     </Tabs>
   );

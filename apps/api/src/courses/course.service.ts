@@ -86,14 +86,14 @@ export class CourseService {
     const sortOrder = asc;
     const sortedField = CourseSortFields.title;
 
-    return await this.db.transaction(async (tx) => {
+    return await this.db.transaction(async (trx) => {
       const conditions = this.getFiltersConditions(filters, false);
 
       if (currentUserRole === USER_ROLES.teacher && currentUserId) {
         conditions.push(eq(courses.authorId, currentUserId));
       }
 
-      const queryDB = tx
+      const queryDB = trx
         .select({
           id: courses.id,
           description: sql<string>`${courses.description}`,
@@ -162,11 +162,11 @@ export class CourseService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    return this.db.transaction(async (tx) => {
+    return this.db.transaction(async (trx) => {
       const conditions = [eq(studentCourses.studentId, userId), eq(courses.isPublished, true)];
       conditions.push(...this.getFiltersConditions(filters));
 
-      const queryDB = tx
+      const queryDB = trx
         .select(this.getSelectField())
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
@@ -194,7 +194,7 @@ export class CourseService {
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
-      const [{ totalItems }] = await tx
+      const [{ totalItems }] = await trx
         .select({ totalItems: countDistinct(courses.id) })
         .from(studentCourses)
         .innerJoin(courses, eq(studentCourses.courseId, courses.id))
@@ -217,6 +217,7 @@ export class CourseService {
 
   async getAvailableCourses(
     query: CoursesQuery,
+    currentUserId: UUIDType,
   ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
     const {
       sort = CourseSortFields.title,
@@ -226,12 +227,47 @@ export class CourseService {
     } = query;
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    return this.db.transaction(async (tx) => {
-      const conditions = [eq(courses.isPublished, true), isNull(studentCourses.studentId)];
-      conditions.push(...this.getFiltersConditions(filters));
+    return this.db.transaction(async (trx) => {
+      const notEnrolledCourses: Record<string, string>[] = await trx.execute(sql`
+        SELECT ${courses.id} AS "courseId"
+        FROM ${courses}
+        WHERE ${courses.id} NOT IN (
+          SELECT DISTINCT ${studentCourses.courseId}
+          FROM ${studentCourses}
+          WHERE ${studentCourses.studentId} = ${currentUserId}
+        )`);
+      const notEnrolledCourseIds = notEnrolledCourses.map(({ courseId }) => courseId);
 
-      const queryDB = tx
-        .select(this.getSelectField())
+      const conditions = [eq(courses.isPublished, true)];
+      conditions.push(...this.getFiltersConditions(filters));
+      if (notEnrolledCourses.length > 0) {
+        conditions.push(inArray(courses.id, notEnrolledCourseIds));
+      }
+
+      const queryDB = trx
+        .select({
+          id: courses.id,
+          description: sql<string>`${courses.description}`,
+          title: courses.title,
+          thumbnailUrl: sql<string>`${courses.thumbnailS3Key}`,
+          authorId: sql<string>`${courses.authorId}`,
+          author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+          authorEmail: sql<string>`${users.email}`,
+          category: sql<string>`${categories.title}`,
+          enrolled: sql<boolean>`FALSE`,
+          enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
+          courseChapterCount: courses.chapterCount,
+          completedChapterCount: sql<number>`0`,
+          priceInCents: courses.priceInCents,
+          currency: courses.currency,
+          hasFreeChapters: sql<boolean>`
+        EXISTS (
+          SELECT 1
+          FROM ${chapters}
+          WHERE ${chapters.courseId} = ${courses.id}
+            AND ${chapters.isFreemium} = TRUE
+        )`,
+        })
         .from(courses)
         .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
         .leftJoin(categories, eq(courses.categoryId, categories.id))
@@ -258,7 +294,7 @@ export class CourseService {
       const dynamicQuery = queryDB.$dynamic();
       const paginatedQuery = addPagination(dynamicQuery, page, perPage);
       const data = await paginatedQuery;
-      const [{ totalItems }] = await tx
+      const [{ totalItems }] = await trx
         .select({ totalItems: countDistinct(courses.id) })
         .from(courses)
         .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
@@ -413,7 +449,7 @@ export class CourseService {
       )
       .orderBy(chapters.displayOrder);
 
-    // TODO: temporary fix
+    // TODO: temporary firx
     const getImageUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url ?? "";
       return await this.fileService.getFileUrl(url);
@@ -507,8 +543,7 @@ export class CourseService {
     return {
       ...course,
       thumbnailUrl,
-      // lessons: updatedCourseLessonList ?? [],
-      chapters: updatedCourseLessonList || [],
+      chapters: updatedCourseLessonList ?? [],
     };
   }
 
@@ -678,8 +713,8 @@ export class CourseService {
     image?: Express.Multer.File,
     currentUserId?: UUIDType,
   ) {
-    return this.db.transaction(async (tx) => {
-      const [existingCourse] = await tx.select().from(courses).where(eq(courses.id, id));
+    return this.db.transaction(async (trx) => {
+      const [existingCourse] = await trx.select().from(courses).where(eq(courses.id, id));
 
       if (!existingCourse) {
         throw new NotFoundException("Course not found");
@@ -690,7 +725,7 @@ export class CourseService {
       }
 
       if (updateCourseBody.categoryId) {
-        const [category] = await tx
+        const [category] = await trx
           .select()
           .from(categories)
           .where(eq(categories.id, updateCourseBody.categoryId));
@@ -717,7 +752,7 @@ export class CourseService {
         ...(imageKey && { imageUrl: imageKey.fileUrl }),
       };
 
-      const [updatedCourse] = await tx
+      const [updatedCourse] = await trx
         .update(courses)
         .set(updateData)
         .where(eq(courses.id, id))
@@ -772,7 +807,6 @@ export class CourseService {
       const courseChapterList = await trx
         .select({
           id: chapters.id,
-          type: lessons.type,
           itemCount: chapters.lessonCount,
         })
         .from(chapters)
@@ -789,6 +823,23 @@ export class CourseService {
             completedLessonItemCount: 0,
           })),
         );
+
+        courseChapterList.forEach(async (chapter) => {
+          const chapterLessons = await trx
+            .select({ id: lessons.id, type: lessons.type })
+            .from(lessons)
+            .where(eq(lessons.chapterId, chapter.id));
+
+          await trx.insert(studentLessonProgress).values(
+            chapterLessons.map((lesson) => ({
+              studentId,
+              lessonId: lesson.id,
+              completedQuestionCount: 0,
+              quizScore: lesson.type === LESSON_TYPES.quiz ? 0 : null,
+              completedAt: null,
+            })),
+          );
+        });
       }
 
       // TODO: add lesson progress records

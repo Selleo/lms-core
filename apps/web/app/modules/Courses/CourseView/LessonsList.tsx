@@ -45,7 +45,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
   return (
     <div className="grow flex flex-col gap-y-4 rounded-2xl bg-white drop-shadow-primary relative p-6 lg:p-8">
       <h3 className="text-xl font-semibold">
-        Lessons
+        Chapters
         <span className="text-primary-700"> ({lessons?.length})</span>
       </h3>
       <ButtonGroup
@@ -57,7 +57,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
             onClick: () => handleChangeLessonType(null),
           },
           {
-            children: "Lessons",
+            children: "Chapters",
             isActive: activeButton === "multimedia",
             onClick: () => handleChangeLessonType("multimedia"),
           },

@@ -37,8 +37,8 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                     value="draft"
                     id="draft"
                     className={cn("px-6 py-4 border rounded-md cursor-pointer text-left", {
-                        "border-blue-500": !field.value,
-                        "border-gray-300": field.value,
+                      "border-blue-500": !field.value,
+                      "border-gray-300": field.value,
                     })}
                   >
                     <div className="flex items-start gap-x-4">
