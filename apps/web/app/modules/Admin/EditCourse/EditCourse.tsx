@@ -3,6 +3,7 @@ import { useParams, useSearchParams } from "@remix-run/react";
 import { useBetaCourseById } from "~/api/queries/admin/useBetaCourse";
 import { Icon } from "~/components/Icon";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { useTrackDataUpdatedAt } from "~/hooks/useTrackDataUpdatedAt";
 
 import CourseLessons from "./CourseLessons/CourseLessons";
 import CoursePricing from "./CoursePricing/CoursePricing";
@@ -17,13 +18,15 @@ const EditCourse = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   if (!id) throw new Error("Course ID not found");
-
-  const { data: course, isLoading } = useBetaCourseById(id);
-
+  const { data: course, isLoading, dataUpdatedAt } = useBetaCourseById(id);
+  const { previousDataUpdatedAt, currentDataUpdatedAt } = useTrackDataUpdatedAt(dataUpdatedAt);
   const handleTabChange = (tabValue: string) => {
     params.set("tab", tabValue);
     setSearchParams(params);
   };
+
+  const canRefetchChapterList =
+    previousDataUpdatedAt && currentDataUpdatedAt && previousDataUpdatedAt < currentDataUpdatedAt;
 
   if (isLoading) {
     return (
@@ -66,7 +69,10 @@ const EditCourse = () => {
         />
       </TabsContent>
       <TabsContent value="Lesson" className="h-full overflow-hidden">
-        <CourseLessons chapters={course?.chapters as Chapter[]} />
+        <CourseLessons
+          chapters={course?.chapters as Chapter[]}
+          canRefetchChapterList={!!canRefetchChapterList}
+        />
       </TabsContent>
       <TabsContent value="Pricing">
         <CoursePricing

@@ -22,12 +22,14 @@ type TextLessonFormProps = {
   chapterToEdit?: Chapter;
   lessonToEdit?: Lesson;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
+  setOpenChapter?: (chapterId: string) => void;
 };
 
 export const useTextLessonForm = ({
   chapterToEdit,
   lessonToEdit,
   setContentTypeToDisplay,
+  setOpenChapter,
 }: TextLessonFormProps) => {
   const { id: courseId } = useParams();
   const { mutateAsync: createTextBlock } = useCreateBetaTextLesson();
@@ -65,6 +67,7 @@ export const useTextLessonForm = ({
         await createTextBlock({
           data: { ...values, chapterId: chapterToEdit.id },
         });
+        setOpenChapter && setOpenChapter(chapterToEdit.id);
         setContentTypeToDisplay(ContentTypes.EMPTY);
       }
 

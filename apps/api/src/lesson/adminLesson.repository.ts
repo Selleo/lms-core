@@ -1,12 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, inArray, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import {
-  questions,
-  questionAnswerOptions,
-  studentQuestionAnswers,
   lessons,
+  questionAnswerOptions,
+  questions,
+  studentQuestionAnswers,
 } from "src/storage/schema";
 
 import type {

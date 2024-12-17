@@ -24,6 +24,7 @@ export const questionSchema = Type.Object({
 });
 
 export const lessonSchema = Type.Object({
+  updatedAt: Type.Optional(Type.String()),
   id: UUIDSchema,
   title: Type.String(),
   type: Type.String(),

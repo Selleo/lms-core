@@ -145,6 +145,8 @@ export interface GetUserByIdResponse {
 
 export interface GetUserDetailsResponse {
   data: {
+    firstName: string | null;
+    lastName: string | null;
     /** @format uuid */
     id: string;
     description: string | null;

@@ -3,6 +3,7 @@ import { Question } from "./CourseLessons/NewLesson/QuizLessonForm/QuizLessonFor
 export type NavigationTab = "Settings" | "Lesson" | "Pricing" | "Status";
 
 export interface Lesson {
+  updatedAt: string;
   type: string;
   displayOrder: number;
   id: string;
@@ -17,6 +18,9 @@ export interface Lesson {
 export interface Chapter {
   id: string;
   title: string;
+  updatedAt: string;
+  // description: string | null;
+  // imageUrl: string | null;
   displayOrder: number;
   isFree: boolean;
   lessonCount: number;

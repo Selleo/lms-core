@@ -182,6 +182,7 @@ export class AdminChapterRepository {
   async getBetaChapterLessons(chapterId: UUIDType): Promise<LessonItemWithContentSchema[]> {
     return await this.db
       .select({
+        updatedAt: sql<string>`${lessons.updatedAt}`,
         id: lessons.id,
         title: lessons.title,
         type: lessons.type,

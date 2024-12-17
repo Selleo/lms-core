@@ -4085,6 +4085,9 @@
           {
             "type": "object",
             "properties": {
+              "updatedAt": {
+                "type": "string"
+              },
               "title": {
                 "type": "string"
               },
@@ -4563,6 +4566,9 @@
           {
             "type": "object",
             "properties": {
+              "updatedAt": {
+                "type": "string"
+              },
               "title": {
                 "type": "string"
               },

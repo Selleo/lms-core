@@ -17,9 +17,10 @@ import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
 
 interface CourseLessonsProps {
   chapters?: Chapter[];
+  canRefetchChapterList: boolean;
 }
 
-const CourseLessons = ({ chapters }: CourseLessonsProps) => {
+const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) => {
   const [contentTypeToDisplay, setContentTypeToDisplay] = useState(ContentTypes.EMPTY);
   const [selectedChapter, setSelectedChapter] = useState<Chapter>();
   const [selectedLesson, setSelectedLesson] = useState<Lesson>();
@@ -78,6 +79,7 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
       <div className="w-full md:max-w-[480px] justify-between h-full flex flex-col">
         <div className="flex h-full flex-col overflow-y-auto">
           <ChaptersList
+            canRefetchChapterList={canRefetchChapterList}
             chapters={chapters}
             setContentTypeToDisplay={setContentTypeToDisplay}
             setSelectedChapter={setSelectedChapter}

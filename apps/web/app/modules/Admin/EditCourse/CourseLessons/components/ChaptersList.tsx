@@ -93,7 +93,7 @@ const ChapterCard = ({
   );
 
   return (
-    <AccordionItem key={`chapter-${chapter.id}`} value={`item-${chapter.id}`} className="p-0">
+    <AccordionItem key={chapter.id} value={chapter.id} className="p-0">
       <Card
         className={cn("mb-4 h-full flex p-4 border", { "border-primary-500": isOpen })}
         onClick={onClickChapterCard}
@@ -172,6 +172,31 @@ interface ChaptersListProps {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
   setSelectedLesson: (selectedLesson?: Lesson) => void;
+  canRefetchChapterList: boolean;
+}
+
+function getChapterWithLatestLesson(chapters: Chapter[]): string | null {
+  let latestTime = 0;
+  let latestChapterId: string | null = null;
+
+  chapters.map((chapter) => {
+    const chapterTime = chapter.updatedAt ? new Date(chapter.updatedAt).getTime() : 0;
+
+    chapter.lessons.map((lesson) => {
+      const lessonTime = new Date(lesson.updatedAt).getTime();
+      if (lessonTime > latestTime) {
+        latestTime = lessonTime;
+        latestChapterId = chapter.id;
+      }
+    });
+
+    if (chapterTime > latestTime) {
+      latestTime = chapterTime;
+      latestChapterId = chapter.id;
+    }
+  });
+
+  return latestChapterId;
 }
 
 const ChaptersList = ({
@@ -179,13 +204,19 @@ const ChaptersList = ({
   setContentTypeToDisplay,
   setSelectedChapter,
   setSelectedLesson,
+  canRefetchChapterList,
 }: ChaptersListProps) => {
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
   const [items, setItems] = useState(chapters);
   const mutation = useChangeChapterDisplayOrder();
+  const chapterId = getChapterWithLatestLesson(chapters ?? []);
 
   useEffect(() => {
     setItems(chapters);
+
+    if (canRefetchChapterList) {
+      chapterId && setOpenItem(chapterId);
+    }
   }, [chapters]);
 
   if (!items) return;
@@ -196,7 +227,7 @@ const ChaptersList = ({
       collapsible
       value={openItem}
       onValueChange={setOpenItem}
-      defaultValue={`item-${openItem}`}
+      defaultValue={openItem}
     >
       <SortableList
         items={items}
