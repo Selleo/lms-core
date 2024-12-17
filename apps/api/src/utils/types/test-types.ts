@@ -32,8 +32,7 @@ const niceCourseData = Type.Intersect([
                       type: Type.String(),
                       title: Type.String(),
                       description: Type.Optional(Type.String()),
-                      solutionExplanation: Type.Optional(Type.String()),
-                      questionAnswers: Type.Optional(
+                      options: Type.Optional(
                         Type.Array(
                           Type.Object({
                             optionText: Type.String(),

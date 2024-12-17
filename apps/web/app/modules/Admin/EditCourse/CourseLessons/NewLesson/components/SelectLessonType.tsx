@@ -29,7 +29,7 @@ const lessonTypes = [
     description: "Choose this type if you want to embed presentations files like PPTX.",
   },
   {
-    type: ContentTypes.EMPTY,
+    type: ContentTypes.QUIZ_FORM,
     icon: "Quiz",
     title: "Quiz",
     description:
@@ -43,16 +43,10 @@ const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) =>
       <h3 className="h5 text-neutral-950">Choose type:</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {lessonTypes.map(({ type, icon, title, description }) => {
-          // TODO: Remove when the quiz feature is implemented
-          const isQuiz = type === ContentTypes.EMPTY;
-
           return (
             <div
               key={type}
-              className={cn(
-                "px-6 border border-neutral-200 rounded-lg py-4 flex flex-col gap-y-6",
-                { "grayscale pointer-event-none cursor-not-allowed": isQuiz },
-              )}
+              className="px-6 border border-neutral-200 rounded-lg py-4 flex flex-col gap-y-6"
               role="button"
               onClick={() => setContentTypeToDisplay(type)}
               aria-label={`Choose ${title} lesson type`}

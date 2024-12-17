@@ -12,8 +12,12 @@ import { AdminLessonService } from "./adminLesson.service";
 import {
   CreateLessonBody,
   createLessonSchema,
+  CreateQuizLessonBody,
+  createQuizLessonSchema,
   UpdateLessonBody,
   updateLessonSchema,
+  UpdateQuizLessonBody,
+  updateQuizLessonSchema,
 } from "./lesson.schem";
 
 // import {
@@ -163,6 +167,53 @@ export class LessonController {
     const id = await this.adminLessonsService.createLessonForChapter(createLessonBody, userId);
 
     return new BaseResponse({ id, message: "Lesson created successfully" });
+  }
+
+  @Post("beta-create-lesson/quiz")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "body",
+        schema: createQuizLessonSchema,
+        required: true,
+      },
+    ],
+    response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
+  })
+  async betaCreateQuizLesson(
+    @Body() createQuizLessonBody: CreateQuizLessonBody,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
+    const id = await this.adminLessonsService.createQuizLesson(createQuizLessonBody, userId);
+
+    return new BaseResponse({ id, message: "Lesson created successfully" }) as any;
+  }
+
+  @Patch("beta-update-lesson/quiz")
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "id",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: updateQuizLessonSchema,
+        required: true,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async betaUpdateQuizLesson(
+    @Query("id") id: string,
+    @Body() data: UpdateQuizLessonBody,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminLessonsService.updateQuizLesson(id, data, userId);
+    return new BaseResponse({ message: "Text block updated successfully" });
   }
 
   @Patch("beta-update-lesson")

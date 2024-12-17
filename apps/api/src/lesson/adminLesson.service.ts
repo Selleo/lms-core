@@ -1,26 +1,20 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, gte, lte, sql } from "drizzle-orm";
+import { eq, gte, inArray, lte, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-import { lessons } from "src/storage/schema";
+import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
 import { AdminLessonRepository } from "./adminLesson.repository";
 import { LessonRepository } from "./lesson.repository";
 import { LESSON_TYPES } from "./lesson.type";
 
-import type { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
-import type { LessonTypes } from "./lesson.type";
+import type {
+  CreateLessonBody,
+  CreateQuizLessonBody,
+  UpdateLessonBody,
+  UpdateQuizLessonBody,
+} from "./lesson.schem";
 import type { UUIDType } from "src/common";
-
-type GetLessonItemsQuery = {
-  type?: LessonTypes;
-  title?: string;
-  state?: string;
-  archived?: boolean;
-  sort?: string;
-  page?: number;
-  perPage?: number;
-};
 
 @Injectable()
 export class AdminLessonService {
@@ -45,6 +39,28 @@ export class AdminLessonService {
       authorId,
     );
     return lesson.id;
+  }
+
+  async createQuizLesson(data: CreateQuizLessonBody, authorId: UUIDType) {
+    const maxDisplayOrder = await this.adminLessonRepository.getMaxDisplayOrder(data.chapterId);
+
+    const lesson = await this.createQuizLessonWithQuestionsAndOptions(
+      data,
+      authorId,
+      maxDisplayOrder + 1,
+    );
+    return lesson?.id;
+  }
+
+  async updateQuizLesson(id: UUIDType, data: UpdateQuizLessonBody, authorId: UUIDType) {
+    const lesson = await this.lessonRepository.getLesson(id);
+
+    if (!lesson) {
+      throw new NotFoundException("Lesson not found");
+    }
+
+    const updatedLessonId = await this.updateQuizLessonWithQuestionsAndOptions(id, data, authorId);
+    return updatedLessonId;
   }
 
   async updateLesson(id: string, data: UpdateLessonBody) {
@@ -111,6 +127,152 @@ export class AdminLessonService {
           `,
         })
         .where(eq(lessons.chapterId, lessonToUpdate.chapterId));
+    });
+  }
+
+  async createQuizLessonWithQuestionsAndOptions(
+    data: CreateQuizLessonBody,
+    authorId: UUIDType,
+    displayOrder: number,
+  ) {
+    return await this.db.transaction(async (trx) => {
+      const lesson = await this.adminLessonRepository.createQuizLessonWithQuestionsAndOptions(
+        data,
+        displayOrder,
+      );
+
+      if (!data.questions) return;
+
+      const questionsToInsert = data?.questions?.map((question) => ({
+        lessonId: lesson.id,
+        authorId,
+        type: question.type,
+        description: question.description || null,
+        title: question.title,
+        photoS3Key: question.photoS3Key,
+        photoQuestionType: question.photoQuestionType || null,
+      }));
+
+      const insertedQuestions = await trx.insert(questions).values(questionsToInsert).returning();
+
+      const optionsToInsert = insertedQuestions.flatMap(
+        (question, index) =>
+          data.questions?.[index].options?.map((option) => ({
+            questionId: question.id,
+            optionText: option.optionText,
+            isCorrect: option.isCorrect,
+            position: option.position,
+          })) || [],
+      );
+
+      if (optionsToInsert.length > 0) {
+        await trx.insert(questionAnswerOptions).values(optionsToInsert);
+      }
+
+      return lesson;
+    });
+  }
+
+  async updateQuizLessonWithQuestionsAndOptions(
+    id: UUIDType,
+    data: UpdateQuizLessonBody,
+    authorId: UUIDType,
+  ) {
+    return await this.db.transaction(async (trx) => {
+      await this.adminLessonRepository.updateQuizLessonWithQuestionsAndOptions(id, data);
+
+      const existingQuestions = await trx
+        .select({ id: questions.id })
+        .from(questions)
+        .where(eq(questions.lessonId, id));
+
+      const existingQuestionIds = existingQuestions.map((question) => question.id);
+
+      const inputQuestionIds = data.questions
+        ? data.questions.map((question) => question.id).filter(Boolean)
+        : [];
+
+      const questionsToDelete = existingQuestionIds.filter(
+        (existingId) => !inputQuestionIds.includes(existingId),
+      );
+
+      if (questionsToDelete.length > 0) {
+        await trx.delete(questions).where(inArray(questions.id, questionsToDelete));
+        await trx
+          .delete(questionAnswerOptions)
+          .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
+      }
+
+      if (data.questions) {
+        for (const question of data.questions) {
+          const questionData = {
+            type: question.type,
+            description: question.description || null,
+            title: question.title,
+            photoS3Key: question.photoS3Key,
+            photoQuestionType: question.photoQuestionType || null,
+          };
+
+          const questionId =
+            question.id ??
+            ((
+              await trx
+                .insert(questions)
+                .values({
+                  lessonId: id,
+                  authorId,
+                  ...questionData,
+                })
+                .returning()
+            )[0].id as UUIDType);
+
+          if (question.id) {
+            await trx.update(questions).set(questionData).where(eq(questions.id, questionId));
+          }
+
+          if (question.options) {
+            const existingOptions = await trx
+              .select({ id: questionAnswerOptions.id })
+              .from(questionAnswerOptions)
+              .where(eq(questionAnswerOptions.questionId, questionId));
+
+            const existingOptionIds = existingOptions.map((option) => option.id);
+            const inputOptionIds = question.options.map((option) => option.id).filter(Boolean);
+
+            const optionsToDelete = existingOptionIds.filter(
+              (existingId) => !inputOptionIds.includes(existingId),
+            );
+
+            if (optionsToDelete.length > 0) {
+              await trx
+                .delete(questionAnswerOptions)
+                .where(inArray(questionAnswerOptions.id, optionsToDelete));
+            }
+
+            for (const option of question.options) {
+              const optionData = {
+                optionText: option.optionText,
+                isCorrect: option.isCorrect,
+                position: option.position,
+              };
+
+              if (option.id) {
+                await trx
+                  .update(questionAnswerOptions)
+                  .set(optionData)
+                  .where(eq(questionAnswerOptions.id, option.id));
+              } else {
+                await trx.insert(questionAnswerOptions).values({
+                  questionId,
+                  ...optionData,
+                });
+              }
+            }
+          }
+        }
+      }
+
+      return id;
     });
   }
 

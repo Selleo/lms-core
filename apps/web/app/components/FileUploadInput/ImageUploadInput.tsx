@@ -9,12 +9,21 @@ interface ImageUploadProps {
   imageUrl?: string;
 }
 
-const ImageUploadInput = ({ field, handleImageUpload, isUploading }: ImageUploadProps) => {
+const ImageUploadInput = ({
+  field,
+  handleImageUpload,
+  isUploading,
+  imageUrl,
+}: ImageUploadProps) => {
   return (
     <div className="flex items-center justify-center flex-col gap-y-2">
       <div className="w-full h-80 rounded-lg border-solid border-2 border-gray-300 flex justify-center items-center bg-gray-100 relative cursor-pointer overflow-hidden flex-col">
         {field.value && (
-          <img src={field.value} alt="Uploaded" className="w-full h-full object-cover" />
+          <img
+            src={imageUrl || field.value}
+            alt="Uploaded"
+            className="w-full h-full object-cover"
+          />
         )}
         <div
           className={cn("absolute inset-0 flex flex-col items-center justify-center text-center", {

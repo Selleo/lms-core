@@ -13,6 +13,7 @@ import FileLessonForm from "./NewLesson/FileLessonForm/FileLessonForm";
 import TextLessonForm from "./NewLesson/TextLessonForm/TextLessonForm";
 
 import type { Chapter, Lesson } from "../EditCourse.types";
+import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
 
 interface CourseLessonsProps {
   chapters?: Chapter[];
@@ -60,6 +61,13 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
       [ContentTypes.SELECT_LESSON_TYPE]: (
         <SelectLessonType setContentTypeToDisplay={setContentTypeToDisplay} />
       ),
+      [ContentTypes.QUIZ_FORM]: (
+        <QuizLessonForm
+          setContentTypeToDisplay={setContentTypeToDisplay}
+          chapterToEdit={selectedChapter}
+          lessonToEdit={selectedLesson}
+        />
+      ),
     };
 
     return contentMap[contentTypeToDisplay] || null;
@@ -84,7 +92,7 @@ const CourseLessons = ({ chapters }: CourseLessonsProps) => {
           Add Chapter
         </Button>
       </div>
-      <div className="w-full h-auto">{renderContent}</div>
+      <div className="w-full h-auto overflow-y-auto">{renderContent}</div>
     </div>
   );
 };

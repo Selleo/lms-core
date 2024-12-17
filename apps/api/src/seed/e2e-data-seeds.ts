@@ -1,5 +1,4 @@
-import { LESSON_TYPES } from "src/lesson/lesson.type";
-import { QUESTION_TYPE } from "src/questions/schema/questions.types";
+import { LESSON_TYPES, QuestionType } from "src/lesson/lesson.type";
 
 import type { NiceCourseData } from "../utils/types/test-types";
 
@@ -39,10 +38,10 @@ export const e2eCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "E2E Testing Question",
                 description: "E2E Testing Question",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "E2E Testing Answer",
                     isCorrect: true,
@@ -51,10 +50,10 @@ export const e2eCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "E2E Testing Question 2",
                 description: "E2E Testing Question 2",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "single true",
                     isCorrect: true,
@@ -68,10 +67,10 @@ export const e2eCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.multiple_choice.key,
+                type: QuestionType.MultipleChoice,
                 title: "E2E Testing Question 3",
                 description: "E2E Testing Question 3",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "multiple true a",
                     isCorrect: true,

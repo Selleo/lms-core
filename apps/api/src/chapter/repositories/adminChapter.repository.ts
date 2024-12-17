@@ -2,9 +2,10 @@ import { Inject, Injectable } from "@nestjs/common";
 import { eq, and, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-import { chapters, lessons } from "src/storage/schema";
+import { chapters, lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 
 @Injectable()
@@ -173,7 +174,12 @@ export class AdminChapterRepository {
   //     .orderBy(lessonItems.displayOrder);
   // }
 
-  async getBetaChapterLessons(chapterId: UUIDType) {
+  // imageUrl: lesson.imageUrl.startsWith("https://")
+  // //           ? lesson.imageUrl
+  // //           : await this.fileService.getFileUrl(lesson.imageUrl),
+  // //       };
+
+  async getBetaChapterLessons(chapterId: UUIDType): Promise<LessonItemWithContentSchema[]> {
     return await this.db
       .select({
         id: lessons.id,
@@ -182,7 +188,34 @@ export class AdminChapterRepository {
         description: sql<string>`${lessons.description}`,
         fileS3Key: sql<string>`${lessons.fileS3Key}`,
         fileType: sql<string>`${lessons.fileType}`,
-        displayOrder: sql<number>`(${lessons.displayOrder})`,
+        displayOrder: sql<number>`${lessons.displayOrder}`,
+        questions: sql<QuestionSchema[]>`
+        (
+          SELECT ARRAY(
+            SELECT json_build_object(
+              'id', ${questions.id},
+              'title', ${questions.title},
+              'type', ${questions.type},
+              'description', ${questions.description},
+              'photoS3Key', ${questions.photoS3Key},
+              'photoQuestionType', ${questions.photoQuestionType},
+              'options', (
+                SELECT ARRAY(
+                  SELECT json_build_object(
+                    'id', ${questionAnswerOptions.id},
+                    'optionText', ${questionAnswerOptions.optionText},
+                    'isCorrect', ${questionAnswerOptions.isCorrect},
+                    'position', ${questionAnswerOptions.position}
+                  )
+                  FROM ${questionAnswerOptions}
+                  WHERE ${questionAnswerOptions.questionId} = ${questions.id}
+                )
+              )
+            )
+            FROM ${questions}
+            WHERE ${questions.lessonId} = lessons.id
+          )
+        )`,
       })
       .from(lessons)
       .where(and(eq(lessons.chapterId, chapterId)))

@@ -26,7 +26,7 @@ import {
 import { cn } from "~/lib/utils";
 import { LessonCardList } from "~/modules/Admin/EditCourse/CourseLessons/components/LessonCardList";
 
-import { ContentTypes } from "../../EditCourse.types";
+import { ContentTypes, LessonType } from "../../EditCourse.types";
 
 import type { Chapter, Lesson } from "../../EditCourse.types";
 import type React from "react";

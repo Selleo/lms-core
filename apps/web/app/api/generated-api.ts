@@ -610,6 +610,29 @@ export type BetaCreateLessonBody = {
   description: string;
   fileS3Key?: string;
   fileType?: string;
+  questions?: {
+    /** @format uuid */
+    id?: string;
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "true_or_false"
+      | "photo_question"
+      | "fill_in_the_blanks"
+      | "brief_response"
+      | "detailed_response";
+    description?: string;
+    title: string;
+    photoQuestionType?: "single_choice" | "multiple_choice";
+    photoS3Key?: string;
+    options?: {
+      /** @format uuid */
+      id?: string;
+      optionText: string;
+      isCorrect: boolean;
+      position: number;
+    }[];
+  }[];
 } & {
   /** @format uuid */
   chapterId: string;
@@ -624,12 +647,119 @@ export interface BetaCreateLessonResponse {
   };
 }
 
+export type BetaCreateQuizLessonBody = {
+  title: string;
+  type: string;
+  description?: string;
+  fileS3Key?: string;
+  fileType?: string;
+  questions?: {
+    /** @format uuid */
+    id?: string;
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "true_or_false"
+      | "photo_question"
+      | "fill_in_the_blanks"
+      | "brief_response"
+      | "detailed_response";
+    description?: string;
+    title: string;
+    photoQuestionType?: "single_choice" | "multiple_choice";
+    photoS3Key?: string;
+    options?: {
+      /** @format uuid */
+      id?: string;
+      optionText: string;
+      isCorrect: boolean;
+      position: number;
+    }[];
+  }[];
+} & {
+  /** @format uuid */
+  chapterId: string;
+  displayOrder?: number;
+};
+
+export interface BetaCreateQuizLessonResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    message: string;
+  };
+}
+
+export type BetaUpdateQuizLessonBody = {
+  title?: string;
+  type?: string;
+  description?: string;
+  fileS3Key?: string;
+  fileType?: string;
+  questions?: {
+    /** @format uuid */
+    id?: string;
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "true_or_false"
+      | "photo_question"
+      | "fill_in_the_blanks"
+      | "brief_response"
+      | "detailed_response";
+    description?: string;
+    title: string;
+    photoQuestionType?: "single_choice" | "multiple_choice";
+    photoS3Key?: string;
+    options?: {
+      /** @format uuid */
+      id?: string;
+      optionText: string;
+      isCorrect: boolean;
+      position: number;
+    }[];
+  }[];
+} & {
+  /** @format uuid */
+  chapterId?: string;
+  displayOrder?: number;
+};
+
+export interface BetaUpdateQuizLessonResponse {
+  data: {
+    message: string;
+  };
+}
+
 export type BetaUpdateLessonBody = {
   title?: string;
   type?: string;
   description?: string;
   fileS3Key?: string;
   fileType?: string;
+  questions?: {
+    /** @format uuid */
+    id?: string;
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "true_or_false"
+      | "photo_question"
+      | "fill_in_the_blanks"
+      | "brief_response"
+      | "detailed_response";
+    description?: string;
+    title: string;
+    photoQuestionType?: "single_choice" | "multiple_choice";
+    photoS3Key?: string;
+    options?: {
+      /** @format uuid */
+      id?: string;
+      optionText: string;
+      isCorrect: boolean;
+      position: number;
+    }[];
+  }[];
 } & {
   /** @format uuid */
   chapterId?: string;
@@ -1737,6 +1867,49 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<BetaCreateLessonResponse, any>({
         path: `/api/lesson/beta-create-lesson`,
         method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonControllerBetaCreateQuizLesson
+     * @request POST:/api/lesson/beta-create-lesson/quiz
+     */
+    lessonControllerBetaCreateQuizLesson: (
+      data: BetaCreateQuizLessonBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<BetaCreateQuizLessonResponse, any>({
+        path: `/api/lesson/beta-create-lesson/quiz`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonControllerBetaUpdateQuizLesson
+     * @request PATCH:/api/lesson/beta-update-lesson/quiz
+     */
+    lessonControllerBetaUpdateQuizLesson: (
+      data: BetaUpdateQuizLessonBody,
+      query?: {
+        /** @format uuid */
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<BetaUpdateQuizLessonResponse, any>({
+        path: `/api/lesson/beta-update-lesson/quiz`,
+        method: "PATCH",
+        query: query,
         body: data,
         type: ContentType.Json,
         format: "json",

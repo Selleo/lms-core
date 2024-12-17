@@ -17,7 +17,11 @@ type NewChapterProps = {
 };
 
 const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
-  const { id: courseId } = useParams();
+  const { id: courseId } = useParams<{ id: string }>();
+  if (!courseId) {
+    throw new Error("courseId is required");
+  }
+
   const { form, onSubmit, onClickDelete } = useNewChapterForm({
     courseId: courseId ?? "",
     chapter,

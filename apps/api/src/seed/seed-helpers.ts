@@ -113,7 +113,6 @@ export async function createNiceCourses(
                 type: questionData.type,
                 title: questionData.title,
                 description: questionData.description ?? null,
-                solutionExplanation: questionData.solutionExplanation ?? null,
                 lessonId: lesson.id,
                 authorId: creatorUserId,
                 createdAt: createdAt,
@@ -121,18 +120,16 @@ export async function createNiceCourses(
               })
               .returning();
 
-            if (questionData.questionAnswers) {
-              const questionAnswerOptionList = questionData.questionAnswers.map(
-                (questionAnswerOption) => ({
-                  id: crypto.randomUUID(),
-                  createdAt: createdAt,
-                  updatedAt: createdAt,
-                  questionId,
-                  optionText: questionAnswerOption.optionText,
-                  isCorrect: questionAnswerOption.isCorrect || false,
-                  position: questionAnswerOption.position,
-                }),
-              );
+            if (questionData.options) {
+              const questionAnswerOptionList = questionData.options.map((questionAnswerOption) => ({
+                id: crypto.randomUUID(),
+                createdAt: createdAt,
+                updatedAt: createdAt,
+                questionId,
+                optionText: questionAnswerOption.optionText,
+                isCorrect: questionAnswerOption.isCorrect || false,
+                position: questionAnswerOption.position,
+              }));
 
               await db.insert(questionAnswerOptions).values(questionAnswerOptionList);
             }

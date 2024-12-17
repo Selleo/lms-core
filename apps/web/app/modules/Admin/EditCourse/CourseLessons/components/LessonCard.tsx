@@ -6,7 +6,7 @@ import { cn } from "~/lib/utils";
 import { mapItemType, mapTypeToIcon } from "../CourseLessons.helpers";
 
 import type { ReactNode } from "react";
-import type { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
+import { LessonType, type Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 import type { IconName } from "~/types/shared";
 
 interface LessonCardProps {
@@ -21,15 +21,15 @@ const LessonCard = ({ item, onClickLessonCard, dragTrigger }: LessonCardProps) =
   const mappedItemType = useMemo(() => mapItemType(contentType), [contentType]);
   const getIcon = useMemo(() => mapTypeToIcon(contentType as string), [contentType]);
 
-  const handleClick = (event: MouseEvent) => {
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
     onClickLessonCard(item);
   };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      handleClick({} as MouseEvent);
+      handleClick({} as React.MouseEvent<HTMLDivElement>);
     }
   };
 
@@ -50,16 +50,14 @@ const LessonCard = ({ item, onClickLessonCard, dragTrigger }: LessonCardProps) =
       <div className="flex gap-x-2 items-start">
         <Icon name={getIcon as IconName} className="size-6 text-primary-700" />
         <hgroup>
-          <p className="body-sm-md text-neutral-950">{item.title}</p>
+          <p className="text-l">
+            {item.type === LessonType.QUIZ
+              ? `${item.title} (${item.questions?.length || 0})`
+              : item.title}
+          </p>
           <p className="text-neutral-950 details">{mappedItemType}</p>
         </hgroup>
       </div>
-      {/*{item?. === "draft" && (*/}
-      {/*  <div className="ml-2 flex gap-x-1.5 items-center text-warning-800 bg-warning-50 px-2 py-0.5 rounded-lg h-min">*/}
-      {/*    <Icon name="Warning" className="size-4" />*/}
-      {/*    <span className="details-sm-md">Draft</span>*/}
-      {/*  </div>*/}
-      {/*)}*/}
     </div>
   );
 };

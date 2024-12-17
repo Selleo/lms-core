@@ -1,8 +1,7 @@
 import { faker } from "@faker-js/faker";
 
-import { LESSON_TYPES } from "src/lesson/lesson.type";
+import { LESSON_TYPES, QuestionType } from "src/lesson/lesson.type";
 
-import { QUESTION_TYPE } from "../questions/schema/questions.types";
 
 import type { NiceCourseData } from "src/utils/types/test-types";
 
@@ -36,7 +35,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QUESTION_TYPE.open_answer.key,
+                type: QuestionType.BriefResponse,
                 title: "Why is HTML considered the backbone of any website?",
                 description: "Explain its role in web development.",
               },
@@ -57,12 +56,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
-                solutionExplanation:
+                description:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
@@ -101,9 +100,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 6,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which HTML tag is used to create a hyperlink?",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "<a>",
                     isCorrect: true,
@@ -144,10 +143,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which of the following HTML tags is used to create an image?",
                 // displayOrder: 1,
-                questionAnswers: [
+                options: [
                   {
                     optionText: "<img>",
                     isCorrect: true,
@@ -171,11 +170,11 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.multiple_choice.key,
+                type: QuestionType.MultipleChoice,
                 title:
                   "Which of the following are valid HTML elements for structuring content? (Select all that apply)",
                 // displayOrder: 2,
-                questionAnswers: [
+                options: [
                   {
                     optionText: "<html>",
                     isCorrect: true,
@@ -209,10 +208,10 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which HTML tag is used to create a hyperlink?",
                 // displayOrder: 3,
-                questionAnswers: [
+                options: [
                   {
                     optionText: "<a>",
                     isCorrect: true,
@@ -236,11 +235,11 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.multiple_choice.key,
+                type: QuestionType.MultipleChoice,
                 title:
                   "Which of the following attributes are commonly used with the <img> tag? (Select all that apply)",
                 // displayOrder: 4,
-                questionAnswers: [
+                options: [
                   {
                     optionText: "alt",
                     isCorrect: true,
@@ -269,13 +268,13 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_dnd.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
                 // displayOrder: 5,
-                solutionExplanation:
+                description:
                   "<p>CSS is used to style <strong>HTML</strong>, while JavaScript is used to add <strong>interactivity</strong> to web pages.</p>",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "HTML",
                     isCorrect: true,
@@ -314,13 +313,13 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 // displayOrder: 6,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
-                solutionExplanation:
+                description:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
@@ -334,13 +333,13 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 // displayOrder: 7,
                 title:
                   "In JavaScript, [word] are used to store data, while [word] are used to perform actions.",
-                solutionExplanation:
+                description:
                   "<p>In JavaScript, <strong>variables</strong> are used to store data, while <strong>functions</strong> are used to perform actions.</p>",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "variables",
                     isCorrect: true,
@@ -371,9 +370,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which CSS property is used to change the text color of an element?",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "color",
                     isCorrect: true,
@@ -397,10 +396,10 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.multiple_choice.key,
+                type: QuestionType.MultipleChoice,
                 title: "Which of the following are valid CSS selectors? (Select all that apply)",
                 // displayOrder: 2,
-                questionAnswers: [
+                options: [
                   {
                     optionText: ".class-name",
                     isCorrect: true,
@@ -429,13 +428,13 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_dnd.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
-                solutionExplanation:
+                description:
                   "<p>The CSS <strong>flexbox</strong> property is used for creating flexible box layouts, while <strong>color properties</strong> are used for creating grid layouts.</p>",
                 // displayOrder: 3,
-                questionAnswers: [
+                options: [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
@@ -459,12 +458,12 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 // displayOrder: 4,
                 title: "To center an element horizontally, you can use 'margin: [word] [word];'.",
-                solutionExplanation:
+                description:
                   "<p>To center an element horizontally, you can use 'margin: <strong>0 auto</strong>;'.</p>",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "0",
                     isCorrect: true,
@@ -501,7 +500,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QUESTION_TYPE.open_answer.key,
+                type: QuestionType.BriefResponse,
                 title:
                   "Why is HTML considered the backbone of any website? Explain its role in web development.",
               },
@@ -522,12 +521,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
-                solutionExplanation:
+                description:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
@@ -586,7 +585,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QUESTION_TYPE.open_answer.key,
+                type: QuestionType.BriefResponse,
                 title: "Explain why Java is the preferred language for Android development.",
                 description: "",
               },
@@ -606,12 +605,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
-                solutionExplanation:
+                description:
                   "<p>In Java, <strong>classes</strong> are used to define the blueprint of objects, while <strong>objects</strong> are instances of these blueprints.</p>",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "classes",
                     isCorrect: true,
@@ -634,12 +633,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
-                solutionExplanation:
+                description:
                   "<p>In Android development, <strong>layouts</strong> are used to define the user interface, while <strong>activities</strong> handle user interactions and app logic.</p>",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "layouts",
                     isCorrect: true,
@@ -667,9 +666,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 7,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which keyword is used to create a new instance of a class in Java?",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "new",
                     isCorrect: true,
@@ -709,9 +708,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which of the following is the entry point of an Android application?",
-                questionAnswers: [
+                options: [
                   {
                     optionText: "Activity",
                     isCorrect: true,
@@ -776,9 +775,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which keyword is used to declare a variable in Kotlin?",
-                questionAnswers: [
+                options: [
                   { optionText: "var", isCorrect: true, position: 0 },
                   { optionText: "val", isCorrect: false, position: 1 },
                   { optionText: "let", isCorrect: false, position: 2 },
@@ -815,12 +814,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
-                solutionExplanation:
+                description:
                   "<p>In Kotlin, <strong>val</strong> are immutable variables, while <strong>var</strong> are mutable variables.</p>",
-                questionAnswers: [
+                options: [
                   { optionText: "val", isCorrect: true, position: 0 },
                   { optionText: "var", isCorrect: true, position: 1 },
                 ],
@@ -860,7 +859,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QUESTION_TYPE.open_answer.key,
+                type: QuestionType.BriefResponse,
                 title:
                   "Why is arithmetic fundamental in math? Give a real-life example of its use.",
               },
@@ -881,12 +880,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
-                solutionExplanation:
+                description:
                   "<p>In arithmetic, <strong>sum</strong> is the result of addition, while <strong>difference</strong> is the result of subtraction.</p>",
-                questionAnswers: [
+                options: [
                   { optionText: "sum", isCorrect: true, position: 0 },
                   { optionText: "difference", isCorrect: true, position: 1 },
                 ],
@@ -922,9 +921,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which formula is used to calculate the area of a rectangle?",
-                questionAnswers: [
+                options: [
                   { optionText: "length × width", isCorrect: true, position: 0 },
                   { optionText: "length + width", isCorrect: false, position: 1 },
                   { optionText: "length × height", isCorrect: false, position: 2 },
@@ -956,12 +955,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
-                solutionExplanation:
+                description:
                   "<p>In algebra, <strong>variables</strong> represent unknown values, while <strong>expressions</strong> are mathematical phrases that combine numbers and variables.</p>",
-                questionAnswers: [
+                options: [
                   { optionText: "variables", isCorrect: true, position: 0 },
                   { optionText: "expressions", isCorrect: true, position: 1 },
                 ],
@@ -991,9 +990,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which of the following is an example of a geometric shape?",
-                questionAnswers: [
+                options: [
                   { optionText: "Triangle", isCorrect: true, position: 0 },
                   { optionText: "Variable", isCorrect: false, position: 1 },
                   { optionText: "Equation", isCorrect: false, position: 2 },
@@ -1001,9 +1000,9 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.multiple_choice.key,
+                type: QuestionType.MultipleChoice,
                 title: "Which operations are included in basic arithmetic? (Select all that apply)",
-                questionAnswers: [
+                options: [
                   { optionText: "Addition", isCorrect: true, position: 0 },
                   { optionText: "Subtraction", isCorrect: true, position: 1 },
                   { optionText: "Multiplication", isCorrect: true, position: 2 },
@@ -1012,12 +1011,12 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title:
                   "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
-                solutionExplanation:
+                description:
                   "<p>In algebra, <strong>variables</strong> are used to represent unknowns, while <strong>equations</strong> can be solved to find their values.</p>",
-                questionAnswers: [
+                options: [
                   { optionText: "variables", isCorrect: true, position: 0 },
                   { optionText: "equations", isCorrect: true, position: 1 },
                 ],
@@ -1064,7 +1063,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
-                type: QUESTION_TYPE.open_answer.key,
+                type: QuestionType.BriefResponse,
                 title: "Explain the difference between a noun and a verb in a sentence.",
                 description: "Explain its role in sentence construction.",
               },
@@ -1084,10 +1083,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_dnd.key,
+                type: QuestionType.FillInTheBlanks,
                 title: "Fill in the blanks: 'She [word] to the store yesterday.'",
-                solutionExplanation: "<p>She <strong>went</strong> to the store yesterday.</p>",
-                questionAnswers: [
+                description: "<p>She <strong>went</strong> to the store yesterday.</p>",
+                options: [
                   { optionText: "went", isCorrect: true, position: 0 },
                   { optionText: "go", isCorrect: false, position: 1 },
                 ],
@@ -1129,9 +1128,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which word is the synonym of 'happy'?",
-                questionAnswers: [
+                options: [
                   { optionText: "Joyful", isCorrect: true, position: 0 },
                   { optionText: "Sad", isCorrect: false, position: 1 },
                   { optionText: "Angry", isCorrect: false, position: 2 },
@@ -1146,9 +1145,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_dnd.key,
+                type: QuestionType.FillInTheBlanks,
                 title: "I [word] to the park every day.",
-                questionAnswers: [
+                options: [
                   { optionText: "go", isCorrect: true, position: 0 },
                   { optionText: "went", isCorrect: false, position: 1 },
                 ],
@@ -1185,10 +1184,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title:
                   "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
-                questionAnswers: [
+                options: [
                   { optionText: "Th", isCorrect: true, position: 0 },
                   { optionText: "S", isCorrect: false, position: 1 },
                   { optionText: "K", isCorrect: false, position: 2 },
@@ -1209,10 +1208,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title: "I love [word] (swimming/swim).",
-                solutionExplanation: "I love <strong>swimming</strong> (swimming/swim).",
-                questionAnswers: [{ optionText: "swimming", isCorrect: true, position: 0 }],
+                description: "I love <strong>swimming</strong> (swimming/swim).",
+                options: [{ optionText: "swimming", isCorrect: true, position: 0 }],
               },
             ],
           },
@@ -1232,10 +1231,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title:
                   "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
-                questionAnswers: [
+                options: [
                   { optionText: "Adverb", isCorrect: true, position: 0 },
                   { optionText: "Verb", isCorrect: false, position: 1 },
                   { optionText: "Adjective", isCorrect: false, position: 2 },
@@ -1250,10 +1249,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title: "She [word] to the park every day.",
-                solutionExplanation: "She <strong>went</strong> to the park every day.",
-                questionAnswers: [
+                description: "She <strong>went</strong> to the park every day.",
+                options: [
                   { optionText: "goes", isCorrect: true, position: 0 },
                   { optionText: "went", isCorrect: false, position: 1 },
                 ],
@@ -1267,9 +1266,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "What is the plural form of 'child'?",
-                questionAnswers: [
+                options: [
                   { optionText: "Children", isCorrect: true, position: 0 },
                   { optionText: "Childs", isCorrect: false, position: 1 },
                 ],
@@ -1283,9 +1282,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which of these words is a conjunction?",
-                questionAnswers: [
+                options: [
                   { optionText: "And", isCorrect: true, position: 0 },
                   { optionText: "Run", isCorrect: false, position: 1 },
                   { optionText: "Quickly", isCorrect: false, position: 2 },
@@ -1345,11 +1344,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title: "The book [word] I borrowed yesterday was fascinating.",
-                solutionExplanation:
-                  "The book <strong>that</strong> I borrowed yesterday was fascinating.",
-                questionAnswers: [
+                description: "The book <strong>that</strong> I borrowed yesterday was fascinating.",
+                options: [
                   { optionText: "that", isCorrect: true, position: 0 },
                   { optionText: "who", isCorrect: false, position: 1 },
                 ],
@@ -1391,9 +1389,9 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QUESTION_TYPE.single_choice.key,
+                type: QuestionType.SingleChoice,
                 title: "Which word is an example of academic vocabulary?",
-                questionAnswers: [
+                options: [
                   { optionText: "Analyze", isCorrect: true, position: 0 },
                   { optionText: "Run", isCorrect: false, position: 1 },
                   { optionText: "Quick", isCorrect: false, position: 2 },
@@ -1408,10 +1406,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title: "The results [word] the hypothesis.",
-                solutionExplanation: "The results <strong>support</strong> the hypothesis.",
-                questionAnswers: [{ optionText: "support", isCorrect: true, position: 0 }],
+                description: "The results <strong>support</strong> the hypothesis.",
+                options: [{ optionText: "support", isCorrect: true, position: 0 }],
               },
             ],
           },
@@ -1456,11 +1454,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QUESTION_TYPE.fill_in_the_blanks_text.key,
+                type: QuestionType.FillInTheBlanks,
                 title: "She was [word] when she heard the good news.",
-                solutionExplanation:
-                  "She was <strong>over the moon</strong> when she heard the good news.",
-                questionAnswers: [{ optionText: "over the moon", isCorrect: true, position: 0 }],
+                description: "She was <strong>over the moon</strong> when she heard the good news.",
+                options: [{ optionText: "over the moon", isCorrect: true, position: 0 }],
               },
             ],
           },

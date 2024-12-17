@@ -9,7 +9,12 @@ import {
   lessons,
 } from "src/storage/schema";
 
-import type { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
+import type {
+  CreateLessonBody,
+  CreateQuizLessonBody,
+  UpdateLessonBody,
+  UpdateQuizLessonBody,
+} from "./lesson.schem";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
@@ -33,6 +38,33 @@ export class AdminLessonRepository {
       .where(eq(lessons.id, id))
       .returning();
     return updatedLesson;
+  }
+
+  async updateQuizLessonWithQuestionsAndOptions(id: UUIDType, data: UpdateQuizLessonBody) {
+    return await this.db
+      .update(lessons)
+      .set({
+        title: data.title,
+        type: "quiz",
+        description: data.description,
+        chapterId: data.chapterId,
+      })
+      .where(eq(lessons.id, id));
+  }
+
+  async createQuizLessonWithQuestionsAndOptions(data: CreateQuizLessonBody, displayOrder: number) {
+    const [lesson] = await this.db
+      .insert(lessons)
+      .values({
+        title: data.title,
+        type: "quiz",
+        description: data.description,
+        chapterId: data?.chapterId,
+        displayOrder,
+      })
+      .returning();
+
+    return lesson;
   }
 
   async getQuestions(conditions: any[]) {
@@ -280,34 +312,34 @@ export class AdminLessonRepository {
   //   );
   // }
 
-  // async updateLessonItemDisplayOrder(chapterId: UUIDType, lessonId: UUIDType) {
-  //   await this.db.transaction(async (trx) => {
-  //     await trx.execute(sql`
-  //       UPDATE ${lessonItems}
-  //       SET display_order = display_order - 1
-  //       WHERE lesson_id = ${chapterId}
-  //         AND display_order > (
-  //           SELECT display_order
-  //           FROM ${lessonItems}
-  //           WHERE lesson_id = ${chapterId}
-  //             AND lesson_item_id = ${lessonId}
-  //         )
-  //     `);
+  async updateLessonItemDisplayOrder(chapterId: UUIDType, lessonId: UUIDType) {
+    await this.db.transaction(async (trx) => {
+      await trx.execute(sql`
+        UPDATE ${lessons}
+        SET display_order = display_order - 1
+        WHERE chapter_id = ${chapterId}
+          AND display_order > (
+            SELECT display_order
+            FROM ${lessons}
+            WHERE chapter_id = ${chapterId}
+              AND id = ${lessonId}
+          )
+      `);
 
-  //     await trx.execute(sql`
-  //       WITH ranked_lesson_items AS (
-  //         SELECT lesson_item_id, row_number() OVER (ORDER BY display_order) AS new_display_order
-  //         FROM ${lessonItems}
-  //         WHERE lesson_id = ${chapterId}
-  //       )
-  //       UPDATE ${lessonItems} li
-  //       SET display_order = rl.new_display_order
-  //       FROM ranked_lesson_items rl
-  //       WHERE li.lesson_item_id = rl.lesson_item_id
-  //         AND li.lesson_id = ${chapterId}
-  //     `);
-  //   });
-  // }
+      await trx.execute(sql`
+        WITH ranked_lesson AS (
+          SELECT id, row_number() OVER (ORDER BY display_order) AS new_display_order
+          FROM ${lessons}
+          WHERE chapter_id = ${chapterId}
+        )
+        UPDATE ${lessons} li
+        SET display_order = rl.new_display_order
+        FROM ranked_lesson rl
+        WHERE li.id = rl.id
+          AND li.chapter_id = ${chapterId}
+      `);
+    });
+  }
 
   // async removeLesson(lessonItemId: string, lessonItemType: LessonItemTypes) {
   //   return await this.db.transaction(async (trx) => {

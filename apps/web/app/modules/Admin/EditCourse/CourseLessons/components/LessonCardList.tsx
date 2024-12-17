@@ -42,6 +42,9 @@ export const LessonCardList = ({
         case "presentation":
           setContentTypeToDisplay(ContentTypes.PRESENTATION_FORM);
           break;
+        case "quiz":
+          setContentTypeToDisplay(ContentTypes.QUIZ_FORM);
+          break;
         default:
           setContentTypeToDisplay(ContentTypes.EMPTY);
       }
