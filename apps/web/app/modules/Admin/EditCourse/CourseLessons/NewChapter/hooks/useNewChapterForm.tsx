@@ -57,6 +57,7 @@ export const useNewChapterForm = ({
         queryClient.invalidateQueries({
           queryKey: [COURSE_QUERY_KEY, { id: courseId }],
         });
+        setContentTypeToDisplay(ContentTypes.EMPTY);
       }
     } catch (error) {
       console.error("Error during chapter submission:", error);

@@ -47,34 +47,32 @@ const AddCourse = () => {
   );
 
   return (
-    <div className="flex h-screen bg-white">
-      <div className="w-1/2 flex items-center justify-center">
+    <div className="flex h-screen bg-white p-20">
+      <div className="w-full flex items-center justify-center">
         <img src={SplashScreenImage} alt="splashScreenImage" className="rounded" />
       </div>
-      <div className="w-1/2 mt-4">
-        <Button
-          onClick={() => navigate("/admin/courses")}
-          className="border-2 border-beige-500 bg-white text-blue-500 py-2 px-6 rounded"
-        >
+      <div className="w-full max-w-[820px] flex flex-col gap-y-8 px-20">
+        <Button variant="outline" onClick={() => navigate("/admin/courses")} className="w-min">
           <Icon name="ChevronLeft" className="w-3 h-3 mr-2" />
           Back
         </Button>
-        <h1 className="text-3xl font-bold mt-8">Create new course</h1>
-        <h1 className="mt-5">
-          Provide the details to set up a new course. You’ll have more options to customize it
-          later.
-        </h1>
+        <hgroup className="flex flex-col gapy-y-1">
+          <h1 className="h3 text-neutral-950">Create new course</h1>
+          <p className="body-lg-md text-neutral-800">
+            Provide the details to set up a new course. You’ll have more options to customize it
+            later.
+          </p>
+        </hgroup>
         <Form {...form}>
-          <form className="mt-10" onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex space-x-5">
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <Label htmlFor="title" className="text-right">
-                      <span className="text-red-500">*</span>
-                      Course title
+                    <Label htmlFor="title">
+                      <span className="text-red-500">*</span> Course title
                     </Label>
                     <FormControl>
                       <Input id="title" {...field} required />
@@ -88,9 +86,8 @@ const AddCourse = () => {
                 name="categoryId"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <Label htmlFor="categoryId" className="text-right">
-                      <span className="text-red-500">*</span>
-                      Category
+                    <Label htmlFor="categoryId">
+                      <span className="text-red-500">*</span> Category
                     </Label>
                     <FormControl>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -118,9 +115,8 @@ const AddCourse = () => {
               name="description"
               render={({ field }) => (
                 <FormItem className="mt-5">
-                  <Label htmlFor="description" className="text-right">
-                    <span className="text-red-500">*</span>
-                    Description
+                  <Label htmlFor="description">
+                    <span className="text-red-500">*</span> Description
                   </Label>
                   <FormControl>
                     <Editor
@@ -139,9 +135,7 @@ const AddCourse = () => {
               name="imageUrl"
               render={({ field }) => (
                 <FormItem className="mt-5">
-                  <Label htmlFor="imageUrl" className="text-right">
-                    Thumbnail
-                  </Label>
+                  <Label htmlFor="imageUrl">Thumbnail</Label>
                   <FormControl>
                     <ImageUploadInput
                       field={field}
