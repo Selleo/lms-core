@@ -19,8 +19,15 @@
     {
       "idx": 2,
       "version": "7",
-      "when": 1734077174821,
-      "tag": "0002_add_missing_columns",
+      "when": 1734361149627,
+      "tag": "0002_add_is_scorm_course_field",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1734419608219,
+      "tag": "0003_add_question_missing_columns",
       "breakpoints": true
     }
   ]

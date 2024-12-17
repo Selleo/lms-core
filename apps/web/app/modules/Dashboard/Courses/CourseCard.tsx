@@ -21,12 +21,12 @@ const CourseCard = ({
   author,
   authorEmail = "",
   category,
-  completedLessonCount,
-  courseLessonCount,
+  completedChapterCount,
+  courseChapterCount,
   currency,
   description,
   enrolled = false,
-  hasFreeLessons,
+  hasFreeChapters,
   id,
   thumbnailUrl,
   priceInCents,
@@ -66,7 +66,7 @@ const CourseCard = ({
               "text-primary-700": isAdmin || !enrolled,
             })}
           />
-          {hasFreeLessons && !enrolled && (
+          {hasFreeChapters && !enrolled && (
             <CardBadge variant="successFilled">
               <Icon name="FreeRight" className="w-4" />
               Free Lessons!
@@ -79,8 +79,8 @@ const CourseCard = ({
           {enrolled && (
             <CourseProgress
               label="Course progress:"
-              courseLessonCount={courseLessonCount}
-              completedLessonCount={completedLessonCount}
+              courseLessonCount={courseChapterCount}
+              completedLessonCount={completedChapterCount}
             />
           )}
           <div className={cn({ "mt-3": author })}>

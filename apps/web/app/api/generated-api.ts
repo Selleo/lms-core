@@ -448,6 +448,7 @@ export interface GetCourseResponse {
     completedChapterCount?: number;
     enrolled?: boolean;
     isPublished: boolean | null;
+    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -487,6 +488,7 @@ export interface GetCourseByIdResponse {
     completedChapterCount?: number;
     enrolled?: boolean;
     isPublished: boolean | null;
+    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -526,6 +528,7 @@ export interface GetBetaCourseByIdResponse {
     completedChapterCount?: number;
     enrolled?: boolean;
     isPublished: boolean | null;
+    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -556,6 +559,7 @@ export type CreateCourseBody = {
   currency?: string;
   /** @format uuid */
   categoryId: string;
+  isScorm?: boolean;
 } & {
   chapters?: string[];
 };
@@ -2151,8 +2155,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     scormControllerServeScormContent: (
       courseId: string,
-      query?: {
-        path?: string;
+      query: {
+        path: string;
       },
       params: RequestParams = {},
     ) =>
@@ -2160,6 +2164,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/scorm/${courseId}/content`,
         method: "GET",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ScormControllerGetScormMetadata
+     * @request GET:/api/scorm/{courseId}/metadata
+     */
+    scormControllerGetScormMetadata: (courseId: string, params: RequestParams = {}) =>
+      this.request<ScormMetadata, any>({
+        path: `/api/scorm/${courseId}/metadata`,
+        method: "GET",
+        format: "json",
         ...params,
       }),
   };

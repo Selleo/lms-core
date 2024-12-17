@@ -17,6 +17,7 @@ export const commonShowCourseSchema = Type.Object({
   completedChapterCount: Type.Optional(Type.Number()),
   enrolled: Type.Optional(Type.Boolean()),
   isPublished: Type.Union([Type.Boolean(), Type.Null()]),
+  isScorm: Type.Optional(Type.Boolean()),
   chapters: Type.Array(chapterSchema),
   priceInCents: Type.Number(),
   currency: Type.String(),

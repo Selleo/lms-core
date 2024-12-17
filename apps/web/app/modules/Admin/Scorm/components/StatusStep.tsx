@@ -41,6 +41,8 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
           description: data.details.description,
           title: data.details.title,
           thumbnailS3Key: thumbnailResult?.fileKey,
+          isScorm: true,
+          priceInCents: data.pricing.price || 0 * 100,
         },
       });
 

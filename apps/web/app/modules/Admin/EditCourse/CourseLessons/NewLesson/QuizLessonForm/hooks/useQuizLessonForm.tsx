@@ -56,7 +56,6 @@ export const useQuizLessonForm = ({
 
             wordMatches.forEach((match, index) => {
               const position = index + 1;
-
               const option = question.options?.find((opt) => opt.position === position);
 
               if (option) {

@@ -123,6 +123,7 @@ export const courses = pgTable("courses", {
   priceInCents: integer("price_in_cents").notNull().default(0),
   currency: varchar("currency").notNull().default("usd"),
   chapterCount: integer("chapter_count").notNull().default(0),
+  isScorm: boolean("is_scorm").notNull().default(false),
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
@@ -147,6 +148,7 @@ export const chapters = pgTable("chapters", {
   lessonCount: integer("lesson_count").notNull().default(0),
 });
 
+// TODO: add itemCount for this
 export const lessons = pgTable("lessons", {
   ...id,
   ...timestamps,

@@ -34,6 +34,7 @@ export const createChapterSchema = Type.Intersect([
 
 export const updateChapterSchema = Type.Partial(createChapterSchema);
 
+// TODO: update it otr remove if not needed
 export const chapter = Type.Object({
   id: UUIDSchema,
   title: Type.String(),

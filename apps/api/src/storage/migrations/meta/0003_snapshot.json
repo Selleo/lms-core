@@ -1,6 +1,6 @@
 {
-  "id": "33402d22-f063-4730-959c-59fc6f317be0",
-  "prevId": "e4451969-8016-44fc-83a8-2cb5310a1d1e",
+  "id": "a69a4ab9-0250-4505-b38f-f18887d2b8e8",
+  "prevId": "33402d22-f063-4730-959c-59fc6f317be0",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -818,6 +818,18 @@
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": true
+        },
+        "photo_s3_key": {
+          "name": "photo_s3_key",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "photo_question_type": {
+          "name": "photo_question_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "description": {
           "name": "description",
