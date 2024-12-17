@@ -9,7 +9,7 @@ if [ $COMMAND = "server" ]; then
 elif [ $COMMAND = "migrate" ]; then
   echo "Running migrations..."
   npm run db:migrate
-elif [ $COMMAND = "seed-staging" ]; then
+elif [ $COMMAND = "seed" ]; then
   echo "Running seeds..."
   npm run db:seed-staging
 elif [ $COMMAND = "seed-prod" ]; then
