@@ -9,6 +9,9 @@ import { ContentTypes } from "../../../EditCourse.types";
 import { useTextLessonForm } from "./hooks/useTextLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
+import { useState } from "react";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType } from "../../CourseLessons.types";
 
 type TextLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -21,11 +24,21 @@ const TextLessonForm = ({
   chapterToEdit,
   lessonToEdit,
 }: TextLessonProps) => {
-  const { form, onSubmit, onClickDelete } = useTextLessonForm({
+  const { form, onSubmit, onDelete } = useTextLessonForm({
     chapterToEdit,
     lessonToEdit,
     setContentTypeToDisplay,
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const onCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const onClickDelete = () => {
+    setIsModalOpen(true);
+  };
 
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
@@ -75,6 +88,7 @@ const TextLessonForm = ({
               Save
             </Button>
             <Button
+              type="button"
               onClick={
                 lessonToEdit ? onClickDelete : () => setContentTypeToDisplay(ContentTypes.EMPTY)
               }
@@ -85,6 +99,12 @@ const TextLessonForm = ({
           </div>
         </form>
       </Form>
+      <DeleteConfirmationModal
+        open={isModalOpen}
+        onClose={onCloseModal}
+        onDelete={onDelete}
+        contentType={DeleteContentType.Text}
+      />
     </div>
   );
 };

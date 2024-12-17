@@ -2,7 +2,6 @@ import { faker } from "@faker-js/faker";
 
 import { LESSON_TYPES, QuestionType } from "src/lesson/lesson.type";
 
-
 import type { NiceCourseData } from "src/utils/types/test-types";
 
 export const niceCourses: NiceCourseData[] = [

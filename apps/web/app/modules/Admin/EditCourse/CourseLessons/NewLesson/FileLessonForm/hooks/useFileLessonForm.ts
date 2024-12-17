@@ -76,7 +76,7 @@ export const useFileLessonForm = ({
     }
   };
 
-  const onClickDelete = async () => {
+  const onDelete = async () => {
     if (!chapterToEdit?.id || !lessonToEdit?.id) {
       console.error("Course ID or Chapter ID is missing.");
       return;
@@ -93,5 +93,5 @@ export const useFileLessonForm = ({
     }
   };
 
-  return { form, onSubmit, onClickDelete };
+  return { form, onSubmit, onDelete };
 };

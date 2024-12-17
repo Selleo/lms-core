@@ -14,6 +14,8 @@ import { ContentTypes } from "../../../EditCourse.types";
 import { useFileLessonForm } from "./hooks/useFileLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType } from "../../CourseLessons.types";
 
 type FileLessonProps = {
   contentTypeToDisplay: string;
@@ -28,7 +30,7 @@ const FileLessonForm = ({
   chapterToEdit,
   lessonToEdit,
 }: FileLessonProps) => {
-  const { form, onSubmit, onClickDelete } = useFileLessonForm({
+  const { form, onSubmit, onDelete } = useFileLessonForm({
     chapterToEdit,
     lessonToEdit,
     setContentTypeToDisplay,
@@ -37,6 +39,16 @@ const FileLessonForm = ({
   const { mutateAsync: uploadFile } = useUploadFile();
   const [url, setUrl] = useState(lessonToEdit?.fileS3Key || "");
   const fileType = form.watch("fileType");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const onCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const onClickDelete = () => {
+    setIsModalOpen(true);
+  };
 
   const handleFileUpload = useCallback(
     async (file: File) => {
@@ -118,6 +130,7 @@ const FileLessonForm = ({
               Save
             </Button>
             <Button
+              type="button"
               onClick={
                 lessonToEdit ? onClickDelete : () => setContentTypeToDisplay(ContentTypes.EMPTY)
               }
@@ -128,6 +141,14 @@ const FileLessonForm = ({
           </div>
         </form>
       </Form>
+      <DeleteConfirmationModal
+        open={isModalOpen}
+        onClose={onCloseModal}
+        onDelete={onDelete}
+        contentType={
+          ContentTypes.VIDEO_LESSON_FORM ? DeleteContentType.Video : DeleteContentType.Presentation
+        }
+      />
     </div>
   );
 };

@@ -88,7 +88,7 @@ export const useQuizLessonForm = ({
     }
   }, [lessonToEdit, reset]);
 
-  const onClickDelete = async () => {
+  const onDelete = async () => {
     if (!chapterToEdit?.id || !lessonToEdit?.id) {
       console.error("Course ID or Chapter ID is missing.");
       return;
@@ -144,5 +144,5 @@ export const useQuizLessonForm = ({
     }
   };
 
-  return { form, onSubmit, onClickDelete };
+  return { form, onSubmit, onDelete };
 };
