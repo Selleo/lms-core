@@ -45,5 +45,6 @@ export { default as DragAndDropIcon } from "./drag-and-drop.svg?react";
 export { default as ArrowUp } from "./arrow-up.svg?react";
 export { default as ArrowDown } from "./arrow-down.svg?react";
 export { default as Info } from "./info.svg?react";
+export { default as Checkmark } from "./checkmark.svg?react";
 
 export * from "./lesson-types";
