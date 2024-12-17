@@ -46,7 +46,7 @@ const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) =>
           return (
             <div
               key={type}
-              className={"px-6 border border-neutral-200 rounded-lg py-4 flex flex-col gap-y-6"}
+              className="px-6 border border-neutral-200 rounded-lg py-4 flex flex-col gap-y-6"
               role="button"
               onClick={() => setContentTypeToDisplay(type)}
               aria-label={`Choose ${title} lesson type`}

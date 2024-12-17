@@ -146,18 +146,18 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                   </div>
                 </div>
               ))}
-              <div className="mt-4 flex gap-2">
-                <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
-                  Add Option
-                </Button>
-                <Button
-                  type="button"
-                  className="text-error-700 bg-color-white border border-neutral-300"
-                  onClick={handleRemoveQuestion}
-                >
-                  Delete Question
-                </Button>
-              </div>
+            </div>
+            <div className="mt-6 flex gap-2">
+              <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
+                Add Option
+              </Button>
+              <Button
+                type="button"
+                className="text-error-700 bg-color-white border border-neutral-300"
+                onClick={handleRemoveQuestion}
+              >
+                Delete Question
+              </Button>
             </div>
           </Accordion.Content>
         </div>

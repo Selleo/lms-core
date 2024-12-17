@@ -136,7 +136,10 @@ export class AdminLessonService {
     displayOrder: number,
   ) {
     return await this.db.transaction(async (trx) => {
-      const lesson = await this.adminLessonRepository.createQuizLessonWithQuestionsAndOptions(data, displayOrder)
+      const lesson = await this.adminLessonRepository.createQuizLessonWithQuestionsAndOptions(
+        data,
+        displayOrder,
+      );
 
       if (!data.questions) return;
 
@@ -176,7 +179,7 @@ export class AdminLessonService {
     authorId: UUIDType,
   ) {
     return await this.db.transaction(async (trx) => {
-      await this.adminLessonRepository.updateQuizLessonWithQuestionsAndOptions(id, data)
+      await this.adminLessonRepository.updateQuizLessonWithQuestionsAndOptions(id, data);
 
       const existingQuestions = await trx
         .select({ id: questions.id })

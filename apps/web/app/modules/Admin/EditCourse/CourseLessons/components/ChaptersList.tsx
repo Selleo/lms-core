@@ -66,31 +66,6 @@ const ChapterCard = ({
     setSelectedChapter(chapter);
   }, [chapter, setContentTypeToDisplay, setSelectedChapter]);
 
-  const onClickLessonCard = useCallback(
-    (lesson: Lesson) => {
-      const contentType = lesson.type;
-      setSelectedLesson(lesson);
-
-      switch (contentType) {
-        case LessonType.VIDEO:
-          setContentTypeToDisplay(ContentTypes.VIDEO_LESSON_FORM);
-          break;
-        case LessonType.TEXT_BLOCK:
-          setContentTypeToDisplay(ContentTypes.TEXT_LESSON_FORM);
-          break;
-        case LessonType.PRESENTATION:
-          setContentTypeToDisplay(ContentTypes.PRESENTATION_FORM);
-          break;
-        case LessonType.QUIZ:
-          setContentTypeToDisplay(ContentTypes.QUIZ_FORM);
-          break;
-        default:
-          setContentTypeToDisplay(ContentTypes.EMPTY);
-      }
-    },
-    [setContentTypeToDisplay, setSelectedLesson],
-  );
-
   const onAccordionClick = useCallback(
     (event: React.MouseEvent) => {
       setSelectedChapter(chapter);
