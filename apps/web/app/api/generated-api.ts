@@ -145,8 +145,6 @@ export interface GetUserByIdResponse {
 
 export interface GetUserDetailsResponse {
   data: {
-    firstName: string | null;
-    lastName: string | null;
     /** @format uuid */
     id: string;
     description: string | null;
@@ -607,6 +605,7 @@ export interface FileUploadResponse {
 }
 
 export type BetaCreateLessonBody = {
+  updatedAt?: string;
   title: string;
   type: string;
   description: string;
@@ -734,6 +733,7 @@ export interface BetaUpdateQuizLessonResponse {
 }
 
 export type BetaUpdateLessonBody = {
+  updatedAt?: string;
   title?: string;
   type?: string;
   description?: string;
@@ -854,20 +854,39 @@ export interface CreatePaymentIntentResponse {
   };
 }
 
-export interface ScormMetadata {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  courseId: string;
-  fileId: string;
-  version: string;
-  entryPoint: string;
-  s3Key: string;
+export interface UploadScormPackageResponse {
+  data: {
+    message: string;
+    metadata: {
+      /** @format uuid */
+      id: string;
+      createdAt: string;
+      updatedAt: string;
+      /** @format uuid */
+      courseId: string;
+      /** @format uuid */
+      fileId: string;
+      version: string;
+      entryPoint: string;
+      s3Key: string;
+    };
+  };
 }
 
-export interface ScormUploadResponse {
-  message: string;
-  metadata: ScormMetadata;
+export interface GetScormMetadataResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    /** @format uuid */
+    courseId: string;
+    /** @format uuid */
+    fileId: string;
+    version: string;
+    entryPoint: string;
+    s3Key: string;
+  };
 }
 
 import type {
@@ -2139,7 +2158,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<ScormUploadResponse, any>({
+      this.request<UploadScormPackageResponse, any>({
         path: `/api/scorm/upload`,
         method: "POST",
         query: query,
@@ -2176,7 +2195,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/scorm/{courseId}/metadata
      */
     scormControllerGetScormMetadata: (courseId: string, params: RequestParams = {}) =>
-      this.request<ScormMetadata, any>({
+      this.request<GetScormMetadataResponse, any>({
         path: `/api/scorm/${courseId}/metadata`,
         method: "GET",
         format: "json",
