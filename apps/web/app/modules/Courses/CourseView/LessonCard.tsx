@@ -78,8 +78,8 @@ export const LessonCard = ({
   isAdmin,
   isEnrolled,
   isFree = false,
-  itemsCompletedCount,
-  itemsCount,
+  completedLessonCount,
+  lessonCount,
   id: lessonId,
   lessonProgress = "not_started",
   title,
@@ -115,7 +115,7 @@ export const LessonCard = ({
           <div className="relative">
             <img
               src={imageUrl ?? CardPlaceholder}
-              alt={`Lesson ${index + 1}`}
+              alt={`Chapter ${index + 1}`}
               loading="eager"
               decoding="async"
               className="w-full object-cover object-center rounded-lg drop-shadow-sm aspect-video"
@@ -140,10 +140,10 @@ export const LessonCard = ({
             <div className="flex justify-between items-center">
               <div className="flex flex-col h-full bg-white w-full">
                 <CourseProgress
-                  label={type === "quiz" ? "Quiz progress:" : "Lesson progress:"}
+                  label={type === "quiz" ? "Quiz progress:" : "Chapter progress:"}
                   isCompleted={lessonProgress === "completed"}
-                  completedLessonCount={itemsCompletedCount ?? 0}
-                  courseLessonCount={itemsCount}
+                  completedLessonCount={completedLessonCount ?? 0}
+                  courseLessonCount={lessonCount}
                 />
               </div>
             </div>

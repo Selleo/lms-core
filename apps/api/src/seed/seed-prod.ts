@@ -4,11 +4,13 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
-import hashPassword from "./common/helpers/hashPassword";
-import { credentials, users } from "./storage/schema";
-import { USER_ROLES } from "./users/schemas/user-roles";
+import hashPassword from "../common/helpers/hashPassword";
+import { credentials, users } from "../storage/schema";
+import { USER_ROLES } from "../users/schemas/user-roles";
 
-import type { DatabasePg } from "./common";
+import { seedTruncateAllTables } from "./seed-helpers";
+
+import type { DatabasePg } from "../common";
 
 dotenv.config({ path: "./.env" });
 
@@ -40,29 +42,42 @@ async function insertCredential(userId: string, password: string) {
   return (await db.insert(credentials).values(credentialData).returning())[0];
 }
 
-async function seed() {
+async function seedProduction() {
+  await seedTruncateAllTables(db);
+
   try {
     const adminUser = await createOrFindUser("admin@example.com", "password", {
       id: faker.string.uuid(),
       email: "admin@example.com",
-      firstName: "Admin",
-      lastName: "User",
+      firstName: faker.person.firstName(),
+      lastName: "Admin",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       role: USER_ROLES.admin,
     });
-
     console.log("Created or found admin user:", adminUser);
+
     const studentUser = await createOrFindUser("user@example.com", "password", {
       id: faker.string.uuid(),
       email: "user@example.com",
-      firstName: "Student",
-      lastName: "User",
+      firstName: faker.person.firstName(),
+      lastName: "Student",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       role: USER_ROLES.student,
     });
     console.log("Created or found student user:", studentUser);
+
+    const teacherUser = await createOrFindUser("teacher@example.com", "password", {
+      id: faker.string.uuid(),
+      email: "teacher@example.com",
+      firstName: faker.person.firstName(),
+      lastName: "Teacher",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      role: USER_ROLES.teacher,
+    });
+    console.log("Created or found teacher user:", teacherUser);
 
     console.log("Seeding completed successfully");
   } catch (error) {
@@ -79,7 +94,7 @@ async function seed() {
 }
 
 if (require.main === module) {
-  seed()
+  seedProduction()
     .then(() => process.exit(0))
     .catch((error) => {
       console.error("An error occurred:", error);
@@ -87,4 +102,4 @@ if (require.main === module) {
     });
 }
 
-export default seed;
+export default seedProduction;

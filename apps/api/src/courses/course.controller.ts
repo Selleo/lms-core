@@ -142,7 +142,7 @@ export class CourseController {
     };
     const query = { filters, page, perPage, sort };
 
-    const data = await this.courseService.getAvailableCourses(query);
+    const data = await this.courseService.getAvailableCourses(query, currentUserId);
 
     return new PaginatedResponse(data);
   }
