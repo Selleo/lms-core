@@ -456,13 +456,13 @@ export class CourseService {
         isFree: chapters.isFreemium,
         lessons: sql<string>`
         COALESCE(
-          (
-            SELECT array_agg(${lessons}.id)
-            FROM ${lessons}
-            WHERE ${lessons}.chapter_id = ${chapters}.id
-          ),
-          '{}'
-        )
+  (
+    SELECT array_agg(${lessons.id} ORDER BY ${lessons.displayOrder})
+    FROM ${lessons}
+    WHERE ${lessons.chapterId} = ${chapters.id}
+  ),
+  '{}'
+)
       `,
       })
       .from(chapters)
@@ -873,30 +873,6 @@ export class CourseService {
       }),
     );
   }
-
-  // private async addS3SignedUrlsToLessons(lessons: LessonItemWithContentSchema[]) {
-  //   return await Promise.all(
-  //     lessons.map(async (item) => {
-  //       if (
-  //         item.fileS3Key &&
-  //         (item.type === LESSON_TYPES.video || item.type === LESSON_TYPES.presentation)
-  //       ) {
-  //         if (item.fileS3Key.startsWith("https://")) {
-  //           return item;
-  //         }
-
-  //         try {
-  //           const signedUrl = await this.fileService.getFileUrl(item.fileS3Key);
-  //           return { ...item, fileS3Key: signedUrl };
-  //         } catch (error) {
-  //           console.error(`Failed to get signed URL for ${item.fileS3Key}:`, error);
-  //           return item;
-  //         }
-  //       }
-  //       return item;
-  //     }),
-  //   );
-  // }
 
   private async addS3SignedUrlsToLessonsAndQuestions(lessons: LessonItemWithContentSchema[]) {
     return await Promise.all(

@@ -136,16 +136,7 @@ export class AdminLessonService {
     displayOrder: number,
   ) {
     return await this.db.transaction(async (trx) => {
-      const [lesson] = await trx
-        .insert(lessons)
-        .values({
-          title: data.title,
-          type: "quiz",
-          description: data.description,
-          chapterId: data?.chapterId,
-          displayOrder,
-        })
-        .returning();
+      const lesson = await this.adminLessonRepository.createQuizLessonWithQuestionsAndOptions(data, displayOrder)
 
       if (!data.questions) return;
 
@@ -185,15 +176,7 @@ export class AdminLessonService {
     authorId: UUIDType,
   ) {
     return await this.db.transaction(async (trx) => {
-      await trx
-        .update(lessons)
-        .set({
-          title: data.title,
-          type: "quiz",
-          description: data.description,
-          chapterId: data.chapterId,
-        })
-        .where(eq(lessons.id, id));
+      await this.adminLessonRepository.updateQuizLessonWithQuestionsAndOptions(id, data)
 
       const existingQuestions = await trx
         .select({ id: questions.id })

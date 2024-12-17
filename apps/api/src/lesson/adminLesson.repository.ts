@@ -9,7 +9,12 @@ import {
   lessons,
 } from "src/storage/schema";
 
-import type { CreateLessonBody, UpdateLessonBody } from "./lesson.schem";
+import type {
+  CreateLessonBody,
+  CreateQuizLessonBody,
+  UpdateLessonBody,
+  UpdateQuizLessonBody,
+} from "./lesson.schem";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
@@ -33,6 +38,33 @@ export class AdminLessonRepository {
       .where(eq(lessons.id, id))
       .returning();
     return updatedLesson;
+  }
+
+  async updateQuizLessonWithQuestionsAndOptions(id: UUIDType, data: UpdateQuizLessonBody) {
+    return await this.db
+      .update(lessons)
+      .set({
+        title: data.title,
+        type: "quiz",
+        description: data.description,
+        chapterId: data.chapterId,
+      })
+      .where(eq(lessons.id, id));
+  }
+
+  async createQuizLessonWithQuestionsAndOptions(data: CreateQuizLessonBody, displayOrder: number) {
+    const [lesson] = await this.db
+      .insert(lessons)
+      .values({
+        title: data.title,
+        type: "quiz",
+        description: data.description,
+        chapterId: data?.chapterId,
+        displayOrder,
+      })
+      .returning();
+
+    return lesson;
   }
 
   async getQuestions(conditions: any[]) {
