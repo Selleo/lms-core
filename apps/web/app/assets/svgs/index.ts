@@ -46,5 +46,8 @@ export { default as ArrowUp } from "./arrow-up.svg?react";
 export { default as ArrowDown } from "./arrow-down.svg?react";
 export { default as Info } from "./info.svg?react";
 export { default as Checkmark } from "./checkmark.svg?react";
+export { default as Flame } from "./flame.svg?react";
+export { default as FreeRight } from "./free-right.svg?react";
+export { default as NoData } from "./no-data.svg?react";
 
 export * from "./lesson-types";
