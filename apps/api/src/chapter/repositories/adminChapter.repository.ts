@@ -208,8 +208,8 @@ export class AdminChapterRepository {
                     'isCorrect', ${questionAnswerOptions.isCorrect},
                     'position', ${questionAnswerOptions.position}
                   )
-                  FROM ${questionAnswerOptions}
-                  WHERE ${questionAnswerOptions.questionId} = ${questions.id}
+                  FROM ${questionAnswerOptions} questionAnswerOptions
+                  WHERE questionAnswerOptions.question_id = questions.id
                 )
               )
             )
