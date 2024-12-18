@@ -18,7 +18,7 @@ export function useUpsertUserDetails() {
 
   return useMutation({
     mutationFn: async (options: UpdateUserDetailsOptions) => {
-      const response = await ApiClient.api.usersControllerUpsertUserDetails(options.data);
+      const response = await ApiClient.api.userControllerUpsertUserDetails(options.data);
 
       return response.data;
     },

@@ -8,7 +8,7 @@ export const userQueryOptions = (id: string) =>
   queryOptions({
     queryKey: ["users", "admin", { id }],
     queryFn: async () => {
-      const response = await ApiClient.api.usersControllerGetUserById({ id });
+      const response = await ApiClient.api.userControllerGetUserById({ id });
       return response.data;
     },
     select: (data: GetUserByIdResponse) => data.data,

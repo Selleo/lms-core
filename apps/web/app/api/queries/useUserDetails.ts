@@ -8,7 +8,7 @@ export const userDetails = (userId: string) => {
   return {
     queryKey: ["user-details", userId],
     queryFn: async () => {
-      const response = await ApiClient.api.usersControllerGetUserDetails({ userId });
+      const response = await ApiClient.api.userControllerGetUserDetails({ userId });
 
       return response.data;
     },

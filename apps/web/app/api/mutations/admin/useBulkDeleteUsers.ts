@@ -16,7 +16,7 @@ export function useBulkDeleteUsers() {
 
   return useMutation({
     mutationFn: async (options: DeleteBulkUsers) => {
-      const response = await ApiClient.api.usersControllerDeleteBulkUsers({
+      const response = await ApiClient.api.userControllerDeleteBulkUsers({
         userIds: options.data.userIds,
       });
 

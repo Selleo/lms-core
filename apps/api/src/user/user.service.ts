@@ -18,14 +18,13 @@ import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 
 import { createTokens, credentials, userDetails, users } from "../storage/schema";
 
-import { USER_ROLES, type UserRole } from "./schemas/userRoles";
 import {
-  type SortUserFieldsOptions,
   type UsersFilterSchema,
   type UserSortField,
+  type UsersQuery,
   UserSortFields,
-  UsersQuery,
 } from "./schemas/userQuery";
+import { USER_ROLES, type UserRole } from "./schemas/userRoles";
 
 import type { UpsertUserDetailsBody } from "./schemas/updateUser.schema";
 import type { UserDetails } from "./schemas/user.schema";

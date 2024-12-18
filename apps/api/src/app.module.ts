@@ -4,6 +4,7 @@ import { ConditionalModule, ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { ScheduleModule } from "@nestjs/schedule";
+
 import { AuthModule } from "./auth/auth.module";
 import { CacheModule } from "./cache/cache.module";
 import { CategoryModule } from "./category/category.module";

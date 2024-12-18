@@ -35,7 +35,6 @@ import {
   UpsertUserDetailsBody,
   upsertUserDetailsSchema,
 } from "./schemas/updateUser.schema";
-import { USER_ROLES } from "./schemas/userRoles";
 import {
   type AllUsersResponse,
   allUsersSchema,
@@ -44,6 +43,7 @@ import {
   type UserResponse,
 } from "./schemas/user.schema";
 import { SortUserFieldsOptions } from "./schemas/userQuery";
+import { USER_ROLES } from "./schemas/userRoles";
 import { UserService } from "./user.service";
 
 import type { UsersFilterSchema } from "./schemas/userQuery";

@@ -1,9 +1,9 @@
 import { omit } from "lodash";
 import request from "supertest";
 
-import { AuthService } from "../../auth/auth.service";
 import { createE2ETest } from "../../../test/create-e2e-test";
 import { createUserFactory, type UserWithCredentials } from "../../../test/factory/user.factory";
+import { AuthService } from "../../auth/auth.service";
 
 import type { DatabasePg } from "../../common";
 import type { INestApplication } from "@nestjs/common";
@@ -35,12 +35,10 @@ describe("UsersController (e2e)", () => {
       .withAdminRole()
       .create();
 
-    const testLoginResponse = await request(app.getHttpServer())
-      .post("/api/auth/login")
-      .send({
-        email: testUser.email,
-        password: testUser.credentials?.password,
-      });
+    const testLoginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
+      email: testUser.email,
+      password: testUser.credentials?.password,
+    });
 
     testCookies = testLoginResponse.headers["set-cookie"];
   });
