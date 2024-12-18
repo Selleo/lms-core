@@ -5,14 +5,13 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "~/component
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
-import { ContentTypes } from "../../EditCourse.types";
+import { ContentTypes, DeleteContentType } from "../../EditCourse.types";
 
 import { useNewChapterForm } from "./hooks/useNewChapterForm";
 
 import type { Chapter } from "../../EditCourse.types";
 import { useState } from "react";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "../CourseLessons.types";
 
 type NewChapterProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -101,7 +100,7 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
         open={isModalOpen}
         onClose={onCloseModal}
         onDelete={onDelete}
-        contentType={DeleteContentType.Chapter}
+        contentType={DeleteContentType.CHAPTER}
       />
     </div>
   );

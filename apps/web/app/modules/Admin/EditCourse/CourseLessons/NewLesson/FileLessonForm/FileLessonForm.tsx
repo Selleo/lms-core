@@ -9,13 +9,12 @@ import { Form, FormControl, FormItem, FormMessage } from "~/components/ui/form";
 import { Label } from "~/components/ui/label";
 import { getFileTypeFromName } from "~/utils/getFileTypeFromName";
 
-import { ContentTypes } from "../../../EditCourse.types";
+import { ContentTypes, DeleteContentType } from "../../../EditCourse.types";
 
 import { useFileLessonForm } from "./hooks/useFileLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "../../CourseLessons.types";
 
 type FileLessonProps = {
   contentTypeToDisplay: string;
@@ -146,7 +145,7 @@ const FileLessonForm = ({
         onClose={onCloseModal}
         onDelete={onDelete}
         contentType={
-          ContentTypes.VIDEO_LESSON_FORM ? DeleteContentType.Video : DeleteContentType.Presentation
+          ContentTypes.VIDEO_LESSON_FORM ? DeleteContentType.VIDEO : DeleteContentType.PRESENTATION
         }
       />
     </div>

@@ -14,10 +14,9 @@ import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
 import { Question, QuestionType } from "./QuizLessonForm.types";
 import type { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { Chapter, ContentTypes, Lesson } from "../../../EditCourse.types";
+import { Chapter, ContentTypes, DeleteContentType, Lesson } from "../../../EditCourse.types";
 import { useCallback, useState } from "react";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "../../CourseLessons.types";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -166,7 +165,7 @@ const QuizLessonForm = ({
         open={isModalOpen}
         onClose={onCloseModal}
         onDelete={onDelete}
-        contentType={DeleteContentType.Quiz}
+        contentType={DeleteContentType.QUIZ}
       />
     </div>
   );
