@@ -23,6 +23,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { QuestionOption, QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
 import { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
 
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -43,12 +44,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
     setDisplayImageUrl(lessonToEdit?.questions?.[questionIndex]?.photoS3SingedUrl);
   }, [lessonToEdit]);
 
-  const isOptionEmpty = useMemo(() => {
-    return (
-      !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
-      form.getValues(`questions.${questionIndex}.options`)?.length === 0
-    );
-  }, [form, questionIndex]);
+  const isOptionEmpty =
+    !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
+    form.getValues(`questions.${questionIndex}.options`)?.length === 0;
 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
@@ -126,7 +124,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
         <div
-          className={cn("border p-4 mt-4 rounded-xl transition-all duration-300", {
+          className={cn("border p-2 mt-4 rounded-xl transition-all duration-300", {
             "border-blue-500": isOpen,
             "border-gray-200": !isOpen,
           })}
@@ -234,8 +232,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                     />
                     <div className="flex items-center">
                       {photoQuestionType === QuestionType.SINGLE_CHOICE ? (
-                        <input
+                        <Input
                           type="radio"
+                          className="w-5 h-5 cursor-pointer ml-3"
                           name={`questions.${questionIndex}.correctOption`}
                           checked={option.isCorrect}
                           onChange={() =>
@@ -243,26 +242,49 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                           }
                         />
                       ) : (
-                        <input
+                        <Input
                           type="checkbox"
+                          className="w-5 h-5 cursor-pointer ml-3"
                           checked={option.isCorrect}
                           onChange={() =>
                             handleOptionChange(optionIndex, "isCorrect", !option.isCorrect)
                           }
                         />
                       )}
-                      <Label className="ml-2 text-neutral-900 body-base">Correct</Label>
-                      <Icon
-                        name="TrashIcon"
-                        className="text-error-500 ml-2 cursor-pointer w-5 h-5"
-                        onClick={() => handleRemoveOption(optionIndex)}
-                      />
+                      <Label
+                        className="ml-2 text-neutral-900 body-base cursor-pointer"
+                        onClick={() =>
+                          handleOptionChange(optionIndex, "isCorrect", !option.isCorrect)
+                        }
+                      >
+                        Correct
+                      </Label>
+                      <TooltipProvider delayDuration={0}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span>
+                              <Icon
+                                name="TrashIcon"
+                                className="text-error-500 ml-3 cursor-pointer w-5 h-5"
+                                onClick={() => handleRemoveOption(optionIndex)}
+                              />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="top"
+                            align="center"
+                            className="bg-black ml-4 text-white text-sm rounded shadow-md"
+                          >
+                            Delete
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-6 flex gap-2">
+            <div className="mt-6 flex gap-2 ml-14">
               <Button className="bg-primary-700" type="button" onClick={handleAddOption}>
                 Add Option
               </Button>

@@ -42,11 +42,11 @@ const TextLessonForm = ({
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
       <div className="flex flex-col gap-y-1">
-        <h1 className="body-base-md text-neutral-800">Text</h1>
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (
             <>
-              <span className="text-neutral-600">Edit:</span> {lessonToEdit?.title}
+              <span className="text-neutral-600">Edit: </span>
+              <span className="font-bold">{lessonToEdit.title}</span>
             </>
           ) : (
             "Create"

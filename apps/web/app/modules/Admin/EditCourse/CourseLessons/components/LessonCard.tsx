@@ -51,11 +51,16 @@ const LessonCard = ({ item, onClickLessonCard, dragTrigger }: LessonCardProps) =
         <Icon name={getIcon as IconName} className="size-6 text-primary-700" />
         <hgroup>
           <p className="text-l">
-            {item.type === LessonType.QUIZ
-              ? `${item.title} (${item.questions?.length || 0})`
-              : item.title}
+            {item.type === LessonType.QUIZ ? (
+              <>
+                {item.title}{" "}
+                <span className="text-neutral-600">({item.questions?.length || 0})</span>
+              </>
+            ) : (
+              item.title
+            )}
           </p>
-          <p className="text-neutral-950 details">{mappedItemType}</p>
+          <p className="text-neutral-600 details">{mappedItemType}</p>
         </hgroup>
       </div>
     </div>

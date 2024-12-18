@@ -104,8 +104,17 @@ const QuizLessonForm = ({
 
   return (
     <div className="w-full max-w-full">
-      <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-6">
-        {lessonToEdit && <h5 className="text-neutral-900 mb-2">Edit: {lessonToEdit.title}</h5>}
+      <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-8">
+        <div className="h5 text-neutral-950 mb-6">
+          {lessonToEdit ? (
+            <>
+              <span className="text-neutral-600">Edit: </span>
+              <span className="font-bold">{lessonToEdit.title}</span>
+            </>
+          ) : (
+            "Create"
+          )}
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -126,8 +135,8 @@ const QuizLessonForm = ({
             />
             <div className="mt-5">
               <Label className="body-base-md">
-                <span className="text-red-500 mr-1 body-base-md">*</span> Questions (
-                {questions?.length || 0})
+                <span className="text-red-500 mr-1 body-base-md">*</span> Questions
+                <span className="text-neutral-600">({questions?.length || 0})</span>
               </Label>
             </div>
 

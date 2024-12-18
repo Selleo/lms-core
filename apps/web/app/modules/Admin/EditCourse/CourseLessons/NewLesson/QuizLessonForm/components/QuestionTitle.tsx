@@ -38,7 +38,7 @@ const QuestionTitle = ({
   };
 
   return (
-    <div className="flex items-center gap-2 p-1">
+    <div className="flex items-center gap-2 p-2">
       <Icon name="DragAndDropIcon" className="w-7 h-7" />
       <Icon name={getIconForQuestionType(questionType)} className="w-5 h-5 text-primary-700" />
 
@@ -61,7 +61,7 @@ const QuestionTitle = ({
       />
 
       {handleToggle && (
-        <AccordionTrigger className="ml-auto" onClick={handleToggle}>
+        <AccordionTrigger className="ml-3 mr-3 text-primary-800" onClick={handleToggle}>
           <Icon name={!isOpen ? "ArrowDown" : "ArrowUp"} />
         </AccordionTrigger>
       )}

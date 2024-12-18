@@ -38,13 +38,18 @@ const EditCourse = () => {
 
   return (
     <Tabs
-      defaultValue={searchParams.get("tab") ?? "Settings"}
+      defaultValue={searchParams.get("tab") ?? "Curriculum"}
       className="flex flex-col gap-y-4 h-full"
     >
       <div className="py-6 px-8 flex flex-col gap-y-4 shadow-md w-full border bg-white rounded-lg border-gray-200">
         <h4 className="text-neutral-950 h4 flex items-center">
           {course?.title || ""}
-          {!course?.isPublished && (
+          {course?.isPublished ? (
+            <span className="ml-2 flex items-center text-success-800 bg-success-50 px-2 py-1 rounded-sm text-sm">
+              <Icon name="Success" className="mr-1" />
+              Published
+            </span>
+          ) : (
             <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
               <Icon name="Warning" className="mr-1" />
               Draft
@@ -52,7 +57,7 @@ const EditCourse = () => {
           )}
         </h4>
         <TabsList className="w-min">
-          {["Settings", "Lesson", "Pricing", "Status"].map((tab) => (
+          {["Settings", "Curriculum", "Pricing", "Status"].map((tab) => (
             <TabsTrigger key={tab} value={tab} onClick={() => handleTabChange(tab)}>
               {tab}
             </TabsTrigger>
@@ -68,7 +73,7 @@ const EditCourse = () => {
           imageUrl={course?.thumbnailUrl}
         />
       </TabsContent>
-      <TabsContent value="Lesson" className="h-full overflow-hidden">
+      <TabsContent value="Curriculum" className="h-full overflow-hidden">
         <CourseLessons
           chapters={course?.chapters as Chapter[]}
           canRefetchChapterList={!!canRefetchChapterList}

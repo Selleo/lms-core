@@ -77,6 +77,7 @@ const ChapterCard = ({
   const onSwitchClick = useCallback(
     async (event: React.MouseEvent) => {
       event.stopPropagation();
+      event.preventDefault();
       try {
         await updateFreemiumStatus({
           chapterId: chapter.id,
@@ -104,7 +105,9 @@ const ChapterCard = ({
               {dragTrigger}
               <hgroup className="flex flex-col-reverse w-full">
                 <h3 className="body-base-md text-neutral-950">{chapter.title}</h3>
-                <div className="text-neutral-800 body-sm-md">Chapter {chapter.displayOrder}</div>
+                <div className="text-neutral-800 body-sm-md">
+                  Chapter {chapter.displayOrder} • Lessons {chapter.lessons.length}
+                </div>
               </hgroup>
               <AccordionTrigger className="cursor-pointer p-2" onClick={onAccordionClick}>
                 <Icon name={isOpen ? "ArrowUp" : "ArrowDown"} className="text-gray-600" />
@@ -244,7 +247,7 @@ const ChaptersList = ({
             <ChapterCard
               key={chapter.id}
               chapter={chapter}
-              isOpen={openItem === `item-${chapter.id}`}
+              isOpen={openItem === chapter.id}
               setContentTypeToDisplay={setContentTypeToDisplay}
               setSelectedChapter={setSelectedChapter}
               setSelectedLesson={setSelectedLesson}
