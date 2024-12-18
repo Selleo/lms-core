@@ -64,7 +64,7 @@ export const useNewChapterForm = ({
     }
   };
 
-  const onClickDelete = async () => {
+  const onDelete = async () => {
     if (!courseId || !chapter?.id) {
       console.error("Course ID or Chapter ID is missing.");
       return;
@@ -80,5 +80,5 @@ export const useNewChapterForm = ({
       console.error("Failed to delete chapter:", error);
     }
   };
-  return { form, onSubmit, onClickDelete };
+  return { form, onSubmit, onDelete };
 };

@@ -14,8 +14,9 @@ import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
 import { Question, QuestionType } from "./QuizLessonForm.types";
 import type { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { Chapter, ContentTypes, Lesson } from "../../../EditCourse.types";
-import { useCallback } from "react";
+import { Chapter, ContentTypes, DeleteContentType, Lesson } from "../../../EditCourse.types";
+import { useCallback, useState } from "react";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -28,13 +29,23 @@ const QuizLessonForm = ({
   chapterToEdit,
   lessonToEdit,
 }: QuizLessonProps) => {
-  const { form, onSubmit, onClickDelete } = useQuizLessonForm({
+  const { form, onSubmit, onDelete } = useQuizLessonForm({
     setContentTypeToDisplay,
     chapterToEdit,
     lessonToEdit,
   });
 
   const questions = form.watch("questions");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const onCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const onClickDelete = () => {
+    setIsModalOpen(true);
+  };
 
   const addQuestion = useCallback(
     (questionType: string) => {
@@ -131,6 +142,7 @@ const QuizLessonForm = ({
               </Button>
               {lessonToEdit ? (
                 <Button
+                  type="button"
                   onClick={onClickDelete}
                   className="text-error-700 bg-color-white border border-neutral-300"
                 >
@@ -149,6 +161,12 @@ const QuizLessonForm = ({
           </form>
         </Form>
       </div>
+      <DeleteConfirmationModal
+        open={isModalOpen}
+        onClose={onCloseModal}
+        onDelete={onDelete}
+        contentType={DeleteContentType.QUIZ}
+      />
     </div>
   );
 };

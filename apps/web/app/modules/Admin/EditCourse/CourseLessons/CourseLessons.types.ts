@@ -1,6 +1,1 @@
-export type LessonTypes =
-  | "presentation"
-  | "external_presentation"
-  | "video"
-  | "external_video"
-  | undefined;
+export type LessonTypes = "presentation" | "video" | undefined;

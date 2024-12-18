@@ -5,11 +5,13 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "~/component
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
-import { ContentTypes } from "../../EditCourse.types";
+import { ContentTypes, DeleteContentType } from "../../EditCourse.types";
 
 import { useNewChapterForm } from "./hooks/useNewChapterForm";
 
 import type { Chapter } from "../../EditCourse.types";
+import { useState } from "react";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 
 type NewChapterProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -22,11 +24,21 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
     throw new Error("courseId is required");
   }
 
-  const { form, onSubmit, onClickDelete } = useNewChapterForm({
+  const { form, onSubmit, onDelete } = useNewChapterForm({
     courseId: courseId ?? "",
     chapter,
     setContentTypeToDisplay,
   });
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const onCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const onClickDelete = () => {
+    setIsModalOpen(true);
+  };
 
   const buttonStyles = "bg-transparent text-red-500 border border-red-500 hover:bg-red-100";
   const saveButtonStyles = "bg-primary-700 hover:bg-blue-600 text-white";
@@ -64,7 +76,12 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
               Save
             </Button>
             {chapter ? (
-              <Button aria-label="Delete chapter" className={buttonStyles} onClick={onClickDelete}>
+              <Button
+                aria-label="Delete chapter"
+                type="button"
+                className={buttonStyles}
+                onClick={onClickDelete}
+              >
                 Delete
               </Button>
             ) : (
@@ -79,6 +96,12 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
           </div>
         </form>
       </Form>
+      <DeleteConfirmationModal
+        open={isModalOpen}
+        onClose={onCloseModal}
+        onDelete={onDelete}
+        contentType={DeleteContentType.CHAPTER}
+      />
     </div>
   );
 };
