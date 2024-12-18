@@ -13,7 +13,7 @@ import { ApiBody, ApiConsumes, ApiQuery, ApiResponse } from "@nestjs/swagger";
 
 import { Roles } from "src/common/decorators/roles.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
 import { FileService } from "./file.service";
 import { FileUploadResponse } from "./schemas/file.schema";
@@ -23,7 +23,7 @@ import { FileUploadResponse } from "./schemas/file.schema";
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @Post()
   @UseInterceptors(FileInterceptor("file"))
   @ApiConsumes("multipart/form-data")
@@ -54,7 +54,7 @@ export class FileController {
     return await this.fileService.uploadFile(file, resource);
   }
 
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @Delete()
   @ApiQuery({
     name: "fileKey",

@@ -20,19 +20,19 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RefreshTokenGuard } from "src/common/guards/refresh-token.guard";
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
 import { UserActivityEvent } from "src/events";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
-import { AuthService } from "../auth.service";
-import { CreateAccountBody, createAccountSchema } from "../schemas/create-account.schema";
-import { type CreatePasswordBody, createPasswordSchema } from "../schemas/create-password.schema";
-import { LoginBody, loginSchema } from "../schemas/login.schema";
+import { AuthService } from "./auth.service";
+import { CreateAccountBody, createAccountSchema } from "./schemas/create-account.schema";
+import { type CreatePasswordBody, createPasswordSchema } from "./schemas/create-password.schema";
+import { LoginBody, loginSchema } from "./schemas/login.schema";
 import {
   ForgotPasswordBody,
   forgotPasswordSchema,
   ResetPasswordBody,
   resetPasswordSchema,
-} from "../schemas/reset-password.schema";
-import { TokenService } from "../token.service";
+} from "./schemas/reset-password.schema";
+import { TokenService } from "./token.service";
 
 import type { Static } from "@sinclair/typebox";
 

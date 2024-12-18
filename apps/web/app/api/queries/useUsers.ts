@@ -14,7 +14,7 @@ type UsersParams = {
 export const usersQueryOptions = (searchParams?: UsersParams) => ({
   queryKey: ["users", searchParams],
   queryFn: async () => {
-    const response = await ApiClient.api.usersControllerGetUsers({
+    const response = await ApiClient.api.userControllerGetUsers({
       page: 1,
       perPage: 100,
       ...(searchParams?.keyword && { keyword: searchParams.keyword }),

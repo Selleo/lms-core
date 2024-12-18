@@ -3,9 +3,9 @@ import { PassportModule } from "@nestjs/passport";
 
 import { ResendVerificationMailCron } from "src/auth/resend-verification-mail-cron";
 import { EmailModule } from "src/common/emails/emails.module";
-import { UsersService } from "src/users/users.service";
+import { UserService } from "src/user/user.service";
 
-import { AuthController } from "./api/auth.controller";
+import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 import { CreatePasswordService } from "./create-password.service";
 import { ResetPasswordService } from "./reset-password.service";
@@ -18,7 +18,7 @@ import { TokenService } from "./token.service";
   controllers: [AuthController],
   providers: [
     AuthService,
-    UsersService,
+    UserService,
     TokenService,
     JwtStrategy,
     LocalStrategy,

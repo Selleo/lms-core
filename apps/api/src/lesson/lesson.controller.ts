@@ -6,7 +6,7 @@ import { baseResponse, BaseResponse, UUIDSchema, type UUIDType } from "src/commo
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
 import { AdminLessonService } from "./adminLesson.service";
 import {
@@ -54,7 +54,7 @@ export class LessonController {
   ) {}
 
   //   @Get()
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     response: paginatedResponse(allLessonsSchema),
   //     request: [
@@ -88,7 +88,7 @@ export class LessonController {
   //   }
 
   //   @Get("available-lessons")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [{ type: "query", name: "courseId", schema: UUIDSchema, required: true }],
   //     response: baseResponse(Type.Array(lessonWithCountItems)),
@@ -116,12 +116,12 @@ export class LessonController {
   //     @CurrentUser("userId") userId: UUIDType,
   //   ): Promise<BaseResponse<ShowLessonResponse>> {
   //     return new BaseResponse(
-  //       await this.lessonsService.getLesson(id, courseId, userId, userRole === USER_ROLES.admin),
+  //       await this.lessonsService.getLesson(id, courseId, userId, userRole === USER_ROLES.ADMIN),
   //     );
   //   }
 
   //   @Get("lesson/:id")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     response: baseResponse(showLessonSchema),
   //   })
@@ -130,7 +130,7 @@ export class LessonController {
   //   }
 
   //   @Post("create-lesson")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -150,7 +150,7 @@ export class LessonController {
   //   }
 
   @Post("beta-create-lesson")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {
@@ -170,7 +170,7 @@ export class LessonController {
   }
 
   @Post("beta-create-lesson/quiz")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {
@@ -191,7 +191,7 @@ export class LessonController {
   }
 
   @Patch("beta-update-lesson/quiz")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {
@@ -217,7 +217,7 @@ export class LessonController {
   }
 
   @Patch("beta-update-lesson")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {
@@ -241,7 +241,7 @@ export class LessonController {
   }
 
   @Delete()
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "query", name: "lessonId", schema: UUIDSchema, required: true }],
     response: baseResponse(Type.Object({ message: Type.String() })),
@@ -257,7 +257,7 @@ export class LessonController {
   }
 
   //   @Patch("lesson")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -281,7 +281,7 @@ export class LessonController {
   //   }
 
   //   @Delete(":courseId/:lessonId")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       { type: "param", name: "courseId", schema: UUIDSchema },
@@ -300,7 +300,7 @@ export class LessonController {
   //   }
 
   //   @Delete("chapter/:courseId/:chapterId")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       { type: "param", name: "courseId", schema: UUIDSchema },
@@ -319,7 +319,7 @@ export class LessonController {
   //   }
 
   //   @Delete("lesson/:chapterId/:lessonId")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       { type: "param", name: "chapterId", schema: UUIDSchema },
@@ -338,7 +338,7 @@ export class LessonController {
   //   }
 
   //   @Patch("course-lesson")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -369,7 +369,7 @@ export class LessonController {
   //   }
 
   //   @Post("evaluation-quiz")
-  //   @Roles(USER_ROLES.student)
+  //   @Roles(USER_ROLES.STUDENT)
   //   @Validate({
   //     request: [
   //       { type: "query", name: "courseId", schema: UUIDSchema },
@@ -389,7 +389,7 @@ export class LessonController {
   //   }
 
   //   @Delete("clear-quiz-progress")
-  //   @Roles(USER_ROLES.student)
+  //   @Roles(USER_ROLES.STUDENT)
   //   @Validate({
   //     request: [
   //       { type: "query", name: "courseId", schema: UUIDSchema, required: true },
@@ -414,7 +414,7 @@ export class LessonController {
   //   }
 
   //   @Get("lesson-items")
-  //   @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  //   @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   //   @Validate({
   //     request: [
   //       {
@@ -459,7 +459,7 @@ export class LessonController {
   //   }
 
   //   @Get("available-lesson-items")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -480,7 +480,7 @@ export class LessonController {
   //   }
 
   //   @Get("lesson-items/:id")
-  //   @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  //   @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   //   @Validate({
   //     response: baseResponse(GetSingleLessonItemsResponseSchema),
   //   })
@@ -492,7 +492,7 @@ export class LessonController {
   //   }
 
   //   @Post(":lessonId/assign-items")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       { type: "param", name: "lessonId", schema: UUIDSchema },
@@ -532,7 +532,7 @@ export class LessonController {
   //   }
 
   //   @Post(":lessonId/unassign-items")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       { type: "param", name: "lessonId", schema: UUIDSchema },
@@ -568,7 +568,7 @@ export class LessonController {
   //   }
 
   //   @Patch("text-block-item")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -592,7 +592,7 @@ export class LessonController {
   //   }
 
   //   @Patch("question-item")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -616,7 +616,7 @@ export class LessonController {
   //   }
 
   //   @Patch("file-item")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -641,7 +641,7 @@ export class LessonController {
   //   }
 
   //   @Post("create-text-block")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -666,7 +666,7 @@ export class LessonController {
   //   }
 
   //   @Post("create-beta-text-block")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -689,7 +689,7 @@ export class LessonController {
   //   }
 
   //   @Post("create-question")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -719,7 +719,7 @@ export class LessonController {
   //   }
 
   //   @Get("question-options")
-  //   @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  //   @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   //   @Validate({
   //     request: [
   //       {
@@ -754,7 +754,7 @@ export class LessonController {
   //   }
 
   //   @Patch("question-options")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -797,7 +797,7 @@ export class LessonController {
   //   }
 
   //   @Patch("course-lesson/freemium-status")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -825,7 +825,7 @@ export class LessonController {
   //   }
 
   //   @Post("create-file")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -851,7 +851,7 @@ export class LessonController {
   //   }
 
   //   @Post("beta-create-file")
-  //   @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
   //     request: [
   //       {
@@ -871,7 +871,7 @@ export class LessonController {
   //   }
 
   @Patch("lesson-display-order")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {

@@ -24,7 +24,7 @@ import {
   userDetails,
   users,
 } from "../storage/schema";
-import { USER_ROLES } from "../users/schemas/user-roles";
+import { USER_ROLES } from "../user/schemas/userRoles";
 
 import { e2eCourses } from "./e2e-data-seeds";
 import { niceCourses } from "./nice-data-seeds";
@@ -52,7 +52,7 @@ async function createUsers(users: UsersSeed, password = faker.internet.password(
         email: userData.email || faker.internet.email(),
         firstName: userData.firstName || faker.person.firstName(),
         lastName: userData.lastName || faker.person.lastName(),
-        role: userData.role || USER_ROLES.student,
+        role: userData.role || USER_ROLES.STUDENT,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -72,7 +72,7 @@ async function createOrFindUser(email: string, password: string, userData: any) 
 
   await insertCredential(newUser.id, password);
 
-  if (newUser.role === USER_ROLES.admin || newUser.role === USER_ROLES.teacher)
+  if (newUser.role === USER_ROLES.ADMIN || newUser.role === USER_ROLES.TEACHER)
     await insertUserDetails(newUser.id);
 
   return newUser;
@@ -259,7 +259,7 @@ async function seed() {
           email: "student0@example.com",
           firstName: faker.person.firstName(),
           lastName: "Student",
-          role: USER_ROLES.student,
+          role: USER_ROLES.STUDENT,
         },
       ],
       "password",

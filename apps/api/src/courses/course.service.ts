@@ -28,7 +28,7 @@ import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { FileService } from "src/file/file.service";
 import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
 import {
@@ -89,7 +89,7 @@ export class CourseService {
     return await this.db.transaction(async (trx) => {
       const conditions = this.getFiltersConditions(filters, false);
 
-      if (currentUserRole === USER_ROLES.teacher && currentUserId) {
+      if (currentUserRole === USER_ROLES.TEACHER && currentUserId) {
         conditions.push(eq(courses.authorId, currentUserId));
       }
 
