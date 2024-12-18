@@ -53,6 +53,12 @@ export default defineConfig(({ mode }) => {
       warmup: {
         clientFiles: ["./app/**/*.tsx"],
       },
+      proxy: {
+        "/api": {
+          target: "http://localhost:3000",
+          changeOrigin: true,
+        },
+      },
     },
     resolve: {
       alias: {

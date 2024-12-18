@@ -1,28 +1,29 @@
 import {
-  Controller,
-  Post,
-  UseInterceptors,
-  UploadedFile,
-  Query,
-  UseGuards,
-  Get,
-  Param,
-  Res,
   BadRequestException,
+  Controller,
+  Get,
   Header,
+  Param,
+  Post,
+  Query,
   Req,
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { ApiBody, ApiConsumes, ApiResponse } from "@nestjs/swagger";
-import { Response, Request } from "express";
+import { ApiBody, ApiConsumes } from "@nestjs/swagger";
+import { Request, Response } from "express";
+import { Validate } from "nestjs-typebox";
 
-import { BaseResponse, UUIDType } from "src/common";
+import { baseResponse, BaseResponse, UUIDSchema, UUIDType } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/users/schemas/user-roles";
 
-import { ScormMetadata, ScormUploadResponse } from "./schemas/scorm.schema";
+import { scormMetadataSchema, scormUploadResponseSchema } from "./schemas/scorm.schema";
 import { ScormService } from "./services/scorm.service";
 
 @Controller("scorm")
@@ -49,10 +50,8 @@ export class ScormController {
       },
     },
   })
-  @ApiResponse({
-    status: 201,
-    description: "File uploaded successfully",
-    type: ScormUploadResponse,
+  @Validate({
+    response: baseResponse(scormUploadResponseSchema),
   })
   async uploadScormPackage(
     @UploadedFile() file: Express.Multer.File,
@@ -78,6 +77,11 @@ export class ScormController {
   @Roles(...Object.values(USER_ROLES))
   @Get(":courseId/content")
   @Header("Cache-Control", "no-store")
+  @Header("X-Frame-Options", "SAMEORIGIN")
+  @Header(
+    "Content-Security-Policy",
+    "frame-ancestors 'self' https://*.lms.localhost https://*.selleo.app",
+  )
   async serveScormContent(
     @Param("courseId") courseId: UUIDType,
     @Query("path") filePath: string,
@@ -108,15 +112,12 @@ export class ScormController {
 
   @Get(":courseId/metadata")
   @Roles(...Object.values(USER_ROLES))
-  @ApiResponse({
-    status: 200,
-    description: "Returns SCORM metadata including entry point path",
-    type: ScormMetadata,
+  @Validate({
+    request: [{ type: "param", name: "courseId", schema: UUIDSchema }],
+    response: baseResponse(scormMetadataSchema),
   })
   async getScormMetadata(@Param("courseId") courseId: UUIDType) {
     const metadata = await this.scormService.getCourseScormMetadata(courseId);
-    return new BaseResponse({
-      metadata,
-    });
+    return new BaseResponse(metadata);
   }
 }

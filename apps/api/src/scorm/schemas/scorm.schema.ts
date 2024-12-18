@@ -1,35 +1,24 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "@sinclair/typebox";
 
-export class ScormMetadata {
-  @ApiProperty()
-  id: string;
+import { UUIDSchema } from "src/common";
 
-  @ApiProperty()
-  createdAt: string;
+import type { Static } from "@sinclair/typebox";
 
-  @ApiProperty()
-  updatedAt: string;
+export const scormMetadataSchema = Type.Object({
+  id: UUIDSchema,
+  createdAt: Type.String(),
+  updatedAt: Type.String(),
+  courseId: UUIDSchema,
+  fileId: UUIDSchema,
+  version: Type.String(),
+  entryPoint: Type.String(),
+  s3Key: Type.String(),
+});
 
-  @ApiProperty()
-  courseId: string;
+export const scormUploadResponseSchema = Type.Object({
+  message: Type.String(),
+  metadata: scormMetadataSchema,
+});
 
-  @ApiProperty()
-  fileId: string;
-
-  @ApiProperty()
-  version: string;
-
-  @ApiProperty()
-  entryPoint: string;
-
-  @ApiProperty()
-  s3Key: string;
-}
-
-export class ScormUploadResponse {
-  @ApiProperty()
-  message: string;
-
-  @ApiProperty()
-  metadata: ScormMetadata;
-}
+export type ScormMetadata = Static<typeof scormMetadataSchema>;
+export type ScormUploadResponse = Static<typeof scormUploadResponseSchema>;

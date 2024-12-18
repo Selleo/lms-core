@@ -1991,12 +1991,11 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "File uploaded successfully",
+          "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ScormUploadResponse"
+                  "$ref": "#/components/schemas/UploadScormPackageResponse"
                 }
               }
             }
@@ -2041,17 +2040,17 @@
             "required": true,
             "in": "path",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Returns SCORM metadata including entry point path",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ScormMetadata"
+                  "$ref": "#/components/schemas/GetScormMetadataResponse"
                 }
               }
             }
@@ -4976,58 +4975,116 @@
           "data"
         ]
       },
-      "ScormMetadata": {
+      "UploadScormPackageResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string"
-          },
-          "courseId": {
-            "type": "string"
-          },
-          "fileId": {
-            "type": "string"
-          },
-          "version": {
-            "type": "string"
-          },
-          "entryPoint": {
-            "type": "string"
-          },
-          "s3Key": {
-            "type": "string"
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  },
+                  "courseId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "fileId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "entryPoint": {
+                    "type": "string"
+                  },
+                  "s3Key": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "createdAt",
+                  "updatedAt",
+                  "courseId",
+                  "fileId",
+                  "version",
+                  "entryPoint",
+                  "s3Key"
+                ]
+              }
+            },
+            "required": [
+              "message",
+              "metadata"
+            ]
           }
         },
         "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "courseId",
-          "fileId",
-          "version",
-          "entryPoint",
-          "s3Key"
+          "data"
         ]
       },
-      "ScormUploadResponse": {
+      "GetScormMetadataResponse": {
         "type": "object",
         "properties": {
-          "message": {
-            "type": "string"
-          },
-          "metadata": {
-            "$ref": "#/components/schemas/ScormMetadata"
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "courseId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "fileId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "entryPoint": {
+                "type": "string"
+              },
+              "s3Key": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "courseId",
+              "fileId",
+              "version",
+              "entryPoint",
+              "s3Key"
+            ]
           }
         },
         "required": [
-          "message",
-          "metadata"
+          "data"
         ]
       }
     }
