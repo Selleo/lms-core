@@ -28,8 +28,8 @@ export const SelectAnswer = ({
 
   return content.questionAnswers
     .sort((a, b) => {
-      if (a.position !== null && b.position !== null) {
-        return a.position - b.position;
+      if (a.displayOrder !== null && b.displayOrder !== null) {
+        return a.displayOrder - b.displayOrder;
       }
 
       return 0;

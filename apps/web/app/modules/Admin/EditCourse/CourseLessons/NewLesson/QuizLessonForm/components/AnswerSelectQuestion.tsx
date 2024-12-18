@@ -33,7 +33,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
     const newOption: QuestionOption = {
       optionText: "",
       isCorrect: false,
-      position: currentOptions.length + 1,
+      displayOrder: currentOptions.length + 1,
     };
     form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption]);
   }, [form, questionIndex]);

@@ -45,7 +45,7 @@ export const e2eCourses: NiceCourseData[] = [
                   {
                     optionText: "E2E Testing Answer",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                 ],
               },
@@ -57,12 +57,12 @@ export const e2eCourses: NiceCourseData[] = [
                   {
                     optionText: "single true",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "single false",
                     isCorrect: false,
-                    position: 1,
+                    displayOrder: 1,
                   },
                 ],
               },
@@ -74,17 +74,17 @@ export const e2eCourses: NiceCourseData[] = [
                   {
                     optionText: "multiple true a",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "multiple true b",
                     isCorrect: false,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "multiple false c",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                 ],
               },

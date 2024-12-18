@@ -117,11 +117,11 @@ export const Question = ({
     }
 
     const items: DndWord[] = content.questionAnswers.map(
-      ({ id, optionText, position, isStudentAnswer, isCorrect, studentAnswerText }) => ({
+      ({ id, optionText, displayOrder, isStudentAnswer, isCorrect, studentAnswerText }) => ({
         id,
-        index: position ?? null,
+        index: displayOrder ?? null,
         value: optionText,
-        blankId: typeof position === "number" ? `blank_${position}` : "blank_preset",
+        blankId: typeof displayOrder === "number" ? `blank_${displayOrder}` : "blank_preset",
         isCorrect,
         isStudentAnswer,
         studentAnswerText,

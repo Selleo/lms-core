@@ -3,7 +3,7 @@ type QuestionCorrectAnswersProps = {
   questionAnswers?: {
     id: string;
     optionText: string;
-    position: number | null;
+    displayOrder: number | null;
     isStudentAnswer?: boolean | null | undefined;
     isCorrect?: boolean | null | undefined;
   }[];

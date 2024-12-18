@@ -123,7 +123,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       if (optionIndex !== -1) {
         updatedOptions[optionIndex] = {
           ...updatedOptions[optionIndex],
-          position: index + 1,
+          displayOrder: index + 1,
           isCorrect: true,
         };
       }
@@ -147,7 +147,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       const newOption = {
         optionText: trimmedWord,
         isCorrect: false,
-        position: currentOptions.length + 1,
+        displayOrder: currentOptions.length + 1,
       };
 
       form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
@@ -230,7 +230,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
           ?.map((option) => {
             return {
               ...option,
-              position: buttonValues.indexOf(option.optionText) + 1,
+              displayOrder: buttonValues.indexOf(option.optionText) + 1,
               isCorrect: buttonValues.includes(option.optionText),
             };
           });

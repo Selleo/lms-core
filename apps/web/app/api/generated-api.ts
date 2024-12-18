@@ -145,8 +145,6 @@ export interface GetUserByIdResponse {
 
 export interface GetUserDetailsResponse {
   data: {
-    firstName: string | null;
-    lastName: string | null;
     /** @format uuid */
     id: string;
     description: string | null;
@@ -607,6 +605,7 @@ export interface FileUploadResponse {
 }
 
 export type BetaCreateLessonBody = {
+  updatedAt?: string;
   title: string;
   type: string;
   description: string;
@@ -632,7 +631,7 @@ export type BetaCreateLessonBody = {
       id?: string;
       optionText: string;
       isCorrect: boolean;
-      position: number;
+      displayOrder: number;
     }[];
   }[];
 } & {
@@ -675,7 +674,7 @@ export type BetaCreateQuizLessonBody = {
       id?: string;
       optionText: string;
       isCorrect: boolean;
-      position: number;
+      displayOrder: number;
     }[];
   }[];
 } & {
@@ -718,7 +717,7 @@ export type BetaUpdateQuizLessonBody = {
       id?: string;
       optionText: string;
       isCorrect: boolean;
-      position: number;
+      displayOrder: number;
     }[];
   }[];
 } & {
@@ -734,6 +733,7 @@ export interface BetaUpdateQuizLessonResponse {
 }
 
 export type BetaUpdateLessonBody = {
+  updatedAt?: string;
   title?: string;
   type?: string;
   description?: string;
@@ -759,7 +759,7 @@ export type BetaUpdateLessonBody = {
       id?: string;
       optionText: string;
       isCorrect: boolean;
-      position: number;
+      displayOrder: number;
     }[];
   }[];
 } & {

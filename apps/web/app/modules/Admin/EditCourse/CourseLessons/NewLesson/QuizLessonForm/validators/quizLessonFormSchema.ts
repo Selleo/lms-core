@@ -23,7 +23,7 @@ export const quizLessonFormSchema = z.object({
             id: z.optional(z.string()),
             optionText: z.string().min(1, "Option text is required"),
             isCorrect: z.boolean(),
-            position: z.number(),
+            displayOrder: z.number(),
           }),
         )
         .optional(),

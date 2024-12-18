@@ -9,7 +9,7 @@ import { handleCompletionForMediaLesson } from "~/utils/handleCompletionForMedia
 type Answer = {
   id: string;
   optionText: string;
-  position: number | null;
+  displayOrder: number | null;
   isStudentAnswer?: boolean | null;
   isCorrect?: boolean | null;
   studentAnswerText?: string | null;
@@ -48,8 +48,8 @@ export const FillInTheBlanks = ({
   updateLessonItemCompletion,
 }: FillInTheBlanksProps) => {
   const [_words, setWords] = useState<Word[]>(
-    answers.map(({ position, studentAnswerText }) => ({
-      index: position ?? 0,
+    answers.map(({ displayOrder, studentAnswerText }) => ({
+      index: displayOrder ?? 0,
       value: studentAnswerText ?? "",
     })),
   );

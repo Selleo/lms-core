@@ -1,0 +1,1 @@
+ALTER TABLE "question_answer_options" RENAME COLUMN "position" TO "display_order";

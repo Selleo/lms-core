@@ -161,7 +161,7 @@ export class AdminLessonService {
             questionId: question.id,
             optionText: option.optionText,
             isCorrect: option.isCorrect,
-            position: option.position,
+            displayOrder: option.displayOrder,
           })) || [],
       );
 
@@ -253,7 +253,7 @@ export class AdminLessonService {
               const optionData = {
                 optionText: option.optionText,
                 isCorrect: option.isCorrect,
-                position: option.position,
+                displayOrder: option.displayOrder,
               };
 
               if (option.id) {

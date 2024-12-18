@@ -29,6 +29,13 @@
       "when": 1734419608219,
       "tag": "0003_add_question_missing_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1734507806594,
+      "tag": "0004_rename_position_column",
+      "breakpoints": true
     }
   ]
 }

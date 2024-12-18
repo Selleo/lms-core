@@ -16,7 +16,7 @@ import { UUIDSchema } from "src/common";
 export const questionAnswerOptionsSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
   optionText: Type.String(),
-  position: Type.Union([Type.Number(), Type.Null()]),
+  displayOrder: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Optional(Type.Boolean()),
   isCorrect: Type.Optional(Type.Boolean()),
   questionId: UUIDSchema,
@@ -76,7 +76,7 @@ export const lessonItemWithContent = Type.Object({
 export const questionAnswer = Type.Object({
   id: UUIDSchema,
   optionText: Type.String(),
-  position: Type.Union([Type.Number(), Type.Null()]),
+  displayOrder: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Union([Type.Boolean(), Type.Null()]),
   isCorrect: Type.Union([Type.Boolean(), Type.Null()]),
 });
@@ -84,7 +84,7 @@ export const questionAnswer = Type.Object({
 export const questionAnswerOptionsResponse = Type.Object({
   id: UUIDSchema,
   optionText: Type.String(),
-  position: Type.Union([Type.Number(), Type.Null()]),
+  displayOrder: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   isCorrect: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   studentAnswerText: Type.Optional(Type.Union([Type.String(), Type.Null()])),

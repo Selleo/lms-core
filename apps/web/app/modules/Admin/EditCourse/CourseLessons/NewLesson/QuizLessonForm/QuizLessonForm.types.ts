@@ -14,7 +14,7 @@ export type QuestionOption = {
   id?: string;
   optionText: string;
   isCorrect: boolean;
-  position: number;
+  displayOrder: number;
 };
 
 export type Question = {

@@ -82,7 +82,7 @@ export class AdminLessonRepository {
         id: questionAnswerOptions.id,
         optionText: questionAnswerOptions.optionText,
         isCorrect: questionAnswerOptions.isCorrect,
-        position: questionAnswerOptions.position,
+        displayOrder: questionAnswerOptions.displayOrder,
       })
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));
@@ -390,7 +390,7 @@ export class AdminLessonRepository {
       id?: string;
       optionText: string;
       isCorrect: boolean;
-      position: number;
+      displayOrder: number;
     },
     trx?: PostgresJsDatabase<typeof schema>,
   ) {
@@ -402,14 +402,14 @@ export class AdminLessonRepository {
         questionId,
         optionText: option.optionText,
         isCorrect: option.isCorrect,
-        position: option.position,
+        displayOrder: option.displayOrder,
       })
       .onConflictDoUpdate({
         target: questionAnswerOptions.id,
         set: {
           optionText: option.optionText,
           isCorrect: option.isCorrect,
-          position: option.position,
+          displayOrder: option.displayOrder,
         },
       });
   }

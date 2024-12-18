@@ -10,7 +10,7 @@ export const optionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
   optionText: Type.String(),
   isCorrect: Type.Boolean(),
-  position: Type.Number(),
+  displayOrder: Type.Number(),
 });
 
 export const questionSchema = Type.Object({

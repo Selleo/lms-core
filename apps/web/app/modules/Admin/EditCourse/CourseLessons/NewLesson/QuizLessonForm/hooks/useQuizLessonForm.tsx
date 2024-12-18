@@ -55,8 +55,8 @@ export const useQuizLessonForm = ({
             const wordMatches = [...processedDescription.matchAll(/\[word\]/g)];
 
             wordMatches.forEach((match, index) => {
-              const position = index + 1;
-              const option = question.options?.find((opt) => opt.position === position);
+              const displayOrder = index + 1;
+              const option = question.options?.find((opt) => opt.displayOrder === displayOrder);
 
               if (option) {
                 const buttonHtml = `<button type="button" class="bg-primary-200 text-white px-4 rounded-xl cursor-pointer align-baseline">
@@ -78,7 +78,7 @@ export const useQuizLessonForm = ({
                 id: option.id,
                 optionText: option.optionText,
                 isCorrect: option.isCorrect,
-                position: option.position,
+                displayOrder: option.displayOrder,
               })),
             };
           }) || [],
