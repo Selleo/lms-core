@@ -18,27 +18,21 @@ import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 
 import { createTokens, credentials, userDetails, users } from "../storage/schema";
 
-import { USER_ROLES, type UserRole } from "./schemas/user-roles";
+import { USER_ROLES, type UserRole } from "./schemas/userRoles";
 import {
   type SortUserFieldsOptions,
   type UsersFilterSchema,
   type UserSortField,
   UserSortFields,
+  UsersQuery,
 } from "./schemas/userQuery";
 
-import type { UpsertUserDetailsBody } from "./schemas/update-user.schema";
+import type { UpsertUserDetailsBody } from "./schemas/updateUser.schema";
 import type { UserDetails } from "./schemas/user.schema";
-import type { CreateUserBody } from "src/users/schemas/create-user.schema";
-
-type UsersQuery = {
-  filters?: UsersFilterSchema;
-  page?: number;
-  perPage?: number;
-  sort?: SortUserFieldsOptions;
-};
+import type { CreateUserBody } from "src/user/schemas/createUser.schema";
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private emailService: EmailService,
@@ -255,7 +249,7 @@ export class UsersService {
         from: process.env.SES_EMAIL || "",
       });
 
-      if (USER_ROLES.teacher === createdUser.role || USER_ROLES.admin === createdUser.role)
+      if (USER_ROLES.TEACHER === createdUser.role || USER_ROLES.ADMIN === createdUser.role)
         await trx
           .insert(userDetails)
           .values({ userId: createdUser.id, contactEmail: createdUser.email });

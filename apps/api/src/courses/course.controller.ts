@@ -34,7 +34,7 @@ import { CreateCourseBody, createCourseSchema } from "src/courses/schemas/create
 import { commonShowCourseSchema } from "src/courses/schemas/showCourseCommon.schema";
 import { UpdateCourseBody, updateCourseSchema } from "src/courses/schemas/updateCourse.schema";
 import { allCoursesValidation, coursesValidation } from "src/courses/validations/validations";
-import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
+import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import type {
   AllCoursesForTeacherResponse,
@@ -49,7 +49,7 @@ export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
   @Get()
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @Validate(allCoursesValidation)
   async getAllCourses(
     @Query("title") title: string,
@@ -172,7 +172,7 @@ export class CourseController {
   }
 
   @Get("course-by-id")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
@@ -182,7 +182,7 @@ export class CourseController {
   }
 
   @Get("beta-course-by-id")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
@@ -192,7 +192,7 @@ export class CourseController {
   }
 
   @Post()
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @Validate({
     request: [{ type: "body", schema: createCourseSchema }],
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
@@ -208,7 +208,7 @@ export class CourseController {
 
   @Patch(":id")
   @UseInterceptors(FileInterceptor("image"))
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       { type: "param", name: "id", schema: UUIDSchema },
@@ -228,7 +228,7 @@ export class CourseController {
   }
 
   @Post("enroll-course")
-  @Roles(USER_ROLES.student)
+  @Roles(USER_ROLES.STUDENT)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
     response: baseResponse(Type.Object({ message: Type.String() })),
@@ -244,7 +244,7 @@ export class CourseController {
   }
 
   @Delete("unenroll-course")
-  @Roles(USER_ROLES.student)
+  @Roles(USER_ROLES.STUDENT)
   @Validate({
     response: nullResponse(),
     request: [{ type: "query", name: "id", schema: UUIDSchema }],

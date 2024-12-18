@@ -25,37 +25,37 @@ import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { commonUserSchema } from "src/common/schemas/common-user.schema";
-import { type CreateUserBody, createUserSchema } from "src/users/schemas/create-user.schema";
+import { type CreateUserBody, createUserSchema } from "src/user/schemas/createUser.schema";
 
-import { type ChangePasswordBody, changePasswordSchema } from "../schemas/change-password.schema";
-import { deleteUsersSchema, type DeleteUsersSchema } from "../schemas/delete-users.schema";
+import { type ChangePasswordBody, changePasswordSchema } from "./schemas/changePassword.schema";
+import { deleteUsersSchema, type DeleteUsersSchema } from "./schemas/deleteUsers.schema";
 import {
   type UpdateUserBody,
   updateUserSchema,
   UpsertUserDetailsBody,
   upsertUserDetailsSchema,
-} from "../schemas/update-user.schema";
-import { USER_ROLES } from "../schemas/user-roles";
+} from "./schemas/updateUser.schema";
+import { USER_ROLES } from "./schemas/userRoles";
 import {
   type AllUsersResponse,
   allUsersSchema,
   type UserDetails,
   userDetailsSchema,
   type UserResponse,
-} from "../schemas/user.schema";
-import { SortUserFieldsOptions } from "../schemas/userQuery";
-import { UsersService } from "../users.service";
+} from "./schemas/user.schema";
+import { SortUserFieldsOptions } from "./schemas/userQuery";
+import { UserService } from "./user.service";
 
-import type { UsersFilterSchema } from "../schemas/userQuery";
+import type { UsersFilterSchema } from "./schemas/userQuery";
 import type { Static } from "@sinclair/typebox";
 
-@Controller("users")
+@Controller("user")
 @UseGuards(RolesGuard)
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly usersService: UserService) {}
 
-  @Get()
-  @Roles(USER_ROLES.admin)
+  @Get("all")
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     request: [
       { type: "query", name: "keyword", schema: Type.String() },
@@ -88,8 +88,8 @@ export class UsersController {
     return new PaginatedResponse(users);
   }
 
-  @Get("user")
-  @Roles(USER_ROLES.admin)
+  @Get()
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonUserSchema),
@@ -100,7 +100,7 @@ export class UsersController {
     return new BaseResponse(user);
   }
 
-  @Get("user-details")
+  @Get("details")
   @Roles(...Object.values(USER_ROLES))
   @Validate({
     request: [{ type: "query", name: "userId", schema: UUIDSchema, required: true }],
@@ -112,7 +112,7 @@ export class UsersController {
   }
 
   @Patch()
-  @Roles(USER_ROLES.admin)
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     response: baseResponse(commonUserSchema),
     request: [
@@ -136,8 +136,8 @@ export class UsersController {
     }
   }
 
-  @Patch("user-details")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Patch("details")
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
     request: [{ type: "body", schema: upsertUserDetailsSchema }],
@@ -156,8 +156,8 @@ export class UsersController {
     }
   }
 
-  @Patch("admin/user")
-  @Roles(USER_ROLES.admin)
+  @Patch("admin")
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     response: baseResponse(commonUserSchema),
     request: [
@@ -198,7 +198,7 @@ export class UsersController {
   }
 
   @Delete("user")
-  @Roles(USER_ROLES.admin)
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     response: nullResponse(),
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
@@ -217,7 +217,7 @@ export class UsersController {
   }
 
   @Delete()
-  @Roles(USER_ROLES.admin)
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     response: nullResponse(),
     request: [{ type: "body", schema: deleteUsersSchema }],
@@ -228,8 +228,8 @@ export class UsersController {
     return null;
   }
 
-  @Post("create")
-  @Roles(USER_ROLES.admin)
+  @Post()
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
     request: [{ type: "body", schema: createUserSchema }],

@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { Factory } from "fishery";
 
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
 import hashPassword from "../../src/common/helpers/hashPassword";
 import { credentials, users } from "../../src/storage/schema";
@@ -19,7 +19,7 @@ export const credentialFactory = Factory.define<Credential>(() => ({
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),
   password: faker.internet.password(),
-  role: USER_ROLES.student,
+  role: USER_ROLES.STUDENT,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   archived: false,
@@ -34,7 +34,7 @@ class UserFactory extends Factory<UserWithCredentials> {
 
   withAdminRole() {
     return this.associations({
-      role: USER_ROLES.admin,
+      role: USER_ROLES.ADMIN,
     });
   }
 }
@@ -73,7 +73,7 @@ export const createUserFactory = (db: DatabasePg) => {
       lastName: faker.person.lastName(),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: USER_ROLES.student,
+      role: USER_ROLES.STUDENT,
       archived: false,
     };
   });

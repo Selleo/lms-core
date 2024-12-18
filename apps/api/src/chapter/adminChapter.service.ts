@@ -29,7 +29,7 @@ export class AdminChapterService {
   //   const { sortOrder, sortedField } = getSortOptions(sort);
   //   const conditions = this.getFiltersConditions(filters);
 
-  //   if (query.currentUserRole === USER_ROLES.teacher && query.currentUserId) {
+  //   if (query.currentUserRole === USER_ROLES.TEACHER && query.currentUserId) {
   //     conditions.push(eq(lessons.authorId, query.currentUserId));
   //   }
 

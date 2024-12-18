@@ -28,3 +28,10 @@ export const usersFilterSchema = Type.Object({
 });
 
 export type UsersFilterSchema = Static<typeof usersFilterSchema>;
+
+export type UsersQuery = {
+  filters?: UsersFilterSchema;
+  page?: number;
+  perPage?: number;
+  sort?: SortUserFieldsOptions;
+};

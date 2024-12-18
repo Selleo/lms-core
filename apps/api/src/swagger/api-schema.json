@@ -334,9 +334,9 @@
         }
       }
     },
-    "/api/users": {
+    "/api/user/all": {
       "get": {
-        "operationId": "UsersController_getUsers",
+        "operationId": "UserController_getUsers",
         "parameters": [
           {
             "name": "keyword",
@@ -399,9 +399,36 @@
             }
           }
         }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "operationId": "UserController_getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserByIdResponse"
+                }
+              }
+            }
+          }
+        }
       },
       "patch": {
-        "operationId": "UsersController_updateUser",
+        "operationId": "UserController_updateUser",
         "parameters": [
           {
             "name": "id",
@@ -436,7 +463,7 @@
         }
       },
       "delete": {
-        "operationId": "UsersController_deleteBulkUsers",
+        "operationId": "UserController_deleteBulkUsers",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -459,53 +486,26 @@
             }
           }
         }
-      }
-    },
-    "/api/users/user": {
-      "get": {
-        "operationId": "UsersController_getUserById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserByIdResponse"
-                }
-              }
-            }
-          }
-        }
       },
-      "delete": {
-        "operationId": "UsersController_deleteUser",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
+      "post": {
+        "operationId": "UserController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserBody"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteUserResponse"
+                  "$ref": "#/components/schemas/CreateUserResponse"
                 }
               }
             }
@@ -513,9 +513,9 @@
         }
       }
     },
-    "/api/users/user-details": {
+    "/api/user/details": {
       "get": {
-        "operationId": "UsersController_getUserDetails",
+        "operationId": "UserController_getUserDetails",
         "parameters": [
           {
             "name": "userId",
@@ -540,7 +540,7 @@
         }
       },
       "patch": {
-        "operationId": "UsersController_upsertUserDetails",
+        "operationId": "UserController_upsertUserDetails",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -565,9 +565,9 @@
         }
       }
     },
-    "/api/users/admin/user": {
+    "/api/user/admin": {
       "patch": {
-        "operationId": "UsersController_adminUpdateUser",
+        "operationId": "UserController_adminUpdateUser",
         "parameters": [
           {
             "name": "id",
@@ -602,9 +602,9 @@
         }
       }
     },
-    "/api/users/change-password": {
+    "/api/user/change-password": {
       "patch": {
-        "operationId": "UsersController_changePassword",
+        "operationId": "UserController_changePassword",
         "parameters": [
           {
             "name": "id",
@@ -639,26 +639,26 @@
         }
       }
     },
-    "/api/users/create": {
-      "post": {
-        "operationId": "UsersController_createUser",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserBody"
-              }
+    "/api/user/user": {
+      "delete": {
+        "operationId": "UserController_deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateUserResponse"
+                  "$ref": "#/components/schemas/DeleteUserResponse"
                 }
               }
             }

@@ -20,7 +20,7 @@ import { BaseResponse, UUIDType } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
 import { ScormMetadata, ScormUploadResponse } from "./schemas/scorm.schema";
 import { ScormService } from "./services/scorm.service";
@@ -32,7 +32,7 @@ export class ScormController {
 
   @Post("upload")
   @UseInterceptors(FileInterceptor("file"))
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @ApiConsumes("multipart/form-data")
   @ApiBody({
     schema: {
