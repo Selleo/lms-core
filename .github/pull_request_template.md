@@ -9,14 +9,13 @@
 -->
 
 ## Jira issue(s)
-
-<!-- https://selleolabs.atlassian.net/browse/LC-121 -->
+[LC-]()
 
 ## Overview
 
 ## Screenshots
 
-## Testing prerequisites
+<!-- ## Testing prerequisites
 
 ## Testing scenarios
 
@@ -24,4 +23,4 @@
 - [ ] B
 - [ ] C
 
-### Notes
+### Notes -->
