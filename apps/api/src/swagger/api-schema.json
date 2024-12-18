@@ -1706,6 +1706,33 @@
         }
       }
     },
+    "/api/lesson/question-anwser-display-order": {
+      "patch": {
+        "operationId": "LessonController_updateQuestionAnswerDisplayOrder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuestionAnswerDisplayOrderBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateQuestionAnswerDisplayOrderResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lesson/lesson-display-order": {
       "patch": {
         "operationId": "LessonController_updateLessonDisplayOrder",
@@ -1844,6 +1871,60 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UpdateFreemiumStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/question/question-anwser-display-order": {
+      "patch": {
+        "operationId": "QuestionController_updateQuestionAnswerDisplayOrder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuestionAnswerDisplayOrderBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateQuestionAnswerDisplayOrderResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/question/question-display-order": {
+      "patch": {
+        "operationId": "QuestionController_updateQuestionDisplayOrder",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateQuestionDisplayOrderBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateQuestionDisplayOrderResponse"
                 }
               }
             }
@@ -4733,6 +4814,41 @@
           "data"
         ]
       },
+      "UpdateQuestionAnswerDisplayOrderBody": {
+        "type": "object",
+        "properties": {
+          "questionAnswerId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "questionAnswerId",
+          "displayOrder"
+        ]
+      },
+      "UpdateQuestionAnswerDisplayOrderResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "UpdateLessonDisplayOrderBody": {
         "type": "object",
         "properties": {
@@ -4920,6 +5036,41 @@
         ]
       },
       "UpdateFreemiumStatusResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateQuestionDisplayOrderBody": {
+        "type": "object",
+        "properties": {
+          "questionId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "questionId",
+          "displayOrder"
+        ]
+      },
+      "UpdateQuestionDisplayOrderResponse": {
         "type": "object",
         "properties": {
           "data": {

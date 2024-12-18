@@ -67,6 +67,17 @@ export class AdminLessonRepository {
     return lesson;
   }
 
+  async getQuestionById(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+    return await dbInstance
+      .select({
+        id: questions.id,
+        displayOrder: questions.displayOrder,
+      })
+      .from(questions)
+      .where(eq(questions.id, questionId));
+  }
+
   async getQuestions(conditions: any[]) {
     return await this.db
       .select()
@@ -83,6 +94,7 @@ export class AdminLessonRepository {
         optionText: questionAnswerOptions.optionText,
         isCorrect: questionAnswerOptions.isCorrect,
         displayOrder: questionAnswerOptions.displayOrder,
+        questionId: questionAnswerOptions.questionId,
       })
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));

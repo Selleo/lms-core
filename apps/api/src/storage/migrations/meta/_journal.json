@@ -36,6 +36,13 @@
       "when": 1734507806594,
       "tag": "0004_rename_position_column",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1734514040404,
+      "tag": "0005_many_glorian",
+      "breakpoints": true
     }
   ]
 }

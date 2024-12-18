@@ -780,6 +780,18 @@ export interface RemoveLessonResponse {
   };
 }
 
+export interface UpdateQuestionAnswerDisplayOrderBody {
+  /** @format uuid */
+  questionAnswerId: string;
+  displayOrder: number;
+}
+
+export interface UpdateQuestionAnswerDisplayOrderResponse {
+  data: {
+    message: string;
+  };
+}
+
 export interface UpdateLessonDisplayOrderBody {
   /** @format uuid */
   lessonId: string;
@@ -837,6 +849,18 @@ export interface UpdateFreemiumStatusBody {
 }
 
 export interface UpdateFreemiumStatusResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface UpdateQuestionDisplayOrderBody {
+  /** @format uuid */
+  questionId: string;
+  displayOrder: number;
+}
+
+export interface UpdateQuestionDisplayOrderResponse {
   data: {
     message: string;
   };
@@ -1966,6 +1990,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name LessonControllerUpdateQuestionAnswerDisplayOrder
+     * @request PATCH:/api/lesson/question-anwser-display-order
+     */
+    lessonControllerUpdateQuestionAnswerDisplayOrder: (
+      data: UpdateQuestionAnswerDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateQuestionAnswerDisplayOrderResponse, any>({
+        path: `/api/lesson/question-anwser-display-order`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LessonControllerUpdateLessonDisplayOrder
      * @request PATCH:/api/lesson/lesson-display-order
      */
@@ -2056,6 +2099,44 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/chapter/freemium-status`,
         method: "PATCH",
         query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name QuestionControllerUpdateQuestionAnswerDisplayOrder
+     * @request PATCH:/api/question/question-anwser-display-order
+     */
+    questionControllerUpdateQuestionAnswerDisplayOrder: (
+      data: UpdateQuestionAnswerDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateQuestionAnswerDisplayOrderResponse, any>({
+        path: `/api/question/question-anwser-display-order`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name QuestionControllerUpdateQuestionDisplayOrder
+     * @request PATCH:/api/question/question-display-order
+     */
+    questionControllerUpdateQuestionDisplayOrder: (
+      data: UpdateQuestionDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateQuestionDisplayOrderResponse, any>({
+        path: `/api/question/question-display-order`,
+        method: "PATCH",
         body: data,
         type: ContentType.Json,
         format: "json",

@@ -38,7 +38,7 @@ export function SortableList<T extends BaseItem>({
   className,
 }: SortableListProps<T>) {
   const [active, setActive] = useState<Active | null>(null);
-  const activeItem = useMemo(() => items.find((item) => item.id === active?.id), [active, items]);
+  const activeItem = useMemo(() => items?.find((item) => item.id === active?.id), [active, items]);
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -59,7 +59,7 @@ export function SortableList<T extends BaseItem>({
 
           const updatedItems = arrayMove(items, activeIndex, overIndex);
 
-          const updatedItem = updatedItems.find((item) => item.id === active.id);
+          const updatedItem = updatedItems?.find((item) => item.id === active.id);
           const newPosition = updatedItems.indexOf(updatedItem!);
 
           onChange(updatedItems, newPosition);
@@ -72,9 +72,7 @@ export function SortableList<T extends BaseItem>({
     >
       <SortableContext items={items}>
         <ul {...(className && { className })} role="application">
-          {items.map((item) => (
-            <Fragment key={item.id}>{renderItem(item)}</Fragment>
-          ))}
+          {items?.map((item) => <Fragment key={item.id}>{renderItem(item)}</Fragment>)}
         </ul>
       </SortableContext>
       <div className="list-none">

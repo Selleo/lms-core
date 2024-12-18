@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 
-import { DatabasePg } from "src/common";
+import { DatabasePg, UUIDType } from "src/common";
 
 import { QuestionsRepository } from "./questions.repository";
 
@@ -20,6 +20,48 @@ export class QuestionService {
     @Inject("DB") private readonly db: DatabasePg,
     private readonly questionsRepository: QuestionsRepository,
   ) {}
+
+  async updateQuestionAnswerDisplayOrder(body: {
+    questionAnswerId: UUIDType;
+    displayOrder: number;
+  }): Promise<void> {
+    const [questionAnswerToUpdate] = await this.questionsRepository.getQuestionAnswersById(
+      body.questionAnswerId,
+    );
+
+    const oldDisplayOrder = questionAnswerToUpdate.displayOrder;
+
+    if (!questionAnswerToUpdate || oldDisplayOrder === null) {
+      throw new NotFoundException("Question answer options not found");
+    }
+
+    await this.questionsRepository.updateQuestionAnswerDisplayOrder(
+      body.questionAnswerId,
+      oldDisplayOrder,
+      body.displayOrder,
+      questionAnswerToUpdate.id,
+    );
+  }
+
+  async updateQuestionDisplayOrder(body: {
+    questionId: UUIDType;
+    displayOrder: number;
+  }): Promise<void> {
+    const [questionToUpdate] = await this.questionsRepository.getQuestionById(body.questionId);
+
+    const oldDisplayOrder = questionToUpdate.displayOrder;
+
+    if (!questionToUpdate || oldDisplayOrder === null) {
+      throw new NotFoundException("Question answer options not found");
+    }
+
+    await this.questionsRepository.updateQuestionDisplayOrder(
+      body.questionId,
+      oldDisplayOrder,
+      body.displayOrder,
+      questionToUpdate.id,
+    );
+  }
 
   // async questionAnswer(answerQuestion: AnswerQuestionSchema, userId: string) {
   //   return await this.db.transaction(async (trx) => {
