@@ -4,11 +4,23 @@ import { ApiClient } from "../api-client";
 
 import type { GetTeacherCoursesResponse } from "../generated-api";
 
-export const teacherCourses = (authorId: string) => {
+type SearchParams = {
+  scope?: "all" | "enrolled" | "available";
+};
+
+export const teacherCoursesOptions = (authorId?: string, searchParams?: SearchParams) => {
   return {
+    enabled: !!authorId,
     queryKey: ["teacher-courses", authorId],
     queryFn: async () => {
-      const response = await ApiClient.api.courseControllerGetTeacherCourses({ authorId });
+      if (!authorId) {
+        throw new Error("Author ID is required");
+      }
+
+      const response = await ApiClient.api.courseControllerGetTeacherCourses({
+        authorId,
+        ...(searchParams?.scope && { scope: searchParams.scope }),
+      });
 
       return response.data;
     },
@@ -16,6 +28,6 @@ export const teacherCourses = (authorId: string) => {
   };
 };
 
-export function useTeacherCourses(authorId: string) {
-  return useQuery(teacherCourses(authorId));
+export function useTeacherCourses(authorId?: string, searchParams?: SearchParams) {
+  return useQuery(teacherCoursesOptions(authorId, searchParams));
 }

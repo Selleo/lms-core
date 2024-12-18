@@ -20,15 +20,15 @@ import {
   sql,
 } from "drizzle-orm";
 
-import { LESSON_ITEM_TYPE, LESSON_TYPE } from "src/chapter/chapter.type";
+import { LESSON_TYPE } from "src/chapter/chapter.type";
 import { AdminChapterRepository } from "src/chapter/repositories/adminChapter.repository";
-import { ChapterProgress } from "src/chapter/schemas/chapter.types";
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { FileService } from "src/file/file.service";
 import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import { USER_ROLES } from "src/user/schemas/userRoles";
+import { PROGRESS_STATUS } from "src/utils/types/progress.type";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
 import {
@@ -56,9 +56,9 @@ import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
-import type { ChapterProgressType } from "src/chapter/schemas/chapter.types";
 import type { Pagination, UUIDType } from "src/common";
 import type { LessonItemWithContentSchema } from "src/lesson/lesson.schema";
+import type { ProgressStatusType } from "src/utils/types/progress.type";
 
 @Injectable()
 export class CourseService {
@@ -331,10 +331,6 @@ export class CourseService {
         priceInCents: courses.priceInCents,
         currency: courses.currency,
         authorId: courses.authorId,
-        // is no needed on frontend *
-        author: sql<string>`${users.firstName} || ' ' || ${users.lastName}`,
-        // is no needed on frontend *
-        authorEmail: sql<string>`${users.email}`,
         hasFreeChapter: sql<boolean>`
           EXISTS (
             SELECT 1
@@ -375,34 +371,16 @@ export class CourseService {
           WHERE ${lessons.chapterId} = ${chapters.id}
             AND ${lessons.type} = ${LESSON_TYPE.quiz.key})::INTEGER`,
         completedLessonCount: sql<number>`COALESCE(${studentChapterProgress.completedLessonCount}, 0)`,
-        // TODO: add lessonProgressState to student lessons progress table
-        chapterProgress: sql<ChapterProgressType>`
-          (CASE
-            WHEN (
-              SELECT COUNT(*)
-              FROM ${lessons}
-              WHERE ${lessons.chapterId} = ${chapters.id}
-                AND ${lessons.type} != ${LESSON_ITEM_TYPE.text_block.key}
-            ) = (
-              SELECT COUNT(*)
-              FROM ${studentLessonProgress}
-              LEFT JOIN ${lessons} ON ${lessons.chapterId} = ${chapters.id}
-              WHERE ${studentLessonProgress.lessonId} = ${lessons.id}
-                AND ${studentLessonProgress.studentId} = ${userId}
-            )
-            THEN ${ChapterProgress.completed}
-            WHEN (
-              SELECT COUNT(*)
-              FROM ${studentLessonProgress}
-              LEFT JOIN ${lessons} ON ${lessons.id} = ${studentLessonProgress.lessonId}
-              WHERE ${studentLessonProgress.lessonId} = ${lessons.id}
-                AND ${studentLessonProgress.studentId} = ${userId}
-            ) > 0
-            THEN ${ChapterProgress.inProgress}
-            ELSE ${ChapterProgress.notStarted}
-          END)
+        chapterProgress: sql<ProgressStatusType>`
+          CASE
+            WHEN ${studentChapterProgress.completedAt} IS NOT NULL THEN ${PROGRESS_STATUS.completed}
+            WHEN ${studentChapterProgress.completedAt} IS NULL
+              AND ${studentChapterProgress.completedLessonCount} > 0 THEN ${PROGRESS_STATUS.inProgress}
+            ELSE ${PROGRESS_STATUS.notStarted}
+          END
         `,
-        isFree: chapters.isFreemium,
+        isFreemium: chapters.isFreemium,
+        displayOrder: sql<number>`${chapters.displayOrder}`,
         lessons: sql<string>`
           COALESCE(
             (
@@ -488,7 +466,7 @@ export class CourseService {
       .select({
         id: chapters.id,
         title: chapters.title,
-        displayOrder: chapters.displayOrder,
+        displayOrder: sql<number>`${chapters.displayOrder}`,
         lessonCount: chapters.lessonCount,
         isFree: chapters.isFreemium,
         lessons: sql<string>`
@@ -556,6 +534,7 @@ export class CourseService {
 
     const courseChapterList = await this.db
       .select({
+        displayOrder: sql<number>`${lessons.displayOrder}`,
         id: chapters.id,
         title: chapters.title,
         lessonCount: chapters.lessonCount,
@@ -587,7 +566,22 @@ export class CourseService {
   }
 
   //TODO: Needs to be refactored
-  async getTeacherCourses(authorId: UUIDType): Promise<AllCoursesForTeacherResponse> {
+  async getTeacherCourses({
+    authorId,
+    scope,
+  }: {
+    authorId: UUIDType;
+    scope: "all" | "enrolled" | "available";
+  }): Promise<AllCoursesForTeacherResponse> {
+    const conditions = [eq(courses.isPublished, true), eq(courses.authorId, authorId)];
+
+    if (scope === "enrolled") {
+      conditions.push(isNotNull(studentCourses.studentId));
+    }
+    if (scope === "available") {
+      conditions.push(isNull(studentCourses.studentId));
+    }
+
     return this.db
       .select({
         id: courses.id,
@@ -616,13 +610,7 @@ export class CourseService {
       .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
       .leftJoin(categories, eq(courses.categoryId, categories.id))
       .leftJoin(users, eq(courses.authorId, users.id))
-      .where(
-        and(
-          eq(courses.isPublished, true),
-          isNull(studentCourses.studentId),
-          eq(courses.authorId, authorId),
-        ),
-      )
+      .where(and(...conditions))
       .groupBy(
         courses.id,
         courses.title,

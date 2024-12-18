@@ -12,11 +12,11 @@ import { cn } from "~/lib/utils";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 
-type Lesson = GetCourseResponse["data"]["lessons"][number];
+type Chapter = GetCourseResponse["data"]["chapters"][number];
 
-type LessonStatus = "not_started" | "in_progress" | "completed";
+type ChapterStatus = "not_started" | "in_progress" | "completed";
 
-type LessonCardProps = Lesson & {
+type ChapterCardProps = Chapter & {
   index: number;
   isEnrolled: boolean;
   isAdmin: boolean;
@@ -37,22 +37,22 @@ const buttonVariants = cva("w-full transition", {
   },
 });
 
-const getButtonProps = (lessonProgress: LessonStatus, isAdmin: boolean, type?: string) => {
+const getButtonProps = (chapterProgress: ChapterStatus, isAdmin: boolean, type?: string) => {
   if (isAdmin) {
     return { text: "Lesson preview", colorClass: "text-primary-700" };
   }
 
-  if (lessonProgress === "completed") {
+  if (chapterProgress === "completed") {
     return type === "quiz"
       ? { text: "Try again", colorClass: "text-success-600" }
       : { text: "Read more", colorClass: "text-success-600" };
   }
 
-  if (lessonProgress === "in_progress") {
+  if (chapterProgress === "in_progress") {
     return { text: "Continue", colorClass: "text-secondary-500" };
   }
 
-  if (lessonProgress === "not_started" && type === "quiz") {
+  if (chapterProgress === "not_started" && type === "quiz") {
     return { text: "Start", colorClass: "text-primary-700" };
   }
 
@@ -71,30 +71,30 @@ const cardBadgeVariant: Record<string, "successOutlined" | "secondary" | "defaul
   not_started: "default",
 };
 
-export const LessonCard = ({
+export const ChapterCard = ({
   description,
   imageUrl,
   index,
   isAdmin,
   isEnrolled,
   isFree = false,
-  completedLessonCount,
-  lessonCount,
+  itemsCompletedCount,
+  itemsCount,
   id: lessonId,
-  lessonProgress = "not_started",
+  chapterProgress = "not_started",
   title,
   type,
   customHref,
-}: LessonCardProps) => {
+}: ChapterCardProps) => {
   const cardClasses = buttonVariants({
     className: cn({
       "opacity-60 cursor-not-allowed hover:border-primary-200": !isEnrolled && !isFree,
     }),
-    variant: lessonProgress,
+    variant: chapterProgress,
   });
 
   const { text: buttonText, colorClass: buttonColorClass } = getButtonProps(
-    lessonProgress,
+    chapterProgress,
     isAdmin,
     type,
   );
@@ -115,7 +115,7 @@ export const LessonCard = ({
           <div className="relative">
             <img
               src={imageUrl ?? CardPlaceholder}
-              alt={`Chapter ${index + 1}`}
+              alt={`Lesson ${index + 1}`}
               loading="eager"
               decoding="async"
               className="w-full object-cover object-center rounded-lg drop-shadow-sm aspect-video"
@@ -123,13 +123,13 @@ export const LessonCard = ({
                 (e.target as HTMLImageElement).src = CardPlaceholder;
               }}
             />
-            {lessonProgress && (
+            {chapterProgress && (
               <CardBadge
-                variant={cardBadgeVariant[lessonProgress]}
+                variant={cardBadgeVariant[chapterProgress]}
                 className="absolute top-3 left-3"
               >
-                <Icon name={cardBadgeIcon[lessonProgress]} />
-                {startCase(lessonProgress)}
+                <Icon name={cardBadgeIcon[chapterProgress]} />
+                {startCase(chapterProgress)}
               </CardBadge>
             )}
             <span className="absolute bottom-0 right-0 -translate-x-1/2 translate-y-1/2 bg-white rounded-full w-8 h-8 flex justify-center items-center text-primary-700">
@@ -140,10 +140,10 @@ export const LessonCard = ({
             <div className="flex justify-between items-center">
               <div className="flex flex-col h-full bg-white w-full">
                 <CourseProgress
-                  label={type === "quiz" ? "Quiz progress:" : "Chapter progress:"}
-                  isCompleted={lessonProgress === "completed"}
-                  completedLessonCount={completedLessonCount ?? 0}
-                  courseLessonCount={lessonCount}
+                  label={type === "quiz" ? "Quiz progress:" : "Lesson progress:"}
+                  isCompleted={chapterProgress === "completed"}
+                  completedLessonCount={itemsCompletedCount ?? 0}
+                  courseLessonCount={itemsCount}
                 />
               </div>
             </div>

@@ -1,6 +1,5 @@
 import { useParams } from "@remix-run/react";
 
-import { useUserById } from "~/api/queries/admin/useUserById";
 import { useTeacherCourses } from "~/api/queries/useTeacherCourses";
 import { useUserDetails } from "~/api/queries/useUserDetails";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
@@ -16,21 +15,23 @@ import { TeacherPageBreadcrumbs } from "./TeacherPageBreadcrumbs";
 export default function TeacherPage() {
   const { id = "" } = useParams();
   const { data: userDetails } = useUserDetails(id);
-  const { data: user } = useUserById(id);
   const { data: teacherCourses } = useTeacherCourses(id);
 
   return (
     <PageWrapper>
-      <TeacherPageBreadcrumbs id={id} username={`${user?.firstName} ${user?.lastName}`} />
+      <TeacherPageBreadcrumbs
+        id={id}
+        username={`${userDetails?.firstName} ${userDetails?.lastName}`}
+      />
       <div className="flex flex-col xl:flex-row gap-6">
         <section className="flex flex-col xl:w-full xl:max-w-[480px] gap-y-6 p-6 bg-white rounded-t-2xl rounded-b-lg drop-shadow">
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <Avatar className="w-20 h-20">
-              <Gravatar email={userDetails?.contactEmail || user?.email || ""} />
+              <Gravatar email={userDetails?.contactEmail || ""} />
             </Avatar>
             <div className="flex flex-col">
               <h2 className="h6 text-neutral-950">
-                {user?.firstName} {user?.lastName}
+                {userDetails?.firstName} {userDetails?.lastName}
               </h2>
               <div className="flex flex-col gap-y-1">
                 <p className="body-sm">

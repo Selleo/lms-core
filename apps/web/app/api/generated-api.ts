@@ -442,8 +442,6 @@ export interface GetCourseResponse {
     categoryId?: string;
     /** @format uuid */
     authorId?: string;
-    author?: string;
-    authorEmail?: string;
     courseChapterCount: number;
     completedChapterCount?: number;
     enrolled?: boolean;
@@ -461,7 +459,7 @@ export interface GetCourseResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
-      quizScore?: number;
+      quizCount?: number;
     }[];
     priceInCents: number;
     currency: string;
@@ -482,8 +480,6 @@ export interface GetCourseByIdResponse {
     categoryId?: string;
     /** @format uuid */
     authorId?: string;
-    author?: string;
-    authorEmail?: string;
     courseChapterCount: number;
     completedChapterCount?: number;
     enrolled?: boolean;
@@ -501,7 +497,7 @@ export interface GetCourseByIdResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
-      quizScore?: number;
+      quizCount?: number;
     }[];
     priceInCents: number;
     currency: string;
@@ -522,8 +518,6 @@ export interface GetBetaCourseByIdResponse {
     categoryId?: string;
     /** @format uuid */
     authorId?: string;
-    author?: string;
-    authorEmail?: string;
     courseChapterCount: number;
     completedChapterCount?: number;
     enrolled?: boolean;
@@ -541,7 +535,7 @@ export interface GetBetaCourseByIdResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
-      quizScore?: number;
+      quizCount?: number;
     }[];
     priceInCents: number;
     currency: string;
@@ -800,7 +794,7 @@ export type BetaCreateChapterBody = {
   isPublished?: boolean;
   isSubmitted?: boolean;
   createdAt?: string;
-  quizScore?: number;
+  quizCount?: number;
 } & {
   /** @format uuid */
   courseId: string;

@@ -13,7 +13,7 @@ import type {
   CreateQuizLessonBody,
   UpdateLessonBody,
   UpdateQuizLessonBody,
-} from "./lesson.schem";
+} from "./lesson.schema";
 import type { UUIDType } from "src/common";
 
 @Injectable()

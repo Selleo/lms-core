@@ -1,86 +1,38 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { EventBus } from "@nestjs/cqrs";
 
 import { DatabasePg } from "src/common";
+import { LessonRepository } from "src/lesson/lesson.repository";
 
 import { ChapterRepository } from "./repositories/chapter.repository";
+
+import type { ShowChapterResponse } from "src/chapter/schemas/chapter.schema";
+import type { UUIDType } from "src/common";
 
 @Injectable()
 export class ChapterService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly chapterRepository: ChapterRepository,
+    private readonly lessonRepository: LessonRepository,
     private readonly eventBus: EventBus,
   ) {}
 
-  // async getChapterWithDetails(id: UUIDType, userId: UUIDType, isStudent: boolean) {
-  //   const hasCourseAccess = await this.chapterRepository.checkChapterAssignment(id, userId);
-  //   if (!hasCourseAccess && isStudent) throw new Error("You don't have access to this chapter");
+  async getChapterWithLessons(
+    id: UUIDType,
+    userId: UUIDType,
+    isAdmin?: boolean,
+  ): Promise<ShowChapterResponse> {
+    const [courseAccess] = await this.chapterRepository.checkChapterAssignment(id, userId);
+    const chapter = await this.chapterRepository.getChapterForUser(id, userId);
 
-  //   const [chapter] = await this.chapterRepository.getChapterWithDetails(id, userId);
-  //   if (!chapter) throw new Error("Chapter not found");
+    if (!isAdmin && !courseAccess && !chapter.isFreemium)
+      throw new UnauthorizedException("You don't have access to this lesson");
 
-  //   return chapter;
-  // }
+    if (!chapter) throw new NotFoundException("Lesson not found");
 
-  // async getChapter(
-  //   id: UUIDType,
-  //   userId: UUIDType,
-  //   isAdmin?: boolean,
-  // ): Promise<ShowChapterResponse> {
-  //   const [courseAccess] = await this.chapterRepository.checkChapterAssignment(id, userId);
-  //   const chapter = await this.chapterRepository.getChapterForUser(id, userId);
+    const chapterLessonList = await this.lessonRepository.getLessonsByChapterId(id);
 
-  //   if (!isAdmin && !courseAccess && !chapter.isFreemium)
-  //     throw new UnauthorizedException("You don't have access to this lesson");
-
-  //   if (!chapter) throw new NotFoundException("Lesson not found");
-
-  //   // const chapterProgress = await this.chapterRepository.getChapterProgressForStudent(
-  //   //   chapter.id,
-  //   //   userId,
-  //   // );
-
-  //   // if (lesson.type !== LESSON_TYPE.quiz.key) {
-  //   //   const lessonItems = await this.getLessonItems(chapter.id, courseId, userId);
-
-  //   //   const completableLessonItems = lessonItems.filter(
-  //   //     (item) => item.lessonItemType !== LESSON_ITEM_TYPE.text_block.key,
-  //   //   );
-
-  //   //   return {
-  //   //     ...lesson,
-  //   //     imageUrl,
-  //   //     lessonItems: lessonItems,
-  //   //     lessonProgress:
-  //   //       completableLessonItems.length === 0
-  //   //         ? ChapterProgress.notStarted
-  //   //         : completableLessonItems.length > 0
-  //   //         ? ChapterProgress.inProgress
-  //   //         : ChapterProgress.completed,
-  //   //     itemsCompletedCount: completedLessonItems.length,
-  //   //   };
-  //   // }
-
-  //   // const lessonProgress = await this.chapterRepository.lessonProgress(
-  //   //   courseId,
-  //   //   lesson.id,
-  //   //   userId,
-  //   //   true,
-  //   // );
-
-  //   // if (!lessonProgress && !isAdmin && !lesson.isFree)
-  //   //   throw new NotFoundException("Lesson progress not found");
-
-  //   // const isAdminOrFreeLessonWithoutLessonProgress = (isAdmin || lesson.isFree) && !lessonProgress;
-
-  //   // const questionLessonItems = await this.getLessonQuestions(
-  //   //   lesson,
-  //   //   courseId,
-  //   //   userId,
-  //   //   isAdminOrFreeLessonWithoutLessonProgress ? false : lessonProgress.quizCompleted,
-  //   // );
-
-  //   return chapter;
-  // }
+    return { ...chapter, lessons: chapterLessonList };
+  }
 }

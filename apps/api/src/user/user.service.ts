@@ -92,6 +92,8 @@ export class UserService {
   public async getUserDetails(userId: string): Promise<UserDetails> {
     const [userBio]: UserDetails[] = await this.db
       .select({
+        firstName: users.firstName,
+        lastName: users.lastName,
         id: userDetails.id,
         description: userDetails.description,
         contactEmail: userDetails.contactEmail,
@@ -99,6 +101,7 @@ export class UserService {
         jobTitle: userDetails.jobTitle,
       })
       .from(userDetails)
+      .leftJoin(users, eq(userDetails.userId, users.id))
       .where(eq(userDetails.userId, userId));
 
     if (!userBio) {

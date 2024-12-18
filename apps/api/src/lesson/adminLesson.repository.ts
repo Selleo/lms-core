@@ -14,7 +14,7 @@ import type {
   CreateQuizLessonBody,
   UpdateLessonBody,
   UpdateQuizLessonBody,
-} from "./lesson.schem";
+} from "./lesson.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
@@ -41,7 +41,7 @@ export class AdminLessonRepository {
   }
 
   async updateQuizLessonWithQuestionsAndOptions(id: UUIDType, data: UpdateQuizLessonBody) {
-    return await this.db
+    return this.db
       .update(lessons)
       .set({
         title: data.title,
@@ -68,7 +68,7 @@ export class AdminLessonRepository {
   }
 
   async getQuestions(conditions: any[]) {
-    return await this.db
+    return this.db
       .select()
       .from(questions)
       .where(and(...conditions));
@@ -77,7 +77,7 @@ export class AdminLessonRepository {
   async getQuestionAnswers(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
-    return await dbInstance
+    return dbInstance
       .select({
         id: questionAnswerOptions.id,
         optionText: questionAnswerOptions.optionText,
@@ -118,7 +118,7 @@ export class AdminLessonRepository {
   async getQuestionAnswerOptions(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
-    return await dbInstance
+    return dbInstance
       .select()
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));
@@ -140,7 +140,7 @@ export class AdminLessonRepository {
   async getQuestionStudentAnswers(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
-    return await dbInstance
+    return dbInstance
       .select()
       .from(studentQuestionAnswers)
       .where(eq(studentQuestionAnswers.questionId, questionId));
@@ -155,7 +155,7 @@ export class AdminLessonRepository {
   async updateLessonDisplayOrder(chapterId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
-    return await dbInstance.execute(sql`
+    return dbInstance.execute(sql`
         WITH ranked_chapters AS (
           SELECT id, row_number() OVER (ORDER BY display_order) AS new_display_order
           FROM ${lessons}
@@ -374,7 +374,7 @@ export class AdminLessonRepository {
   ) {
     const dbInstance = trx ?? this.db;
 
-    return await dbInstance
+    return dbInstance
       .delete(questionAnswerOptions)
       .where(
         and(
@@ -395,7 +395,7 @@ export class AdminLessonRepository {
     trx?: PostgresJsDatabase<typeof schema>,
   ) {
     const dbInstance = trx ?? this.db;
-    return await dbInstance
+    return dbInstance
       .insert(questionAnswerOptions)
       .values({
         id: option.id,

@@ -149,14 +149,27 @@ export class CourseController {
 
   @Get("teacher-courses")
   @Validate({
-    request: [{ type: "query", name: "authorId", schema: UUIDSchema, required: true }],
+    request: [
+      { type: "query", name: "authorId", schema: UUIDSchema, required: true },
+      {
+        type: "query",
+        name: "scope",
+        schema: Type.Union([
+          Type.Literal("all"),
+          Type.Literal("enrolled"),
+          Type.Literal("available"),
+        ]),
+      },
+    ],
     response: baseResponse(allCoursesSchema),
   })
   async getTeacherCourses(
     @Query("authorId") authorId: UUIDType,
-    @CurrentUser("userId") currentUserId: UUIDType,
+    @Query("scope") scope: "all" | "enrolled" | "available" = "all",
   ): Promise<BaseResponse<AllCoursesForTeacherResponse>> {
-    return new BaseResponse(await this.courseService.getTeacherCourses(authorId));
+    const query = { authorId, scope };
+
+    return new BaseResponse(await this.courseService.getTeacherCourses(query));
   }
 
   @Get("course")

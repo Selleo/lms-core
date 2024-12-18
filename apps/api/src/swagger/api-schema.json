@@ -1299,6 +1299,27 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "scope",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "all",
+                  "type": "string"
+                },
+                {
+                  "const": "enrolled",
+                  "type": "string"
+                },
+                {
+                  "const": "available",
+                  "type": "string"
+                }
+              ]
+            }
           }
         ],
         "responses": {
@@ -1733,6 +1754,58 @@
         }
       }
     },
+    "/api/chapter": {
+      "get": {
+        "operationId": "ChapterController_getLesson",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLessonResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ChapterController_removeChapter",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/chapter/beta-create-chapter": {
       "post": {
         "operationId": "ChapterController_betaCreateChapter",
@@ -1780,33 +1853,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UpdateChapterDisplayOrderResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/chapter": {
-      "delete": {
-        "operationId": "ChapterController_removeChapter",
-        "parameters": [
-          {
-            "name": "chapterId",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RemoveChapterResponse"
                 }
               }
             }
@@ -2445,6 +2491,26 @@
           "data": {
             "type": "object",
             "properties": {
+              "firstName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "id": {
                 "format": "uuid",
                 "type": "string"
@@ -2491,6 +2557,8 @@
               }
             },
             "required": [
+              "firstName",
+              "lastName",
               "id",
               "description",
               "contactEmail",
@@ -3471,17 +3539,11 @@
           "data": {
             "type": "object",
             "properties": {
-              "id": {
+              "archived": {
+                "type": "boolean"
+              },
+              "authorId": {
                 "format": "uuid",
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "thumbnailUrl": {
-                "type": "string"
-              },
-              "description": {
                 "type": "string"
               },
               "category": {
@@ -3490,38 +3552,6 @@
               "categoryId": {
                 "format": "uuid",
                 "type": "string"
-              },
-              "authorId": {
-                "format": "uuid",
-                "type": "string"
-              },
-              "author": {
-                "type": "string"
-              },
-              "authorEmail": {
-                "type": "string"
-              },
-              "courseChapterCount": {
-                "type": "number"
-              },
-              "completedChapterCount": {
-                "type": "number"
-              },
-              "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "isScorm": {
-                "type": "boolean"
               },
               "chapters": {
                 "type": "array",
@@ -3572,40 +3602,76 @@
                     "createdAt": {
                       "type": "string"
                     },
-                    "quizScore": {
+                    "quizCount": {
+                      "type": "number"
+                    },
+                    "displayOrder": {
                       "type": "number"
                     }
                   },
                   "required": [
                     "id",
                     "title",
-                    "lessonCount"
+                    "lessonCount",
+                    "displayOrder"
                   ]
                 }
               },
-              "priceInCents": {
+              "completedChapterCount": {
+                "type": "number"
+              },
+              "courseChapterCount": {
                 "type": "number"
               },
               "currency": {
                 "type": "string"
               },
-              "archived": {
+              "description": {
+                "type": "string"
+              },
+              "enrolled": {
                 "type": "boolean"
               },
               "hasFreeChapter": {
                 "type": "boolean"
+              },
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "isPublished": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "isScorm": {
+                "type": "boolean"
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "thumbnailUrl": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
               }
             },
             "required": [
-              "id",
-              "title",
-              "description",
               "category",
-              "courseChapterCount",
-              "isPublished",
               "chapters",
+              "courseChapterCount",
+              "currency",
+              "description",
+              "id",
+              "isPublished",
               "priceInCents",
-              "currency"
+              "title"
             ]
           }
         },
@@ -3619,17 +3685,11 @@
           "data": {
             "type": "object",
             "properties": {
-              "id": {
+              "archived": {
+                "type": "boolean"
+              },
+              "authorId": {
                 "format": "uuid",
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "thumbnailUrl": {
-                "type": "string"
-              },
-              "description": {
                 "type": "string"
               },
               "category": {
@@ -3638,38 +3698,6 @@
               "categoryId": {
                 "format": "uuid",
                 "type": "string"
-              },
-              "authorId": {
-                "format": "uuid",
-                "type": "string"
-              },
-              "author": {
-                "type": "string"
-              },
-              "authorEmail": {
-                "type": "string"
-              },
-              "courseChapterCount": {
-                "type": "number"
-              },
-              "completedChapterCount": {
-                "type": "number"
-              },
-              "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "isScorm": {
-                "type": "boolean"
               },
               "chapters": {
                 "type": "array",
@@ -3720,40 +3748,76 @@
                     "createdAt": {
                       "type": "string"
                     },
-                    "quizScore": {
+                    "quizCount": {
+                      "type": "number"
+                    },
+                    "displayOrder": {
                       "type": "number"
                     }
                   },
                   "required": [
                     "id",
                     "title",
-                    "lessonCount"
+                    "lessonCount",
+                    "displayOrder"
                   ]
                 }
               },
-              "priceInCents": {
+              "completedChapterCount": {
+                "type": "number"
+              },
+              "courseChapterCount": {
                 "type": "number"
               },
               "currency": {
                 "type": "string"
               },
-              "archived": {
+              "description": {
+                "type": "string"
+              },
+              "enrolled": {
                 "type": "boolean"
               },
               "hasFreeChapter": {
                 "type": "boolean"
+              },
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "isPublished": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "isScorm": {
+                "type": "boolean"
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "thumbnailUrl": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
               }
             },
             "required": [
-              "id",
-              "title",
-              "description",
               "category",
-              "courseChapterCount",
-              "isPublished",
               "chapters",
+              "courseChapterCount",
+              "currency",
+              "description",
+              "id",
+              "isPublished",
               "priceInCents",
-              "currency"
+              "title"
             ]
           }
         },
@@ -3767,17 +3831,11 @@
           "data": {
             "type": "object",
             "properties": {
-              "id": {
+              "archived": {
+                "type": "boolean"
+              },
+              "authorId": {
                 "format": "uuid",
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "thumbnailUrl": {
-                "type": "string"
-              },
-              "description": {
                 "type": "string"
               },
               "category": {
@@ -3786,38 +3844,6 @@
               "categoryId": {
                 "format": "uuid",
                 "type": "string"
-              },
-              "authorId": {
-                "format": "uuid",
-                "type": "string"
-              },
-              "author": {
-                "type": "string"
-              },
-              "authorEmail": {
-                "type": "string"
-              },
-              "courseChapterCount": {
-                "type": "number"
-              },
-              "completedChapterCount": {
-                "type": "number"
-              },
-              "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "isScorm": {
-                "type": "boolean"
               },
               "chapters": {
                 "type": "array",
@@ -3868,40 +3894,76 @@
                     "createdAt": {
                       "type": "string"
                     },
-                    "quizScore": {
+                    "quizCount": {
+                      "type": "number"
+                    },
+                    "displayOrder": {
                       "type": "number"
                     }
                   },
                   "required": [
                     "id",
                     "title",
-                    "lessonCount"
+                    "lessonCount",
+                    "displayOrder"
                   ]
                 }
               },
-              "priceInCents": {
+              "completedChapterCount": {
+                "type": "number"
+              },
+              "courseChapterCount": {
                 "type": "number"
               },
               "currency": {
                 "type": "string"
               },
-              "archived": {
+              "description": {
+                "type": "string"
+              },
+              "enrolled": {
                 "type": "boolean"
               },
               "hasFreeChapter": {
                 "type": "boolean"
+              },
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "isPublished": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "isScorm": {
+                "type": "boolean"
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "thumbnailUrl": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
               }
             },
             "required": [
-              "id",
-              "title",
-              "description",
               "category",
-              "courseChapterCount",
-              "isPublished",
               "chapters",
+              "courseChapterCount",
+              "currency",
+              "description",
+              "id",
+              "isPublished",
               "priceInCents",
-              "currency"
+              "title"
             ]
           }
         },
@@ -4767,6 +4829,211 @@
           "data"
         ]
       },
+      "GetLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "lessonCount": {
+                "type": "number"
+              },
+              "completedLessonCount": {
+                "type": "number"
+              },
+              "chapterProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
+              },
+              "isFreemium": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "isPublished": {
+                "type": "boolean"
+              },
+              "isSubmitted": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "quizCount": {
+                "type": "number"
+              },
+              "displayOrder": {
+                "type": "number"
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "displayOrder": {
+                      "type": "number"
+                    },
+                    "fileS3Key": {
+                      "type": "string"
+                    },
+                    "fileType": {
+                      "type": "string"
+                    },
+                    "questions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "type": {
+                            "anyOf": [
+                              {
+                                "const": "single_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "multiple_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "true_or_false",
+                                "type": "string"
+                              },
+                              {
+                                "const": "photo_question",
+                                "type": "string"
+                              },
+                              {
+                                "const": "fill_in_the_blanks",
+                                "type": "string"
+                              },
+                              {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "photoQuestionType": {
+                            "anyOf": [
+                              {
+                                "const": "single_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "multiple_choice",
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "photoS3Key": {
+                            "type": "string"
+                          },
+                          "options": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "optionText": {
+                                  "type": "string"
+                                },
+                                "isCorrect": {
+                                  "type": "boolean"
+                                },
+                                "position": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "optionText",
+                                "isCorrect",
+                                "position"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "type",
+                    "description",
+                    "displayOrder"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "lessonCount",
+              "displayOrder",
+              "lessons"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "BetaCreateChapterBody": {
         "type": "object",
         "allOf": [
@@ -4807,12 +5074,16 @@
               "createdAt": {
                 "type": "string"
               },
-              "quizScore": {
+              "quizCount": {
+                "type": "number"
+              },
+              "displayOrder": {
                 "type": "number"
               }
             },
             "required": [
-              "title"
+              "title",
+              "displayOrder"
             ]
           },
           {
