@@ -33,7 +33,11 @@ import { SortCourseFieldsOptions } from "src/courses/schemas/courseQuery";
 import { CreateCourseBody, createCourseSchema } from "src/courses/schemas/createCourse.schema";
 import { commonShowCourseSchema } from "src/courses/schemas/showCourseCommon.schema";
 import { UpdateCourseBody, updateCourseSchema } from "src/courses/schemas/updateCourse.schema";
-import { allCoursesValidation, coursesValidation } from "src/courses/validations/validations";
+import {
+  allCoursesValidation,
+  coursesValidation,
+  studentCoursesValidation,
+} from "src/courses/validations/validations";
 import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import type {
@@ -90,7 +94,7 @@ export class CourseController {
   }
 
   @Get("get-student-courses")
-  @Validate(coursesValidation)
+  @Validate(studentCoursesValidation)
   async getStudentCourses(
     @Query("title") title: string,
     @Query("category") category: string,
