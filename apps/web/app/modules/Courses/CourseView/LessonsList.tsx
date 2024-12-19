@@ -2,7 +2,7 @@ import { useCallback, useMemo, useState } from "react";
 
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { useUserRole } from "~/hooks/useUserRole";
-import { LessonCard } from "~/modules/Courses/CourseView/LessonCard";
+import { ChapterCard } from "~/modules/Courses/CourseView/ChapterCard";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 
@@ -32,7 +32,7 @@ export const LessonsList = ({ lessons, isEnrolled }: LessonsListProps) => {
 
   const lessonCards = useMemo(() => {
     return filteredLessons?.map((lesson, index) => (
-      <LessonCard
+      <ChapterCard
         {...lesson}
         key={lesson.id}
         index={index}

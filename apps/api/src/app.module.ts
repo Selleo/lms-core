@@ -5,8 +5,6 @@ import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { ScheduleModule } from "@nestjs/schedule";
 
-import { UsersModule } from "src/users/users.module";
-
 import { AuthModule } from "./auth/auth.module";
 import { CacheModule } from "./cache/cache.module";
 import { CategoryModule } from "./category/category.module";
@@ -33,6 +31,7 @@ import * as schema from "./storage/schema";
 import { StripeModule } from "./stripe/stripe.module";
 import { StudentLessonProgressModule } from "./studentLessonProgress/studentLessonProgress.module";
 import { TestConfigModule } from "./test-config/test-config.module";
+import { UserModule } from "./user/user.module";
 
 @Module({
   imports: [
@@ -68,7 +67,7 @@ import { TestConfigModule } from "./test-config/test-config.module";
     }),
     AuthModule,
     HealthModule,
-    UsersModule,
+    UserModule,
     EmailModule,
     TestConfigModule,
     CategoryModule,

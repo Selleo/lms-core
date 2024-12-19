@@ -1,7 +1,7 @@
 import { type Static, Type } from "@sinclair/typebox";
 
 import type { UUIDType } from "src/common";
-import type { UserRole } from "src/users/schemas/user-roles";
+import type { UserRole } from "src/user/schemas/userRoles";
 
 export const courseSortFields = [
   "title",
@@ -68,4 +68,5 @@ export type CoursesQuery = {
   sort?: SortCourseFieldsOptions;
   currentUserId?: UUIDType;
   currentUserRole?: UserRole;
+  excludeCourseId?: UUIDType;
 };

@@ -1,7 +1,7 @@
 import { type Static, Type } from "@sinclair/typebox";
 
 import type { UUIDType } from "src/common";
-import type { UserRole } from "src/users/schemas/user-roles";
+import type { UserRole } from "src/user/schemas/userRoles";
 
 export const lessonSortFields = ["title", "createdAt", "state", "itemsCount"] as const;
 

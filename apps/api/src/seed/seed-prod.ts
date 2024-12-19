@@ -6,7 +6,7 @@ import postgres from "postgres";
 
 import hashPassword from "../common/helpers/hashPassword";
 import { credentials, users } from "../storage/schema";
-import { USER_ROLES } from "../users/schemas/user-roles";
+import { USER_ROLES } from "../user/schemas/userRoles";
 
 import { seedTruncateAllTables } from "./seed-helpers";
 
@@ -53,7 +53,7 @@ async function seedProduction() {
       lastName: "Admin",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: USER_ROLES.admin,
+      role: USER_ROLES.ADMIN,
     });
     console.log("Created or found admin user:", adminUser);
 
@@ -64,7 +64,7 @@ async function seedProduction() {
       lastName: "Student",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: USER_ROLES.student,
+      role: USER_ROLES.STUDENT,
     });
     console.log("Created or found student user:", studentUser);
 
@@ -75,7 +75,7 @@ async function seedProduction() {
       lastName: "Teacher",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
-      role: USER_ROLES.teacher,
+      role: USER_ROLES.TEACHER,
     });
     console.log("Created or found teacher user:", teacherUser);
 

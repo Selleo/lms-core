@@ -21,7 +21,7 @@ export class StatisticsController {
   // }
 
   // @Get("teacher-stats")
-  // @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  // @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   // @Validate({
   //   response: baseResponse(TeacherStatsSchema),
   // })

@@ -172,7 +172,7 @@ After starting the development environment, you can access:
 | Service | URL                           | Description             |
 | ------- | ----------------------------- | ----------------------- |
 | Web App | https://app.lms.localhost     | Frontend application    |
-| API     | https://api.lms.localhost     | Backend API             |
+| API     | https://app.lms.localhost/api | Backend API url         |
 | Swagger | https://api.lms.localhost/api | API documentation       |
 | Mailhog | https://mailbox.lms.localhost | Email testing interface |
 

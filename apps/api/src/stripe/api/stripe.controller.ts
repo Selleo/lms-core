@@ -12,7 +12,7 @@ import Stripe from "stripe";
 import { BaseResponse, baseResponse } from "src/common";
 import { Public } from "src/common/decorators/public.decorator";
 import { Roles } from "src/common/decorators/roles.decorator";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
 import { paymentIntentSchema } from "../schemas/payment";
 import { StripeService } from "../stripe.service";
@@ -38,7 +38,7 @@ export class StripeController {
   }
 
   @Post()
-  @Roles(USER_ROLES.student)
+  @Roles(USER_ROLES.STUDENT)
   @Validate({
     response: baseResponse(paymentIntentSchema),
     request: [

@@ -34,7 +34,7 @@ import { CreateCourseBody, createCourseSchema } from "src/courses/schemas/create
 import { commonShowCourseSchema } from "src/courses/schemas/showCourseCommon.schema";
 import { UpdateCourseBody, updateCourseSchema } from "src/courses/schemas/updateCourse.schema";
 import { allCoursesValidation, coursesValidation } from "src/courses/validations/validations";
-import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
+import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import type {
   AllCoursesForTeacherResponse,
@@ -49,7 +49,7 @@ export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
   @Get()
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @Validate(allCoursesValidation)
   async getAllCourses(
     @Query("title") title: string,
@@ -129,6 +129,7 @@ export class CourseController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
+    @Query("excludeCourseId") excludeCourseId: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
@@ -140,7 +141,7 @@ export class CourseController {
           ? [creationDateRangeStart, creationDateRangeEnd]
           : undefined,
     };
-    const query = { filters, page, perPage, sort };
+    const query = { filters, page, perPage, sort, excludeCourseId };
 
     const data = await this.courseService.getAvailableCourses(query, currentUserId);
 
@@ -149,14 +150,30 @@ export class CourseController {
 
   @Get("teacher-courses")
   @Validate({
-    request: [{ type: "query", name: "authorId", schema: UUIDSchema, required: true }],
+    request: [
+      { type: "query", name: "authorId", schema: UUIDSchema, required: true },
+      {
+        type: "query",
+        name: "scope",
+        schema: Type.Union([
+          Type.Literal("all"),
+          Type.Literal("enrolled"),
+          Type.Literal("available"),
+        ]),
+      },
+      { type: "query", name: "excludeCourseId", schema: UUIDSchema },
+    ],
     response: baseResponse(allCoursesSchema),
   })
   async getTeacherCourses(
     @Query("authorId") authorId: UUIDType,
+    @Query("scope") scope: "all" | "enrolled" | "available" = "all",
+    @Query("excludeCourseId") excludeCourseId: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<AllCoursesForTeacherResponse>> {
-    return new BaseResponse(await this.courseService.getTeacherCourses(authorId));
+    const query = { authorId, currentUserId, excludeCourseId, scope };
+
+    return new BaseResponse(await this.courseService.getTeacherCourses(query));
   }
 
   @Get("course")
@@ -172,7 +189,7 @@ export class CourseController {
   }
 
   @Get("course-by-id")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
@@ -182,7 +199,7 @@ export class CourseController {
   }
 
   @Get("beta-course-by-id")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),
@@ -192,7 +209,7 @@ export class CourseController {
   }
 
   @Post()
-  @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @Validate({
     request: [{ type: "body", schema: createCourseSchema }],
     response: baseResponse(Type.Object({ id: UUIDSchema, message: Type.String() })),
@@ -208,7 +225,7 @@ export class CourseController {
 
   @Patch(":id")
   @UseInterceptors(FileInterceptor("image"))
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       { type: "param", name: "id", schema: UUIDSchema },
@@ -228,7 +245,7 @@ export class CourseController {
   }
 
   @Post("enroll-course")
-  @Roles(USER_ROLES.student)
+  @Roles(USER_ROLES.STUDENT)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
     response: baseResponse(Type.Object({ message: Type.String() })),
@@ -244,7 +261,7 @@ export class CourseController {
   }
 
   @Delete("unenroll-course")
-  @Roles(USER_ROLES.student)
+  @Roles(USER_ROLES.STUDENT)
   @Validate({
     response: nullResponse(),
     request: [{ type: "query", name: "id", schema: UUIDSchema }],

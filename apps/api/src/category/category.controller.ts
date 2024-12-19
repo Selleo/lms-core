@@ -23,7 +23,7 @@ import {
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES, UserRole } from "src/users/schemas/user-roles";
+import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import { CategoryService } from "./category.service";
 import {
@@ -69,7 +69,7 @@ export class CategoryController {
   }
 
   @Get(":id")
-  @Roles(USER_ROLES.admin)
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     response: baseResponse(categorySchema),
     request: [{ type: "param", name: "id", schema: UUIDSchema }],
@@ -81,7 +81,7 @@ export class CategoryController {
   }
 
   @Post()
-  @Roles(USER_ROLES.admin)
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     request: [
       {
@@ -100,7 +100,7 @@ export class CategoryController {
   }
 
   @Patch(":id")
-  @Roles(USER_ROLES.admin)
+  @Roles(USER_ROLES.ADMIN)
   @Validate({
     response: baseResponse(categorySchema),
     request: [
@@ -113,7 +113,7 @@ export class CategoryController {
     @Body() updateCategoryBody: CategoryUpdateBody,
     @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<BaseResponse<CategorySchema>> {
-    if (currentUserRole !== USER_ROLES.admin) {
+    if (currentUserRole !== USER_ROLES.ADMIN) {
       throw new UnauthorizedException("You don't have permission to update category");
     }
 

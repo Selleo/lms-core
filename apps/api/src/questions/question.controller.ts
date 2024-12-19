@@ -11,7 +11,7 @@ export class QuestionController {
 
   // TODO: repair this
   // @Post("answer")
-  // @Roles(USER_ROLES.student)
+  // @Roles(USER_ROLES.STUDENT)
   // @Validate({
   //   request: [{ type: "body", schema: answerQuestionSchema, required: true }],
   //   response: baseResponse(Type.Object({ message: Type.String() })),

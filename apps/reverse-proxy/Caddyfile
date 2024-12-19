@@ -1,9 +1,11 @@
-api.lms.localhost {
-	reverse_proxy localhost:3000
-}
-
 app.lms.localhost {
-	reverse_proxy localhost:5173
+    handle_path /api/* {
+        reverse_proxy localhost:3000
+    }
+
+    handle {
+        reverse_proxy localhost:5173
+    }
 }
 
 mailbox.lms.localhost {

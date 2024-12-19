@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, gte, lte, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
@@ -29,7 +29,7 @@ export class AdminChapterService {
   //   const { sortOrder, sortedField } = getSortOptions(sort);
   //   const conditions = this.getFiltersConditions(filters);
 
-  //   if (query.currentUserRole === USER_ROLES.teacher && query.currentUserId) {
+  //   if (query.currentUserRole === USER_ROLES.TEACHER && query.currentUserId) {
   //     conditions.push(eq(lessons.authorId, query.currentUserId));
   //   }
 
@@ -230,27 +230,12 @@ export class AdminChapterService {
 
     const newDisplayOrder = chapterObject.displayOrder;
 
-    await this.db.transaction(async (trx) => {
-      await trx
-        .update(chapters)
-        .set({
-          displayOrder: sql`CASE
-            WHEN ${eq(chapters.id, chapterToUpdate.id)}
-              THEN ${newDisplayOrder}
-            WHEN ${newDisplayOrder < oldDisplayOrder}
-              AND ${gte(chapters.displayOrder, newDisplayOrder)}
-              AND ${lte(chapters.displayOrder, oldDisplayOrder)}
-              THEN ${chapters.displayOrder} + 1
-            WHEN ${newDisplayOrder > oldDisplayOrder}
-              AND ${lte(chapters.displayOrder, newDisplayOrder)}
-              AND ${gte(chapters.displayOrder, oldDisplayOrder)}
-              THEN ${chapters.displayOrder} - 1
-            ELSE ${chapters.displayOrder}
-          END
-          `,
-        })
-        .where(eq(chapters.courseId, chapterToUpdate.courseId));
-    });
+    await this.adminChapterRepository.changeChapterDisplayOrder(
+      chapterToUpdate.courseId,
+      chapterToUpdate.id,
+      oldDisplayOrder,
+      newDisplayOrder,
+    );
   }
 
   async updateChapter(id: string, body: UpdateChapterBody) {

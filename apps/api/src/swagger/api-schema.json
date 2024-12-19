@@ -334,9 +334,9 @@
         }
       }
     },
-    "/api/users": {
+    "/api/user/all": {
       "get": {
-        "operationId": "UsersController_getUsers",
+        "operationId": "UserController_getUsers",
         "parameters": [
           {
             "name": "keyword",
@@ -399,9 +399,36 @@
             }
           }
         }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "operationId": "UserController_getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserByIdResponse"
+                }
+              }
+            }
+          }
+        }
       },
       "patch": {
-        "operationId": "UsersController_updateUser",
+        "operationId": "UserController_updateUser",
         "parameters": [
           {
             "name": "id",
@@ -436,7 +463,7 @@
         }
       },
       "delete": {
-        "operationId": "UsersController_deleteBulkUsers",
+        "operationId": "UserController_deleteBulkUsers",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -459,53 +486,26 @@
             }
           }
         }
-      }
-    },
-    "/api/users/user": {
-      "get": {
-        "operationId": "UsersController_getUserById",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GetUserByIdResponse"
-                }
-              }
-            }
-          }
-        }
       },
-      "delete": {
-        "operationId": "UsersController_deleteUser",
-        "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
+      "post": {
+        "operationId": "UserController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserBody"
+              }
             }
           }
-        ],
+        },
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DeleteUserResponse"
+                  "$ref": "#/components/schemas/CreateUserResponse"
                 }
               }
             }
@@ -513,9 +513,9 @@
         }
       }
     },
-    "/api/users/user-details": {
+    "/api/user/details": {
       "get": {
-        "operationId": "UsersController_getUserDetails",
+        "operationId": "UserController_getUserDetails",
         "parameters": [
           {
             "name": "userId",
@@ -540,7 +540,7 @@
         }
       },
       "patch": {
-        "operationId": "UsersController_upsertUserDetails",
+        "operationId": "UserController_upsertUserDetails",
         "parameters": [],
         "requestBody": {
           "required": true,
@@ -565,9 +565,9 @@
         }
       }
     },
-    "/api/users/admin/user": {
+    "/api/user/admin": {
       "patch": {
-        "operationId": "UsersController_adminUpdateUser",
+        "operationId": "UserController_adminUpdateUser",
         "parameters": [
           {
             "name": "id",
@@ -602,9 +602,9 @@
         }
       }
     },
-    "/api/users/change-password": {
+    "/api/user/change-password": {
       "patch": {
-        "operationId": "UsersController_changePassword",
+        "operationId": "UserController_changePassword",
         "parameters": [
           {
             "name": "id",
@@ -639,26 +639,26 @@
         }
       }
     },
-    "/api/users/create": {
-      "post": {
-        "operationId": "UsersController_createUser",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateUserBody"
-              }
+    "/api/user/user": {
+      "delete": {
+        "operationId": "UserController_deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateUserResponse"
+                  "$ref": "#/components/schemas/DeleteUserResponse"
                 }
               }
             }
@@ -1028,6 +1028,15 @@
         "operationId": "CourseController_getStudentCourses",
         "parameters": [
           {
+            "name": "excludeCourseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
             "name": "title",
             "required": false,
             "in": "query",
@@ -1272,6 +1281,15 @@
                 }
               ]
             }
+          },
+          {
+            "name": "excludeCourseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1294,6 +1312,36 @@
           {
             "name": "authorId",
             "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "scope",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "anyOf": [
+                {
+                  "const": "all",
+                  "type": "string"
+                },
+                {
+                  "const": "enrolled",
+                  "type": "string"
+                },
+                {
+                  "const": "available",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          {
+            "name": "excludeCourseId",
+            "required": false,
             "in": "query",
             "schema": {
               "format": "uuid",
@@ -1733,34 +1781,32 @@
         }
       }
     },
-    "/api/chapter/beta-create-chapter": {
-      "post": {
-        "operationId": "ChapterController_betaCreateChapter",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BetaCreateChapterBody"
-              }
+    "/api/chapter": {
+      "get": {
+        "operationId": "ChapterController_getChapterWithLesson",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
             }
           }
-        },
+        ],
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BetaCreateChapterResponse"
+                  "$ref": "#/components/schemas/GetChapterWithLessonResponse"
                 }
               }
             }
           }
         }
-      }
-    },
-    "/api/chapter": {
+      },
       "patch": {
         "operationId": "ChapterController_updateChapter",
         "parameters": [
@@ -1815,6 +1861,33 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RemoveChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/chapter/beta-create-chapter": {
+      "post": {
+        "operationId": "ChapterController_betaCreateChapter",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BetaCreateChapterBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BetaCreateChapterResponse"
                 }
               }
             }
@@ -2026,12 +2099,11 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "File uploaded successfully",
+          "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ScormUploadResponse"
+                  "$ref": "#/components/schemas/UploadScormPackageResponse"
                 }
               }
             }
@@ -2076,17 +2148,17 @@
             "required": true,
             "in": "path",
             "schema": {
+              "format": "uuid",
               "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Returns SCORM metadata including entry point path",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ScormMetadata"
+                  "$ref": "#/components/schemas/GetScormMetadataResponse"
                 }
               }
             }
@@ -2481,6 +2553,26 @@
           "data": {
             "type": "object",
             "properties": {
+              "firstName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "lastName": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
               "id": {
                 "format": "uuid",
                 "type": "string"
@@ -2527,6 +2619,8 @@
               }
             },
             "required": [
+              "firstName",
+              "lastName",
               "id",
               "description",
               "contactEmail",
@@ -3507,17 +3601,11 @@
           "data": {
             "type": "object",
             "properties": {
-              "id": {
+              "archived": {
+                "type": "boolean"
+              },
+              "authorId": {
                 "format": "uuid",
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "thumbnailUrl": {
-                "type": "string"
-              },
-              "description": {
                 "type": "string"
               },
               "category": {
@@ -3526,38 +3614,6 @@
               "categoryId": {
                 "format": "uuid",
                 "type": "string"
-              },
-              "authorId": {
-                "format": "uuid",
-                "type": "string"
-              },
-              "author": {
-                "type": "string"
-              },
-              "authorEmail": {
-                "type": "string"
-              },
-              "courseChapterCount": {
-                "type": "number"
-              },
-              "completedChapterCount": {
-                "type": "number"
-              },
-              "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "isScorm": {
-                "type": "boolean"
               },
               "chapters": {
                 "type": "array",
@@ -3608,40 +3664,76 @@
                     "createdAt": {
                       "type": "string"
                     },
-                    "quizScore": {
+                    "quizCount": {
+                      "type": "number"
+                    },
+                    "displayOrder": {
                       "type": "number"
                     }
                   },
                   "required": [
                     "id",
                     "title",
-                    "lessonCount"
+                    "lessonCount",
+                    "displayOrder"
                   ]
                 }
               },
-              "priceInCents": {
+              "completedChapterCount": {
+                "type": "number"
+              },
+              "courseChapterCount": {
                 "type": "number"
               },
               "currency": {
                 "type": "string"
               },
-              "archived": {
+              "description": {
+                "type": "string"
+              },
+              "enrolled": {
                 "type": "boolean"
               },
               "hasFreeChapter": {
                 "type": "boolean"
+              },
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "isPublished": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "isScorm": {
+                "type": "boolean"
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "thumbnailUrl": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
               }
             },
             "required": [
-              "id",
-              "title",
-              "description",
               "category",
-              "courseChapterCount",
-              "isPublished",
               "chapters",
+              "courseChapterCount",
+              "currency",
+              "description",
+              "id",
+              "isPublished",
               "priceInCents",
-              "currency"
+              "title"
             ]
           }
         },
@@ -3655,17 +3747,11 @@
           "data": {
             "type": "object",
             "properties": {
-              "id": {
+              "archived": {
+                "type": "boolean"
+              },
+              "authorId": {
                 "format": "uuid",
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "thumbnailUrl": {
-                "type": "string"
-              },
-              "description": {
                 "type": "string"
               },
               "category": {
@@ -3674,38 +3760,6 @@
               "categoryId": {
                 "format": "uuid",
                 "type": "string"
-              },
-              "authorId": {
-                "format": "uuid",
-                "type": "string"
-              },
-              "author": {
-                "type": "string"
-              },
-              "authorEmail": {
-                "type": "string"
-              },
-              "courseChapterCount": {
-                "type": "number"
-              },
-              "completedChapterCount": {
-                "type": "number"
-              },
-              "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "isScorm": {
-                "type": "boolean"
               },
               "chapters": {
                 "type": "array",
@@ -3756,40 +3810,76 @@
                     "createdAt": {
                       "type": "string"
                     },
-                    "quizScore": {
+                    "quizCount": {
+                      "type": "number"
+                    },
+                    "displayOrder": {
                       "type": "number"
                     }
                   },
                   "required": [
                     "id",
                     "title",
-                    "lessonCount"
+                    "lessonCount",
+                    "displayOrder"
                   ]
                 }
               },
-              "priceInCents": {
+              "completedChapterCount": {
+                "type": "number"
+              },
+              "courseChapterCount": {
                 "type": "number"
               },
               "currency": {
                 "type": "string"
               },
-              "archived": {
+              "description": {
+                "type": "string"
+              },
+              "enrolled": {
                 "type": "boolean"
               },
               "hasFreeChapter": {
                 "type": "boolean"
+              },
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "isPublished": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "isScorm": {
+                "type": "boolean"
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "thumbnailUrl": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
               }
             },
             "required": [
-              "id",
-              "title",
-              "description",
               "category",
-              "courseChapterCount",
-              "isPublished",
               "chapters",
+              "courseChapterCount",
+              "currency",
+              "description",
+              "id",
+              "isPublished",
               "priceInCents",
-              "currency"
+              "title"
             ]
           }
         },
@@ -3803,17 +3893,11 @@
           "data": {
             "type": "object",
             "properties": {
-              "id": {
+              "archived": {
+                "type": "boolean"
+              },
+              "authorId": {
                 "format": "uuid",
-                "type": "string"
-              },
-              "title": {
-                "type": "string"
-              },
-              "thumbnailUrl": {
-                "type": "string"
-              },
-              "description": {
                 "type": "string"
               },
               "category": {
@@ -3822,38 +3906,6 @@
               "categoryId": {
                 "format": "uuid",
                 "type": "string"
-              },
-              "authorId": {
-                "format": "uuid",
-                "type": "string"
-              },
-              "author": {
-                "type": "string"
-              },
-              "authorEmail": {
-                "type": "string"
-              },
-              "courseChapterCount": {
-                "type": "number"
-              },
-              "completedChapterCount": {
-                "type": "number"
-              },
-              "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
-                "anyOf": [
-                  {
-                    "type": "boolean"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "isScorm": {
-                "type": "boolean"
               },
               "chapters": {
                 "type": "array",
@@ -3904,40 +3956,76 @@
                     "createdAt": {
                       "type": "string"
                     },
-                    "quizScore": {
+                    "quizCount": {
+                      "type": "number"
+                    },
+                    "displayOrder": {
                       "type": "number"
                     }
                   },
                   "required": [
                     "id",
                     "title",
-                    "lessonCount"
+                    "lessonCount",
+                    "displayOrder"
                   ]
                 }
               },
-              "priceInCents": {
+              "completedChapterCount": {
+                "type": "number"
+              },
+              "courseChapterCount": {
                 "type": "number"
               },
               "currency": {
                 "type": "string"
               },
-              "archived": {
+              "description": {
+                "type": "string"
+              },
+              "enrolled": {
                 "type": "boolean"
               },
               "hasFreeChapter": {
                 "type": "boolean"
+              },
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "isPublished": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "isScorm": {
+                "type": "boolean"
+              },
+              "priceInCents": {
+                "type": "number"
+              },
+              "thumbnailUrl": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
               }
             },
             "required": [
-              "id",
-              "title",
-              "description",
               "category",
-              "courseChapterCount",
-              "isPublished",
               "chapters",
+              "courseChapterCount",
+              "currency",
+              "description",
+              "id",
+              "isPublished",
               "priceInCents",
-              "currency"
+              "title"
             ]
           }
         },
@@ -4803,6 +4891,211 @@
           "data"
         ]
       },
+      "GetChapterWithLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "lessonCount": {
+                "type": "number"
+              },
+              "completedLessonCount": {
+                "type": "number"
+              },
+              "chapterProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
+              },
+              "isFreemium": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "isPublished": {
+                "type": "boolean"
+              },
+              "isSubmitted": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "quizCount": {
+                "type": "number"
+              },
+              "displayOrder": {
+                "type": "number"
+              },
+              "lessons": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "id": {
+                      "format": "uuid",
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "displayOrder": {
+                      "type": "number"
+                    },
+                    "fileS3Key": {
+                      "type": "string"
+                    },
+                    "fileType": {
+                      "type": "string"
+                    },
+                    "questions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "type": {
+                            "anyOf": [
+                              {
+                                "const": "single_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "multiple_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "true_or_false",
+                                "type": "string"
+                              },
+                              {
+                                "const": "photo_question",
+                                "type": "string"
+                              },
+                              {
+                                "const": "fill_in_the_blanks",
+                                "type": "string"
+                              },
+                              {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "photoQuestionType": {
+                            "anyOf": [
+                              {
+                                "const": "single_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "multiple_choice",
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "photoS3Key": {
+                            "type": "string"
+                          },
+                          "options": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "optionText": {
+                                  "type": "string"
+                                },
+                                "isCorrect": {
+                                  "type": "boolean"
+                                },
+                                "position": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "optionText",
+                                "isCorrect",
+                                "position"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "title",
+                    "type",
+                    "description",
+                    "displayOrder"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "lessonCount",
+              "displayOrder",
+              "lessons"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
       "BetaCreateChapterBody": {
         "type": "object",
         "allOf": [
@@ -4843,7 +5136,7 @@
               "createdAt": {
                 "type": "string"
               },
-              "quizScore": {
+              "quizCount": {
                 "type": "number"
               }
             },
@@ -4929,7 +5222,7 @@
               "createdAt": {
                 "type": "string"
               },
-              "quizScore": {
+              "quizCount": {
                 "type": "number"
               }
             }
@@ -5086,58 +5379,116 @@
           "data"
         ]
       },
-      "ScormMetadata": {
+      "UploadScormPackageResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string"
-          },
-          "courseId": {
-            "type": "string"
-          },
-          "fileId": {
-            "type": "string"
-          },
-          "version": {
-            "type": "string"
-          },
-          "entryPoint": {
-            "type": "string"
-          },
-          "s3Key": {
-            "type": "string"
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "metadata": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  },
+                  "courseId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "fileId": {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  },
+                  "entryPoint": {
+                    "type": "string"
+                  },
+                  "s3Key": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "createdAt",
+                  "updatedAt",
+                  "courseId",
+                  "fileId",
+                  "version",
+                  "entryPoint",
+                  "s3Key"
+                ]
+              }
+            },
+            "required": [
+              "message",
+              "metadata"
+            ]
           }
         },
         "required": [
-          "id",
-          "createdAt",
-          "updatedAt",
-          "courseId",
-          "fileId",
-          "version",
-          "entryPoint",
-          "s3Key"
+          "data"
         ]
       },
-      "ScormUploadResponse": {
+      "GetScormMetadataResponse": {
         "type": "object",
         "properties": {
-          "message": {
-            "type": "string"
-          },
-          "metadata": {
-            "$ref": "#/components/schemas/ScormMetadata"
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
+                "type": "string"
+              },
+              "courseId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "fileId": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "version": {
+                "type": "string"
+              },
+              "entryPoint": {
+                "type": "string"
+              },
+              "s3Key": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "createdAt",
+              "updatedAt",
+              "courseId",
+              "fileId",
+              "version",
+              "entryPoint",
+              "s3Key"
+            ]
           }
         },
         "required": [
-          "message",
-          "metadata"
+          "data"
         ]
       }
     }

@@ -145,6 +145,8 @@ export interface GetUserByIdResponse {
 
 export interface GetUserDetailsResponse {
   data: {
+    firstName: string | null;
+    lastName: string | null;
     /** @format uuid */
     id: string;
     description: string | null;
@@ -432,23 +434,12 @@ export interface GetTeacherCoursesResponse {
 
 export interface GetCourseResponse {
   data: {
+    archived?: boolean;
     /** @format uuid */
-    id: string;
-    title: string;
-    thumbnailUrl?: string;
-    description: string;
+    authorId?: string;
     category: string;
     /** @format uuid */
     categoryId?: string;
-    /** @format uuid */
-    authorId?: string;
-    author?: string;
-    authorEmail?: string;
-    courseChapterCount: number;
-    completedChapterCount?: number;
-    enrolled?: boolean;
-    isPublished: boolean | null;
-    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -461,34 +452,33 @@ export interface GetCourseResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
-      quizScore?: number;
+      quizCount?: number;
+      displayOrder: number;
     }[];
-    priceInCents: number;
+    completedChapterCount?: number;
+    courseChapterCount: number;
     currency: string;
-    archived?: boolean;
+    description: string;
+    enrolled?: boolean;
     hasFreeChapter?: boolean;
+    /** @format uuid */
+    id: string;
+    isPublished: boolean | null;
+    isScorm?: boolean;
+    priceInCents: number;
+    thumbnailUrl?: string;
+    title: string;
   };
 }
 
 export interface GetCourseByIdResponse {
   data: {
+    archived?: boolean;
     /** @format uuid */
-    id: string;
-    title: string;
-    thumbnailUrl?: string;
-    description: string;
+    authorId?: string;
     category: string;
     /** @format uuid */
     categoryId?: string;
-    /** @format uuid */
-    authorId?: string;
-    author?: string;
-    authorEmail?: string;
-    courseChapterCount: number;
-    completedChapterCount?: number;
-    enrolled?: boolean;
-    isPublished: boolean | null;
-    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -501,34 +491,33 @@ export interface GetCourseByIdResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
-      quizScore?: number;
+      quizCount?: number;
+      displayOrder: number;
     }[];
-    priceInCents: number;
+    completedChapterCount?: number;
+    courseChapterCount: number;
     currency: string;
-    archived?: boolean;
+    description: string;
+    enrolled?: boolean;
     hasFreeChapter?: boolean;
+    /** @format uuid */
+    id: string;
+    isPublished: boolean | null;
+    isScorm?: boolean;
+    priceInCents: number;
+    thumbnailUrl?: string;
+    title: string;
   };
 }
 
 export interface GetBetaCourseByIdResponse {
   data: {
+    archived?: boolean;
     /** @format uuid */
-    id: string;
-    title: string;
-    thumbnailUrl?: string;
-    description: string;
+    authorId?: string;
     category: string;
     /** @format uuid */
     categoryId?: string;
-    /** @format uuid */
-    authorId?: string;
-    author?: string;
-    authorEmail?: string;
-    courseChapterCount: number;
-    completedChapterCount?: number;
-    enrolled?: boolean;
-    isPublished: boolean | null;
-    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -541,12 +530,22 @@ export interface GetBetaCourseByIdResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
-      quizScore?: number;
+      quizCount?: number;
+      displayOrder: number;
     }[];
-    priceInCents: number;
+    completedChapterCount?: number;
+    courseChapterCount: number;
     currency: string;
-    archived?: boolean;
+    description: string;
+    enrolled?: boolean;
     hasFreeChapter?: boolean;
+    /** @format uuid */
+    id: string;
+    isPublished: boolean | null;
+    isScorm?: boolean;
+    priceInCents: number;
+    thumbnailUrl?: string;
+    title: string;
   };
 }
 
@@ -792,6 +791,58 @@ export interface UpdateLessonDisplayOrderResponse {
   };
 }
 
+export interface GetChapterWithLessonResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    lessonCount: number;
+    completedLessonCount?: number;
+    chapterProgress?: "completed" | "in_progress" | "not_started";
+    isFreemium?: boolean;
+    enrolled?: boolean;
+    isPublished?: boolean;
+    isSubmitted?: boolean;
+    createdAt?: string;
+    quizCount?: number;
+    displayOrder: number;
+    lessons: {
+      updatedAt?: string;
+      /** @format uuid */
+      id: string;
+      title: string;
+      type: string;
+      description: string;
+      displayOrder: number;
+      fileS3Key?: string;
+      fileType?: string;
+      questions?: {
+        /** @format uuid */
+        id?: string;
+        type:
+          | "single_choice"
+          | "multiple_choice"
+          | "true_or_false"
+          | "photo_question"
+          | "fill_in_the_blanks"
+          | "brief_response"
+          | "detailed_response";
+        description?: string;
+        title: string;
+        photoQuestionType?: "single_choice" | "multiple_choice";
+        photoS3Key?: string;
+        options?: {
+          /** @format uuid */
+          id?: string;
+          optionText: string;
+          isCorrect: boolean;
+          position: number;
+        }[];
+      }[];
+    }[];
+  };
+}
+
 export type BetaCreateChapterBody = {
   title: string;
   chapterProgress?: "completed" | "in_progress" | "not_started";
@@ -800,7 +851,7 @@ export type BetaCreateChapterBody = {
   isPublished?: boolean;
   isSubmitted?: boolean;
   createdAt?: string;
-  quizScore?: number;
+  quizCount?: number;
 } & {
   /** @format uuid */
   courseId: string;
@@ -822,7 +873,7 @@ export type UpdateChapterBody = {
   isPublished?: boolean;
   isSubmitted?: boolean;
   createdAt?: string;
-  quizScore?: number;
+  quizCount?: number;
 } & {
   /** @format uuid */
   courseId?: string;
@@ -874,20 +925,39 @@ export interface CreatePaymentIntentResponse {
   };
 }
 
-export interface ScormMetadata {
-  id: string;
-  createdAt: string;
-  updatedAt: string;
-  courseId: string;
-  fileId: string;
-  version: string;
-  entryPoint: string;
-  s3Key: string;
+export interface UploadScormPackageResponse {
+  data: {
+    message: string;
+    metadata: {
+      /** @format uuid */
+      id: string;
+      createdAt: string;
+      updatedAt: string;
+      /** @format uuid */
+      courseId: string;
+      /** @format uuid */
+      fileId: string;
+      version: string;
+      entryPoint: string;
+      s3Key: string;
+    };
+  };
 }
 
-export interface ScormUploadResponse {
-  message: string;
-  metadata: ScormMetadata;
+export interface GetScormMetadataResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    createdAt: string;
+    updatedAt: string;
+    /** @format uuid */
+    courseId: string;
+    /** @format uuid */
+    fileId: string;
+    version: string;
+    entryPoint: string;
+    s3Key: string;
+  };
 }
 
 import type {
@@ -1244,10 +1314,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerGetUsers
-     * @request GET:/api/users
+     * @name UserControllerGetUsers
+     * @request GET:/api/user/all
      */
-    usersControllerGetUsers: (
+    userControllerGetUsers: (
       query?: {
         keyword?: string;
         role?: string;
@@ -1260,7 +1330,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetUsersResponse, any>({
-        path: `/api/users`,
+        path: `/api/user/all`,
         method: "GET",
         query: query,
         format: "json",
@@ -1270,10 +1340,31 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerUpdateUser
-     * @request PATCH:/api/users
+     * @name UserControllerGetUserById
+     * @request GET:/api/user
      */
-    usersControllerUpdateUser: (
+    userControllerGetUserById: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetUserByIdResponse, any>({
+        path: `/api/user`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name UserControllerUpdateUser
+     * @request PATCH:/api/user
+     */
+    userControllerUpdateUser: (
       query: {
         /** @format uuid */
         id: string;
@@ -1282,7 +1373,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<UpdateUserResponse, any>({
-        path: `/api/users`,
+        path: `/api/user`,
         method: "PATCH",
         query: query,
         body: data,
@@ -1294,12 +1385,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerDeleteBulkUsers
-     * @request DELETE:/api/users
+     * @name UserControllerDeleteBulkUsers
+     * @request DELETE:/api/user
      */
-    usersControllerDeleteBulkUsers: (data: DeleteBulkUsersBody, params: RequestParams = {}) =>
+    userControllerDeleteBulkUsers: (data: DeleteBulkUsersBody, params: RequestParams = {}) =>
       this.request<DeleteBulkUsersResponse, any>({
-        path: `/api/users`,
+        path: `/api/user`,
         method: "DELETE",
         body: data,
         type: ContentType.Json,
@@ -1310,20 +1401,15 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerGetUserById
-     * @request GET:/api/users/user
+     * @name UserControllerCreateUser
+     * @request POST:/api/user
      */
-    usersControllerGetUserById: (
-      query: {
-        /** @format uuid */
-        id: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetUserByIdResponse, any>({
-        path: `/api/users/user`,
-        method: "GET",
-        query: query,
+    userControllerCreateUser: (data: CreateUserBody, params: RequestParams = {}) =>
+      this.request<CreateUserResponse, any>({
+        path: `/api/user`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -1331,31 +1417,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerDeleteUser
-     * @request DELETE:/api/users/user
+     * @name UserControllerGetUserDetails
+     * @request GET:/api/user/details
      */
-    usersControllerDeleteUser: (
-      query: {
-        /** @format uuid */
-        id: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<DeleteUserResponse, any>({
-        path: `/api/users/user`,
-        method: "DELETE",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name UsersControllerGetUserDetails
-     * @request GET:/api/users/user-details
-     */
-    usersControllerGetUserDetails: (
+    userControllerGetUserDetails: (
       query: {
         /** @format uuid */
         userId: string;
@@ -1363,7 +1428,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetUserDetailsResponse, any>({
-        path: `/api/users/user-details`,
+        path: `/api/user/details`,
         method: "GET",
         query: query,
         format: "json",
@@ -1373,12 +1438,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerUpsertUserDetails
-     * @request PATCH:/api/users/user-details
+     * @name UserControllerUpsertUserDetails
+     * @request PATCH:/api/user/details
      */
-    usersControllerUpsertUserDetails: (data: UpsertUserDetailsBody, params: RequestParams = {}) =>
+    userControllerUpsertUserDetails: (data: UpsertUserDetailsBody, params: RequestParams = {}) =>
       this.request<UpsertUserDetailsResponse, any>({
-        path: `/api/users/user-details`,
+        path: `/api/user/details`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,
@@ -1389,10 +1454,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerAdminUpdateUser
-     * @request PATCH:/api/users/admin/user
+     * @name UserControllerAdminUpdateUser
+     * @request PATCH:/api/user/admin
      */
-    usersControllerAdminUpdateUser: (
+    userControllerAdminUpdateUser: (
       query: {
         /** @format uuid */
         id: string;
@@ -1401,7 +1466,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<AdminUpdateUserResponse, any>({
-        path: `/api/users/admin/user`,
+        path: `/api/user/admin`,
         method: "PATCH",
         query: query,
         body: data,
@@ -1413,10 +1478,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerChangePassword
-     * @request PATCH:/api/users/change-password
+     * @name UserControllerChangePassword
+     * @request PATCH:/api/user/change-password
      */
-    usersControllerChangePassword: (
+    userControllerChangePassword: (
       query: {
         /** @format uuid */
         id: string;
@@ -1425,7 +1490,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<ChangePasswordResponse, any>({
-        path: `/api/users/change-password`,
+        path: `/api/user/change-password`,
         method: "PATCH",
         query: query,
         body: data,
@@ -1437,15 +1502,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name UsersControllerCreateUser
-     * @request POST:/api/users/create
+     * @name UserControllerDeleteUser
+     * @request DELETE:/api/user/user
      */
-    usersControllerCreateUser: (data: CreateUserBody, params: RequestParams = {}) =>
-      this.request<CreateUserResponse, any>({
-        path: `/api/users/create`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
+    userControllerDeleteUser: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<DeleteUserResponse, any>({
+        path: `/api/user/user`,
+        method: "DELETE",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -1617,6 +1687,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     courseControllerGetStudentCourses: (
       query?: {
+        /** @format uuid */
+        excludeCourseId?: string;
         title?: string;
         category?: string;
         author?: string;
@@ -1678,6 +1750,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | "-author"
           | "-chapterCount"
           | "-enrolledParticipantsCount";
+        /** @format uuid */
+        excludeCourseId?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -1699,6 +1773,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query: {
         /** @format uuid */
         authorId: string;
+        scope?: "all" | "enrolled" | "available";
+        /** @format uuid */
+        excludeCourseId?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -2005,15 +2082,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name ChapterControllerBetaCreateChapter
-     * @request POST:/api/chapter/beta-create-chapter
+     * @name ChapterControllerGetChapterWithLesson
+     * @request GET:/api/chapter
      */
-    chapterControllerBetaCreateChapter: (data: BetaCreateChapterBody, params: RequestParams = {}) =>
-      this.request<BetaCreateChapterResponse, any>({
-        path: `/api/chapter/beta-create-chapter`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
+    chapterControllerGetChapterWithLesson: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetChapterWithLessonResponse, any>({
+        path: `/api/chapter`,
+        method: "GET",
+        query: query,
         format: "json",
         ...params,
       }),
@@ -2059,6 +2141,22 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/chapter`,
         method: "DELETE",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerBetaCreateChapter
+     * @request POST:/api/chapter/beta-create-chapter
+     */
+    chapterControllerBetaCreateChapter: (data: BetaCreateChapterBody, params: RequestParams = {}) =>
+      this.request<BetaCreateChapterResponse, any>({
+        path: `/api/chapter/beta-create-chapter`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2183,7 +2281,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<ScormUploadResponse, any>({
+      this.request<UploadScormPackageResponse, any>({
         path: `/api/scorm/upload`,
         method: "POST",
         query: query,
@@ -2220,7 +2318,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/api/scorm/{courseId}/metadata
      */
     scormControllerGetScormMetadata: (courseId: string, params: RequestParams = {}) =>
-      this.request<ScormMetadata, any>({
+      this.request<GetScormMetadataResponse, any>({
         path: `/api/scorm/${courseId}/metadata`,
         method: "GET",
         format: "json",

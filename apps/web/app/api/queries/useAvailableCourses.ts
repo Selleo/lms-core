@@ -10,6 +10,7 @@ type CourseParams = {
   category?: string;
   sort?: SortOption;
   userId?: string;
+  excludeCourseId?: string;
 };
 
 export const availableCoursesQueryOptions = (searchParams?: CourseParams) => ({
@@ -22,6 +23,7 @@ export const availableCoursesQueryOptions = (searchParams?: CourseParams) => ({
       ...(searchParams?.category && { category: searchParams.category }),
       ...(searchParams?.sort && { sort: searchParams.sort }),
       ...(searchParams?.userId && { userId: searchParams.userId }),
+      ...(searchParams?.excludeCourseId && { excludeCourseId: searchParams.excludeCourseId }),
     });
     return response.data;
   },
