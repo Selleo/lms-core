@@ -261,15 +261,15 @@ export class CourseService {
           priceInCents: courses.priceInCents,
           currency: courses.currency,
           hasFreeChapters: sql<boolean>`
-        EXISTS (
-          SELECT 1
-          FROM ${chapters}
-          WHERE ${chapters.courseId} = ${courses.id}
-            AND ${chapters.isFreemium} = TRUE
-        )`,
+            EXISTS (
+              SELECT 1
+              FROM ${chapters}
+              WHERE ${chapters.courseId} = ${courses.id}
+                AND ${chapters.isFreemium} = TRUE
+            )
+          `,
         })
         .from(courses)
-        .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
@@ -283,11 +283,9 @@ export class CourseService {
           users.firstName,
           users.lastName,
           users.email,
-          studentCourses.studentId,
           categories.title,
           coursesSummaryStats.freePurchasedCount,
           coursesSummaryStats.paidPurchasedCount,
-          studentCourses.finishedChapterCount,
         )
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
@@ -297,7 +295,6 @@ export class CourseService {
       const [{ totalItems }] = await trx
         .select({ totalItems: countDistinct(courses.id) })
         .from(courses)
-        .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .where(and(...conditions));
@@ -590,9 +587,9 @@ export class CourseService {
         excludeCourseId,
       );
 
-      if (availableCourseIds.length) {
-        conditions.push(inArray(courses.id, availableCourseIds));
-      }
+      if (!availableCourseIds.length) return [];
+
+      conditions.push(inArray(courses.id, availableCourseIds));
     }
 
     return this.db
@@ -620,7 +617,10 @@ export class CourseService {
         )`,
       })
       .from(courses)
-      .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, courses.id), eq(studentCourses.studentId, currentUserId)),
+      )
       .leftJoin(categories, eq(courses.categoryId, categories.id))
       .leftJoin(users, eq(courses.authorId, users.id))
       .where(and(...conditions))
