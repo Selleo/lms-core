@@ -43,6 +43,13 @@
       "when": 1735027876543,
       "tag": "0005_rename_column_position_to_display_order",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1735305032335,
+      "tag": "0006_incerase_lesson_description_characters_count",
+      "breakpoints": true
     }
   ]
 }

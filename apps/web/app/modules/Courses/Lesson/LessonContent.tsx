@@ -1,10 +1,12 @@
 import { startCase } from "lodash-es";
+import { useEffect, useState } from "react";
 import { match } from "ts-pattern";
 
 import { useMarkLessonAsCompleted } from "~/api/mutations";
 import { Icon } from "~/components/Icon";
 import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
+import { VideoPlayer } from "~/components/VideoPlayer/VideoPlayer";
 
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 
@@ -21,16 +23,24 @@ export const LessonContent = ({
   handlePrevious,
   handleNext,
 }: LessonContentProps) => {
-  const mutation = useMarkLessonAsCompleted();
+  const [isCompleteDisabled, setIsCompleteDisabled] = useState(false);
+  const { mutate: markLessonAsCompleted } = useMarkLessonAsCompleted();
+
+  useEffect(() => {
+    if (lesson.type === "video") setIsCompleteDisabled(true);
+  }, [lesson.type]);
 
   const Content = () =>
     match(lesson.type)
       .with("text", () => <Viewer variant="lesson" content={lesson?.description} />)
       .with("quiz", () => <></>)
-      .otherwise(() => <></>);
+      .with("video", () => (
+        <VideoPlayer url={lesson.fileUrl} onVideoEnded={() => setIsCompleteDisabled(false)} />
+      ))
+      .otherwise(() => null);
 
   const handleMarkLessonAsComplete = () => {
-    mutation.mutate({ lessonId: lesson.id });
+    markLessonAsCompleted({ lessonId: lesson.id });
   };
 
   return (
@@ -56,7 +66,7 @@ export const LessonContent = ({
         </div>
         <Content />
         <footer className="sticky bottom-0 border-t border-neutral-200 left-0 w-full py-4 grid place-items-center">
-          <Button onClick={handleMarkLessonAsComplete}>
+          <Button onClick={handleMarkLessonAsComplete} disabled={isCompleteDisabled}>
             Complete <Icon name="ArrowRight" className="w-4 h-auto" />
           </Button>
         </footer>

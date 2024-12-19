@@ -510,19 +510,24 @@ export interface GetBetaCourseByIdResponse {
             | "multiple_choice"
             | "true_or_false"
             | "photo_question"
-            | "fill_in_the_blanks"
+            | "fill_in_the_blanks_text"
+            | "fill_in_the_blanks_dnd"
             | "brief_response"
             | "detailed_response";
           description?: string | null;
           title: string;
+          displayOrder?: number;
           photoQuestionType?: ("single_choice" | "multiple_choice") | null;
           photoS3Key?: string | null;
           options?: {
             /** @format uuid */
             id?: string;
             optionText: string;
+            displayOrder: number | null;
+            isStudentAnswer?: boolean;
             isCorrect: boolean;
-            position: number;
+            /** @format uuid */
+            questionId?: string;
           }[];
         }[];
         updatedAt?: string;
@@ -884,21 +889,23 @@ export type BetaCreateChapterBody = {
         | "true_or_false"
         | "photo_question"
         | "fill_in_the_blanks_text"
-          | "fill_in_the_blanks_dnd"
+        | "fill_in_the_blanks_dnd"
         | "brief_response"
         | "detailed_response";
       description?: string | null;
-      title: string;displayOrder?: number;
+      title: string;
+      displayOrder?: number;
       photoQuestionType?: ("single_choice" | "multiple_choice") | null;
       photoS3Key?: string | null;
       options?: {
         /** @format uuid */
         id?: string;
-        optionText: string;displayOrder: number | null;
-          isStudentAnswer?: boolean;
+        optionText: string;
+        displayOrder: number | null;
+        isStudentAnswer?: boolean;
         isCorrect: boolean;
         /** @format uuid */
-          questionId?: string;
+        questionId?: string;
       }[];
     }[];
     updatedAt?: string;
@@ -942,19 +949,24 @@ export type UpdateChapterBody = {
         | "multiple_choice"
         | "true_or_false"
         | "photo_question"
-        | "fill_in_the_blanks"
+        | "fill_in_the_blanks_text"
+        | "fill_in_the_blanks_dnd"
         | "brief_response"
         | "detailed_response";
       description?: string | null;
       title: string;
+      displayOrder?: number;
       photoQuestionType?: ("single_choice" | "multiple_choice") | null;
       photoS3Key?: string | null;
       options?: {
         /** @format uuid */
         id?: string;
         optionText: string;
+        displayOrder: number | null;
+        isStudentAnswer?: boolean;
         isCorrect: boolean;
-        position: number;
+        /** @format uuid */
+        questionId?: string;
       }[];
     }[];
     updatedAt?: string;

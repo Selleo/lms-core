@@ -33,7 +33,7 @@ const QuestionWrapper = ({
         <div
           className={cn(
             "border p-2 mt-4 rounded-xl transition-all duration-300",
-            isOpen ? "border-blue-500" : "border-gray-200"
+            isOpen ? "border-blue-500" : "border-gray-200",
           )}
         >
           <QuestionTitle
