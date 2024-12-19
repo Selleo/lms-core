@@ -1028,15 +1028,6 @@
         "operationId": "CourseController_getStudentCourses",
         "parameters": [
           {
-            "name": "excludeCourseId",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          },
-          {
             "name": "title",
             "required": false,
             "in": "query",
