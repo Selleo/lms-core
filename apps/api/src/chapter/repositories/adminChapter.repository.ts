@@ -4,10 +4,10 @@ import { and, eq, gte, lte, sql } from "drizzle-orm";
 import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
+import type { UpdateChapterBody } from "../schemas/chapter.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
-import { UpdateChapterBody } from "../schemas/chapter.schema";
 
 @Injectable()
 export class AdminChapterRepository {

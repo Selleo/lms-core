@@ -17,6 +17,7 @@ import {
   updateChapterSchema,
   showChapterSchema
 } from "./schemas/chapter.schema";
+
 import type { ShowChapterResponse } from "./schemas/chapter.schema";
 
 @Controller("chapter")
