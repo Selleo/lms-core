@@ -19,21 +19,21 @@ import { ScormRepository } from "../repositories/scorm.repository";
 
 import type { UUIDType } from "src/common";
 
-interface ScormChapter {
+type ScormChapter = {
   title: string;
   identifier: string;
   displayOrder: number;
   lessons: ScormLesson[];
-}
+};
 
-interface ScormLesson {
+type ScormLesson = {
   title: string;
   identifier: string;
   href: string;
   type: string;
   displayOrder: number;
   isQuiz: boolean;
-}
+};
 
 @Injectable()
 export class ScormService {
@@ -417,7 +417,6 @@ export class ScormService {
     const organization = manifest.manifest.organizations[0].organization[0];
     const resources = manifest.manifest.resources[0].resource;
 
-    // Map to quickly lookup resources
     const resourceMap = new Map(
       resources.map((resource: any) => [
         resource.$.identifier,
@@ -429,20 +428,37 @@ export class ScormService {
       ]),
     );
 
-    // Parse chapters (scorm folders)
-    return organization.item.map((chapterItem: any, chapterIndex: number) => {
-      const lessons = chapterItem.item.map((lessonItem: any, lessonIndex: number) => {
+    const items = Array.isArray(organization.item) ? organization.item : [organization.item];
+
+    return items.map((chapterItem: any, chapterIndex: number) => {
+      const subItems = chapterItem.item
+        ? Array.isArray(chapterItem.item)
+          ? chapterItem.item
+          : [chapterItem.item]
+        : [
+            {
+              $: {
+                identifier: chapterItem.$.identifier,
+                identifierref: chapterItem.$.identifierref,
+              },
+              title: chapterItem.title,
+            },
+          ];
+
+      const lessons = subItems.map((lessonItem: any, lessonIndex: number) => {
         const resourceId = lessonItem.$.identifierref;
         const resource = resourceMap.get(resourceId);
-        const lessonTitle = lessonItem.title[0];
+        const lessonTitle = Array.isArray(lessonItem.title)
+          ? lessonItem.title[0]
+          : lessonItem.title;
         const isQuiz = lessonTitle.toLowerCase().includes("quiz");
 
         return {
           title: lessonTitle,
           identifier: lessonItem.$.identifier,
-          // @ts-expect-error there is no way to type resource properly
+          // @ts-expect-error tet
           href: resource?.href || "",
-          // @ts-expect-error there is no way to type resource properly
+          // @ts-expect-error tet
           type: isQuiz ? LESSON_TYPES.quiz : this.determineLessonType(resource?.href || ""),
           displayOrder: lessonIndex + 1,
           isQuiz,
@@ -450,7 +466,7 @@ export class ScormService {
       });
 
       return {
-        title: chapterItem.title[0],
+        title: Array.isArray(chapterItem.title) ? chapterItem.title[0] : chapterItem.title,
         identifier: chapterItem.$.identifier,
         displayOrder: chapterIndex + 1,
         lessons,
