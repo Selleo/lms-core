@@ -1760,6 +1760,68 @@
         }
       }
     },
+    "/api/chapter": {
+      "patch": {
+        "operationId": "ChapterController_updateChapter",
+        "parameters": [
+          {
+            "name": "id",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateChapterBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "ChapterController_removeChapter",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RemoveChapterResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/chapter/chapter-display-order": {
       "patch": {
         "operationId": "ChapterController_updateChapterDisplayOrder",
@@ -1780,33 +1842,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UpdateChapterDisplayOrderResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/chapter": {
-      "delete": {
-        "operationId": "ChapterController_removeChapter",
-        "parameters": [
-          {
-            "name": "chapterId",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/RemoveChapterResponse"
                 }
               }
             }
@@ -4846,6 +4881,81 @@
             },
             "required": [
               "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateChapterBody": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "chapterProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
+              },
+              "isFreemium": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "isPublished": {
+                "type": "boolean"
+              },
+              "isSubmitted": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "quizScore": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "courseId": {
+                "format": "uuid",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
               "message"
             ]
           }

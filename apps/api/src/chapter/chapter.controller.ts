@@ -10,7 +10,12 @@ import { USER_ROLES } from "src/users/schemas/user-roles";
 
 import { AdminChapterService } from "./adminChapter.service";
 import { ChapterService } from "./chapter.service";
-import { CreateChapterBody, createChapterSchema } from "./schemas/chapter.schema";
+import {
+  CreateChapterBody,
+  createChapterSchema,
+  UpdateChapterBody,
+  updateChapterSchema,
+} from "./schemas/chapter.schema";
 
 @Controller("chapter")
 @UseGuards(RolesGuard)
@@ -85,6 +90,31 @@ export class ChapterController {
     const { id } = await this.adminChapterService.createChapterForCourse(createChapterBody, userId);
 
     return new BaseResponse({ id, message: "Chapter created successfully" });
+  }
+
+  @Patch()
+  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "id",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: updateChapterSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateChapter(
+    @Query("id") id: UUIDType,
+    @Body() updateChapterBody: UpdateChapterBody,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminChapterService.updateChapter(id, updateChapterBody);
+
+    return new BaseResponse({ message: "Chapter updated successfully" });
   }
 
   @Patch("chapter-display-order")

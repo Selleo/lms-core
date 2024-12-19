@@ -37,6 +37,8 @@ interface ChapterCardProps {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
   setSelectedLesson: (selectedLesson?: Lesson) => void;
+  selectedChapter?: Chapter;
+  selectedLesson?: Lesson;
   dragTrigger: React.ReactNode;
 }
 
@@ -46,6 +48,8 @@ const ChapterCard = ({
   setContentTypeToDisplay,
   setSelectedChapter,
   setSelectedLesson,
+  selectedChapter,
+  selectedLesson,
   dragTrigger,
 }: ChapterCardProps) => {
   const { mutateAsync: updateFreemiumStatus } = useUpdateLessonFreemiumStatus();
@@ -96,7 +100,9 @@ const ChapterCard = ({
   return (
     <AccordionItem key={chapter.id} value={chapter.id} className="p-0">
       <Card
-        className={cn("mb-4 h-full flex p-4 border", { "border-primary-500": isOpen })}
+        className={cn("mb-4 h-full flex p-4 border", {
+          "border-primary-500": isOpen || selectedChapter?.id === chapter.id,
+        })}
         onClick={onClickChapterCard}
       >
         <div className="flex w-full">
@@ -116,6 +122,7 @@ const ChapterCard = ({
             <AccordionContent className="mt-2 text-gray-700">
               <LessonCardList
                 lessons={chapter.lessons}
+                selectedLesson={selectedLesson}
                 setSelectedLesson={setSelectedLesson}
                 setContentTypeToDisplay={setContentTypeToDisplay}
               />
@@ -175,6 +182,8 @@ interface ChaptersListProps {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
   setSelectedLesson: (selectedLesson?: Lesson) => void;
+  selectedChapter?: Chapter;
+  selectedLesson?: Lesson;
   canRefetchChapterList: boolean;
 }
 
@@ -207,6 +216,8 @@ const ChaptersList = ({
   setContentTypeToDisplay,
   setSelectedChapter,
   setSelectedLesson,
+  selectedChapter,
+  selectedLesson,
   canRefetchChapterList,
 }: ChaptersListProps) => {
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
@@ -251,6 +262,8 @@ const ChaptersList = ({
               setContentTypeToDisplay={setContentTypeToDisplay}
               setSelectedChapter={setSelectedChapter}
               setSelectedLesson={setSelectedLesson}
+              selectedLesson={selectedLesson}
+              selectedChapter={selectedChapter}
               dragTrigger={
                 <SortableList.DragHandle>
                   <Icon name="DragAndDropIcon" className="cursor-move" />

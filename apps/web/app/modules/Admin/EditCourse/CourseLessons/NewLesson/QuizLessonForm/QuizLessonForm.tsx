@@ -17,6 +17,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { Chapter, ContentTypes, DeleteContentType, Lesson } from "../../../EditCourse.types";
 import { useCallback, useState } from "react";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import Breadcrumb from "../components/Breadcrumb";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -105,6 +106,7 @@ const QuizLessonForm = ({
   return (
     <div className="w-full max-w-full">
       <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-8">
+        <Breadcrumb lessonLabel="Quiz" setContentTypeToDisplay={setContentTypeToDisplay} />
         <div className="h5 text-neutral-950 mb-6">
           {lessonToEdit ? (
             <>
@@ -136,7 +138,7 @@ const QuizLessonForm = ({
             <div className="mt-5">
               <Label className="body-base-md">
                 <span className="text-red-500 mr-1 body-base-md">*</span> Questions
-                <span className="text-neutral-600">({questions?.length || 0})</span>
+                <span className="text-neutral-600"> ({questions?.length || 0})</span>
               </Label>
             </div>
 

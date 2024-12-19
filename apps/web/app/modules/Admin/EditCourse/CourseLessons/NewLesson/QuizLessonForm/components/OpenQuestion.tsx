@@ -22,7 +22,7 @@ const OpenQuestion = ({ form, questionIndex }: OpenQuestionProps) => {
   }, [form, questionIndex]);
 
   return (
-    <div className="border p-2 mt-4 border-gray-200 flex items-center justify-between">
+    <div className="border rounded-xl p-2 mt-3 border-gray-200 flex items-center justify-between">
       <div className="flex-1">
         <QuestionTitle form={form} questionIndex={questionIndex} questionType={questionType} />
       </div>
@@ -31,13 +31,13 @@ const OpenQuestion = ({ form, questionIndex }: OpenQuestionProps) => {
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span>
+              <div className="group">
                 <Icon
                   name="TrashIcon"
-                  className="text-error-500 ml-2 cursor-pointer w-5 h-5"
+                  className="text-error-500 ml-2 mr-2 bg-error-50 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
                   onClick={handleRemoveQuestion}
                 />
-              </span>
+              </div>
             </TooltipTrigger>
             <TooltipContent
               side="top"

@@ -30,7 +30,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                 <div className="flex flex-col space-y-6">
                   <div
                     className={cn(
-                      "flex items-center gap-x-4 px-6 py-4 border rounded-md cursor-pointer",
+                      "flex items-start gap-x-4 px-6 py-4 border rounded-md cursor-pointer",
                       {
                         "border-blue-500": field.value === false,
                         "border-gray-300": field.value !== false,
@@ -43,7 +43,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                       name="isPublished"
                       checked={field.value === false}
                       onChange={() => field.onChange(false)}
-                      className="p-1 w-auto w-6 h-6"
+                      className="p-1 w-7 h-7"
                       id="draft"
                     />
                     <div>
@@ -64,7 +64,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
 
                   <div
                     className={cn(
-                      "flex items-center gap-x-4 px-6 py-4 border rounded-md cursor-pointer",
+                      "flex items-start gap-x-4 px-6 py-4 border rounded-md cursor-pointer",
                       {
                         "border-blue-500": field.value === true,
                         "border-gray-300": field.value !== true,
@@ -77,7 +77,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                       name="isPublished"
                       checked={field.value === true}
                       onChange={() => field.onChange(true)}
-                      className="p-1 w-auto w-5 h-5"
+                      className="p-1 w-7 h-7"
                       id="published"
                     />
                     <div>

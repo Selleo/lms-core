@@ -12,12 +12,14 @@ type LessonCardListProps = {
   setSelectedLesson: (lesson: Lesson) => void;
   setContentTypeToDisplay: (contentType: string) => void;
   lessons: Lesson[];
+  selectedLesson?: Lesson;
 };
 
 export const LessonCardList = ({
   lessons,
   setSelectedLesson,
   setContentTypeToDisplay,
+  selectedLesson,
 }: LessonCardListProps) => {
   const [items, setItems] = useState(lessons);
   const mutation = useChangeLessonDisplayOrder();
@@ -73,6 +75,7 @@ export const LessonCardList = ({
             key={item.id}
             item={item}
             onClickLessonCard={onClickLessonCard}
+            selectedLesson={selectedLesson}
             dragTrigger={
               <SortableList.DragHandle>
                 <Icon name="DragAndDropIcon" className="cursor-move" />

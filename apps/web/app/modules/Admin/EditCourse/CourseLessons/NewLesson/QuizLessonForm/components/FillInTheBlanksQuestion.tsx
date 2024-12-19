@@ -252,7 +252,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
         <div
-          className={cn("border p-2 mt-4 rounded-xl transition-all duration-300", {
+          className={cn("border p-2 mt-3 rounded-xl transition-all duration-300", {
             "border-blue-500": isOpen,
             "border-gray-200": !isOpen,
           })}
@@ -352,7 +352,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               />
               <Button
                 type="button"
-                className="text-error-700 bg-color-white border border-neutral-300 mt-4"
+                className="text-error-700 bg-color-white mb-4 border border-neutral-300 mt-4"
                 onClick={handleRemoveQuestion}
               >
                 Delete Question

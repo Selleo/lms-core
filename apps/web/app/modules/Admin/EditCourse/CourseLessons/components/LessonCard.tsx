@@ -13,9 +13,10 @@ interface LessonCardProps {
   item: Lesson;
   onClickLessonCard: (lesson: Lesson) => void;
   dragTrigger: ReactNode;
+  selectedLesson?: Lesson;
 }
 
-const LessonCard = ({ item, onClickLessonCard, dragTrigger }: LessonCardProps) => {
+const LessonCard = ({ item, onClickLessonCard, dragTrigger, selectedLesson }: LessonCardProps) => {
   const contentType = item.type === "file" ? item.fileType : item.type;
 
   const mappedItemType = useMemo(() => mapItemType(contentType), [contentType]);
@@ -43,7 +44,10 @@ const LessonCard = ({ item, onClickLessonCard, dragTrigger }: LessonCardProps) =
       aria-label={`Lesson: ${item.title}`}
       className={cn(
         "flex p-3 gap-x-3 bg-white border rounded-lg hover:border-neutral-300 hover:bg-neutral-50",
-        { "border-neutral-200": true, "border-primary-500 bg-primary-50": false },
+        {
+          "border-neutral-200": selectedLesson?.id !== item.id,
+          "border-primary-500 bg-primary-50": selectedLesson?.id === item.id,
+        },
       )}
     >
       {dragTrigger}

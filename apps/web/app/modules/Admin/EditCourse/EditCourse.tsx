@@ -11,6 +11,7 @@ import CourseSettings from "./CourseSettings/CourseSettings";
 import CourseStatus from "./CourseStatus/CourseStatus";
 
 import type { Chapter } from "./EditCourse.types";
+import { Button } from "~/components/ui/button";
 
 const EditCourse = () => {
   const { id } = useParams();
@@ -42,20 +43,26 @@ const EditCourse = () => {
       className="flex flex-col gap-y-4 h-full"
     >
       <div className="py-6 px-8 flex flex-col gap-y-4 shadow-md w-full border bg-white rounded-lg border-gray-200">
-        <h4 className="text-neutral-950 h4 flex items-center">
-          {course?.title || ""}
-          {course?.isPublished ? (
-            <span className="ml-2 flex items-center text-success-800 bg-success-50 px-2 py-1 rounded-sm text-sm">
-              <Icon name="Success" className="mr-1" />
-              Published
-            </span>
-          ) : (
-            <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
-              <Icon name="Warning" className="mr-1" />
-              Draft
-            </span>
-          )}
-        </h4>
+        <div className="flex justify-between items-center">
+          <h4 className="text-neutral-950 h4 flex items-center">
+            {course?.title || ""}
+            {course?.isPublished ? (
+              <span className="ml-2 flex items-center text-success-800 bg-success-50 px-2 py-1 rounded-sm text-sm">
+                <Icon name="Success" className="mr-1" />
+                Published
+              </span>
+            ) : (
+              <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
+                <Icon name="Warning" className="mr-1" />
+                Draft
+              </span>
+            )}
+          </h4>
+          <Button className="bg-transparent text-primary-700 border border-neutral-200 flex justify-end">
+            <Icon name="Eye" className="mr-2" />
+            Preview <Icon name="ArrowDown" className="text-neutral-500 ml-2" />
+          </Button>
+        </div>
         <TabsList className="w-min">
           {["Settings", "Curriculum", "Pricing", "Status"].map((tab) => (
             <TabsTrigger key={tab} value={tab} onClick={() => handleTabChange(tab)}>

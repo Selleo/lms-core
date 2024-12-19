@@ -7,6 +7,14 @@ import { Input } from "~/components/ui/input";
 import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+  TooltipArrow,
+} from "~/components/ui/tooltip";
+import { mapQuestionTypeToLabel } from "../../../CourseLessons.helpers";
 
 interface QuestionTitleProps {
   questionIndex: number;
@@ -40,7 +48,25 @@ const QuestionTitle = ({
   return (
     <div className="flex items-center gap-2 p-2">
       <Icon name="DragAndDropIcon" className="w-7 h-7" />
-      <Icon name={getIconForQuestionType(questionType)} className="w-5 h-5 text-primary-700" />
+      <TooltipProvider delayDuration={0}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div className="group">
+              <Icon
+                name={getIconForQuestionType(questionType)}
+                className="w-5 h-5 text-primary-700"
+              />
+            </div>
+          </TooltipTrigger>
+          <TooltipContent
+            side="top"
+            align="center"
+            className="bg-black ml-4 text-white text-sm rounded shadow-md"
+          >
+            {mapQuestionTypeToLabel(questionType)}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
       <FormField
         control={form.control}
@@ -61,7 +87,7 @@ const QuestionTitle = ({
       />
 
       {handleToggle && (
-        <AccordionTrigger className="ml-3 mr-3 text-primary-800" onClick={handleToggle}>
+        <AccordionTrigger className="ml-2 mr-2 text-primary-800" onClick={handleToggle}>
           <Icon name={!isOpen ? "ArrowDown" : "ArrowUp"} />
         </AccordionTrigger>
       )}

@@ -1,5 +1,5 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { useCallback, useMemo, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
@@ -24,6 +24,7 @@ import { QuestionOption, QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
 import { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
+import { Checkbox } from "~/components/ui/checkbox";
 
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -124,7 +125,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
         <div
-          className={cn("border p-2 mt-4 rounded-xl transition-all duration-300", {
+          className={cn("border p-2 mt-3 rounded-xl transition-all duration-300", {
             "border-blue-500": isOpen,
             "border-gray-200": !isOpen,
           })}
@@ -242,14 +243,17 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                           }
                         />
                       ) : (
-                        <Input
-                          type="checkbox"
-                          className="w-5 h-5 cursor-pointer ml-3"
-                          checked={option.isCorrect}
-                          onChange={() =>
-                            handleOptionChange(optionIndex, "isCorrect", !option.isCorrect)
-                          }
-                        />
+                        <div className="cursor-pointer ml-3">
+                          <Checkbox
+                            id="isCorrect"
+                            className="w-5 h-5 mt-1"
+                            checked={option.isCorrect}
+                            isSquareCheck
+                            onCheckedChange={() =>
+                              handleOptionChange(optionIndex, "isCorrect", !option.isCorrect)
+                            }
+                          />
+                        </div>
                       )}
                       <Label
                         className="ml-2 text-neutral-900 body-base cursor-pointer"
@@ -262,13 +266,13 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                       <TooltipProvider delayDuration={0}>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <span>
+                            <div className="group">
                               <Icon
                                 name="TrashIcon"
-                                className="text-error-500 ml-3 cursor-pointer w-5 h-5"
+                                className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
                                 onClick={() => handleRemoveOption(optionIndex)}
                               />
-                            </span>
+                            </div>
                           </TooltipTrigger>
                           <TooltipContent
                             side="top"
@@ -284,7 +288,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 </div>
               ))}
             </div>
-            <div className="mt-6 flex gap-2 ml-14">
+            <div className="mt-6 flex gap-2 mb-4 ml-14">
               <Button className="bg-primary-700" type="button" onClick={handleAddOption}>
                 Add Option
               </Button>

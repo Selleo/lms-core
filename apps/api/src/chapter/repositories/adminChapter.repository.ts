@@ -7,6 +7,7 @@ import { chapters, lessons, questionAnswerOptions, questions } from "src/storage
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
+import { UpdateLessonBody } from "src/lesson/lesson.schem";
 
 @Injectable()
 export class AdminChapterRepository {
@@ -273,9 +274,9 @@ export class AdminChapterRepository {
   //     .returning();
   // }
 
-  // async updateLesson(id: string, body: UpdateLessonBody) {
-  //   return await this.db.update(lessons).set(body).where(eq(lessons.id, id)).returning();
-  // }
+  async updateChapter(id: string, body: UpdateLessonBody) {
+    return await this.db.update(chapters).set(body).where(eq(chapters.id, id)).returning();
+  }
 
   // async getLessonsCount(conditions: any[]) {
   //   return await this.db

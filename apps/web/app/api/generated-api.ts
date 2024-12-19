@@ -145,8 +145,6 @@ export interface GetUserByIdResponse {
 
 export interface GetUserDetailsResponse {
   data: {
-    firstName: string | null;
-    lastName: string | null;
     /** @format uuid */
     id: string;
     description: string | null;
@@ -607,6 +605,7 @@ export interface FileUploadResponse {
 }
 
 export type BetaCreateLessonBody = {
+  updatedAt?: string;
   title: string;
   type: string;
   description: string;
@@ -734,6 +733,7 @@ export interface BetaUpdateQuizLessonResponse {
 }
 
 export type BetaUpdateLessonBody = {
+  updatedAt?: string;
   title?: string;
   type?: string;
   description?: string;
@@ -810,6 +810,26 @@ export interface BetaCreateChapterResponse {
   data: {
     /** @format uuid */
     id: string;
+    message: string;
+  };
+}
+
+export type UpdateChapterBody = {
+  title?: string;
+  chapterProgress?: "completed" | "in_progress" | "not_started";
+  isFreemium?: boolean;
+  enrolled?: boolean;
+  isPublished?: boolean;
+  isSubmitted?: boolean;
+  createdAt?: string;
+  quizScore?: number;
+} & {
+  /** @format uuid */
+  courseId?: string;
+};
+
+export interface UpdateChapterResponse {
+  data: {
     message: string;
   };
 }
@@ -2001,16 +2021,21 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name ChapterControllerUpdateChapterDisplayOrder
-     * @request PATCH:/api/chapter/chapter-display-order
+     * @name ChapterControllerUpdateChapter
+     * @request PATCH:/api/chapter
      */
-    chapterControllerUpdateChapterDisplayOrder: (
-      data: UpdateChapterDisplayOrderBody,
+    chapterControllerUpdateChapter: (
+      data: UpdateChapterBody,
+      query?: {
+        /** @format uuid */
+        id?: string;
+      },
       params: RequestParams = {},
     ) =>
-      this.request<UpdateChapterDisplayOrderResponse, any>({
-        path: `/api/chapter/chapter-display-order`,
+      this.request<UpdateChapterResponse, any>({
+        path: `/api/chapter`,
         method: "PATCH",
+        query: query,
         body: data,
         type: ContentType.Json,
         format: "json",
@@ -2034,6 +2059,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/chapter`,
         method: "DELETE",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerUpdateChapterDisplayOrder
+     * @request PATCH:/api/chapter/chapter-display-order
+     */
+    chapterControllerUpdateChapterDisplayOrder: (
+      data: UpdateChapterDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateChapterDisplayOrderResponse, any>({
+        path: `/api/chapter/chapter-display-order`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),

@@ -84,6 +84,8 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
             setContentTypeToDisplay={setContentTypeToDisplay}
             setSelectedChapter={setSelectedChapter}
             setSelectedLesson={setSelectedLesson}
+            selectedChapter={selectedChapter}
+            selectedLesson={selectedLesson}
           />
         </div>
         <Button
