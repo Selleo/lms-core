@@ -9,13 +9,13 @@ import { Form, FormControl, FormItem, FormMessage } from "~/components/ui/form";
 import { Label } from "~/components/ui/label";
 import { getFileTypeFromName } from "~/utils/getFileTypeFromName";
 
-import { ContentTypes } from "../../../EditCourse.types";
+import { ContentTypes, DeleteContentType } from "../../../EditCourse.types";
 
 import { useFileLessonForm } from "./hooks/useFileLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "../../CourseLessons.types";
+import Breadcrumb from "../components/Breadcrumb";
 
 type FileLessonProps = {
   contentTypeToDisplay: string;
@@ -80,9 +80,12 @@ const FileLessonForm = ({
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
       <div className="flex flex-col gap-y-1">
-        <h1 className="body-base-md text-neutral-800">
-          {contentTypeToDisplay === ContentTypes.PRESENTATION_FORM ? "Presentation" : "Video"}
-        </h1>
+        <Breadcrumb
+          lessonLabel={
+            contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "Video" : "Presentation"
+          }
+          setContentTypeToDisplay={setContentTypeToDisplay}
+        />
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (
             <>
@@ -146,7 +149,7 @@ const FileLessonForm = ({
         onClose={onCloseModal}
         onDelete={onDelete}
         contentType={
-          ContentTypes.VIDEO_LESSON_FORM ? DeleteContentType.Video : DeleteContentType.Presentation
+          ContentTypes.VIDEO_LESSON_FORM ? DeleteContentType.VIDEO : DeleteContentType.PRESENTATION
         }
       />
     </div>

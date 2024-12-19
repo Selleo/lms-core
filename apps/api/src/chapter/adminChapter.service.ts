@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, gte, lte, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
@@ -7,7 +7,7 @@ import { chapters } from "src/storage/schema";
 
 import { AdminChapterRepository } from "./repositories/adminChapter.repository";
 
-import type { CreateChapterBody } from "./schemas/chapter.schema";
+import type { CreateChapterBody, UpdateChapterBody } from "./schemas/chapter.schema";
 import type { UUIDType } from "src/common";
 
 @Injectable()
@@ -29,7 +29,7 @@ export class AdminChapterService {
   //   const { sortOrder, sortedField } = getSortOptions(sort);
   //   const conditions = this.getFiltersConditions(filters);
 
-  //   if (query.currentUserRole === USER_ROLES.teacher && query.currentUserId) {
+  //   if (query.currentUserRole === USER_ROLES.TEACHER && query.currentUserId) {
   //     conditions.push(eq(lessons.authorId, query.currentUserId));
   //   }
 
@@ -230,33 +230,19 @@ export class AdminChapterService {
 
     const newDisplayOrder = chapterObject.displayOrder;
 
-    await this.db.transaction(async (trx) => {
-      await trx
-        .update(chapters)
-        .set({
-          displayOrder: sql`CASE
-            WHEN ${eq(chapters.id, chapterToUpdate.id)}
-              THEN ${newDisplayOrder}
-            WHEN ${newDisplayOrder < oldDisplayOrder}
-              AND ${gte(chapters.displayOrder, newDisplayOrder)}
-              AND ${lte(chapters.displayOrder, oldDisplayOrder)}
-              THEN ${chapters.displayOrder} + 1
-            WHEN ${newDisplayOrder > oldDisplayOrder}
-              AND ${lte(chapters.displayOrder, newDisplayOrder)}
-              AND ${gte(chapters.displayOrder, oldDisplayOrder)}
-              THEN ${chapters.displayOrder} - 1
-            ELSE ${chapters.displayOrder}
-          END
-          `,
-        })
-        .where(eq(chapters.courseId, chapterToUpdate.courseId));
-    });
+    await this.adminChapterRepository.changeChapterDisplayOrder(
+      chapterToUpdate.courseId,
+      chapterToUpdate.id,
+      oldDisplayOrder,
+      newDisplayOrder,
+    );
   }
-  // async updateLesson(id: string, body: UpdateLessonBody) {
-  //   const [lesson] = await this.adminChapterRepository.updateLesson(id, body);
 
-  //   if (!lesson) throw new NotFoundException("Lesson not found");
-  // }
+  async updateChapter(id: string, body: UpdateChapterBody) {
+    const [chapter] = await this.adminChapterRepository.updateChapter(id, body);
+
+    if (!chapter) throw new NotFoundException("Lesson not found");
+  }
 
   // async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {
   //   return await this.adminChapterRepository.toggleLessonAsFree(courseId, lessonId, isFree);

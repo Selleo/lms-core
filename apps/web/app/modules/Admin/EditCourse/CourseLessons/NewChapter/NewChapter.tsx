@@ -5,14 +5,13 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "~/component
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
-import { ContentTypes } from "../../EditCourse.types";
+import { ContentTypes, DeleteContentType } from "../../EditCourse.types";
 
 import { useNewChapterForm } from "./hooks/useNewChapterForm";
 
 import type { Chapter } from "../../EditCourse.types";
 import { useState } from "react";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "../CourseLessons.types";
 
 type NewChapterProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -47,13 +46,19 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
   return (
     <div className="w-full h-min p-8 flex flex-col bg-white rounded-lg gap-y-6">
       <hgroup className="flex flex-col-reverse w-full gap-y-1">
-        {chapter && (
-          <h3 className="h5 text-neutral-950">
-            <span className="text-neutral-800 h5">Edit: </span>
-            {chapter.title}
-          </h3>
-        )}
-        <p className="body-base-md text-neutral-800">Chapter</p>
+        <div className="h5 text-neutral-950">
+          {chapter ? (
+            <>
+              <span className="text-neutral-600">Edit: </span>
+              <span className="font-bold">{chapter.title}</span>
+            </>
+          ) : (
+            "Create"
+          )}
+        </div>
+        <p className="body-base-md text-neutral-950">
+          {chapter ? `Chapter ${chapter.displayOrder}` : "Chapter"}
+        </p>
       </hgroup>
       <Form {...form}>
         <form className="" onSubmit={form.handleSubmit(onSubmit)}>
@@ -101,7 +106,7 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
         open={isModalOpen}
         onClose={onCloseModal}
         onDelete={onDelete}
-        contentType={DeleteContentType.Chapter}
+        contentType={DeleteContentType.CHAPTER}
       />
     </div>
   );

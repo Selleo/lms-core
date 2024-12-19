@@ -24,7 +24,7 @@ import { EmailService } from "src/common/emails/emails.service";
 import hashPassword from "src/common/helpers/hashPassword";
 
 import { createTokens, credentials, resetTokens, users } from "../storage/schema";
-import { UsersService } from "../users/users.service";
+import { UserService } from "../user/user.service";
 
 import { CreatePasswordService } from "./create-password.service";
 import { ResetPasswordService } from "./reset-password.service";
@@ -36,7 +36,7 @@ export class AuthService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private jwtService: JwtService,
-    private usersService: UsersService,
+    private userService: UserService,
     private configService: ConfigService,
     private emailService: EmailService,
     private createPasswordService: CreatePasswordService,
@@ -97,7 +97,7 @@ export class AuthService {
   }
 
   public async currentUser(id: UUIDType) {
-    const user = await this.usersService.getUserById(id);
+    const user = await this.userService.getUserById(id);
 
     if (!user) {
       throw new UnauthorizedException("User not found");
@@ -113,7 +113,7 @@ export class AuthService {
         ignoreExpiration: false,
       });
 
-      const user = await this.usersService.getUserById(payload.userId);
+      const user = await this.userService.getUserById(payload.userId);
       if (!user) {
         throw new UnauthorizedException("User not found");
       }
@@ -176,7 +176,7 @@ export class AuthService {
   }
 
   public async forgotPassword(email: string) {
-    const user = await this.usersService.getUserByEmail(email);
+    const user = await this.userService.getUserByEmail(email);
 
     if (!user) throw new BadRequestException("Email not found");
 
@@ -226,7 +226,7 @@ export class AuthService {
   public async resetPassword(token: string, newPassword: string) {
     const resetToken = await this.resetPasswordService.getOneByToken(token);
 
-    await this.usersService.resetPassword(resetToken.userId, newPassword);
+    await this.userService.resetPassword(resetToken.userId, newPassword);
     await this.resetPasswordService.deleteToken(token);
   }
 

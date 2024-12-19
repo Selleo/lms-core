@@ -6,6 +6,7 @@ import {
 } from "@remix-run/react";
 
 import { courseQueryOptions, useCourseSuspense } from "~/api/queries";
+import { useScormMetadata } from "~/api/queries/admin/useScormMetaData";
 import { queryClient } from "~/api/queryClient";
 import { PageWrapper } from "~/components/PageWrapper";
 import {
@@ -39,6 +40,10 @@ export default function CoursesViewPage() {
   const { id } = useParams<{ id: string }>();
 
   const { data: course } = useCourseSuspense(id ?? "");
+  const { data: scormMetadata } = useScormMetadata({
+    id: id ?? "",
+    isScorm: course?.isScorm,
+  });
 
   if (!id) {
     throw new Error("No course ID provided");
@@ -56,7 +61,7 @@ export default function CoursesViewPage() {
     >
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
+          <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>
@@ -66,8 +71,8 @@ export default function CoursesViewPage() {
       <div className="flex flex-col md:flex-row h-full gap-6">
         {course.isScorm ? (
           <iframe
-            title="Playing"
-            src="https://api.lms.localhost/api/scorm/dd284185-2e3b-4a06-8736-403a421a32a5/content?path=Playing/Playing.html"
+            title={scormMetadata?.entryPoint}
+            src={`/api/scorm/${id}/content?path=${scormMetadata?.entryPoint}`}
             width="100%"
             height="100%"
             className="w-full h-full"

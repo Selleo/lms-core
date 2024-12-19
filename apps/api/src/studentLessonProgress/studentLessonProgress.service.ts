@@ -11,8 +11,7 @@ import {
   studentCourses,
   studentLessonProgress,
 } from "src/storage/schema";
-
-import { studentCoursesStates } from "./schemas/studentCompletedLesson.schema";
+import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 import type { UUIDType } from "src/common";
 
@@ -71,18 +70,18 @@ export class StudentLessonProgressService {
       await this.updateStudentCourseStats(
         studentId,
         courseId,
-        studentCoursesStates.completed,
+        PROGRESS_STATUSES.COMPLETED,
         courseFinishedChapterCount,
       );
 
       return await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(courseId);
     }
 
-    if (courseCompleted.state !== studentCoursesStates.in_progress) {
+    if (courseCompleted.state !== PROGRESS_STATUSES.IN_PROGRESS) {
       return await this.updateStudentCourseStats(
         studentId,
         courseId,
-        studentCoursesStates.in_progress,
+        PROGRESS_STATUSES.IN_PROGRESS,
         courseFinishedChapterCount,
       );
     }

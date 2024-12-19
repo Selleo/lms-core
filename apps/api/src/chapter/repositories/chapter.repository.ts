@@ -3,13 +3,16 @@ import { and, eq, isNotNull, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, lessons, studentChapterProgress, studentCourses } from "src/storage/schema";
+import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
+
+import type { ProgressStatus } from "src/utils/types/progress.type";
 
 @Injectable()
 export class ChapterRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
   async getChapterWithDetails(id: UUIDType, userId: UUIDType, isStudent: boolean) {
-    return await this.db
+    return this.db
       .select({
         id: chapters.id,
         title: chapters.title,
@@ -58,16 +61,22 @@ export class ChapterRepository {
       .where(and(eq(chapters.isPublished, true), eq(chapters.id, id)));
   }
 
-  // TODO: check this functions \/
   async getChapterForUser(id: UUIDType, userId: UUIDType) {
-    const [lesson] = await this.db
+    const [chapter] = await this.db
       .select({
+        displayOrder: sql<number>`${lessons.displayOrder}`,
         id: chapters.id,
         title: chapters.title,
         isFreemium: chapters.isFreemium,
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN true ELSE false END`,
         lessonCount: chapters.lessonCount,
         completedLessonCount: sql<number>`COALESCE(${studentChapterProgress.completedLessonCount}, 0)`,
+        progress: sql<ProgressStatus>`
+          CASE ${studentChapterProgress.completedAt} IS NOT NULL
+            THEN ${PROGRESS_STATUSES.COMPLETED}
+            WHEN ${studentChapterProgress.completedAt} IS NULL AND ${studentChapterProgress.completedLessonCount} < 0
+              THEN ${PROGRESS_STATUSES.IN_PROGRESS}
+            ELSE ${PROGRESS_STATUSES.NOT_STARTED}`,
       })
       .from(chapters)
       .leftJoin(
@@ -84,7 +93,7 @@ export class ChapterRepository {
       )
       .where(and(eq(chapters.id, id), eq(chapters.isPublished, true)));
 
-    return lesson;
+    return chapter;
   }
 
   async getChapter(id: UUIDType) {
@@ -99,19 +108,5 @@ export class ChapterRepository {
       .where(and(eq(chapters.id, id), eq(chapters.isPublished, true)));
 
     return chapter;
-  }
-
-  async getChapterProgressForStudent(chapterId: UUIDType, userId: UUIDType) {
-    const [chapterProgress] = await this.db
-      .select({})
-      .from(studentChapterProgress)
-      .where(
-        and(
-          eq(studentChapterProgress.studentId, userId),
-          eq(studentChapterProgress.chapterId, chapterId),
-        ),
-      );
-
-    return chapterProgress;
   }
 }

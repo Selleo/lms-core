@@ -4,7 +4,7 @@ import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useUserRole } from "~/hooks/useUserRole";
-import { LessonCard } from "~/modules/Courses/CourseView/LessonCard";
+import { ChapterCard } from "~/modules/Courses/CourseView/ChapterCard";
 
 import type { GetUserStatisticsResponse } from "~/api/generated-api";
 
@@ -53,7 +53,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
           {lesson?.courseDescription}
         </p>
       </div>
-      <LessonCard
+      <ChapterCard
         {...lesson}
         customHref={`/course/${lesson.courseId}/lesson/${lesson.id}`}
         isAdmin={isAdmin}

@@ -17,7 +17,7 @@ export function useCreateUser() {
 
   return useMutation({
     mutationFn: async (options: CreateUserOptions) => {
-      const response = await ApiClient.api.usersControllerCreateUser(options.data);
+      const response = await ApiClient.api.userControllerCreateUser(options.data);
 
       return response.data;
     },

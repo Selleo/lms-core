@@ -1,6 +1,6 @@
 import { Question } from "./CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
 
-export type NavigationTab = "Settings" | "Lesson" | "Pricing" | "Status";
+export type NavigationTab = "Settings" | "Curriculum" | "Pricing" | "Status";
 
 export interface Lesson {
   updatedAt: string;
@@ -39,9 +39,18 @@ export const ContentTypes = {
 
 export type LessonIcons = "Text" | "Video" | "Presentation" | "Quiz";
 
-export enum LessonType {
-  VIDEO = "video",
-  TEXT_BLOCK = "text_block",
-  PRESENTATION = "presentation",
-  QUIZ = "quiz",
-}
+export const LessonType = {
+  VIDEO: "video",
+  TEXT_BLOCK: "text_block",
+  PRESENTATION: "presentation",
+  QUIZ: "quiz",
+} as const;
+
+export type LessonType = (typeof LessonType)[keyof typeof LessonType];
+
+export const DeleteContentType = {
+  ...LessonType,
+  CHAPTER: "chapter",
+} as const;
+
+export type DeleteContentType = (typeof DeleteContentType)[keyof typeof DeleteContentType];

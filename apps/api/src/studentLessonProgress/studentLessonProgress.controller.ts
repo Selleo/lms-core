@@ -6,7 +6,7 @@ import { UUIDSchema, baseResponse, BaseResponse, UUIDType } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
 import { StudentLessonProgressService } from "./studentLessonProgress.service";
 
@@ -16,7 +16,7 @@ export class StudentLessonProgressController {
   constructor(private readonly studentLessonProgressService: StudentLessonProgressService) {}
 
   @Post()
-  @Roles(USER_ROLES.student)
+  @Roles(USER_ROLES.STUDENT)
   @Validate({
     request: [
       { type: "query", name: "id", schema: UUIDSchema, required: true },

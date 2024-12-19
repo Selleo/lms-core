@@ -1,9 +1,8 @@
 import { type Static, Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
-import { lessonItemSelectSchema } from "src/lesson/lesson.schema";
-
-import { ChapterProgress } from "./chapter.types";
+import { lessonSchema } from "src/lesson/lesson.schema";
+import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 export const chapterSchema = Type.Object({
   id: UUIDSchema,
@@ -12,9 +11,9 @@ export const chapterSchema = Type.Object({
   completedLessonCount: Type.Optional(Type.Number()),
   chapterProgress: Type.Optional(
     Type.Union([
-      Type.Literal(ChapterProgress.completed),
-      Type.Literal(ChapterProgress.inProgress),
-      Type.Literal(ChapterProgress.notStarted),
+      Type.Literal(PROGRESS_STATUSES.COMPLETED),
+      Type.Literal(PROGRESS_STATUSES.IN_PROGRESS),
+      Type.Literal(PROGRESS_STATUSES.NOT_STARTED),
     ]),
   ),
   isFreemium: Type.Optional(Type.Boolean()),
@@ -22,11 +21,12 @@ export const chapterSchema = Type.Object({
   isPublished: Type.Optional(Type.Boolean()),
   isSubmitted: Type.Optional(Type.Boolean()),
   createdAt: Type.Optional(Type.String()),
-  quizScore: Type.Optional(Type.Number()),
+  quizCount: Type.Optional(Type.Number()),
+  displayOrder: Type.Number(),
 });
 
 export const createChapterSchema = Type.Intersect([
-  Type.Omit(chapterSchema, ["id", "lessonCount", "completedLessonCount"]),
+  Type.Omit(chapterSchema, ["id", "lessonCount", "completedLessonCount", "displayOrder"]),
   Type.Object({
     courseId: UUIDSchema,
   }),
@@ -34,14 +34,10 @@ export const createChapterSchema = Type.Intersect([
 
 export const updateChapterSchema = Type.Partial(createChapterSchema);
 
-// TODO: update it otr remove if not needed
 export const chapter = Type.Object({
   id: UUIDSchema,
   title: Type.String(),
-  imageUrl: Type.String(),
-  description: Type.String(),
-  type: Type.String(),
-  isFree: Type.Boolean(),
+  isFreemium: Type.Boolean(),
 });
 
 export const chapterWithLessonCount = Type.Intersect([
@@ -55,14 +51,8 @@ export const allChapterSchema = Type.Array(chapterSchema);
 
 export const showChapterSchema = Type.Object({
   ...chapterSchema.properties,
-  lessonItems: Type.Array(lessonItemSelectSchema),
-  chapterProgress: Type.Optional(
-    Type.Union([
-      Type.Literal(ChapterProgress.completed),
-      Type.Literal(ChapterProgress.inProgress),
-      Type.Literal(ChapterProgress.notStarted),
-    ]),
-  ),
+  quizCount: Type.Optional(Type.Number()),
+  lessons: Type.Array(lessonSchema),
 });
 
 export type Chapter = Static<typeof chapter>;

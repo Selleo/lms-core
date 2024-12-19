@@ -1,6 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { Label } from "@radix-ui/react-label";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -12,6 +12,7 @@ import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
 import { QuestionOption } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
 
 type TrueOrFalseQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -76,16 +77,15 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
     [form, questionIndex],
   );
 
-  const isOptionEmpty = useMemo(() => {
-    const options = form.getValues(`questions.${questionIndex}.options`);
-    return !Array.isArray(options) || options.length === 0;
-  }, [form, questionIndex]);
+  const isOptionEmpty =
+    !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
+    form.getValues(`questions.${questionIndex}.options`)?.length === 0;
 
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
         <div
-          className={cn("border p-4 mt-4 rounded-xl transition-all duration-300", {
+          className={cn("border p-2 mt-3 rounded-xl transition-all duration-300", {
             "border-blue-500": isOpen,
             "border-gray-200": !isOpen,
           })}
@@ -125,29 +125,53 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                         name={`questions.${questionIndex}.options.${optionIndex}.isCorrect`}
                         checked={option.isCorrect === true}
                         onChange={() => handleOptionChange(optionIndex, "isCorrect", true)}
-                        className="p-1 w-auto"
+                        className="p-1 w-5 h-5 ml-3"
                       />
-                      <Label className="ml-2 text-neutral-900 body-base">True</Label>
+                      <Label
+                        className="ml-2 text-neutral-900 body-base cursor-pointer"
+                        onChange={() => handleOptionChange(optionIndex, "isCorrect", false)}
+                      >
+                        True
+                      </Label>
                       <Input
                         type="radio"
                         name={`questions.${questionIndex}.options.${optionIndex}.isCorrect`}
                         checked={option.isCorrect === false}
                         onChange={() => handleOptionChange(optionIndex, "isCorrect", false)}
-                        className="p-1 w-auto ml-2"
+                        className="p-1 ml-2 w-5 h-5"
                       />
-                      <Label className="ml-2 text-neutral-900 body-base">False</Label>
-
-                      <Icon
-                        name="TrashIcon"
-                        className="text-error-500 ml-2 cursor-pointer w-5 h-5"
-                        onClick={() => handleRemoveOption(optionIndex)}
-                      />
+                      <Label
+                        className="ml-2 text-neutral-900 body-base cursor-pointer"
+                        onChange={() => handleOptionChange(optionIndex, "isCorrect", false)}
+                      >
+                        False
+                      </Label>
+                      <TooltipProvider delayDuration={0}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="group">
+                              <Icon
+                                name="TrashIcon"
+                                className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
+                                onClick={handleRemoveQuestion}
+                              />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="top"
+                            align="center"
+                            className="bg-black ml-4 text-white text-sm rounded shadow-md"
+                          >
+                            Delete
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-6 flex gap-2">
+            <div className="mt-6 flex gap-2 mb-4 ml-14">
               <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
                 Add Option
               </Button>

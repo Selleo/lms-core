@@ -10,7 +10,7 @@ import { DatabasePg } from "src/common";
 import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { categories } from "src/storage/schema";
-import { USER_ROLES, type UserRole } from "src/users/schemas/user-roles";
+import { USER_ROLES, type UserRole } from "src/user/schemas/userRoles";
 
 import {
   type CategoryFilterSchema,
@@ -44,7 +44,7 @@ export class CategoryService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    const isAdmin = userRole === USER_ROLES.admin;
+    const isAdmin = userRole === USER_ROLES.ADMIN;
 
     const selectedColumns = {
       id: categories.id,

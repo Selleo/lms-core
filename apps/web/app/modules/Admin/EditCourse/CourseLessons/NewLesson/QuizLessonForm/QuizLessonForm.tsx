@@ -14,10 +14,10 @@ import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
 import { Question, QuestionType } from "./QuizLessonForm.types";
 import type { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { Chapter, ContentTypes, Lesson } from "../../../EditCourse.types";
+import { Chapter, ContentTypes, DeleteContentType, Lesson } from "../../../EditCourse.types";
 import { useCallback, useState } from "react";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "../../CourseLessons.types";
+import Breadcrumb from "../components/Breadcrumb";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -105,8 +105,18 @@ const QuizLessonForm = ({
 
   return (
     <div className="w-full max-w-full">
-      <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-6">
-        {lessonToEdit && <h5 className="text-neutral-900 mb-2">Edit: {lessonToEdit.title}</h5>}
+      <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-8">
+        <Breadcrumb lessonLabel="Quiz" setContentTypeToDisplay={setContentTypeToDisplay} />
+        <div className="h5 text-neutral-950 mb-6">
+          {lessonToEdit ? (
+            <>
+              <span className="text-neutral-600">Edit: </span>
+              <span className="font-bold">{lessonToEdit.title}</span>
+            </>
+          ) : (
+            "Create"
+          )}
+        </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <FormField
@@ -127,8 +137,8 @@ const QuizLessonForm = ({
             />
             <div className="mt-5">
               <Label className="body-base-md">
-                <span className="text-red-500 mr-1 body-base-md">*</span> Questions (
-                {questions?.length || 0})
+                <span className="text-red-500 mr-1 body-base-md">*</span> Questions
+                <span className="text-neutral-600"> ({questions?.length || 0})</span>
               </Label>
             </div>
 
@@ -166,7 +176,7 @@ const QuizLessonForm = ({
         open={isModalOpen}
         onClose={onCloseModal}
         onDelete={onDelete}
-        contentType={DeleteContentType.Quiz}
+        contentType={DeleteContentType.QUIZ}
       />
     </div>
   );

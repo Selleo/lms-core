@@ -4,7 +4,6 @@ import { useForm } from "react-hook-form";
 
 import { useBetaCreateChapter } from "~/api/mutations/admin/useBetaCreateChapter";
 import { useDeleteChapter } from "~/api/mutations/admin/useDeleteChapter";
-import { useUpdateLesson } from "~/api/mutations/admin/useUpdateLesson";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 
@@ -12,6 +11,7 @@ import { type Chapter, ContentTypes } from "../../../EditCourse.types";
 import { newChapterFormSchema } from "../validators/newChapterFormSchema";
 
 import type { NewChapterFormValues } from "../validators/newChapterFormSchema";
+import { useUpdateChapter } from "~/api/mutations/admin/useUpdateChapter";
 
 type UseNewChapterFormProps = {
   courseId: string;
@@ -25,7 +25,7 @@ export const useNewChapterForm = ({
   setContentTypeToDisplay,
 }: UseNewChapterFormProps) => {
   const { mutateAsync: createChapter } = useBetaCreateChapter();
-  const { mutateAsync: updateChapter } = useUpdateLesson();
+  const { mutateAsync: updateChapter } = useUpdateChapter();
   const { mutateAsync: deleteChapter } = useDeleteChapter();
 
   const form = useForm<NewChapterFormValues>({
@@ -46,7 +46,7 @@ export const useNewChapterForm = ({
   const onSubmit = async (data: NewChapterFormValues) => {
     try {
       if (chapter) {
-        await updateChapter({ data, lessonId: chapter.id });
+        await updateChapter({ data, chapterId: chapter.id });
         queryClient.invalidateQueries({
           queryKey: [COURSE_QUERY_KEY, { id: courseId }],
         });

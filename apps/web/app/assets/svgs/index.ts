@@ -1,7 +1,4 @@
-export { default as ArrowRight } from "./arrow-right.svg?react";
-export { default as CaretDown } from "./carret-down.svg?react";
 export { default as Category } from "./category.svg?react";
-export { default as CaretRight } from "./chevron-right.svg?react";
 export { default as Course } from "./course.svg?react";
 export { default as Dashboard } from "./dashboard.svg?react";
 export { default as Directory } from "./directory.svg?react";
@@ -40,14 +37,14 @@ export { default as PhotoQuestion } from "./photo-question.svg?react";
 export { default as TrueOrFalse } from "./true-or-false.svg?react";
 export { default as Success } from "./success.svg?react";
 export { default as CourseEmptyState } from "./course-empty-state.svg?react";
-export { default as ChevronLeft } from "./chevron-left.svg?react";
 export { default as DragAndDropIcon } from "./drag-and-drop.svg?react";
-export { default as ArrowUp } from "./arrow-up.svg?react";
-export { default as ArrowDown } from "./arrow-down.svg?react";
 export { default as Info } from "./info.svg?react";
 export { default as Checkmark } from "./checkmark.svg?react";
 export { default as Flame } from "./flame.svg?react";
 export { default as FreeRight } from "./free-right.svg?react";
 export { default as NoData } from "./no-data.svg?react";
+export { default as Eye } from "./eye.svg?react";
 
 export * from "./lesson-types";
+export * from "./arrows";
+export * from "./actions";

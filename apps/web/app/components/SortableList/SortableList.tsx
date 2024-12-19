@@ -15,7 +15,7 @@ interface BaseItem {
 
 interface SortableListProps<T extends BaseItem> {
   items: T[];
-  onChange(items: T[], newPosition: number): void;
+  onChange(items: T[], newChapterPosition: number, newDisplayOrder: number): void;
   additionalOnChangeAction?(): void;
   renderItem(item: T): ReactNode;
   className?: string;
@@ -59,11 +59,19 @@ export function SortableList<T extends BaseItem>({
 
           const updatedItems = arrayMove(items, activeIndex, overIndex);
 
-          const updatedItem = updatedItems?.find((item) => item.id === active.id);
-          const newPosition = updatedItems.indexOf(updatedItem!);
+          const updatedItemsWithOrder = updatedItems.map((item, index) => ({
+            ...item,
+            displayOrder: index + 1,
+          }));
 
-          onChange(updatedItems, newPosition);
+          const updatedItem = updatedItemsWithOrder.find((item) => item.id === active.id);
+
+          const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem!);
+          const newDisplayOrder = newChapterPosition + 1;
+
+          onChange(updatedItemsWithOrder, newChapterPosition, newDisplayOrder);
         }
+
         setActive(null);
       }}
       onDragCancel={() => {

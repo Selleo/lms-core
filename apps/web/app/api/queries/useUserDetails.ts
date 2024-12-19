@@ -4,11 +4,15 @@ import { ApiClient } from "../api-client";
 
 import type { GetUserDetailsResponse } from "../generated-api";
 
-export const userDetails = (userId: string) => {
+export const userDetails = (userId?: string) => {
   return {
+    enabled: !!userId,
     queryKey: ["user-details", userId],
     queryFn: async () => {
-      const response = await ApiClient.api.usersControllerGetUserDetails({ userId });
+      if (!userId) {
+        throw new Error("userId is required");
+      }
+      const response = await ApiClient.api.userControllerGetUserDetails({ userId });
 
       return response.data;
     },
@@ -16,10 +20,10 @@ export const userDetails = (userId: string) => {
   };
 };
 
-export function useUserDetails(userId: string) {
+export function useUserDetails(userId?: string) {
   return useQuery(userDetails(userId));
 }
 
-export function useUserDetailsSuspense(userId: string) {
+export function useUserDetailsSuspense(userId?: string) {
   return useSuspenseQuery(userDetails(userId));
 }

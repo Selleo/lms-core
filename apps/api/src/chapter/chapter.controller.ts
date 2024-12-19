@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -6,11 +6,19 @@ import { baseResponse, BaseResponse, UUIDSchema, type UUIDType } from "src/commo
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/users/schemas/user-roles";
+import { USER_ROLES, type UserRole } from "src/user/schemas/userRoles";
 
 import { AdminChapterService } from "./adminChapter.service";
 import { ChapterService } from "./chapter.service";
-import { CreateChapterBody, createChapterSchema } from "./schemas/chapter.schema";
+import {
+  CreateChapterBody,
+  createChapterSchema,
+  UpdateChapterBody,
+  updateChapterSchema,
+  showChapterSchema,
+} from "./schemas/chapter.schema";
+
+import type { ShowChapterResponse } from "./schemas/chapter.schema";
 
 @Controller("chapter")
 @UseGuards(RolesGuard)
@@ -20,28 +28,24 @@ export class ChapterController {
     private readonly adminChapterService: AdminChapterService,
   ) {}
 
-  // @Get("lesson")
-  // @Roles(...Object.values(USER_ROLES))
-  // @Validate({
-  //   request: [
-  //     { type: "query", name: "id", schema: UUIDSchema, required: true },
-  //     { type: "query", name: "courseId", schema: UUIDSchema, required: true },
-  //   ],
-  //   response: baseResponse(showLessonSchema),
-  // })
-  // async getLesson(
-  //   @Query("id") id: UUIDType,
-  //   @Query("courseId") courseId: UUIDType,
-  //   @CurrentUser("role") userRole: UserRole,
-  //   @CurrentUser("userId") userId: UUIDType,
-  // ): Promise<BaseResponse<ShowLessonResponse>> {
-  //   return new BaseResponse(
-  //     await this.lessonsService.getLesson(id, courseId, userId, userRole === USER_ROLES.admin),
-  //   );
-  // }
+  @Get()
+  @Roles(...Object.values(USER_ROLES))
+  @Validate({
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
+    response: baseResponse(showChapterSchema),
+  })
+  async getChapterWithLesson(
+    @Query("id") id: UUIDType,
+    @CurrentUser("role") userRole: UserRole,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<ShowChapterResponse>> {
+    return new BaseResponse(
+      await this.chapterService.getChapterWithLessons(id, userId, userRole === USER_ROLES.ADMIN),
+    );
+  }
 
   // @Get("lesson/:id")
-  // @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  // @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   // @Validate({
   //   response: baseResponse(showLessonSchema),
   // })
@@ -62,13 +66,13 @@ export class ChapterController {
   //   const data = await this.chapterService.getChapterWithDetails(
   //     id,
   //     currentUserId,
-  //     currentUserRole === USER_ROLES.student,
+  //     currentUserRole === USER_ROLES.STUDENT,
   //   );
   //   return new BaseResponse(data);
   // }
 
   @Post("beta-create-chapter")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {
@@ -87,8 +91,33 @@ export class ChapterController {
     return new BaseResponse({ id, message: "Chapter created successfully" });
   }
 
+  @Patch()
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "id",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: updateChapterSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateChapter(
+    @Query("id") id: UUIDType,
+    @Body() updateChapterBody: UpdateChapterBody,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminChapterService.updateChapter(id, updateChapterBody);
+
+    return new BaseResponse({ message: "Chapter updated successfully" });
+  }
+
   @Patch("chapter-display-order")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {
@@ -117,7 +146,7 @@ export class ChapterController {
   }
 
   // @Patch("lesson")
-  // @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  // @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   // @Validate({
   //   request: [
   //     {
@@ -159,7 +188,7 @@ export class ChapterController {
   //   });
   // }
   @Delete()
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "query", name: "chapterId", schema: UUIDSchema, required: true }],
     response: baseResponse(Type.Object({ message: Type.String() })),
@@ -174,7 +203,7 @@ export class ChapterController {
   }
 
   // @Post("evaluation-quiz")
-  // @Roles(USER_ROLES.student)
+  // @Roles(USER_ROLES.STUDENT)
   // @Validate({
   //   request: [
   //     { type: "query", name: "courseId", schema: UUIDSchema },
@@ -194,7 +223,7 @@ export class ChapterController {
   // }
 
   // @Delete("clear-quiz-progress")
-  // @Roles(USER_ROLES.student)
+  // @Roles(USER_ROLES.STUDENT)
   // @Validate({
   //   request: [
   //     { type: "query", name: "courseId", schema: UUIDSchema, required: true },
@@ -219,7 +248,7 @@ export class ChapterController {
   // }
 
   // @Get("question-options")
-  // @Roles(USER_ROLES.admin, USER_ROLES.teacher)
+  // @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   // @Validate({
   //   request: [
   //     {
@@ -254,7 +283,7 @@ export class ChapterController {
   // }
 
   @Patch("freemium-status")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {

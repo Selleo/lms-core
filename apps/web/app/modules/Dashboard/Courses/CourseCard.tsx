@@ -13,9 +13,9 @@ import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
 
 import { CourseCardTitle } from "./CourseCardTitle";
 
-import type { GetAllCoursesResponse } from "~/api/generated-api";
+import type { GetAvailableCoursesResponse } from "~/api/generated-api";
 
-export type CourseCardProps = GetAllCoursesResponse["data"][number];
+export type CourseCardProps = GetAvailableCoursesResponse["data"][number];
 
 const CourseCard = ({
   author,

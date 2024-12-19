@@ -4,25 +4,23 @@ import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 import { UUIDSchema } from "src/common";
 
 export const commonShowCourseSchema = Type.Object({
-  id: Type.String({ format: "uuid" }),
-  title: Type.String(),
-  thumbnailUrl: Type.Optional(Type.String()),
-  description: Type.String(),
+  archived: Type.Optional(Type.Boolean()),
+  authorId: Type.Optional(UUIDSchema),
   category: Type.String(),
   categoryId: Type.Optional(Type.String({ format: "uuid" })),
-  authorId: Type.Optional(UUIDSchema),
-  author: Type.Optional(Type.String()),
-  authorEmail: Type.Optional(Type.String()),
-  courseChapterCount: Type.Number(),
+  chapters: Type.Array(chapterSchema),
   completedChapterCount: Type.Optional(Type.Number()),
+  courseChapterCount: Type.Number(),
+  currency: Type.String(),
+  description: Type.String(),
   enrolled: Type.Optional(Type.Boolean()),
+  hasFreeChapter: Type.Optional(Type.Boolean()),
+  id: Type.String({ format: "uuid" }),
   isPublished: Type.Union([Type.Boolean(), Type.Null()]),
   isScorm: Type.Optional(Type.Boolean()),
-  chapters: Type.Array(chapterSchema),
   priceInCents: Type.Number(),
-  currency: Type.String(),
-  archived: Type.Optional(Type.Boolean()),
-  hasFreeChapter: Type.Optional(Type.Boolean()),
+  thumbnailUrl: Type.Optional(Type.String()),
+  title: Type.String(),
 });
 
 export type CommonShowCourse = Static<typeof commonShowCourseSchema>;

@@ -1,9 +1,10 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
+import { cn } from "~/lib/utils";
 
 type QuestionSelectorProps = {
   addQuestion: (questionType: string) => void;
@@ -11,6 +12,9 @@ type QuestionSelectorProps = {
 
 const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   const [showOptions, setShowOptions] = useState(false);
+  const [openUpwards, setOpenUpwards] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   const toggleOptions = () => setShowOptions(!showOptions);
 
@@ -48,15 +52,37 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
     },
   ];
 
+  useEffect(() => {
+    if (showOptions && buttonRef.current) {
+      const buttonRect = buttonRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      const spaceBelow = windowHeight - buttonRect.bottom;
+      const spaceAbove = buttonRect.top;
+
+      setOpenUpwards(spaceAbove > spaceBelow);
+    }
+  }, [showOptions]);
+
   return (
     <div className="relative mt-4">
-      <Button type="button" className="mt-3 mb-4 bg-primary-700" onClick={toggleOptions}>
+      <Button
+        type="button"
+        className="mt-3 mb-4 bg-primary-700"
+        onClick={toggleOptions}
+        ref={buttonRef}
+      >
         Add question{" "}
         <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
       </Button>
 
       {showOptions && (
-        <Card className="absolute top-full mb-2 w-64 p-2 bg-white text-black rounded shadow-lg z-10">
+        <Card
+          className={cn(
+            "absolute w-64 p-2 bg-white text-black rounded shadow-lg z-50 transition-all duration-200",
+            openUpwards ? "bottom-full mb-2" : "top-full mt-2",
+          )}
+          ref={cardRef}
+        >
           <p className="block p-2 text-left text-black border-b border-gray-300 body-base-md w-full">
             Select question type:
           </p>

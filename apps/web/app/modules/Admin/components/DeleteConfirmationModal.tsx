@@ -7,8 +7,8 @@ import {
   DialogTitle,
   DialogDescription,
 } from "~/components/ui/dialog";
-import { DeleteContentType } from "../EditCourse/CourseLessons/CourseLessons.types";
 import { match } from "ts-pattern";
+import { DeleteContentType } from "../EditCourse/EditCourse.types";
 
 type DeleteConfirmationModalProps = {
   open: boolean;
@@ -26,19 +26,19 @@ const DeleteConfirmationModal = ({
   const getDialogTitleText = (): string => {
     return match(contentType)
       .with(
-        DeleteContentType.Video,
+        DeleteContentType.VIDEO,
         () => "Are you sure you want to delete video lesson from the chapter?",
       )
       .with(
-        DeleteContentType.Presentation,
+        DeleteContentType.PRESENTATION,
         () => "Are you sure you want to delete presentation from the chapter?",
       )
       .with(
-        DeleteContentType.Text,
+        DeleteContentType.TEXT_BLOCK,
         () => "Are you sure you want to delete text content from the chapter?",
       )
-      .with(DeleteContentType.Quiz, () => "Are you sure you want to delete quiz from the chapter?")
-      .with(DeleteContentType.Chapter, () => "Are you sure you want to delete this chapter?")
+      .with(DeleteContentType.QUIZ, () => "Are you sure you want to delete quiz from the chapter?")
+      .with(DeleteContentType.CHAPTER, () => "Are you sure you want to delete this chapter?")
       .otherwise(() => "Are you sure you want to delete this content?");
   };
 

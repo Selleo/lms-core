@@ -12,12 +12,14 @@ type LessonCardListProps = {
   setSelectedLesson: (lesson: Lesson) => void;
   setContentTypeToDisplay: (contentType: string) => void;
   lessons: Lesson[];
+  selectedLesson?: Lesson;
 };
 
 export const LessonCardList = ({
   lessons,
   setSelectedLesson,
   setContentTypeToDisplay,
+  selectedLesson,
 }: LessonCardListProps) => {
   const [items, setItems] = useState(lessons);
   const mutation = useChangeLessonDisplayOrder();
@@ -59,11 +61,11 @@ export const LessonCardList = ({
   return (
     <SortableList
       items={items}
-      onChange={async (updatedItems, newPosition) => {
+      onChange={async (updatedItems, newChapterPosition, newDisplayOrder) => {
         setItems(updatedItems);
 
         await mutation.mutateAsync({
-          lesson: { lessonId: updatedItems[newPosition].id, displayOrder: newPosition },
+          lesson: { lessonId: updatedItems[newChapterPosition].id, displayOrder: newDisplayOrder },
         });
       }}
       className="mt-4 grid grid-cols-1 gap-4"
@@ -73,6 +75,7 @@ export const LessonCardList = ({
             key={item.id}
             item={item}
             onClickLessonCard={onClickLessonCard}
+            selectedLesson={selectedLesson}
             dragTrigger={
               <SortableList.DragHandle>
                 <Icon name="DragAndDropIcon" className="cursor-move" />
