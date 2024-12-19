@@ -1,6 +1,6 @@
 app.lms.localhost {
-    handle_path /api/* {
-        reverse_proxy localhost:3000
+    reverse_proxy /api/* {
+        to http://localhost:3000
     }
 
     handle {
