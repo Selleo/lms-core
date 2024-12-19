@@ -69,7 +69,7 @@ export default function CoursesViewPage() {
         </BreadcrumbItem>
       </BreadcrumbList>
       <div className="flex flex-col md:flex-row h-full gap-6">
-        {course.isScorm ? (
+        {/* {course.isScorm ? (
           <iframe
             title={scormMetadata?.entryPoint}
             src={`/api/scorm/${id}/content?path=${scormMetadata?.entryPoint}`}
@@ -77,12 +77,12 @@ export default function CoursesViewPage() {
             height="100%"
             className="w-full h-full"
           ></iframe>
-        ) : (
-          <>
-            <CourseViewMainCard {...course} />
-            <LessonsList lessons={course.chapters} isEnrolled={course.enrolled || isAdmin} />
-          </>
-        )}
+        ) : ( */}
+        <>
+          <CourseViewMainCard {...course} />
+          <LessonsList lessons={course.chapters} isEnrolled={course.enrolled || isAdmin} />
+        </>
+        {/* )} */}
       </div>
     </PageWrapper>
   );
