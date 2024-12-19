@@ -76,6 +76,7 @@ export async function createNiceCourses(
           isFreemium: chapterData.isFreemium,
           createdAt: createdAt,
           updatedAt: createdAt,
+          displayOrder: chapterData.displayOrder,
           lessonCount: chapterData.lessons.length,
         })
         .returning();
@@ -88,14 +89,14 @@ export async function createNiceCourses(
             title: lessonData.title,
             description: lessonData.description,
             type: lessonData.type,
-            displayOrder: index,
+            displayOrder: index + 1,
             fileS3Key: getFileUrl(lessonData.type),
             fileType:
               lessonData.type === LESSON_TYPES.presentation
                 ? "pptx"
                 : lessonData.type === LESSON_TYPES.video
-                  ? "mp4"
-                  : null,
+                ? "mp4"
+                : null,
             chapterId: chapter.id,
             createdAt: createdAt,
             updatedAt: createdAt,
