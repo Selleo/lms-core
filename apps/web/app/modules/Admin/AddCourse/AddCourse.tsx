@@ -1,4 +1,3 @@
-import { useNavigate } from "@remix-run/react";
 import { useCallback, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
@@ -6,7 +5,6 @@ import { useCategoriesSuspense } from "~/api/queries/useCategories";
 import SplashScreenImage from "~/assets/svgs/splash-screen-image.svg";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
 import { Icon } from "~/components/Icon";
-import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
@@ -20,9 +18,9 @@ import {
 } from "~/components/ui/select";
 
 import { useAddCourseForm } from "./hooks/useAddCourseForm";
+import Breadcrumb from "./components/Breadcrumb";
 
 const AddCourse = () => {
-  const navigate = useNavigate();
   const { form, onSubmit } = useAddCourseForm();
   const { data: categories } = useCategoriesSuspense();
   const [isUploading, setIsUploading] = useState(false);
@@ -30,6 +28,10 @@ const AddCourse = () => {
   const { isValid: isFormValid } = form.formState;
   const watchedImageUrl = form.watch("imageUrl");
   const imageUrl = form.getValues("imageUrl");
+  const maxDescriptionFieldLength = 800;
+
+  const watchedDescriptionLength = form.watch("description").length;
+  const descriptionFieldCharactersLeft = maxDescriptionFieldLength - watchedDescriptionLength;
 
   const handleImageUpload = useCallback(
     async (file: File) => {
@@ -47,15 +49,12 @@ const AddCourse = () => {
   );
 
   return (
-    <div className="flex h-screen bg-white p-20">
+    <div className="flex h-screen bg-white px-20 py-8 overflow-auto">
       <div className="w-full flex items-center justify-center">
         <img src={SplashScreenImage} alt="splashScreenImage" className="rounded" />
       </div>
-      <div className="w-full max-w-[820px] flex flex-col gap-y-8 px-20">
-        <Button variant="outline" onClick={() => navigate("/admin/courses")} className="w-min">
-          <Icon name="ChevronLeft" className="w-3 h-3 mr-2" />
-          Back
-        </Button>
+      <div className="w-full max-w-[820px] flex flex-col gap-y-6 px-8">
+        <Breadcrumb />
         <hgroup className="flex flex-col gapy-y-1">
           <h1 className="h3 text-neutral-950">Create new course</h1>
           <p className="body-lg-md text-neutral-800">
@@ -71,11 +70,17 @@ const AddCourse = () => {
                 name="title"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <Label htmlFor="title">
+                    <Label htmlFor="title" className="body-base-md">
                       <span className="text-red-500">*</span> Course title
                     </Label>
                     <FormControl>
-                      <Input id="title" {...field} required />
+                      <Input
+                        id="title"
+                        {...field}
+                        required
+                        placeholder="Enter title..."
+                        className="placeholder:body-base"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -92,7 +97,10 @@ const AddCourse = () => {
                     <FormControl>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger id="categoryId">
+                          <SelectTrigger
+                            id="categoryId"
+                            className="border border-neutral-300 focus:border-primary-800 focus:ring-primary-800 rounded-lg data-[placeholder]:body-base"
+                          >
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                         </FormControl>
@@ -119,17 +127,27 @@ const AddCourse = () => {
                     <span className="text-red-500">*</span> Description
                   </Label>
                   <FormControl>
-                    <Editor
+                    <textarea
                       id="description"
-                      content={field.value}
-                      className="h-32 w-full"
+                      maxLength={maxDescriptionFieldLength}
+                      placeholder="Provide description about the course..."
+                      className="h-32 px-2 py-1 text-left text-neutral-950 body-base placeholder:body-base  placeholder:text-neutral-600 border border-neutral-300 rounded-lg focus:border-blue-500 focus:border-2 focus:outline-none"
                       {...field}
+                      required
                     />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+            {descriptionFieldCharactersLeft <= 0 ? (
+              <p className="text-red-500 text-sm">You have reached the character limit.</p>
+            ) : (
+              <p className="text-neutral-800 mt-1">
+                {descriptionFieldCharactersLeft} characters left
+              </p>
+            )}
+
             <FormField
               control={form.control}
               name="imageUrl"
@@ -162,12 +180,12 @@ const AddCourse = () => {
 
             <div className="pb-5">
               <div className="flex space-x-5 mt-5 mb-10">
-                <Button className="bg-white text-blue-500 border-2 rounded px-6 py-2">
+                <Button className="bg-white text-primary-800 border-2 rounded px-6 py-2">
                   Cancel
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-blue-500 text-white rounded px-6 py-2"
+                  className="bg-primary-700 text-white rounded px-6 py-2"
                   disabled={!isFormValid || isUploading}
                 >
                   Proceed
