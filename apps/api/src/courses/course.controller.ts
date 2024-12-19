@@ -171,6 +171,7 @@ export class CourseController {
   })
   async getTeacherCourses(
     @Query("authorId") authorId: UUIDType,
+    // TODO: extract to const
     @Query("scope") scope: "all" | "enrolled" | "available" = "all",
     @Query("excludeCourseId") excludeCourseId: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
