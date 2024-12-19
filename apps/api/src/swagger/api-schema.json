@@ -1028,15 +1028,6 @@
         "operationId": "CourseController_getStudentCourses",
         "parameters": [
           {
-            "name": "excludeCourseId",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "format": "uuid",
-              "type": "string"
-            }
-          },
-          {
             "name": "title",
             "required": false,
             "in": "query",
@@ -1783,7 +1774,7 @@
     },
     "/api/chapter": {
       "get": {
-        "operationId": "ChapterController_getLesson",
+        "operationId": "ChapterController_getChapterWithLesson",
         "parameters": [
           {
             "name": "id",
@@ -1800,7 +1791,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetLessonResponse"
+                  "$ref": "#/components/schemas/GetChapterWithLessonResponse"
                 }
               }
             }
@@ -4856,7 +4847,7 @@
           "data"
         ]
       },
-      "GetLessonResponse": {
+      "GetChapterWithLessonResponse": {
         "type": "object",
         "properties": {
           "data": {

@@ -145,6 +145,8 @@ export interface GetUserByIdResponse {
 
 export interface GetUserDetailsResponse {
   data: {
+    firstName: string | null;
+    lastName: string | null;
     /** @format uuid */
     id: string;
     description: string | null;
@@ -789,7 +791,7 @@ export interface UpdateLessonDisplayOrderResponse {
   };
 }
 
-export interface GetLessonResponse {
+export interface GetChapterWithLessonResponse {
   data: {
     /** @format uuid */
     id: string;
@@ -1726,6 +1728,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | "-author"
           | "-chapterCount"
           | "-enrolledParticipantsCount";
+        /** @format uuid */
+        excludeCourseId?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -2056,17 +2060,17 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name ChapterControllerGetLesson
+     * @name ChapterControllerGetChapterWithLesson
      * @request GET:/api/chapter
      */
-    chapterControllerGetLesson: (
+    chapterControllerGetChapterWithLesson: (
       query: {
         /** @format uuid */
         id: string;
       },
       params: RequestParams = {},
     ) =>
-      this.request<GetLessonResponse, any>({
+      this.request<GetChapterWithLessonResponse, any>({
         path: `/api/chapter`,
         method: "GET",
         query: query,
