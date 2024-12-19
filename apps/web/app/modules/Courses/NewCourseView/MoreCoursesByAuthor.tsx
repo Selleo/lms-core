@@ -7,11 +7,15 @@ import Loader from "~/modules/common/Loader/Loader";
 import { CoursesCarousel } from "~/modules/Dashboard/Courses/CoursesCarousel";
 
 type MoreCoursesByAuthorProps = {
+  courseId: string;
   teacherId: string | undefined;
 };
 
-export const MoreCoursesByAuthor = ({ teacherId }: MoreCoursesByAuthorProps) => {
-  const { data: teacherCourses, isLoading } = useTeacherCourses(teacherId, { scope: "available" });
+export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthorProps) => {
+  const { data: teacherCourses, isLoading } = useTeacherCourses(teacherId, {
+    scope: "available",
+    excludeCourseId: courseId,
+  });
   const { data: teacherData } = useUserDetails(teacherId);
 
   if (!teacherCourses?.length) return null;

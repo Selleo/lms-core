@@ -32,13 +32,13 @@ export class ChapterController {
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(showChapterSchema),
   })
-  async getLesson(
+  async getChapterWithLesson(
     @Query("id") id: UUIDType,
     @CurrentUser("role") userRole: UserRole,
     @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<ShowChapterResponse>> {
     return new BaseResponse(
-      await this.chapterService.getChapterWithLessons(id, userId, userRole === USER_ROLES.admin),
+      await this.chapterService.getChapterWithLessons(id, userId, userRole === USER_ROLES.ADMIN),
     );
   }
 

@@ -1028,6 +1028,15 @@
         "operationId": "CourseController_getStudentCourses",
         "parameters": [
           {
+            "name": "excludeCourseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
             "name": "title",
             "required": false,
             "in": "query",
@@ -1272,6 +1281,15 @@
                 }
               ]
             }
+          },
+          {
+            "name": "excludeCourseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1319,6 +1337,15 @@
                   "type": "string"
                 }
               ]
+            }
+          },
+          {
+            "name": "excludeCourseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
             }
           }
         ],
@@ -5076,14 +5103,10 @@
               },
               "quizCount": {
                 "type": "number"
-              },
-              "displayOrder": {
-                "type": "number"
               }
             },
             "required": [
-              "title",
-              "displayOrder"
+              "title"
             ]
           },
           {

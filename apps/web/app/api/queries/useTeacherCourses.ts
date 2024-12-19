@@ -6,6 +6,7 @@ import type { GetTeacherCoursesResponse } from "../generated-api";
 
 type SearchParams = {
   scope?: "all" | "enrolled" | "available";
+  excludeCourseId?: string;
 };
 
 export const teacherCoursesOptions = (authorId?: string, searchParams?: SearchParams) => {
@@ -20,6 +21,7 @@ export const teacherCoursesOptions = (authorId?: string, searchParams?: SearchPa
       const response = await ApiClient.api.courseControllerGetTeacherCourses({
         authorId,
         ...(searchParams?.scope && { scope: searchParams.scope }),
+        ...(searchParams?.excludeCourseId && { excludeCourseId: searchParams.excludeCourseId }),
       });
 
       return response.data;

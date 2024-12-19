@@ -7,10 +7,14 @@ import { CoursesCarousel } from "~/modules/Dashboard/Courses/CoursesCarousel";
 
 type YouMayBeInterestedInProps = {
   category: string;
+  courseId: string;
 };
 
-export const YouMayBeInterestedIn = ({ category }: YouMayBeInterestedInProps) => {
-  const { data: relatedCourses, isLoading } = useAvailableCourses({ category });
+export const YouMayBeInterestedIn = ({ category, courseId }: YouMayBeInterestedInProps) => {
+  const { data: relatedCourses, isLoading } = useAvailableCourses({
+    category,
+    excludeCourseId: courseId,
+  });
 
   if (!relatedCourses?.length) return null;
 

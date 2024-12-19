@@ -1,6 +1,7 @@
 import * as Switch from "@radix-ui/react-switch";
 import { useParams } from "@remix-run/react";
 import { useCallback, useEffect, useState } from "react";
+import { flushSync } from "react-dom";
 
 import { useChangeChapterDisplayOrder } from "~/api/mutations/admin/changeChapterDisplayOrder";
 import { useUpdateLessonFreemiumStatus } from "~/api/mutations/admin/useUpdateLessonFreemiumStatus";
@@ -26,7 +27,7 @@ import {
 import { cn } from "~/lib/utils";
 import { LessonCardList } from "~/modules/Admin/EditCourse/CourseLessons/components/LessonCardList";
 
-import { ContentTypes, LessonType } from "../../EditCourse.types";
+import { ContentTypes } from "../../EditCourse.types";
 
 import type { Chapter, Lesson } from "../../EditCourse.types";
 import type React from "react";
@@ -145,7 +146,7 @@ const ChapterCard = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span>
-                        <Icon name="Info" className="text-neutral-800 cursor-default" />
+                        <Icon name="Info" className="text-neutral-800 w-6 h-auto cursor-default" />
                       </span>
                     </TooltipTrigger>
                     <TooltipContent
@@ -231,11 +232,16 @@ const ChaptersList = ({
     >
       <SortableList
         items={items}
-        onChange={(updatedItems, newPosition) => {
-          setItems(updatedItems);
+        onChange={(updatedItems, newChapterPosition, newDisplayOrder) => {
+          flushSync(() => {
+            setItems(updatedItems);
 
-          mutation.mutate({
-            chapter: { chapterId: updatedItems[newPosition].id, displayOrder: newPosition },
+            mutation.mutate({
+              chapter: {
+                chapterId: updatedItems[newChapterPosition].id,
+                displayOrder: newDisplayOrder,
+              },
+            });
           });
         }}
         className="grid grid-cols-1"

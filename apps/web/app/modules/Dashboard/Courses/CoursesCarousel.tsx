@@ -15,7 +15,7 @@ type CoursesCarouselProps = {
 
 export const CoursesCarousel = ({ courses }: CoursesCarouselProps) => {
   const renderCarouselItems = () => {
-    if (!courses) return null;
+    if (!courses?.length) return null;
 
     return courses.map((course) => {
       if (!course) return null;

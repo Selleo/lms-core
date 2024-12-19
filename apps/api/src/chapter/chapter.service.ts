@@ -29,7 +29,7 @@ export class ChapterService {
     if (!isAdmin && !courseAccess && !chapter.isFreemium)
       throw new UnauthorizedException("You don't have access to this lesson");
 
-    if (!chapter) throw new NotFoundException("Lesson not found");
+    if (!chapter) throw new NotFoundException("Chapter not found");
 
     const chapterLessonList = await this.lessonRepository.getLessonsByChapterId(id);
 

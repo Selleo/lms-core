@@ -1,12 +1,12 @@
 import { Elements } from "@stripe/react-stripe-js";
-import { useState } from "react";
 
 import { useStripePaymentIntent } from "~/api/mutations/useStripePaymentIntent";
-import { currentUserQueryOptions, useCurrentUserSuspense } from "~/api/queries/useCurrentUser";
+import { currentUserQueryOptions } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
 import { Button } from "~/components/ui/button";
 import { toast } from "~/components/ui/use-toast";
 import { formatPrice } from "~/lib/formatters/priceFormatter";
+import { useCurrentUserStore } from "~/modules/common/store/useCurrentUserStore";
 
 import { useStripePromise } from "./hooks/useStripePromise";
 import { PaymentForm } from "./PaymentForm";
@@ -37,10 +37,7 @@ export function PaymentModal({
   courseTitle,
   courseId,
 }: PaymentModalProps) {
-  const [open, setOpen] = useState(false);
-  const {
-    data: { id: currentUserId },
-  } = useCurrentUserSuspense();
+  const { currentUser } = useCurrentUserStore();
   const stripePromise = useStripePromise();
   const { clientSecret, createPaymentIntent, resetClientSecret } = useStripePaymentIntent();
 
@@ -49,17 +46,15 @@ export function PaymentModal({
       await createPaymentIntent({
         amount: coursePrice,
         currency: courseCurrency,
-        customerId: currentUserId,
+        customerId: currentUser?.id ?? "",
         courseId,
       });
-      setOpen(true);
     } catch (error) {
       console.error("Error creating payment intent:", error);
     }
   };
 
-  const handlePaymentSuccess = () => {
-    setOpen(false);
+  const handlePaymentSuccess = async () => {
     resetClientSecret();
     toast({
       description: "Payment successful",

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { eq, and, sql } from "drizzle-orm";
+import { and, eq, gte, lte, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, lessons, questionAnswerOptions, questions } from "src/storage/schema";
@@ -14,6 +14,35 @@ export class AdminChapterRepository {
 
   async getChapterById(chapterId: UUIDType) {
     return await this.db.select().from(chapters).where(eq(chapters.id, chapterId));
+  }
+
+  async changeChapterDisplayOrder(
+    courseId: UUIDType,
+    chapterId: UUIDType,
+    oldDisplayOrder: number,
+    newDisplayOrder: number,
+  ) {
+    await this.db.transaction(async (trx) => {
+      await trx
+        .update(chapters)
+        .set({
+          displayOrder: sql`CASE
+            WHEN ${eq(chapters.id, chapterId)}
+              THEN ${newDisplayOrder}
+            WHEN ${newDisplayOrder < oldDisplayOrder}
+              AND ${gte(chapters.displayOrder, newDisplayOrder)}
+              AND ${lte(chapters.displayOrder, oldDisplayOrder)}
+              THEN ${chapters.displayOrder} + 1
+            WHEN ${newDisplayOrder > oldDisplayOrder}
+              AND ${lte(chapters.displayOrder, newDisplayOrder)}
+              AND ${gte(chapters.displayOrder, oldDisplayOrder)}
+              THEN ${chapters.displayOrder} - 1
+            ELSE ${chapters.displayOrder}
+          END
+          `,
+        })
+        .where(eq(chapters.courseId, courseId));
+    });
   }
 
   // async getLessons(conditions: any[], sortOrder: any) {

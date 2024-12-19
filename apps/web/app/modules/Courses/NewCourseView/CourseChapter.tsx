@@ -18,13 +18,13 @@ const cardBadgeIcon = {
   not_started: "NotStartedRounded",
 } as const;
 
-export const CourseChapter = ({
-  chapter,
-}: {
+type CourseChapterProps = {
   chapter: GetCourseResponse["data"]["chapters"][0];
-}) => {
-  const lessonText = formatWithPlural(chapter.lessonCount || 0, "Lesson", "Lessons");
-  const quizText = formatWithPlural(chapter.quizCount || 0, "Quiz", "Quizzes");
+};
+
+export const CourseChapter = ({ chapter }: CourseChapterProps) => {
+  const lessonText = formatWithPlural(chapter.lessonCount ?? 0, "Lesson", "Lessons");
+  const quizText = formatWithPlural(chapter.quizCount ?? 0, "Quiz", "Quizzes");
 
   return (
     <Accordion type="single" collapsible>
@@ -61,7 +61,7 @@ export const CourseChapter = ({
             <AccordionTrigger className="text-start [&[data-state=open]>div>div>svg]:rotate-180 [&[data-state=open]>div>div>svg]:duration-200 [&[data-state=open]>div>div>svg]:ease-out data-[state=closed]:rounded-lg data-[state=open]:rounded-t-lg data-[state=open]:border-primary-500 data-[state=open]:bg-primary-50 border">
               <div className="w-full gap-x-4 p-4 flex items-center">
                 <div className="grid place-items-center w-8 h-8">
-                  <Icon name="CaretDown" className="w-6 text-primary-700" />
+                  <Icon name="CarretDown" className="w-6 text-primary-700" />
                 </div>
                 <div className="flex flex-col w-full">
                   <div className="details text-neutral-800">

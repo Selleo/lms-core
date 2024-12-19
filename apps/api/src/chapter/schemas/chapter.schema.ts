@@ -2,7 +2,7 @@ import { type Static, Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
 import { lessonSchema } from "src/lesson/lesson.schema";
-import { PROGRESS_STATUS } from "src/utils/types/progress.type";
+import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 export const chapterSchema = Type.Object({
   id: UUIDSchema,
@@ -11,9 +11,9 @@ export const chapterSchema = Type.Object({
   completedLessonCount: Type.Optional(Type.Number()),
   chapterProgress: Type.Optional(
     Type.Union([
-      Type.Literal(PROGRESS_STATUS.completed),
-      Type.Literal(PROGRESS_STATUS.inProgress),
-      Type.Literal(PROGRESS_STATUS.notStarted),
+      Type.Literal(PROGRESS_STATUSES.COMPLETED),
+      Type.Literal(PROGRESS_STATUSES.IN_PROGRESS),
+      Type.Literal(PROGRESS_STATUSES.NOT_STARTED),
     ]),
   ),
   isFreemium: Type.Optional(Type.Boolean()),
@@ -26,7 +26,7 @@ export const chapterSchema = Type.Object({
 });
 
 export const createChapterSchema = Type.Intersect([
-  Type.Omit(chapterSchema, ["id", "lessonCount", "completedLessonCount"]),
+  Type.Omit(chapterSchema, ["id", "lessonCount", "completedLessonCount", "displayOrder"]),
   Type.Object({
     courseId: UUIDSchema,
   }),

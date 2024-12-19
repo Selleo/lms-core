@@ -3,9 +3,9 @@ import { and, eq, isNotNull, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, lessons, studentChapterProgress, studentCourses } from "src/storage/schema";
-import { PROGRESS_STATUS } from "src/utils/types/progress.type";
+import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
-import type { ProgressStatusType } from "src/utils/types/progress.type";
+import type { ProgressStatus } from "src/utils/types/progress.type";
 
 @Injectable()
 export class ChapterRepository {
@@ -71,12 +71,12 @@ export class ChapterRepository {
         enrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN true ELSE false END`,
         lessonCount: chapters.lessonCount,
         completedLessonCount: sql<number>`COALESCE(${studentChapterProgress.completedLessonCount}, 0)`,
-        progress: sql<ProgressStatusType>`
+        progress: sql<ProgressStatus>`
           CASE ${studentChapterProgress.completedAt} IS NOT NULL
-            THEN ${PROGRESS_STATUS.completed}
+            THEN ${PROGRESS_STATUSES.COMPLETED}
             WHEN ${studentChapterProgress.completedAt} IS NULL AND ${studentChapterProgress.completedLessonCount} < 0
-              THEN ${PROGRESS_STATUS.inProgress}
-            ELSE ${PROGRESS_STATUS.notStarted}`,
+              THEN ${PROGRESS_STATUSES.IN_PROGRESS}
+            ELSE ${PROGRESS_STATUSES.NOT_STARTED}`,
       })
       .from(chapters)
       .leftJoin(

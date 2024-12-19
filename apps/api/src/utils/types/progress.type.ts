@@ -1,7 +1,7 @@
-export const PROGRESS_STATUS = {
-  notStarted: "not_started",
-  inProgress: "in_progress",
-  completed: "completed",
+export const PROGRESS_STATUSES = {
+  NOT_STARTED: "not_started",
+  IN_PROGRESS: "in_progress",
+  COMPLETED: "completed",
 } as const;
 
-export type ProgressStatusType = (typeof PROGRESS_STATUS)[keyof typeof PROGRESS_STATUS];
+export type ProgressStatus = (typeof PROGRESS_STATUSES)[keyof typeof PROGRESS_STATUSES];

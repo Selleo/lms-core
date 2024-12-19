@@ -432,21 +432,12 @@ export interface GetTeacherCoursesResponse {
 
 export interface GetCourseResponse {
   data: {
+    archived?: boolean;
     /** @format uuid */
-    id: string;
-    title: string;
-    thumbnailUrl?: string;
-    description: string;
+    authorId?: string;
     category: string;
     /** @format uuid */
     categoryId?: string;
-    /** @format uuid */
-    authorId?: string;
-    courseChapterCount: number;
-    completedChapterCount?: number;
-    enrolled?: boolean;
-    isPublished: boolean | null;
-    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -460,31 +451,32 @@ export interface GetCourseResponse {
       isSubmitted?: boolean;
       createdAt?: string;
       quizCount?: number;
+      displayOrder: number;
     }[];
-    priceInCents: number;
+    completedChapterCount?: number;
+    courseChapterCount: number;
     currency: string;
-    archived?: boolean;
+    description: string;
+    enrolled?: boolean;
     hasFreeChapter?: boolean;
+    /** @format uuid */
+    id: string;
+    isPublished: boolean | null;
+    isScorm?: boolean;
+    priceInCents: number;
+    thumbnailUrl?: string;
+    title: string;
   };
 }
 
 export interface GetCourseByIdResponse {
   data: {
+    archived?: boolean;
     /** @format uuid */
-    id: string;
-    title: string;
-    thumbnailUrl?: string;
-    description: string;
+    authorId?: string;
     category: string;
     /** @format uuid */
     categoryId?: string;
-    /** @format uuid */
-    authorId?: string;
-    courseChapterCount: number;
-    completedChapterCount?: number;
-    enrolled?: boolean;
-    isPublished: boolean | null;
-    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -498,31 +490,32 @@ export interface GetCourseByIdResponse {
       isSubmitted?: boolean;
       createdAt?: string;
       quizCount?: number;
+      displayOrder: number;
     }[];
-    priceInCents: number;
+    completedChapterCount?: number;
+    courseChapterCount: number;
     currency: string;
-    archived?: boolean;
+    description: string;
+    enrolled?: boolean;
     hasFreeChapter?: boolean;
+    /** @format uuid */
+    id: string;
+    isPublished: boolean | null;
+    isScorm?: boolean;
+    priceInCents: number;
+    thumbnailUrl?: string;
+    title: string;
   };
 }
 
 export interface GetBetaCourseByIdResponse {
   data: {
+    archived?: boolean;
     /** @format uuid */
-    id: string;
-    title: string;
-    thumbnailUrl?: string;
-    description: string;
+    authorId?: string;
     category: string;
     /** @format uuid */
     categoryId?: string;
-    /** @format uuid */
-    authorId?: string;
-    courseChapterCount: number;
-    completedChapterCount?: number;
-    enrolled?: boolean;
-    isPublished: boolean | null;
-    isScorm?: boolean;
     chapters: {
       /** @format uuid */
       id: string;
@@ -536,11 +529,21 @@ export interface GetBetaCourseByIdResponse {
       isSubmitted?: boolean;
       createdAt?: string;
       quizCount?: number;
+      displayOrder: number;
     }[];
-    priceInCents: number;
+    completedChapterCount?: number;
+    courseChapterCount: number;
     currency: string;
-    archived?: boolean;
+    description: string;
+    enrolled?: boolean;
     hasFreeChapter?: boolean;
+    /** @format uuid */
+    id: string;
+    isPublished: boolean | null;
+    isScorm?: boolean;
+    priceInCents: number;
+    thumbnailUrl?: string;
+    title: string;
   };
 }
 
@@ -783,6 +786,58 @@ export interface UpdateLessonDisplayOrderBody {
 export interface UpdateLessonDisplayOrderResponse {
   data: {
     message: string;
+  };
+}
+
+export interface GetLessonResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    lessonCount: number;
+    completedLessonCount?: number;
+    chapterProgress?: "completed" | "in_progress" | "not_started";
+    isFreemium?: boolean;
+    enrolled?: boolean;
+    isPublished?: boolean;
+    isSubmitted?: boolean;
+    createdAt?: string;
+    quizCount?: number;
+    displayOrder: number;
+    lessons: {
+      updatedAt?: string;
+      /** @format uuid */
+      id: string;
+      title: string;
+      type: string;
+      description: string;
+      displayOrder: number;
+      fileS3Key?: string;
+      fileType?: string;
+      questions?: {
+        /** @format uuid */
+        id?: string;
+        type:
+          | "single_choice"
+          | "multiple_choice"
+          | "true_or_false"
+          | "photo_question"
+          | "fill_in_the_blanks"
+          | "brief_response"
+          | "detailed_response";
+        description?: string;
+        title: string;
+        photoQuestionType?: "single_choice" | "multiple_choice";
+        photoS3Key?: string;
+        options?: {
+          /** @format uuid */
+          id?: string;
+          optionText: string;
+          isCorrect: boolean;
+          position: number;
+        }[];
+      }[];
+    }[];
   };
 }
 
@@ -1692,6 +1747,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query: {
         /** @format uuid */
         authorId: string;
+        scope?: "all" | "enrolled" | "available";
+        /** @format uuid */
+        excludeCourseId?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -1998,6 +2056,48 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name ChapterControllerGetLesson
+     * @request GET:/api/chapter
+     */
+    chapterControllerGetLesson: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetLessonResponse, any>({
+        path: `/api/chapter`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerRemoveChapter
+     * @request DELETE:/api/chapter
+     */
+    chapterControllerRemoveChapter: (
+      query: {
+        /** @format uuid */
+        chapterId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<RemoveChapterResponse, any>({
+        path: `/api/chapter`,
+        method: "DELETE",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name ChapterControllerBetaCreateChapter
      * @request POST:/api/chapter/beta-create-chapter
      */
@@ -2026,27 +2126,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: "PATCH",
         body: data,
         type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChapterControllerRemoveChapter
-     * @request DELETE:/api/chapter
-     */
-    chapterControllerRemoveChapter: (
-      query: {
-        /** @format uuid */
-        chapterId: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<RemoveChapterResponse, any>({
-        path: `/api/chapter`,
-        method: "DELETE",
-        query: query,
         format: "json",
         ...params,
       }),

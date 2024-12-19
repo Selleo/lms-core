@@ -15,8 +15,8 @@ import {
   ilike,
   inArray,
   isNotNull,
-  isNull,
   like,
+  ne,
   sql,
 } from "drizzle-orm";
 
@@ -28,7 +28,7 @@ import { FileService } from "src/file/file.service";
 import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import { USER_ROLES } from "src/user/schemas/userRoles";
-import { PROGRESS_STATUS } from "src/utils/types/progress.type";
+import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 import { getSortOptions } from "../common/helpers/getSortOptions";
 import {
@@ -56,9 +56,11 @@ import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { Pagination, UUIDType } from "src/common";
 import type { LessonItemWithContentSchema } from "src/lesson/lesson.schema";
-import type { ProgressStatusType } from "src/utils/types/progress.type";
+import type * as schema from "src/storage/schema";
+import type { ProgressStatus } from "src/utils/types/progress.type";
 
 @Injectable()
 export class CourseService {
@@ -228,20 +230,18 @@ export class CourseService {
     const { sortOrder, sortedField } = getSortOptions(sort);
 
     return this.db.transaction(async (trx) => {
-      const notEnrolledCourses: Record<string, string>[] = await trx.execute(sql`
-        SELECT ${courses.id} AS "courseId"
-        FROM ${courses}
-        WHERE ${courses.id} NOT IN (
-          SELECT DISTINCT ${studentCourses.courseId}
-          FROM ${studentCourses}
-          WHERE ${studentCourses.studentId} = ${currentUserId}
-        )`);
-      const notEnrolledCourseIds = notEnrolledCourses.map(({ courseId }) => courseId);
+      const availableCourseIds = await this.getAvailableCourseIds(
+        currentUserId,
+        trx,
+        undefined,
+        query.excludeCourseId,
+      );
 
       const conditions = [eq(courses.isPublished, true)];
       conditions.push(...this.getFiltersConditions(filters));
-      if (notEnrolledCourses.length > 0) {
-        conditions.push(inArray(courses.id, notEnrolledCourseIds));
+
+      if (availableCourseIds.length > 0) {
+        conditions.push(inArray(courses.id, availableCourseIds));
       }
 
       const queryDB = trx
@@ -371,12 +371,12 @@ export class CourseService {
           WHERE ${lessons.chapterId} = ${chapters.id}
             AND ${lessons.type} = ${LESSON_TYPE.quiz.key})::INTEGER`,
         completedLessonCount: sql<number>`COALESCE(${studentChapterProgress.completedLessonCount}, 0)`,
-        chapterProgress: sql<ProgressStatusType>`
+        chapterProgress: sql<ProgressStatus>`
           CASE
-            WHEN ${studentChapterProgress.completedAt} IS NOT NULL THEN ${PROGRESS_STATUS.completed}
+            WHEN ${studentChapterProgress.completedAt} IS NOT NULL THEN ${PROGRESS_STATUSES.COMPLETED}
             WHEN ${studentChapterProgress.completedAt} IS NULL
-              AND ${studentChapterProgress.completedLessonCount} > 0 THEN ${PROGRESS_STATUS.inProgress}
-            ELSE ${PROGRESS_STATUS.notStarted}
+              AND ${studentChapterProgress.completedLessonCount} > 0 THEN ${PROGRESS_STATUSES.IN_PROGRESS}
+            ELSE ${PROGRESS_STATUSES.NOT_STARTED}
           END
         `,
         isFreemium: chapters.isFreemium,
@@ -565,21 +565,34 @@ export class CourseService {
     };
   }
 
-  //TODO: Needs to be refactored
   async getTeacherCourses({
+    currentUserId,
     authorId,
     scope,
+    excludeCourseId,
   }: {
+    currentUserId: UUIDType;
     authorId: UUIDType;
     scope: "all" | "enrolled" | "available";
+    excludeCourseId?: UUIDType;
   }): Promise<AllCoursesForTeacherResponse> {
     const conditions = [eq(courses.isPublished, true), eq(courses.authorId, authorId)];
 
     if (scope === "enrolled") {
-      conditions.push(isNotNull(studentCourses.studentId));
+      conditions.push(eq(studentCourses.studentId, currentUserId));
     }
+
     if (scope === "available") {
-      conditions.push(isNull(studentCourses.studentId));
+      const availableCourseIds = await this.getAvailableCourseIds(
+        currentUserId,
+        this.db,
+        authorId,
+        excludeCourseId,
+      );
+
+      if (availableCourseIds.length) {
+        conditions.push(inArray(courses.id, availableCourseIds));
+      }
     }
 
     return this.db
@@ -1032,5 +1045,34 @@ export class CourseService {
       default:
         return courses.title;
     }
+  }
+
+  private async getAvailableCourseIds(
+    currentUserId: UUIDType,
+    trx: PostgresJsDatabase<typeof schema>,
+    authorId?: UUIDType,
+    excludeCourseId?: UUIDType,
+  ) {
+    const conditions = [];
+
+    if (authorId) {
+      conditions.push(eq(courses.authorId, authorId));
+    }
+
+    if (excludeCourseId) {
+      conditions.push(ne(courses.id, excludeCourseId));
+    }
+
+    const availableCourses: Record<string, string>[] = await trx.execute(sql`
+      SELECT ${courses.id} AS "courseId"
+      FROM ${courses}
+      WHERE ${conditions.length ? and(...conditions) : true} AND ${courses.id} NOT IN (
+        SELECT DISTINCT ${studentCourses.courseId}
+        FROM ${studentCourses}
+        WHERE ${studentCourses.studentId} = ${currentUserId}
+      )
+    `);
+
+    return availableCourses.map(({ courseId }) => courseId);
   }
 }

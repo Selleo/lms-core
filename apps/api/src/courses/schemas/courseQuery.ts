@@ -68,4 +68,5 @@ export type CoursesQuery = {
   sort?: SortCourseFieldsOptions;
   currentUserId?: UUIDType;
   currentUserRole?: UserRole;
+  excludeCourseId?: UUIDType;
 };
