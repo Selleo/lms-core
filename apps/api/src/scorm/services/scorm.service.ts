@@ -4,16 +4,36 @@ import path from "path";
 import { Injectable, Inject, BadRequestException, NotFoundException } from "@nestjs/common";
 import AdmZip from "adm-zip";
 import { JSDOM } from "jsdom";
+import { match } from "ts-pattern";
 import xml2js from "xml2js";
 
+import { AdminChapterService } from "src/chapter/adminChapter.service";
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
+import { AdminLessonService } from "src/lesson/adminLesson.service";
+import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { S3Service } from "src/s3/s3.service";
 
 import { SCORM } from "../constants/scorm.consts";
 import { ScormRepository } from "../repositories/scorm.repository";
 
 import type { UUIDType } from "src/common";
+
+type ScormChapter = {
+  title: string;
+  identifier: string;
+  displayOrder: number;
+  lessons: ScormLesson[];
+};
+
+type ScormLesson = {
+  title: string;
+  identifier: string;
+  href: string;
+  type: string;
+  displayOrder: number;
+  isQuiz: boolean;
+};
 
 @Injectable()
 export class ScormService {
@@ -22,6 +42,8 @@ export class ScormService {
     private readonly s3Service: S3Service,
     private readonly fileService: FileService,
     private readonly scormRepository: ScormRepository,
+    private readonly adminChapterService: AdminChapterService,
+    private readonly adminLessonService: AdminLessonService,
   ) {}
 
   /**
@@ -54,10 +76,11 @@ export class ScormService {
   async processScormPackage(file: Express.Multer.File, courseId: UUIDType, userId: UUIDType) {
     return await this.db.transaction(async (tx) => {
       try {
-        const { version, entryPoint, entries } = await this.parseAndValidateScorm(file);
+        const { manifest, version, entries } = await this.parseAndValidateScorm(file);
+
+        const chapters = this.parseScormStructure(manifest);
 
         const s3BaseKey = `scorm/${courseId}/${randomUUID()}`;
-
         await Promise.all(
           entries
             .filter((entry) => !entry.isDirectory)
@@ -84,11 +107,38 @@ export class ScormService {
             courseId,
             fileId: createdFile.id,
             version,
-            entryPoint,
+            entryPoint: this.findEntryPoint(manifest),
             s3Key: s3BaseKey,
           },
           tx,
         );
+
+        for (const chapter of chapters) {
+          const createdChapter = await this.adminChapterService.createChapterForCourse(
+            {
+              title: chapter.title,
+              courseId,
+              isPublished: true,
+              isFreemium: false,
+            },
+            userId,
+          );
+
+          // Create lessons
+          for (const lesson of chapter.lessons) {
+            await this.adminLessonService.createLessonForChapter(
+              {
+                title: lesson.title,
+                chapterId: createdChapter.id,
+                type: lesson.type,
+                description: "",
+                fileS3Key: lesson.href ? `${s3BaseKey}/${lesson.href}` : undefined,
+                fileType: this.getContentType(lesson.href),
+              },
+              userId,
+            );
+          }
+        }
 
         return metadata;
       } catch (error) {
@@ -296,6 +346,7 @@ export class ScormService {
     const manifest = await xml2js.parseStringPromise(manifestContent);
 
     return {
+      manifest,
       version: this.detectScormVersion(manifest),
       entryPoint: this.findEntryPoint(manifest),
       entries: zip.getEntries(),
@@ -360,6 +411,77 @@ export class ScormService {
     }
 
     return sco.$.href;
+  }
+
+  private parseScormStructure(manifest: any): ScormChapter[] {
+    const organization = manifest.manifest.organizations[0].organization[0];
+    const resources = manifest.manifest.resources[0].resource;
+
+    const resourceMap = new Map(
+      resources.map((resource: any) => [
+        resource.$.identifier,
+        {
+          href: resource.$.href,
+          type: resource.$.type,
+          scormtype: resource.$["adlcp:scormtype"],
+        },
+      ]),
+    );
+
+    const items = Array.isArray(organization.item) ? organization.item : [organization.item];
+
+    return items.map((chapterItem: any, chapterIndex: number) => {
+      const subItems = chapterItem.item
+        ? Array.isArray(chapterItem.item)
+          ? chapterItem.item
+          : [chapterItem.item]
+        : [
+            {
+              $: {
+                identifier: chapterItem.$.identifier,
+                identifierref: chapterItem.$.identifierref,
+              },
+              title: chapterItem.title,
+            },
+          ];
+
+      const lessons = subItems.map((lessonItem: any, lessonIndex: number) => {
+        const resourceId = lessonItem.$.identifierref;
+        const resource = resourceMap.get(resourceId);
+        const lessonTitle = Array.isArray(lessonItem.title)
+          ? lessonItem.title[0]
+          : lessonItem.title;
+        const isQuiz = lessonTitle.toLowerCase().includes("quiz");
+
+        return {
+          title: lessonTitle,
+          identifier: lessonItem.$.identifier,
+          // @ts-expect-error tet
+          href: resource?.href || "",
+          // @ts-expect-error tet
+          type: isQuiz ? LESSON_TYPES.quiz : this.determineLessonType(resource?.href || ""),
+          displayOrder: lessonIndex + 1,
+          isQuiz,
+        };
+      });
+
+      return {
+        title: Array.isArray(chapterItem.title) ? chapterItem.title[0] : chapterItem.title,
+        identifier: chapterItem.$.identifier,
+        displayOrder: chapterIndex + 1,
+        lessons,
+      };
+    });
+  }
+
+  private determineLessonType(href: string): string {
+    const extension = path.extname(href).toLowerCase();
+
+    return match(extension)
+      .with(".mp4", ".webm", () => LESSON_TYPES.video)
+      .with(".pptx", ".ppt", () => LESSON_TYPES.presentation)
+      .with(".html", () => LESSON_TYPES.textBlock)
+      .otherwise(() => LESSON_TYPES.file);
   }
 
   /**
