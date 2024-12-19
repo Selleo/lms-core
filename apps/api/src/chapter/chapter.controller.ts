@@ -15,7 +15,7 @@ import {
   createChapterSchema,
   UpdateChapterBody,
   updateChapterSchema,
-  showChapterSchema
+  showChapterSchema,
 } from "./schemas/chapter.schema";
 
 import type { ShowChapterResponse } from "./schemas/chapter.schema";
