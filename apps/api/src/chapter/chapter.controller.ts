@@ -13,7 +13,9 @@ import { ChapterService } from "./chapter.service";
 import {
   CreateChapterBody,
   createChapterSchema,
-  showChapterSchema,
+  UpdateChapterBody,
+  updateChapterSchema,
+  showChapterSchema
 } from "./schemas/chapter.schema";
 
 import type { ShowChapterResponse } from "./schemas/chapter.schema";
@@ -87,6 +89,31 @@ export class ChapterController {
     const { id } = await this.adminChapterService.createChapterForCourse(createChapterBody, userId);
 
     return new BaseResponse({ id, message: "Chapter created successfully" });
+  }
+
+  @Patch()
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
+  @Validate({
+    request: [
+      {
+        type: "query",
+        name: "id",
+        schema: UUIDSchema,
+      },
+      {
+        type: "body",
+        schema: updateChapterSchema,
+      },
+    ],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async updateChapter(
+    @Query("id") id: UUIDType,
+    @Body() updateChapterBody: UpdateChapterBody,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.adminChapterService.updateChapter(id, updateChapterBody);
+
+    return new BaseResponse({ message: "Chapter updated successfully" });
   }
 
   @Patch("chapter-display-order")

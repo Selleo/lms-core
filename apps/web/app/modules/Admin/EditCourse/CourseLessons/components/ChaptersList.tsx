@@ -38,6 +38,8 @@ interface ChapterCardProps {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
   setSelectedLesson: (selectedLesson?: Lesson) => void;
+  selectedChapter?: Chapter;
+  selectedLesson?: Lesson;
   dragTrigger: React.ReactNode;
 }
 
@@ -47,6 +49,8 @@ const ChapterCard = ({
   setContentTypeToDisplay,
   setSelectedChapter,
   setSelectedLesson,
+  selectedChapter,
+  selectedLesson,
   dragTrigger,
 }: ChapterCardProps) => {
   const { mutateAsync: updateFreemiumStatus } = useUpdateLessonFreemiumStatus();
@@ -78,6 +82,7 @@ const ChapterCard = ({
   const onSwitchClick = useCallback(
     async (event: React.MouseEvent) => {
       event.stopPropagation();
+      event.preventDefault();
       try {
         await updateFreemiumStatus({
           chapterId: chapter.id,
@@ -96,7 +101,9 @@ const ChapterCard = ({
   return (
     <AccordionItem key={chapter.id} value={chapter.id} className="p-0">
       <Card
-        className={cn("mb-4 h-full flex p-4 border", { "border-primary-500": isOpen })}
+        className={cn("mb-4 h-full flex p-4 border", {
+          "border-primary-500": isOpen || selectedChapter?.id === chapter.id,
+        })}
         onClick={onClickChapterCard}
       >
         <div className="flex w-full">
@@ -105,7 +112,9 @@ const ChapterCard = ({
               {dragTrigger}
               <hgroup className="flex flex-col-reverse w-full">
                 <h3 className="body-base-md text-neutral-950">{chapter.title}</h3>
-                <div className="text-neutral-800 body-sm-md">Chapter {chapter.displayOrder}</div>
+                <div className="text-neutral-800 body-sm-md">
+                  Chapter {chapter.displayOrder} • Lessons {chapter.lessons.length}
+                </div>
               </hgroup>
               <AccordionTrigger className="cursor-pointer p-2" onClick={onAccordionClick}>
                 <Icon name={isOpen ? "ArrowUp" : "ArrowDown"} className="text-gray-600" />
@@ -114,6 +123,7 @@ const ChapterCard = ({
             <AccordionContent className="mt-2 text-gray-700">
               <LessonCardList
                 lessons={chapter.lessons}
+                selectedLesson={selectedLesson}
                 setSelectedLesson={setSelectedLesson}
                 setContentTypeToDisplay={setContentTypeToDisplay}
               />
@@ -173,6 +183,8 @@ interface ChaptersListProps {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter) => void;
   setSelectedLesson: (selectedLesson?: Lesson) => void;
+  selectedChapter?: Chapter;
+  selectedLesson?: Lesson;
   canRefetchChapterList: boolean;
 }
 
@@ -205,6 +217,8 @@ const ChaptersList = ({
   setContentTypeToDisplay,
   setSelectedChapter,
   setSelectedLesson,
+  selectedChapter,
+  selectedLesson,
   canRefetchChapterList,
 }: ChaptersListProps) => {
   const [openItem, setOpenItem] = useState<string | undefined>(undefined);
@@ -250,10 +264,12 @@ const ChaptersList = ({
             <ChapterCard
               key={chapter.id}
               chapter={chapter}
-              isOpen={openItem === `item-${chapter.id}`}
+              isOpen={openItem === chapter.id}
               setContentTypeToDisplay={setContentTypeToDisplay}
               setSelectedChapter={setSelectedChapter}
               setSelectedLesson={setSelectedLesson}
+              selectedLesson={selectedLesson}
+              selectedChapter={selectedChapter}
               dragTrigger={
                 <SortableList.DragHandle>
                   <Icon name="DragAndDropIcon" className="cursor-move" />

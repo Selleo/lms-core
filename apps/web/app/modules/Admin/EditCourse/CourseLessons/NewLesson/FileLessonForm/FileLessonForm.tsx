@@ -15,6 +15,7 @@ import { useFileLessonForm } from "./hooks/useFileLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import Breadcrumb from "../components/Breadcrumb";
 
 type FileLessonProps = {
   contentTypeToDisplay: string;
@@ -79,9 +80,12 @@ const FileLessonForm = ({
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
       <div className="flex flex-col gap-y-1">
-        <h1 className="body-base-md text-neutral-800">
-          {contentTypeToDisplay === ContentTypes.PRESENTATION_FORM ? "Presentation" : "Video"}
-        </h1>
+        <Breadcrumb
+          lessonLabel={
+            contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "Video" : "Presentation"
+          }
+          setContentTypeToDisplay={setContentTypeToDisplay}
+        />
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (
             <>

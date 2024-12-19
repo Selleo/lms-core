@@ -7,7 +7,7 @@ import { chapters } from "src/storage/schema";
 
 import { AdminChapterRepository } from "./repositories/adminChapter.repository";
 
-import type { CreateChapterBody } from "./schemas/chapter.schema";
+import type { CreateChapterBody, UpdateChapterBody } from "./schemas/chapter.schema";
 import type { UUIDType } from "src/common";
 
 @Injectable()
@@ -237,11 +237,12 @@ export class AdminChapterService {
       newDisplayOrder,
     );
   }
-  // async updateLesson(id: string, body: UpdateLessonBody) {
-  //   const [lesson] = await this.adminChapterRepository.updateLesson(id, body);
 
-  //   if (!lesson) throw new NotFoundException("Lesson not found");
-  // }
+  async updateChapter(id: string, body: UpdateChapterBody) {
+    const [chapter] = await this.adminChapterRepository.updateChapter(id, body);
+
+    if (!chapter) throw new NotFoundException("Lesson not found");
+  }
 
   // async toggleLessonAsFree(courseId: UUIDType, lessonId: UUIDType, isFree: boolean) {
   //   return await this.adminChapterRepository.toggleLessonAsFree(courseId, lessonId, isFree);

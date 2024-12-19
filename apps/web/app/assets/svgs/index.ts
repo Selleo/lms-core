@@ -43,6 +43,7 @@ export { default as Checkmark } from "./checkmark.svg?react";
 export { default as Flame } from "./flame.svg?react";
 export { default as FreeRight } from "./free-right.svg?react";
 export { default as NoData } from "./no-data.svg?react";
+export { default as Eye } from "./eye.svg?react";
 
 export * from "./lesson-types";
 export * from "./arrows";

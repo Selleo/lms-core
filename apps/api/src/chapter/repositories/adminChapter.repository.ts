@@ -4,6 +4,7 @@ import { and, eq, gte, lte, sql } from "drizzle-orm";
 import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
+import type { UpdateChapterBody } from "../schemas/chapter.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
@@ -302,9 +303,9 @@ export class AdminChapterRepository {
   //     .returning();
   // }
 
-  // async updateLesson(id: string, body: UpdateLessonBody) {
-  //   return await this.db.update(lessons).set(body).where(eq(lessons.id, id)).returning();
-  // }
+  async updateChapter(id: string, body: UpdateChapterBody) {
+    return await this.db.update(chapters).set(body).where(eq(chapters.id, id)).returning();
+  }
 
   // async getLessonsCount(conditions: any[]) {
   //   return await this.db

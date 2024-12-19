@@ -1,6 +1,6 @@
 import { Question } from "./CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
 
-export type NavigationTab = "Settings" | "Lesson" | "Pricing" | "Status";
+export type NavigationTab = "Settings" | "Curriculum" | "Pricing" | "Status";
 
 export interface Lesson {
   updatedAt: string;

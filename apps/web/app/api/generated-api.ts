@@ -865,6 +865,26 @@ export interface BetaCreateChapterResponse {
   };
 }
 
+export type UpdateChapterBody = {
+  title?: string;
+  chapterProgress?: "completed" | "in_progress" | "not_started";
+  isFreemium?: boolean;
+  enrolled?: boolean;
+  isPublished?: boolean;
+  isSubmitted?: boolean;
+  createdAt?: string;
+  quizCount?: number;
+} & {
+  /** @format uuid */
+  courseId?: string;
+};
+
+export interface UpdateChapterResponse {
+  data: {
+    message: string;
+  };
+}
+
 export interface UpdateChapterDisplayOrderBody {
   /** @format uuid */
   chapterId: string;
@@ -1667,6 +1687,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     courseControllerGetStudentCourses: (
       query?: {
+        /** @format uuid */
+        excludeCourseId?: string;
         title?: string;
         category?: string;
         author?: string;
@@ -2074,6 +2096,30 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/chapter`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerUpdateChapter
+     * @request PATCH:/api/chapter
+     */
+    chapterControllerUpdateChapter: (
+      data: UpdateChapterBody,
+      query?: {
+        /** @format uuid */
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateChapterResponse, any>({
+        path: `/api/chapter`,
+        method: "PATCH",
+        query: query,
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
