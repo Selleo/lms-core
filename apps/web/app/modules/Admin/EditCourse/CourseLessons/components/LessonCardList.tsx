@@ -59,11 +59,11 @@ export const LessonCardList = ({
   return (
     <SortableList
       items={items}
-      onChange={async (updatedItems, newPosition) => {
+      onChange={async (updatedItems, newChapterPosition, newDisplayOrder) => {
         setItems(updatedItems);
 
         await mutation.mutateAsync({
-          lesson: { lessonId: updatedItems[newPosition].id, displayOrder: newPosition },
+          lesson: { lessonId: updatedItems[newChapterPosition].id, displayOrder: newDisplayOrder },
         });
       }}
       className="mt-4 grid grid-cols-1 gap-4"

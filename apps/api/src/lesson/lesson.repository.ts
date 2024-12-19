@@ -1,7 +1,9 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
+import { chapters, lessons, questions, studentLessonProgress } from "src/storage/schema";
+
 // import { STATES } from "src/common/states";
 // import { QUESTION_TYPE } from "src/questions/schema/questions.types";
 // import {
@@ -14,9 +16,8 @@ import { DatabasePg, type UUIDType } from "src/common";
 //   studentCourses,
 //   studentQuestionAnswers,
 // } from "src/storage/schema";
-import { chapters, lessons, studentLessonProgress } from "src/storage/schema";
-
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { QuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 
 @Injectable()
@@ -26,6 +27,44 @@ export class LessonRepository {
   async getLesson(id: UUIDType) {
     const [lesson] = await this.db.select().from(lessons).where(eq(lessons.id, id));
     return lesson;
+  }
+
+  async getLessonsByChapterId(chapterId: UUIDType) {
+    return this.db
+      .select({
+        id: lessons.id,
+        title: lessons.title,
+        type: lessons.type,
+        description: sql<string>`${lessons.description}`,
+        fileS3Key: sql<string | undefined>`${lessons.fileS3Key}`,
+        fileType: sql<string | undefined>`${lessons.fileType}`,
+        displayOrder: sql<number>`${lessons.displayOrder}`,
+        questions: sql<QuestionBody[]>`
+          COALESCE(
+            (
+              SELECT json_agg(questions_data)
+              FROM (
+                SELECT
+                  ${questions.id} AS id,
+                  ${questions.title} AS title,
+                  ${questions.description} AS description,
+                  ${questions.type} AS type,
+                  ${questions.photoQuestionType} AS photoQuestionType,
+                  ${questions.photoS3Key} AS photoS3Key,
+                  ${questions.solutionExplanation} AS solutionExplanation,
+                  -- TODO: add display order
+                FROM ${questions}
+                WHERE ${lessons.id} = ${questions.lessonId}
+                -- ORDER BY ${lessons.displayOrder}
+              ) AS questions_data
+            ), 
+            '[]'::json
+          )
+        `,
+      })
+      .from(lessons)
+      .where(eq(lessons.chapterId, chapterId))
+      .orderBy(lessons.displayOrder);
   }
 
   //   async getChapterForUser(id: UUIDType, userId: UUIDType) {

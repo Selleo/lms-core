@@ -2,7 +2,7 @@ import { Type } from "@sinclair/typebox";
 
 import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 import { baseCourseSchema } from "src/courses/schemas/createCourse.schema";
-import { lessonSchema } from "src/lesson/lesson.schem";
+import { lessonSchema } from "src/lesson/lesson.schema";
 
 import type { Static } from "@sinclair/typebox";
 

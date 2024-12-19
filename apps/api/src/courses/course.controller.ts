@@ -129,6 +129,7 @@ export class CourseController {
     @Query("page") page: number,
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
+    @Query("excludeCourseId") excludeCourseId: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
     const filters: CoursesFilterSchema = {
@@ -140,7 +141,7 @@ export class CourseController {
           ? [creationDateRangeStart, creationDateRangeEnd]
           : undefined,
     };
-    const query = { filters, page, perPage, sort };
+    const query = { filters, page, perPage, sort, excludeCourseId };
 
     const data = await this.courseService.getAvailableCourses(query, currentUserId);
 
@@ -149,14 +150,30 @@ export class CourseController {
 
   @Get("teacher-courses")
   @Validate({
-    request: [{ type: "query", name: "authorId", schema: UUIDSchema, required: true }],
+    request: [
+      { type: "query", name: "authorId", schema: UUIDSchema, required: true },
+      {
+        type: "query",
+        name: "scope",
+        schema: Type.Union([
+          Type.Literal("all"),
+          Type.Literal("enrolled"),
+          Type.Literal("available"),
+        ]),
+      },
+      { type: "query", name: "excludeCourseId", schema: UUIDSchema },
+    ],
     response: baseResponse(allCoursesSchema),
   })
   async getTeacherCourses(
     @Query("authorId") authorId: UUIDType,
+    @Query("scope") scope: "all" | "enrolled" | "available" = "all",
+    @Query("excludeCourseId") excludeCourseId: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<AllCoursesForTeacherResponse>> {
-    return new BaseResponse(await this.courseService.getTeacherCourses(authorId));
+    const query = { authorId, currentUserId, excludeCourseId, scope };
+
+    return new BaseResponse(await this.courseService.getTeacherCourses(query));
   }
 
   @Get("course")

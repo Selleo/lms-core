@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Patch, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -6,11 +6,17 @@ import { baseResponse, BaseResponse, UUIDSchema, type UUIDType } from "src/commo
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/user/schemas/userRoles";
+import { USER_ROLES, type UserRole } from "src/user/schemas/userRoles";
 
 import { AdminChapterService } from "./adminChapter.service";
 import { ChapterService } from "./chapter.service";
-import { CreateChapterBody, createChapterSchema } from "./schemas/chapter.schema";
+import {
+  CreateChapterBody,
+  createChapterSchema,
+  showChapterSchema,
+} from "./schemas/chapter.schema";
+
+import type { ShowChapterResponse } from "./schemas/chapter.schema";
 
 @Controller("chapter")
 @UseGuards(RolesGuard)
@@ -20,25 +26,21 @@ export class ChapterController {
     private readonly adminChapterService: AdminChapterService,
   ) {}
 
-  // @Get("lesson")
-  // @Roles(...Object.values(USER_ROLES))
-  // @Validate({
-  //   request: [
-  //     { type: "query", name: "id", schema: UUIDSchema, required: true },
-  //     { type: "query", name: "courseId", schema: UUIDSchema, required: true },
-  //   ],
-  //   response: baseResponse(showLessonSchema),
-  // })
-  // async getLesson(
-  //   @Query("id") id: UUIDType,
-  //   @Query("courseId") courseId: UUIDType,
-  //   @CurrentUser("role") userRole: UserRole,
-  //   @CurrentUser("userId") userId: UUIDType,
-  // ): Promise<BaseResponse<ShowLessonResponse>> {
-  //   return new BaseResponse(
-  //     await this.lessonsService.getLesson(id, courseId, userId, userRole === USER_ROLES.ADMIN),
-  //   );
-  // }
+  @Get()
+  @Roles(...Object.values(USER_ROLES))
+  @Validate({
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
+    response: baseResponse(showChapterSchema),
+  })
+  async getChapterWithLesson(
+    @Query("id") id: UUIDType,
+    @CurrentUser("role") userRole: UserRole,
+    @CurrentUser("userId") userId: UUIDType,
+  ): Promise<BaseResponse<ShowChapterResponse>> {
+    return new BaseResponse(
+      await this.chapterService.getChapterWithLessons(id, userId, userRole === USER_ROLES.ADMIN),
+    );
+  }
 
   // @Get("lesson/:id")
   // @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
@@ -141,7 +143,7 @@ export class ChapterController {
   // }
 
   // @Delete(":courseId/:lessonId")
-  // @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
+  // @Roles(USER_ROLES.teacher, USER_ROLES.admin)
   // @Validate({
   //   request: [
   //     { type: "param", name: "courseId", schema: UUIDSchema },

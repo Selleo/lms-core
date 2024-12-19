@@ -61,7 +61,7 @@ export default function CoursesViewPage() {
     >
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
+          <BreadcrumbLink href="/">Dashboard</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

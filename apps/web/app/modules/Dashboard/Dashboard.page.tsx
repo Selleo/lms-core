@@ -29,7 +29,7 @@ import {
 import { DashboardIcon, HamburgerIcon } from "../icons/icons";
 
 import { CourseList } from "./Courses/CourseList";
-import { StudentCoursesCarousel } from "./Courses/StudentCoursesCarousel";
+import { CoursesCarousel } from "./Courses/CoursesCarousel";
 
 import type { MetaFunction } from "@remix-run/node";
 
@@ -191,7 +191,7 @@ export default function DashboardPage() {
                 <Loader />
               </div>
             )}
-            <StudentCoursesCarousel studentCourses={studentCourses} />
+            <CoursesCarousel courses={studentCourses} />
           </div>
         </div>
         <div className="flex flex-col">

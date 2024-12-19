@@ -18,7 +18,7 @@ import {
   updateLessonSchema,
   UpdateQuizLessonBody,
   updateQuizLessonSchema,
-} from "./lesson.schem";
+} from "./lesson.schema";
 
 // import {
 //   BetaFileLessonType,
