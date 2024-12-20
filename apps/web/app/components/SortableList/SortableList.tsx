@@ -41,14 +41,12 @@ export function SortableList<T extends BaseItem>({
 }: SortableListProps<T> & { isQuiz?: boolean }) {
   const [active, setActive] = useState<Active | null>(null);
 
-  // Używamy displayOrder jako identyfikatora
   const activeItem = useMemo(() => {
     if (isQuiz && active) {
-      // Jeżeli isQuiz, to aktywny element będzie na podstawie displayOrder
-      const activeOrder = Number(active.id); // active.id to teraz displayOrder
+      const activeOrder = Number(active.id);
       return items.find((item) => (item.displayOrder as number) === activeOrder);
     }
-    return items.find((item) => item.id === active?.id); // Dla innych przypadków
+    return items.find((item) => item.id === active?.id); 
   }, [active, items, isQuiz]);
 
   const sensors = useSensors(
@@ -62,37 +60,34 @@ export function SortableList<T extends BaseItem>({
     <DndContext
       sensors={sensors}
       onDragStart={({ active }) => {
-        setActive(active); // Ustawiamy aktywny element
+        setActive(active); 
       }}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over.id) {
-          // Obliczamy indeksy na podstawie displayOrder
-          const activeOrder = Number(active.id); // Teraz active.id to displayOrder
-          const overOrder = Number(over.id); // To samo dla over.id
+          const activeOrder = Number(active.id); 
+          const overOrder = Number(over.id); 
 
           const activeIndex = items.findIndex((item) => item.displayOrder === activeOrder);
           const overIndex = items.findIndex((item) => item.displayOrder === overOrder);
 
-          // Modyfikacja listy z nowymi elementami
           const updatedItems = arrayMove(items, activeIndex, overIndex);
 
           const updatedItemsWithOrder = updatedItems.map((item, index) => ({
             ...item,
-            displayOrder: index + 1, // Aktualizacja displayOrder
+            displayOrder: index + 1, 
           }));
 
           const updatedItem = updatedItemsWithOrder[activeIndex];
           const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem);
           const newDisplayOrder = newChapterPosition + 1;
 
-          // Wywołanie onChange z nowymi wartościami
           onChange(updatedItemsWithOrder, newChapterPosition, newDisplayOrder);
         }
 
-        setActive(null); // Zresetuj stan po zakończeniu
+        setActive(null); 
       }}
       onDragCancel={() => {
-        setActive(null); // Zresetuj stan w przypadku anulowania
+        setActive(null); 
       }}
     >
       <SortableContext
