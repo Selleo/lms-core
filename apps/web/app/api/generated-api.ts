@@ -466,6 +466,7 @@ export interface GetCourseResponse {
     isPublished: boolean | null;
     isScorm?: boolean;
     priceInCents: number;
+    thumbnailUrl?: string;
     thumbnailS3Key?: string;
     thumbnailS3SingedUrl?: string;
     title: string;
@@ -506,6 +507,7 @@ export interface GetCourseByIdResponse {
     isPublished: boolean | null;
     isScorm?: boolean;
     priceInCents: number;
+    thumbnailUrl?: string;
     thumbnailS3Key?: string;
     thumbnailS3SingedUrl?: string;
     title: string;
@@ -546,6 +548,7 @@ export interface GetBetaCourseByIdResponse {
     isPublished: boolean | null;
     isScorm?: boolean;
     priceInCents: number;
+    thumbnailUrl?: string;
     thumbnailS3Key?: string;
     thumbnailS3SingedUrl?: string;
     title: string;
