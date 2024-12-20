@@ -31,10 +31,10 @@ export default function NewCourseViewPage() {
       <div className="flex flex-col lg:grid lg:grid-cols-[1fr_480px] max-w-full gap-6 w-full">
         <div className="flex flex-col gap-y-6 overflow-hidden">
           <CourseOverview course={course} />
-          <div className="p-8 rounded-lg bg-white flex flex-col gap-y-6">
-            <div className="flex flex-col">
-              <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Chapters</h4>
-              <p className="text-lg leading-7 text-neutral-800">
+          <div className="py-6 px-4 md:p-8 rounded-lg bg-white flex flex-col gap-y-4">
+            <div className="flex flex-col gap-y-1">
+              <h4 className="h6 text-neutral-950">Chapters</h4>
+              <p className="body-base-md text-neutral-800">
                 Below you can see all chapters inside this course
               </p>
             </div>

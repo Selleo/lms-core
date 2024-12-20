@@ -28,10 +28,7 @@ export const YouMayBeInterestedIn = ({ category, courseId }: YouMayBeInterestedI
           Below you can see courses with similar topic or knowledge domain{" "}
         </p>
       </div>
-      <div
-        data-testid="enrolled-courses"
-        className="flex gap-6 lg:p-8 lg:bg-white w-full lg:rounded-lg drop-shadow-primary"
-      >
+      <div data-testid="enrolled-courses" className="flex gap-6w-full">
         {!relatedCourses ||
           (isEmpty(relatedCourses) && (
             <div className="col-span-3 flex gap-8">
