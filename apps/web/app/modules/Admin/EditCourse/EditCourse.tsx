@@ -77,7 +77,8 @@ const EditCourse = () => {
           title={course?.title}
           description={course?.description}
           categoryId={course?.categoryId}
-          imageUrl={course?.thumbnailUrl}
+          thumbnailS3SingedUrl={course?.thumbnailS3SingedUrl}
+          thumbnailS3Key={course?.thumbnailS3Key}
         />
       </TabsContent>
       <TabsContent value="Curriculum" className="h-full overflow-hidden">
