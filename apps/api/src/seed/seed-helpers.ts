@@ -95,8 +95,8 @@ export async function createNiceCourses(
               lessonData.type === LESSON_TYPES.presentation
                 ? "pptx"
                 : lessonData.type === LESSON_TYPES.video
-                ? "mp4"
-                : null,
+                  ? "mp4"
+                  : null,
             chapterId: chapter.id,
             createdAt: createdAt,
             updatedAt: createdAt,

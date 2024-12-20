@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
@@ -26,30 +26,34 @@ type CourseSettingsProps = {
   title?: string;
   description?: string;
   categoryId?: string;
-  imageUrl?: string;
+  thumbnailS3SingedUrl?: string;
+  thumbnailS3Key?: string;
 };
 const CourseSettings = ({
   courseId,
   title,
   description,
   categoryId,
-  imageUrl,
+  thumbnailS3SingedUrl,
+  thumbnailS3Key,
 }: CourseSettingsProps) => {
   const { form, onSubmit } = useCourseSettingsForm({
     title,
     description,
     categoryId,
-    imageUrl,
+    thumbnailS3Key,
     courseId: courseId || "",
   });
   const { data: categories } = useCategoriesSuspense();
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
   const isFormValid = form.formState.isValid;
+  const [displayThumbnailUrl, setDisplayThumbnailUrl] = useState<string | undefined>(
+    thumbnailS3SingedUrl || undefined,
+  );
 
   const watchedTitle = form.watch("title");
   const watchedDescription = form.watch("description");
-  const watchedImageUrl = form.watch("imageUrl");
   const watchedCategoryId = form.getValues("categoryId");
 
   const categoryName = useMemo(() => {
@@ -61,7 +65,8 @@ const CourseSettings = ({
       setIsUploading(true);
       try {
         const result = await uploadFile({ file, resource: "course" });
-        form.setValue("imageUrl", result.fileUrl, { shouldValidate: true });
+        form.setValue("thumbnailS3Key", result.fileKey, { shouldValidate: true });
+        setDisplayThumbnailUrl(result.fileUrl);
       } catch (error) {
         console.error("Error uploading image:", error);
       } finally {
@@ -70,6 +75,11 @@ const CourseSettings = ({
     },
     [form, uploadFile],
   );
+
+  const removeThumbnail = () => {
+    form.setValue("thumbnailS3Key", "");
+    setDisplayThumbnailUrl(undefined);
+  };
 
   return (
     <div className="w-full flex h-full gap-x-6">
@@ -121,16 +131,16 @@ const CourseSettings = ({
               />
               <FormField
                 control={form.control}
-                name="imageUrl"
+                name="thumbnailS3Key"
                 render={({ field }) => (
                   <FormItem className="max-h-[440px]">
-                    <Label htmlFor="imageUrl">Thumbnail</Label>
+                    <Label htmlFor="thumbnailS3Key">Thumbnail</Label>
                     <FormControl>
                       <ImageUploadInput
                         field={field}
                         handleImageUpload={handleImageUpload}
                         isUploading={isUploading}
-                        imageUrl={imageUrl}
+                        imageUrl={displayThumbnailUrl}
                       />
                     </FormControl>
                     {isUploading && <p>Uploading image...</p>}
@@ -139,11 +149,8 @@ const CourseSettings = ({
                 )}
               />
               <div className="flex items-center justify-start gap-x-2">
-                {watchedImageUrl && (
-                  <Button
-                    onClick={() => form.setValue("imageUrl", "")}
-                    className="bg-red-500 text-white py-2 px-6"
-                  >
+                {displayThumbnailUrl && (
+                  <Button onClick={removeThumbnail} className="bg-red-500 text-white py-2 px-6">
                     <Icon name="TrashIcon" className="mr-2" />
                     Remove Thumbnail
                   </Button>
@@ -160,7 +167,7 @@ const CourseSettings = ({
       </div>
       <div className="max-w-[480px] w-full">
         <CourseCardPreview
-          imageUrl={watchedImageUrl}
+          imageUrl={displayThumbnailUrl}
           title={watchedTitle}
           description={watchedDescription}
           category={categoryName}
