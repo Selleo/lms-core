@@ -149,6 +149,7 @@ export class AdminLessonService {
         type: question.type,
         description: question.description || null,
         title: question.title,
+        displayOrder: question.displayOrder,
         photoS3Key: question.photoS3Key,
         photoQuestionType: question.photoQuestionType || null,
       }));
@@ -210,6 +211,7 @@ export class AdminLessonService {
             description: question.description || null,
             title: question.title,
             photoS3Key: question.photoS3Key,
+            displayOrder: question.displayOrder,
             photoQuestionType: question.photoQuestionType || null,
           };
 

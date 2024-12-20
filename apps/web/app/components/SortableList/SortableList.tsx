@@ -11,13 +11,14 @@ import type { ReactNode } from "react";
 
 interface BaseItem {
   id: UniqueIdentifier;
+  displayOrder?: number;
 }
 
 interface SortableListProps<T extends BaseItem> {
   items: T[];
   onChange(items: T[], newChapterPosition: number, newDisplayOrder: number): void;
   additionalOnChangeAction?(): void;
-  renderItem(item: T): ReactNode;
+  renderItem(item: T, index?: number): ReactNode;
   className?: string;
 }
 
@@ -36,9 +37,20 @@ export function SortableList<T extends BaseItem>({
   onChange,
   renderItem,
   className,
-}: SortableListProps<T>) {
+  isQuiz = false,
+}: SortableListProps<T> & { isQuiz?: boolean }) {
   const [active, setActive] = useState<Active | null>(null);
-  const activeItem = useMemo(() => items?.find((item) => item.id === active?.id), [active, items]);
+
+  // Używamy displayOrder jako identyfikatora
+  const activeItem = useMemo(() => {
+    if (isQuiz && active) {
+      // Jeżeli isQuiz, to aktywny element będzie na podstawie displayOrder
+      const activeOrder = Number(active.id); // active.id to teraz displayOrder
+      return items.find((item) => (item.displayOrder as number) === activeOrder);
+    }
+    return items.find((item) => item.id === active?.id); // Dla innych przypadków
+  }, [active, items, isQuiz]);
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -50,37 +62,52 @@ export function SortableList<T extends BaseItem>({
     <DndContext
       sensors={sensors}
       onDragStart={({ active }) => {
-        setActive(active);
+        setActive(active); // Ustawiamy aktywny element
       }}
       onDragEnd={({ active, over }) => {
-        if (over && active.id !== over?.id) {
-          const activeIndex = items.findIndex(({ id }) => id === active.id);
-          const overIndex = items.findIndex(({ id }) => id === over.id);
+        if (over && active.id !== over.id) {
+          // Obliczamy indeksy na podstawie displayOrder
+          const activeOrder = Number(active.id); // Teraz active.id to displayOrder
+          const overOrder = Number(over.id); // To samo dla over.id
 
+          const activeIndex = items.findIndex((item) => item.displayOrder === activeOrder);
+          const overIndex = items.findIndex((item) => item.displayOrder === overOrder);
+
+          // Modyfikacja listy z nowymi elementami
           const updatedItems = arrayMove(items, activeIndex, overIndex);
 
           const updatedItemsWithOrder = updatedItems.map((item, index) => ({
             ...item,
-            displayOrder: index + 1,
+            displayOrder: index + 1, // Aktualizacja displayOrder
           }));
 
-          const updatedItem = updatedItemsWithOrder.find((item) => item.id === active.id);
-
-          const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem!);
+          const updatedItem = updatedItemsWithOrder[activeIndex];
+          const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem);
           const newDisplayOrder = newChapterPosition + 1;
 
+          // Wywołanie onChange z nowymi wartościami
           onChange(updatedItemsWithOrder, newChapterPosition, newDisplayOrder);
         }
 
-        setActive(null);
+        setActive(null); // Zresetuj stan po zakończeniu
       }}
       onDragCancel={() => {
-        setActive(null);
+        setActive(null); // Zresetuj stan w przypadku anulowania
       }}
     >
-      <SortableContext items={items}>
+      <SortableContext
+        items={
+          isQuiz
+            ? items.map((item) => item?.displayOrder?.toString() as any)
+            : items.map((item) => item.id)
+        }
+      >
         <ul {...(className && { className })} role="application">
-          {items?.map((item) => <Fragment key={item.id}>{renderItem(item)}</Fragment>)}
+          {items?.map((item, index) => (
+            <Fragment key={isQuiz ? item.displayOrder : item.id}>
+              {renderItem(item, index)}
+            </Fragment>
+          ))}
         </ul>
       </SortableContext>
       <div className="list-none">

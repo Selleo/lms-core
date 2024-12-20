@@ -6,13 +6,11 @@ import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 
-import QuestionTitle from "./QuestionTitle";
-
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
 import { QuestionOption } from "../QuizLessonForm.types";
-import { cn } from "~/lib/utils";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
+import { SortableList } from "~/components/SortableList";
 
 type TrueOrFalseQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -20,12 +18,7 @@ type TrueOrFalseQuestionProps = {
 };
 
 const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) => {
-  const questionType = form.getValues(`questions.${questionIndex}.type`);
-
-  const [isOpen, setIsOpen] = useState(false);
-  const handleToggle = useCallback(() => {
-    setIsOpen((prevIsOpen) => !prevIsOpen);
-  }, []);
+  const watchedOptions = form.watch(`questions.${questionIndex}.options`);
 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
@@ -84,106 +77,107 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
-        <div
-          className={cn("border p-2 mt-3 rounded-xl transition-all duration-300", {
-            "border-blue-500": isOpen,
-            "border-gray-200": !isOpen,
-          })}
-        >
-          <QuestionTitle
-            questionIndex={questionIndex}
-            questionType={questionType}
-            form={form}
-            isOpen={isOpen}
-            handleToggle={handleToggle}
-          />
-
-          <Accordion.Content className="mt-4">
-            <div className="ml-14">
-              {!isOptionEmpty && (
-                <>
-                  <span className="text-red-500 mr-1">*</span>
-                  <Label className="body-sm-md">Options</Label>
-                </>
-              )}
-              {form.getValues(`questions.${questionIndex}.options`)?.map((option, optionIndex) => (
-                <div key={optionIndex} className="mt-4">
-                  <div className="border border-gray-300 p-4 rounded-xl flex items-center space-x-2">
-                    <Icon name="DragAndDropIcon" className="h-7 w-7" />
-                    <Input
-                      type="text"
-                      value={option.optionText}
-                      onChange={(e) =>
-                        handleOptionChange(optionIndex, "optionText", e.target.value)
-                      }
-                      placeholder={`Option ${optionIndex + 1}`}
-                      required
-                    />
-                    <div className="flex items-center">
-                      <Input
-                        type="radio"
-                        name={`questions.${questionIndex}.options.${optionIndex}.isCorrect`}
-                        checked={option.isCorrect === true}
-                        onChange={() => handleOptionChange(optionIndex, "isCorrect", true)}
-                        className="p-1 w-5 h-5 ml-3"
-                      />
-                      <Label
-                        className="ml-2 text-neutral-900 body-base cursor-pointer"
-                        onChange={() => handleOptionChange(optionIndex, "isCorrect", false)}
-                      >
-                        True
-                      </Label>
-                      <Input
-                        type="radio"
-                        name={`questions.${questionIndex}.options.${optionIndex}.isCorrect`}
-                        checked={option.isCorrect === false}
-                        onChange={() => handleOptionChange(optionIndex, "isCorrect", false)}
-                        className="p-1 ml-2 w-5 h-5"
-                      />
-                      <Label
-                        className="ml-2 text-neutral-900 body-base cursor-pointer"
-                        onChange={() => handleOptionChange(optionIndex, "isCorrect", false)}
-                      >
-                        False
-                      </Label>
-                      <TooltipProvider delayDuration={0}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <div className="group">
-                              <Icon
-                                name="TrashIcon"
-                                className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
-                                onClick={handleRemoveQuestion}
-                              />
-                            </div>
-                          </TooltipTrigger>
-                          <TooltipContent
-                            side="top"
-                            align="center"
-                            className="bg-black ml-4 text-white text-sm rounded shadow-md"
+        <div className={"p-2 rounded-xl border-0 transition-all duration-300"}>
+          <div className="ml-14">
+            {!isOptionEmpty && (
+              <>
+                <span className="text-red-500 mr-1">*</span>
+                <Label className="body-sm-md">Options</Label>
+              </>
+            )}
+            {watchedOptions && watchedOptions?.length > 0 && (
+              <SortableList
+                items={watchedOptions as any[]}
+                isQuiz
+                onChange={(updatedItems) => {
+                  form.setValue(`questions.${questionIndex}.options`, updatedItems);
+                }}
+                className="grid grid-cols-1"
+                renderItem={(item, index: number) => (
+                  <SortableList.Item id={item.displayOrder}>
+                    <div className="mt-4">
+                      <div className="border border-gray-300 p-4 rounded-xl flex items-center space-x-2">
+                        <SortableList.DragHandle>
+                          <Icon name="DragAndDropIcon" className="cursor-move" />
+                        </SortableList.DragHandle>
+                        <Input
+                          type="text"
+                          value={item.optionText}
+                          onChange={(e) =>
+                            handleOptionChange(index as number, "optionText", e.target.value)
+                          }
+                          placeholder={`Option ${index + 1}`}
+                          required
+                          className="flex-1"
+                        />
+                        <div className="flex items-center">
+                          <Input
+                            type="radio"
+                            name={`questions.${questionIndex}.options.${index}.isCorrect`}
+                            checked={item.isCorrect === true}
+                            onChange={() => handleOptionChange(index, "isCorrect", true)}
+                            className="p-1 w-4 h-4 ml-3 cursor-pointer"
+                          />
+                          <Label
+                            className="ml-2 text-neutral-900 body-base cursor-pointer"
+                            onChange={() => handleOptionChange(index, "isCorrect", false)}
                           >
-                            Delete
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
+                            True
+                          </Label>
+                          <Input
+                            type="radio"
+                            name={`questions.${questionIndex}.options.${index}.isCorrect`}
+                            checked={item.isCorrect === false}
+                            onChange={() => handleOptionChange(index, "isCorrect", false)}
+                            className="p-1 w-4 h-4 ml-3 cursor-pointer"
+                          />
+                          <Label
+                            className="ml-2 text-neutral-900 body-base cursor-pointer"
+                            onChange={() => handleOptionChange(index, "isCorrect", false)}
+                          >
+                            False
+                          </Label>
+
+                          <TooltipProvider delayDuration={0}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <div className="group">
+                                  <Icon
+                                    name="TrashIcon"
+                                    className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
+                                    onClick={() => handleRemoveOption(index)}
+                                  />
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent
+                                side="top"
+                                align="center"
+                                className="bg-black ml-4 text-white text-sm rounded shadow-md"
+                              >
+                                Delete
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-6 flex gap-2 mb-4 ml-14">
-              <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
-                Add Option
-              </Button>
-              <Button
-                type="button"
-                className="text-error-700 bg-color-white border border-neutral-300"
-                onClick={handleRemoveQuestion}
-              >
-                Delete Question
-              </Button>
-            </div>
-          </Accordion.Content>
+                  </SortableList.Item>
+                )}
+              />
+            )}
+          </div>
+          <div className="mt-4 flex gap-2 mb-4 ml-14">
+            <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
+              Add Option
+            </Button>
+            <Button
+              type="button"
+              className="text-error-700 bg-color-white border border-neutral-300"
+              onClick={handleRemoveQuestion}
+            >
+              Delete Question
+            </Button>
+          </div>
         </div>
       </Accordion.Item>
     </Accordion.Root>

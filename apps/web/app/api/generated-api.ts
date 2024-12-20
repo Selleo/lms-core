@@ -145,6 +145,8 @@ export interface GetUserByIdResponse {
 
 export interface GetUserDetailsResponse {
   data: {
+    firstName: string | null;
+    lastName: string | null;
     /** @format uuid */
     id: string;
     description: string | null;
@@ -627,8 +629,11 @@ export type BetaCreateLessonBody = {
       /** @format uuid */
       id?: string;
       optionText: string;
+      displayOrder: number | null;
+      isStudentAnswer?: boolean;
       isCorrect: boolean;
-      displayOrder: number;
+      /** @format uuid */
+      questionId?: string;
     }[];
   }[];
 } & {
@@ -670,8 +675,11 @@ export type BetaCreateQuizLessonBody = {
       /** @format uuid */
       id?: string;
       optionText: string;
+      displayOrder: number | null;
+      isStudentAnswer?: boolean;
       isCorrect: boolean;
-      displayOrder: number;
+      /** @format uuid */
+      questionId?: string;
     }[];
   }[];
 } & {
@@ -713,8 +721,11 @@ export type BetaUpdateQuizLessonBody = {
       /** @format uuid */
       id?: string;
       optionText: string;
+      displayOrder: number | null;
+      isStudentAnswer?: boolean;
       isCorrect: boolean;
-      displayOrder: number;
+      /** @format uuid */
+      questionId?: string;
     }[];
   }[];
 } & {
@@ -755,8 +766,11 @@ export type BetaUpdateLessonBody = {
       /** @format uuid */
       id?: string;
       optionText: string;
+      displayOrder: number | null;
+      isStudentAnswer?: boolean;
       isCorrect: boolean;
-      displayOrder: number;
+      /** @format uuid */
+      questionId?: string;
     }[];
   }[];
 } & {
@@ -845,8 +859,11 @@ export interface GetChapterWithLessonResponse {
           /** @format uuid */
           id?: string;
           optionText: string;
+          displayOrder: number | null;
+          isStudentAnswer?: boolean;
           isCorrect: boolean;
-          position: number;
+          /** @format uuid */
+          questionId?: string;
         }[];
       }[];
     }[];
@@ -1709,8 +1726,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     courseControllerGetStudentCourses: (
       query?: {
-        /** @format uuid */
-        excludeCourseId?: string;
         title?: string;
         category?: string;
         author?: string;

@@ -23,6 +23,7 @@ export type Question = {
   description?: string;
   photoS3Key?: string;
   photoS3SingedUrl?: string;
+  displayOrder: number;
   photoQuestionType?: PhotoQuestionType;
   title: string;
   options?: QuestionOption[];

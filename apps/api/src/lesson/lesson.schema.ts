@@ -11,8 +11,8 @@ export const optionSchema = Type.Object({
   optionText: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Optional(Type.Boolean()),
-  isCorrect: Type.Optional(Type.Boolean()),
-  questionId: UUIDSchema,
+  isCorrect: Type.Boolean(),
+  questionId: Type.Optional(UUIDSchema),
 });
 
 export const questionSchema = Type.Object({
@@ -20,6 +20,7 @@ export const questionSchema = Type.Object({
   type: Type.Enum(QuestionType),
   description: Type.Optional(Type.String()),
   title: Type.String(),
+  displayOrder: Type.Optional(Type.Number()),
   photoQuestionType: Type.Optional(Type.Enum(PhotoQuestionType)),
   photoS3Key: Type.Optional(Type.String()),
   options: Type.Optional(Type.Array(optionSchema)),
@@ -80,7 +81,7 @@ export const questionAnswerOptionsResponse = Type.Object({
   optionText: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-  isCorrect: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
+  isCorrect: Type.Union([Type.Boolean(), Type.Null()]),
   studentAnswerText: Type.Optional(Type.Union([Type.String(), Type.Null()])),
 });
 export const createQuizLessonSchema = Type.Intersect([

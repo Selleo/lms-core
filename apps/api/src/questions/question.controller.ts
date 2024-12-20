@@ -4,10 +4,10 @@ import { RolesGuard } from "src/common/guards/roles.guard";
 
 import { QuestionService } from "./question.service";
 import { Roles } from "src/common/decorators/roles.decorator";
-import { USER_ROLES } from "src/users/schemas/user-roles";
 import { Validate } from "nestjs-typebox";
 import { Type } from "@sinclair/typebox";
 import { BaseResponse, baseResponse, UUIDSchema, UUIDType } from "src/common";
+import { USER_ROLES } from "src/user/schemas/userRoles";
 
 @UseGuards(RolesGuard)
 @Controller("question")
@@ -15,7 +15,7 @@ export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
   @Patch("question-anwser-display-order")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {
@@ -44,7 +44,7 @@ export class QuestionController {
   }
 
   @Patch("question-display-order")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {

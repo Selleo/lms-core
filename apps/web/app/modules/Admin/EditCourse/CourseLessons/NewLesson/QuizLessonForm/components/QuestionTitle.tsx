@@ -15,6 +15,7 @@ import {
   TooltipArrow,
 } from "~/components/ui/tooltip";
 import { mapQuestionTypeToLabel } from "../../../CourseLessons.helpers";
+import { useCallback } from "react";
 
 interface QuestionTitleProps {
   questionIndex: number;
@@ -22,6 +23,7 @@ interface QuestionTitleProps {
   form: UseFormReturn<QuizLessonFormValues>;
   isOpen?: boolean;
   handleToggle?: () => void;
+  dragTrigger?: React.ReactNode;
 }
 
 const QuestionTitle = ({
@@ -30,6 +32,7 @@ const QuestionTitle = ({
   form,
   isOpen,
   handleToggle,
+  dragTrigger,
 }: QuestionTitleProps) => {
   const questionTypeToIconMap: Record<QuestionType, QuestionIcons> = {
     [QuestionType.MULTIPLE_CHOICE]: QuestionIcons.MultiSelect,
@@ -41,13 +44,22 @@ const QuestionTitle = ({
     [QuestionType.FILL_IN_THE_BLANKS]: QuestionIcons.FillInTheBlanks,
   };
 
+  const isOpenQuestion =
+    questionType === QuestionType.BRIEF_RESPONSE || questionType === QuestionType.DETAILED_RESPONSE;
+
   const getIconForQuestionType = (type: QuestionType): QuestionIcons => {
     return questionTypeToIconMap[type];
   };
 
+  const handleRemoveQuestion = useCallback(() => {
+    const currentQuestions = form.getValues("questions") || [];
+    const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
+    form.setValue("questions", updatedQuestions);
+  }, [form, questionIndex]);
+
   return (
     <div className="flex items-center gap-2 p-2">
-      <Icon name="DragAndDropIcon" className="w-7 h-7" />
+      {dragTrigger}
       <TooltipProvider delayDuration={0}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -85,8 +97,30 @@ const QuestionTitle = ({
           </FormItem>
         )}
       />
+      {isOpenQuestion && (
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="group">
+                <Icon
+                  name="TrashIcon"
+                  className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
+                  onClick={handleRemoveQuestion}
+                />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              align="center"
+              className="bg-black ml-4 text-white text-sm rounded shadow-md"
+            >
+              Delete
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
 
-      {handleToggle && (
+      {handleToggle && !isOpenQuestion && (
         <AccordionTrigger className="ml-2 mr-2 text-primary-800" onClick={handleToggle}>
           <Icon name={!isOpen ? "ArrowDown" : "ArrowUp"} />
         </AccordionTrigger>

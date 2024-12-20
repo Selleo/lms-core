@@ -257,7 +257,7 @@ export class LessonController {
   }
 
   @Patch("question-anwser-display-order")
-  @Roles(USER_ROLES.teacher, USER_ROLES.admin)
+  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
       {

@@ -229,6 +229,7 @@ export class AdminChapterRepository {
               'type', ${questions.type},
               'description', ${questions.description},
               'photoS3Key', ${questions.photoS3Key},
+              'displayOrder', ${questions.displayOrder},
               'photoQuestionType', ${questions.photoQuestionType},
               'options', (
                 SELECT ARRAY(
