@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -8,59 +18,37 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/user/schemas/userRoles";
 
-import { AdminLessonService } from "./adminLesson.service";
+import { AdminLessonService } from "./services/adminLesson.service";
 import {
   CreateLessonBody,
   createLessonSchema,
   CreateQuizLessonBody,
   createQuizLessonSchema,
+  LessonShow,
+  lessonShowSchema,
   UpdateLessonBody,
   updateLessonSchema,
   UpdateQuizLessonBody,
   updateQuizLessonSchema,
 } from "./lesson.schema";
-
-// import {
-//   BetaFileLessonType,
-//   betaFileSelectSchema,
-//   betaTextLessonSchema,
-//   BetaTextLessonType,
-//   type FileInsertType,
-//   fileUpdateSchema,
-//   type GetAllLessonItemsResponse,
-//   GetAllLessonItemsResponseSchema,
-//   type GetSingleLessonItemsResponse,
-//   GetSingleLessonItemsResponseSchema,
-//   type QuestionInsertType,
-//   questionUpdateSchema,
-//   type TextBlockInsertType,
-//   textBlockUpdateSchema,
-//   type UpdateFileBody,
-//   type UpdateQuestionBody,
-//   type UpdateTextBlockBody,
-// } from "./schemas/lessonItem.schema";
-// import {
-//   type LessonsFilterSchema,
-//   sortLessonFieldsOptions,
-//   type SortLessonFieldsOptions,
-// } from "./schemas/lessonQuery";
+import { LessonService } from "./services/lesson.service";
 
 @Controller("lesson")
 @UseGuards(RolesGuard)
 export class LessonController {
   constructor(
-    // private readonly chapterService: CService,
-    private readonly adminLessonsService: AdminLessonService, // private readonly adminLessonItemsService: AdminLessonItemsService,
+    private readonly adminLessonsService: AdminLessonService,
+    private readonly lessonService: LessonService,
   ) {}
 
-  //   @Get("lesson/:id")
-  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
-  //   @Validate({
-  //     response: baseResponse(showLessonSchema),
-  //   })
-  //   async getLessonById(@Param("id") id: string): Promise<BaseResponse<ShowLessonResponse>> {
-  //     return new BaseResponse(await this.adminLessonsService.getLessonWithItemsById(id));
-  //   }
+  @Get(":id")
+  @Roles(...Object.values(USER_ROLES))
+  @Validate({
+    response: baseResponse(lessonShowSchema),
+  })
+  async getLessonById(@Param("id") id: UUIDType): Promise<BaseResponse<LessonShow>> {
+    return new BaseResponse(await this.lessonService.getLessonById(id));
+  }
 
   @Post("beta-create-lesson")
   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)

@@ -5,7 +5,7 @@ import { isEmpty } from "lodash";
 import Stripe from "stripe";
 
 import { DatabasePg } from "src/common";
-import { LessonRepository } from "src/lesson/lesson.repository";
+import { LessonRepository } from "src/lesson/repositories/lesson.repository";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import {
   chapters,

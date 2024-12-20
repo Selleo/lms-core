@@ -20,7 +20,6 @@ import {
   sql,
 } from "drizzle-orm";
 
-import { LESSON_TYPE } from "src/chapter/chapter.type";
 import { AdminChapterRepository } from "src/chapter/repositories/adminChapter.repository";
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
@@ -84,6 +83,7 @@ export class CourseService {
       currentUserRole,
     } = query;
 
+    // TODO: repair it
     // const { sortOrder, sortedField } = getSortOptions(sort);
     const sortOrder = asc;
     const sortedField = CourseSortFields.title;
@@ -366,7 +366,7 @@ export class CourseService {
           (SELECT COUNT(*)
           FROM ${lessons}
           WHERE ${lessons.chapterId} = ${chapters.id}
-            AND ${lessons.type} = ${LESSON_TYPE.quiz.key})::INTEGER`,
+            AND ${lessons.type} = ${LESSON_TYPES.QUIZ})::INTEGER`,
         completedLessonCount: sql<number>`COALESCE(${studentChapterProgress.completedLessonCount}, 0)`,
         chapterProgress: sql<ProgressStatus>`
           CASE
@@ -395,7 +395,7 @@ export class CourseService {
                     ELSE 'not_started'
                   END AS status,
                   CASE
-                    WHEN ${lessons.type} = ${LESSON_TYPES.quiz} THEN COUNT(${questions.id})
+                    WHEN ${lessons.type} = ${LESSON_TYPES.QUIZ} THEN COUNT(${questions.id})
                     ELSE NULL
                   END AS "quizQuestionCount"
                 FROM ${lessons}
@@ -823,7 +823,7 @@ export class CourseService {
               studentId,
               lessonId: lesson.id,
               completedQuestionCount: 0,
-              quizScore: lesson.type === LESSON_TYPES.quiz ? 0 : null,
+              quizScore: lesson.type === LESSON_TYPES.QUIZ ? 0 : null,
               completedAt: null,
             })),
           );
@@ -934,7 +934,7 @@ export class CourseService {
         const updatedLesson = { ...lesson };
         if (
           lesson.fileS3Key &&
-          (lesson.type === LESSON_TYPES.video || lesson.type === LESSON_TYPES.presentation)
+          (lesson.type === LESSON_TYPES.VIDEO || lesson.type === LESSON_TYPES.PRESENTATION)
         ) {
           if (!lesson.fileS3Key.startsWith("https://")) {
             try {

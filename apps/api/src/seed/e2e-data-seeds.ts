@@ -18,7 +18,7 @@ export const e2eCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "E2E Testing Text Block",
             description: "E2E Testing Text Block Body",
             displayOrder: 1,
@@ -32,7 +32,7 @@ export const e2eCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "E2E Testing Quiz",
             description: "E2E Testing Quiz Description",
             displayOrder: 1,

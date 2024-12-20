@@ -1590,6 +1590,32 @@
         }
       }
     },
+    "/api/lesson/{id}": {
+      "get": {
+        "operationId": "LessonController_getLessonById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetLessonByIdResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/lesson/beta-create-lesson": {
       "post": {
         "operationId": "LessonController_betaCreateLesson",
@@ -4191,6 +4217,64 @@
         "required": [
           "fileKey",
           "fileUrl"
+        ]
+      },
+      "GetLessonByIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "fileType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "fileUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "questions": {
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "type",
+              "description",
+              "fileType",
+              "fileUrl"
+            ]
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "BetaCreateLessonBody": {
