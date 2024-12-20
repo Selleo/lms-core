@@ -23,7 +23,7 @@ export const CourseOptions = ({ course }: CourseOptionsProps) => {
 
   return (
     <>
-      <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Options</h4>
+      <h4 className="h6 text-neutral-950 pb-1">Options</h4>
       <div className="flex flex-col gap-y-2">
         <CopyUrlButton variant="outline" className="gap-x-2">
           <Icon name="Share" className="w-6 h-auto text-primary-800" />

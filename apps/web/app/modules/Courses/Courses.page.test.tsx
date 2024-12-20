@@ -10,18 +10,18 @@ import { setMatchingMediaQuery } from "~/utils/mocks/matchMedia.mock";
 import { mockRemixReact } from "~/utils/mocks/remix-run-mock";
 import { renderWith } from "~/utils/testUtils";
 
-import DashboardPage from "./Dashboard.page";
+import CoursesPage from "./Courses.page";
 
 vi.mock("../../../api/api-client");
 mockRemixReact();
 
-describe("Dashboard page", () => {
+describe("Courses page", () => {
   const RemixStub = createRemixStub([
     {
       path: "/",
       Component: () => (
         <Suspense>
-          <DashboardPage />
+          <CoursesPage />
         </Suspense>
       ),
     },

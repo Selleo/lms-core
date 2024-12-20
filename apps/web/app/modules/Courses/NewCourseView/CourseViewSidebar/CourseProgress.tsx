@@ -1,7 +1,7 @@
 import { CopyUrlButton } from "~/components/CopyUrlButton";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
-import { CourseProgressChart } from "~/modules/Courses/NewCourseView/CourseProgressChart";
+import { CourseProgressChart } from "~/modules/Courses/NewCourseView/components/CourseProgressChart";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 
@@ -12,7 +12,7 @@ type CourseProgressProps = {
 export const CourseProgress = ({ course }: CourseProgressProps) => {
   return (
     <>
-      <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Course progress</h4>
+      <h4 className="h6 text-neutral-950 pb-1">Course progress</h4>
       <CourseProgressChart
         chaptersCount={course?.courseChapterCount}
         completedChaptersCount={course?.completedChapterCount}
