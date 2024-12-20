@@ -21,13 +21,13 @@ export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
   const shouldShowCourseOptions = !isAdmin && !isTeacher && !course?.enrolled;
 
   return (
-    <section className="flex sticky top-6 3xl:top-12 left-0 flex-col h-min xl:w-full xl:max-w-[480px] gap-y-6 p-6 bg-white rounded-t-2xl rounded-b-lg drop-shadow">
+    <section className="flex sticky top-6 3xl:top-12 left-0 flex-col h-min xl:w-full xl:max-w-[480px] gap-y-6 p-8 bg-white rounded-t-2xl rounded-b-lg drop-shadow">
       {shouldShowCourseOptions ? (
         <CourseOptions course={course} />
       ) : (
         <CourseProgress course={course} />
       )}
-      <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1 pt-2">Author</h4>
+      <h4 className="h6 text-neutral-950 pb-1 pt-2">Author</h4>
       <div className="flex flex-col md:flex-row md:items-center gap-6">
         <Avatar className="w-20 h-20">
           <Gravatar email={userDetails?.contactEmail || ""} />
@@ -49,7 +49,7 @@ export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
           <span className="text-neutral-900">About</span>
           <div className="bg-primary-200 h-[1px] w-full" />
         </div>
-        <p className="body-base mt-2 text-neutral-950">{userDetails?.description}</p>
+        <p className="body-sm mt-2 text-neutral-950">{userDetails?.description}</p>
       </div>
       <Button variant="outline" className="sr-only">
         <span>Collapse</span>
