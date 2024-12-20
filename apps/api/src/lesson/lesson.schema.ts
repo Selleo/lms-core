@@ -2,7 +2,7 @@ import { Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
 
-import { PhotoQuestionType, QuestionType } from "./lesson.type";
+import { LESSON_TYPES, PhotoQuestionType, QuestionType } from "./lesson.type";
 
 import type { Static } from "@sinclair/typebox";
 
@@ -73,6 +73,24 @@ export const createQuizLessonSchema = Type.Intersect([
   }),
 ]);
 
+export const questionDetails = Type.Object({
+  questions: Type.Array(Type.Any()),
+  questionCount: Type.Number(),
+  correctAnswerCount: Type.Union([Type.Number(), Type.Null()]),
+  wrongAnswerCount: Type.Union([Type.Number(), Type.Null()]),
+  score: Type.Union([Type.Number(), Type.Null()]),
+});
+
+export const lessonShowSchema = Type.Object({
+  id: UUIDSchema,
+  title: Type.String(),
+  type: Type.String(),
+  description: Type.String(),
+  fileType: Type.Union([Type.String(), Type.Null()]),
+  fileUrl: Type.Union([Type.String(), Type.Null()]),
+  quizDetails: Type.Optional(questionDetails),
+});
+
 export const updateLessonSchema = Type.Partial(createLessonSchema);
 export const updateQuizLessonSchema = Type.Partial(createQuizLessonSchema);
 
@@ -81,5 +99,8 @@ export type CreateLessonBody = Static<typeof createLessonSchema>;
 export type UpdateLessonBody = Static<typeof updateLessonSchema>;
 export type UpdateQuizLessonBody = Static<typeof updateQuizLessonSchema>;
 export type CreateQuizLessonBody = Static<typeof createQuizLessonSchema>;
+// TODO: duplicate
+export type OptionBody = Static<typeof optionSchema>;
 export type QuestionBody = Static<typeof questionSchema>;
 export type QuestionSchema = Static<typeof questionSchema>;
+export type LessonShow = Static<typeof lessonShowSchema>;

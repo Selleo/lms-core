@@ -4,18 +4,6 @@ import { and, eq, sql } from "drizzle-orm";
 import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, lessons, questions, studentLessonProgress } from "src/storage/schema";
 
-// import { STATES } from "src/common/states";
-// import { QUESTION_TYPE } from "src/questions/schema/questions.types";
-// import {
-//   chapters,
-//   courses,
-//   lessons,
-//   questionAnswerOptions,
-//   questions,
-//   studentChapterProgress,
-//   studentCourses,
-//   studentQuestionAnswers,
-// } from "src/storage/schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { QuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";

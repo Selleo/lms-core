@@ -21,14 +21,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to HTML",
             description:
               "HTML (HyperText Markup Language) is the standard language used to create the structure of web pages. In this lesson, you'll explore basic HTML elements and how they are used to build the framework of a website.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
             description: "Why is HTML considered the backbone of any website?",
             displayOrder: 2,
@@ -41,14 +41,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "HTML Elements Video",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
             description:
               "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -86,14 +86,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "HTML Hyperlinks Presentation",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
             displayOrder: 5,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "HTML Tag Quiz",
             description: "Which HTML tag is used to create a hyperlink?",
             displayOrder: 6,
@@ -135,7 +135,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "HTML Basics: Test Your Knowledge",
             description:
               "This lesson is designed to test your understanding of basic HTML concepts. You'll encounter a mix of multiple-choice and single-answer questions to evaluate your knowledge of HTML structure and common elements.",
@@ -362,7 +362,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "CSS Fundamentals: Put Your Skills to the Test",
             description:
               "This lesson is a comprehensive quiz to evaluate your understanding of CSS fundamentals. You'll face a variety of question types covering selectors, properties, and layout techniques.",
@@ -486,14 +486,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to HTML",
             description:
               "HTML (HyperText Markup Language) is the standard language used to create the structure of web pages. In this lesson, you'll explore basic HTML elements and how they are used to build the framework of a website.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
             description: "Why is HTML considered the backbone of any website?",
             displayOrder: 2,
@@ -506,14 +506,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "HTML Elements Video",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
             description:
               "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -571,14 +571,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to Java for Android",
             description:
               "Java is the primary language used for Android app development. In this lesson, you'll learn about Java syntax, data types, and object-oriented programming principles that form the foundation of Android development.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Explain why Java is the preferred language for Android development",
             description: "",
             displayOrder: 2,
@@ -591,13 +591,13 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Java Basics Video Tutorial",
             description: "Learn Java basics for Android development.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
             description: "",
@@ -625,7 +625,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "In Android dev, [word] are used to define the user interface, while [word] handle user interactions",
             description: "",
@@ -653,13 +653,13 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "Java OOP Concepts Presentation",
             description: "Explore Object-Oriented Programming principles in Java.",
             displayOrder: 6,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to create a new instance of a class in Java?",
             description: "",
             displayOrder: 7,
@@ -701,7 +701,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which of the following is the entry point of an Android application?",
             description: "",
             displayOrder: 1,
@@ -754,21 +754,21 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to Kotlin for Android",
             description:
               "Kotlin is a modern, concise language used for Android development. In this lesson, you'll learn about Kotlin syntax and basic concepts for creating Android apps.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Kotlin Basics Video Tutorial",
             description:
               "A video tutorial to help you learn Kotlin syntax, object-oriented principles, and how to apply them to Android development.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to declare a variable in Kotlin?",
             description: "",
             displayOrder: 3,
@@ -794,20 +794,20 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Setting Up Your Android Studio Environment",
             description:
               "Learn how to configure Android Studio for Kotlin development and create your first Android project.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "Creating a Simple Kotlin App",
             description: "A step-by-step guide to building your first Android app using Kotlin.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
             description: "",
             displayOrder: 3,
@@ -845,14 +845,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to Arithmetic",
             description:
               "Arithmetic is the foundation of mathematics. In this lesson, you'll learn about numbers, basic operations, and their properties.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Why is arithmetic considered the foundation of mathematics? ",
             description: "",
             displayOrder: 2,
@@ -865,14 +865,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Basic Arithmetic Video Tutorial",
             description:
               "Learn the basics of arithmetic operations and how to use them in problem-solving scenarios.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
             description: "",
@@ -900,21 +900,21 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Understanding Geometry",
             description:
               "Geometry involves the study of shapes, sizes, and the properties of space. In this lesson, you'll learn about basic geometric figures and their properties.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "Geometric Shapes Presentation",
             description:
               "Explore various geometric shapes, their formulas for area and perimeter, and their real-life applications.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which formula is used to calculate the area of a rectangle?",
             description: "",
             displayOrder: 3,
@@ -940,14 +940,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Getting Started with Algebra",
             description:
               "Algebra helps us solve problems by finding unknown values. In this lesson, you'll learn about variables, expressions, and simple equations.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
             description: "",
@@ -967,7 +967,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Basic Algebra Video Guide",
             description:
               "Learn to solve basic algebraic equations and understand how to work with variables.",
@@ -982,7 +982,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Mathematics Basics Quiz: Test Your Knowledge",
             description:
               "Evaluate your understanding of arithmetic, geometry, and algebra with this comprehensive quiz.",
@@ -1042,21 +1042,21 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to English Grammar",
             description:
               "Learn the essential grammar rules that form the backbone of English communication, covering nouns, verbs, adjectives, and more.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Sentence Structure Basics",
             description:
               "Explore how sentences are structured, including subject-verb agreement and word order in affirmative, negative, and question forms.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Explain the difference between a noun and a verb in a sentence.",
             description: "Explain the difference between a noun and a verb in a sentence.",
             displayOrder: 3,
@@ -1069,14 +1069,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Grammar Rules Video Tutorial",
             description:
               "Watch this tutorial to get a comprehensive overview of essential English grammar rules.",
             displayOrder: 4,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Fill in the blanks: 'She [word] to the store yesterday.'",
             description: "Fill in the blanks with the correct verb.",
             displayOrder: 5,
@@ -1101,27 +1101,27 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Common English Words and Phrases",
             description:
               "A beginner-friendly list of common English words and phrases you can use in daily conversations.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Synonyms and Antonyms",
             description:
               "Learn about the importance of synonyms and antonyms in expanding your vocabulary and making your speech more varied.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "English Vocabulary Expansion Presentation",
             description: "A comprehensive slide presentation on expanding your vocabulary.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which word is the synonym of 'happy'?",
             description: "Choose the correct synonym for 'happy'.",
             displayOrder: 4,
@@ -1138,7 +1138,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "I [word] to the park every day.",
             description: "Fill in the blank with the correct verb.",
             displayOrder: 5,
@@ -1162,21 +1162,21 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Essential Pronunciation Tips",
             description:
               "Learn how to pronounce English words correctly and improve your accent with practical tips and exercises.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Common Pronunciation Mistakes",
             description:
               "Identify and work on common pronunciation challenges for non-native English speakers.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
             description: "Choose the sound that is most commonly mispronounced.",
@@ -1195,13 +1195,13 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Pronunciation and Accent Video Tutorial",
             description: "A step-by-step video guide on mastering English pronunciation.",
             displayOrder: 4,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "I love [word] (swimming/swim).",
             description: "Choose the correct verb form.",
             displayOrder: 5,
@@ -1223,7 +1223,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
             description: "Choose the correct part of speech.",
@@ -1242,7 +1242,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "She [word] to the park every day.",
             description: "Fill in the blank with the correct verb.",
             displayOrder: 2,
@@ -1259,7 +1259,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "What is the plural form of 'child'?",
             description: "Choose the correct plural form of 'child'.",
             displayOrder: 3,
@@ -1275,7 +1275,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which of these words is a conjunction?",
             description: "Choose the correct conjunction.",
             displayOrder: 4,
@@ -1310,34 +1310,34 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Complex Sentences and Their Use",
             description:
               "Learn how to form and use complex sentences to convey more detailed thoughts and ideas effectively.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Relative Clauses and Modifiers",
             description:
               "A deep dive into relative clauses and modifiers, which help to add extra information to sentences.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "What is the difference between a relative clause and a noun clause?",
             description: "Explain the difference between relative and noun clauses.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Advanced Grammar Video Tutorial",
             description:
               "Watch this in-depth video to understand complex sentence structures and advanced grammar.",
             displayOrder: 4,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Fill in the blanks: The book [word] I borrowed yesterday was fascinating.",
             description: "Fill in the blank with the correct word.",
             displayOrder: 5,
@@ -1361,28 +1361,28 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Academic Vocabulary and Its Application",
             description:
               "Master vocabulary words commonly used in academic papers, essays, and formal discussions.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Using Formal Language in Communication",
             description:
               "Learn how to adjust your language for formal situations, such as presentations or professional meetings.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "Academic Vocabulary List",
             description:
               "Download this list of academic vocabulary and explore their meanings and usage in context.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which word is an example of academic vocabulary?",
             description: "Select the correct academic word.",
             displayOrder: 4,
@@ -1399,7 +1399,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "The results [word] the hypothesis.",
             description: "Fill in the blank with the correct word.",
             displayOrder: 5,
@@ -1420,34 +1420,34 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Understanding Idioms in Context",
             description:
               "Learn how idiomatic expressions are used in everyday conversations to sound more natural and fluent.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT_BLOCK,
             title: "Common Idioms and Their Meanings",
             description:
               "A list of frequently used idioms, their meanings, and examples of how to use them.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "What does the idiom 'break the ice' mean?",
             description: "Explain the meaning of the idiom 'break the ice'.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Idiomatic Expressions Video Tutorial",
             description:
               "Watch this video to learn how to use idiomatic expressions in real conversations.",
             displayOrder: 4,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "She was [word] when she heard the good news.",
             description: "Fill in the blank with the correct idiom.",
             displayOrder: 5,
@@ -1464,178 +1464,4 @@ export const niceCourses: NiceCourseData[] = [
       },
     ],
   },
-
-  // {
-  //   type: LESSON_TYPE.multimedia.key,
-  //   title: "Advanced Writing Skills: Crafting Cohesive Paragraphs",
-  //   description:
-  //     "Learn how to write complex, well-structured paragraphs that convey your ideas clearly and persuasively in advanced writing contexts.",
-  //   state: STATUS.published.key,
-  //   imageUrl: faker.image.urlPicsumPhotos(),
-  //   isFree: false,
-  //   items: [
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.text_block.key,
-  //       title: "Topic Sentences and Supporting Details",
-  //       body: "Learn how to craft a clear topic sentence and use supporting details effectively in your writing.",
-  //       state: STATUS.published.key,
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.text_block.key,
-  //       title: "Transitions and Coherence in Writing",
-  //       body: "Understand the importance of transitions and coherence to make your paragraphs flow logically.",
-  //       state: STATUS.published.key,
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.file.key,
-  //       title: "Paragraph Writing Practice",
-  //       type: LESSON_FILE_TYPE.external_presentation.key,
-  //       state: STATUS.published.key,
-  //       body: "Download this practice worksheet to improve your paragraph writing skills.",
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.fill_in_the_blanks_text.key,
-  //       title:
-  //         "The introduction [word] should [word] the main points [word] in the essay.",
-  //       state: STATUS.published.key,
-  //       solutionExplanation:
-  //         "The introduction <strong>paragraph</strong> should <strong>outline</strong> the main points <strong>discussed</strong> in the essay.",
-  //       questionAnswers: [
-  //         {
-  //           optionText: "paragraph",
-  //           isCorrect: true,
-  //           position: 0,
-  //         },
-  //         {
-  //           optionText: "outline",
-  //           isCorrect: true,
-  //           position: 1,
-  //         },
-  //         {
-  //           optionText: "discussed",
-  //           isCorrect: true,
-  //           position: 2,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: LESSON_TYPE.multimedia.key,
-  //   title: "Public Speaking: Delivering a Persuasive Speech",
-  //   description:
-  //     "Develop your public speaking skills by learning how to structure and deliver a persuasive speech that captivates your audience.",
-  //   state: STATUS.published.key,
-  //   imageUrl: faker.image.urlPicsumPhotos(),
-  //   isFree: false,
-  //   items: [
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.text_block.key,
-  //       title: "Structuring a Persuasive Speech",
-  //       body: "Learn the key components of a persuasive speech, including introduction, body, and conclusion.",
-  //       state: STATUS.published.key,
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.text_block.key,
-  //       title: "Techniques for Engaging Your Audience",
-  //       body: "Discover techniques such as storytelling, rhetorical questions, and powerful language to keep your audience engaged.",
-  //       state: STATUS.published.key,
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.single_choice.key,
-  //       title: "What is the purpose of the conclusion in a persuasive speech?",
-  //       state: STATUS.published.key,
-  //       questionAnswers: [
-  //         {
-  //           optionText: "Summarize the main points",
-  //           isCorrect: true,
-  //           position: 0,
-  //         },
-  //         {
-  //           optionText: "Introduce new information",
-  //           isCorrect: false,
-  //           position: 1,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.file.key,
-  //       title: "Persuasive Speech Example",
-  //       type: LESSON_FILE_TYPE.external_video.key,
-  //       state: STATUS.published.key,
-  //       body: "Listen to this persuasive speech example to see effective techniques in action.",
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: LESSON_TYPE.quiz.key,
-  //   title: "Advanced English Quiz: Test Your Knowledge",
-  //   description:
-  //     "Test your mastery of advanced English skills, including grammar, vocabulary, idioms, writing, and public speaking.",
-  //   state: STATUS.published.key,
-  //   imageUrl: faker.image.urlPicsumPhotos(),
-  //   isFree: false,
-  //   items: [
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.single_choice.key,
-  //       title: "Which sentence is an example of a complex sentence?",
-  //       state: STATUS.published.key,
-  //       questionAnswers: [
-  //         {
-  //           optionText: "She went to the store, and he stayed home.",
-  //           isCorrect: false,
-  //           position: 0,
-  //         },
-  //         {
-  //           optionText: "Although it was raining, she went for a walk.",
-  //           isCorrect: true,
-  //           position: 1,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.single_choice.key,
-  //       title: "Which idiom means 'to be very happy'?",
-  //       state: STATUS.published.key,
-  //       questionAnswers: [
-  //         {
-  //           optionText: "On cloud nine",
-  //           isCorrect: true,
-  //           position: 0,
-  //         },
-  //         {
-  //           optionText: "Hit the nail on the head",
-  //           isCorrect: false,
-  //           position: 1,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.fill_in_the_blanks_text.key,
-  //       title: "The manager will [word] the team meeting [word].",
-  //       state: STATUS.published.key,
-  //       solutionExplanation:
-  //         "The manager will <strong>lead</strong> the team meeting <strong>tomorrow</strong>.",
-  //       questionAnswers: [
-  //         {
-  //           optionText: "lead",
-  //           isCorrect: true,
-  //           position: 0,
-  //         },
-  //         {
-  //           optionText: "tomorrow",
-  //           isCorrect: true,
-  //           position: 1,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // ],
-  // },
 ];

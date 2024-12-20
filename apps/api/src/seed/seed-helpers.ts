@@ -92,18 +92,18 @@ export async function createNiceCourses(
             displayOrder: index + 1,
             fileS3Key: getFileUrl(lessonData.type),
             fileType:
-              lessonData.type === LESSON_TYPES.presentation
+              lessonData.type === LESSON_TYPES.PRESENTATION
                 ? "pptx"
-                : lessonData.type === LESSON_TYPES.video
-                  ? "mp4"
-                  : null,
+                : lessonData.type === LESSON_TYPES.VIDEO
+                ? "mp4"
+                : null,
             chapterId: chapter.id,
             createdAt: createdAt,
             updatedAt: createdAt,
           })
           .returning();
 
-        if (lessonData.type === LESSON_TYPES.quiz && lessonData.questions) {
+        if (lessonData.type === LESSON_TYPES.QUIZ && lessonData.questions) {
           for (const [index, questionData] of lessonData.questions.entries()) {
             const questionId = crypto.randomUUID();
             // TODO: add displayOrder to questions
@@ -186,9 +186,9 @@ const external_presentation_urls = [
 ];
 
 function getFileUrl(lessonType: string) {
-  if (lessonType === LESSON_TYPES.video) {
+  if (lessonType === LESSON_TYPES.VIDEO) {
     return faker.helpers.arrayElement(external_video_urls);
-  } else if (lessonType === LESSON_TYPES.presentation) {
+  } else if (lessonType === LESSON_TYPES.PRESENTATION) {
     return faker.helpers.arrayElement(external_presentation_urls);
   }
   return null;
