@@ -445,45 +445,15 @@ export interface GetCourseResponse {
       id: string;
       title: string;
       lessonCount: number;
-      completedLessonCount?: number;
-      chapterProgress?: "completed" | "in_progress" | "not_started";
-      isFreemium?: boolean;
-      enrolled?: boolean;
-      isPublished?: boolean;
-      isSubmitted?: boolean;
-      createdAt?: string;
-      quizCount?: number;
-      displayOrder: number;
-    }[];
-    completedChapterCount?: number;
-    courseChapterCount: number;
-    currency: string;
-    description: string;
-    enrolled?: boolean;
-    hasFreeChapter?: boolean;
-    /** @format uuid */
-    id: string;
-    isPublished: boolean | null;
-    isScorm?: boolean;
-    priceInCents: number;
-    thumbnailUrl?: string;
-    title: string;
-  };
-}
-
-export interface GetCourseByIdResponse {
-  data: {
-    archived?: boolean;
-    /** @format uuid */
-    authorId?: string;
-    category: string;
-    /** @format uuid */
-    categoryId?: string;
-    chapters: {
-      /** @format uuid */
-      id: string;
-      title: string;
-      lessonCount: number;
+      lessons: {
+        /** @format uuid */
+        id: string;
+        title: string;
+        type: string;
+        displayOrder: number;
+        status: string;
+        quizQuestionCount: number | null;
+      }[];
       completedLessonCount?: number;
       chapterProgress?: "completed" | "in_progress" | "not_started";
       isFreemium?: boolean;
@@ -523,6 +493,15 @@ export interface GetBetaCourseByIdResponse {
       id: string;
       title: string;
       lessonCount: number;
+      lessons: {
+        /** @format uuid */
+        id: string;
+        title: string;
+        type: string;
+        displayOrder: number;
+        status: string;
+        quizQuestionCount: number | null;
+      }[];
       completedLessonCount?: number;
       chapterProgress?: "completed" | "in_progress" | "not_started";
       isFreemium?: boolean;
@@ -601,6 +580,19 @@ export type UnenrollCourseResponse = null;
 export interface FileUploadResponse {
   fileKey: string;
   fileUrl: string;
+}
+
+export interface GetLessonByIdResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    type: string;
+    description: string;
+    fileType: string | null;
+    fileUrl: string | null;
+    questions?: any[];
+  };
 }
 
 export type BetaCreateLessonBody = {
@@ -797,6 +789,15 @@ export interface GetChapterWithLessonResponse {
     id: string;
     title: string;
     lessonCount: number;
+    lessons: {
+      /** @format uuid */
+      id: string;
+      title: string;
+      type: string;
+      displayOrder: number;
+      status: string;
+      quizQuestionCount: number | null;
+    }[];
     completedLessonCount?: number;
     chapterProgress?: "completed" | "in_progress" | "not_started";
     isFreemium?: boolean;
@@ -806,45 +807,45 @@ export interface GetChapterWithLessonResponse {
     createdAt?: string;
     quizCount?: number;
     displayOrder: number;
-    lessons: {
-      updatedAt?: string;
-      /** @format uuid */
-      id: string;
-      title: string;
-      type: string;
-      description: string;
-      displayOrder: number;
-      fileS3Key?: string;
-      fileType?: string;
-      questions?: {
-        /** @format uuid */
-        id?: string;
-        type:
-          | "single_choice"
-          | "multiple_choice"
-          | "true_or_false"
-          | "photo_question"
-          | "fill_in_the_blanks"
-          | "brief_response"
-          | "detailed_response";
-        description?: string;
-        title: string;
-        photoQuestionType?: "single_choice" | "multiple_choice";
-        photoS3Key?: string;
-        options?: {
-          /** @format uuid */
-          id?: string;
-          optionText: string;
-          isCorrect: boolean;
-          position: number;
-        }[];
-      }[];
-    }[];
   };
 }
 
 export type BetaCreateChapterBody = {
   title: string;
+  lessons?: {
+    updatedAt?: string;
+    /** @format uuid */
+    id: string;
+    title: string;
+    type: string;
+    description: string;
+    displayOrder: number;
+    fileS3Key?: string;
+    fileType?: string;
+    questions?: {
+      /** @format uuid */
+      id?: string;
+      type:
+        | "single_choice"
+        | "multiple_choice"
+        | "true_or_false"
+        | "photo_question"
+        | "fill_in_the_blanks"
+        | "brief_response"
+        | "detailed_response";
+      description?: string;
+      title: string;
+      photoQuestionType?: "single_choice" | "multiple_choice";
+      photoS3Key?: string;
+      options?: {
+        /** @format uuid */
+        id?: string;
+        optionText: string;
+        isCorrect: boolean;
+        position: number;
+      }[];
+    }[];
+  }[];
   chapterProgress?: "completed" | "in_progress" | "not_started";
   isFreemium?: boolean;
   enrolled?: boolean;
@@ -867,6 +868,40 @@ export interface BetaCreateChapterResponse {
 
 export type UpdateChapterBody = {
   title?: string;
+  lessons?: {
+    updatedAt?: string;
+    /** @format uuid */
+    id: string;
+    title: string;
+    type: string;
+    description: string;
+    displayOrder: number;
+    fileS3Key?: string;
+    fileType?: string;
+    questions?: {
+      /** @format uuid */
+      id?: string;
+      type:
+        | "single_choice"
+        | "multiple_choice"
+        | "true_or_false"
+        | "photo_question"
+        | "fill_in_the_blanks"
+        | "brief_response"
+        | "detailed_response";
+      description?: string;
+      title: string;
+      photoQuestionType?: "single_choice" | "multiple_choice";
+      photoS3Key?: string;
+      options?: {
+        /** @format uuid */
+        id?: string;
+        optionText: string;
+        isCorrect: boolean;
+        position: number;
+      }[];
+    }[];
+  }[];
   chapterProgress?: "completed" | "in_progress" | "not_started";
   isFreemium?: boolean;
   enrolled?: boolean;
@@ -1687,8 +1722,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     courseControllerGetStudentCourses: (
       query?: {
-        /** @format uuid */
-        excludeCourseId?: string;
         title?: string;
         category?: string;
         author?: string;
@@ -1802,27 +1835,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<GetCourseResponse, any>({
         path: `/api/course/course`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name CourseControllerGetCourseById
-     * @request GET:/api/course/course-by-id
-     */
-    courseControllerGetCourseById: (
-      query: {
-        /** @format uuid */
-        id: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetCourseByIdResponse, any>({
-        path: `/api/course/course-by-id`,
         method: "GET",
         query: query,
         format: "json",
@@ -1953,6 +1965,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/file`,
         method: "DELETE",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonControllerGetLessonById
+     * @request GET:/api/lesson/{id}
+     */
+    lessonControllerGetLessonById: (id: string, params: RequestParams = {}) =>
+      this.request<GetLessonByIdResponse, any>({
+        path: `/api/lesson/${id}`,
+        method: "GET",
+        format: "json",
         ...params,
       }),
 

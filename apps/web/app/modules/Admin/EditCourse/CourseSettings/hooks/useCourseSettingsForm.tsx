@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 
 import { useDeleteFile } from "~/api/mutations/admin/useDeleteFile";
 import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
-import { courseQueryOptions } from "~/api/queries/admin/useCourseById";
+import { courseQueryOptions } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 import { courseSettingsFormSchema } from "~/modules/Admin/EditCourse/CourseSettings/validators/courseSettingsFormSchema";
 

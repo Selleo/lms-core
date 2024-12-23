@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 
 import { LESSON_ITEM_TYPE } from "src/chapter/chapter.type";
@@ -38,10 +38,6 @@ export class StudentLessonProgressService {
       throw new NotFoundException(`Lesson with id ${id} not found`);
     }
 
-    if (lesson.type === "text_block") {
-      throw new ConflictException("Text block is not completable");
-    }
-
     const [existingRecord] = await this.db
       .select()
       .from(studentLessonProgress)
@@ -54,7 +50,9 @@ export class StudentLessonProgressService {
 
     if (existingRecord) return;
 
-    await this.db.insert(studentLessonProgress).values({ studentId, lessonId: lesson.id });
+    await this.db
+      .insert(studentLessonProgress)
+      .values({ studentId, lessonId: lesson.id, completedAt: sql<string>`now()` });
 
     await this.checkCourseIsCompletedForUser(lesson.courseId, studentId);
   }
@@ -88,7 +86,7 @@ export class StudentLessonProgressService {
   }
 
   private async getCourseFinishedChapterCount(courseId: UUIDType, studentId: UUIDType) {
-    const [finishedLessonsCount] = await this.db
+    const [finishedChapterCount] = await this.db
       .select({
         count: sql<number>`COUNT(DISTINCT ${studentChapterProgress.chapterId})`,
       })
@@ -101,7 +99,7 @@ export class StudentLessonProgressService {
         ),
       );
 
-    return finishedLessonsCount.count;
+    return finishedChapterCount.count;
   }
 
   // TODO: refactor this to use correct new names

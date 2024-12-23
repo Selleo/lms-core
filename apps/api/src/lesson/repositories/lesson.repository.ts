@@ -54,6 +54,39 @@ export class LessonRepository {
       .orderBy(lessons.displayOrder);
   }
 
+  async getLessonsForChapter(chapterId: UUIDType) {
+    return this.db
+      .select({
+        title: lessons.title,
+        type: lessons.type,
+        displayOrder: sql<number>`${lessons.displayOrder}`,
+        questions: sql<QuestionBody[]>`
+          COALESCE(
+            (
+              SELECT json_agg(questions_data)
+              FROM (
+                SELECT
+                  ${questions.id} AS id,
+                  ${questions.title} AS title,
+                  ${questions.description} AS description,
+                  ${questions.type} AS type,
+                  ${questions.photoQuestionType} AS photoQuestionType,
+                  ${questions.photoS3Key} AS photoS3Key,
+                  ${questions.solutionExplanation} AS solutionExplanation,
+                  -- TODO: add display order
+                FROM ${questions}
+                WHERE ${lessons.id} = ${questions.lessonId}
+              ) AS questions_data
+            ), 
+            '[]'::json
+          )
+        `,
+      })
+      .from(lessons)
+      .where(eq(lessons.chapterId, chapterId))
+      .orderBy(lessons.displayOrder);
+  }
+
   //   async completeQuiz(
   //     courseId: UUIDType,
   //     lessonId: UUIDType,

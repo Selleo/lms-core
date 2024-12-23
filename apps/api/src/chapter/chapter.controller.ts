@@ -13,12 +13,12 @@ import { ChapterService } from "./chapter.service";
 import {
   CreateChapterBody,
   createChapterSchema,
+  showChapterSchema,
   UpdateChapterBody,
   updateChapterSchema,
-  showChapterSchema,
 } from "./schemas/chapter.schema";
 
-import type { ShowChapterResponse } from "./schemas/chapter.schema";
+import type { ChapterResponse } from "./schemas/chapter.schema";
 
 @Controller("chapter")
 @UseGuards(RolesGuard)
@@ -38,7 +38,7 @@ export class ChapterController {
     @Query("id") id: UUIDType,
     @CurrentUser("role") userRole: UserRole,
     @CurrentUser("userId") userId: UUIDType,
-  ): Promise<BaseResponse<ShowChapterResponse>> {
+  ): Promise<BaseResponse<ChapterResponse>> {
     return new BaseResponse(
       await this.chapterService.getChapterWithLessons(id, userId, userRole === USER_ROLES.ADMIN),
     );

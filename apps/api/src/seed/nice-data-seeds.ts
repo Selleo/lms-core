@@ -21,6 +21,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to HTML",
             description:
@@ -28,6 +29,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
             description: "Why is HTML considered the backbone of any website?",
@@ -41,6 +43,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "HTML Elements Video",
             description:
@@ -48,6 +51,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
             description:
@@ -86,6 +90,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "HTML Hyperlinks Presentation",
             description:
@@ -93,6 +98,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "HTML Tag Quiz",
             description: "Which HTML tag is used to create a hyperlink?",
@@ -135,6 +141,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "HTML Basics: Test Your Knowledge",
             description:
@@ -362,6 +369,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "CSS Fundamentals: Put Your Skills to the Test",
             description:
@@ -486,6 +494,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to HTML",
             description:
@@ -493,6 +502,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
             description: "Why is HTML considered the backbone of any website?",
@@ -506,6 +516,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "HTML Elements Video",
             description:
@@ -513,6 +524,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
             description:
@@ -571,6 +583,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to Java for Android",
             description:
@@ -578,6 +591,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Explain why Java is the preferred language for Android development",
             description: "",
@@ -591,12 +605,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Java Basics Video Tutorial",
             description: "Learn Java basics for Android development.",
             displayOrder: 3,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title:
               "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
@@ -625,6 +641,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title:
               "In Android dev, [word] are used to define the user interface, while [word] handle user interactions",
@@ -653,12 +670,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "Java OOP Concepts Presentation",
             description: "Explore Object-Oriented Programming principles in Java.",
             displayOrder: 6,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to create a new instance of a class in Java?",
             description: "",
@@ -701,6 +720,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which of the following is the entry point of an Android application?",
             description: "",
@@ -754,6 +774,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to Kotlin for Android",
             description:
@@ -761,6 +782,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Kotlin Basics Video Tutorial",
             description:
@@ -768,6 +790,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to declare a variable in Kotlin?",
             description: "",
@@ -794,6 +817,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Setting Up Your Android Studio Environment",
             description:
@@ -801,12 +825,14 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "Creating a Simple Kotlin App",
             description: "A step-by-step guide to building your first Android app using Kotlin.",
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
             description: "",
@@ -845,6 +871,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to Arithmetic",
             description:
@@ -852,6 +879,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Why is arithmetic considered the foundation of mathematics? ",
             description: "",
@@ -865,6 +893,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Basic Arithmetic Video Tutorial",
             description:
@@ -872,6 +901,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title:
               "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
@@ -900,6 +930,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Understanding Geometry",
             description:
@@ -907,6 +938,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "Geometric Shapes Presentation",
             description:
@@ -914,6 +946,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which formula is used to calculate the area of a rectangle?",
             description: "",
@@ -940,6 +973,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Getting Started with Algebra",
             description:
@@ -947,6 +981,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title:
               "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
@@ -967,6 +1002,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Basic Algebra Video Guide",
             description:
@@ -982,6 +1018,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Mathematics Basics Quiz: Test Your Knowledge",
             description:
@@ -1042,6 +1079,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Introduction to English Grammar",
             description:
@@ -1049,6 +1087,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Sentence Structure Basics",
             description:
@@ -1056,6 +1095,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Explain the difference between a noun and a verb in a sentence.",
             description: "Explain the difference between a noun and a verb in a sentence.",
@@ -1069,6 +1109,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Grammar Rules Video Tutorial",
             description:
@@ -1076,6 +1117,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Fill in the blanks: 'She [word] to the store yesterday.'",
             description: "Fill in the blanks with the correct verb.",
@@ -1101,6 +1143,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Common English Words and Phrases",
             description:
@@ -1108,6 +1151,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Synonyms and Antonyms",
             description:
@@ -1115,12 +1159,14 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "English Vocabulary Expansion Presentation",
             description: "A comprehensive slide presentation on expanding your vocabulary.",
             displayOrder: 3,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which word is the synonym of 'happy'?",
             description: "Choose the correct synonym for 'happy'.",
@@ -1138,6 +1184,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "I [word] to the park every day.",
             description: "Fill in the blank with the correct verb.",
@@ -1162,6 +1209,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Essential Pronunciation Tips",
             description:
@@ -1169,6 +1217,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Common Pronunciation Mistakes",
             description:
@@ -1176,6 +1225,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title:
               "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
@@ -1195,12 +1245,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Pronunciation and Accent Video Tutorial",
             description: "A step-by-step video guide on mastering English pronunciation.",
             displayOrder: 4,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "I love [word] (swimming/swim).",
             description: "Choose the correct verb form.",
@@ -1223,6 +1275,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title:
               "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
@@ -1242,6 +1295,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "She [word] to the park every day.",
             description: "Fill in the blank with the correct verb.",
@@ -1259,6 +1313,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "What is the plural form of 'child'?",
             description: "Choose the correct plural form of 'child'.",
@@ -1275,6 +1330,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which of these words is a conjunction?",
             description: "Choose the correct conjunction.",
@@ -1310,6 +1366,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Complex Sentences and Their Use",
             description:
@@ -1317,6 +1374,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Relative Clauses and Modifiers",
             description:
@@ -1324,12 +1382,14 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "What is the difference between a relative clause and a noun clause?",
             description: "Explain the difference between relative and noun clauses.",
             displayOrder: 3,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Advanced Grammar Video Tutorial",
             description:
@@ -1337,6 +1397,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Fill in the blanks: The book [word] I borrowed yesterday was fascinating.",
             description: "Fill in the blank with the correct word.",
@@ -1361,6 +1422,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Academic Vocabulary and Its Application",
             description:
@@ -1368,6 +1430,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Using Formal Language in Communication",
             description:
@@ -1375,6 +1438,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "Academic Vocabulary List",
             description:
@@ -1382,6 +1446,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which word is an example of academic vocabulary?",
             description: "Select the correct academic word.",
@@ -1399,6 +1464,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "The results [word] the hypothesis.",
             description: "Fill in the blank with the correct word.",
@@ -1420,6 +1486,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Understanding Idioms in Context",
             description:
@@ -1427,6 +1494,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT_BLOCK,
             title: "Common Idioms and Their Meanings",
             description:
@@ -1434,12 +1502,14 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "What does the idiom 'break the ice' mean?",
             description: "Explain the meaning of the idiom 'break the ice'.",
             displayOrder: 3,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Idiomatic Expressions Video Tutorial",
             description:
@@ -1447,6 +1517,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
           },
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "She was [word] when she heard the good news.",
             description: "Fill in the blank with the correct idiom.",
