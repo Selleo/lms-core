@@ -2,7 +2,7 @@ import { Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
 
-import { LESSON_TYPES, PhotoQuestionType, QuestionType } from "./lesson.type";
+import { PhotoQuestionType, QuestionType } from "./lesson.type";
 
 import type { Static } from "@sinclair/typebox";
 

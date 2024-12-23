@@ -2,10 +2,10 @@ import { Module } from "@nestjs/common";
 
 import { FileModule } from "src/file/files.module";
 
-import { AdminLessonRepository } from "./repositories/adminLesson.repository";
-import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonController } from "./lesson.controller";
+import { AdminLessonRepository } from "./repositories/adminLesson.repository";
 import { LessonRepository } from "./repositories/lesson.repository";
+import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
 
 @Module({

@@ -1,23 +1,30 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { EventBus } from "@nestjs/cqrs";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-
-import type { UUIDType } from "src/common";
-import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
-import { LESSON_TYPES, PhotoQuestionType, QuestionType } from "../lesson.type";
 import { FileService } from "src/file/file.service";
-import { LessonShow, OptionBody, QuestionBody } from "../lesson.schema";
-import { QuestionTypes } from "src/questions/schema/questions.types";
+import {
+  chapters,
+  lessons,
+  questionAnswerOptions,
+  questions,
+  studentCourses,
+} from "src/storage/schema";
+
+import { LESSON_TYPES } from "../lesson.type";
+
+
+import type { LessonShow, OptionBody, QuestionBody } from "../lesson.schema";
+import type { PhotoQuestionType, QuestionType } from "../lesson.type";
+import type { UUIDType } from "src/common";
 
 @Injectable()
 export class LessonService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly fileService: FileService, // TODO: add event bus
-  ) // private readonly eventBus: EventBus,
-  {}
+    // private readonly eventBus: EventBus,
+  ) {}
 
   async getLessonById(id: UUIDType): Promise<LessonShow> {
     const [lesson] = await this.db
@@ -34,7 +41,7 @@ export class LessonService {
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
-    if (lesson.type === LESSON_TYPES.TEXT_BLOCK && !lesson.fileUrl) return lesson;
+    if (lesson.type === LESSON_TYPES.TEXT && !lesson.fileUrl) return lesson;
 
     if (lesson.type !== LESSON_TYPES.QUIZ) {
       if (!lesson.fileUrl) throw new NotFoundException("Lesson file not found");
@@ -97,12 +104,8 @@ export class LessonService {
     return { ...lesson, quizDetails };
   }
 
-  // async evaluationQuiz(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
-  //   const [accessCourseLessons] = await this.chapterRepository.checkLessonAssignment(
-  //     courseId,
-  //     lessonId,
-  //     userId,
-  //   );
+  // async evaluationQuiz(lessonId: UUIDType, userId: UUIDType) {
+  //   const [accessCourseLessons] = await this.checkLessonAssignment(lessonId, userId);
 
   //   if (!accessCourseLessons.isAssigned && !accessCourseLessons.isFree)
   //     throw new UnauthorizedException("You don't have assignment to this lesson");
@@ -139,6 +142,20 @@ export class LessonService {
 
   //   return true;
   // }
+
+  async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
+    return this.db
+      .select({
+        isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
+      })
+      .from(lessons)
+      .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+      )
+      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
+  }
 
   // private async evaluationsQuestions(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
   //   const lesson = await this.chapterRepository.getLessonForUser(courseId, lessonId, userId);

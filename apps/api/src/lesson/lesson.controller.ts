@@ -18,20 +18,22 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES } from "src/user/schemas/userRoles";
 
-import { AdminLessonService } from "./services/adminLesson.service";
 import {
   CreateLessonBody,
   createLessonSchema,
   CreateQuizLessonBody,
   createQuizLessonSchema,
-  LessonShow,
   lessonShowSchema,
   UpdateLessonBody,
   updateLessonSchema,
   UpdateQuizLessonBody,
   updateQuizLessonSchema,
 } from "./lesson.schema";
+import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
+
+import type {
+  LessonShow} from "./lesson.schema";
 
 @Controller("lesson")
 @UseGuards(RolesGuard)
@@ -157,56 +159,21 @@ export class LessonController {
     });
   }
 
-  //   @Patch("course-lesson")
-  //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
-  //   @Validate({
-  //     request: [
-  //       {
-  //         type: "body",
-  //         schema: Type.Object({
-  //           courseId: UUIDSchema,
-  //           lessonId: UUIDSchema,
-  //           isFree: Type.Boolean(),
-  //         }),
-  //       },
-  //     ],
-  //     response: baseResponse(Type.Object({ isFree: Type.Boolean(), message: Type.String() })),
-  //   })
-  //   async toggleLessonAsFree(
-  //     @Body() body: { courseId: string; lessonId: string; isFree: boolean },
-  //   ): Promise<BaseResponse<{ isFree: boolean; message: string }>> {
-  //     const [toggledLesson] = await this.adminLessonsService.toggleLessonAsFree(
-  //       body.courseId,
-  //       body.lessonId,
-  //       body.isFree,
-  //     );
-  //     return new BaseResponse({
-  //       isFree: toggledLesson.isFree,
-  //       message: body.isFree
-  //         ? "Lesson toggled as free successfully"
-  //         : "Lesson toggled as not free successfully",
-  //     });
-  //   }
-
-  //   @Post("evaluation-quiz")
-  //   @Roles(USER_ROLES.STUDENT)
-  //   @Validate({
-  //     request: [
-  //       { type: "query", name: "courseId", schema: UUIDSchema },
-  //       { type: "query", name: "lessonId", schema: UUIDSchema },
-  //     ],
-  //     response: baseResponse(Type.Object({ message: Type.String() })),
-  //   })
-  //   async evaluationQuiz(
-  //     @Query("courseId") courseId: string,
-  //     @Query("lessonId") lessonId: string,
-  //     @CurrentUser("userId") currentUserId: UUIDType,
-  //   ): Promise<BaseResponse<{ message: string }>> {
-  //     await this.lessonsService.evaluationQuiz(courseId, lessonId, currentUserId);
-  //     return new BaseResponse({
-  //       message: "Evaluation quiz successfully",
-  //     });
-  //   }
+  // @Post("evaluation-quiz")
+  // @Roles(USER_ROLES.STUDENT)
+  // @Validate({
+  //   request: [{ type: "query", name: "lessonId", schema: UUIDSchema, required: true }],
+  //   response: baseResponse(Type.Object({ message: Type.String() })),
+  // })
+  // async evaluationQuiz(
+  //   @Query("lessonId") lessonId: string,
+  //   @CurrentUser("userId") currentUserId: UUIDType,
+  // ): Promise<BaseResponse<{ message: string }>> {
+  //   await this.lessonService.evaluationQuiz(lessonId, currentUserId);
+  //   return new BaseResponse({
+  //     message: "Evaluation quiz successfully",
+  //   });
+  // }
 
   //   @Delete("clear-quiz-progress")
   //   @Roles(USER_ROLES.STUDENT)

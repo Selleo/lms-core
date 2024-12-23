@@ -18,7 +18,7 @@ export const e2eCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "E2E Testing Text Block",
             description: "E2E Testing Text Block Body",
             displayOrder: 1,

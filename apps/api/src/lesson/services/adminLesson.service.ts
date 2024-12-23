@@ -4,9 +4,9 @@ import { eq, gte, inArray, lte, sql } from "drizzle-orm";
 import { DatabasePg } from "src/common";
 import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
+import { LESSON_TYPES } from "../lesson.type";
 import { AdminLessonRepository } from "../repositories/adminLesson.repository";
 import { LessonRepository } from "../repositories/lesson.repository";
-import { LESSON_TYPES } from "../lesson.type";
 
 import type {
   CreateLessonBody,

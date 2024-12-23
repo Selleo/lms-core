@@ -1,11 +1,11 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 
-import { LESSON_ITEM_TYPE } from "src/chapter/chapter.type";
 import { DatabasePg } from "src/common";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import {
   chapters,
+  courses,
   lessons,
   studentChapterProgress,
   studentCourses,
@@ -14,6 +14,8 @@ import {
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 import type { UUIDType } from "src/common";
+import type { ProgressStatus } from "src/utils/types/progress.type";
+
 
 @Injectable()
 export class StudentLessonProgressService {
@@ -28,45 +30,84 @@ export class StudentLessonProgressService {
         id: lessons.id,
         type: lessons.type,
         chapterId: chapters.id,
+        chapterLessonCount: chapters.lessonCount,
         courseId: chapters.courseId,
       })
       .from(lessons)
       .leftJoin(chapters, eq(chapters.id, lessons.chapterId))
       .where(and(eq(lessons.id, id)));
 
-    if (!lesson || lesson.chapterId === null || lesson.courseId === null) {
+    if (!lesson || !lesson.chapterId || !lesson.courseId || !lesson.chapterLessonCount) {
       throw new NotFoundException(`Lesson with id ${id} not found`);
     }
 
-    if (lesson.type === "text_block") {
-      throw new ConflictException("Text block is not completable");
-    }
+    const [createdLessonProgress] = await this.db
+      .insert(studentLessonProgress)
+      .values({ studentId, lessonId: lesson.id, completedAt: sql`now()` })
+      .onConflictDoNothing()
+      .returning();
 
-    const [existingRecord] = await this.db
-      .select()
-      .from(studentLessonProgress)
-      .where(
-        and(
-          eq(studentLessonProgress.lessonId, lesson.id),
-          eq(studentLessonProgress.studentId, studentId),
-        ),
-      );
+    if (!createdLessonProgress) return;
 
-    if (existingRecord) return;
-
-    await this.db.insert(studentLessonProgress).values({ studentId, lessonId: lesson.id });
+    await this.updateChapterProgress(lesson.chapterId, studentId, lesson.chapterLessonCount);
 
     await this.checkCourseIsCompletedForUser(lesson.courseId, studentId);
   }
 
+  private async updateChapterProgress(
+    chapterId: UUIDType,
+    studentId: UUIDType,
+    lessonCount: number,
+  ) {
+    const [completedLessonCount] = await this.db
+      .select({ count: sql<number>`count(*)` })
+      .from(studentLessonProgress)
+      .where(
+        and(
+          eq(studentLessonProgress.chapterId, chapterId),
+          eq(studentLessonProgress.studentId, studentId),
+          isNotNull(studentLessonProgress.completedAt),
+        ),
+      );
+
+    if (completedLessonCount.count === lessonCount) {
+      return await this.db
+        .update(studentChapterProgress)
+        .set({
+          completedLessonCount: completedLessonCount.count,
+          completedAt: sql`now()`,
+        })
+        .where(
+          and(
+            eq(studentChapterProgress.chapterId, chapterId),
+            eq(studentChapterProgress.studentId, studentId),
+          ),
+        )
+        .returning();
+    }
+
+    return await this.db
+      .update(studentChapterProgress)
+      .set({
+        completedLessonCount: completedLessonCount.count,
+      })
+      .where(
+        and(
+          eq(studentChapterProgress.chapterId, chapterId),
+          eq(studentChapterProgress.studentId, studentId),
+        ),
+      )
+      .returning();
+  }
+
   private async checkCourseIsCompletedForUser(courseId: UUIDType, studentId: UUIDType) {
-    const courseCompleted = await this.getCourseCompletionStatus(courseId);
+    const courseProgress = await this.getCourseCompletionStatus(courseId, studentId);
     const courseFinishedChapterCount = await this.getCourseFinishedChapterCount(
       courseId,
       studentId,
     );
 
-    if (courseCompleted.courseCompleted) {
+    if (courseProgress.courseIsCompleted) {
       await this.updateStudentCourseStats(
         studentId,
         courseId,
@@ -77,7 +118,7 @@ export class StudentLessonProgressService {
       return await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(courseId);
     }
 
-    if (courseCompleted.state !== PROGRESS_STATUSES.IN_PROGRESS) {
+    if (courseProgress.progress !== PROGRESS_STATUSES.IN_PROGRESS) {
       return await this.updateStudentCourseStats(
         studentId,
         courseId,
@@ -104,71 +145,38 @@ export class StudentLessonProgressService {
     return finishedLessonsCount.count;
   }
 
-  // TODO: refactor this to use correct new names
-  private async getCourseCompletionStatus(courseId: UUIDType) {
-    const [courseCompleted] = await this.db.execute(sql`
-      WITH lesson_count AS (
-        SELECT
-          course_lessons.lesson_id AS lesson_id,
-          COUNT(lesson_items.id) AS lesson_count
-        FROM
-          course_lessons
-        LEFT JOIN lesson_items ON course_lessons.lesson_id = lesson_items.lesson_id
-        WHERE
-          course_lessons.course_id = ${courseId}
-          AND lesson_items.lesson_item_type != ${LESSON_ITEM_TYPE.text_block.key}
-        GROUP BY
-          course_lessons.lesson_id
-      ),
-      completed_lesson_count AS (
-        SELECT
-          course_lessons.lesson_id AS lesson_id,
-          COUNT(student_completed_lesson_items.id) AS completed_lesson_count
-        FROM
-          course_lessons
-        LEFT JOIN student_completed_lesson_items ON course_lessons.lesson_id = student_completed_lesson_items.lesson_id
-        WHERE
-          course_lessons.course_id = ${courseId}
-        GROUP BY
-          course_lessons.lesson_id
-      ),
-      lesson_completion_status AS (
-        SELECT
-          lc.lesson_id,
-          CASE
-            WHEN lc.lesson_count = clc.completed_lesson_count THEN 1
-            ELSE 0
-          END AS is_lesson_completed
-        FROM
-          lesson_count lc
-        JOIN completed_lesson_count clc ON lc.lesson_id = clc.lesson_id
-      ),
-      course_completion_status AS (
-        SELECT
-          CASE
-            WHEN COUNT(*) = SUM(is_lesson_completed) THEN true
-            ELSE false
-          END AS is_course_completed
-        FROM
-          lesson_completion_status
-      )
-      SELECT is_course_completed:: BOOLEAN AS "courseCompleted", student_courses.state as "state"
-      FROM course_completion_status
-      LEFT JOIN student_courses ON student_courses.course_id = ${courseId}
-    `);
+  private async getCourseCompletionStatus(courseId: UUIDType, studentId: UUIDType) {
+    const [courseCompletedStatus] = await this.db
+      .select({
+        courseIsCompleted: sql<boolean>`${studentCourses.finishedChapterCount} = ${courses.chapterCount}`,
+        progress: sql<ProgressStatus>`${studentCourses.progress}`,
+      })
+      .from(studentCourses)
+      .leftJoin(courses, and(eq(courses.id, studentCourses.courseId)))
+      .where(and(eq(studentCourses.courseId, courseId), eq(studentCourses.studentId, studentId)));
 
-    return courseCompleted;
+    return {
+      courseIsCompleted: courseCompletedStatus.courseIsCompleted,
+      progress: courseCompletedStatus.progress,
+    };
   }
 
   private async updateStudentCourseStats(
     studentId: UUIDType,
     courseId: UUIDType,
-    progress: string,
+    progress: ProgressStatus,
     finishedChapterCount: number,
   ) {
+    if (progress === PROGRESS_STATUSES.COMPLETED) {
+      return await this.db
+        .update(studentCourses)
+        .set({ progress, completedAt: sql`now()`, finishedChapterCount })
+        .where(and(eq(studentCourses.studentId, studentId), eq(studentCourses.courseId, courseId)));
+    }
+
     return await this.db
       .update(studentCourses)
-      .set({ progress, completedAt: sql`now()`, finishedChapterCount })
+      .set({ progress, finishedChapterCount })
       .where(and(eq(studentCourses.studentId, studentId), eq(studentCourses.courseId, courseId)));
   }
 }

@@ -21,7 +21,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to HTML",
             description:
               "HTML (HyperText Markup Language) is the standard language used to create the structure of web pages. In this lesson, you'll explore basic HTML elements and how they are used to build the framework of a website.",
@@ -486,7 +486,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to HTML",
             description:
               "HTML (HyperText Markup Language) is the standard language used to create the structure of web pages. In this lesson, you'll explore basic HTML elements and how they are used to build the framework of a website.",
@@ -571,7 +571,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to Java for Android",
             description:
               "Java is the primary language used for Android app development. In this lesson, you'll learn about Java syntax, data types, and object-oriented programming principles that form the foundation of Android development.",
@@ -754,7 +754,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to Kotlin for Android",
             description:
               "Kotlin is a modern, concise language used for Android development. In this lesson, you'll learn about Kotlin syntax and basic concepts for creating Android apps.",
@@ -794,7 +794,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Setting Up Your Android Studio Environment",
             description:
               "Learn how to configure Android Studio for Kotlin development and create your first Android project.",
@@ -845,7 +845,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to Arithmetic",
             description:
               "Arithmetic is the foundation of mathematics. In this lesson, you'll learn about numbers, basic operations, and their properties.",
@@ -900,7 +900,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Understanding Geometry",
             description:
               "Geometry involves the study of shapes, sizes, and the properties of space. In this lesson, you'll learn about basic geometric figures and their properties.",
@@ -940,7 +940,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Getting Started with Algebra",
             description:
               "Algebra helps us solve problems by finding unknown values. In this lesson, you'll learn about variables, expressions, and simple equations.",
@@ -1042,14 +1042,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to English Grammar",
             description:
               "Learn the essential grammar rules that form the backbone of English communication, covering nouns, verbs, adjectives, and more.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Sentence Structure Basics",
             description:
               "Explore how sentences are structured, including subject-verb agreement and word order in affirmative, negative, and question forms.",
@@ -1101,14 +1101,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Common English Words and Phrases",
             description:
               "A beginner-friendly list of common English words and phrases you can use in daily conversations.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Synonyms and Antonyms",
             description:
               "Learn about the importance of synonyms and antonyms in expanding your vocabulary and making your speech more varied.",
@@ -1162,14 +1162,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Essential Pronunciation Tips",
             description:
               "Learn how to pronounce English words correctly and improve your accent with practical tips and exercises.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Common Pronunciation Mistakes",
             description:
               "Identify and work on common pronunciation challenges for non-native English speakers.",
@@ -1310,14 +1310,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Complex Sentences and Their Use",
             description:
               "Learn how to form and use complex sentences to convey more detailed thoughts and ideas effectively.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Relative Clauses and Modifiers",
             description:
               "A deep dive into relative clauses and modifiers, which help to add extra information to sentences.",
@@ -1361,14 +1361,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Academic Vocabulary and Its Application",
             description:
               "Master vocabulary words commonly used in academic papers, essays, and formal discussions.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Using Formal Language in Communication",
             description:
               "Learn how to adjust your language for formal situations, such as presentations or professional meetings.",
@@ -1420,14 +1420,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Understanding Idioms in Context",
             description:
               "Learn how idiomatic expressions are used in everyday conversations to sound more natural and fluent.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.TEXT_BLOCK,
+            type: LESSON_TYPES.TEXT,
             title: "Common Idioms and Their Meanings",
             description:
               "A list of frequently used idioms, their meanings, and examples of how to use them.",
@@ -1457,6 +1457,164 @@ export const niceCourses: NiceCourseData[] = [
                 title: "She was [word] when she heard the good news.",
                 description: "She was <strong>over the moon</strong> when she heard the good news.",
                 options: [{ optionText: "over the moon", isCorrect: true, position: 0 }],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    title: "Artificial Intelligence in Business: Fundamentals",
+    description:
+      "This beginner-friendly course introduces the basics of AI in business. Learn about key concepts, terminologies, and how AI is applied to improve efficiency, automate processes, and enhance decision-making in various industries. By the end, you'll understand AI's potential to transform your business.",
+    isPublished: true,
+    priceInCents: 12900,
+    category: "Artificial Intelligence",
+    thumbnailS3Key: faker.image.urlPicsumPhotos(),
+    chapters: [
+      {
+        title: "Understanding AI Basics",
+        isPublished: true,
+        isFreemium: true,
+        displayOrder: 1,
+        lessons: [
+          {
+            type: LESSON_TYPES.VIDEO,
+            title: "What is Artificial Intelligence? An Introductory Overview",
+            description:
+              "A comprehensive video introduction to the concept of Artificial Intelligence, its history, and its significance in business.",
+            displayOrder: 1,
+          },
+          {
+            type: LESSON_TYPES.TEXT,
+            title: "Key Concepts and Terminologies in AI",
+            description:
+              "Learn the foundational terminologies of AI, including Machine Learning, Neural Networks, NLP, and more.",
+            displayOrder: 2,
+          },
+          {
+            type: LESSON_TYPES.PRESENTATION,
+            title: "AI Applications Across Industries",
+            description:
+              "A presentation exploring real-world AI applications in sectors like healthcare, finance, and retail.",
+            displayOrder: 3,
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "AI Quiz: Primary Goal of AI in Business",
+            description:
+              "Test your understanding of the fundamental goal of AI in business applications.",
+            displayOrder: 4,
+            questions: [
+              {
+                type: QuestionType.SingleChoice,
+                title: "What is the primary goal of AI in business?",
+                options: [
+                  { optionText: "Replace human workers", isCorrect: false, position: 0 },
+                  { optionText: "Fully automate all tasks", isCorrect: false, position: 1 },
+                  { optionText: "Improve decision-making", isCorrect: true, position: 2 },
+                  { optionText: "Eliminate all business costs", isCorrect: false, position: 3 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "AI Quiz: Applications of AI",
+            description: "Identify common AI applications in various business domains.",
+            displayOrder: 5,
+            questions: [
+              {
+                type: QuestionType.MultipleChoice,
+                title:
+                  "Which of the following are applications of AI in business? (Select all that apply)",
+                options: [
+                  { optionText: "Customer service chatbots", isCorrect: true, position: 0 },
+                  { optionText: "Predictive analytics", isCorrect: true, position: 1 },
+                  { optionText: "Supply chain optimization", isCorrect: true, position: 2 },
+                  { optionText: "Space exploration tools", isCorrect: false, position: 3 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "AI Quiz: Can AI Function Without Data?",
+            description: "Test your understanding of AI's reliance on data.",
+            displayOrder: 6,
+            questions: [
+              {
+                type: QuestionType.TrueOrFalse,
+                title: "AI can function without any data input from humans.",
+                options: [
+                  { optionText: "True", isCorrect: false, position: 0 },
+                  { optionText: "False", isCorrect: true, position: 1 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Photo Identification: AI Solutions",
+            description: "Identify the AI-driven solution from the provided images.",
+            displayOrder: 7,
+            questions: [
+              {
+                type: QuestionType.PhotoQuestion,
+                title: "Which image represents an AI-driven chatbot?",
+                options: [
+                  { optionText: "Image 1 (Chatbot Interface)", isCorrect: true, position: 0 },
+                  { optionText: "Image 2 (Calculator)", isCorrect: false, position: 1 },
+                  { optionText: "Image 3 (Spreadsheet)", isCorrect: false, position: 2 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "AI Fill in the Blanks",
+            description: "Complete the sentences with the correct AI-related terms.",
+            displayOrder: 8,
+            questions: [
+              {
+                type: QuestionType.FillInTheBlanks,
+                title:
+                  "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
+                description:
+                  "<p>Complete the blanks: Artificial <strong>Intelligence</strong> refers to the ability of machines to mimic <strong>Human</strong> intelligence.</p>",
+                options: [
+                  { optionText: "Intelligence", isCorrect: true, position: 0 },
+                  { optionText: "Human", isCorrect: true, position: 1 },
+                  { optionText: "Automation", isCorrect: false, position: 2 },
+                  { optionText: "Learning", isCorrect: false, position: 3 },
+                  { optionText: "Animal", isCorrect: false, position: 4 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Brief Response: Why Businesses Adopt AI",
+            description: "Explain in one sentence why businesses adopt AI.",
+            displayOrder: 9,
+            questions: [
+              {
+                type: QuestionType.BriefResponse,
+                title: "In one sentence, explain why businesses are adopting AI.",
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Detailed Response: AI's Role in an Industry",
+            description: "Describe how AI can improve decision-making in a specific industry.",
+            displayOrder: 10,
+            questions: [
+              {
+                type: QuestionType.DetailedResponse,
+                title:
+                  "Describe how AI can improve decision-making in a specific industry of your choice.",
               },
             ],
           },
