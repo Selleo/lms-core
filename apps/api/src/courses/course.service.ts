@@ -447,7 +447,7 @@ export class CourseService {
       .select({
         id: courses.id,
         title: courses.title,
-        thumbnailUrl: sql<string>`COALESCE(${courses.thumbnailS3Key}, '')`,
+        thumbnailS3Key: sql<string>`COALESCE(${courses.thumbnailS3Key}, '')`,
         category: categories.title,
         categoryId: categories.id,
         description: sql<string>`${courses.description}`,
@@ -489,7 +489,7 @@ export class CourseService {
       return await this.fileService.getFileUrl(url);
     };
 
-    const thumbnailUrl = await getImageUrl(course.thumbnailUrl);
+    const thumbnailS3SingedUrl = await getImageUrl(course.thumbnailS3Key);
 
     const updatedCourseLessonList = await Promise.all(
       courseChapterList?.map(async (chapter) => {
@@ -507,7 +507,7 @@ export class CourseService {
 
     return {
       ...course,
-      thumbnailUrl,
+      thumbnailS3SingedUrl,
       chapters: updatedCourseLessonList ?? [],
     };
   }
@@ -517,7 +517,7 @@ export class CourseService {
       .select({
         id: courses.id,
         title: courses.title,
-        thumbnailUrl: sql<string>`${courses.thumbnailS3Key}`,
+        thumbnailS3Key: sql<string>`${courses.thumbnailS3Key}`,
         category: categories.title,
         categoryId: categories.id,
         description: sql<string>`${courses.description}`,
@@ -556,11 +556,11 @@ export class CourseService {
       return await this.fileService.getFileUrl(url);
     };
 
-    const thumbnailUrl = await getImageUrl(course.thumbnailUrl);
+    const thumbnailS3SingedUrl = await getImageUrl(course.thumbnailS3Key);
 
     return {
       ...course,
-      thumbnailUrl,
+      thumbnailS3SingedUrl,
       chapters: courseChapterList,
     };
   }

@@ -20,6 +20,8 @@ export const commonShowCourseSchema = Type.Object({
   isScorm: Type.Optional(Type.Boolean()),
   priceInCents: Type.Number(),
   thumbnailUrl: Type.Optional(Type.String()),
+  thumbnailS3Key: Type.Optional(Type.String()),
+  thumbnailS3SingedUrl: Type.Optional(Type.String()),
   title: Type.String(),
 });
 

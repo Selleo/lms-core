@@ -467,6 +467,8 @@ export interface GetCourseResponse {
     isScorm?: boolean;
     priceInCents: number;
     thumbnailUrl?: string;
+    thumbnailS3Key?: string;
+    thumbnailS3SingedUrl?: string;
     title: string;
   };
 }
@@ -506,6 +508,8 @@ export interface GetCourseByIdResponse {
     isScorm?: boolean;
     priceInCents: number;
     thumbnailUrl?: string;
+    thumbnailS3Key?: string;
+    thumbnailS3SingedUrl?: string;
     title: string;
   };
 }
@@ -545,6 +549,8 @@ export interface GetBetaCourseByIdResponse {
     isScorm?: boolean;
     priceInCents: number;
     thumbnailUrl?: string;
+    thumbnailS3Key?: string;
+    thumbnailS3SingedUrl?: string;
     title: string;
   };
 }
@@ -1687,8 +1693,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     courseControllerGetStudentCourses: (
       query?: {
-        /** @format uuid */
-        excludeCourseId?: string;
         title?: string;
         category?: string;
         author?: string;

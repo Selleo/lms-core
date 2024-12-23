@@ -3711,6 +3711,12 @@
               "thumbnailUrl": {
                 "type": "string"
               },
+              "thumbnailS3Key": {
+                "type": "string"
+              },
+              "thumbnailS3SingedUrl": {
+                "type": "string"
+              },
               "title": {
                 "type": "string"
               }
@@ -3857,6 +3863,12 @@
               "thumbnailUrl": {
                 "type": "string"
               },
+              "thumbnailS3Key": {
+                "type": "string"
+              },
+              "thumbnailS3SingedUrl": {
+                "type": "string"
+              },
               "title": {
                 "type": "string"
               }
@@ -4001,6 +4013,12 @@
                 "type": "number"
               },
               "thumbnailUrl": {
+                "type": "string"
+              },
+              "thumbnailS3Key": {
+                "type": "string"
+              },
+              "thumbnailS3SingedUrl": {
                 "type": "string"
               },
               "title": {
