@@ -4,6 +4,7 @@ import { match } from "ts-pattern";
 import { Icon } from "~/components/Icon";
 import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
+import { VideoPlayer } from "~/components/VideoPlayer/VideoPlayer";
 
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 
@@ -18,7 +19,8 @@ export const LessonContent = ({ lesson, handlePrevious, handleNext }: LessonCont
     match(lesson.type)
       .with("text_block", () => <Viewer variant="lesson" content={lesson?.description} />)
       .with("quiz", () => <></>)
-      .otherwise(() => <></>);
+      .with("video", () => <VideoPlayer url={lesson.fileUrl} />)
+      .otherwise(() => null);
 
   return (
     <div className="flex flex-col py-6 w-full items-center">

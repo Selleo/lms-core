@@ -493,7 +493,7 @@ export class CourseService {
           await this.adminChapterRepository.getBetaChapterLessons(chapter.id);
 
         const lessonsWithSignedUrls = await this.addS3SignedUrlsToLessonsAndQuestions(lessons);
-        console.log({ lessonsWithSignedUrls });
+
         return {
           ...chapter,
           lessons: lessonsWithSignedUrls,

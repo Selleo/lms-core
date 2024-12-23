@@ -26,6 +26,8 @@ export default function NewCourseViewPage() {
   //   },
   // ];
 
+  console.log(course);
+
   return (
     <PageWrapper className="max-w-full">
       <div className="flex flex-col lg:grid lg:grid-cols-[1fr_480px] max-w-full gap-6 w-full">
@@ -41,7 +43,9 @@ export default function NewCourseViewPage() {
             {course?.chapters?.map((chapter) => {
               if (!chapter) return null;
 
-              return <CourseChapter chapter={chapter} key={chapter.id} />;
+              return (
+                <CourseChapter chapter={chapter} key={chapter.id} enrolled={course.enrolled} />
+              );
             })}
           </div>
           <MoreCoursesByAuthor courseId={course.id} teacherId={course.authorId} />

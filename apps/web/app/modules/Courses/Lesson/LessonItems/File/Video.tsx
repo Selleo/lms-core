@@ -4,7 +4,7 @@ import ReactPlayer from "react-player/lazy";
 import { useMarkLessonItemAsCompleted } from "~/api/mutations/useMarkLessonItemAsCompleted";
 
 type VideoProps = {
-  url: string;
+  url: string | null;
   videoId: string;
   isAdmin: boolean;
   type: string;
@@ -27,6 +27,8 @@ export default function Video({
     courseId: string;
   }>();
   const { mutate: markLessonItemAsCompleted } = useMarkLessonItemAsCompleted();
+
+  if (!url) throw new Error("Something went wrong");
 
   if (!lessonId) throw new Error("Lesson ID not found");
 

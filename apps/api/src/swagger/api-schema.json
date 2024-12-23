@@ -3970,48 +3970,6 @@
                         ]
                       }
                     },
-                    "lessons": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "format": "uuid",
-                            "type": "string"
-                          },
-                          "title": {
-                            "type": "string"
-                          },
-                          "type": {
-                            "type": "string"
-                          },
-                          "displayOrder": {
-                            "type": "number"
-                          },
-                          "status": {
-                            "type": "string"
-                          },
-                          "quizQuestionCount": {
-                            "anyOf": [
-                              {
-                                "type": "number"
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
-                          }
-                        },
-                        "required": [
-                          "id",
-                          "title",
-                          "type",
-                          "displayOrder",
-                          "status",
-                          "quizQuestionCount"
-                        ]
-                      }
-                    },
                     "completedLessonCount": {
                       "type": "number"
                     },
@@ -4057,7 +4015,6 @@
                     "id",
                     "title",
                     "lessonCount",
-                    "lessons",
                     "displayOrder"
                   ]
                 }

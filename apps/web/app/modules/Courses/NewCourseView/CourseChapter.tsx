@@ -15,9 +15,10 @@ import type { GetCourseResponse } from "~/api/generated-api";
 
 type CourseChapterProps = {
   chapter: GetCourseResponse["data"]["chapters"][0];
+  enrolled: GetCourseResponse["data"]["enrolled"];
 };
 
-export const CourseChapter = ({ chapter }: CourseChapterProps) => {
+export const CourseChapter = ({ chapter, enrolled }: CourseChapterProps) => {
   const lessonText = formatWithPlural(chapter.lessonCount ?? 0, "Lesson", "Lessons");
   const quizText = formatWithPlural(chapter.quizCount ?? 0, "Quiz", "Quizzes");
 
@@ -75,10 +76,10 @@ export const CourseChapter = ({ chapter }: CourseChapterProps) => {
               <div className="divide-y pl-14 divide-neutral-200 pt-3 pb-4 rounded-b-lg border-b border-x border-primary-500">
                 {chapter?.lessons?.map((lesson) => {
                   if (!lesson) return null;
-
                   return <CourseChapterLesson key={lesson.id} lesson={lesson} />;
                 })}
-                <Button className="mt-3 gap-x-2" disabled={!chapter.isFreemium}>
+                <Button className="mt-3 gap-x-2" disabled={!(chapter.isFreemium || enrolled)}>
+                  {" "}
                   <Icon name="Play" className="w-4 h-auto" />
                   <span>
                     {chapter.chapterProgress === "completed"
