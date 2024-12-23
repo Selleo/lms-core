@@ -6,7 +6,7 @@ import { LessonRepository } from "src/lesson/repositories/lesson.repository";
 
 import { ChapterRepository } from "./repositories/chapter.repository";
 
-import type { ShowChapterResponse } from "src/chapter/schemas/chapter.schema";
+import type { ChapterResponse } from "src/chapter/schemas/chapter.schema";
 import type { UUIDType } from "src/common";
 
 @Injectable()
@@ -22,7 +22,7 @@ export class ChapterService {
     id: UUIDType,
     userId: UUIDType,
     isAdmin?: boolean,
-  ): Promise<ShowChapterResponse> {
+  ): Promise<ChapterResponse> {
     const [courseAccess] = await this.chapterRepository.checkChapterAssignment(id, userId);
     const chapter = await this.chapterRepository.getChapterForUser(id, userId);
 
