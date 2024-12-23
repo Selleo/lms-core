@@ -13,9 +13,8 @@ import {
 
 import { LESSON_TYPES } from "../lesson.type";
 
-
 import type { LessonShow, OptionBody, QuestionBody } from "../lesson.schema";
-import type { PhotoQuestionType, QuestionType } from "../lesson.type";
+import type { LessonTypes, PhotoQuestionType, QuestionType } from "../lesson.type";
 import type { UUIDType } from "src/common";
 
 @Injectable()
@@ -23,18 +22,20 @@ export class LessonService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
     private readonly fileService: FileService, // TODO: add event bus
+  ) {
     // private readonly eventBus: EventBus,
-  ) {}
+  }
 
   async getLessonById(id: UUIDType): Promise<LessonShow> {
     const [lesson] = await this.db
       .select({
         id: lessons.id,
-        type: lessons.type,
+        type: sql<LessonTypes>`${lessons.type}`,
         title: lessons.title,
         description: sql<string>`${lessons.description}`,
         fileUrl: lessons.fileS3Key,
         fileType: lessons.fileType,
+        displayOrder: sql<number>`${lessons.displayOrder}`,
       })
       .from(lessons)
       .where(eq(lessons.id, id));

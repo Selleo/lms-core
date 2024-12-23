@@ -6,7 +6,7 @@ import { chapters, lessons, questionAnswerOptions, questions } from "src/storage
 
 import type { UpdateChapterBody } from "../schemas/chapter.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type { LessonItemWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
+import type { AdminLessonWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 
 @Injectable()
@@ -209,7 +209,7 @@ export class AdminChapterRepository {
   // //           : await this.fileService.getFileUrl(lesson.imageUrl),
   // //       };
 
-  async getBetaChapterLessons(chapterId: UUIDType): Promise<LessonItemWithContentSchema[]> {
+  async getBetaChapterLessons(chapterId: UUIDType): Promise<AdminLessonWithContentSchema[]> {
     return await this.db
       .select({
         updatedAt: sql<string>`${lessons.updatedAt}`,

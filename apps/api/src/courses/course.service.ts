@@ -57,7 +57,7 @@ import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { Pagination, UUIDType } from "src/common";
-import type { LessonItemWithContentSchema } from "src/lesson/lesson.schema";
+import type { AdminLessonWithContentSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 import type { ProgressStatus } from "src/utils/types/progress.type";
 
@@ -490,7 +490,7 @@ export class CourseService {
 
     const updatedCourseLessonList = await Promise.all(
       courseChapterList?.map(async (chapter) => {
-        const lessons: LessonItemWithContentSchema[] =
+        const lessons: AdminLessonWithContentSchema[] =
           await this.adminChapterRepository.getBetaChapterLessons(chapter.id);
 
         const lessonsWithSignedUrls = await this.addS3SignedUrlsToLessonsAndQuestions(lessons);
@@ -928,7 +928,7 @@ export class CourseService {
     );
   }
 
-  private async addS3SignedUrlsToLessonsAndQuestions(lessons: LessonItemWithContentSchema[]) {
+  private async addS3SignedUrlsToLessonsAndQuestions(lessons: AdminLessonWithContentSchema[]) {
     return await Promise.all(
       lessons.map(async (lesson) => {
         const updatedLesson = { ...lesson };

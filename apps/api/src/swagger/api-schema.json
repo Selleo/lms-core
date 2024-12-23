@@ -4251,7 +4251,28 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "const": "text",
+                    "type": "string"
+                  },
+                  {
+                    "const": "file",
+                    "type": "string"
+                  },
+                  {
+                    "const": "presentation",
+                    "type": "string"
+                  },
+                  {
+                    "const": "video",
+                    "type": "string"
+                  },
+                  {
+                    "const": "quiz",
+                    "type": "string"
+                  }
+                ]
               },
               "description": {
                 "type": "string"
@@ -4324,6 +4345,9 @@
                   "wrongAnswerCount",
                   "score"
                 ]
+              },
+              "displayOrder": {
+                "type": "number"
               }
             },
             "required": [
@@ -4332,7 +4356,8 @@
               "type",
               "description",
               "fileType",
-              "fileUrl"
+              "fileUrl",
+              "displayOrder"
             ]
           }
         },
@@ -4346,9 +4371,6 @@
           {
             "type": "object",
             "properties": {
-              "updatedAt": {
-                "type": "string"
-              },
               "title": {
                 "type": "string"
               },
@@ -4458,6 +4480,9 @@
                     "title"
                   ]
                 }
+              },
+              "updatedAt": {
+                "type": "string"
               }
             },
             "required": [
@@ -4827,9 +4852,6 @@
           {
             "type": "object",
             "properties": {
-              "updatedAt": {
-                "type": "string"
-              },
               "title": {
                 "type": "string"
               },
@@ -4939,6 +4961,9 @@
                     "title"
                   ]
                 }
+              },
+              "updatedAt": {
+                "type": "string"
               }
             }
           },
@@ -5090,9 +5115,6 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "updatedAt": {
-                      "type": "string"
-                    },
                     "id": {
                       "format": "uuid",
                       "type": "string"
@@ -5209,6 +5231,9 @@
                           "title"
                         ]
                       }
+                    },
+                    "updatedAt": {
+                      "type": "string"
                     }
                   },
                   "required": [

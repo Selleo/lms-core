@@ -16,7 +16,6 @@ import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 import type { UUIDType } from "src/common";
 import type { ProgressStatus } from "src/utils/types/progress.type";
 
-
 @Injectable()
 export class StudentLessonProgressService {
   constructor(

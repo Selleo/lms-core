@@ -32,8 +32,7 @@ import {
 import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
 
-import type {
-  LessonShow} from "./lesson.schema";
+import type { LessonShow } from "./lesson.schema";
 
 @Controller("lesson")
 @UseGuards(RolesGuard)
