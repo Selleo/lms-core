@@ -18,6 +18,7 @@ export const e2eCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "E2E Testing Text Block",
             description: "E2E Testing Text Block Body",
@@ -32,12 +33,14 @@ export const e2eCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
+            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "E2E Testing Quiz",
             description: "E2E Testing Quiz Description",
             displayOrder: 1,
             questions: [
               {
+                id: crypto.randomUUID(),
                 type: QuestionType.SingleChoice,
                 title: "E2E Testing Question",
                 description: "E2E Testing Question",
@@ -50,6 +53,7 @@ export const e2eCourses: NiceCourseData[] = [
                 ],
               },
               {
+                id: crypto.randomUUID(),
                 type: QuestionType.SingleChoice,
                 title: "E2E Testing Question 2",
                 description: "E2E Testing Question 2",
@@ -67,6 +71,7 @@ export const e2eCourses: NiceCourseData[] = [
                 ],
               },
               {
+                id: crypto.randomUUID(),
                 type: QuestionType.MultipleChoice,
                 title: "E2E Testing Question 3",
                 description: "E2E Testing Question 3",
