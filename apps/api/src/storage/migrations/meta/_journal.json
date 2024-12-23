@@ -29,6 +29,13 @@
       "when": 1734419608219,
       "tag": "0003_add_question_missing_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1734960126182,
+      "tag": "0004_add_chapter_id_to_student_lesson_progress",
+      "breakpoints": true
     }
   ]
 }

@@ -146,6 +146,7 @@ async function createLessonProgress(userId: string) {
   const courseLessonsList = await db
     .select({
       lessonId: sql<string>`${lessons.id}`,
+      chapterId: sql<string>`${chapters.id}`,
       createdAt: sql<string>`${courses.createdAt}`,
       lessonType: sql<string>`${lessons.type}`,
     })
@@ -156,14 +157,13 @@ async function createLessonProgress(userId: string) {
     .where(eq(studentCourses.studentId, userId));
 
   const lessonProgressList = courseLessonsList.map((courseLesson) => {
-    const lessonId = courseLesson.lessonId;
-
     return {
-      lessonId,
       studentId: userId,
+      lessonId: courseLesson.lessonId,
+      chapterId: courseLesson.chapterId,
       createdAt: courseLesson.createdAt,
       updatedAt: courseLesson.createdAt,
-      quizScore: courseLesson.lessonType === LESSON_TYPES.quiz ? 0 : null,
+      quizScore: courseLesson.lessonType === LESSON_TYPES.QUIZ ? 0 : null,
     };
   });
 
@@ -191,7 +191,7 @@ async function createQuizAttempts(userId: string) {
     .innerJoin(chapters, eq(courses.id, chapters.courseId))
     .innerJoin(lessons, eq(lessons.chapterId, chapters.id))
     .innerJoin(questions, eq(questions.lessonId, lessons.id))
-    .where(and(eq(courses.isPublished, true), eq(lessons.type, LESSON_TYPES.quiz)))
+    .where(and(eq(courses.isPublished, true), eq(lessons.type, LESSON_TYPES.QUIZ)))
     .groupBy(courses.id, lessons.id);
 
   const createdQuizAttempts = quizzes.map((quiz) => {

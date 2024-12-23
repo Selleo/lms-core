@@ -20,7 +20,6 @@ import {
   sql,
 } from "drizzle-orm";
 
-import { LESSON_TYPE } from "src/chapter/chapter.type";
 import { AdminChapterRepository } from "src/chapter/repositories/adminChapter.repository";
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
@@ -58,7 +57,7 @@ import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { Pagination, UUIDType } from "src/common";
-import type { LessonItemWithContentSchema } from "src/lesson/lesson.schema";
+import type { AdminLessonWithContentSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 import type { ProgressStatus } from "src/utils/types/progress.type";
 
@@ -84,6 +83,7 @@ export class CourseService {
       currentUserRole,
     } = query;
 
+    // TODO: repair it
     // const { sortOrder, sortedField } = getSortOptions(sort);
     const sortOrder = asc;
     const sortedField = CourseSortFields.title;
@@ -261,15 +261,15 @@ export class CourseService {
           priceInCents: courses.priceInCents,
           currency: courses.currency,
           hasFreeChapters: sql<boolean>`
-        EXISTS (
-          SELECT 1
-          FROM ${chapters}
-          WHERE ${chapters.courseId} = ${courses.id}
-            AND ${chapters.isFreemium} = TRUE
-        )`,
+            EXISTS (
+              SELECT 1
+              FROM ${chapters}
+              WHERE ${chapters.courseId} = ${courses.id}
+                AND ${chapters.isFreemium} = TRUE
+            )
+          `,
         })
         .from(courses)
-        .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
@@ -283,11 +283,9 @@ export class CourseService {
           users.firstName,
           users.lastName,
           users.email,
-          studentCourses.studentId,
           categories.title,
           coursesSummaryStats.freePurchasedCount,
           coursesSummaryStats.paidPurchasedCount,
-          studentCourses.finishedChapterCount,
         )
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
@@ -297,7 +295,6 @@ export class CourseService {
       const [{ totalItems }] = await trx
         .select({ totalItems: countDistinct(courses.id) })
         .from(courses)
-        .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
         .where(and(...conditions));
@@ -369,7 +366,7 @@ export class CourseService {
           (SELECT COUNT(*)
           FROM ${lessons}
           WHERE ${lessons.chapterId} = ${chapters.id}
-            AND ${lessons.type} = ${LESSON_TYPE.quiz.key})::INTEGER`,
+            AND ${lessons.type} = ${LESSON_TYPES.QUIZ})::INTEGER`,
         completedLessonCount: sql<number>`COALESCE(${studentChapterProgress.completedLessonCount}, 0)`,
         chapterProgress: sql<ProgressStatus>`
           CASE
@@ -398,7 +395,7 @@ export class CourseService {
                     ELSE 'not_started'
                   END AS status,
                   CASE
-                    WHEN ${lessons.type} = ${LESSON_TYPES.quiz} THEN COUNT(${questions.id})
+                    WHEN ${lessons.type} = ${LESSON_TYPES.QUIZ} THEN COUNT(${questions.id})
                     ELSE NULL
                   END AS "quizQuestionCount"
                 FROM ${lessons}
@@ -493,7 +490,7 @@ export class CourseService {
 
     const updatedCourseLessonList = await Promise.all(
       courseChapterList?.map(async (chapter) => {
-        const lessons: LessonItemWithContentSchema[] =
+        const lessons: AdminLessonWithContentSchema[] =
           await this.adminChapterRepository.getBetaChapterLessons(chapter.id);
 
         const lessonsWithSignedUrls = await this.addS3SignedUrlsToLessonsAndQuestions(lessons);
@@ -590,9 +587,9 @@ export class CourseService {
         excludeCourseId,
       );
 
-      if (availableCourseIds.length) {
-        conditions.push(inArray(courses.id, availableCourseIds));
-      }
+      if (!availableCourseIds.length) return [];
+
+      conditions.push(inArray(courses.id, availableCourseIds));
     }
 
     return this.db
@@ -620,7 +617,10 @@ export class CourseService {
         )`,
       })
       .from(courses)
-      .leftJoin(studentCourses, eq(studentCourses.courseId, courses.id))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, courses.id), eq(studentCourses.studentId, currentUserId)),
+      )
       .leftJoin(categories, eq(courses.categoryId, categories.id))
       .leftJoin(users, eq(courses.authorId, users.id))
       .where(and(...conditions))
@@ -823,7 +823,7 @@ export class CourseService {
               studentId,
               lessonId: lesson.id,
               completedQuestionCount: 0,
-              quizScore: lesson.type === LESSON_TYPES.quiz ? 0 : null,
+              quizScore: lesson.type === LESSON_TYPES.QUIZ ? 0 : null,
               completedAt: null,
             })),
           );
@@ -928,13 +928,13 @@ export class CourseService {
     );
   }
 
-  private async addS3SignedUrlsToLessonsAndQuestions(lessons: LessonItemWithContentSchema[]) {
+  private async addS3SignedUrlsToLessonsAndQuestions(lessons: AdminLessonWithContentSchema[]) {
     return await Promise.all(
       lessons.map(async (lesson) => {
         const updatedLesson = { ...lesson };
         if (
           lesson.fileS3Key &&
-          (lesson.type === LESSON_TYPES.video || lesson.type === LESSON_TYPES.presentation)
+          (lesson.type === LESSON_TYPES.VIDEO || lesson.type === LESSON_TYPES.PRESENTATION)
         ) {
           if (!lesson.fileS3Key.startsWith("https://")) {
             try {

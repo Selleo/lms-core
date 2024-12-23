@@ -14,7 +14,7 @@ import type {
   CreateQuizLessonBody,
   UpdateLessonBody,
   UpdateQuizLessonBody,
-} from "./lesson.schema";
+} from "../lesson.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 

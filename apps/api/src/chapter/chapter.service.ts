@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException, UnauthorizedException } from "@n
 import { EventBus } from "@nestjs/cqrs";
 
 import { DatabasePg } from "src/common";
-import { LessonRepository } from "src/lesson/lesson.repository";
+import { LessonRepository } from "src/lesson/repositories/lesson.repository";
 
 import { ChapterRepository } from "./repositories/chapter.repository";
 

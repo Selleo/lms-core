@@ -10,8 +10,8 @@ import xml2js from "xml2js";
 import { AdminChapterService } from "src/chapter/adminChapter.service";
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
-import { AdminLessonService } from "src/lesson/adminLesson.service";
 import { LESSON_TYPES } from "src/lesson/lesson.type";
+import { AdminLessonService } from "src/lesson/services/adminLesson.service";
 import { S3Service } from "src/s3/s3.service";
 
 import { SCORM } from "../constants/scorm.consts";
@@ -478,10 +478,10 @@ export class ScormService {
     const extension = path.extname(href).toLowerCase();
 
     return match(extension)
-      .with(".mp4", ".webm", () => LESSON_TYPES.video)
-      .with(".pptx", ".ppt", () => LESSON_TYPES.presentation)
-      .with(".html", () => LESSON_TYPES.textBlock)
-      .otherwise(() => LESSON_TYPES.file);
+      .with(".mp4", ".webm", () => LESSON_TYPES.VIDEO)
+      .with(".pptx", ".ppt", () => LESSON_TYPES.PRESENTATION)
+      .with(".html", () => LESSON_TYPES.TEXT)
+      .otherwise(() => LESSON_TYPES.FILE);
   }
 
   /**

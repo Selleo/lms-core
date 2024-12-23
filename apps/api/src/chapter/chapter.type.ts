@@ -1,8 +1,4 @@
-export const LESSON_TYPE = {
-  quiz: { key: "quiz", value: "Quiz" },
-  multimedia: { key: "multimedia", value: "Multimedia" },
-} as const;
-
+// TODO: remove unused types
 export const LESSON_ITEM_TYPE = {
   text_block: { key: "text_block", value: "Text Block" },
   file: { key: "file", value: "File" },
