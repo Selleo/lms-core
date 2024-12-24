@@ -18,7 +18,7 @@ const badgeVariants = cva(
         inProgress: "text-warning-800 bg-warning-100",
         inProgressFilled: "text-secondary-700 bg-secondary-50",
         notStarted: "text-neutral-600 bg-neutral-100",
-        notStartedFilled: "text-neutral-900 bg-white border border-neutral-200",
+        notStartedFilled: "bg-neutral-50 text-neutral-900 details-md",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive:

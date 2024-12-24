@@ -1,9 +1,9 @@
 export const LESSON_TYPES = {
-  textBlock: "text_block",
-  file: "file",
-  presentation: "presentation",
-  video: "video",
-  quiz: "quiz",
+  TEXT: "text",
+  FILE: "file",
+  PRESENTATION: "presentation",
+  VIDEO: "video",
+  QUIZ: "quiz",
 } as const;
 
 export enum QuestionType {

@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-import { useDeleteFile } from "~/api/mutations/admin/useDeleteFile";
 import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
 import { courseQueryOptions } from "~/api/queries/admin/useCourseById";
 import { queryClient } from "~/api/queryClient";
@@ -14,7 +13,7 @@ type CourseSettingsProps = {
   title?: string;
   description?: string;
   categoryId?: string;
-  imageUrl?: string;
+  thumbnailS3Key?: string;
   courseId: string;
 };
 
@@ -22,28 +21,20 @@ export const useCourseSettingsForm = ({
   title,
   description,
   categoryId,
-  imageUrl,
+  thumbnailS3Key,
   courseId,
 }: CourseSettingsProps) => {
   const { mutateAsync: updateCourse } = useUpdateCourse();
 
-  const { mutateAsync: deleteOldFile } = useDeleteFile();
   const form = useForm<CourseSettingsFormValues>({
     resolver: zodResolver(courseSettingsFormSchema),
     defaultValues: {
       title: title || "",
       description: description || "",
       categoryId: categoryId || "",
-      imageUrl: imageUrl || "",
+      thumbnailS3Key: thumbnailS3Key || "",
     },
   });
-
-  const newImageUrl = form.getValues("imageUrl");
-  const oldImageUrl = imageUrl ?? "";
-
-  const oldImageExist = Boolean(oldImageUrl);
-  const newImageExist = Boolean(newImageUrl);
-  const imageUrlChanged = oldImageExist && newImageExist && newImageUrl !== oldImageUrl;
 
   const onSubmit = async (data: UpdateCourseBody) => {
     updateCourse({
@@ -51,9 +42,6 @@ export const useCourseSettingsForm = ({
       courseId,
     }).then(() => {
       queryClient.invalidateQueries(courseQueryOptions(courseId));
-      if (imageUrlChanged) {
-        deleteOldFile(oldImageUrl);
-      }
     });
   };
 

@@ -21,14 +21,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to HTML",
             description:
               "HTML (HyperText Markup Language) is the standard language used to create the structure of web pages. In this lesson, you'll explore basic HTML elements and how they are used to build the framework of a website.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
             description: "Why is HTML considered the backbone of any website?",
             displayOrder: 2,
@@ -41,14 +41,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "HTML Elements Video",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
             description:
               "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -86,14 +86,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "HTML Hyperlinks Presentation",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
             displayOrder: 5,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "HTML Tag Quiz",
             description: "Which HTML tag is used to create a hyperlink?",
             displayOrder: 6,
@@ -135,7 +135,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "HTML Basics: Test Your Knowledge",
             description:
               "This lesson is designed to test your understanding of basic HTML concepts. You'll encounter a mix of multiple-choice and single-answer questions to evaluate your knowledge of HTML structure and common elements.",
@@ -362,7 +362,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "CSS Fundamentals: Put Your Skills to the Test",
             description:
               "This lesson is a comprehensive quiz to evaluate your understanding of CSS fundamentals. You'll face a variety of question types covering selectors, properties, and layout techniques.",
@@ -486,14 +486,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to HTML",
             description:
               "HTML (HyperText Markup Language) is the standard language used to create the structure of web pages. In this lesson, you'll explore basic HTML elements and how they are used to build the framework of a website.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
             description: "Why is HTML considered the backbone of any website?",
             displayOrder: 2,
@@ -506,14 +506,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "HTML Elements Video",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
             description:
               "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -571,14 +571,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to Java for Android",
             description:
               "Java is the primary language used for Android app development. In this lesson, you'll learn about Java syntax, data types, and object-oriented programming principles that form the foundation of Android development.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Explain why Java is the preferred language for Android development",
             description: "",
             displayOrder: 2,
@@ -591,13 +591,13 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Java Basics Video Tutorial",
             description: "Learn Java basics for Android development.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
             description: "",
@@ -625,7 +625,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "In Android dev, [word] are used to define the user interface, while [word] handle user interactions",
             description: "",
@@ -653,13 +653,13 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "Java OOP Concepts Presentation",
             description: "Explore Object-Oriented Programming principles in Java.",
             displayOrder: 6,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to create a new instance of a class in Java?",
             description: "",
             displayOrder: 7,
@@ -701,7 +701,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which of the following is the entry point of an Android application?",
             description: "",
             displayOrder: 1,
@@ -754,21 +754,21 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to Kotlin for Android",
             description:
               "Kotlin is a modern, concise language used for Android development. In this lesson, you'll learn about Kotlin syntax and basic concepts for creating Android apps.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Kotlin Basics Video Tutorial",
             description:
               "A video tutorial to help you learn Kotlin syntax, object-oriented principles, and how to apply them to Android development.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to declare a variable in Kotlin?",
             description: "",
             displayOrder: 3,
@@ -794,20 +794,20 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Setting Up Your Android Studio Environment",
             description:
               "Learn how to configure Android Studio for Kotlin development and create your first Android project.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "Creating a Simple Kotlin App",
             description: "A step-by-step guide to building your first Android app using Kotlin.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
             description: "",
             displayOrder: 3,
@@ -845,14 +845,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to Arithmetic",
             description:
               "Arithmetic is the foundation of mathematics. In this lesson, you'll learn about numbers, basic operations, and their properties.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Why is arithmetic considered the foundation of mathematics? ",
             description: "",
             displayOrder: 2,
@@ -865,14 +865,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Basic Arithmetic Video Tutorial",
             description:
               "Learn the basics of arithmetic operations and how to use them in problem-solving scenarios.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
             description: "",
@@ -900,21 +900,21 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Understanding Geometry",
             description:
               "Geometry involves the study of shapes, sizes, and the properties of space. In this lesson, you'll learn about basic geometric figures and their properties.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "Geometric Shapes Presentation",
             description:
               "Explore various geometric shapes, their formulas for area and perimeter, and their real-life applications.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which formula is used to calculate the area of a rectangle?",
             description: "",
             displayOrder: 3,
@@ -940,14 +940,14 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Getting Started with Algebra",
             description:
               "Algebra helps us solve problems by finding unknown values. In this lesson, you'll learn about variables, expressions, and simple equations.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
             description: "",
@@ -967,7 +967,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Basic Algebra Video Guide",
             description:
               "Learn to solve basic algebraic equations and understand how to work with variables.",
@@ -982,7 +982,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Mathematics Basics Quiz: Test Your Knowledge",
             description:
               "Evaluate your understanding of arithmetic, geometry, and algebra with this comprehensive quiz.",
@@ -1042,21 +1042,21 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Introduction to English Grammar",
             description:
               "Learn the essential grammar rules that form the backbone of English communication, covering nouns, verbs, adjectives, and more.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Sentence Structure Basics",
             description:
               "Explore how sentences are structured, including subject-verb agreement and word order in affirmative, negative, and question forms.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Explain the difference between a noun and a verb in a sentence.",
             description: "Explain the difference between a noun and a verb in a sentence.",
             displayOrder: 3,
@@ -1069,14 +1069,14 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Grammar Rules Video Tutorial",
             description:
               "Watch this tutorial to get a comprehensive overview of essential English grammar rules.",
             displayOrder: 4,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Fill in the blanks: 'She [word] to the store yesterday.'",
             description: "Fill in the blanks with the correct verb.",
             displayOrder: 5,
@@ -1101,27 +1101,27 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Common English Words and Phrases",
             description:
               "A beginner-friendly list of common English words and phrases you can use in daily conversations.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Synonyms and Antonyms",
             description:
               "Learn about the importance of synonyms and antonyms in expanding your vocabulary and making your speech more varied.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "English Vocabulary Expansion Presentation",
             description: "A comprehensive slide presentation on expanding your vocabulary.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which word is the synonym of 'happy'?",
             description: "Choose the correct synonym for 'happy'.",
             displayOrder: 4,
@@ -1138,7 +1138,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "I [word] to the park every day.",
             description: "Fill in the blank with the correct verb.",
             displayOrder: 5,
@@ -1162,21 +1162,21 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Essential Pronunciation Tips",
             description:
               "Learn how to pronounce English words correctly and improve your accent with practical tips and exercises.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Common Pronunciation Mistakes",
             description:
               "Identify and work on common pronunciation challenges for non-native English speakers.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
             description: "Choose the sound that is most commonly mispronounced.",
@@ -1195,13 +1195,13 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Pronunciation and Accent Video Tutorial",
             description: "A step-by-step video guide on mastering English pronunciation.",
             displayOrder: 4,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "I love [word] (swimming/swim).",
             description: "Choose the correct verb form.",
             displayOrder: 5,
@@ -1223,7 +1223,7 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 4,
         lessons: [
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title:
               "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
             description: "Choose the correct part of speech.",
@@ -1242,7 +1242,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "She [word] to the park every day.",
             description: "Fill in the blank with the correct verb.",
             displayOrder: 2,
@@ -1259,7 +1259,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "What is the plural form of 'child'?",
             description: "Choose the correct plural form of 'child'.",
             displayOrder: 3,
@@ -1275,7 +1275,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which of these words is a conjunction?",
             description: "Choose the correct conjunction.",
             displayOrder: 4,
@@ -1310,34 +1310,34 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 1,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Complex Sentences and Their Use",
             description:
               "Learn how to form and use complex sentences to convey more detailed thoughts and ideas effectively.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Relative Clauses and Modifiers",
             description:
               "A deep dive into relative clauses and modifiers, which help to add extra information to sentences.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "What is the difference between a relative clause and a noun clause?",
             description: "Explain the difference between relative and noun clauses.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Advanced Grammar Video Tutorial",
             description:
               "Watch this in-depth video to understand complex sentence structures and advanced grammar.",
             displayOrder: 4,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Fill in the blanks: The book [word] I borrowed yesterday was fascinating.",
             description: "Fill in the blank with the correct word.",
             displayOrder: 5,
@@ -1361,28 +1361,28 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 2,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Academic Vocabulary and Its Application",
             description:
               "Master vocabulary words commonly used in academic papers, essays, and formal discussions.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Using Formal Language in Communication",
             description:
               "Learn how to adjust your language for formal situations, such as presentations or professional meetings.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.presentation,
+            type: LESSON_TYPES.PRESENTATION,
             title: "Academic Vocabulary List",
             description:
               "Download this list of academic vocabulary and explore their meanings and usage in context.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "Which word is an example of academic vocabulary?",
             description: "Select the correct academic word.",
             displayOrder: 4,
@@ -1399,7 +1399,7 @@ export const niceCourses: NiceCourseData[] = [
             ],
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "The results [word] the hypothesis.",
             description: "Fill in the blank with the correct word.",
             displayOrder: 5,
@@ -1420,34 +1420,34 @@ export const niceCourses: NiceCourseData[] = [
         displayOrder: 3,
         lessons: [
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Understanding Idioms in Context",
             description:
               "Learn how idiomatic expressions are used in everyday conversations to sound more natural and fluent.",
             displayOrder: 1,
           },
           {
-            type: LESSON_TYPES.textBlock,
+            type: LESSON_TYPES.TEXT,
             title: "Common Idioms and Their Meanings",
             description:
               "A list of frequently used idioms, their meanings, and examples of how to use them.",
             displayOrder: 2,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "What does the idiom 'break the ice' mean?",
             description: "Explain the meaning of the idiom 'break the ice'.",
             displayOrder: 3,
           },
           {
-            type: LESSON_TYPES.video,
+            type: LESSON_TYPES.VIDEO,
             title: "Idiomatic Expressions Video Tutorial",
             description:
               "Watch this video to learn how to use idiomatic expressions in real conversations.",
             displayOrder: 4,
           },
           {
-            type: LESSON_TYPES.quiz,
+            type: LESSON_TYPES.QUIZ,
             title: "She was [word] when she heard the good news.",
             description: "Fill in the blank with the correct idiom.",
             displayOrder: 5,
@@ -1464,178 +1464,160 @@ export const niceCourses: NiceCourseData[] = [
       },
     ],
   },
-
-  // {
-  //   type: LESSON_TYPE.multimedia.key,
-  //   title: "Advanced Writing Skills: Crafting Cohesive Paragraphs",
-  //   description:
-  //     "Learn how to write complex, well-structured paragraphs that convey your ideas clearly and persuasively in advanced writing contexts.",
-  //   state: STATUS.published.key,
-  //   imageUrl: faker.image.urlPicsumPhotos(),
-  //   isFree: false,
-  //   items: [
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.text_block.key,
-  //       title: "Topic Sentences and Supporting Details",
-  //       body: "Learn how to craft a clear topic sentence and use supporting details effectively in your writing.",
-  //       state: STATUS.published.key,
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.text_block.key,
-  //       title: "Transitions and Coherence in Writing",
-  //       body: "Understand the importance of transitions and coherence to make your paragraphs flow logically.",
-  //       state: STATUS.published.key,
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.file.key,
-  //       title: "Paragraph Writing Practice",
-  //       type: LESSON_FILE_TYPE.external_presentation.key,
-  //       state: STATUS.published.key,
-  //       body: "Download this practice worksheet to improve your paragraph writing skills.",
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.fill_in_the_blanks_text.key,
-  //       title:
-  //         "The introduction [word] should [word] the main points [word] in the essay.",
-  //       state: STATUS.published.key,
-  //       solutionExplanation:
-  //         "The introduction <strong>paragraph</strong> should <strong>outline</strong> the main points <strong>discussed</strong> in the essay.",
-  //       questionAnswers: [
-  //         {
-  //           optionText: "paragraph",
-  //           isCorrect: true,
-  //           displayOrder: 0,
-  //         },
-  //         {
-  //           optionText: "outline",
-  //           isCorrect: true,
-  //           displayOrder: 1,
-  //         },
-  //         {
-  //           optionText: "discussed",
-  //           isCorrect: true,
-  //           displayOrder: 2,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: LESSON_TYPE.multimedia.key,
-  //   title: "Public Speaking: Delivering a Persuasive Speech",
-  //   description:
-  //     "Develop your public speaking skills by learning how to structure and deliver a persuasive speech that captivates your audience.",
-  //   state: STATUS.published.key,
-  //   imageUrl: faker.image.urlPicsumPhotos(),
-  //   isFree: false,
-  //   items: [
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.text_block.key,
-  //       title: "Structuring a Persuasive Speech",
-  //       body: "Learn the key components of a persuasive speech, including introduction, body, and conclusion.",
-  //       state: STATUS.published.key,
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.text_block.key,
-  //       title: "Techniques for Engaging Your Audience",
-  //       body: "Discover techniques such as storytelling, rhetorical questions, and powerful language to keep your audience engaged.",
-  //       state: STATUS.published.key,
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.single_choice.key,
-  //       title: "What is the purpose of the conclusion in a persuasive speech?",
-  //       state: STATUS.published.key,
-  //       questionAnswers: [
-  //         {
-  //           optionText: "Summarize the main points",
-  //           isCorrect: true,
-  //           displayOrder: 0,
-  //         },
-  //         {
-  //           optionText: "Introduce new information",
-  //           isCorrect: false,
-  //           displayOrder: 1,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.file.key,
-  //       title: "Persuasive Speech Example",
-  //       type: LESSON_FILE_TYPE.external_video.key,
-  //       state: STATUS.published.key,
-  //       body: "Listen to this persuasive speech example to see effective techniques in action.",
-  //     },
-  //   ],
-  // },
-  // {
-  //   type: LESSON_TYPE.quiz.key,
-  //   title: "Advanced English Quiz: Test Your Knowledge",
-  //   description:
-  //     "Test your mastery of advanced English skills, including grammar, vocabulary, idioms, writing, and public speaking.",
-  //   state: STATUS.published.key,
-  //   imageUrl: faker.image.urlPicsumPhotos(),
-  //   isFree: false,
-  //   items: [
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.single_choice.key,
-  //       title: "Which sentence is an example of a complex sentence?",
-  //       state: STATUS.published.key,
-  //       questionAnswers: [
-  //         {
-  //           optionText: "She went to the store, and he stayed home.",
-  //           isCorrect: false,
-  //           displayOrder: 0,
-  //         },
-  //         {
-  //           optionText: "Although it was raining, she went for a walk.",
-  //           isCorrect: true,
-  //           displayOrder: 1,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.single_choice.key,
-  //       title: "Which idiom means 'to be very happy'?",
-  //       state: STATUS.published.key,
-  //       questionAnswers: [
-  //         {
-  //           optionText: "On cloud nine",
-  //           isCorrect: true,
-  //           displayOrder: 0,
-  //         },
-  //         {
-  //           optionText: "Hit the nail on the head",
-  //           isCorrect: false,
-  //           displayOrder: 1,
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       itemType: LESSON_ITEM_TYPE.question.key,
-  //       questionType: QUESTION_TYPE.fill_in_the_blanks_text.key,
-  //       title: "The manager will [word] the team meeting [word].",
-  //       state: STATUS.published.key,
-  //       solutionExplanation:
-  //         "The manager will <strong>lead</strong> the team meeting <strong>tomorrow</strong>.",
-  //       questionAnswers: [
-  //         {
-  //           optionText: "lead",
-  //           isCorrect: true,
-  //           displayOrder: 0,
-  //         },
-  //         {
-  //           optionText: "tomorrow",
-  //           isCorrect: true,
-  //           displayOrder: 1,
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-  // ],
-  // },
+  {
+    title: "Artificial Intelligence in Business: Fundamentals",
+    description:
+      "This beginner-friendly course introduces the basics of AI in business. Learn about key concepts, terminologies, and how AI is applied to improve efficiency, automate processes, and enhance decision-making in various industries. By the end, you'll understand AI's potential to transform your business.",
+    isPublished: true,
+    priceInCents: 12900,
+    category: "Artificial Intelligence",
+    thumbnailS3Key: faker.image.urlPicsumPhotos(),
+    chapters: [
+      {
+        title: "Understanding AI Basics",
+        isPublished: true,
+        isFreemium: false,
+        displayOrder: 1,
+        lessons: [
+          {
+            type: LESSON_TYPES.VIDEO,
+            title: "What is Artificial Intelligence? An Introductory Overview",
+            description:
+              "A comprehensive video introduction to the concept of Artificial Intelligence, its history, and its significance in business.",
+            displayOrder: 1,
+          },
+          {
+            type: LESSON_TYPES.TEXT,
+            title: "Key Concepts and Terminologies in AI",
+            description:
+              '<p>Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions. Below are some key concepts and terminologies essential to understanding AI:</p><ul><li><strong>Machine Learning (ML):</strong> A subset of AI focused on creating algorithms that allow computers to learn from and make predictions based on data. Example: A recommendation system suggesting movies based on your viewing history.</li><li><strong>Neural Networks:</strong> Inspired by the human brain, these are algorithms designed to recognize patterns and process data in layers, enabling tasks like image and speech recognition.</li><li><strong>Natural Language Processing (NLP):</strong> This involves teaching machines to understand, interpret, and generate human language. Example: Virtual assistants like Alexa or Siri.</li><li><strong>Computer Vision:</strong> A field of AI that enables computers to interpret and process visual data, such as images and videos. Example: Facial recognition technology.</li><li><strong>Deep Learning:</strong> A more complex subset of ML that uses large neural networks to analyze massive amounts of data and solve intricate problems, such as self-driving cars.</li><li><strong>Supervised vs. Unsupervised Learning:</strong><br>- <strong>Supervised Learning:</strong> The AI is trained on labeled data (e.g., images labeled as "cat" or "dog").<br>- <strong>Unsupervised Learning:</strong> The AI identifies patterns in unlabeled data without explicit instructions.</li><li><strong>Big Data:</strong> The large volume of structured and unstructured data generated by businesses and devices, which is essential for training AI models.</li><li><strong>Automation:</strong> AI is often used to automate repetitive tasks, freeing up human resources for more complex activities.</li><li><strong>Ethics in AI:</strong> As AI becomes more powerful, ensuring its ethical use (e.g., avoiding bias in decision-making) is critical for building trust.</li></ul><h3>Why These Concepts Matter</h3><p>Understanding these basic AI terms is the first step toward recognizing how AI can be applied in business. Each concept represents a building block of AI\'s potential to transform industries by increasing efficiency, improving decision-making, and creating innovative solutions.</p>',
+            displayOrder: 2,
+          },
+          {
+            type: LESSON_TYPES.PRESENTATION,
+            title: "AI Applications Across Industries",
+            description:
+              "A presentation exploring real-world AI applications in sectors like healthcare, finance, and retail.",
+            displayOrder: 3,
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "AI Quiz: Primary Goal of AI in Business",
+            description:
+              "Test your understanding of the fundamental goal of AI in business applications.",
+            displayOrder: 4,
+            questions: [
+              {
+                type: QuestionType.SingleChoice,
+                title: "What is the primary goal of AI in business?",
+                options: [
+                  { optionText: "Replace human workers", isCorrect: false, displayOrder: 0 },
+                  { optionText: "Automate repetitive tasks", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Improve decision-making", isCorrect: true, displayOrder: 2 },
+                  { optionText: "Eliminate operational costs", isCorrect: false, displayOrder: 3 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "AI Quiz: Applications of AI",
+            description: "Identify common AI applications in various business domains.",
+            displayOrder: 5,
+            questions: [
+              {
+                type: QuestionType.MultipleChoice,
+                title:
+                  "Which of the following are applications of AI in business? (Select all that apply)",
+                options: [
+                  { optionText: "Customer service chatbots", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Predictive analytics", isCorrect: true, displayOrder: 1 },
+                  { optionText: "Supply chain optimization", isCorrect: true, displayOrder: 2 },
+                  { optionText: "Space exploration tools", isCorrect: false, displayOrder: 3 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "AI Quiz: Can AI Function Without Data?",
+            description: "Test your understanding of AI's reliance on data.",
+            displayOrder: 6,
+            questions: [
+              {
+                type: QuestionType.TrueOrFalse,
+                title: "AI can function without any data input from humans.",
+                options: [
+                  { optionText: "True", isCorrect: false, displayOrder: 0 },
+                  { optionText: "False", isCorrect: true, displayOrder: 1 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Photo Identification: AI Solutions",
+            description: "Identify the AI-driven solution from the provided images.",
+            displayOrder: 7,
+            questions: [
+              {
+                type: QuestionType.PhotoQuestion,
+                title: "Which image represents an AI-driven chatbot?",
+                options: [
+                  { optionText: "Image 1 (Chatbot Interface)", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Image 2 (Calculator)", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Image 3 (Spreadsheet)", isCorrect: false, displayOrder: 2 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "AI Fill in the Blanks",
+            description: "Complete the sentences with the correct AI-related terms.",
+            displayOrder: 8,
+            questions: [
+              {
+                type: QuestionType.FillInTheBlanksDnd,
+                title:
+                  "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
+                options: [
+                  { optionText: "Intelligence", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Automation", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Learning", isCorrect: false, displayOrder: 2 },
+                  { optionText: "Human", isCorrect: true, displayOrder: 3 },
+                  { optionText: "Animal", isCorrect: false, displayOrder: 4 },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Brief Response: Why Businesses Adopt AI",
+            description: "Explain in one sentence why businesses adopt AI.",
+            displayOrder: 9,
+            questions: [
+              {
+                type: QuestionType.BriefResponse,
+                title: "In one sentence, explain why businesses are adopting AI.",
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Detailed Response: AI's Role in an Industry",
+            description: "Describe how AI can improve decision-making in a specific industry.",
+            displayOrder: 10,
+            questions: [
+              {
+                type: QuestionType.DetailedResponse,
+                title:
+                  "Describe how AI can improve decision-making in a specific industry of your choice.",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ];

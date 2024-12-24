@@ -63,7 +63,7 @@ export class AdminChapterService {
   //     },
   //   };
   // }
-  // async processLessonItems(lessonItemsList: LessonItemWithContentSchema[]) {
+  // async processLessonItems(lessonItemsList: AdminLessonWithContentSchema[]) {
   //   const getFileUrl = async (url: string) => {
   //     if (!url || url.startsWith("https://")) return url;
   //     return await this.s3Service.getSignedUrl(url);
@@ -123,7 +123,7 @@ export class AdminChapterService {
 
   //   const lessonItemsList = await this.adminChapterRepository.getLessonItems(id);
 
-  //   const items = await this.processLessonItems(lessonItemsList as LessonItemWithContentSchema[]);
+  //   const items = await this.processLessonItems(lessonItemsList as AdminLessonWithContentSchema[]);
 
   //   return {
   //     ...lesson,

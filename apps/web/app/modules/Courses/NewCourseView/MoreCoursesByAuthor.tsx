@@ -30,10 +30,7 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
           Below you can see more courses created by the same author
         </p>
       </div>
-      <div
-        data-testid="enrolled-courses"
-        className="flex gap-6 lg:p-8 lg:bg-white w-full lg:rounded-lg drop-shadow-primary"
-      >
+      <div data-testid="enrolled-courses" className="flex gap-6 w-full">
         {!teacherCourses ||
           (isEmpty(teacherCourses) && (
             <div className="col-span-3 flex gap-8">

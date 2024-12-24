@@ -467,6 +467,8 @@ export interface GetCourseResponse {
     isScorm?: boolean;
     priceInCents: number;
     thumbnailUrl?: string;
+    thumbnailS3Key?: string;
+    thumbnailS3SingedUrl?: string;
     title: string;
   };
 }
@@ -506,6 +508,8 @@ export interface GetCourseByIdResponse {
     isScorm?: boolean;
     priceInCents: number;
     thumbnailUrl?: string;
+    thumbnailS3Key?: string;
+    thumbnailS3SingedUrl?: string;
     title: string;
   };
 }
@@ -545,6 +549,8 @@ export interface GetBetaCourseByIdResponse {
     isScorm?: boolean;
     priceInCents: number;
     thumbnailUrl?: string;
+    thumbnailS3Key?: string;
+    thumbnailS3SingedUrl?: string;
     title: string;
   };
 }
@@ -601,6 +607,25 @@ export type UnenrollCourseResponse = null;
 export interface FileUploadResponse {
   fileKey: string;
   fileUrl: string;
+}
+
+export interface GetLessonByIdResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    type: string;
+    description: string;
+    fileType: string | null;
+    fileUrl: string | null;
+    quizDetails?: {
+      questions: any[];
+      questionCount: number;
+      correctAnswerCount: number | null;
+      wrongAnswerCount: number | null;
+      score: number | null;
+    };
+  };
 }
 
 export type BetaCreateLessonBody = {
@@ -1976,6 +2001,20 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/file`,
         method: "DELETE",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name LessonControllerGetLessonById
+     * @request GET:/api/lesson/{id}
+     */
+    lessonControllerGetLessonById: (id: string, params: RequestParams = {}) =>
+      this.request<GetLessonByIdResponse, any>({
+        path: `/api/lesson/${id}`,
+        method: "GET",
+        format: "json",
         ...params,
       }),
 

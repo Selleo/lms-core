@@ -245,6 +245,9 @@ export const studentLessonProgress = pgTable(
     studentId: uuid("student_id")
       .references(() => users.id, { onDelete: "set null" })
       .notNull(),
+    chapterId: uuid("chapter_id").references(() => chapters.id, { onDelete: "cascade" }),
+    // TODO: add notNull after deploy
+    // .notNull(),
     lessonId: uuid("lesson_id")
       .references(() => lessons.id, { onDelete: "cascade" })
       .notNull(),
@@ -257,7 +260,7 @@ export const studentLessonProgress = pgTable(
     }),
   },
   (table) => ({
-    unq: unique().on(table.studentId, table.lessonId),
+    unq: unique().on(table.studentId, table.lessonId, table.chapterId),
   }),
 );
 

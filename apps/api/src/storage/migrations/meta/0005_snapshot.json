@@ -1,6 +1,6 @@
 {
-  "id": "4a61ac2b-fd8b-4d94-a632-e4d19f0c32c8",
-  "prevId": "a69a4ab9-0250-4505-b38f-f18887d2b8e8",
+  "id": "8c719630-33c8-4de1-b6bb-45e59afc7fe9",
+  "prevId": "4a61ac2b-fd8b-4d94-a632-e4d19f0c32c8",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -744,8 +744,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "position": {
-          "name": "position",
+        "display_order": {
+          "name": "display_order",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -818,6 +818,12 @@
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": true
+        },
+        "display_order": {
+          "name": "display_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         },
         "photo_s3_key": {
           "name": "photo_s3_key",
