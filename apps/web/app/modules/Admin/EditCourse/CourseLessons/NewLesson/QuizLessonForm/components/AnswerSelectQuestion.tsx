@@ -62,7 +62,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
       }
 
       updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], [field]: value };
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, {shouldDirty: true});
     },
     [form, questionIndex, questionType],
   );
@@ -99,6 +99,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                         </SortableList.DragHandle>
                         <Input
                           type="text"
+                          name={`questions.${questionIndex}.options.${index}.optionText`}
                           value={item.optionText}
                           onChange={(e) => handleOptionChange(index, "optionText", e.target.value)}
                           placeholder={`Option ${index + 1}`}
@@ -118,6 +119,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                             <div className="cursor-pointer">
                               <Checkbox
                                 id="isCorrect"
+                                name={`questions.${questionIndex}.options.${index}.isCorrect`}
                                 className="w-4 h-4 mt-1"
                                 checked={item.isCorrect}
                                 isSquareCheck

@@ -89,7 +89,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
   const handleRemoveWord = (index: number) => {
     const updatedOptions = currentOptions.filter((_, i) => i !== index);
-    form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldValidate: true });
+    form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldValidate: true, shouldDirty: true });
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -133,6 +133,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
       shouldValidate: true,
+      shouldDirty: true
     });
 
     setAddedWords(buttonValues);
@@ -150,6 +151,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
       form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
         shouldValidate: true,
+        shouldDirty: true,
       });
 
       setNewWord("");
@@ -170,7 +172,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     editor.on("update", () => {
       const html = editor.getHTML();
-      form.setValue(`questions.${questionIndex}.description`, html);
+      form.setValue(`questions.${questionIndex}.description`, html, {shouldDirty: true});
     });
 
     return () => {
@@ -235,6 +237,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
         form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
           shouldValidate: true,
+          shouldDirty: true
         });
       }
     };

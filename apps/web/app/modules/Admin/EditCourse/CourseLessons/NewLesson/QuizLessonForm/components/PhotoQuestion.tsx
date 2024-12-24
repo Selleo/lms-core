@@ -91,7 +91,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
         updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], [field]: value as string };
       }
 
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, {shouldDirty: true});
     },
     [form, questionIndex, photoQuestionType],
   );
@@ -104,6 +104,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
         setDisplayImageUrl(result.fileUrl);
         form.setValue(`questions.${questionIndex}.photoS3Key`, result.fileKey, {
           shouldValidate: true,
+          shouldDirty: true,
         });
       } catch (error) {
         console.error("Error uploading image:", error);
@@ -201,7 +202,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 items={watchedOptions}
                 isQuiz
                 onChange={(updatedItems) => {
-                  form.setValue(`questions.${questionIndex}.options`, updatedItems);
+                  form.setValue(`questions.${questionIndex}.options`, updatedItems, {shouldDirty: true});
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
@@ -212,6 +213,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                           <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
                         </SortableList.DragHandle>
                         <Input
+                          name={`questions.${questionIndex}.options.${index}.optionText`}
                           type="text"
                           value={item.optionText}
                           onChange={(e) =>
@@ -226,7 +228,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                             <Input
                               type="radio"
                               className="w-4 h-4 cursor-pointer"
-                              name={`questions.${questionIndex}.correctOption`}
+                              name={`questions.${questionIndex}.options.${index}.isCorrect`}
                               checked={item.isCorrect}
                               onChange={() =>
                                 handleOptionChange(index, "isCorrect", !item.isCorrect)
@@ -236,6 +238,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                             <div className="cursor-pointer">
                               <Checkbox
                                 id="isCorrect"
+                                name={`questions.${questionIndex}.options.${index}.isCorrect`}
                                 className="w-4 h-4 mt-1"
                                 checked={item.isCorrect}
                                 isSquareCheck

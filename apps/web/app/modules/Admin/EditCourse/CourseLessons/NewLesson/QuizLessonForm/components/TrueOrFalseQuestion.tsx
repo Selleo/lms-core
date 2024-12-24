@@ -44,7 +44,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
   const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
-    form.setValue("questions", updatedQuestions);
+    form.setValue("questions", updatedQuestions, { shouldDirty: true });
   }, [form, questionIndex]);
 
   const handleOptionChange = useCallback(
@@ -65,7 +65,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
         };
       }
 
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, {shouldDirty: true});
     },
     [form, questionIndex],
   );

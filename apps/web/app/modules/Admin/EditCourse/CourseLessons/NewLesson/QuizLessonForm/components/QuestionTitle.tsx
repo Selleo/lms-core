@@ -50,12 +50,12 @@ const QuestionTitle = ({
   const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
-    form.setValue("questions", updatedQuestions);
+    form.setValue("questions", updatedQuestions, {shouldDirty: true});
   }, [form, questionIndex]);
 
   const handleOptionChange = useCallback(
     (value: string) => {
-      form.setValue(`questions.${questionIndex}.title`, value);
+      form.setValue(`questions.${questionIndex}.title`, value, {shouldDirty: true});
     },
     [form, questionIndex, questionType],
   );
@@ -84,6 +84,7 @@ const QuestionTitle = ({
       </TooltipProvider>
       <Input
         type="text"
+        name={`questions.${questionIndex}.title`}
         value={item.title}
         onChange={(e) => handleOptionChange(e.target.value)}
         required

@@ -40,6 +40,9 @@ const QuizLessonForm = ({
   const questions = form.watch("questions");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const { isDirty } = form.formState;
+  console.log(isDirty);
+
   const onCloseModal = () => {
     setIsModalOpen(false);
   };
