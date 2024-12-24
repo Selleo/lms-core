@@ -18,6 +18,7 @@ import Breadcrumb from "../components/Breadcrumb";
 import { SortableList } from "~/components/SortableList";
 import { Icon } from "~/components/Icon";
 import QuestionWrapper from "./components/QuestionWrapper";
+import { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -68,7 +69,7 @@ const QuizLessonForm = ({
     (
       question: Question,
       questionIndex: number,
-      form: UseFormReturn<any>,
+      form: UseFormReturn<QuizLessonFormValues>,
       dragTrigger: React.ReactNode,
     ) => {
       return (
@@ -78,6 +79,7 @@ const QuizLessonForm = ({
           questionIndex={questionIndex}
           form={form}
           dragTrigger={dragTrigger}
+          item={question}
         >
           {question.type === QuestionType.SINGLE_CHOICE ||
           question.type === QuestionType.MULTIPLE_CHOICE ? (
@@ -86,7 +88,8 @@ const QuizLessonForm = ({
             <TrueOrFalseQuestion questionIndex={questionIndex} form={form} />
           ) : question.type === QuestionType.PHOTO_QUESTION ? (
             <PhotoQuestion questionIndex={questionIndex} form={form} lessonToEdit={lessonToEdit} />
-          ) : question.type === QuestionType.FILL_IN_THE_BLANKS ? (
+          ) : question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT ||
+            question.type === QuestionType.FILL_IN_THE_BLANKS_DND ? (
             <FillInTheBlanksQuestion questionIndex={questionIndex} form={form} />
           ) : null}
         </QuestionWrapper>
@@ -136,7 +139,7 @@ const QuizLessonForm = ({
 
             {questions && questions.length > 0 && (
               <SortableList
-                items={questions as any[]}
+                items={questions}
                 isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions`, updatedItems);
@@ -158,7 +161,6 @@ const QuizLessonForm = ({
             )}
 
             <QuestionSelector addQuestion={addQuestion} />
-
             <div className="flex space-x-4 mt-4">
               <Button type="submit" className="bg-primary-700">
                 Save

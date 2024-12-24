@@ -1,6 +1,5 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { Label } from "@radix-ui/react-label";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -10,6 +9,7 @@ import { QuestionOption, QuestionType } from "../QuizLessonForm.types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
 import { Checkbox } from "~/components/ui/checkbox";
 import { SortableList } from "~/components/SortableList";
+import { Label } from "~/components/ui/label";
 
 type AnswerSelectQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -84,7 +84,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
             ) : null}
             {watchedOptions && watchedOptions.length > 0 && (
               <SortableList
-                items={watchedOptions as any[]}
+                items={watchedOptions}
                 isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions.${questionIndex}.options`, updatedItems);
@@ -92,17 +92,15 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
                   <SortableList.Item id={item.displayOrder}>
-                    <div className="mt-4">
-                      <div className="border border-gray-300 p-4 rounded-xl flex items-center space-x-2">
+                    <div className="mt-2">
+                      <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
                         <SortableList.DragHandle>
-                          <Icon name="DragAndDropIcon" className="cursor-move" />
+                          <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
                         </SortableList.DragHandle>
                         <Input
                           type="text"
                           value={item.optionText}
-                          onChange={(e) =>
-                            handleOptionChange(index as number, "optionText", e.target.value)
-                          }
+                          onChange={(e) => handleOptionChange(index, "optionText", e.target.value)}
                           placeholder={`Option ${index + 1}`}
                           required
                           className="flex-1"
@@ -114,10 +112,10 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                               name={`questions.${questionIndex}.options.${index}.isCorrect`}
                               checked={item.isCorrect === true}
                               onChange={() => handleOptionChange(index, "isCorrect", true)}
-                              className="p-1 w-4 h-4 ml-3"
+                              className="w-4 h-4 cursor-pointer"
                             />
                           ) : (
-                            <div className="cursor-pointer ml-3">
+                            <div className="cursor-pointer">
                               <Checkbox
                                 id="isCorrect"
                                 className="w-4 h-4 mt-1"
@@ -129,7 +127,12 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                               />
                             </div>
                           )}
-                          <Label className="ml-2 body-sm text-neutral-950">Correct</Label>
+                          <Label
+                            onClick={() => handleOptionChange(index, "isCorrect", !item.isCorrect)}
+                            className="ml-2 body-sm text-neutral-950 cursor-pointer"
+                          >
+                            Correct
+                          </Label>
                           <TooltipProvider delayDuration={0}>
                             <Tooltip>
                               <TooltipTrigger asChild>

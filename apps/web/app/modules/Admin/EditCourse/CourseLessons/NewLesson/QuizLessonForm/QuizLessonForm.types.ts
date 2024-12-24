@@ -36,5 +36,6 @@ export enum QuestionType {
   BRIEF_RESPONSE = "brief_response",
   DETAILED_RESPONSE = "detailed_response",
   PHOTO_QUESTION = "photo_question",
-  FILL_IN_THE_BLANKS = "fill_in_the_blanks",
+  FILL_IN_THE_BLANKS_TEXT = "fill_in_the_blanks_text",
+  FILL_IN_THE_BLANKS_DND = "fill_in_the_blanks_dnd",
 }

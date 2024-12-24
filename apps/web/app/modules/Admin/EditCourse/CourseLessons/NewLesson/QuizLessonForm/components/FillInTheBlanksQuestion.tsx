@@ -13,6 +13,14 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { QuestionType } from "../QuizLessonForm.types";
 
 type FillInTheBlankQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -243,6 +251,49 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       <Accordion.Item value={`item-${questionIndex}`}>
         <div className={"p-2 mt-3 rounded-xl border-0 transition-all duration-300"}>
           <div className="ml-14">
+            <FormField
+              control={form.control}
+              name={`questions.${questionIndex}.type`}
+              render={({ field }) => (
+                <FormItem className="w-[20rem] mb-6">
+                  <Label htmlFor="type" className="body-sm-md">
+                    <span className="text-red-500 mr-1">*</span>
+                    Type
+                  </Label>
+                  <FormControl>
+                    <Select
+                      {...field}
+                      onValueChange={(value) => field.onChange(value)}
+                      defaultValue={QuestionType.FILL_IN_THE_BLANKS_DND}
+                      value={field.value || QuestionType.FILL_IN_THE_BLANKS_DND}
+                    >
+                      <SelectTrigger>
+                        <SelectValue
+                          className="text-left body-base-md"
+                          placeholder="Drag and drop"
+                        />
+                        <SelectValue className="text-left body-base-md" placeholder="Text" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem
+                          value={QuestionType.FILL_IN_THE_BLANKS_DND}
+                          className="text-left body-base-md"
+                        >
+                          Drag and drop
+                        </SelectItem>
+                        <SelectItem
+                          value={QuestionType.FILL_IN_THE_BLANKS_TEXT}
+                          className="text-left body-base-md"
+                        >
+                          Text
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <span className="text-red-500 mr-1">*</span>
             <Label className="body-sm-md">Words</Label>
             <div className="flex flex-wrap gap-2 items-center">
@@ -310,7 +361,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                 <FormItem className="mt-5">
                   <Label htmlFor="description" className="body-sm-md">
                     <span className="text-red-500 mr-1">*</span>
-                    Sentence
+                    Sentences
                   </Label>
                   <FormControl>
                     <EditorContent

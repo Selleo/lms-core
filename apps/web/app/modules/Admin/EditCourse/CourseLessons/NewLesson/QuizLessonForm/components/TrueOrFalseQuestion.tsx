@@ -1,5 +1,4 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { Label } from "@radix-ui/react-label";
 import { useCallback, useState } from "react";
 
 import { Icon } from "~/components/Icon";
@@ -11,6 +10,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { QuestionOption } from "../QuizLessonForm.types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
 import { SortableList } from "~/components/SortableList";
+import { Label } from "~/components/ui/label";
 
 type TrueOrFalseQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -87,7 +87,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             )}
             {watchedOptions && watchedOptions?.length > 0 && (
               <SortableList
-                items={watchedOptions as any[]}
+                items={watchedOptions}
                 isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions.${questionIndex}.options`, updatedItems);
@@ -95,10 +95,10 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
                   <SortableList.Item id={item.displayOrder}>
-                    <div className="mt-4">
-                      <div className="border border-gray-300 p-4 rounded-xl flex items-center space-x-2">
+                    <div className="mt-2">
+                      <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
                         <SortableList.DragHandle>
-                          <Icon name="DragAndDropIcon" className="cursor-move" />
+                          <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
                         </SortableList.DragHandle>
                         <Input
                           type="text"
@@ -116,11 +116,11 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                             name={`questions.${questionIndex}.options.${index}.isCorrect`}
                             checked={item.isCorrect === true}
                             onChange={() => handleOptionChange(index, "isCorrect", true)}
-                            className="p-1 w-4 h-4 ml-3 cursor-pointer"
+                            className="p-1 w-4 h-4 cursor-pointer"
                           />
                           <Label
                             className="ml-2 text-neutral-900 body-base cursor-pointer"
-                            onChange={() => handleOptionChange(index, "isCorrect", false)}
+                            onClick={() => handleOptionChange(index, "isCorrect", true)}
                           >
                             True
                           </Label>
@@ -133,7 +133,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                           />
                           <Label
                             className="ml-2 text-neutral-900 body-base cursor-pointer"
-                            onChange={() => handleOptionChange(index, "isCorrect", false)}
+                            onClick={() => handleOptionChange(index, "isCorrect", false)}
                           >
                             False
                           </Label>

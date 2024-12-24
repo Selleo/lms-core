@@ -43,7 +43,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                       name="isPublished"
                       checked={field.value === false}
                       onChange={() => field.onChange(false)}
-                      className="p-1 w-7 h-7"
+                      className="p-1 w-6 h-6"
                       id="draft"
                     />
                     <div>
@@ -77,7 +77,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                       name="isPublished"
                       checked={field.value === true}
                       onChange={() => field.onChange(true)}
-                      className="p-1 w-7 h-7"
+                      className="p-1 w-6 h-6"
                       id="published"
                     />
                     <div>

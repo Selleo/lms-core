@@ -55,7 +55,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
                 description:
@@ -267,7 +267,7 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
                 // displayOrder: 5,
@@ -312,7 +312,7 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 // displayOrder: 6,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -332,7 +332,7 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 // displayOrder: 7,
                 title:
                   "In JavaScript, [word] are used to store data, while [word] are used to perform actions.",
@@ -427,7 +427,7 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
                 description:
@@ -457,7 +457,7 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 // displayOrder: 4,
                 title: "To center an element horizontally, you can use 'margin: [word] [word];'.",
                 description:
@@ -520,7 +520,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
                 description:
@@ -604,7 +604,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
                 description:
@@ -632,7 +632,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
                 description:
@@ -813,7 +813,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
                 description:
@@ -879,7 +879,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
                 description:
@@ -954,7 +954,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
                 description:
@@ -1010,7 +1010,7 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
                 description:
@@ -1082,7 +1082,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "Fill in the blanks: 'She [word] to the store yesterday.'",
                 description: "<p>She <strong>went</strong> to the store yesterday.</p>",
                 options: [
@@ -1144,7 +1144,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "I [word] to the park every day.",
                 options: [
                   { optionText: "go", isCorrect: true, displayOrder: 0 },
@@ -1207,7 +1207,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "I love [word] (swimming/swim).",
                 description: "I love <strong>swimming</strong> (swimming/swim).",
                 options: [{ optionText: "swimming", isCorrect: true, displayOrder: 0 }],
@@ -1248,7 +1248,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "She [word] to the park every day.",
                 description: "She <strong>went</strong> to the park every day.",
                 options: [
@@ -1343,7 +1343,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "The book [word] I borrowed yesterday was fascinating.",
                 description: "The book <strong>that</strong> I borrowed yesterday was fascinating.",
                 options: [
@@ -1405,7 +1405,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "The results [word] the hypothesis.",
                 description: "The results <strong>support</strong> the hypothesis.",
                 options: [{ optionText: "support", isCorrect: true, displayOrder: 0 }],
@@ -1453,7 +1453,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "She was [word] when she heard the good news.",
                 description: "She was <strong>over the moon</strong> when she heard the good news.",
                 options: [{ optionText: "over the moon", isCorrect: true, displayOrder: 0 }],

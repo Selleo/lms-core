@@ -112,7 +112,11 @@ export const useQuizLessonForm = ({
     }
 
     const updatedQuestions = values.questions.map((question) => {
-      if (question.type === QuestionType.FILL_IN_THE_BLANKS && question.description) {
+      if (
+        question.type ===
+          (QuestionType.FILL_IN_THE_BLANKS_DND || QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
+        question.description
+      ) {
         return {
           ...question,
           description: question.description.replace(/<button\b[^>]*>[\s\S]*?<\/button>/g, "[word]"),

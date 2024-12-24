@@ -1977,60 +1977,6 @@
         }
       }
     },
-    "/api/question/question-anwser-display-order": {
-      "patch": {
-        "operationId": "QuestionController_updateQuestionAnswerDisplayOrder",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateQuestionAnswerDisplayOrderBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateQuestionAnswerDisplayOrderResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/question/question-display-order": {
-      "patch": {
-        "operationId": "QuestionController_updateQuestionDisplayOrder",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateQuestionDisplayOrderBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateQuestionDisplayOrderResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/studentLessonProgress": {
       "post": {
         "operationId": "StudentLessonProgressController_markLessonAsCompleted",
@@ -4326,7 +4272,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "fill_in_the_blanks",
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
                           "type": "string"
                         },
                         {
@@ -4507,7 +4457,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "fill_in_the_blanks",
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
                           "type": "string"
                         },
                         {
@@ -4687,7 +4641,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "fill_in_the_blanks",
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
                           "type": "string"
                         },
                         {
@@ -4858,7 +4816,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "fill_in_the_blanks",
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
                           "type": "string"
                         },
                         {
@@ -4999,7 +4961,7 @@
       "UpdateQuestionAnswerDisplayOrderBody": {
         "type": "object",
         "properties": {
-          "questionAnswerId": {
+          "questionAnwserId": {
             "format": "uuid",
             "type": "string"
           },
@@ -5008,7 +4970,7 @@
           }
         },
         "required": [
-          "questionAnswerId",
+          "questionAnwserId",
           "displayOrder"
         ]
       },
@@ -5180,7 +5142,11 @@
                                 "type": "string"
                               },
                               {
-                                "const": "fill_in_the_blanks",
+                                "const": "fill_in_the_blanks_text",
+                                "type": "string"
+                              },
+                              {
+                                "const": "fill_in_the_blanks_dnd",
                                 "type": "string"
                               },
                               {
@@ -5515,41 +5481,6 @@
         ]
       },
       "UpdateFreemiumStatusResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "message"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
-      "UpdateQuestionDisplayOrderBody": {
-        "type": "object",
-        "properties": {
-          "questionId": {
-            "format": "uuid",
-            "type": "string"
-          },
-          "displayOrder": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "questionId",
-          "displayOrder"
-        ]
-      },
-      "UpdateQuestionDisplayOrderResponse": {
         "type": "object",
         "properties": {
           "data": {

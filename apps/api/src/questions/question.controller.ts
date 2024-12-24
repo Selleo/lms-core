@@ -14,64 +14,6 @@ import { USER_ROLES } from "src/user/schemas/userRoles";
 export class QuestionController {
   constructor(private readonly questionService: QuestionService) {}
 
-  @Patch("question-anwser-display-order")
-  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
-  @Validate({
-    request: [
-      {
-        type: "body",
-        schema: Type.Object({
-          questionAnswerId: UUIDSchema,
-          displayOrder: Type.Number(),
-        }),
-        required: true,
-      },
-    ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
-  })
-  async updateQuestionAnswerDisplayOrder(
-    @Body()
-    body: {
-      questionAnswerId: UUIDType;
-      displayOrder: number;
-    },
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.questionService.updateQuestionAnswerDisplayOrder(body);
-
-    return new BaseResponse({
-      message: "Question answer display order updated successfully",
-    });
-  }
-
-  @Patch("question-display-order")
-  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
-  @Validate({
-    request: [
-      {
-        type: "body",
-        schema: Type.Object({
-          questionId: UUIDSchema,
-          displayOrder: Type.Number(),
-        }),
-        required: true,
-      },
-    ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
-  })
-  async updateQuestionDisplayOrder(
-    @Body()
-    body: {
-      questionId: UUIDType;
-      displayOrder: number;
-    },
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.questionService.updateQuestionDisplayOrder(body);
-
-    return new BaseResponse({
-      message: "Question answer display order updated successfully",
-    });
-  }
-
   // TODO: repair this
   // @Post("answer")
   // @Roles(USER_ROLES.STUDENT)

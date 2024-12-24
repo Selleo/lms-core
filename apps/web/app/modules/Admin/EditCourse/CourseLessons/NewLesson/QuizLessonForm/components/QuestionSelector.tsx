@@ -36,7 +36,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
       icon: QuestionIcons.PhotoQuestion,
     },
     {
-      type: QuestionType.FILL_IN_THE_BLANKS,
+      type: QuestionType.FILL_IN_THE_BLANKS_DND,
       label: "Fill in the blanks",
       icon: QuestionIcons.FillInTheBlanks,
     },

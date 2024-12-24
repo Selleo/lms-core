@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import QuestionTitle from "./QuestionTitle";
 import * as Accordion from "@radix-ui/react-accordion";
-import { QuestionType } from "../QuizLessonForm.types";
+import { Question, QuestionType } from "../QuizLessonForm.types";
 import { UseFormReturn } from "react-hook-form";
 import { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 
@@ -11,12 +11,14 @@ const QuestionWrapper = ({
   form,
   dragTrigger,
   children,
+  item,
 }: {
   questionType: QuestionType;
   questionIndex: number;
   form: UseFormReturn<QuizLessonFormValues>;
   dragTrigger: React.ReactNode;
   children: React.ReactNode;
+  item: Question;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,8 +41,9 @@ const QuestionWrapper = ({
             isOpen={isOpen}
             handleToggle={handleToggle}
             dragTrigger={dragTrigger}
+            item={item}
           />
-          <Accordion.Content>{children} </Accordion.Content>
+          <Accordion.Content>{children}</Accordion.Content>
         </div>
       </Accordion.Item>
     </Accordion.Root>

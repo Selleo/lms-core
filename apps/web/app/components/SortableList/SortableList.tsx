@@ -10,7 +10,7 @@ import type { Active, UniqueIdentifier } from "@dnd-kit/core";
 import type { ReactNode } from "react";
 
 interface BaseItem {
-  id: UniqueIdentifier;
+  id?: UniqueIdentifier;
   displayOrder?: number;
 }
 
@@ -46,7 +46,7 @@ export function SortableList<T extends BaseItem>({
       const activeOrder = Number(active.id);
       return items.find((item) => (item.displayOrder as number) === activeOrder);
     }
-    return items.find((item) => item.id === active?.id); 
+    return items.find((item) => item.id === active?.id);
   }, [active, items, isQuiz]);
 
   const sensors = useSensors(
@@ -60,34 +60,53 @@ export function SortableList<T extends BaseItem>({
     <DndContext
       sensors={sensors}
       onDragStart={({ active }) => {
-        setActive(active); 
+        setActive(active);
       }}
       onDragEnd={({ active, over }) => {
-        if (over && active.id !== over.id) {
-          const activeOrder = Number(active.id); 
-          const overOrder = Number(over.id); 
+        if (over && active.id !== over?.id) {
+          if (isQuiz) {
+            const activeOrder = Number(active.id);
+            const overOrder = Number(over.id);
+            const activeIndex = items.findIndex((item) => item.displayOrder === activeOrder);
+            const overIndex = items.findIndex((item) => item.displayOrder === overOrder);
 
-          const activeIndex = items.findIndex((item) => item.displayOrder === activeOrder);
-          const overIndex = items.findIndex((item) => item.displayOrder === overOrder);
+            const updatedItems = arrayMove(items, activeIndex, overIndex);
 
-          const updatedItems = arrayMove(items, activeIndex, overIndex);
+            const updatedItemsWithOrder = updatedItems.map((item, index) => ({
+              ...item,
+              displayOrder: index + 1,
+            }));
 
-          const updatedItemsWithOrder = updatedItems.map((item, index) => ({
-            ...item,
-            displayOrder: index + 1, 
-          }));
+            const updatedItem = updatedItemsWithOrder[activeIndex];
+            const newPosition = updatedItemsWithOrder.indexOf(updatedItem);
+            const newDisplayOrder = newPosition + 1;
 
-          const updatedItem = updatedItemsWithOrder[activeIndex];
-          const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem);
-          const newDisplayOrder = newChapterPosition + 1;
+            onChange(updatedItemsWithOrder, newPosition, newDisplayOrder);
+            setActive(null);
+          } else {
+            const activeIndex = items.findIndex(({ id }) => id === active.id);
+            const overIndex = items.findIndex(({ id }) => id === over.id);
 
-          onChange(updatedItemsWithOrder, newChapterPosition, newDisplayOrder);
+            const updatedItems = arrayMove(items, activeIndex, overIndex);
+
+            const updatedItemsWithOrder = updatedItems.map((item, index) => ({
+              ...item,
+              displayOrder: index + 1,
+            }));
+
+            const updatedItem = updatedItemsWithOrder.find((item) => item.id === active.id);
+
+            const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem!);
+
+            const newDisplayOrder = newChapterPosition + 1;
+
+            onChange(updatedItemsWithOrder, newChapterPosition, newDisplayOrder);
+            setActive(null);
+          }
         }
-
-        setActive(null); 
       }}
       onDragCancel={() => {
-        setActive(null); 
+        setActive(null);
       }}
     >
       <SortableContext

@@ -57,32 +57,6 @@ export class QuestionsRepository {
     return existingAnswer?.id;
   }
 
-  async getQuestionById(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
-    const dbInstance = trx ?? this.db;
-    return await dbInstance
-      .select({
-        id: questions.id,
-        displayOrder: questions.displayOrder,
-      })
-      .from(questions)
-      .where(eq(questions.id, questionId));
-  }
-
-  async getQuestionAnswersById(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
-    const dbInstance = trx ?? this.db;
-
-    return await dbInstance
-      .select({
-        id: questionAnswerOptions.id,
-        optionText: questionAnswerOptions.optionText,
-        isCorrect: questionAnswerOptions.isCorrect,
-        displayOrder: questionAnswerOptions.displayOrder,
-        questionId: questionAnswerOptions.questionId,
-      })
-      .from(questionAnswerOptions)
-      .where(eq(questionAnswerOptions.questionId, questionId));
-  }
-
   async getQuestionAnswers(
     questionId: UUIDType,
     answerList: string[],
@@ -109,62 +83,6 @@ export class QuestionsRepository {
     return await dbInstance
       .delete(studentQuestionAnswers)
       .where(eq(studentQuestionAnswers.id, answerId));
-  }
-
-  async updateQuestionDisplayOrder(
-    questionId: UUIDType,
-    oldDisplayOrder: number,
-    newDisplayOrder: number,
-    questionToUpdateId: UUIDType,
-  ): Promise<void> {
-    await this.db.transaction(async (trx) => {
-      await trx
-        .update(questions)
-        .set({
-          displayOrder: sql`CASE
-            WHEN ${eq(questions.id, questionId)}
-              THEN ${newDisplayOrder}
-            WHEN ${newDisplayOrder < oldDisplayOrder}
-              AND ${gte(questions.displayOrder, newDisplayOrder)}
-              AND ${lte(questions.displayOrder, oldDisplayOrder)}
-              THEN ${questions.displayOrder} + 1
-            WHEN ${newDisplayOrder > oldDisplayOrder}
-              AND ${lte(questions.displayOrder, newDisplayOrder)}
-              AND ${gte(questions.displayOrder, oldDisplayOrder)}
-              THEN ${questions.displayOrder} - 1
-            ELSE ${questions.displayOrder}
-          END`,
-        })
-        .where(eq(questions.id, questionToUpdateId));
-    });
-  }
-
-  async updateQuestionAnswerDisplayOrder(
-    questionAnswerId: UUIDType,
-    oldDisplayOrder: number,
-    newDisplayOrder: number,
-    questionAnswerToUpdateId: UUIDType,
-  ): Promise<void> {
-    await this.db.transaction(async (trx) => {
-      await trx
-        .update(questions)
-        .set({
-          displayOrder: sql`CASE
-            WHEN ${eq(questionAnswerOptions.id, questionAnswerId)}
-              THEN ${newDisplayOrder}
-            WHEN ${newDisplayOrder < oldDisplayOrder}
-              AND ${gte(questionAnswerOptions.displayOrder, newDisplayOrder)}
-              AND ${lte(questionAnswerOptions.displayOrder, oldDisplayOrder)}
-              THEN ${questionAnswerOptions.displayOrder} + 1
-            WHEN ${newDisplayOrder > oldDisplayOrder}
-              AND ${lte(questionAnswerOptions.displayOrder, newDisplayOrder)}
-              AND ${gte(questionAnswerOptions.displayOrder, oldDisplayOrder)}
-              THEN ${questionAnswerOptions.displayOrder} - 1
-            ELSE ${questionAnswerOptions.displayOrder}
-          END`,
-        })
-        .where(eq(questionAnswerOptions.id, questionAnswerToUpdateId));
-    });
   }
 
   async upsertAnswer(

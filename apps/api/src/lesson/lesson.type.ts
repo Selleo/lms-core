@@ -11,7 +11,8 @@ export enum QuestionType {
   MultipleChoice = "multiple_choice",
   TrueOrFalse = "true_or_false",
   PhotoQuestion = "photo_question",
-  FillInTheBlanks = "fill_in_the_blanks",
+  FillInTheBlanksText = "fill_in_the_blanks_text",
+  FillInTheBlanksDnd = "fill_in_the_blanks_dnd",
   BriefResponse = "brief_response",
   DetailedResponse = "detailed_response",
 }

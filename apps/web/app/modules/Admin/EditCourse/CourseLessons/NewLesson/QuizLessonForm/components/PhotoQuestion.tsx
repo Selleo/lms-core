@@ -189,7 +189,6 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
               )}
             />
           </div>
-
           <div className="ml-14 mt-4">
             {!isOptionEmpty && (
               <>
@@ -199,7 +198,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             )}
             {watchedOptions && watchedOptions?.length > 0 && (
               <SortableList
-                items={watchedOptions as any[]}
+                items={watchedOptions}
                 isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions.${questionIndex}.options`, updatedItems);
@@ -207,10 +206,10 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
                   <SortableList.Item id={item.displayOrder}>
-                    <div className="mt-4">
-                      <div className="border border-gray-300 p-4 rounded-xl flex items-center space-x-2">
+                    <div className="mt-2">
+                      <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
                         <SortableList.DragHandle>
-                          <Icon name="DragAndDropIcon" className="cursor-move" />
+                          <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
                         </SortableList.DragHandle>
                         <Input
                           type="text"
@@ -226,7 +225,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                           {photoQuestionType === QuestionType.SINGLE_CHOICE ? (
                             <Input
                               type="radio"
-                              className="w-4 h-4 cursor-pointer ml-3"
+                              className="w-4 h-4 cursor-pointer"
                               name={`questions.${questionIndex}.correctOption`}
                               checked={item.isCorrect}
                               onChange={() =>
@@ -234,10 +233,10 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                               }
                             />
                           ) : (
-                            <div className="cursor-pointer ml-3">
+                            <div className="cursor-pointer">
                               <Checkbox
                                 id="isCorrect"
-                                className="w-5 h-5 mt-1"
+                                className="w-4 h-4 mt-1"
                                 checked={item.isCorrect}
                                 isSquareCheck
                                 onCheckedChange={() =>
@@ -246,7 +245,13 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                               />
                             </div>
                           )}
-                          <Label className="ml-2 body-sm text-neutral-950">Correct</Label>
+
+                          <Label
+                            onClick={() => handleOptionChange(index, "isCorrect", !item.isCorrect)}
+                            className="ml-2 body-sm text-neutral-950 cursor-pointer"
+                          >
+                            Correct
+                          </Label>
                           <TooltipProvider delayDuration={0}>
                             <Tooltip>
                               <TooltipTrigger asChild>
