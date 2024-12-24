@@ -1745,33 +1745,6 @@
         }
       }
     },
-    "/api/lesson/question-anwser-display-order": {
-      "patch": {
-        "operationId": "LessonController_updateQuestionAnswerDisplayOrder",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateQuestionAnswerDisplayOrderBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateQuestionAnswerDisplayOrderResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/lesson/lesson-display-order": {
       "patch": {
         "operationId": "LessonController_updateLessonDisplayOrder",
@@ -4940,41 +4913,6 @@
         ]
       },
       "RemoveLessonResponse": {
-        "type": "object",
-        "properties": {
-          "data": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "message"
-            ]
-          }
-        },
-        "required": [
-          "data"
-        ]
-      },
-      "UpdateQuestionAnswerDisplayOrderBody": {
-        "type": "object",
-        "properties": {
-          "questionAnwserId": {
-            "format": "uuid",
-            "type": "string"
-          },
-          "displayOrder": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "questionAnwserId",
-          "displayOrder"
-        ]
-      },
-      "UpdateQuestionAnswerDisplayOrderResponse": {
         "type": "object",
         "properties": {
           "data": {
