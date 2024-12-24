@@ -21,6 +21,7 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { QuestionType } from "../QuizLessonForm.types";
+import { cn } from "~/lib/utils";
 
 type FillInTheBlankQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -249,7 +250,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
-        <div className={"p-2 mt-3 rounded-xl border-0 transition-all duration-300"}>
+        <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
           <div className="ml-14">
             <FormField
               control={form.control}
@@ -300,9 +301,10 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               {currentOptions.map((option, index) => (
                 <div
                   key={index}
-                  className={`px-4 rounded-full flex items-center justify-between space-x-2 ${
+                  className={cn(
+                    "px-4 rounded-full flex items-center justify-between space-x-2",
                     option.isCorrect ? "bg-success-100" : "bg-primary-200"
-                  }`}
+                  )}
                   draggable={!containsButtonWithWord(option.optionText)}
                   onDragStart={(e) => handleDragStart(option.optionText, e)}
                 >

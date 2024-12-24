@@ -55,7 +55,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QuestionType.FillInTheBlanksText,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
                 description:
@@ -312,7 +312,7 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QuestionType.FillInTheBlanksText,
                 // displayOrder: 6,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
