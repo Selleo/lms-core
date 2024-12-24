@@ -8,7 +8,7 @@ type TextBlankProps = {
   studentAnswer?: {
     id: string;
     optionText: string;
-    position: number | null;
+    displayOrder: number | null;
     isStudentAnswer?: boolean | null;
     isCorrect?: boolean | null;
     studentAnswerText?: string | null;

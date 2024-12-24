@@ -129,7 +129,7 @@ export async function createNiceCourses(
                 questionId,
                 optionText: questionAnswerOption.optionText,
                 isCorrect: questionAnswerOption.isCorrect || false,
-                position: questionAnswerOption.position,
+                displayOrder: questionAnswerOption.displayOrder,
               }));
 
               await db.insert(questionAnswerOptions).values(questionAnswerOptionList);

@@ -229,6 +229,7 @@ export class AdminChapterRepository {
               'type', ${questions.type},
               'description', ${questions.description},
               'photoS3Key', ${questions.photoS3Key},
+              'displayOrder', ${questions.displayOrder},
               'photoQuestionType', ${questions.photoQuestionType},
               'options', (
                 SELECT ARRAY(
@@ -236,7 +237,7 @@ export class AdminChapterRepository {
                     'id', ${questionAnswerOptions.id},
                     'optionText', ${questionAnswerOptions.optionText},
                     'isCorrect', ${questionAnswerOptions.isCorrect},
-                    'position', ${questionAnswerOptions.position}
+                    'displayOrder', ${questionAnswerOptions.displayOrder}
                   )
                   FROM ${questionAnswerOptions} questionAnswerOptions
                   WHERE questionAnswerOptions.question_id = questions.id

@@ -5,19 +5,20 @@ import { Label } from "~/components/ui/label";
 
 import AnswerSelectQuestion from "./components/AnswerSelectQuestion";
 import FillInTheBlanksQuestion from "./components/FillInTheBlanksQuestion";
-import OpenQuestion from "./components/OpenQuestion";
 import PhotoQuestion from "./components/PhotoQuestion";
 import QuestionSelector from "./components/QuestionSelector";
 import TrueOrFalseQuestion from "./components/TrueOrFalseQuestion";
 import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
-
 import { Question, QuestionType } from "./QuizLessonForm.types";
-import type { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
 import { Chapter, ContentTypes, DeleteContentType, Lesson } from "../../../EditCourse.types";
 import { useCallback, useState } from "react";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 import Breadcrumb from "../components/Breadcrumb";
+import { SortableList } from "~/components/SortableList";
+import { Icon } from "~/components/Icon";
+import QuestionWrapper from "./components/QuestionWrapper";
+import { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -37,7 +38,6 @@ const QuizLessonForm = ({
   });
 
   const questions = form.watch("questions");
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onCloseModal = () => {
@@ -55,6 +55,7 @@ const QuizLessonForm = ({
       const newQuestion: Question = {
         title: "",
         type: questionType as QuestionType,
+        displayOrder: questions.length + 1,
         photoQuestionType:
           questionType === QuestionType.PHOTO_QUESTION ? QuestionType.SINGLE_CHOICE : undefined,
       };
@@ -65,42 +66,36 @@ const QuizLessonForm = ({
   );
 
   const renderQuestion = useCallback(
-    (question: Question, questionIndex: number, form: UseFormReturn<QuizLessonFormValues>) => {
-      switch (question.type) {
-        case QuestionType.SINGLE_CHOICE:
-        case QuestionType.MULTIPLE_CHOICE:
-          return (
-            <AnswerSelectQuestion key={questionIndex} questionIndex={questionIndex} form={form} />
-          );
-        case QuestionType.TRUE_OR_FALSE:
-          return (
-            <TrueOrFalseQuestion key={questionIndex} questionIndex={questionIndex} form={form} />
-          );
-        case QuestionType.BRIEF_RESPONSE:
-        case QuestionType.DETAILED_RESPONSE:
-          return <OpenQuestion key={questionIndex} questionIndex={questionIndex} form={form} />;
-        case QuestionType.PHOTO_QUESTION:
-          return (
-            <PhotoQuestion
-              key={questionIndex}
-              questionIndex={questionIndex}
-              form={form}
-              lessonToEdit={lessonToEdit}
-            />
-          );
-        case QuestionType.FILL_IN_THE_BLANKS:
-          return (
-            <FillInTheBlanksQuestion
-              key={questionIndex}
-              questionIndex={questionIndex}
-              form={form}
-            />
-          );
-        default:
-          return null;
-      }
+    (
+      question: Question,
+      questionIndex: number,
+      form: UseFormReturn<QuizLessonFormValues>,
+      dragTrigger: React.ReactNode,
+    ) => {
+      return (
+        <QuestionWrapper
+          key={questionIndex}
+          questionType={question.type}
+          questionIndex={questionIndex}
+          form={form}
+          dragTrigger={dragTrigger}
+          item={question}
+        >
+          {question.type === QuestionType.SINGLE_CHOICE ||
+          question.type === QuestionType.MULTIPLE_CHOICE ? (
+            <AnswerSelectQuestion questionIndex={questionIndex} form={form} />
+          ) : question.type === QuestionType.TRUE_OR_FALSE ? (
+            <TrueOrFalseQuestion questionIndex={questionIndex} form={form} />
+          ) : question.type === QuestionType.PHOTO_QUESTION ? (
+            <PhotoQuestion questionIndex={questionIndex} form={form} lessonToEdit={lessonToEdit} />
+          ) : question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT ||
+            question.type === QuestionType.FILL_IN_THE_BLANKS_DND ? (
+            <FillInTheBlanksQuestion questionIndex={questionIndex} form={form} />
+          ) : null}
+        </QuestionWrapper>
+      );
     },
-    [],
+    [lessonToEdit],
   );
 
   return (
@@ -142,11 +137,30 @@ const QuizLessonForm = ({
               </Label>
             </div>
 
-            {questions?.map((question, questionIndex) =>
-              renderQuestion(question, questionIndex, form),
+            {questions && questions.length > 0 && (
+              <SortableList
+                items={questions}
+                isQuiz
+                onChange={(updatedItems) => {
+                  form.setValue(`questions`, updatedItems);
+                }}
+                className="grid grid-cols-1"
+                renderItem={(item, index: number) => (
+                  <SortableList.Item id={item.displayOrder}>
+                    {renderQuestion(
+                      item,
+                      index,
+                      form,
+                      <SortableList.DragHandle>
+                        <Icon name="DragAndDropIcon" className="cursor-move" />
+                      </SortableList.DragHandle>,
+                    )}
+                  </SortableList.Item>
+                )}
+              />
             )}
-            <QuestionSelector addQuestion={addQuestion} />
 
+            <QuestionSelector addQuestion={addQuestion} />
             <div className="flex space-x-4 mt-4">
               <Button type="submit" className="bg-primary-700">
                 Save

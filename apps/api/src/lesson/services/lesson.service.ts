@@ -77,15 +77,15 @@ export class LessonService {
                           ${questionAnswerOptions.id} AS id,
                           ${questionAnswerOptions.optionText} AS optionText,
                           ${questionAnswerOptions.isCorrect} AS "isCorrect",
-                          ${questionAnswerOptions.position} AS "position",
+                          ${questionAnswerOptions.displayOrder} AS "displayOrder",
                         FROM ${questionAnswerOptions}
                         WHERE ${questionAnswerOptions.questionId} = ${questions.id}
                         GROUP BY
                           ${questionAnswerOptions.id},
                           ${questionAnswerOptions.optionText},
                           ${questionAnswerOptions.isCorrect},
-                          ${questionAnswerOptions.position},
-                        ORDER BY ${questionAnswerOptions.position}
+                          ${questionAnswerOptions.displayOrder},
+                        ORDER BY ${questionAnswerOptions.displayOrder}
                       ) AS question_options
                     ),
                     undefined

@@ -37,7 +37,7 @@ const niceCourseData = Type.Intersect([
                           Type.Object({
                             optionText: Type.String(),
                             isCorrect: Type.Boolean(),
-                            position: Type.Number(),
+                            displayOrder: Type.Number(),
                           }),
                         ),
                       ),

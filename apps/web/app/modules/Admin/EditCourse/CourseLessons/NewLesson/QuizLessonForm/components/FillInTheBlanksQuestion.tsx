@@ -11,11 +11,16 @@ import { Button } from "~/components/ui/button";
 import { FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-
-import QuestionTitle from "./QuestionTitle";
-
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
 
 type FillInTheBlankQuestionProps = {
@@ -49,10 +54,8 @@ const ButtonNode = Node.create({
 });
 
 const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestionProps) => {
-  const questionType = form.getValues(`questions.${questionIndex}.type`);
   const [newWord, setNewWord] = useState("");
   const [isAddingWord, setIsAddingWord] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [addedWords, setAddedWords] = useState<string[]>([]);
 
   const editor = useEditor({
@@ -123,7 +126,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       if (optionIndex !== -1) {
         updatedOptions[optionIndex] = {
           ...updatedOptions[optionIndex],
-          position: index + 1,
+          displayOrder: index + 1,
           isCorrect: true,
         };
       }
@@ -136,10 +139,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     setAddedWords(buttonValues);
   };
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
   const handleAddWord = () => {
     const trimmedWord = newWord.trim();
 
@@ -147,7 +146,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       const newOption = {
         optionText: trimmedWord,
         isCorrect: false,
-        position: currentOptions.length + 1,
+        displayOrder: currentOptions.length + 1,
       };
 
       form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
@@ -230,7 +229,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
           ?.map((option) => {
             return {
               ...option,
-              position: buttonValues.indexOf(option.optionText) + 1,
+              displayOrder: buttonValues.indexOf(option.optionText) + 1,
               isCorrect: buttonValues.includes(option.optionText),
             };
           });
@@ -251,114 +250,140 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
-        <div
-          className={cn("border p-2 mt-3 rounded-xl transition-all duration-300", {
-            "border-blue-500": isOpen,
-            "border-gray-200": !isOpen,
-          })}
-        >
-          <QuestionTitle
-            form={form}
-            questionIndex={questionIndex}
-            questionType={questionType}
-            handleToggle={handleToggle}
-            isOpen={isOpen}
-          />
-          <Accordion.Content className="mt-4">
-            <div className="mt-8 ml-14">
-              <span className="text-red-500 mr-1">*</span>
-              <Label className="body-sm-md">Words</Label>
-              <div className="flex flex-wrap gap-2 items-center">
-                {currentOptions.map((option, index) => (
-                  <div
-                    key={index}
-                    className={`px-4 rounded-full flex items-center justify-between space-x-2 ${
-                      option.isCorrect ? "bg-success-100" : "bg-primary-200"
-                    }`}
-                    draggable={!containsButtonWithWord(option.optionText)}
-                    onDragStart={(e) => handleDragStart(option.optionText, e)}
-                  >
-                    <Icon name="DragAndDropIcon" />
-                    {addedWords.includes(option.optionText) && <Icon name="Success" />}
-                    <span>{option.optionText}</span>
-                    <Button
-                      onClick={() => handleRemoveWord(index)}
-                      type="button"
-                      className="text-color-black bg-transparent p-0 rounded-full"
+        <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
+          <div className="ml-14">
+            <FormField
+              control={form.control}
+              name={`questions.${questionIndex}.type`}
+              render={({ field }) => (
+                <FormItem className="w-[20rem] mb-6">
+                  <Label htmlFor="type" className="body-sm-md">
+                    <span className="text-red-500 mr-1">*</span>
+                    Type
+                  </Label>
+                  <FormControl>
+                    <Select
+                      {...field}
+                      onValueChange={(value) => field.onChange(value)}
+                      defaultValue={QuestionType.FILL_IN_THE_BLANKS_DND}
+                      value={field.value || QuestionType.FILL_IN_THE_BLANKS_DND}
                     >
-                      X
-                    </Button>
-                  </div>
-                ))}
-                <div className="flex items-center">
-                  {!isAddingWord && (
-                    <Button
-                      onClick={() => setIsAddingWord(true)}
-                      type="button"
-                      className="mt-4 bg-blue-700 text-white rounded-full flex items-center mb-4"
-                    >
-                      <Icon name="Plus" />
-                      Add Word
-                    </Button>
+                      <SelectTrigger>
+                        <SelectValue
+                          className="text-left body-base-md"
+                          placeholder="Drag and drop"
+                        />
+                        <SelectValue className="text-left body-base-md" placeholder="Text" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem
+                          value={QuestionType.FILL_IN_THE_BLANKS_DND}
+                          className="text-left body-base-md"
+                        >
+                          Drag and drop
+                        </SelectItem>
+                        <SelectItem
+                          value={QuestionType.FILL_IN_THE_BLANKS_TEXT}
+                          className="text-left body-base-md"
+                        >
+                          Text
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <span className="text-red-500 mr-1">*</span>
+            <Label className="body-sm-md">Words</Label>
+            <div className="flex flex-wrap gap-2 items-center">
+              {currentOptions.map((option, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    "px-4 rounded-full flex items-center justify-between space-x-2",
+                    option.isCorrect ? "bg-success-100" : "bg-primary-200"
                   )}
+                  draggable={!containsButtonWithWord(option.optionText)}
+                  onDragStart={(e) => handleDragStart(option.optionText, e)}
+                >
+                  <Icon name="DragAndDropIcon" />
+                  {addedWords.includes(option.optionText) && <Icon name="Success" />}
+                  <span>{option.optionText}</span>
+                  <Button
+                    onClick={() => handleRemoveWord(index)}
+                    type="button"
+                    className="text-color-black bg-transparent p-0 rounded-full"
+                  >
+                    X
+                  </Button>
                 </div>
-
-                {isAddingWord && (
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="text"
-                      value={newWord}
-                      onChange={(e) => setNewWord(e.target.value)}
-                      placeholder="Enter a word"
-                      className="flex-1"
-                    />
-                    <Button
-                      onClick={handleAddWord}
-                      type="button"
-                      className="bg-blue-700 text-white"
-                    >
-                      Add
-                    </Button>
-                    <Button
-                      onClick={() => setIsAddingWord(false)}
-                      type="button"
-                      className="bg-red-500 border border-neutral-200 text-red-500 bg-color-transparent"
-                    >
-                      Cancel
-                    </Button>
-                  </div>
+              ))}
+              <div className="flex items-center">
+                {!isAddingWord && (
+                  <Button
+                    onClick={() => setIsAddingWord(true)}
+                    type="button"
+                    className="mt-4 bg-blue-700 text-white rounded-full flex items-center mb-4"
+                  >
+                    <Icon name="Plus" />
+                    Add Word
+                  </Button>
                 )}
               </div>
 
-              <FormField
-                control={form.control}
-                name={`questions.${questionIndex}.description`}
-                render={() => (
-                  <FormItem className="mt-5">
-                    <Label htmlFor="description" className="body-sm-md">
-                      <span className="text-red-500 mr-1">*</span>
-                      Sentence
-                    </Label>
-                    <FormControl>
-                      <EditorContent
-                        editor={editor}
-                        className="w-full h-40 p-4 border border-gray-300 rounded-lg bg-white text-black"
-                        onDrop={handleDrop}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button
-                type="button"
-                className="text-error-700 bg-color-white mb-4 border border-neutral-300 mt-4"
-                onClick={handleRemoveQuestion}
-              >
-                Delete Question
-              </Button>
+              {isAddingWord && (
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="text"
+                    value={newWord}
+                    onChange={(e) => setNewWord(e.target.value)}
+                    placeholder="Enter a word"
+                    className="flex-1"
+                  />
+                  <Button onClick={handleAddWord} type="button" className="bg-blue-700 text-white">
+                    Add
+                  </Button>
+                  <Button
+                    onClick={() => setIsAddingWord(false)}
+                    type="button"
+                    className="bg-red-500 border border-neutral-200 text-red-500 bg-color-transparent"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
             </div>
-          </Accordion.Content>
+
+            <FormField
+              control={form.control}
+              name={`questions.${questionIndex}.description`}
+              render={() => (
+                <FormItem className="mt-5">
+                  <Label htmlFor="description" className="body-sm-md">
+                    <span className="text-red-500 mr-1">*</span>
+                    Sentences
+                  </Label>
+                  <FormControl>
+                    <EditorContent
+                      editor={editor}
+                      className="w-full h-40 p-4 border border-gray-300 rounded-lg bg-white text-black"
+                      onDrop={handleDrop}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="button"
+              className="text-error-700 bg-color-white mb-4 border border-neutral-300 mt-4"
+              onClick={handleRemoveQuestion}
+            >
+              Delete Question
+            </Button>
+          </div>
         </div>
       </Accordion.Item>
     </Accordion.Root>

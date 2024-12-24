@@ -10,14 +10,15 @@ import type { Active, UniqueIdentifier } from "@dnd-kit/core";
 import type { ReactNode } from "react";
 
 interface BaseItem {
-  id: UniqueIdentifier;
+  id?: UniqueIdentifier;
+  displayOrder?: number;
 }
 
 interface SortableListProps<T extends BaseItem> {
   items: T[];
   onChange(items: T[], newChapterPosition: number, newDisplayOrder: number): void;
   additionalOnChangeAction?(): void;
-  renderItem(item: T): ReactNode;
+  renderItem(item: T, index?: number): ReactNode;
   className?: string;
 }
 
@@ -36,9 +37,18 @@ export function SortableList<T extends BaseItem>({
   onChange,
   renderItem,
   className,
-}: SortableListProps<T>) {
+  isQuiz = false,
+}: SortableListProps<T> & { isQuiz?: boolean }) {
   const [active, setActive] = useState<Active | null>(null);
-  const activeItem = useMemo(() => items.find((item) => item.id === active?.id), [active, items]);
+
+  const activeItem = useMemo(() => {
+    if (isQuiz && active) {
+      const activeOrder = Number(active.id);
+      return items.find((item) => (item.displayOrder) === activeOrder);
+    }
+    return items.find((item) => item.id === active?.id);
+  }, [active, items, isQuiz]);
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -54,34 +64,63 @@ export function SortableList<T extends BaseItem>({
       }}
       onDragEnd={({ active, over }) => {
         if (over && active.id !== over?.id) {
-          const activeIndex = items.findIndex(({ id }) => id === active.id);
-          const overIndex = items.findIndex(({ id }) => id === over.id);
+          if (isQuiz) {
+            const activeOrder = Number(active.id);
+            const overOrder = Number(over.id);
+            const activeIndex = items.findIndex((item) => item.displayOrder === activeOrder);
+            const overIndex = items.findIndex((item) => item.displayOrder === overOrder);
 
-          const updatedItems = arrayMove(items, activeIndex, overIndex);
+            const updatedItems = arrayMove(items, activeIndex, overIndex);
 
-          const updatedItemsWithOrder = updatedItems.map((item, index) => ({
-            ...item,
-            displayOrder: index + 1,
-          }));
+            const updatedItemsWithOrder = updatedItems.map((item, index) => ({
+              ...item,
+              displayOrder: index + 1,
+            }));
 
-          const updatedItem = updatedItemsWithOrder.find((item) => item.id === active.id);
+            const updatedItem = updatedItemsWithOrder[activeIndex];
+            const newPosition = updatedItemsWithOrder.indexOf(updatedItem);
+            const newDisplayOrder = newPosition + 1;
 
-          const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem!);
-          const newDisplayOrder = newChapterPosition + 1;
+            onChange(updatedItemsWithOrder, newPosition, newDisplayOrder);
+            setActive(null);
+          } else {
+            const activeIndex = items.findIndex(({ id }) => id === active.id);
+            const overIndex = items.findIndex(({ id }) => id === over.id);
 
-          onChange(updatedItemsWithOrder, newChapterPosition, newDisplayOrder);
+            const updatedItems = arrayMove(items, activeIndex, overIndex);
+
+            const updatedItemsWithOrder = updatedItems.map((item, index) => ({
+              ...item,
+              displayOrder: index + 1,
+            }));
+
+            const updatedItem = updatedItemsWithOrder.find((item) => item.id === active.id);
+
+            const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem!);
+
+            const newDisplayOrder = newChapterPosition + 1;
+
+            onChange(updatedItemsWithOrder, newChapterPosition, newDisplayOrder);
+            setActive(null);
+          }
         }
-
-        setActive(null);
       }}
       onDragCancel={() => {
         setActive(null);
       }}
     >
-      <SortableContext items={items}>
+      <SortableContext
+        items={
+          isQuiz
+            ? items.map((item) => item?.displayOrder?.toString() as any)
+            : items.map((item) => item.id)
+        }
+      >
         <ul {...(className && { className })} role="application">
-          {items.map((item) => (
-            <Fragment key={item.id}>{renderItem(item)}</Fragment>
+          {items?.map((item, index) => (
+            <Fragment key={isQuiz ? item.displayOrder : item.id}>
+              {renderItem(item, index)}
+            </Fragment>
           ))}
         </ul>
       </SortableContext>

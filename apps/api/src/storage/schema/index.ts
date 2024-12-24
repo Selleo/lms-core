@@ -174,6 +174,7 @@ export const questions = pgTable("questions", {
     .notNull(),
   type: text("type").notNull(),
   title: varchar("title", { length: 200 }).notNull(),
+  displayOrder: integer("display_order"),
   photoS3Key: varchar("photo_s3_key", { length: 200 }),
   photoQuestionType: text("photo_question_type"),
   description: text("description"),
@@ -188,7 +189,7 @@ export const questionAnswerOptions = pgTable("question_answer_options", {
     .notNull(),
   optionText: varchar("option_text", { length: 100 }).notNull(),
   isCorrect: boolean("is_correct").notNull(),
-  position: integer("position"),
+  displayOrder: integer("display_order"),
 });
 
 // TODO: add cascade on delete?

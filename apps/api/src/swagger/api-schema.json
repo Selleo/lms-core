@@ -4414,7 +4414,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "fill_in_the_blanks",
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
                           "type": "string"
                         },
                         {
@@ -4432,6 +4436,9 @@
                     },
                     "title": {
                       "type": "string"
+                    },
+                    "displayOrder": {
+                      "type": "number"
                     },
                     "photoQuestionType": {
                       "anyOf": [
@@ -4460,17 +4467,31 @@
                           "optionText": {
                             "type": "string"
                           },
+                          "displayOrder": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "isStudentAnswer": {
+                            "type": "boolean"
+                          },
                           "isCorrect": {
                             "type": "boolean"
                           },
-                          "position": {
-                            "type": "number"
+                          "questionId": {
+                            "format": "uuid",
+                            "type": "string"
                           }
                         },
                         "required": [
                           "optionText",
-                          "isCorrect",
-                          "position"
+                          "displayOrder",
+                          "isCorrect"
                         ]
                       }
                     }
@@ -4581,7 +4602,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "fill_in_the_blanks",
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
                           "type": "string"
                         },
                         {
@@ -4599,6 +4624,9 @@
                     },
                     "title": {
                       "type": "string"
+                    },
+                    "displayOrder": {
+                      "type": "number"
                     },
                     "photoQuestionType": {
                       "anyOf": [
@@ -4627,17 +4655,31 @@
                           "optionText": {
                             "type": "string"
                           },
+                          "displayOrder": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "isStudentAnswer": {
+                            "type": "boolean"
+                          },
                           "isCorrect": {
                             "type": "boolean"
                           },
-                          "position": {
-                            "type": "number"
+                          "questionId": {
+                            "format": "uuid",
+                            "type": "string"
                           }
                         },
                         "required": [
                           "optionText",
-                          "isCorrect",
-                          "position"
+                          "displayOrder",
+                          "isCorrect"
                         ]
                       }
                     }
@@ -4744,7 +4786,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "fill_in_the_blanks",
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
                           "type": "string"
                         },
                         {
@@ -4762,6 +4808,9 @@
                     },
                     "title": {
                       "type": "string"
+                    },
+                    "displayOrder": {
+                      "type": "number"
                     },
                     "photoQuestionType": {
                       "anyOf": [
@@ -4790,17 +4839,31 @@
                           "optionText": {
                             "type": "string"
                           },
+                          "displayOrder": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "isStudentAnswer": {
+                            "type": "boolean"
+                          },
                           "isCorrect": {
                             "type": "boolean"
                           },
-                          "position": {
-                            "type": "number"
+                          "questionId": {
+                            "format": "uuid",
+                            "type": "string"
                           }
                         },
                         "required": [
                           "optionText",
-                          "isCorrect",
-                          "position"
+                          "displayOrder",
+                          "isCorrect"
                         ]
                       }
                     }
@@ -4895,7 +4958,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "fill_in_the_blanks",
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
                           "type": "string"
                         },
                         {
@@ -4913,6 +4980,9 @@
                     },
                     "title": {
                       "type": "string"
+                    },
+                    "displayOrder": {
+                      "type": "number"
                     },
                     "photoQuestionType": {
                       "anyOf": [
@@ -4941,17 +5011,31 @@
                           "optionText": {
                             "type": "string"
                           },
+                          "displayOrder": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "isStudentAnswer": {
+                            "type": "boolean"
+                          },
                           "isCorrect": {
                             "type": "boolean"
                           },
-                          "position": {
-                            "type": "number"
+                          "questionId": {
+                            "format": "uuid",
+                            "type": "string"
                           }
                         },
                         "required": [
                           "optionText",
-                          "isCorrect",
-                          "position"
+                          "displayOrder",
+                          "isCorrect"
                         ]
                       }
                     }
@@ -5165,7 +5249,11 @@
                                 "type": "string"
                               },
                               {
-                                "const": "fill_in_the_blanks",
+                                "const": "fill_in_the_blanks_text",
+                                "type": "string"
+                              },
+                              {
+                                "const": "fill_in_the_blanks_dnd",
                                 "type": "string"
                               },
                               {
@@ -5183,6 +5271,9 @@
                           },
                           "title": {
                             "type": "string"
+                          },
+                          "displayOrder": {
+                            "type": "number"
                           },
                           "photoQuestionType": {
                             "anyOf": [
@@ -5211,17 +5302,31 @@
                                 "optionText": {
                                   "type": "string"
                                 },
+                                "displayOrder": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "isStudentAnswer": {
+                                  "type": "boolean"
+                                },
                                 "isCorrect": {
                                   "type": "boolean"
                                 },
-                                "position": {
-                                  "type": "number"
+                                "questionId": {
+                                  "format": "uuid",
+                                  "type": "string"
                                 }
                               },
                               "required": [
                                 "optionText",
-                                "isCorrect",
-                                "position"
+                                "displayOrder",
+                                "isCorrect"
                               ]
                             }
                           }

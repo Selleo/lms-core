@@ -150,6 +150,7 @@ export class AdminLessonService {
         type: question.type,
         description: question.description || null,
         title: question.title,
+        displayOrder: question.displayOrder,
         photoS3Key: question.photoS3Key,
         photoQuestionType: question.photoQuestionType || null,
       }));
@@ -162,7 +163,7 @@ export class AdminLessonService {
             questionId: question.id,
             optionText: option.optionText,
             isCorrect: option.isCorrect,
-            position: option.position,
+            displayOrder: option.displayOrder,
           })) || [],
       );
 
@@ -212,6 +213,7 @@ export class AdminLessonService {
             type: question.type,
             description: question.description || null,
             title: question.title,
+            displayOrder: question.displayOrder,
             photoS3Key: question.photoS3Key,
             photoQuestionType: question.photoQuestionType || null,
           };
@@ -258,7 +260,7 @@ export class AdminLessonService {
               const optionData = {
                 optionText: option.optionText,
                 isCorrect: option.isCorrect,
-                position: option.position,
+                displayOrder: option.displayOrder,
               };
 
               // TODO: extract to repository

@@ -14,7 +14,7 @@ export type QuestionOption = {
   id?: string;
   optionText: string;
   isCorrect: boolean;
-  position: number;
+  displayOrder: number;
 };
 
 export type Question = {
@@ -23,6 +23,7 @@ export type Question = {
   description?: string;
   photoS3Key?: string;
   photoS3SingedUrl?: string;
+  displayOrder: number;
   photoQuestionType?: PhotoQuestionType;
   title: string;
   options?: QuestionOption[];
@@ -35,5 +36,6 @@ export enum QuestionType {
   BRIEF_RESPONSE = "brief_response",
   DETAILED_RESPONSE = "detailed_response",
   PHOTO_QUESTION = "photo_question",
-  FILL_IN_THE_BLANKS = "fill_in_the_blanks",
+  FILL_IN_THE_BLANKS_TEXT = "fill_in_the_blanks_text",
+  FILL_IN_THE_BLANKS_DND = "fill_in_the_blanks_dnd",
 }

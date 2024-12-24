@@ -55,7 +55,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksText,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
                 description:
@@ -64,22 +64,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "color properties",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "grid",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "flex",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
@@ -105,22 +105,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "<a>",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "<link>",
                     isCorrect: false,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "<button>",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "<input>",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
@@ -149,22 +149,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "<img>",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "<picture>",
                     isCorrect: false,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "<video>",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "<audio>",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
@@ -177,32 +177,32 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "<html>",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "<head>",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "<body>",
                     isCorrect: true,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "<title>",
                     isCorrect: true,
-                    position: 3,
+                    displayOrder: 3,
                   },
                   {
                     optionText: "<h1>",
                     isCorrect: false,
-                    position: 4,
+                    displayOrder: 4,
                   },
                   {
                     optionText: "<p>",
                     isCorrect: false,
-                    position: 5,
+                    displayOrder: 5,
                   },
                 ],
               },
@@ -214,22 +214,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "<a>",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "<link>",
                     isCorrect: false,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "<button>",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "<input>",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
@@ -242,32 +242,32 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "alt",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "src",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "width",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "height",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                   {
                     optionText: "srcset",
                     isCorrect: false,
-                    position: 4,
+                    displayOrder: 4,
                   },
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
                 // displayOrder: 5,
@@ -277,42 +277,42 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "HTML",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "interactivity",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "styles",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "functions",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                   {
                     optionText: "content",
                     isCorrect: false,
-                    position: 4,
+                    displayOrder: 4,
                   },
                   {
                     optionText: "elements",
                     isCorrect: false,
-                    position: 5,
+                    displayOrder: 5,
                   },
                   {
                     optionText: "animations",
                     isCorrect: false,
-                    position: 6,
+                    displayOrder: 6,
                   },
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksText,
                 // displayOrder: 6,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -322,17 +322,17 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "color properties",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 // displayOrder: 7,
                 title:
                   "In JavaScript, [word] are used to store data, while [word] are used to perform actions.",
@@ -342,12 +342,12 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "variables",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "functions",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                 ],
               },
@@ -375,22 +375,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "color",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "text-color",
                     isCorrect: false,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "font-color",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "text-style",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
@@ -402,32 +402,32 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: ".class-name",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "#id-name",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "element",
                     isCorrect: true,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "[attribute]",
                     isCorrect: true,
-                    position: 3,
+                    displayOrder: 3,
                   },
                   {
                     optionText: "$variable",
                     isCorrect: false,
-                    position: 4,
+                    displayOrder: 4,
                   },
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
                 description:
@@ -437,27 +437,27 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "color properties",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "grid",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "flex",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 // displayOrder: 4,
                 title: "To center an element horizontally, you can use 'margin: [word] [word];'.",
                 description:
@@ -466,12 +466,12 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "0",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "auto",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                 ],
               },
@@ -520,7 +520,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
                 description:
@@ -529,22 +529,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "color properties",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "grid",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "flex",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
@@ -604,7 +604,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
                 description:
@@ -613,12 +613,12 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "classes",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "objects",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                 ],
               },
@@ -632,7 +632,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
                 description:
@@ -641,12 +641,12 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "layouts",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "activities",
                     isCorrect: true,
-                    position: 1,
+                    displayOrder: 1,
                   },
                 ],
               },
@@ -671,22 +671,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "new",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "create",
                     isCorrect: false,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "instance",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "object",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
@@ -713,22 +713,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "Activity",
                     isCorrect: true,
-                    position: 0,
+                    displayOrder: 0,
                   },
                   {
                     optionText: "Service",
                     isCorrect: false,
-                    position: 1,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "BroadcastReceiver",
                     isCorrect: false,
-                    position: 2,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "ContentProvider",
                     isCorrect: false,
-                    position: 3,
+                    displayOrder: 3,
                   },
                 ],
               },
@@ -777,10 +777,10 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which keyword is used to declare a variable in Kotlin?",
                 options: [
-                  { optionText: "var", isCorrect: true, position: 0 },
-                  { optionText: "val", isCorrect: false, position: 1 },
-                  { optionText: "let", isCorrect: false, position: 2 },
-                  { optionText: "data", isCorrect: false, position: 3 },
+                  { optionText: "var", isCorrect: true, displayOrder: 0 },
+                  { optionText: "val", isCorrect: false, displayOrder: 1 },
+                  { optionText: "let", isCorrect: false, displayOrder: 2 },
+                  { optionText: "data", isCorrect: false, displayOrder: 3 },
                 ],
               },
             ],
@@ -813,14 +813,14 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
                 description:
                   "<p>In Kotlin, <strong>val</strong> are immutable variables, while <strong>var</strong> are mutable variables.</p>",
                 options: [
-                  { optionText: "val", isCorrect: true, position: 0 },
-                  { optionText: "var", isCorrect: true, position: 1 },
+                  { optionText: "val", isCorrect: true, displayOrder: 0 },
+                  { optionText: "var", isCorrect: true, displayOrder: 1 },
                 ],
               },
             ],
@@ -879,14 +879,14 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
                 description:
                   "<p>In arithmetic, <strong>sum</strong> is the result of addition, while <strong>difference</strong> is the result of subtraction.</p>",
                 options: [
-                  { optionText: "sum", isCorrect: true, position: 0 },
-                  { optionText: "difference", isCorrect: true, position: 1 },
+                  { optionText: "sum", isCorrect: true, displayOrder: 0 },
+                  { optionText: "difference", isCorrect: true, displayOrder: 1 },
                 ],
               },
             ],
@@ -923,10 +923,10 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which formula is used to calculate the area of a rectangle?",
                 options: [
-                  { optionText: "length × width", isCorrect: true, position: 0 },
-                  { optionText: "length + width", isCorrect: false, position: 1 },
-                  { optionText: "length × height", isCorrect: false, position: 2 },
-                  { optionText: "2 × (length + width)", isCorrect: false, position: 3 },
+                  { optionText: "length × width", isCorrect: true, displayOrder: 0 },
+                  { optionText: "length + width", isCorrect: false, displayOrder: 1 },
+                  { optionText: "length × height", isCorrect: false, displayOrder: 2 },
+                  { optionText: "2 × (length + width)", isCorrect: false, displayOrder: 3 },
                 ],
               },
             ],
@@ -954,14 +954,14 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
                 description:
                   "<p>In algebra, <strong>variables</strong> represent unknown values, while <strong>expressions</strong> are mathematical phrases that combine numbers and variables.</p>",
                 options: [
-                  { optionText: "variables", isCorrect: true, position: 0 },
-                  { optionText: "expressions", isCorrect: true, position: 1 },
+                  { optionText: "variables", isCorrect: true, displayOrder: 0 },
+                  { optionText: "expressions", isCorrect: true, displayOrder: 1 },
                 ],
               },
             ],
@@ -992,32 +992,32 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which of the following is an example of a geometric shape?",
                 options: [
-                  { optionText: "Triangle", isCorrect: true, position: 0 },
-                  { optionText: "Variable", isCorrect: false, position: 1 },
-                  { optionText: "Equation", isCorrect: false, position: 2 },
-                  { optionText: "Sum", isCorrect: false, position: 3 },
+                  { optionText: "Triangle", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Variable", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Equation", isCorrect: false, displayOrder: 2 },
+                  { optionText: "Sum", isCorrect: false, displayOrder: 3 },
                 ],
               },
               {
                 type: QuestionType.MultipleChoice,
                 title: "Which operations are included in basic arithmetic? (Select all that apply)",
                 options: [
-                  { optionText: "Addition", isCorrect: true, position: 0 },
-                  { optionText: "Subtraction", isCorrect: true, position: 1 },
-                  { optionText: "Multiplication", isCorrect: true, position: 2 },
-                  { optionText: "Division", isCorrect: true, position: 3 },
-                  { optionText: "Integration", isCorrect: false, position: 4 },
+                  { optionText: "Addition", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Subtraction", isCorrect: true, displayOrder: 1 },
+                  { optionText: "Multiplication", isCorrect: true, displayOrder: 2 },
+                  { optionText: "Division", isCorrect: true, displayOrder: 3 },
+                  { optionText: "Integration", isCorrect: false, displayOrder: 4 },
                 ],
               },
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
                 description:
                   "<p>In algebra, <strong>variables</strong> are used to represent unknowns, while <strong>equations</strong> can be solved to find their values.</p>",
                 options: [
-                  { optionText: "variables", isCorrect: true, position: 0 },
-                  { optionText: "equations", isCorrect: true, position: 1 },
+                  { optionText: "variables", isCorrect: true, displayOrder: 0 },
+                  { optionText: "equations", isCorrect: true, displayOrder: 1 },
                 ],
               },
             ],
@@ -1082,12 +1082,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "Fill in the blanks: 'She [word] to the store yesterday.'",
                 description: "<p>She <strong>went</strong> to the store yesterday.</p>",
                 options: [
-                  { optionText: "went", isCorrect: true, position: 0 },
-                  { optionText: "go", isCorrect: false, position: 1 },
+                  { optionText: "went", isCorrect: true, displayOrder: 0 },
+                  { optionText: "go", isCorrect: false, displayOrder: 1 },
                 ],
               },
             ],
@@ -1130,9 +1130,9 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which word is the synonym of 'happy'?",
                 options: [
-                  { optionText: "Joyful", isCorrect: true, position: 0 },
-                  { optionText: "Sad", isCorrect: false, position: 1 },
-                  { optionText: "Angry", isCorrect: false, position: 2 },
+                  { optionText: "Joyful", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Sad", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Angry", isCorrect: false, displayOrder: 2 },
                 ],
               },
             ],
@@ -1144,11 +1144,11 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "I [word] to the park every day.",
                 options: [
-                  { optionText: "go", isCorrect: true, position: 0 },
-                  { optionText: "went", isCorrect: false, position: 1 },
+                  { optionText: "go", isCorrect: true, displayOrder: 0 },
+                  { optionText: "went", isCorrect: false, displayOrder: 1 },
                 ],
               },
             ],
@@ -1187,9 +1187,9 @@ export const niceCourses: NiceCourseData[] = [
                 title:
                   "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
                 options: [
-                  { optionText: "Th", isCorrect: true, position: 0 },
-                  { optionText: "S", isCorrect: false, position: 1 },
-                  { optionText: "K", isCorrect: false, position: 2 },
+                  { optionText: "Th", isCorrect: true, displayOrder: 0 },
+                  { optionText: "S", isCorrect: false, displayOrder: 1 },
+                  { optionText: "K", isCorrect: false, displayOrder: 2 },
                 ],
               },
             ],
@@ -1207,10 +1207,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "I love [word] (swimming/swim).",
                 description: "I love <strong>swimming</strong> (swimming/swim).",
-                options: [{ optionText: "swimming", isCorrect: true, position: 0 }],
+                options: [{ optionText: "swimming", isCorrect: true, displayOrder: 0 }],
               },
             ],
           },
@@ -1234,9 +1234,9 @@ export const niceCourses: NiceCourseData[] = [
                 title:
                   "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
                 options: [
-                  { optionText: "Adverb", isCorrect: true, position: 0 },
-                  { optionText: "Verb", isCorrect: false, position: 1 },
-                  { optionText: "Adjective", isCorrect: false, position: 2 },
+                  { optionText: "Adverb", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Verb", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Adjective", isCorrect: false, displayOrder: 2 },
                 ],
               },
             ],
@@ -1248,12 +1248,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "She [word] to the park every day.",
                 description: "She <strong>went</strong> to the park every day.",
                 options: [
-                  { optionText: "goes", isCorrect: true, position: 0 },
-                  { optionText: "went", isCorrect: false, position: 1 },
+                  { optionText: "goes", isCorrect: true, displayOrder: 0 },
+                  { optionText: "went", isCorrect: false, displayOrder: 1 },
                 ],
               },
             ],
@@ -1268,8 +1268,8 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "What is the plural form of 'child'?",
                 options: [
-                  { optionText: "Children", isCorrect: true, position: 0 },
-                  { optionText: "Childs", isCorrect: false, position: 1 },
+                  { optionText: "Children", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Childs", isCorrect: false, displayOrder: 1 },
                 ],
               },
             ],
@@ -1284,9 +1284,9 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which of these words is a conjunction?",
                 options: [
-                  { optionText: "And", isCorrect: true, position: 0 },
-                  { optionText: "Run", isCorrect: false, position: 1 },
-                  { optionText: "Quickly", isCorrect: false, position: 2 },
+                  { optionText: "And", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Run", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Quickly", isCorrect: false, displayOrder: 2 },
                 ],
               },
             ],
@@ -1343,12 +1343,12 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "The book [word] I borrowed yesterday was fascinating.",
                 description: "The book <strong>that</strong> I borrowed yesterday was fascinating.",
                 options: [
-                  { optionText: "that", isCorrect: true, position: 0 },
-                  { optionText: "who", isCorrect: false, position: 1 },
+                  { optionText: "that", isCorrect: true, displayOrder: 0 },
+                  { optionText: "who", isCorrect: false, displayOrder: 1 },
                 ],
               },
             ],
@@ -1391,9 +1391,9 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which word is an example of academic vocabulary?",
                 options: [
-                  { optionText: "Analyze", isCorrect: true, position: 0 },
-                  { optionText: "Run", isCorrect: false, position: 1 },
-                  { optionText: "Quick", isCorrect: false, position: 2 },
+                  { optionText: "Analyze", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Run", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Quick", isCorrect: false, displayOrder: 2 },
                 ],
               },
             ],
@@ -1405,10 +1405,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "The results [word] the hypothesis.",
                 description: "The results <strong>support</strong> the hypothesis.",
-                options: [{ optionText: "support", isCorrect: true, position: 0 }],
+                options: [{ optionText: "support", isCorrect: true, displayOrder: 0 }],
               },
             ],
           },
@@ -1453,10 +1453,10 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title: "She was [word] when she heard the good news.",
                 description: "She was <strong>over the moon</strong> when she heard the good news.",
-                options: [{ optionText: "over the moon", isCorrect: true, position: 0 }],
+                options: [{ optionText: "over the moon", isCorrect: true, displayOrder: 0 }],
               },
             ],
           },
@@ -1490,7 +1490,7 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.TEXT,
             title: "Key Concepts and Terminologies in AI",
             description:
-              '<p>Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions. Below are some key concepts and terminologies essential to understanding AI:</p><ul><li><strong>Machine Learning (ML):</strong> A subset of AI focused on creating algorithms that allow computers to learn from and make predictions based on data. Example: A recommendation system suggesting movies based on your viewing history.</li><li><strong>Neural Networks:</strong> Inspired by the human brain, these are algorithms designed to recognize patterns and process data in layers, enabling tasks like image and speech recognition.</li><li><strong>Natural Language Processing (NLP):</strong> This involves teaching machines to understand, interpret, and generate human language. Example: Virtual assistants like Alexa or Siri.</li><li><strong>Computer Vision:</strong> A field of AI that enables computers to interpret and process visual data, such as images and videos. Example: Facial recognition technology.</li><li><strong>Deep Learning:</strong> A more complex subset of ML that uses large neural networks to analyze massive amounts of data and solve intricate problems, such as self-driving cars.</li><li><strong>Supervised vs. Unsupervised Learning:</strong><br>- <strong>Supervised Learning:</strong> The AI is trained on labeled data (e.g., images labeled as "cat" or "dog").<br>- <strong>Unsupervised Learning:</strong> The AI identifies patterns in unlabeled data without explicit instructions.</li><li><strong>Big Data:</strong> The large volume of structured and unstructured data generated by businesses and devices, which is essential for training AI models.</li><li><strong>Automation:</strong> AI is often used to automate repetitive tasks, freeing up human resources for more complex activities.</li><li><strong>Ethics in AI:</strong> As AI becomes more powerful, ensuring its ethical use (e.g., avoiding bias in decision-making) is critical for building trust.</li></ul><h3>Why These Concepts Matter</h3><p>Understanding these basic AI terms is the first step toward recognizing how AI can be applied in business. Each concept represents a building block of AI\'s potential to transform industries by increasing efficiency, improving decision-making, and creating innovative solutions.</p>',
+              "<p>Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions. Below are some key concepts and terminologies essential to understanding AI:</p><ul><li><strong>Machine Learning (ML):</strong> A subset of AI focused on creating algorithms that allow computers to learn from and make predictions based on data. Example: A recommendation system suggesting movies based on your viewing history.</li><li><strong>Neural Networks:</strong> Inspired by the human brain, these are algorithms designed to recognize patterns and process data in layers, enabling tasks like image and speech recognition.</li><li><strong>Natural Language Processing (NLP):</strong> This involves teaching machines to understand, interpret, and generate human language.",         
             displayOrder: 2,
           },
           {
@@ -1511,10 +1511,10 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "What is the primary goal of AI in business?",
                 options: [
-                  { optionText: "Replace human workers", isCorrect: false, position: 0 },
-                  { optionText: "Automate repetitive tasks", isCorrect: false, position: 1 },
-                  { optionText: "Improve decision-making", isCorrect: true, position: 2 },
-                  { optionText: "Eliminate operational costs", isCorrect: false, position: 3 },
+                  { optionText: "Replace human workers", isCorrect: false, displayOrder: 0 },
+                  { optionText: "Automate repetitive tasks", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Improve decision-making", isCorrect: true, displayOrder: 2 },
+                  { optionText: "Eliminate operational costs", isCorrect: false, displayOrder: 3 },
                 ],
               },
             ],
@@ -1530,10 +1530,10 @@ export const niceCourses: NiceCourseData[] = [
                 title:
                   "Which of the following are applications of AI in business? (Select all that apply)",
                 options: [
-                  { optionText: "Customer service chatbots", isCorrect: true, position: 0 },
-                  { optionText: "Predictive analytics", isCorrect: true, position: 1 },
-                  { optionText: "Supply chain optimization", isCorrect: true, position: 2 },
-                  { optionText: "Space exploration tools", isCorrect: false, position: 3 },
+                  { optionText: "Customer service chatbots", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Predictive analytics", isCorrect: true, displayOrder: 1 },
+                  { optionText: "Supply chain optimization", isCorrect: true, displayOrder: 2 },
+                  { optionText: "Space exploration tools", isCorrect: false, displayOrder: 3 },
                 ],
               },
             ],
@@ -1548,8 +1548,8 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.TrueOrFalse,
                 title: "AI can function without any data input from humans.",
                 options: [
-                  { optionText: "True", isCorrect: false, position: 0 },
-                  { optionText: "False", isCorrect: true, position: 1 },
+                  { optionText: "True", isCorrect: false, displayOrder: 0 },
+                  { optionText: "False", isCorrect: true, displayOrder: 1 },
                 ],
               },
             ],
@@ -1564,9 +1564,9 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.PhotoQuestion,
                 title: "Which image represents an AI-driven chatbot?",
                 options: [
-                  { optionText: "Image 1 (Chatbot Interface)", isCorrect: true, position: 0 },
-                  { optionText: "Image 2 (Calculator)", isCorrect: false, position: 1 },
-                  { optionText: "Image 3 (Spreadsheet)", isCorrect: false, position: 2 },
+                  { optionText: "Image 1 (Chatbot Interface)", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Image 2 (Calculator)", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Image 3 (Spreadsheet)", isCorrect: false, displayOrder: 2 },
                 ],
               },
             ],
@@ -1578,15 +1578,15 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 8,
             questions: [
               {
-                type: QuestionType.FillInTheBlanks,
+                type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
                 options: [
-                  { optionText: "Intelligence", isCorrect: true, position: 0 },
-                  { optionText: "Automation", isCorrect: false, position: 1 },
-                  { optionText: "Learning", isCorrect: false, position: 2 },
-                  { optionText: "Human", isCorrect: true, position: 3 },
-                  { optionText: "Animal", isCorrect: false, position: 4 },
+                  { optionText: "Intelligence", isCorrect: true, displayOrder: 0 },
+                  { optionText: "Automation", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Learning", isCorrect: false, displayOrder: 2 },
+                  { optionText: "Human", isCorrect: true, displayOrder: 3 },
+                  { optionText: "Animal", isCorrect: false, displayOrder: 4 },
                 ],
               },
             ],

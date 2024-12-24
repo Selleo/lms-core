@@ -27,11 +27,14 @@ export const useCoursePricingForm = ({
     defaultValues: {
       priceInCents: priceInCents || 0,
       currency: currency || "",
+      isFree: priceInCents === 0 ? true : false,
     },
   });
-  const onSubmit = async (data: UpdateCourseBody) => {
+  const onSubmit = async (data: CoursePricingFormValues) => {
+    const { isFree, ...updatedData } = data;
+
     updateCourse({
-      data: { ...data },
+      data: updatedData,
       courseId,
     }).then(() => {
       queryClient.invalidateQueries(courseQueryOptions(courseId));

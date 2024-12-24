@@ -36,6 +36,13 @@
       "when": 1734960126182,
       "tag": "0004_add_chapter_id_to_student_lesson_progress",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1735027876543,
+      "tag": "0005_rename_column_position_to_display_order",
+      "breakpoints": true
     }
   ]
 }

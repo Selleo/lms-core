@@ -9,8 +9,10 @@ import type { Static } from "@sinclair/typebox";
 export const optionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
   optionText: Type.String(),
+  displayOrder: Type.Union([Type.Number(), Type.Null()]),
+  isStudentAnswer: Type.Optional(Type.Boolean()),
   isCorrect: Type.Boolean(),
-  position: Type.Number(),
+  questionId: Type.Optional(UUIDSchema),
 });
 
 export const questionSchema = Type.Object({
@@ -18,6 +20,7 @@ export const questionSchema = Type.Object({
   type: Type.Enum(QuestionType),
   description: Type.Optional(Type.String()),
   title: Type.String(),
+  displayOrder: Type.Optional(Type.Number()),
   photoQuestionType: Type.Optional(Type.Enum(PhotoQuestionType)),
   photoS3Key: Type.Optional(Type.String()),
   options: Type.Optional(Type.Array(optionSchema)),
