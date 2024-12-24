@@ -67,17 +67,6 @@ export class AdminLessonRepository {
     return lesson;
   }
 
-  async getQuestionById(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
-    const dbInstance = trx ?? this.db;
-    return await dbInstance
-      .select({
-        id: questions.id,
-        displayOrder: questions.displayOrder,
-      })
-      .from(questions)
-      .where(eq(questions.id, questionId));
-  }
-
   async getQuestions(conditions: any[]) {
     return this.db
       .select()

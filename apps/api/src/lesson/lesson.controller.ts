@@ -256,35 +256,6 @@ export class LessonController {
     });
   }
 
-  @Patch("question-anwser-display-order")
-  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
-  @Validate({
-    request: [
-      {
-        type: "body",
-        schema: Type.Object({
-          questionAnwserId: UUIDSchema,
-          displayOrder: Type.Number(),
-        }),
-        required: true,
-      },
-    ],
-    response: baseResponse(Type.Object({ message: Type.String() })),
-  })
-  async updateQuestionAnswerDisplayOrder(
-    @Body()
-    body: {
-      questionAnwserId: UUIDType;
-      displayOrder: number;
-    },
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.adminLessonsService.updateQuestionAnswerDisplayOrder(body);
-
-    return new BaseResponse({
-      message: "Question answer display order updated successfully",
-    });
-  }
-
   //   @Patch("lesson")
   //   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   //   @Validate({
