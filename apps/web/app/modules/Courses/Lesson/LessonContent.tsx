@@ -6,6 +6,8 @@ import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
 import { VideoPlayer } from "~/components/VideoPlayer/VideoPlayer";
 
+import Presentation from "../../../components/Presentation/Presentation";
+
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 
 type LessonContentProps = {
@@ -20,6 +22,18 @@ export const LessonContent = ({ lesson, handlePrevious, handleNext }: LessonCont
       .with("text_block", () => <Viewer variant="lesson" content={lesson?.description} />)
       .with("quiz", () => <></>)
       .with("video", () => <VideoPlayer url={lesson.fileUrl} />)
+      .with("presentation", () => (
+        <Presentation
+          url={lesson.fileUrl}
+          presentationId={""}
+          isAdmin={false}
+          isCompleted={false}
+          lessonItemId={""}
+          updateLessonItemCompletion={function (lessonItemId: string): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+      ))
       .otherwise(() => null);
 
   return (
