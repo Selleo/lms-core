@@ -16,7 +16,7 @@ import { baseResponse, BaseResponse, UUIDSchema, type UUIDType } from "src/commo
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/user/schemas/userRoles";
+import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import {
   CreateLessonBody,
@@ -33,6 +33,7 @@ import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
 
 import type { LessonShow } from "./lesson.schema";
+import { user } from "src/seed/seed.types";
 
 @Controller("lesson")
 @UseGuards(RolesGuard)
@@ -47,8 +48,14 @@ export class LessonController {
   @Validate({
     response: baseResponse(lessonShowSchema),
   })
-  async getLessonById(@Param("id") id: UUIDType): Promise<BaseResponse<LessonShow>> {
-    return new BaseResponse(await this.lessonService.getLessonById(id));
+  async getLessonById(
+    @Param("id") id: UUIDType,
+    @CurrentUser("userId") userId: UUIDType,
+    @CurrentUser("role") userRole: UserRole,
+  ): Promise<BaseResponse<LessonShow>> {
+    return new BaseResponse(
+      await this.lessonService.getLessonById(id, userId, userRole === USER_ROLES.STUDENT),
+    );
   }
 
   @Post("beta-create-lesson")

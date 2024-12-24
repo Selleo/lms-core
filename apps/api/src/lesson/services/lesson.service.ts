@@ -1,9 +1,15 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, and, desc } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
-import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
+import {
+  lessons,
+  questionAnswerOptions,
+  questions,
+  quizAttempts,
+  studentLessonProgress,
+} from "src/storage/schema";
 
 import { LESSON_TYPES } from "../lesson.type";
 
@@ -20,7 +26,7 @@ export class LessonService {
     // private readonly eventBus: EventBus,
   }
 
-  async getLessonById(id: UUIDType): Promise<LessonShow> {
+  async getLessonById(id: UUIDType, userId: UUIDType, isStudent: boolean): Promise<LessonShow> {
     const [lesson] = await this.db
       .select({
         id: lessons.id,
@@ -30,8 +36,17 @@ export class LessonService {
         fileUrl: lessons.fileS3Key,
         fileType: lessons.fileType,
         displayOrder: sql<number>`${lessons.displayOrder}`,
+        quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
+        quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
       })
       .from(lessons)
+      .leftJoin(
+        studentLessonProgress,
+        and(
+          eq(studentLessonProgress.lessonId, lessons.id),
+          eq(studentLessonProgress.studentId, userId),
+        ),
+      )
       .where(eq(lessons.id, id));
 
     if (!lesson) throw new NotFoundException("Lesson not found");
@@ -89,13 +104,43 @@ export class LessonService {
       .from(questions)
       .where(eq(questions.lessonId, id));
 
+    if (isStudent && lesson.quizCompleted && lesson.quizScore) {
+      const [quizResult] = await this.db
+        .select({
+          score: sql<number>`${quizAttempts.score}`,
+          correctAnswerCount: sql<number>`${quizAttempts.correctAnswers}`,
+          wrongAnswerCount: sql<number>`${quizAttempts.wrongAnswers}`,
+        })
+        .from(quizAttempts)
+        .where(
+          and(
+            eq(quizAttempts.lessonId, id),
+            eq(quizAttempts.userId, userId),
+            eq(quizAttempts.score, lesson.quizScore),
+          ),
+        )
+        .orderBy(desc(quizAttempts.createdAt))
+        .limit(1);
+
+      const quizDetails = {
+        questions: questionList,
+        questionCount: questionList.length,
+        score: quizResult.score,
+        correctAnswerCount: quizResult.correctAnswerCount,
+        wrongAnswerCount: quizResult.wrongAnswerCount,
+      };
+
+      return { ...lesson, quizDetails };
+    }
+
     const quizDetails = {
       questions: questionList,
       questionCount: questionList.length,
-      score: 1,
-      correctAnswerCount: 1,
-      wrongAnswerCount: 1,
+      score: null,
+      correctAnswerCount: null,
+      wrongAnswerCount: null,
     };
+
     return { ...lesson, quizDetails };
   }
 
