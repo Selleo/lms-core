@@ -68,22 +68,6 @@ export const createLessonSchema = Type.Intersect([
   }),
 ]);
 
-export const questionAnswer = Type.Object({
-  id: UUIDSchema,
-  optionText: Type.String(),
-  displayOrder: Type.Union([Type.Number(), Type.Null()]),
-  isStudentAnswer: Type.Union([Type.Boolean(), Type.Null()]),
-  isCorrect: Type.Union([Type.Boolean(), Type.Null()]),
-});
-
-export const questionAnswerOptionsResponse = Type.Object({
-  id: UUIDSchema,
-  optionText: Type.String(),
-  displayOrder: Type.Union([Type.Number(), Type.Null()]),
-  isStudentAnswer: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
-  isCorrect: Type.Union([Type.Boolean(), Type.Null()]),
-  studentAnswerText: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-});
 export const createQuizLessonSchema = Type.Intersect([
   Type.Omit(lessonQuizSchema, ["id", "displayOrder"]),
   Type.Object({
