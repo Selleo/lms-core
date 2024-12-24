@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 
-import { DatabasePg, UUIDType } from "src/common";
+import { DatabasePg } from "src/common";
 
 import { QuestionsRepository } from "./questions.repository";
 
