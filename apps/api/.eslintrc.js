@@ -40,6 +40,7 @@ module.exports = {
         disallowTypeAnnotations: false,
       },
     ],
+    "no-console": ["warn", { allow: ["warn", "error"] }],
     "@typescript-eslint/no-import-type-side-effects": "error",
     "@typescript-eslint/interface-name-prefix": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
@@ -49,7 +50,6 @@ module.exports = {
       "error",
       { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
     ],
-    "@typescript-eslint/no-unused-vars": "off",
     "unused-imports/no-unused-imports": "error",
   },
 };

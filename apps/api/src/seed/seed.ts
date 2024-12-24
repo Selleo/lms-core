@@ -6,7 +6,6 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import { flatMap, sampleSize } from "lodash";
 import postgres from "postgres";
 
-import { LESSON_ITEM_TYPE } from "src/chapter/chapter.type";
 import { LESSON_TYPES } from "src/lesson/lesson.type";
 
 import hashPassword from "../common/helpers/hashPassword";
@@ -97,26 +96,6 @@ async function insertUserDetails(userId: string) {
     contactPhoneNumber: faker.phone.number(),
     jobTitle: faker.person.jobTitle(),
   });
-}
-
-function createLessonItems(lessonId: string, files: any[], textBlocks: any[], questions: any[]) {
-  const allItems = [
-    ...files.map((file) => ({ type: LESSON_ITEM_TYPE.file.key, item: file })),
-    ...textBlocks.map((textBlock) => ({ type: LESSON_ITEM_TYPE.text_block.key, item: textBlock })),
-    ...questions.map((question) => ({ type: LESSON_ITEM_TYPE.question.key, item: question })),
-  ];
-
-  const shuffledItems = faker.helpers.shuffle(allItems);
-
-  const itemCount = faker.number.int({ min: 3, max: 10 });
-
-  return shuffledItems.slice(0, itemCount).map((item, index) => ({
-    id: faker.string.uuid(),
-    lessonId: lessonId,
-    lessonItemId: item.item.id,
-    lessonItemType: item.type,
-    displayOrder: index + 1,
-  }));
 }
 
 async function createStudentCourses(courses: any[], studentIds: string[]) {

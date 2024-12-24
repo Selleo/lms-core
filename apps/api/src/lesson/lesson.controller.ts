@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
+  UseGuards,
+} from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
@@ -54,9 +64,8 @@ export class LessonController {
   })
   async betaCreateLesson(
     @Body() createLessonBody: CreateLessonBody,
-    @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
-    const id = await this.adminLessonsService.createLessonForChapter(createLessonBody, userId);
+    const id = await this.adminLessonsService.createLessonForChapter(createLessonBody);
 
     return new BaseResponse({ id, message: "Lesson created successfully" });
   }

@@ -1,9 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { eq, sql } from "drizzle-orm/sql";
 
-// import { LESSON_ITEM_TYPE } from "./lessons/lesson.type";
-// import { QUESTION_TYPE } from "./questions/schema/questions.types";
-
 import { LESSON_TYPES } from "src/lesson/lesson.type";
 import {
   categories,
@@ -95,8 +92,8 @@ export async function createNiceCourses(
               lessonData.type === LESSON_TYPES.PRESENTATION
                 ? "pptx"
                 : lessonData.type === LESSON_TYPES.VIDEO
-                  ? "mp4"
-                  : null,
+                ? "mp4"
+                : null,
             chapterId: chapter.id,
             createdAt: createdAt,
             updatedAt: createdAt,
@@ -104,10 +101,10 @@ export async function createNiceCourses(
           .returning();
 
         if (lessonData.type === LESSON_TYPES.QUIZ && lessonData.questions) {
-          for (const [index, questionData] of lessonData.questions.entries()) {
+          for (const questionData of lessonData.questions) {
             const questionId = crypto.randomUUID();
             // TODO: add displayOrder to questions
-            const [question] = await db
+            await db
               .insert(questions)
               .values({
                 id: questionId,
