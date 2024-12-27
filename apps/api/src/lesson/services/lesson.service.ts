@@ -3,11 +3,7 @@ import { eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
-import {
-  lessons,
-  questionAnswerOptions,
-  questions,
-} from "src/storage/schema";
+import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
 import { LESSON_TYPES } from "../lesson.type";
 

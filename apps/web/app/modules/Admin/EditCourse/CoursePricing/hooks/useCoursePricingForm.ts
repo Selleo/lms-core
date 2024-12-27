@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
-import { courseQueryOptions } from "~/api/queries/admin/useCourseById";
+import { courseQueryOptions } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 
 import { coursePricingFormSchema } from "../validators/coursePricingFormSchema";
