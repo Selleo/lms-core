@@ -157,7 +157,7 @@ export const lessons = pgTable("lessons", {
     .notNull(),
   type: varchar("type", { length: 20 }).notNull(),
   title: varchar("title", { length: 100 }).notNull(),
-  description: varchar("description", { length: 1000 }),
+  description: varchar("description", { length: 3000 }),
   displayOrder: integer("display_order"),
   fileS3Key: varchar("file_s3_key", { length: 200 }),
   fileType: varchar("file_type", { length: 20 }),

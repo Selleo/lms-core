@@ -1,161 +1,98 @@
-import { type ClientLoaderFunctionArgs, Link, useParams } from "@remix-run/react";
-import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate, useParams } from "@remix-run/react";
 
-import { useClearQuizProgress } from "~/api/mutations/useClearQuizProgress";
-import { useSubmitQuiz } from "~/api/mutations/useSubmitQuiz";
-import { useCourseSuspense } from "~/api/queries/useCourse";
-import { lessonQueryOptions, useLessonSuspense } from "~/api/queries/useLesson";
-import { queryClient } from "~/api/queryClient";
+import { useCourse, useLesson } from "~/api/queries";
 import { PageWrapper } from "~/components/PageWrapper";
-import { Button } from "~/components/ui/button";
-import { LessonItems } from "~/modules/Courses/Lesson/LessonItems/LessonItems";
-import { QuizSummaryModal } from "~/modules/Courses/Lesson/QuizSummaryModal";
+import { LessonContent } from "~/modules/Courses/Lesson/LessonContent";
+import { LessonSidebar } from "~/modules/Courses/Lesson/LessonSidebar";
 
-import Breadcrumb from "./Breadcrumb";
-import Overview from "./Overview";
-import Summary from "./Summary";
-import { getOrderedLessons, getQuestionsArray, getUserAnswers } from "./utils";
-
-import type { TQuestionsForm } from "./types";
-import type { MetaFunction } from "@remix-run/node";
-
-export const meta: MetaFunction = () => {
-  return [{ title: "Lesson" }];
-};
-
-export const clientLoader = async ({ params }: ClientLoaderFunctionArgs) => {
-  const { lessonId = "", courseId = "" } = params;
-  if (!lessonId) throw new Error("Lesson ID not found");
-  await queryClient.prefetchQuery(lessonQueryOptions(lessonId, courseId));
-  return null;
-};
+import type { GetCourseResponse } from "~/api/generated-api";
 
 export default function LessonPage() {
-  const { lessonId = "", courseId = "" } = useParams();
-  const [isOpen, setIsOpen] = useState(false);
-  const { data: lesson, refetch } = useLessonSuspense(lessonId, courseId);
-  const {
-    data: { id, title, lessons },
-  } = useCourseSuspense(courseId ?? "");
+  const { courseId = "", lessonId = "" } = useParams();
+  const { data: lesson } = useLesson(lessonId);
+  const { data: course } = useCourse(courseId);
+  const navigate = useNavigate();
 
-  const methods = useForm<TQuestionsForm>({
-    mode: "onChange",
-    defaultValues: getUserAnswers(lesson),
-  });
+  if (!lesson || !course) return null;
 
-  const submitQuiz = useSubmitQuiz({
-    handleOnSuccess: async () => {
-      await refetch();
-      setIsOpen(true);
-    },
-  });
-  const clearQuizProgress = useClearQuizProgress({
-    handleOnSuccess: async () => {
-      methods.reset();
-      await refetch();
-    },
-  });
+  const currentChapter = course.chapters.find((chapter) =>
+    chapter?.lessons.some((l) => l.id === lessonId),
+  );
 
-  const lessonsIds = lessons.map((lesson) => lesson.id);
-  const currentLessonIndex = lessonsIds.indexOf(lessonId ?? "");
-
-  if (!lesson || !lessonId) {
-    throw new Error(`Lesson with id: ${lessonId} not found`);
+  function findCurrentLessonIndex(
+    lessons: GetCourseResponse["data"]["chapters"][number]["lessons"],
+    currentLessonId: string,
+  ) {
+    return lessons.findIndex((lesson) => lesson.id === currentLessonId);
   }
 
-  const orderedLessonsItems = getOrderedLessons(lesson);
+  function handleNextLesson(
+    currentLessonId: string,
+    chapters: GetCourseResponse["data"]["chapters"],
+  ) {
+    for (const chapter of chapters) {
+      const lessonIndex = findCurrentLessonIndex(chapter.lessons, currentLessonId);
+      if (lessonIndex !== -1) {
+        if (lessonIndex + 1 < chapter.lessons.length) {
+          const nextLessonId = chapter.lessons[lessonIndex + 1].id;
+          navigate(`/course/${courseId}/lesson/${nextLessonId}`);
+        } else {
+          const currentChapterIndex = chapters.indexOf(chapter);
+          if (currentChapterIndex + 1 < chapters.length) {
+            const nextChapterId = chapters[currentChapterIndex + 1].lessons[0].id;
+            navigate(`/course/${courseId}/lesson/${nextChapterId}`);
+          }
+        }
+      }
+    }
 
-  const questionsArray = getQuestionsArray(orderedLessonsItems);
+    return null;
+  }
 
-  const previousLessonId = currentLessonIndex > 0 ? lessonsIds[currentLessonIndex - 1] : null;
-  const nextLessonId =
-    currentLessonIndex < lessonsIds.length - 1 ? lessonsIds[currentLessonIndex + 1] : null;
+  function handlePrevLesson(
+    currentLessonId: string,
+    chapters: GetCourseResponse["data"]["chapters"],
+  ) {
+    for (const chapter of chapters) {
+      const lessonIndex = findCurrentLessonIndex(chapter.lessons, currentLessonId);
+      if (lessonIndex !== -1) {
+        if (lessonIndex > 0) {
+          const prevLessonId = chapter.lessons[lessonIndex - 1].id;
+          navigate(`/course/${courseId}/lesson/${prevLessonId}`);
+        } else {
+          const currentChapterIndex = chapters.indexOf(chapter);
+          if (currentChapterIndex > 0) {
+            const prevChapter = chapters[currentChapterIndex - 1];
+            const prevChapterId = prevChapter.lessons[prevChapter.lessons.length - 1].id;
 
-  const isQuiz = lesson?.type === "quiz";
-  const isEnrolled = lesson?.enrolled;
+            navigate(`/course/${courseId}/lesson/${prevChapterId}`);
+          }
+        }
+      }
+    }
 
-  const getScorePercentage = () => {
-    if (!lesson.quizScore || lesson.quizScore === 0 || !lesson.lessonItems.length) return "0%";
-
-    return `${((lesson.quizScore / lesson.lessonItems.length) * 100)?.toFixed(0)}%`;
-  };
-
-  const scorePercentage = getScorePercentage();
-
-  const updateLessonItemCompletion = async () => {
-    await refetch();
-  };
+    return null;
+  }
 
   return (
-    <div className="flex">
-      <PageWrapper>
-        <div className="flex flex-col gap-6 w-full">
-          <Breadcrumb lessonData={lesson} courseId={id} courseTitle={title} />
-          <Overview lesson={lesson} />
-          {isQuiz && (
-            <QuizSummaryModal
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-              scoreLabel={scorePercentage}
-              courseId={courseId}
-            />
-          )}
-          <FormProvider {...methods}>
-            <form className="flex flex-col gap-8">
-              <LessonItems
-                isSubmitted={!!lesson?.isSubmitted}
-                questions={questionsArray}
-                lessonItems={orderedLessonsItems}
-                lessonType={lesson?.type ?? "multimedia"}
-                updateLessonItemCompletion={updateLessonItemCompletion}
-              />
-            </form>
-          </FormProvider>
-          {isQuiz && (
-            <Button
-              className="w-min self-end"
-              variant="outline"
-              onClick={
-                lesson?.isSubmitted
-                  ? () => clearQuizProgress.mutate({ lessonId, courseId })
-                  : () => submitQuiz.mutate({ lessonId, courseId })
-              }
-            >
-              {lesson?.isSubmitted ? "Clear progress" : "Check answers"}
-            </Button>
-          )}
-          {isEnrolled && (
-            <div className="w-full flex flex-col sm:flex-row gap-4 justify-end">
-              <Link
-                to={previousLessonId ? `/course/${courseId}/lesson/${previousLessonId}` : "#"}
-                onClick={(e) => !previousLessonId && e.preventDefault()}
-                reloadDocument
-                replace
-              >
-                <Button
-                  variant="outline"
-                  className="w-full sm:w-[180px]"
-                  disabled={!previousLessonId}
-                >
-                  Previous lesson
-                </Button>
-              </Link>
-              <Link
-                to={nextLessonId ? `/course/${courseId}/lesson/${nextLessonId}` : "#"}
-                onClick={(e) => !nextLessonId && e.preventDefault()}
-                reloadDocument
-                replace
-              >
-                <Button className="w-full sm:w-[180px]" disabled={!nextLessonId}>
-                  Next lesson
-                </Button>
-              </Link>
-            </div>
-          )}
+    <PageWrapper className="max-w-full h-full">
+      <div className="flex flex-col lg:grid lg:grid-cols-[1fr_480px] h-full max-w-full gap-6 w-full">
+        <div className="w-full bg-white rounded-lg flex flex-col h-full divide-y">
+          <div className="flex items-center py-6 px-12">
+            <p className="h6 text-neutral-950">
+              <span className="text-neutral-800">Chapter {currentChapter?.displayOrder}:</span>{" "}
+              {course?.title}
+            </p>
+          </div>
+          <LessonContent
+            lesson={lesson}
+            lessonsAmount={currentChapter?.lessons.length ?? 0}
+            handlePrevious={() => handlePrevLesson(lessonId, course.chapters)}
+            handleNext={() => handleNextLesson(lessonId, course.chapters)}
+          />
         </div>
-      </PageWrapper>
-      <Summary lesson={lesson} />
-    </div>
+        <LessonSidebar course={course} courseId={courseId} />
+      </div>
+    </PageWrapper>
   );
 }

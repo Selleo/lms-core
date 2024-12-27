@@ -1,15 +1,9 @@
 import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { and, eq, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
-import {
-  chapters,
-  lessons,
-  questionAnswerOptions,
-  questions,
-  studentCourses,
-} from "src/storage/schema";
+import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
 import { LESSON_TYPES } from "../lesson.type";
 
@@ -144,19 +138,19 @@ export class LessonService {
   //   return true;
   // }
 
-  async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
-    return this.db
-      .select({
-        isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
-      })
-      .from(lessons)
-      .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
-      .leftJoin(
-        studentCourses,
-        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
-      )
-      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
-  }
+  // async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
+  //   return this.db
+  //     .select({
+  //       isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
+  //     })
+  //     .from(lessons)
+  //     .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
+  //     .leftJoin(
+  //       studentCourses,
+  //       and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+  //     )
+  //     .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
+  // }
 
   // private async evaluationsQuestions(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
   //   const lesson = await this.chapterRepository.getLessonForUser(courseId, lessonId, userId);

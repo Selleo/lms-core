@@ -1,6 +1,7 @@
 import { Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
+import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 import { LESSON_TYPES, PhotoQuestionType, QuestionType } from "./lesson.type";
 
@@ -18,11 +19,11 @@ export const optionSchema = Type.Object({
 export const questionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
   type: Type.Enum(QuestionType),
-  description: Type.Optional(Type.String()),
+  description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
   displayOrder: Type.Optional(Type.Number()),
-  photoQuestionType: Type.Optional(Type.Enum(PhotoQuestionType)),
-  photoS3Key: Type.Optional(Type.String()),
+  photoQuestionType: Type.Optional(Type.Union([Type.Enum(PhotoQuestionType), Type.Null()])),
+  photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(optionSchema)),
 });
 
@@ -32,8 +33,8 @@ export const lessonSchema = Type.Object({
   type: Type.String(),
   description: Type.String(),
   displayOrder: Type.Number(),
-  fileS3Key: Type.Optional(Type.String()),
-  fileType: Type.Optional(Type.String()),
+  fileS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  fileType: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   questions: Type.Optional(Type.Array(questionSchema)),
   updatedAt: Type.Optional(Type.String()),
 });
@@ -97,8 +98,28 @@ export const lessonShowSchema = Type.Object({
 
 export const updateLessonSchema = Type.Partial(createLessonSchema);
 export const updateQuizLessonSchema = Type.Partial(createQuizLessonSchema);
+export const lessonForChapterSchema = Type.Array(
+  Type.Object({
+    id: UUIDSchema,
+    title: Type.String(),
+    type: Type.Union([
+      Type.Literal(LESSON_TYPES.QUIZ),
+      Type.Literal(LESSON_TYPES.PRESENTATION),
+      Type.Literal(LESSON_TYPES.VIDEO),
+      Type.Literal(LESSON_TYPES.TEXT),
+    ]),
+    displayOrder: Type.Number(),
+    status: Type.Union([
+      Type.Literal(PROGRESS_STATUSES.COMPLETED),
+      Type.Literal(PROGRESS_STATUSES.IN_PROGRESS),
+      Type.Literal(PROGRESS_STATUSES.NOT_STARTED),
+    ]),
+    quizQuestionCount: Type.Union([Type.Number(), Type.Null()]),
+  }),
+);
 
 export type AdminLessonWithContentSchema = Static<typeof adminLessonSchema>;
+export type LessonForChapterSchema = Static<typeof lessonForChapterSchema>;
 export type CreateLessonBody = Static<typeof createLessonSchema>;
 export type UpdateLessonBody = Static<typeof updateLessonSchema>;
 export type UpdateQuizLessonBody = Static<typeof updateQuizLessonSchema>;
@@ -108,3 +129,4 @@ export type OptionBody = Static<typeof optionSchema>;
 export type QuestionBody = Static<typeof questionSchema>;
 export type QuestionSchema = Static<typeof questionSchema>;
 export type LessonShow = Static<typeof lessonShowSchema>;
+export type LessonSchema = Static<typeof lessonSchema>;

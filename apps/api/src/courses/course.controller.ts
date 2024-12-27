@@ -31,7 +31,10 @@ import { CourseService } from "src/courses/course.service";
 import { allCoursesSchema } from "src/courses/schemas/course.schema";
 import { SortCourseFieldsOptions } from "src/courses/schemas/courseQuery";
 import { CreateCourseBody, createCourseSchema } from "src/courses/schemas/createCourse.schema";
-import { commonShowCourseSchema } from "src/courses/schemas/showCourseCommon.schema";
+import {
+  commonShowBetaCourseSchema,
+  commonShowCourseSchema,
+} from "src/courses/schemas/showCourseCommon.schema";
 import { UpdateCourseBody, updateCourseSchema } from "src/courses/schemas/updateCourse.schema";
 import {
   allCoursesValidation,
@@ -45,7 +48,10 @@ import type {
   AllCoursesResponse,
 } from "src/courses/schemas/course.schema";
 import type { CoursesFilterSchema } from "src/courses/schemas/courseQuery";
-import type { CommonShowCourse } from "src/courses/schemas/showCourseCommon.schema";
+import type {
+  CommonShowBetaCourse,
+  CommonShowCourse,
+} from "src/courses/schemas/showCourseCommon.schema";
 
 @Controller("course")
 @UseGuards(RolesGuard)
@@ -193,23 +199,13 @@ export class CourseController {
     return new BaseResponse(await this.courseService.getCourse(id, currentUserId));
   }
 
-  @Get("course-by-id")
-  @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
-  @Validate({
-    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
-    response: baseResponse(commonShowCourseSchema),
-  })
-  async getCourseById(@Query("id") id: UUIDType): Promise<BaseResponse<CommonShowCourse>> {
-    return new BaseResponse(await this.courseService.getCourseById(id));
-  }
-
   @Get("beta-course-by-id")
   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
-    response: baseResponse(commonShowCourseSchema),
+    response: baseResponse(commonShowBetaCourseSchema),
   })
-  async getBetaCourseById(@Query("id") id: UUIDType): Promise<BaseResponse<CommonShowCourse>> {
+  async getBetaCourseById(@Query("id") id: UUIDType): Promise<BaseResponse<CommonShowBetaCourse>> {
     return new BaseResponse(await this.courseService.getBetaCourseById(id));
   }
 

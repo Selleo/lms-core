@@ -38,7 +38,7 @@ export const LessonCardList = ({
         case "video":
           setContentTypeToDisplay(ContentTypes.VIDEO_LESSON_FORM);
           break;
-        case "text_block":
+        case "text":
           setContentTypeToDisplay(ContentTypes.TEXT_LESSON_FORM);
           break;
         case "presentation":
