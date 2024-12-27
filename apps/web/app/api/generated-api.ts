@@ -445,6 +445,15 @@ export interface GetCourseResponse {
       id: string;
       title: string;
       lessonCount: number;
+      lessons: {
+        /** @format uuid */
+        id: string;
+        title: string;
+        type: "quiz" | "presentation" | "video" | "text";
+        displayOrder: number;
+        status: "completed" | "in_progress" | "not_started";
+        quizQuestionCount: number | null;
+      }[];
       completedLessonCount?: number;
       chapterProgress?: "completed" | "in_progress" | "not_started";
       isFreemium?: boolean;
@@ -467,49 +476,6 @@ export interface GetCourseResponse {
     isScorm?: boolean;
     priceInCents: number;
     thumbnailUrl?: string;
-    thumbnailS3Key?: string;
-    thumbnailS3SingedUrl?: string;
-    title: string;
-  };
-}
-
-export interface GetCourseByIdResponse {
-  data: {
-    archived?: boolean;
-    /** @format uuid */
-    authorId?: string;
-    category: string;
-    /** @format uuid */
-    categoryId?: string;
-    chapters: {
-      /** @format uuid */
-      id: string;
-      title: string;
-      lessonCount: number;
-      completedLessonCount?: number;
-      chapterProgress?: "completed" | "in_progress" | "not_started";
-      isFreemium?: boolean;
-      enrolled?: boolean;
-      isPublished?: boolean;
-      isSubmitted?: boolean;
-      createdAt?: string;
-      quizCount?: number;
-      displayOrder: number;
-    }[];
-    completedChapterCount?: number;
-    courseChapterCount: number;
-    currency: string;
-    description: string;
-    enrolled?: boolean;
-    hasFreeChapter?: boolean;
-    /** @format uuid */
-    id: string;
-    isPublished: boolean | null;
-    isScorm?: boolean;
-    priceInCents: number;
-    thumbnailUrl?: string;
-    thumbnailS3Key?: string;
-    thumbnailS3SingedUrl?: string;
     title: string;
   };
 }
@@ -527,6 +493,45 @@ export interface GetBetaCourseByIdResponse {
       id: string;
       title: string;
       lessonCount: number;
+      lessons?: {
+        /** @format uuid */
+        id: string;
+        title: string;
+        type: string;
+        description: string;
+        displayOrder: number;
+        fileS3Key?: string | null;
+        fileType?: string | null;
+        questions?: {
+          /** @format uuid */
+          id?: string;
+          type:
+            | "single_choice"
+            | "multiple_choice"
+            | "true_or_false"
+            | "photo_question"
+            | "fill_in_the_blanks_text"
+            | "fill_in_the_blanks_dnd"
+            | "brief_response"
+            | "detailed_response";
+          description?: string | null;
+          title: string;
+          displayOrder?: number;
+          photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+          photoS3Key?: string | null;
+          options?: {
+            /** @format uuid */
+            id?: string;
+            optionText: string;
+            displayOrder: number | null;
+            isStudentAnswer?: boolean;
+            isCorrect: boolean;
+            /** @format uuid */
+            questionId?: string;
+          }[];
+        }[];
+        updatedAt?: string;
+      }[];
       completedLessonCount?: number;
       chapterProgress?: "completed" | "in_progress" | "not_started";
       isFreemium?: boolean;
@@ -633,8 +638,8 @@ export type BetaCreateLessonBody = {
   title: string;
   type: string;
   description: string;
-  fileS3Key?: string;
-  fileType?: string;
+  fileS3Key?: string | null;
+  fileType?: string | null;
   questions?: {
     /** @format uuid */
     id?: string;
@@ -647,11 +652,11 @@ export type BetaCreateLessonBody = {
       | "fill_in_the_blanks_dnd"
       | "brief_response"
       | "detailed_response";
-    description?: string;
+    description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: "single_choice" | "multiple_choice";
-    photoS3Key?: string;
+    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+    photoS3Key?: string | null;
     options?: {
       /** @format uuid */
       id?: string;
@@ -696,11 +701,11 @@ export type BetaCreateQuizLessonBody = {
       | "fill_in_the_blanks_dnd"
       | "brief_response"
       | "detailed_response";
-    description?: string;
+    description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: "single_choice" | "multiple_choice";
-    photoS3Key?: string;
+    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+    photoS3Key?: string | null;
     options?: {
       /** @format uuid */
       id?: string;
@@ -744,11 +749,11 @@ export type BetaUpdateQuizLessonBody = {
       | "fill_in_the_blanks_dnd"
       | "brief_response"
       | "detailed_response";
-    description?: string;
+    description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: "single_choice" | "multiple_choice";
-    photoS3Key?: string;
+    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+    photoS3Key?: string | null;
     options?: {
       /** @format uuid */
       id?: string;
@@ -776,8 +781,8 @@ export type BetaUpdateLessonBody = {
   title?: string;
   type?: string;
   description?: string;
-  fileS3Key?: string;
-  fileType?: string;
+  fileS3Key?: string | null;
+  fileType?: string | null;
   questions?: {
     /** @format uuid */
     id?: string;
@@ -790,11 +795,11 @@ export type BetaUpdateLessonBody = {
       | "fill_in_the_blanks_dnd"
       | "brief_response"
       | "detailed_response";
-    description?: string;
+    description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: "single_choice" | "multiple_choice";
-    photoS3Key?: string;
+    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+    photoS3Key?: string | null;
     options?: {
       /** @format uuid */
       id?: string;
@@ -843,6 +848,15 @@ export interface GetChapterWithLessonResponse {
     id: string;
     title: string;
     lessonCount: number;
+    lessons: {
+      /** @format uuid */
+      id: string;
+      title: string;
+      type: "quiz" | "presentation" | "video" | "text";
+      displayOrder: number;
+      status: "completed" | "in_progress" | "not_started";
+      quizQuestionCount: number | null;
+    }[];
     completedLessonCount?: number;
     chapterProgress?: "completed" | "in_progress" | "not_started";
     isFreemium?: boolean;
@@ -852,50 +866,50 @@ export interface GetChapterWithLessonResponse {
     createdAt?: string;
     quizCount?: number;
     displayOrder: number;
-    lessons: {
-      /** @format uuid */
-      id: string;
-      title: string;
-      type: string;
-      description: string;
-      displayOrder: number;
-      fileS3Key?: string;
-      fileType?: string;
-      questions?: {
-        /** @format uuid */
-        id?: string;
-        type:
-          | "single_choice"
-          | "multiple_choice"
-          | "true_or_false"
-          | "photo_question"
-          | "fill_in_the_blanks_text"
-          | "fill_in_the_blanks_dnd"
-          | "brief_response"
-          | "detailed_response";
-        description?: string;
-        title: string;
-        displayOrder?: number;
-        photoQuestionType?: "single_choice" | "multiple_choice";
-        photoS3Key?: string;
-        options?: {
-          /** @format uuid */
-          id?: string;
-          optionText: string;
-          displayOrder: number | null;
-          isStudentAnswer?: boolean;
-          isCorrect: boolean;
-          /** @format uuid */
-          questionId?: string;
-        }[];
-      }[];
-      updatedAt?: string;
-    }[];
   };
 }
 
 export type BetaCreateChapterBody = {
   title: string;
+  lessons?: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    type: string;
+    description: string;
+    displayOrder: number;
+    fileS3Key?: string | null;
+    fileType?: string | null;
+    questions?: {
+      /** @format uuid */
+      id?: string;
+      type:
+        | "single_choice"
+        | "multiple_choice"
+        | "true_or_false"
+        | "photo_question"
+        | "fill_in_the_blanks_text"
+        | "fill_in_the_blanks_dnd"
+        | "brief_response"
+        | "detailed_response";
+      description?: string | null;
+      title: string;
+      displayOrder?: number;
+      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+      photoS3Key?: string | null;
+      options?: {
+        /** @format uuid */
+        id?: string;
+        optionText: string;
+        displayOrder: number | null;
+        isStudentAnswer?: boolean;
+        isCorrect: boolean;
+        /** @format uuid */
+        questionId?: string;
+      }[];
+    }[];
+    updatedAt?: string;
+  }[];
   chapterProgress?: "completed" | "in_progress" | "not_started";
   isFreemium?: boolean;
   enrolled?: boolean;
@@ -918,6 +932,45 @@ export interface BetaCreateChapterResponse {
 
 export type UpdateChapterBody = {
   title?: string;
+  lessons?: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    type: string;
+    description: string;
+    displayOrder: number;
+    fileS3Key?: string | null;
+    fileType?: string | null;
+    questions?: {
+      /** @format uuid */
+      id?: string;
+      type:
+        | "single_choice"
+        | "multiple_choice"
+        | "true_or_false"
+        | "photo_question"
+        | "fill_in_the_blanks_text"
+        | "fill_in_the_blanks_dnd"
+        | "brief_response"
+        | "detailed_response";
+      description?: string | null;
+      title: string;
+      displayOrder?: number;
+      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+      photoS3Key?: string | null;
+      options?: {
+        /** @format uuid */
+        id?: string;
+        optionText: string;
+        displayOrder: number | null;
+        isStudentAnswer?: boolean;
+        isCorrect: boolean;
+        /** @format uuid */
+        questionId?: string;
+      }[];
+    }[];
+    updatedAt?: string;
+  }[];
   chapterProgress?: "completed" | "in_progress" | "not_started";
   isFreemium?: boolean;
   enrolled?: boolean;
@@ -1860,27 +1913,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name CourseControllerGetCourseById
-     * @request GET:/api/course/course-by-id
-     */
-    courseControllerGetCourseById: (
-      query: {
-        /** @format uuid */
-        id: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetCourseByIdResponse, any>({
-        path: `/api/course/course-by-id`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
      * @name CourseControllerGetBetaCourseById
      * @request GET:/api/course/beta-course-by-id
      */
@@ -2275,8 +2307,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     studentLessonProgressControllerMarkLessonAsCompleted: (
       query: {
-        /** @format uuid */
-        lessonId: string;
         /** @format uuid */
         id: string;
       },

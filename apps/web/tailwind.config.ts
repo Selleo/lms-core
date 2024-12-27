@@ -27,6 +27,10 @@ const config = {
       "3xl": "1680px",
     },
     extend: {
+      opacity: {
+        32: "0.32",
+        48: "0.48",
+      },
       colors: {
         black: "var(--color-black)",
         white: "var(--color-white)",

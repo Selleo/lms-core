@@ -1,13 +1,14 @@
 import { type Static, Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
-import { lessonSchema } from "src/lesson/lesson.schema";
+import { lessonForChapterSchema, lessonSchema } from "src/lesson/lesson.schema";
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 export const chapterSchema = Type.Object({
   id: UUIDSchema,
   title: Type.String(),
   lessonCount: Type.Number(),
+  lessons: Type.Optional(Type.Array(lessonSchema)),
   completedLessonCount: Type.Optional(Type.Number()),
   chapterProgress: Type.Optional(
     Type.Union([
@@ -40,23 +41,15 @@ export const chapter = Type.Object({
   isFreemium: Type.Boolean(),
 });
 
-export const chapterWithLessonCount = Type.Intersect([
-  Type.Omit(chapter, ["type"]),
-  Type.Object({
-    lessonCount: Type.Number(),
-  }),
-]);
-
 export const allChapterSchema = Type.Array(chapterSchema);
 
 export const showChapterSchema = Type.Object({
   ...chapterSchema.properties,
   quizCount: Type.Optional(Type.Number()),
-  lessons: Type.Array(lessonSchema),
+  lessons: lessonForChapterSchema,
 });
 
 export type Chapter = Static<typeof chapter>;
-export type ChapterWithLessonCount = Static<typeof chapterWithLessonCount>;
 export type ChapterResponse = Static<typeof chapterSchema>;
 export type ShowChapterResponse = Static<typeof showChapterSchema>;
 export type AllChaptersResponse = Static<typeof allChapterSchema>;

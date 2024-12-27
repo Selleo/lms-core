@@ -4,6 +4,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { Question, QuestionType } from "../QuizLessonForm.types";
 import { UseFormReturn } from "react-hook-form";
 import { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
+import { cn } from "~/lib/utils";
 
 const QuestionWrapper = ({
   questionType,
@@ -30,9 +31,10 @@ const QuestionWrapper = ({
     <Accordion.Root type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
         <div
-          className={`border p-2 mt-4 rounded-xl transition-all duration-300 ${
-            isOpen ? "border-blue-500" : "border-gray-200"
-          }`}
+          className={cn(
+            "border p-2 mt-4 rounded-xl transition-all duration-300",
+            isOpen ? "border-blue-500" : "border-gray-200",
+          )}
         >
           <QuestionTitle
             questionIndex={questionIndex}

@@ -1,13 +1,13 @@
 export const LessonTypes = {
   presentation: "Presentation",
-  text_block: "Text Block",
+  text: "Text",
   video: "Video",
   quiz: "Quiz",
 } as const;
 
 export const LessonTypesIcons = {
   presentation: "Presentation",
-  text_block: "Text",
+  text: "Text",
   video: "Video",
   quiz: "Quiz",
 } as const;

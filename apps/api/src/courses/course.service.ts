@@ -57,7 +57,10 @@ import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { Pagination, UUIDType } from "src/common";
-import type { AdminLessonWithContentSchema } from "src/lesson/lesson.schema";
+import type {
+  AdminLessonWithContentSchema,
+  LessonForChapterSchema,
+} from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 import type { ProgressStatus } from "src/utils/types/progress.type";
 
@@ -378,7 +381,7 @@ export class CourseService {
         `,
         isFreemium: chapters.isFreemium,
         displayOrder: sql<number>`${chapters.displayOrder}`,
-        lessons: sql<string>`
+        lessons: sql<LessonForChapterSchema>`
           COALESCE(
             (
               SELECT json_agg(lesson_data)
@@ -424,7 +427,7 @@ export class CourseService {
       )
       .orderBy(chapters.displayOrder);
 
-    // TODO: temporary firx
+    // TODO: temporary fix
     const getImageUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url ?? "";
       return await this.fileService.getFileUrl(url);
@@ -466,15 +469,15 @@ export class CourseService {
         displayOrder: sql<number>`${chapters.displayOrder}`,
         lessonCount: chapters.lessonCount,
         isFree: chapters.isFreemium,
-        lessons: sql<string>`
+        lessons: sql<LessonForChapterSchema>`
         COALESCE(
-  (
-    SELECT array_agg(${lessons.id} ORDER BY ${lessons.displayOrder})
-    FROM ${lessons}
-    WHERE ${lessons.chapterId} = ${chapters.id}
-  ),
-  '{}'
-)
+          (
+            SELECT array_agg(${lessons.id} ORDER BY ${lessons.displayOrder})
+            FROM ${lessons}
+            WHERE ${lessons.chapterId} = ${chapters.id}
+          ),
+          '{}'
+        )
       `,
       })
       .from(chapters)

@@ -24,7 +24,7 @@ const niceCourseData = Type.Intersect([
           displayOrder: Type.Number(),
           lessons: Type.Array(
             Type.Intersect([
-              Type.Omit(lessonSchema, ["id", "fileS3Key", "fileType"]),
+              Type.Omit(lessonSchema, ["id", "fileS3Key", "fileType", "questions"]),
               Type.Partial(
                 Type.Object({
                   questions: Type.Array(

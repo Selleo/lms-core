@@ -142,38 +142,39 @@ export class AdminLessonService {
         displayOrder,
       );
 
-      if (Array.isArray(data.questions) && data.questions.length > 0) {
-        const questionsToInsert = data?.questions?.map((question) => ({
-          lessonId: lesson.id,
-          authorId,
-          type: question.type,
-          description: question.description || null,
-          title: question.title,
-          displayOrder: question.displayOrder,
-          photoS3Key: question.photoS3Key,
-          photoQuestionType: question.photoQuestionType || null,
-        }));
+      if (!data.questions) return;
 
-        const insertedQuestions = await trx.insert(questions).values(questionsToInsert).returning();
+      const questionsToInsert = data?.questions?.map((question) => ({
+        lessonId: lesson.id,
+        authorId,
+        type: question.type,
+        description: question.description || null,
+        title: question.title,
+        displayOrder: question.displayOrder,
+        photoS3Key: question.photoS3Key,
+        photoQuestionType: question.photoQuestionType || null,
+      }));
 
-        const optionsToInsert = insertedQuestions.flatMap(
-          (question, index) =>
-            data.questions?.[index].options?.map((option) => ({
-              questionId: question.id,
-              optionText: option.optionText,
-              isCorrect: option.isCorrect,
-              displayOrder: option.displayOrder,
-            })) || [],
-        );
+      const insertedQuestions = await trx.insert(questions).values(questionsToInsert).returning();
 
-        if (optionsToInsert.length > 0) {
-          await trx.insert(questionAnswerOptions).values(optionsToInsert);
-        }
+      const optionsToInsert = insertedQuestions.flatMap(
+        (question, index) =>
+          data.questions?.[index].options?.map((option) => ({
+            questionId: question.id,
+            optionText: option.optionText,
+            isCorrect: option.isCorrect,
+            displayOrder: option.displayOrder,
+          })) || [],
+      );
+
+      if (optionsToInsert.length > 0) {
+        await trx.insert(questionAnswerOptions).values(optionsToInsert);
       }
 
       return lesson;
     });
   }
+
 
   async updateQuizLessonWithQuestionsAndOptions(
     id: UUIDType,

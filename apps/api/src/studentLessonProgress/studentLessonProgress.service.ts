@@ -128,7 +128,7 @@ export class StudentLessonProgressService {
   }
 
   private async getCourseFinishedChapterCount(courseId: UUIDType, studentId: UUIDType) {
-    const [finishedLessonsCount] = await this.db
+    const [finishedChapterCount] = await this.db
       .select({
         count: sql<number>`COUNT(DISTINCT ${studentChapterProgress.chapterId})`,
       })
@@ -141,7 +141,7 @@ export class StudentLessonProgressService {
         ),
       );
 
-    return finishedLessonsCount.count;
+    return finishedChapterCount.count;
   }
 
   private async getCourseCompletionStatus(courseId: UUIDType, studentId: UUIDType) {

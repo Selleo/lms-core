@@ -2,7 +2,7 @@ import { Controller, Post, Query, UseGuards } from "@nestjs/common";
 import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 
-import { UUIDSchema, baseResponse, BaseResponse, UUIDType } from "src/common";
+import { baseResponse, BaseResponse, UUIDSchema, UUIDType } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
@@ -18,15 +18,7 @@ export class StudentLessonProgressController {
   @Post()
   @Roles(USER_ROLES.STUDENT)
   @Validate({
-    request: [
-      { type: "query", name: "id", schema: UUIDSchema, required: true },
-      {
-        type: "query",
-        name: "lessonId",
-        schema: UUIDSchema,
-        required: true,
-      },
-    ],
+    request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async markLessonAsCompleted(
