@@ -303,7 +303,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                   key={index}
                   className={cn(
                     "px-4 rounded-full flex items-center justify-between space-x-2",
-                    option.isCorrect ? "bg-success-100" : "bg-primary-200"
+                    option.isCorrect ? "bg-success-100" : "bg-primary-200",
                   )}
                   draggable={!containsButtonWithWord(option.optionText)}
                   onDragStart={(e) => handleDragStart(option.optionText, e)}

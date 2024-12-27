@@ -427,7 +427,7 @@ export class CourseService {
       )
       .orderBy(chapters.displayOrder);
 
-    // TODO: temporary firx
+    // TODO: temporary fix
     const getImageUrl = async (url: string) => {
       if (!url || url.startsWith("https://")) return url ?? "";
       return await this.fileService.getFileUrl(url);

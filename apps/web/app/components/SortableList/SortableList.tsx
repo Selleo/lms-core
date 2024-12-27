@@ -44,7 +44,7 @@ export function SortableList<T extends BaseItem>({
   const activeItem = useMemo(() => {
     if (isQuiz && active) {
       const activeOrder = Number(active.id);
-      return items.find((item) => (item.displayOrder) === activeOrder);
+      return items.find((item) => item.displayOrder === activeOrder);
     }
     return items.find((item) => item.id === active?.id);
   }, [active, items, isQuiz]);
