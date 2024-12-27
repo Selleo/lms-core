@@ -55,6 +55,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -101,6 +102,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 type: QuestionType.SingleChoice,
                 title: "Which HTML tag is used to create a hyperlink?",
+                displayOrder: 1,
                 options: [
                   {
                     optionText: "<a>",
@@ -144,7 +146,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 type: QuestionType.SingleChoice,
                 title: "Which of the following HTML tags is used to create an image?",
-                // displayOrder: 1,
+                displayOrder: 1,
                 options: [
                   {
                     optionText: "<img>",
@@ -369,6 +371,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which CSS property is used to change the text color of an element?",
                 options: [
@@ -499,6 +502,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.BriefResponse,
                 title:
                   "Why is HTML considered the backbone of any website? Explain its role in web development.",
@@ -520,6 +524,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -584,6 +589,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.BriefResponse,
                 title: "Explain why Java is the preferred language for Android development.",
                 description: "",
@@ -604,6 +610,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
@@ -632,6 +639,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
@@ -665,6 +673,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 7,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which keyword is used to create a new instance of a class in Java?",
                 options: [
@@ -707,6 +716,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which of the following is the entry point of an Android application?",
                 options: [
@@ -774,6 +784,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which keyword is used to declare a variable in Kotlin?",
                 options: [
@@ -813,6 +824,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
@@ -858,6 +870,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.BriefResponse,
                 title:
                   "Why is arithmetic fundamental in math? Give a real-life example of its use.",
@@ -879,6 +892,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
@@ -920,6 +934,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which formula is used to calculate the area of a rectangle?",
                 options: [
@@ -954,6 +969,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
@@ -989,6 +1005,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which of the following is an example of a geometric shape?",
                 options: [
@@ -1062,6 +1079,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.BriefResponse,
                 title: "Explain the difference between a noun and a verb in a sentence.",
                 description: "Explain its role in sentence construction.",
@@ -1082,6 +1100,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "Fill in the blanks: 'She [word] to the store yesterday.'",
                 description: "<p>She <strong>went</strong> to the store yesterday.</p>",
@@ -1127,6 +1146,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which word is the synonym of 'happy'?",
                 options: [
@@ -1144,6 +1164,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "I [word] to the park every day.",
                 options: [
@@ -1183,6 +1204,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title:
                   "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
@@ -1207,6 +1229,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "I love [word] (swimming/swim).",
                 description: "I love <strong>swimming</strong> (swimming/swim).",
@@ -1230,6 +1253,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title:
                   "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
@@ -1248,6 +1272,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 2,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "She [word] to the park every day.",
                 description: "She <strong>went</strong> to the park every day.",
@@ -1265,6 +1290,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 3,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "What is the plural form of 'child'?",
                 options: [
@@ -1281,6 +1307,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which of these words is a conjunction?",
                 options: [
@@ -1343,6 +1370,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "The book [word] I borrowed yesterday was fascinating.",
                 description: "The book <strong>that</strong> I borrowed yesterday was fascinating.",
@@ -1388,6 +1416,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "Which word is an example of academic vocabulary?",
                 options: [
@@ -1405,6 +1434,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "The results [word] the hypothesis.",
                 description: "The results <strong>support</strong> the hypothesis.",
@@ -1453,6 +1483,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "She was [word] when she heard the good news.",
                 description: "She was <strong>over the moon</strong> when she heard the good news.",
@@ -1490,7 +1521,7 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.TEXT,
             title: "Key Concepts and Terminologies in AI",
             description:
-              '<p>Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions. Below are some key concepts and terminologies essential to understanding AI:</p><ul><li><strong>Machine Learning (ML):</strong> A subset of AI focused on creating algorithms that allow computers to learn from and make predictions based on data. Example: A recommendation system suggesting movies based on your viewing history.</li><li><strong>Neural Networks:</strong> Inspired by the human brain, these are algorithms designed to recognize patterns and process data in layers, enabling tasks like image and speech recognition.</li><li><strong>Natural Language Processing (NLP):</strong> This involves teaching machines to understand, interpret, and generate human language. Example: Virtual assistants like Alexa or Siri.</li><li><strong>Computer Vision:</strong> A field of AI that enables computers to interpret and process visual data, such as images and videos. Example: Facial recognition technology.</li><li><strong>Deep Learning:</strong> A more complex subset of ML that uses large neural networks to analyze massive amounts of data and solve intricate problems, such as self-driving cars.</li><li><strong>Supervised vs. Unsupervised Learning:</strong><br>- <strong>Supervised Learning:</strong> The AI is trained on labeled data (e.g., images labeled as "cat" or "dog").<br>- <strong>Unsupervised Learning:</strong> The AI identifies patterns in unlabeled data without explicit instructions.</li><li><strong>Big Data:</strong> The large volume of structured and unstructured data generated by businesses and devices, which is essential for training AI models.</li><li><strong>Automation:</strong> AI is often used to automate repetitive tasks, freeing up human resources for more complex activities.</li><li><strong>Ethics in AI:</strong> As AI becomes more powerful, ensuring its ethical use (e.g., avoiding bias in decision-making) is critical for building trust.</li></ul><h3>Why These Concepts Matter</h3><p>Understanding these basic AI terms is the first step toward recognizing how AI can be applied in business. Each concept represents a building block of AI\'s potential to transform industries by increasing efficiency, improving decision-making, and creating innovative solutions.</p>',
+              "<p>Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions.</p>",
             displayOrder: 2,
           },
           {
@@ -1508,6 +1539,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 4,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.SingleChoice,
                 title: "What is the primary goal of AI in business?",
                 options: [
@@ -1526,6 +1558,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 5,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.MultipleChoice,
                 title:
                   "Which of the following are applications of AI in business? (Select all that apply)",
@@ -1545,6 +1578,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 6,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.TrueOrFalse,
                 title: "AI can function without any data input from humans.",
                 options: [
@@ -1561,6 +1595,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 7,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.PhotoQuestion,
                 title: "Which image represents an AI-driven chatbot?",
                 options: [
@@ -1578,6 +1613,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 8,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.FillInTheBlanksDnd,
                 title:
                   "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
@@ -1598,6 +1634,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 9,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.BriefResponse,
                 title: "In one sentence, explain why businesses are adopting AI.",
               },
@@ -1610,6 +1647,7 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 10,
             questions: [
               {
+                displayOrder: 1,
                 type: QuestionType.DetailedResponse,
                 title:
                   "Describe how AI can improve decision-making in a specific industry of your choice.",

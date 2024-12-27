@@ -12,24 +12,28 @@ import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
 import { Question, QuestionType } from "./QuizLessonForm.types";
 import type { UseFormReturn } from "react-hook-form";
 import { Chapter, ContentTypes, DeleteContentType, Lesson } from "../../../EditCourse.types";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 import Breadcrumb from "../components/Breadcrumb";
 import { SortableList } from "~/components/SortableList";
 import { Icon } from "~/components/Icon";
 import QuestionWrapper from "./components/QuestionWrapper";
 import { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
+import LeaveConfirmationModal from "~/modules/Admin/components/LeaveConfirmationModal";
+import { useLeaveModal } from "~/context/LeaveModalContext";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
-  chapterToEdit?: Chapter;
-  lessonToEdit?: Lesson;
+  chapterToEdit: Chapter | null;
+  lessonToEdit: Lesson | null;
+  setSelectedLesson: (lesson: Lesson | null) => void;
 };
 
 const QuizLessonForm = ({
   setContentTypeToDisplay,
   chapterToEdit,
   lessonToEdit,
+  setSelectedLesson,
 }: QuizLessonProps) => {
   const { form, onSubmit, onDelete } = useQuizLessonForm({
     setContentTypeToDisplay,
@@ -38,18 +42,63 @@ const QuizLessonForm = ({
   });
 
   const questions = form.watch("questions");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   const { isDirty } = form.formState;
-  console.log(isDirty);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const {
+    isLeaveModalOpen,
+    closeLeaveModal,
+    setIsCurrectFormDirty,
+    isCurrentFormDirty,
+    openLeaveModal,
+    setIsLeavingContent,
+  } = useLeaveModal();
+  const [isCanceling, setIsCanceling] = useState(false);
 
   const onCloseModal = () => {
-    setIsModalOpen(false);
+    setIsDeleteModalOpen(false);
   };
 
   const onClickDelete = () => {
-    setIsModalOpen(true);
+    setIsDeleteModalOpen(true);
   };
+
+  useEffect(() => {
+    setIsCurrectFormDirty(isDirty);
+  }, [isDirty]);
+
+  const onCancelModal = () => {
+    closeLeaveModal();
+    setIsCurrectFormDirty(false);
+  };
+
+  const onSaveModal = () => {
+    form.handleSubmit(onSubmit)();
+    closeLeaveModal();
+  };
+
+  const onCancel = useCallback(() => {
+    if (isCurrentFormDirty) {
+      setIsCanceling(true);
+      setIsLeavingContent(true);
+      openLeaveModal();
+      return;
+    }
+    setContentTypeToDisplay(ContentTypes.EMPTY);
+  }, [
+    isCurrentFormDirty,
+    setIsCanceling,
+    setIsLeavingContent,
+    openLeaveModal,
+    setContentTypeToDisplay,
+  ]);
+
+  useEffect(() => {
+    if (!isCurrentFormDirty && isCanceling) {
+      onCancel();
+      setIsCanceling(false);
+      setIsLeavingContent(false);
+    }
+  }, [isCurrentFormDirty, isCanceling, onCancel]);
 
   const addQuestion = useCallback(
     (questionType: string) => {
@@ -63,7 +112,7 @@ const QuizLessonForm = ({
           questionType === QuestionType.PHOTO_QUESTION ? QuestionType.SINGLE_CHOICE : undefined,
       };
 
-      form.setValue("questions", [...questions, newQuestion]);
+      form.setValue("questions", [...questions, newQuestion], { shouldDirty: true });
     },
     [form],
   );
@@ -104,7 +153,11 @@ const QuizLessonForm = ({
   return (
     <div className="w-full max-w-full">
       <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-8">
-        <Breadcrumb lessonLabel="Quiz" setContentTypeToDisplay={setContentTypeToDisplay} />
+        <Breadcrumb
+          lessonLabel="Quiz"
+          setContentTypeToDisplay={setContentTypeToDisplay}
+          setSelectedLesson={setSelectedLesson}
+        />
         <div className="h5 text-neutral-950 mb-6">
           {lessonToEdit ? (
             <>
@@ -145,7 +198,7 @@ const QuizLessonForm = ({
                 items={questions}
                 isQuiz
                 onChange={(updatedItems) => {
-                  form.setValue(`questions`, updatedItems);
+                  form.setValue(`questions`, updatedItems, { shouldDirty: true });
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
@@ -180,7 +233,7 @@ const QuizLessonForm = ({
                 <Button
                   className="text-error-700 bg-color-white border border-neutral-300"
                   type="button"
-                  onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
+                  onClick={onCancel}
                 >
                   Cancel
                 </Button>
@@ -190,10 +243,15 @@ const QuizLessonForm = ({
         </Form>
       </div>
       <DeleteConfirmationModal
-        open={isModalOpen}
+        open={isDeleteModalOpen}
         onClose={onCloseModal}
         onDelete={onDelete}
         contentType={DeleteContentType.QUIZ}
+      />
+      <LeaveConfirmationModal
+        open={isLeaveModalOpen || false}
+        onClose={onCancelModal}
+        onSave={onSaveModal}
       />
     </div>
   );

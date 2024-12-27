@@ -15,14 +15,16 @@ import Breadcrumb from "../components/Breadcrumb";
 
 type TextLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
-  chapterToEdit?: Chapter;
-  lessonToEdit?: Lesson;
+  chapterToEdit: Chapter | null;
+  lessonToEdit: Lesson | null;
+  setSelectedLesson: (selectedLesson: Lesson | null) => void;
 };
 
 const TextLessonForm = ({
   setContentTypeToDisplay,
   chapterToEdit,
   lessonToEdit,
+  setSelectedLesson,
 }: TextLessonProps) => {
   const { form, onSubmit, onDelete } = useTextLessonForm({
     chapterToEdit,
@@ -43,7 +45,11 @@ const TextLessonForm = ({
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
       <div className="flex flex-col gap-y-1">
-        <Breadcrumb lessonLabel="Text" setContentTypeToDisplay={setContentTypeToDisplay} />
+        <Breadcrumb
+          lessonLabel="Text"
+          setContentTypeToDisplay={setContentTypeToDisplay}
+          setSelectedLesson={setSelectedLesson}
+        />
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (
             <>

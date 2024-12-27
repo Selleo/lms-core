@@ -15,7 +15,7 @@ import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmati
 
 type NewChapterProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
-  chapter?: Chapter;
+  chapter: Chapter | null;
 };
 
 const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {

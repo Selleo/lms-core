@@ -1,5 +1,5 @@
 export const LESSON_TYPES = {
-  TEXT: "text",
+  TEXT: "text_block",
   FILE: "file",
   PRESENTATION: "presentation",
   VIDEO: "video",

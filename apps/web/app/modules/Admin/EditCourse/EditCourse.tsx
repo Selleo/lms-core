@@ -12,6 +12,7 @@ import CourseStatus from "./CourseStatus/CourseStatus";
 
 import type { Chapter } from "./EditCourse.types";
 import { Button } from "~/components/ui/button";
+import { LeaveModalProvider } from "~/context/LeaveModalContext";
 
 const EditCourse = () => {
   const { id } = useParams();
@@ -82,10 +83,12 @@ const EditCourse = () => {
         />
       </TabsContent>
       <TabsContent value="Curriculum" className="h-full overflow-hidden">
-        <CourseLessons
-          chapters={course?.chapters as Chapter[]}
-          canRefetchChapterList={!!canRefetchChapterList}
-        />
+        <LeaveModalProvider>
+          <CourseLessons
+            chapters={course?.chapters as Chapter[]}
+            canRefetchChapterList={!!canRefetchChapterList}
+          />
+        </LeaveModalProvider>
       </TabsContent>
       <TabsContent value="Pricing">
         <CoursePricing

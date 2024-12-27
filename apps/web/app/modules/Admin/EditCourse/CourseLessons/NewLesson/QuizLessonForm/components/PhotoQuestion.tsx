@@ -1,6 +1,5 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { useCallback, useEffect, useState } from "react";
-
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
 import { Icon } from "~/components/Icon";
@@ -15,11 +14,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
 import { QuestionOption, QuestionType } from "../QuizLessonForm.types";
-import { cn } from "~/lib/utils";
 import { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
 import { Checkbox } from "~/components/ui/checkbox";
@@ -28,7 +25,7 @@ import { SortableList } from "~/components/SortableList";
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
   questionIndex: number;
-  lessonToEdit?: Lesson;
+  lessonToEdit: Lesson | null;
 };
 
 const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps) => {
@@ -54,7 +51,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
     };
-    form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption]);
+    form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
+      shouldDirty: true,
+    });
   }, [form, questionIndex]);
 
   const handleRemoveOption = useCallback(
@@ -62,7 +61,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
       const currentOptions: QuestionOption[] =
         form.getValues(`questions.${questionIndex}.options`) || [];
       const updatedOptions = currentOptions.filter((_, index) => index !== optionIndex);
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldDirty: true });
     },
     [form, questionIndex],
   );
@@ -70,7 +69,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
   const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
-    form.setValue("questions", updatedQuestions);
+    form.setValue("questions", updatedQuestions, { shouldDirty: true });
   }, [form, questionIndex]);
 
   const handleOptionChange = useCallback(
@@ -91,7 +90,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
         updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], [field]: value as string };
       }
 
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions, {shouldDirty: true});
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldDirty: true });
     },
     [form, questionIndex, photoQuestionType],
   );
@@ -202,7 +201,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 items={watchedOptions}
                 isQuiz
                 onChange={(updatedItems) => {
-                  form.setValue(`questions.${questionIndex}.options`, updatedItems, {shouldDirty: true});
+                  form.setValue(`questions.${questionIndex}.options`, updatedItems, {
+                    shouldDirty: true,
+                  });
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (

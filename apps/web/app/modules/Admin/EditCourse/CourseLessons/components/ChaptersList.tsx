@@ -31,15 +31,16 @@ import { ContentTypes } from "../../EditCourse.types";
 
 import type { Chapter, Lesson } from "../../EditCourse.types";
 import type React from "react";
+import { useLeaveModal } from "~/context/LeaveModalContext";
 
 interface ChapterCardProps {
   chapter: Chapter;
   isOpen: boolean;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
-  setSelectedChapter: (selectedChapter: Chapter) => void;
-  setSelectedLesson: (selectedLesson?: Lesson) => void;
-  selectedChapter?: Chapter;
-  selectedLesson?: Lesson;
+  setSelectedChapter: (selectedChapter: Chapter | null) => void;
+  setSelectedLesson: (selectedLesson: Lesson | null) => void;
+  selectedChapter: Chapter | null;
+  selectedLesson: Lesson | null;
   dragTrigger: React.ReactNode;
 }
 
@@ -55,21 +56,40 @@ const ChapterCard = ({
 }: ChapterCardProps) => {
   const { mutateAsync: updateFreemiumStatus } = useUpdateLessonFreemiumStatus();
   const { id } = useParams();
+  const { openLeaveModal, isCurrentFormDirty, setIsLeavingContent } = useLeaveModal();
+  const [isNewLesson, setIsNewLesson] = useState(false);
+  const [pendingChapter, setPendingChapter] = useState<Chapter | null>(null);
+
+  const addLessonLogic = useCallback(() => {
+    setSelectedLesson(null);
+    setContentTypeToDisplay(ContentTypes.SELECT_LESSON_TYPE);
+    setSelectedChapter(chapter);
+  }, [chapter, setContentTypeToDisplay, setSelectedChapter, setSelectedLesson]);
 
   const handleAddLessonClick = useCallback(
     (event: React.MouseEvent) => {
+      if (isCurrentFormDirty) {
+        setIsNewLesson(true);
+        openLeaveModal();
+        return;
+      }
       event.stopPropagation();
-      setSelectedLesson(undefined);
-      setContentTypeToDisplay(ContentTypes.SELECT_LESSON_TYPE);
-      setSelectedChapter(chapter);
+      addLessonLogic();
     },
-    [chapter, setContentTypeToDisplay, setSelectedChapter, setSelectedLesson],
+    [chapter, openLeaveModal, addLessonLogic],
   );
 
   const onClickChapterCard = useCallback(() => {
+    if (isCurrentFormDirty) {
+      setPendingChapter(chapter);
+      setIsLeavingContent(true);
+      openLeaveModal();
+      return;
+    }
     setContentTypeToDisplay(ContentTypes.CHAPTER_FORM);
     setSelectedChapter(chapter);
-  }, [chapter, setContentTypeToDisplay, setSelectedChapter]);
+    setSelectedLesson(null);
+  }, [chapter, setContentTypeToDisplay, setSelectedChapter, openLeaveModal]);
 
   const onAccordionClick = useCallback(
     (event: React.MouseEvent) => {
@@ -78,6 +98,21 @@ const ChapterCard = ({
     },
     [chapter, setSelectedChapter],
   );
+
+  useEffect(() => {
+    if (!isCurrentFormDirty && pendingChapter) {
+      onClickChapterCard();
+      setPendingChapter(null);
+      setIsLeavingContent(false);
+    }
+  }, [isCurrentFormDirty, pendingChapter, onClickChapterCard]);
+
+  useEffect(() => {
+    if (!isCurrentFormDirty && isNewLesson) {
+      addLessonLogic();
+      setIsNewLesson(false);
+    }
+  }, [isCurrentFormDirty, isNewLesson, addLessonLogic]);
 
   const onSwitchClick = useCallback(
     async (event: React.MouseEvent) => {
@@ -181,11 +216,12 @@ const ChapterCard = ({
 interface ChaptersListProps {
   chapters?: Chapter[];
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
-  setSelectedChapter: (selectedChapter: Chapter) => void;
-  setSelectedLesson: (selectedLesson?: Lesson) => void;
-  selectedChapter?: Chapter;
-  selectedLesson?: Lesson;
+  setSelectedChapter: (selectedChapter: Chapter | null) => void;
+  setSelectedLesson: (selectedLesson: Lesson | null) => void;
+  selectedChapter: Chapter | null;
+  selectedLesson: Lesson | null;
   canRefetchChapterList: boolean;
+  isLeaveModalOpen?: boolean;
 }
 
 function getChapterWithLatestLesson(chapters: Chapter[]): string | null {

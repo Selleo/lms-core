@@ -28,7 +28,9 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
     };
-    form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption]);
+    form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
+      shouldDirty: true,
+    });
   }, [form, questionIndex]);
 
   const handleRemoveOption = useCallback(
@@ -36,7 +38,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
       const currentOptions: QuestionOption[] =
         form.getValues(`questions.${questionIndex}.options`) || [];
       const updatedOptions = currentOptions.filter((_, index) => index !== optionIndex);
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldDirty: true });
     },
     [form, questionIndex],
   );
@@ -44,7 +46,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
   const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
-    form.setValue("questions", updatedQuestions);
+    form.setValue("questions", updatedQuestions, { shouldDirty: true });
   }, [form, questionIndex]);
 
   const handleOptionChange = useCallback(
@@ -62,7 +64,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
       }
 
       updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], [field]: value };
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions, {shouldDirty: true});
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldDirty: true });
     },
     [form, questionIndex, questionType],
   );
@@ -87,7 +89,9 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                 items={watchedOptions}
                 isQuiz
                 onChange={(updatedItems) => {
-                  form.setValue(`questions.${questionIndex}.options`, updatedItems);
+                  form.setValue(`questions.${questionIndex}.options`, updatedItems, {
+                    shouldDirty: true,
+                  });
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (

@@ -13,7 +13,7 @@ interface LessonCardProps {
   item: Lesson;
   onClickLessonCard: (lesson: Lesson) => void;
   dragTrigger: ReactNode;
-  selectedLesson?: Lesson;
+  selectedLesson: Lesson | null;
 }
 
 const LessonCard = ({ item, onClickLessonCard, dragTrigger, selectedLesson }: LessonCardProps) => {

@@ -614,7 +614,7 @@ export interface GetLessonByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    type: string;
+    type: "text_block" | "file" | "presentation" | "video" | "quiz";
     description: string;
     fileType: string | null;
     fileUrl: string | null;
@@ -625,11 +625,11 @@ export interface GetLessonByIdResponse {
       wrongAnswerCount: number | null;
       score: number | null;
     };
+    displayOrder: number;
   };
 }
 
 export type BetaCreateLessonBody = {
-  updatedAt?: string;
   title: string;
   type: string;
   description: string;
@@ -663,6 +663,7 @@ export type BetaCreateLessonBody = {
       questionId?: string;
     }[];
   }[];
+  updatedAt?: string;
 } & {
   /** @format uuid */
   chapterId: string;
@@ -772,7 +773,6 @@ export interface BetaUpdateQuizLessonResponse {
 }
 
 export type BetaUpdateLessonBody = {
-  updatedAt?: string;
   title?: string;
   type?: string;
   description?: string;
@@ -806,6 +806,7 @@ export type BetaUpdateLessonBody = {
       questionId?: string;
     }[];
   }[];
+  updatedAt?: string;
 } & {
   /** @format uuid */
   chapterId?: string;
@@ -852,7 +853,6 @@ export interface GetChapterWithLessonResponse {
     quizCount?: number;
     displayOrder: number;
     lessons: {
-      updatedAt?: string;
       /** @format uuid */
       id: string;
       title: string;
@@ -889,6 +889,7 @@ export interface GetChapterWithLessonResponse {
           questionId?: string;
         }[];
       }[];
+      updatedAt?: string;
     }[];
   };
 }

@@ -15,7 +15,7 @@ import { useUpdateChapter } from "~/api/mutations/admin/useUpdateChapter";
 
 type UseNewChapterFormProps = {
   courseId: string;
-  chapter?: Chapter;
+  chapter: Chapter | null;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
 };
 

@@ -4253,7 +4253,7 @@
               "type": {
                 "anyOf": [
                   {
-                    "const": "text",
+                    "const": "text_block",
                     "type": "string"
                   },
                   {

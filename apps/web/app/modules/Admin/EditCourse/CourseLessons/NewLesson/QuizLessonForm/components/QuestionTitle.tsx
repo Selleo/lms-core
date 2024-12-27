@@ -50,12 +50,12 @@ const QuestionTitle = ({
   const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
-    form.setValue("questions", updatedQuestions, {shouldDirty: true});
+    form.setValue("questions", updatedQuestions, { shouldDirty: true });
   }, [form, questionIndex]);
 
   const handleOptionChange = useCallback(
     (value: string) => {
-      form.setValue(`questions.${questionIndex}.title`, value, {shouldDirty: true});
+      form.setValue(`questions.${questionIndex}.title`, value, { shouldDirty: true });
     },
     [form, questionIndex, questionType],
   );

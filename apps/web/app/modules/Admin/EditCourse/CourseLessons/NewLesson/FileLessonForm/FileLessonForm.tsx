@@ -20,8 +20,9 @@ import Breadcrumb from "../components/Breadcrumb";
 type FileLessonProps = {
   contentTypeToDisplay: string;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
-  chapterToEdit?: Chapter;
-  lessonToEdit?: Lesson;
+  chapterToEdit: Chapter | null;
+  lessonToEdit: Lesson | null;
+  setSelectedLesson: (selectedLesson: Lesson | null) => void;
 };
 
 const FileLessonForm = ({
@@ -29,6 +30,7 @@ const FileLessonForm = ({
   setContentTypeToDisplay,
   chapterToEdit,
   lessonToEdit,
+  setSelectedLesson,
 }: FileLessonProps) => {
   const { form, onSubmit, onDelete } = useFileLessonForm({
     chapterToEdit,
@@ -85,6 +87,7 @@ const FileLessonForm = ({
             contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "Video" : "Presentation"
           }
           setContentTypeToDisplay={setContentTypeToDisplay}
+          setSelectedLesson={setSelectedLesson}
         />
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (

@@ -142,33 +142,33 @@ export class AdminLessonService {
         displayOrder,
       );
 
-      if (!data.questions) return;
+      if (Array.isArray(data.questions) && data.questions.length > 0) {
+        const questionsToInsert = data?.questions?.map((question) => ({
+          lessonId: lesson.id,
+          authorId,
+          type: question.type,
+          description: question.description || null,
+          title: question.title,
+          displayOrder: question.displayOrder,
+          photoS3Key: question.photoS3Key,
+          photoQuestionType: question.photoQuestionType || null,
+        }));
 
-      const questionsToInsert = data?.questions?.map((question) => ({
-        lessonId: lesson.id,
-        authorId,
-        type: question.type,
-        description: question.description || null,
-        title: question.title,
-        displayOrder: question.displayOrder,
-        photoS3Key: question.photoS3Key,
-        photoQuestionType: question.photoQuestionType || null,
-      }));
+        const insertedQuestions = await trx.insert(questions).values(questionsToInsert).returning();
 
-      const insertedQuestions = await trx.insert(questions).values(questionsToInsert).returning();
+        const optionsToInsert = insertedQuestions.flatMap(
+          (question, index) =>
+            data.questions?.[index].options?.map((option) => ({
+              questionId: question.id,
+              optionText: option.optionText,
+              isCorrect: option.isCorrect,
+              displayOrder: option.displayOrder,
+            })) || [],
+        );
 
-      const optionsToInsert = insertedQuestions.flatMap(
-        (question, index) =>
-          data.questions?.[index].options?.map((option) => ({
-            questionId: question.id,
-            optionText: option.optionText,
-            isCorrect: option.isCorrect,
-            displayOrder: option.displayOrder,
-          })) || [],
-      );
-
-      if (optionsToInsert.length > 0) {
-        await trx.insert(questionAnswerOptions).values(optionsToInsert);
+        if (optionsToInsert.length > 0) {
+          await trx.insert(questionAnswerOptions).values(optionsToInsert);
+        }
       }
 
       return lesson;
