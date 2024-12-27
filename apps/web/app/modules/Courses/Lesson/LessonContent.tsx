@@ -8,6 +8,8 @@ import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
 import { VideoPlayer } from "~/components/VideoPlayer/VideoPlayer";
 
+import Presentation from "../../../components/Presentation/Presentation";
+
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 
 type LessonContentProps = {
@@ -37,6 +39,7 @@ export const LessonContent = ({
       .with("video", () => (
         <VideoPlayer url={lesson.fileUrl} onVideoEnded={() => setIsCompleteDisabled(false)} />
       ))
+      .with("presentation", () => <Presentation url={lesson.fileUrl ?? ""} />)
       .otherwise(() => null);
 
   const handleMarkLessonAsComplete = () => {
