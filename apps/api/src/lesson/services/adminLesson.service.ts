@@ -184,7 +184,7 @@ export class AdminLessonService {
     return await this.db.transaction(async (trx) => {
       await this.adminLessonRepository.updateQuizLessonWithQuestionsAndOptions(id, data);
 
-      const existingQuestions = await this.adminLessonRepository.getExistingQuestions(id);
+      const existingQuestions = await this.adminLessonRepository.getExistingQuestions(id, trx);
       const existingQuestionIds = existingQuestions.map((question) => question.id);
       const inputQuestionIds = data.questions
         ? data.questions.map((question) => question.id).filter(Boolean)
@@ -195,8 +195,8 @@ export class AdminLessonService {
       );
 
       if (questionsToDelete.length > 0) {
-        await this.adminLessonRepository.deleteQuestions(questionsToDelete);
-        await this.adminLessonRepository.deleteQuestionOptions(questionsToDelete);
+        await this.adminLessonRepository.deleteQuestions(questionsToDelete, trx);
+        await this.adminLessonRepository.deleteQuestionOptions(questionsToDelete, trx);
       }
 
       if (data.questions) {
@@ -214,12 +214,13 @@ export class AdminLessonService {
             questionData,
             id,
             authorId,
-            question.id,
+            trx,    
+            question.id,      
           );
 
           if (question.options) {
             const { existingOptions } =
-              await this.adminLessonRepository.findExistingOptions(questionId);
+              await this.adminLessonRepository.getExistingOptions(questionId, trx);
 
             const existingOptionIds = existingOptions.map((option) => option.id);
             const inputOptionIds = question.options.map((option) => option.id).filter(Boolean);
@@ -228,7 +229,7 @@ export class AdminLessonService {
             );
 
             if (optionsToDelete.length > 0) {
-              await this.adminLessonRepository.deleteOptions(optionsToDelete);
+              await this.adminLessonRepository.deleteOptions(optionsToDelete, trx);
             }
 
             for (const option of question.options) {
@@ -240,9 +241,9 @@ export class AdminLessonService {
               };
 
               if (option.id) {
-                await this.adminLessonRepository.updateOption(option.id, optionData);
+                await this.adminLessonRepository.updateOption(option.id, optionData, trx);
               } else {
-                await this.adminLessonRepository.insertOption(questionId, optionData);
+                await this.adminLessonRepository.insertOption(questionId, optionData, trx);
               }
             }
           }
