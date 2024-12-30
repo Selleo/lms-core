@@ -4323,7 +4323,7 @@
               "type": {
                 "anyOf": [
                   {
-                    "const": "text_block",
+                    "const": "text",
                     "type": "string"
                   },
                   {

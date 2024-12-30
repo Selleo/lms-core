@@ -41,7 +41,7 @@ export const useTextLessonForm = ({
     defaultValues: {
       title: lessonToEdit?.title || "",
       description: lessonToEdit?.description || "",
-      type: lessonToEdit?.type || "text_block",
+      type: lessonToEdit?.type || "text",
     },
   });
 
@@ -52,7 +52,7 @@ export const useTextLessonForm = ({
       reset({
         title: lessonToEdit.title,
         description: lessonToEdit?.description,
-        type: "text_block",
+        type: "text",
       });
     }
   }, [lessonToEdit, reset]);

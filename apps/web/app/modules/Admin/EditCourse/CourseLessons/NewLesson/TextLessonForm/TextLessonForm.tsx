@@ -110,7 +110,7 @@ const TextLessonForm = ({
         open={isModalOpen}
         onClose={onCloseModal}
         onDelete={onDelete}
-        contentType={DeleteContentType.TEXT_BLOCK}
+        contentType={DeleteContentType.TEXT}
       />
     </div>
   );

@@ -619,7 +619,7 @@ export interface GetLessonByIdResponse {
     /** @format uuid */
     id: string;
     title: string;
-    type: "text_block" | "file" | "presentation" | "video" | "quiz";
+    type: "text" | "file" | "presentation" | "video" | "quiz";
     description: string;
     fileType: string | null;
     fileUrl: string | null;

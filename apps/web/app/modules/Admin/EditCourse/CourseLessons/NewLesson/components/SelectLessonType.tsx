@@ -1,5 +1,4 @@
 import { Icon } from "~/components/Icon";
-import { cn } from "~/lib/utils";
 
 import { ContentTypes } from "../../../EditCourse.types";
 

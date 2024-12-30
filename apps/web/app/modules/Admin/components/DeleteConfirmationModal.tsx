@@ -34,7 +34,7 @@ const DeleteConfirmationModal = ({
         () => "Are you sure you want to delete presentation from the chapter?",
       )
       .with(
-        DeleteContentType.TEXT_BLOCK,
+        DeleteContentType.TEXT,
         () => "Are you sure you want to delete text content from the chapter?",
       )
       .with(DeleteContentType.QUIZ, () => "Are you sure you want to delete quiz from the chapter?")

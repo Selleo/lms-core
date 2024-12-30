@@ -175,7 +175,6 @@ export class AdminLessonService {
     });
   }
 
-
   async updateQuizLessonWithQuestionsAndOptions(
     id: UUIDType,
     data: UpdateQuizLessonBody,
