@@ -172,48 +172,48 @@ export class AdminLessonRepository {
       `);
   }
 
-  async getExistingQuestions(lessonId: UUIDType) {
-    return await this.db
+  async getExistingQuestions(lessonId: UUIDType, trx: PostgresJsDatabase<typeof schema>) {
+    return await trx
       .select({ id: questions.id })
       .from(questions)
       .where(eq(questions.lessonId, lessonId));
   }
-
-  async findExistingOptions(questionId: UUIDType) {
-    const existingOptions = await this.db
+  
+  async getExistingOptions(questionId: UUIDType, trx: PostgresJsDatabase<typeof schema>) {
+    const existingOptions = await trx
       .select({ id: questionAnswerOptions.id })
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));
-
+  
     return { existingOptions };
   }
-
-  async updateOption(optionId: UUIDType, optionData: OptionBody) {
-    await this.db
+  
+  async updateOption(optionId: UUIDType, optionData: OptionBody, trx: PostgresJsDatabase<typeof schema>) {
+    await trx
       .update(questionAnswerOptions)
       .set(optionData)
       .where(eq(questionAnswerOptions.id, optionId));
   }
-
-  async insertOption(questionId: UUIDType, optionData: OptionBody) {
-    await this.db.insert(questionAnswerOptions).values({
+  
+  async insertOption(questionId: UUIDType, optionData: OptionBody, trx: PostgresJsDatabase<typeof schema>) {
+    await trx.insert(questionAnswerOptions).values({
       questionId,
       ...optionData,
     });
   }
-
-  async deleteOptions(optionIds: UUIDType[]) {
-    await this.db
+  
+  async deleteOptions(optionIds: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
+    await trx
       .delete(questionAnswerOptions)
       .where(inArray(questionAnswerOptions.id, optionIds));
   }
-
-  async deleteQuestions(questionsToDelete: UUIDType[]) {
-    await this.db.delete(questions).where(inArray(questions.id, questionsToDelete));
+  
+  async deleteQuestions(questionsToDelete: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
+    await trx.delete(questions).where(inArray(questions.id, questionsToDelete));
   }
-
-  async deleteQuestionOptions(questionsToDelete: UUIDType[]) {
-    await this.db
+  
+  async deleteQuestionOptions(questionsToDelete: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
+    await trx
       .delete(questionAnswerOptions)
       .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
   }
@@ -222,9 +222,11 @@ export class AdminLessonRepository {
     questionData: QuestionBody,
     lessonId: UUIDType,
     authorId: UUIDType,
-    questionId?: UUIDType
+    trx: PostgresJsDatabase<typeof schema>,
+    questionId?: UUIDType,
   ): Promise<UUIDType> {
-    const [result] = await this.db
+  
+    const [result] = await trx
       .insert(questions)
       .values({
         id: questionId,
