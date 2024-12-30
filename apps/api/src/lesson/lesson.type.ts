@@ -15,6 +15,7 @@ export enum QuestionType {
   FillInTheBlanksDnd = "fill_in_the_blanks_dnd",
   BriefResponse = "brief_response",
   DetailedResponse = "detailed_response",
+  MatchWords = "match_words",
 }
 
 export enum PhotoQuestionType {

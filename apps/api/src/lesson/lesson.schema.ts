@@ -14,6 +14,7 @@ export const optionSchema = Type.Object({
   isStudentAnswer: Type.Optional(Type.Boolean()),
   isCorrect: Type.Boolean(),
   questionId: Type.Optional(UUIDSchema),
+  matchedWord: Type.Optional(Type.Union([Type.String(), Type.Null()])),
 });
 
 export const questionSchema = Type.Object({

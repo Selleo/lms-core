@@ -6,6 +6,7 @@ export enum QuestionIcons {
   DetailedResponse = "DetailedResponse",
   PhotoQuestion = "PhotoQuestion",
   FillInTheBlanks = "FillInTheBlanks",
+  MatchWords = "Equal",
 }
 
 export type PhotoQuestionType = "single_choice" | "multiple_choice";
@@ -15,6 +16,7 @@ export type QuestionOption = {
   optionText: string;
   isCorrect: boolean;
   displayOrder: number;
+  matchedWord?: string;
 };
 
 export type Question = {
@@ -31,6 +33,7 @@ export type Question = {
 
 export enum QuestionType {
   SINGLE_CHOICE = "single_choice",
+  MATCH_WORDS = "match_words",
   MULTIPLE_CHOICE = "multiple_choice",
   TRUE_OR_FALSE = "true_or_false",
   BRIEF_RESPONSE = "brief_response",

@@ -12,6 +12,8 @@ import {
 import type {
   CreateLessonBody,
   CreateQuizLessonBody,
+  OptionBody,
+  QuestionBody,
   UpdateLessonBody,
   UpdateQuizLessonBody,
 } from "../lesson.schema";
@@ -168,6 +170,81 @@ export class AdminLessonRepository {
         WHERE cc.id = rc.id
           AND cc.chapter_id = ${chapterId}
       `);
+  }
+
+  async getExistingQuestions(lessonId: UUIDType, trx: PostgresJsDatabase<typeof schema>) {
+    return await trx
+      .select({ id: questions.id })
+      .from(questions)
+      .where(eq(questions.lessonId, lessonId));
+  }
+  
+  async getExistingOptions(questionId: UUIDType, trx: PostgresJsDatabase<typeof schema>) {
+    const existingOptions = await trx
+      .select({ id: questionAnswerOptions.id })
+      .from(questionAnswerOptions)
+      .where(eq(questionAnswerOptions.questionId, questionId));
+  
+    return { existingOptions };
+  }
+  
+  async updateOption(optionId: UUIDType, optionData: OptionBody, trx: PostgresJsDatabase<typeof schema>) {
+    await trx
+      .update(questionAnswerOptions)
+      .set(optionData)
+      .where(eq(questionAnswerOptions.id, optionId));
+  }
+  
+  async insertOption(questionId: UUIDType, optionData: OptionBody, trx: PostgresJsDatabase<typeof schema>) {
+    await trx.insert(questionAnswerOptions).values({
+      questionId,
+      ...optionData,
+    });
+  }
+  
+  async deleteOptions(optionIds: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
+    await trx
+      .delete(questionAnswerOptions)
+      .where(inArray(questionAnswerOptions.id, optionIds));
+  }
+  
+  async deleteQuestions(questionsToDelete: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
+    await trx.delete(questions).where(inArray(questions.id, questionsToDelete));
+  }
+  
+  async deleteQuestionOptions(questionsToDelete: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
+    await trx
+      .delete(questionAnswerOptions)
+      .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
+  }
+
+  async upsertQuestion(
+    questionData: QuestionBody,
+    lessonId: UUIDType,
+    authorId: UUIDType,
+    trx: PostgresJsDatabase<typeof schema>,
+    questionId?: UUIDType,
+  ): Promise<UUIDType> {
+  
+    const [result] = await trx
+      .insert(questions)
+      .values({
+        id: questionId,
+        lessonId,
+        authorId,
+        ...questionData,
+      })
+      .onConflictDoUpdate({
+        target: questions.id, 
+        set: {
+          lessonId,
+          authorId,
+          ...questionData,
+        },
+      })
+      .returning({ id: questions.id });
+  
+    return result.id;
   }
 
   // async getLessonStudentAnswers(lessonId: UUIDType) {

@@ -50,6 +50,13 @@
       "when": 1735305032335,
       "tag": "0006_incerase_lesson_description_characters_count",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1735549766763,
+      "tag": "0007_add_matched_word_column",
+      "breakpoints": true
     }
   ]
 }

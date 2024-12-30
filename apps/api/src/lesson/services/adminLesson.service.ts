@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, gte, inArray, lte, sql } from "drizzle-orm";
+import { eq, gte, lte, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
@@ -164,6 +164,7 @@ export class AdminLessonService {
             optionText: option.optionText,
             isCorrect: option.isCorrect,
             displayOrder: option.displayOrder,
+            matchedWord: option.matchedWord,
           })) || [],
       );
 
@@ -183,14 +184,8 @@ export class AdminLessonService {
     return await this.db.transaction(async (trx) => {
       await this.adminLessonRepository.updateQuizLessonWithQuestionsAndOptions(id, data);
 
-      // TODO: extract to repository
-      const existingQuestions = await trx
-        .select({ id: questions.id })
-        .from(questions)
-        .where(eq(questions.lessonId, id));
-
+      const existingQuestions = await this.adminLessonRepository.getExistingQuestions(id, trx);
       const existingQuestionIds = existingQuestions.map((question) => question.id);
-
       const inputQuestionIds = data.questions
         ? data.questions.map((question) => question.id).filter(Boolean)
         : [];
@@ -200,11 +195,8 @@ export class AdminLessonService {
       );
 
       if (questionsToDelete.length > 0) {
-        // TODO: extract to repository
-        await trx.delete(questions).where(inArray(questions.id, questionsToDelete));
-        await trx
-          .delete(questionAnswerOptions)
-          .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
+        await this.adminLessonRepository.deleteQuestions(questionsToDelete, trx);
+        await this.adminLessonRepository.deleteQuestionOptions(questionsToDelete, trx);
       }
 
       if (data.questions) {
@@ -217,43 +209,27 @@ export class AdminLessonService {
             photoS3Key: question.photoS3Key,
             photoQuestionType: question.photoQuestionType || null,
           };
-
-          // TODO: extract to repository
-          const questionId =
-            question.id ??
-            ((
-              await trx
-                .insert(questions)
-                .values({
-                  lessonId: id,
-                  authorId,
-                  ...questionData,
-                })
-                .returning()
-            )[0].id as UUIDType);
-
-          if (question.id) {
-            await trx.update(questions).set(questionData).where(eq(questions.id, questionId));
-          }
+      
+          const questionId = await this.adminLessonRepository.upsertQuestion(
+            questionData,
+            id,
+            authorId,
+            trx,    
+            question.id,      
+          );
 
           if (question.options) {
-            // TODO: extract to repository
-            const existingOptions = await trx
-              .select({ id: questionAnswerOptions.id })
-              .from(questionAnswerOptions)
-              .where(eq(questionAnswerOptions.questionId, questionId));
+            const { existingOptions } =
+              await this.adminLessonRepository.getExistingOptions(questionId, trx);
 
             const existingOptionIds = existingOptions.map((option) => option.id);
             const inputOptionIds = question.options.map((option) => option.id).filter(Boolean);
-
             const optionsToDelete = existingOptionIds.filter(
               (existingId) => !inputOptionIds.includes(existingId),
             );
 
             if (optionsToDelete.length > 0) {
-              await trx
-                .delete(questionAnswerOptions)
-                .where(inArray(questionAnswerOptions.id, optionsToDelete));
+              await this.adminLessonRepository.deleteOptions(optionsToDelete, trx);
             }
 
             for (const option of question.options) {
@@ -261,19 +237,13 @@ export class AdminLessonService {
                 optionText: option.optionText,
                 isCorrect: option.isCorrect,
                 displayOrder: option.displayOrder,
+                matchedWord: option.matchedWord,
               };
 
-              // TODO: extract to repository
               if (option.id) {
-                await trx
-                  .update(questionAnswerOptions)
-                  .set(optionData)
-                  .where(eq(questionAnswerOptions.id, option.id));
+                await this.adminLessonRepository.updateOption(option.id, optionData, trx);
               } else {
-                await trx.insert(questionAnswerOptions).values({
-                  questionId,
-                  ...optionData,
-                });
+                await this.adminLessonRepository.insertOption(questionId, optionData, trx);
               }
             }
           }

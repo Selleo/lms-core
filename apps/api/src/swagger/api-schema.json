@@ -3920,6 +3920,10 @@
                                     {
                                       "const": "detailed_response",
                                       "type": "string"
+                                    },
+                                    {
+                                      "const": "match_words",
+                                      "type": "string"
                                     }
                                   ]
                                 },
@@ -3999,6 +4003,16 @@
                                       "questionId": {
                                         "format": "uuid",
                                         "type": "string"
+                                      },
+                                      "matchedWord": {
+                                        "anyOf": [
+                                          {
+                                            "type": "string"
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
                                       }
                                     },
                                     "required": [
@@ -4525,6 +4539,10 @@
                         {
                           "const": "detailed_response",
                           "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
                         }
                       ]
                     },
@@ -4604,6 +4622,16 @@
                           "questionId": {
                             "format": "uuid",
                             "type": "string"
+                          },
+                          "matchedWord": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           }
                         },
                         "required": [
@@ -4733,6 +4761,10 @@
                         {
                           "const": "detailed_response",
                           "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
                         }
                       ]
                     },
@@ -4812,6 +4844,16 @@
                           "questionId": {
                             "format": "uuid",
                             "type": "string"
+                          },
+                          "matchedWord": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           }
                         },
                         "required": [
@@ -4938,6 +4980,10 @@
                         {
                           "const": "detailed_response",
                           "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
                         }
                       ]
                     },
@@ -5017,6 +5063,16 @@
                           "questionId": {
                             "format": "uuid",
                             "type": "string"
+                          },
+                          "matchedWord": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           }
                         },
                         "required": [
@@ -5152,6 +5208,10 @@
                         {
                           "const": "detailed_response",
                           "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
                         }
                       ]
                     },
@@ -5231,6 +5291,16 @@
                           "questionId": {
                             "format": "uuid",
                             "type": "string"
+                          },
+                          "matchedWord": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           }
                         },
                         "required": [
@@ -5580,6 +5650,10 @@
                               {
                                 "const": "detailed_response",
                                 "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
                               }
                             ]
                           },
@@ -5659,6 +5733,16 @@
                                 "questionId": {
                                   "format": "uuid",
                                   "type": "string"
+                                },
+                                "matchedWord": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
                                 }
                               },
                               "required": [
@@ -5863,6 +5947,10 @@
                               {
                                 "const": "detailed_response",
                                 "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
                               }
                             ]
                           },
@@ -5942,6 +6030,16 @@
                                 "questionId": {
                                   "format": "uuid",
                                   "type": "string"
+                                },
+                                "matchedWord": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
                                 }
                               },
                               "required": [

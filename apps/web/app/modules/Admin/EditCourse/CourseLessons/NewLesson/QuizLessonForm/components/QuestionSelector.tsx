@@ -50,6 +50,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
       label: "Detailed response",
       icon: QuestionIcons.DetailedResponse,
     },
+    { type: QuestionType.MATCH_WORDS, label: "Match words", icon: QuestionIcons.MatchWords },
   ];
 
   useEffect(() => {
