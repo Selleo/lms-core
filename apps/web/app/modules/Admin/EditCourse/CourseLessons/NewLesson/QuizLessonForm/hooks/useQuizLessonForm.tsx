@@ -18,10 +18,11 @@ import { useEffect } from "react";
 import { Question, QuestionOption, QuestionType } from "../QuizLessonForm.types";
 import { useUpdateQuizLesson } from "~/api/mutations/admin/useUpdateQuizLesson";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
+import { useLeaveModal } from "~/context/LeaveModalContext";
 
 type QuizLessonFormProps = {
-  chapterToEdit?: Chapter;
-  lessonToEdit?: Lesson;
+  chapterToEdit: Chapter | null;
+  lessonToEdit: Lesson | null;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
 };
 
@@ -33,6 +34,7 @@ export const useQuizLessonForm = ({
   const { mutateAsync: createQuizLesson } = useCreateQuizLesson();
   const { mutateAsync: updateQuizLesson } = useUpdateQuizLesson();
   const { mutateAsync: deleteLesson } = useDeleteLesson();
+  const { isLeavingContent, setIsCurrectFormDirty } = useLeaveModal();
   const { id: courseId } = useParams();
   const form = useForm<QuizLessonFormValues>({
     resolver: zodResolver(quizLessonFormSchema),
@@ -141,8 +143,10 @@ export const useQuizLessonForm = ({
           },
         });
       }
-      setContentTypeToDisplay(ContentTypes.EMPTY);
-
+      if (!isLeavingContent) {
+        setContentTypeToDisplay(ContentTypes.EMPTY);
+      }
+      setIsCurrectFormDirty(false);
       queryClient.invalidateQueries({ queryKey: [COURSE_QUERY_KEY, { id: courseId }] });
     } catch (error) {
       console.error("Error creating text block:", error);

@@ -118,6 +118,7 @@ export async function createNiceCourses(
                 authorId: creatorUserId,
                 createdAt: createdAt,
                 updatedAt: createdAt,
+                displayOrder: questionData.displayOrder,
               })
               .returning();
 

@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -14,6 +14,7 @@ import TextLessonForm from "./NewLesson/TextLessonForm/TextLessonForm";
 
 import type { Chapter, Lesson } from "../EditCourse.types";
 import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
+import { useLeaveModal } from "~/context/LeaveModalContext";
 
 interface CourseLessonsProps {
   chapters?: Chapter[];
@@ -22,13 +23,35 @@ interface CourseLessonsProps {
 
 const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) => {
   const [contentTypeToDisplay, setContentTypeToDisplay] = useState(ContentTypes.EMPTY);
-  const [selectedChapter, setSelectedChapter] = useState<Chapter>();
-  const [selectedLesson, setSelectedLesson] = useState<Lesson>();
+  const [selectedChapter, setSelectedChapter] = useState<Chapter | null>(null);
+  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+  const { setIsLeavingContent, isCurrentFormDirty, openLeaveModal } = useLeaveModal();
+  const [isNewChapter, setIsNewChapter] = useState(false);
 
-  const addChapter = () => {
+  const addChapter = useCallback(() => {
+    if (isCurrentFormDirty) {
+      setIsLeavingContent(true);
+      setIsNewChapter(true);
+      openLeaveModal();
+      return;
+    }
     setContentTypeToDisplay(ContentTypes.CHAPTER_FORM);
-    setSelectedChapter(undefined);
-  };
+    setSelectedChapter(null);
+  }, [
+    isCurrentFormDirty,
+    setIsLeavingContent,
+    setIsNewChapter,
+    openLeaveModal,
+    setContentTypeToDisplay,
+    setSelectedChapter,
+  ]);
+
+  useEffect(() => {
+    if (!isCurrentFormDirty && isNewChapter) {
+      addChapter();
+      setIsNewChapter(false);
+    }
+  }, [isCurrentFormDirty, isNewChapter, addChapter]);
 
   const renderContent = useMemo(() => {
     const contentMap: Record<string, JSX.Element | null> = {
@@ -42,6 +65,7 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
           setContentTypeToDisplay={setContentTypeToDisplay}
           chapterToEdit={selectedChapter}
           lessonToEdit={selectedLesson}
+          setSelectedLesson={setSelectedLesson}
         />
       ),
       [ContentTypes.PRESENTATION_FORM]: (
@@ -50,6 +74,7 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
           setContentTypeToDisplay={setContentTypeToDisplay}
           chapterToEdit={selectedChapter}
           lessonToEdit={selectedLesson}
+          setSelectedLesson={setSelectedLesson}
         />
       ),
       [ContentTypes.TEXT_LESSON_FORM]: (
@@ -57,6 +82,7 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
           setContentTypeToDisplay={setContentTypeToDisplay}
           chapterToEdit={selectedChapter}
           lessonToEdit={selectedLesson}
+          setSelectedLesson={setSelectedLesson}
         />
       ),
       [ContentTypes.SELECT_LESSON_TYPE]: (
@@ -67,10 +93,10 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
           setContentTypeToDisplay={setContentTypeToDisplay}
           chapterToEdit={selectedChapter}
           lessonToEdit={selectedLesson}
+          setSelectedLesson={setSelectedLesson}
         />
       ),
     };
-
     return contentMap[contentTypeToDisplay] || null;
   }, [contentTypeToDisplay, selectedChapter, selectedLesson]);
 

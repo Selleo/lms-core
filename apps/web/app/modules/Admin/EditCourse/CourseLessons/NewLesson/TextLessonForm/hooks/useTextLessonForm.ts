@@ -19,8 +19,8 @@ import { textLessonFormSchema } from "../validators/useTextLessonFormSchema";
 import type { TextLessonFormValues } from "../validators/useTextLessonFormSchema";
 
 type TextLessonFormProps = {
-  chapterToEdit?: Chapter;
-  lessonToEdit?: Lesson;
+  chapterToEdit: Chapter | null;
+  lessonToEdit: Lesson | null;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setOpenChapter?: (chapterId: string) => void;
 };
@@ -41,7 +41,7 @@ export const useTextLessonForm = ({
     defaultValues: {
       title: lessonToEdit?.title || "",
       description: lessonToEdit?.description || "",
-      type: lessonToEdit?.type || "text_block",
+      type: lessonToEdit?.type || "text",
     },
   });
 
@@ -52,7 +52,7 @@ export const useTextLessonForm = ({
       reset({
         title: lessonToEdit.title,
         description: lessonToEdit?.description,
-        type: "text_block",
+        type: "text",
       });
     }
   }, [lessonToEdit, reset]);

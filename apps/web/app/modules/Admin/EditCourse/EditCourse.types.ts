@@ -41,7 +41,7 @@ export type LessonIcons = "Text" | "Video" | "Presentation" | "Quiz";
 
 export const LessonType = {
   VIDEO: "video",
-  TEXT_BLOCK: "text_block",
+  TEXT: "text",
   PRESENTATION: "presentation",
   QUIZ: "quiz",
 } as const;

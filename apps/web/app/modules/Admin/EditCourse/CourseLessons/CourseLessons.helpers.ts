@@ -3,7 +3,7 @@ import { QuestionType } from "./NewLesson/QuizLessonForm/QuizLessonForm.types";
 
 export const mapItemType = (itemType: string | undefined): string =>
   match(itemType)
-    .with("text_block", () => "Text")
+    .with("text", () => "Text")
     .with("video", () => "Video")
     .with("presentation", () => "Presentation")
     .with("question", () => "Quiz")
@@ -11,7 +11,7 @@ export const mapItemType = (itemType: string | undefined): string =>
 
 export const mapTypeToIcon = (itemType: string): string =>
   match(itemType)
-    .with("text_block", () => "Text")
+    .with("text", () => "Text")
     .with("video", () => "Video")
     .with("presentation", () => "Presentation")
     .with("question", () => "Quiz")

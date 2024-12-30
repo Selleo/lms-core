@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useChangeLessonDisplayOrder } from "~/api/mutations/admin/changeLessonDisplayOrder";
 import { Icon } from "~/components/Icon";
 import { SortableList } from "~/components/SortableList/SortableList";
+import { useLeaveModal } from "~/context/LeaveModalContext";
 import LessonCard from "~/modules/Admin/EditCourse/CourseLessons/components/LessonCard";
 import { ContentTypes } from "~/modules/Admin/EditCourse/EditCourse.types";
 
@@ -12,7 +13,7 @@ type LessonCardListProps = {
   setSelectedLesson: (lesson: Lesson) => void;
   setContentTypeToDisplay: (contentType: string) => void;
   lessons: Lesson[];
-  selectedLesson?: Lesson;
+  selectedLesson: Lesson | null;
 };
 
 export const LessonCardList = ({
@@ -23,6 +24,8 @@ export const LessonCardList = ({
 }: LessonCardListProps) => {
   const [items, setItems] = useState(lessons);
   const mutation = useChangeLessonDisplayOrder();
+  const { openLeaveModal, isCurrentFormDirty, setIsLeavingContent } = useLeaveModal();
+  const [pendingLesson, setPendingLesson] = useState<Lesson | null>(null);
 
   useEffect(() => {
     setItems(lessons);
@@ -30,10 +33,15 @@ export const LessonCardList = ({
 
   const onClickLessonCard = useCallback(
     (lesson: Lesson) => {
+      if (isCurrentFormDirty) {
+        setPendingLesson(lesson);
+        setIsLeavingContent(true);
+        openLeaveModal();
+        return;
+      }
+
       const contentType = lesson.type === "file" ? lesson.fileType : lesson.type;
-
       setSelectedLesson(lesson);
-
       switch (contentType) {
         case "video":
           setContentTypeToDisplay(ContentTypes.VIDEO_LESSON_FORM);
@@ -51,8 +59,16 @@ export const LessonCardList = ({
           setContentTypeToDisplay(ContentTypes.EMPTY);
       }
     },
-    [setContentTypeToDisplay, setSelectedLesson],
+    [isCurrentFormDirty, setContentTypeToDisplay, setSelectedLesson, openLeaveModal],
   );
+
+  useEffect(() => {
+    if (!isCurrentFormDirty && pendingLesson) {
+      onClickLessonCard(pendingLesson);
+      setPendingLesson(null);
+      setIsLeavingContent(false);
+    }
+  }, [isCurrentFormDirty, pendingLesson, onClickLessonCard]);
 
   if (!lessons) {
     return <p>No items for this lesson</p>;

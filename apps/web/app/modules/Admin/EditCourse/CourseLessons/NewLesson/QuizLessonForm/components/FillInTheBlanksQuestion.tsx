@@ -90,7 +90,10 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
   const handleRemoveWord = (index: number) => {
     const updatedOptions = currentOptions.filter((_, i) => i !== index);
-    form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldValidate: true });
+    form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -134,6 +137,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
       shouldValidate: true,
+      shouldDirty: true,
     });
 
     setAddedWords(buttonValues);
@@ -151,6 +155,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
       form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
         shouldValidate: true,
+        shouldDirty: true,
       });
 
       setNewWord("");
@@ -163,7 +168,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   const handleRemoveQuestion = () => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
-    form.setValue("questions", updatedQuestions);
+    form.setValue("questions", updatedQuestions, { shouldDirty: true });
   };
 
   useEffect(() => {
@@ -171,7 +176,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     editor.on("update", () => {
       const html = editor.getHTML();
-      form.setValue(`questions.${questionIndex}.description`, html);
+      form.setValue(`questions.${questionIndex}.description`, html, { shouldDirty: true });
     });
 
     return () => {
@@ -198,6 +203,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
         form.setValue(
           `questions.${questionIndex}.description`,
           form.getValues(`questions.${questionIndex}.description`)?.replace(buttonHtml, ""),
+          { shouldDirty: true },
         );
 
         const optionValue = button.innerText.trim().replace(/\s+/g, " ").split(" ")[0];
@@ -210,6 +216,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
             );
           form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
             shouldValidate: true,
+            shouldDirty: true,
           });
         }
         button.remove();
@@ -236,6 +243,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
         form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
           shouldValidate: true,
+          shouldDirty: true,
         });
       }
     };

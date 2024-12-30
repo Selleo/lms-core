@@ -17,8 +17,8 @@ import type { FileLessonFormValues } from "../validators/fileLessonFormSchema";
 import type { Chapter, Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type FileLessonFormProps = {
-  chapterToEdit?: Chapter;
-  lessonToEdit?: Lesson;
+  chapterToEdit: Chapter | null;
+  lessonToEdit?: Lesson | null;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
 };
 

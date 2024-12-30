@@ -1,5 +1,5 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -28,7 +28,9 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
     };
-    form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption]);
+    form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
+      shouldDirty: true,
+    });
   }, [form, questionIndex]);
 
   const handleRemoveOption = useCallback(
@@ -36,7 +38,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
       const currentOptions: QuestionOption[] =
         form.getValues(`questions.${questionIndex}.options`) || [];
       const updatedOptions = currentOptions.filter((_, index) => index !== optionIndex);
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldDirty: true });
     },
     [form, questionIndex],
   );
@@ -44,7 +46,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
   const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
-    form.setValue("questions", updatedQuestions);
+    form.setValue("questions", updatedQuestions, { shouldDirty: true });
   }, [form, questionIndex]);
 
   const handleOptionChange = useCallback(
@@ -65,7 +67,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
         };
       }
 
-      form.setValue(`questions.${questionIndex}.options`, updatedOptions);
+      form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldDirty: true });
     },
     [form, questionIndex],
   );
