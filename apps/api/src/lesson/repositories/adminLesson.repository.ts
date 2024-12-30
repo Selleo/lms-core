@@ -12,6 +12,7 @@ import {
 import type {
   CreateLessonBody,
   CreateQuizLessonBody,
+  OptionBody,
   UpdateLessonBody,
   UpdateQuizLessonBody,
 } from "../lesson.schema";
@@ -168,6 +169,87 @@ export class AdminLessonRepository {
         WHERE cc.id = rc.id
           AND cc.chapter_id = ${chapterId}
       `);
+  }
+
+  async getExistingQuestions(lessonId: UUIDType) {
+    return await this.db
+      .select({ id: questions.id })
+      .from(questions)
+      .where(eq(questions.lessonId, lessonId));
+  }
+
+  async upsertOptions(questionId: UUIDType, options: OptionBody[]) {
+    const existingOptions = await this.db
+      .select({ id: questionAnswerOptions.id })
+      .from(questionAnswerOptions)
+      .where(eq(questionAnswerOptions.questionId, questionId));
+
+    const existingOptionIds = existingOptions.map((option) => option.id);
+    const inputOptionIds = options.map((option) => option.id).filter(Boolean);
+    const optionsToDelete = existingOptionIds.filter(
+      (existingId) => !inputOptionIds.includes(existingId),
+    );
+
+    if (optionsToDelete.length > 0) {
+      await this.db
+        .delete(questionAnswerOptions)
+        .where(inArray(questionAnswerOptions.id, optionsToDelete));
+    }
+
+    for (const option of options) {
+      const optionData = {
+        optionText: option.optionText,
+        isCorrect: option.isCorrect,
+        displayOrder: option.displayOrder,
+        matchedWord: option.matchedWord,
+      };
+
+      if (option.id) {
+        await this.db
+          .update(questionAnswerOptions)
+          .set(optionData)
+          .where(eq(questionAnswerOptions.id, option.id));
+      } else {
+        await this.db.insert(questionAnswerOptions).values({
+          questionId,
+          ...optionData,
+        });
+      }
+    }
+  }
+
+  async upsertQuestion(question: any, lessonId: UUIDType, authorId: UUIDType): Promise<UUIDType> {
+    const questionData = {
+      type: question.type,
+      description: question.description || null,
+      title: question.title,
+      displayOrder: question.displayOrder,
+      photoS3Key: question.photoS3Key,
+      photoQuestionType: question.photoQuestionType || null,
+    };
+
+    if (question.id) {
+      await this.db.update(questions).set(questionData).where(eq(questions.id, question.id));
+      return question.id;
+    } else {
+      const [newQuestion] = await this.db
+        .insert(questions)
+        .values({
+          lessonId,
+          authorId,
+          ...questionData,
+        })
+        .returning();
+      return newQuestion.id;
+    }
+  }
+
+  async deleteQuestionsAndOptions(questionsToDelete: UUIDType[]) {
+    await this.db.delete(questions).where(inArray(questions.id, questionsToDelete));
+
+    await this.db
+      .delete(questionAnswerOptions)
+      .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
   }
 
   // async getLessonStudentAnswers(lessonId: UUIDType) {

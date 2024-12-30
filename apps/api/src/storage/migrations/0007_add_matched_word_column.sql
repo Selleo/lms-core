@@ -1,0 +1,1 @@
+ALTER TABLE "question_answer_options" ADD COLUMN "matched_word" varchar(100);

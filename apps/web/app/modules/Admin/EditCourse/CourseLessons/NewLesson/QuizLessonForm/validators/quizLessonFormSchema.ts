@@ -25,6 +25,7 @@ export const quizLessonFormSchema = z.object({
             optionText: z.string().min(1, "Option text is required"),
             isCorrect: z.boolean(),
             displayOrder: z.number(),
+            matchedWord: z.optional(z.string()),
           }),
         )
         .optional(),

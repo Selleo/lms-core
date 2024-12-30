@@ -38,6 +38,7 @@ const QuestionTitle = ({
     [QuestionType.PHOTO_QUESTION]: QuestionIcons.PhotoQuestion,
     [QuestionType.FILL_IN_THE_BLANKS_TEXT]: QuestionIcons.FillInTheBlanks,
     [QuestionType.FILL_IN_THE_BLANKS_DND]: QuestionIcons.FillInTheBlanks,
+    [QuestionType.MATCH_WORDS]: QuestionIcons.MatchWords,
   };
 
   const isOpenQuestion =

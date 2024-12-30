@@ -498,7 +498,7 @@ export interface GetBetaCourseByIdResponse {
         id: string;
         title: string;
         type: string;
-        description: string;
+        description?: string | null;
         displayOrder: number;
         fileS3Key?: string | null;
         fileType?: string | null;
@@ -513,7 +513,8 @@ export interface GetBetaCourseByIdResponse {
             | "fill_in_the_blanks_text"
             | "fill_in_the_blanks_dnd"
             | "brief_response"
-            | "detailed_response";
+            | "detailed_response"
+            | "match_words";
           description?: string | null;
           title: string;
           displayOrder?: number;
@@ -528,6 +529,7 @@ export interface GetBetaCourseByIdResponse {
             isCorrect: boolean;
             /** @format uuid */
             questionId?: string;
+            matchedWord?: string | null;
           }[];
         }[];
         updatedAt?: string;
@@ -637,7 +639,7 @@ export interface GetLessonByIdResponse {
 export type BetaCreateLessonBody = {
   title: string;
   type: string;
-  description: string;
+  description?: string | null;
   fileS3Key?: string | null;
   fileType?: string | null;
   questions?: {
@@ -651,7 +653,8 @@ export type BetaCreateLessonBody = {
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
-      | "detailed_response";
+      | "detailed_response"
+      | "match_words";
     description?: string | null;
     title: string;
     displayOrder?: number;
@@ -666,6 +669,7 @@ export type BetaCreateLessonBody = {
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
+      matchedWord?: string | null;
     }[];
   }[];
   updatedAt?: string;
@@ -700,7 +704,8 @@ export type BetaCreateQuizLessonBody = {
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
-      | "detailed_response";
+      | "detailed_response"
+      | "match_words";
     description?: string | null;
     title: string;
     displayOrder?: number;
@@ -715,6 +720,7 @@ export type BetaCreateQuizLessonBody = {
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
+      matchedWord?: string | null;
     }[];
   }[];
 } & {
@@ -748,7 +754,8 @@ export type BetaUpdateQuizLessonBody = {
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
-      | "detailed_response";
+      | "detailed_response"
+      | "match_words";
     description?: string | null;
     title: string;
     displayOrder?: number;
@@ -763,6 +770,7 @@ export type BetaUpdateQuizLessonBody = {
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
+      matchedWord?: string | null;
     }[];
   }[];
 } & {
@@ -780,7 +788,7 @@ export interface BetaUpdateQuizLessonResponse {
 export type BetaUpdateLessonBody = {
   title?: string;
   type?: string;
-  description?: string;
+  description?: string | null;
   fileS3Key?: string | null;
   fileType?: string | null;
   questions?: {
@@ -794,7 +802,8 @@ export type BetaUpdateLessonBody = {
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
-      | "detailed_response";
+      | "detailed_response"
+      | "match_words";
     description?: string | null;
     title: string;
     displayOrder?: number;
@@ -809,6 +818,7 @@ export type BetaUpdateLessonBody = {
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
+      matchedWord?: string | null;
     }[];
   }[];
   updatedAt?: string;
@@ -876,7 +886,7 @@ export type BetaCreateChapterBody = {
     id: string;
     title: string;
     type: string;
-    description: string;
+    description?: string | null;
     displayOrder: number;
     fileS3Key?: string | null;
     fileType?: string | null;
@@ -891,7 +901,8 @@ export type BetaCreateChapterBody = {
         | "fill_in_the_blanks_text"
         | "fill_in_the_blanks_dnd"
         | "brief_response"
-        | "detailed_response";
+        | "detailed_response"
+        | "match_words";
       description?: string | null;
       title: string;
       displayOrder?: number;
@@ -906,6 +917,7 @@ export type BetaCreateChapterBody = {
         isCorrect: boolean;
         /** @format uuid */
         questionId?: string;
+        matchedWord?: string | null;
       }[];
     }[];
     updatedAt?: string;
@@ -937,7 +949,7 @@ export type UpdateChapterBody = {
     id: string;
     title: string;
     type: string;
-    description: string;
+    description?: string | null;
     displayOrder: number;
     fileS3Key?: string | null;
     fileType?: string | null;
@@ -952,7 +964,8 @@ export type UpdateChapterBody = {
         | "fill_in_the_blanks_text"
         | "fill_in_the_blanks_dnd"
         | "brief_response"
-        | "detailed_response";
+        | "detailed_response"
+        | "match_words";
       description?: string | null;
       title: string;
       displayOrder?: number;
@@ -967,6 +980,7 @@ export type UpdateChapterBody = {
         isCorrect: boolean;
         /** @format uuid */
         questionId?: string;
+        matchedWord?: string | null;
       }[];
     }[];
     updatedAt?: string;

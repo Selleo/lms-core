@@ -21,6 +21,8 @@ import QuestionWrapper from "./components/QuestionWrapper";
 import { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 import LeaveConfirmationModal from "~/modules/Admin/components/LeaveConfirmationModal";
 import { useLeaveModal } from "~/context/LeaveModalContext";
+import MatchWordsQuestion from "./components/MatchWordsQuestion";
+import { match } from "ts-pattern";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -133,17 +135,27 @@ const QuizLessonForm = ({
           dragTrigger={dragTrigger}
           item={question}
         >
-          {question.type === QuestionType.SINGLE_CHOICE ||
-          question.type === QuestionType.MULTIPLE_CHOICE ? (
-            <AnswerSelectQuestion questionIndex={questionIndex} form={form} />
-          ) : question.type === QuestionType.TRUE_OR_FALSE ? (
-            <TrueOrFalseQuestion questionIndex={questionIndex} form={form} />
-          ) : question.type === QuestionType.PHOTO_QUESTION ? (
-            <PhotoQuestion questionIndex={questionIndex} form={form} lessonToEdit={lessonToEdit} />
-          ) : question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT ||
-            question.type === QuestionType.FILL_IN_THE_BLANKS_DND ? (
-            <FillInTheBlanksQuestion questionIndex={questionIndex} form={form} />
-          ) : null}
+          {match(question.type)
+            .with(QuestionType.SINGLE_CHOICE, QuestionType.MULTIPLE_CHOICE, () => (
+              <AnswerSelectQuestion questionIndex={questionIndex} form={form} />
+            ))
+            .with(QuestionType.TRUE_OR_FALSE, () => (
+              <TrueOrFalseQuestion questionIndex={questionIndex} form={form} />
+            ))
+            .with(QuestionType.PHOTO_QUESTION, () => (
+              <PhotoQuestion
+                questionIndex={questionIndex}
+                form={form}
+                lessonToEdit={lessonToEdit}
+              />
+            ))
+            .with(QuestionType.MATCH_WORDS, () => (
+              <MatchWordsQuestion questionIndex={questionIndex} form={form} />
+            ))
+            .with(QuestionType.FILL_IN_THE_BLANKS_TEXT, QuestionType.FILL_IN_THE_BLANKS_DND, () => (
+              <FillInTheBlanksQuestion questionIndex={questionIndex} form={form} />
+            ))
+            .otherwise(() => null)}
         </QuestionWrapper>
       );
     },

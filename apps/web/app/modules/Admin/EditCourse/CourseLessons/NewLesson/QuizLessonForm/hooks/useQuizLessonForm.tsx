@@ -82,6 +82,7 @@ export const useQuizLessonForm = ({
                 optionText: option.optionText,
                 isCorrect: option.isCorrect,
                 displayOrder: option.displayOrder,
+                matchedWord: option.matchedWord || undefined,
               })),
             };
           }) || [],

@@ -27,4 +27,5 @@ export const mapQuestionTypeToLabel = (questionType: QuestionType): string =>
     .with(QuestionType.PHOTO_QUESTION, () => "Photo Question")
     .with(QuestionType.FILL_IN_THE_BLANKS_TEXT, () => "Fill in the Blanks")
     .with(QuestionType.FILL_IN_THE_BLANKS_DND, () => "Fill in the Blanks")
+    .with(QuestionType.MATCH_WORDS, () => "Match words")
     .otherwise(() => "");

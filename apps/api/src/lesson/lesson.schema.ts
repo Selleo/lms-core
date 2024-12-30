@@ -14,6 +14,7 @@ export const optionSchema = Type.Object({
   isStudentAnswer: Type.Optional(Type.Boolean()),
   isCorrect: Type.Boolean(),
   questionId: Type.Optional(UUIDSchema),
+  matchedWord: Type.Optional(Type.Union([Type.String(), Type.Null()])),
 });
 
 export const questionSchema = Type.Object({
@@ -31,7 +32,7 @@ export const lessonSchema = Type.Object({
   id: UUIDSchema,
   title: Type.String(),
   type: Type.String(),
-  description: Type.String(),
+  description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   displayOrder: Type.Number(),
   fileS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   fileType: Type.Optional(Type.Union([Type.String(), Type.Null()])),

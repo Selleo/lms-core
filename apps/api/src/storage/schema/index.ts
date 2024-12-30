@@ -190,6 +190,7 @@ export const questionAnswerOptions = pgTable("question_answer_options", {
   optionText: varchar("option_text", { length: 100 }).notNull(),
   isCorrect: boolean("is_correct").notNull(),
   displayOrder: integer("display_order"),
+  matchedWord: varchar("matched_word", { length: 100 }),
 });
 
 // TODO: add cascade on delete?
