@@ -195,19 +195,56 @@ export class AdminLessonService {
       );
 
       if (questionsToDelete.length > 0) {
-        await this.adminLessonRepository.deleteQuestionsAndOptions(questionsToDelete);
+        await this.adminLessonRepository.deleteQuestions(questionsToDelete);
+        await this.adminLessonRepository.deleteQuestionOptions(questionsToDelete);
       }
 
       if (data.questions) {
         for (const question of data.questions) {
+          const questionData = {
+            type: question.type,
+            description: question.description || null,
+            title: question.title,
+            displayOrder: question.displayOrder,
+            photoS3Key: question.photoS3Key,
+            photoQuestionType: question.photoQuestionType || null,
+          };
+      
           const questionId = await this.adminLessonRepository.upsertQuestion(
-            question,
+            questionData,
             id,
             authorId,
+            question.id,
           );
 
           if (question.options) {
-            await this.adminLessonRepository.upsertOptions(questionId, question.options);
+            const { existingOptions } =
+              await this.adminLessonRepository.upsertOptions(questionId);
+
+            const existingOptionIds = existingOptions.map((option) => option.id);
+            const inputOptionIds = question.options.map((option) => option.id).filter(Boolean);
+            const optionsToDelete = existingOptionIds.filter(
+              (existingId) => !inputOptionIds.includes(existingId),
+            );
+
+            if (optionsToDelete.length > 0) {
+              await this.adminLessonRepository.deleteOptions(optionsToDelete);
+            }
+
+            for (const option of question.options) {
+              const optionData = {
+                optionText: option.optionText,
+                isCorrect: option.isCorrect,
+                displayOrder: option.displayOrder,
+                matchedWord: option.matchedWord,
+              };
+
+              if (option.id) {
+                await this.adminLessonRepository.updateOption(option.id, optionData);
+              } else {
+                await this.adminLessonRepository.insertOption(questionId, optionData);
+              }
+            }
           }
         }
       }

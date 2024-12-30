@@ -13,6 +13,7 @@ import type {
   CreateLessonBody,
   CreateQuizLessonBody,
   OptionBody,
+  QuestionBody,
   UpdateLessonBody,
   UpdateQuizLessonBody,
 } from "../lesson.schema";
@@ -178,78 +179,57 @@ export class AdminLessonRepository {
       .where(eq(questions.lessonId, lessonId));
   }
 
-  async upsertOptions(questionId: UUIDType, options: OptionBody[]) {
+  async upsertOptions(questionId: UUIDType) {
     const existingOptions = await this.db
       .select({ id: questionAnswerOptions.id })
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));
 
-    const existingOptionIds = existingOptions.map((option) => option.id);
-    const inputOptionIds = options.map((option) => option.id).filter(Boolean);
-    const optionsToDelete = existingOptionIds.filter(
-      (existingId) => !inputOptionIds.includes(existingId),
-    );
-
-    if (optionsToDelete.length > 0) {
-      await this.db
-        .delete(questionAnswerOptions)
-        .where(inArray(questionAnswerOptions.id, optionsToDelete));
-    }
-
-    for (const option of options) {
-      const optionData = {
-        optionText: option.optionText,
-        isCorrect: option.isCorrect,
-        displayOrder: option.displayOrder,
-        matchedWord: option.matchedWord,
-      };
-
-      if (option.id) {
-        await this.db
-          .update(questionAnswerOptions)
-          .set(optionData)
-          .where(eq(questionAnswerOptions.id, option.id));
-      } else {
-        await this.db.insert(questionAnswerOptions).values({
-          questionId,
-          ...optionData,
-        });
-      }
-    }
+    return { existingOptions };
   }
 
-  async upsertQuestion(question: any, lessonId: UUIDType, authorId: UUIDType): Promise<UUIDType> {
-    const questionData = {
-      type: question.type,
-      description: question.description || null,
-      title: question.title,
-      displayOrder: question.displayOrder,
-      photoS3Key: question.photoS3Key,
-      photoQuestionType: question.photoQuestionType || null,
-    };
-
-    if (question.id) {
-      await this.db.update(questions).set(questionData).where(eq(questions.id, question.id));
-      return question.id;
-    } else {
-      const [newQuestion] = await this.db
-        .insert(questions)
-        .values({
-          lessonId,
-          authorId,
-          ...questionData,
-        })
-        .returning();
-      return newQuestion.id;
-    }
+  async updateOption(optionId: UUIDType, optionData: OptionBody) {
+    await this.db
+      .update(questionAnswerOptions)
+      .set(optionData)
+      .where(eq(questionAnswerOptions.id, optionId));
   }
 
-  async deleteQuestionsAndOptions(questionsToDelete: UUIDType[]) {
+  async insertOption(questionId: UUIDType, optionData: OptionBody) {
+    await this.db.insert(questionAnswerOptions).values({
+      questionId,
+      ...optionData,
+    });
+  }
+
+  async deleteOptions(optionIds: UUIDType[]) {
+    await this.db
+      .delete(questionAnswerOptions)
+      .where(inArray(questionAnswerOptions.id, optionIds));
+  }
+
+  async deleteQuestions(questionsToDelete: UUIDType[]) {
     await this.db.delete(questions).where(inArray(questions.id, questionsToDelete));
+  }
 
+  async deleteQuestionOptions(questionsToDelete: UUIDType[]) {
     await this.db
       .delete(questionAnswerOptions)
       .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
+  }
+
+  async upsertQuestion(questionData: QuestionBody, lessonId: UUIDType, authorId: UUIDType, questionId?: UUIDType): Promise<UUIDType> {
+    if (questionId) {
+      await this.db.update(questions).set(questionData).where(eq(questions.id, questionId));
+      return questionId;
+    } else {
+      const [newQuestion] = await this.db.insert(questions).values({
+        lessonId,
+        authorId,
+        ...questionData,
+      }).returning();
+      return newQuestion.id;
+    }
   }
 
   // async getLessonStudentAnswers(lessonId: UUIDType) {
