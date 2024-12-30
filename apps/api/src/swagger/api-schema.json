@@ -3846,7 +3846,14 @@
                             "type": "string"
                           },
                           "description": {
-                            "type": "string"
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           },
                           "displayOrder": {
                             "type": "number"
@@ -4016,7 +4023,6 @@
                           "id",
                           "title",
                           "type",
-                          "description",
                           "displayOrder"
                         ]
                       }
@@ -4448,7 +4454,14 @@
                 "type": "string"
               },
               "description": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "fileS3Key": {
                 "anyOf": [
@@ -4613,8 +4626,7 @@
             },
             "required": [
               "title",
-              "type",
-              "description"
+              "type"
             ]
           },
           {
@@ -5069,7 +5081,14 @@
                 "type": "string"
               },
               "description": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "fileS3Key": {
                 "anyOf": [
@@ -5487,7 +5506,14 @@
                       "type": "string"
                     },
                     "description": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     },
                     "displayOrder": {
                       "type": "number"
@@ -5657,7 +5683,6 @@
                     "id",
                     "title",
                     "type",
-                    "description",
                     "displayOrder"
                   ]
                 }
@@ -5764,7 +5789,14 @@
                       "type": "string"
                     },
                     "description": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     },
                     "displayOrder": {
                       "type": "number"
@@ -5934,7 +5966,6 @@
                     "id",
                     "title",
                     "type",
-                    "description",
                     "displayOrder"
                   ]
                 }
