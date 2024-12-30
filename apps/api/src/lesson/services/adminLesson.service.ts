@@ -1,5 +1,5 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, gte, inArray, lte, sql } from "drizzle-orm";
+import { eq, gte, lte, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
