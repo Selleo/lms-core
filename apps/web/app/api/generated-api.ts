@@ -498,7 +498,7 @@ export interface GetBetaCourseByIdResponse {
         id: string;
         title: string;
         type: string;
-        description?: string | null;
+        description?: string;
         displayOrder: number;
         fileS3Key?: string | null;
         fileType?: string | null;
@@ -639,7 +639,7 @@ export interface GetLessonByIdResponse {
 export type BetaCreateLessonBody = {
   title: string;
   type: string;
-  description?: string | null;
+  description?: string;
   fileS3Key?: string | null;
   fileType?: string | null;
   questions?: {
@@ -886,7 +886,7 @@ export type BetaCreateChapterBody = {
     id: string;
     title: string;
     type: string;
-    description?: string | null;
+    description?: string;
     displayOrder: number;
     fileS3Key?: string | null;
     fileType?: string | null;
@@ -949,7 +949,7 @@ export type UpdateChapterBody = {
     id: string;
     title: string;
     type: string;
-    description?: string | null;
+    description?: string;
     displayOrder: number;
     fileS3Key?: string | null;
     fileType?: string | null;

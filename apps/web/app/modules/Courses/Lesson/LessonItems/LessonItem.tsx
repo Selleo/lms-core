@@ -2,16 +2,12 @@ import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 
 import CustomErrorBoundary from "~/modules/common/ErrorBoundary/ErrorBoundary";
 
-import { File } from "./File";
 import { Question } from "./Question";
 import { TextBlock } from "./TextBlock";
 
-import type { GetLessonResponse } from "~/api/generated-api";
-
-type LessonItem = GetLessonResponse["data"]["lessonItems"][number];
-
 type LessonItemsSwitchProps = {
-  lessonItem: LessonItem;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  lessonItem: any;
   questionsArray: string[];
   isSubmitted?: boolean;
   lessonType: string;
@@ -43,16 +39,17 @@ export const LessonItem = ({
     );
   }
 
-  if ("url" in content) {
-    return (
-      <File
-        content={content}
-        lessonItemId={lessonItemId}
-        isCompleted={!!isCompleted}
-        updateLessonItemCompletion={updateLessonItemCompletion}
-      />
-    );
-  }
+  // TODO: Remove when safe
+  // if ("url" in content) {
+  //   return (
+  //     <File
+  //       content={content}
+  //       lessonItemId={lessonItemId}
+  //       isCompleted={!!isCompleted}
+  //       updateLessonItemCompletion={updateLessonItemCompletion}
+  //     />
+  //   );
+  // }
 
   return (
     <div className="h4 text-center py-8 border-none drop-shadow-primary">
