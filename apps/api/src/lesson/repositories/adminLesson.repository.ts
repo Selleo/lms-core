@@ -179,7 +179,7 @@ export class AdminLessonRepository {
       .where(eq(questions.lessonId, lessonId));
   }
 
-  async upsertOptions(questionId: UUIDType) {
+  async findExistingOptions(questionId: UUIDType) {
     const existingOptions = await this.db
       .select({ id: questionAnswerOptions.id })
       .from(questionAnswerOptions)
@@ -218,18 +218,31 @@ export class AdminLessonRepository {
       .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
   }
 
-  async upsertQuestion(questionData: QuestionBody, lessonId: UUIDType, authorId: UUIDType, questionId?: UUIDType): Promise<UUIDType> {
-    if (questionId) {
-      await this.db.update(questions).set(questionData).where(eq(questions.id, questionId));
-      return questionId;
-    } else {
-      const [newQuestion] = await this.db.insert(questions).values({
+  async upsertQuestion(
+    questionData: QuestionBody,
+    lessonId: UUIDType,
+    authorId: UUIDType,
+    questionId?: UUIDType
+  ): Promise<UUIDType> {
+    const [result] = await this.db
+      .insert(questions)
+      .values({
+        id: questionId,
         lessonId,
         authorId,
         ...questionData,
-      }).returning();
-      return newQuestion.id;
-    }
+      })
+      .onConflictDoUpdate({
+        target: questions.id, 
+        set: {
+          lessonId,
+          authorId,
+          ...questionData,
+        },
+      })
+      .returning({ id: questions.id });
+  
+    return result.id;
   }
 
   // async getLessonStudentAnswers(lessonId: UUIDType) {

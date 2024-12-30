@@ -219,7 +219,7 @@ export class AdminLessonService {
 
           if (question.options) {
             const { existingOptions } =
-              await this.adminLessonRepository.upsertOptions(questionId);
+              await this.adminLessonRepository.findExistingOptions(questionId);
 
             const existingOptionIds = existingOptions.map((option) => option.id);
             const inputOptionIds = question.options.map((option) => option.id).filter(Boolean);
