@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from "@remix-run/react";
+import { first, get, last, orderBy } from "lodash-es";
 
 import { useCourse, useLesson } from "~/api/queries";
 import { PageWrapper } from "~/components/PageWrapper";
@@ -7,6 +8,21 @@ import { LessonSidebar } from "~/modules/Courses/Lesson/LessonSidebar";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 
+type Chapters = GetCourseResponse["data"]["chapters"];
+
+const checkOverallLessonPosition = (chapters: Chapters, currentLessonId: string) => {
+  const sortedChapters = orderBy(chapters, ["displayOrder"], ["asc"]);
+
+  const firstLesson = get(first(sortedChapters), "lessons[0]");
+  const lastChapter = last(sortedChapters);
+  const lastLesson = last(get(lastChapter, "lessons", []));
+
+  return {
+    isFirst: get(firstLesson, "id") === currentLessonId,
+    isLast: get(lastLesson, "id") === currentLessonId,
+  };
+};
+
 export default function LessonPage() {
   const { courseId = "", lessonId = "" } = useParams();
   const { data: lesson } = useLesson(lessonId);
@@ -14,6 +30,8 @@ export default function LessonPage() {
   const navigate = useNavigate();
 
   if (!lesson || !course) return null;
+
+  const { isFirst, isLast } = checkOverallLessonPosition(course.chapters, lessonId);
 
   const currentChapter = course.chapters.find((chapter) =>
     chapter?.lessons.some((l) => l.id === lessonId),
@@ -26,10 +44,7 @@ export default function LessonPage() {
     return lessons.findIndex((lesson) => lesson.id === currentLessonId);
   }
 
-  function handleNextLesson(
-    currentLessonId: string,
-    chapters: GetCourseResponse["data"]["chapters"],
-  ) {
+  function handleNextLesson(currentLessonId: string, chapters: Chapters) {
     for (const chapter of chapters) {
       const lessonIndex = findCurrentLessonIndex(chapter.lessons, currentLessonId);
       if (lessonIndex !== -1) {
@@ -89,6 +104,8 @@ export default function LessonPage() {
             lessonsAmount={currentChapter?.lessons.length ?? 0}
             handlePrevious={() => handlePrevLesson(lessonId, course.chapters)}
             handleNext={() => handleNextLesson(lessonId, course.chapters)}
+            isFirstLesson={isFirst}
+            isLastLesson={isLast}
           />
         </div>
         <LessonSidebar course={course} courseId={courseId} />

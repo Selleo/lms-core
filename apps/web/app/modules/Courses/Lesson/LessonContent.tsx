@@ -17,6 +17,8 @@ type LessonContentProps = {
   lessonsAmount: number;
   handlePrevious: () => void;
   handleNext: () => void;
+  isFirstLesson: boolean;
+  isLastLesson: boolean;
 };
 
 export const LessonContent = ({
@@ -24,6 +26,8 @@ export const LessonContent = ({
   lessonsAmount,
   handlePrevious,
   handleNext,
+  isFirstLesson,
+  isLastLesson,
 }: LessonContentProps) => {
   const [isCompleteDisabled, setIsCompleteDisabled] = useState(false);
   const { mutate: markLessonAsCompleted } = useMarkLessonAsCompleted();
@@ -57,14 +61,18 @@ export const LessonContent = ({
             <p className="h4 text-neutral-950">{lesson.title}</p>
           </div>
           <div className="flex gap-x-3">
-            <Button variant="outline" className="gap-x-1" onClick={handlePrevious}>
-              <Icon name="ArrowRight" className="rotate-180 w-4 h-auto" />
-              <span>Previous</span>
-            </Button>
-            <Button className="gap-x-1" onClick={handleNext}>
-              <Icon name="ArrowRight" className="w-4 h-auto" />
-              <span>Next</span>
-            </Button>
+            {!isFirstLesson && (
+              <Button variant="outline" className="gap-x-1" onClick={handlePrevious}>
+                <Icon name="ArrowRight" className="rotate-180 w-4 h-auto" />
+                <span>Previous</span>
+              </Button>
+            )}
+            {!isLastLesson && (
+              <Button className="gap-x-1" onClick={handleNext}>
+                <Icon name="ArrowRight" className="w-4 h-auto" />
+                <span>Next</span>
+              </Button>
+            )}
           </div>
         </div>
         <Content />
