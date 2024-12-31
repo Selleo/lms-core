@@ -63,10 +63,11 @@ export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
                         return (
                           <Link
                             key={id}
-                            to={`/course/${courseId}/lesson/${id}`}
+                            to={status === "completed" ? `/course/${courseId}/lesson/${id}` : "#"}
                             className={cn("flex gap-x-4 py-2 px-6 border-x hover:bg-neutral-50", {
                               "bg-primary-50 border-l-2 border-l-primary-600":
                                 status === "completed",
+                              "cursor-not-allowed": status === "not_started",
                             })}
                           >
                             <Badge
