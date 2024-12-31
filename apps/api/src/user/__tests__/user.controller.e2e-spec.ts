@@ -35,12 +35,10 @@ describe("UsersController (e2e)", () => {
       .withAdminRole()
       .create();
 
-    const testLoginResponse = await request(app.getHttpServer())
-      .post("/api/auth/login")
-      .send({
-        email: testUser.email,
-        password: testUser.credentials?.password,
-      });
+    const testLoginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
+      email: testUser.email,
+      password: testUser.credentials?.password,
+    });
 
     testCookies = testLoginResponse.headers["set-cookie"];
   });

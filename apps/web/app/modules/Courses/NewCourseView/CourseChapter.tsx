@@ -78,17 +78,6 @@ export const CourseChapter = ({ chapter, enrolled }: CourseChapterProps) => {
                   if (!lesson) return null;
                   return <CourseChapterLesson key={lesson.id} lesson={lesson} />;
                 })}
-                <Button className="mt-3 gap-x-2" disabled={!(chapter.isFreemium || enrolled)}>
-                  {" "}
-                  <Icon name="Play" className="w-4 h-auto" />
-                  <span>
-                    {chapter.chapterProgress === "completed"
-                      ? "Open"
-                      : chapter.chapterProgress === "in_progress"
-                        ? "Continue"
-                        : "Play chapter"}
-                  </span>
-                </Button>
               </div>
             </AccordionContent>
           </div>
