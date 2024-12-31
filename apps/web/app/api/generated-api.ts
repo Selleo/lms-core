@@ -645,45 +645,58 @@ export interface GetChapterWithLessonResponse {
   };
 }
 
-export type BetaCreateLessonBody = {
+export type BetaCreateChapterBody = {
   title: string;
-  type: string;
-  description?: string | null;
-  fileS3Key?: string | null;
-  fileType?: string | null;
-  questions?: {
+  lessons?: {
     /** @format uuid */
-    id?: string;
-    type:
-      | "single_choice"
-      | "multiple_choice"
-      | "true_or_false"
-      | "photo_question"
-      | "fill_in_the_blanks_text"
-      | "fill_in_the_blanks_dnd"
-      | "brief_response"
-      | "detailed_response"
-      | "match_words"
-      | "scale_1_5";
-    description?: string | null;
+    id: string;
     title: string;
-    displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
-    photoS3Key?: string | null;
-    options?: {
+    type: string;
+    description?: string | null;
+    displayOrder: number;
+    fileS3Key?: string | null;
+    fileType?: string | null;
+    questions?: {
       /** @format uuid */
       id?: string;
-      optionText: string;
-      displayOrder: number | null;
-      isStudentAnswer?: boolean;
-      isCorrect: boolean;
-      /** @format uuid */
-      questionId?: string;
-      matchedWord?: string | null;
-      scaleAnswer?: number | null;
+      type:
+        | "single_choice"
+        | "multiple_choice"
+        | "true_or_false"
+        | "photo_question"
+        | "fill_in_the_blanks_text"
+        | "fill_in_the_blanks_dnd"
+        | "brief_response"
+        | "detailed_response"
+        | "match_words"
+        | "scale_1_5";
+      description?: string | null;
+      title: string;
+      displayOrder?: number;
+      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+      photoS3Key?: string | null;
+      options?: {
+        /** @format uuid */
+        id?: string;
+        optionText: string;
+        displayOrder: number | null;
+        isStudentAnswer?: boolean;
+        isCorrect: boolean;
+        /** @format uuid */
+        questionId?: string;
+        matchedWord?: string | null;
+        scaleAnswer?: number | null;
+      }[];
     }[];
+    updatedAt?: string;
   }[];
-  updatedAt?: string;
+  chapterProgress?: "completed" | "in_progress" | "not_started";
+  isFreemium?: boolean;
+  enrolled?: boolean;
+  isPublished?: boolean;
+  isSubmitted?: boolean;
+  createdAt?: string;
+  quizCount?: number;
 } & {
   /** @format uuid */
   courseId: string;
@@ -697,45 +710,70 @@ export interface BetaCreateChapterResponse {
   };
 }
 
-export type BetaCreateQuizLessonBody = {
-  title: string;
-  type: string;
-  description?: string;
-  fileS3Key?: string;
-  fileType?: string;
-  questions?: {
+export type UpdateChapterBody = {
+  title?: string;
+  lessons?: {
     /** @format uuid */
-    id?: string;
-    type:
-      | "single_choice"
-      | "multiple_choice"
-      | "true_or_false"
-      | "photo_question"
-      | "fill_in_the_blanks_text"
-      | "fill_in_the_blanks_dnd"
-      | "brief_response"
-      | "detailed_response"
-      | "match_words"
-      | "scale_1_5";
-    description?: string | null;
+    id: string;
     title: string;
-    displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
-    photoS3Key?: string | null;
-    options?: {
+    type: string;
+    description?: string | null;
+    displayOrder: number;
+    fileS3Key?: string | null;
+    fileType?: string | null;
+    questions?: {
       /** @format uuid */
       id?: string;
-      optionText: string;
-      displayOrder: number | null;
-      isStudentAnswer?: boolean;
-      isCorrect: boolean;
-      /** @format uuid */
-      questionId?: string;
-      matchedWord?: string | null;
-      scaleAnswer?: number | null;
+      type:
+        | "single_choice"
+        | "multiple_choice"
+        | "true_or_false"
+        | "photo_question"
+        | "fill_in_the_blanks_text"
+        | "fill_in_the_blanks_dnd"
+        | "brief_response"
+        | "detailed_response"
+        | "match_words"
+        | "scale_1_5";
+      description?: string | null;
+      title: string;
+      displayOrder?: number;
+      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+      photoS3Key?: string | null;
+      options?: {
+        /** @format uuid */
+        id?: string;
+        optionText: string;
+        displayOrder: number | null;
+        isStudentAnswer?: boolean;
+        isCorrect: boolean;
+        /** @format uuid */
+        questionId?: string;
+        matchedWord?: string | null;
+        scaleAnswer?: number | null;
+      }[];
     }[];
+    updatedAt?: string;
   }[];
+  chapterProgress?: "completed" | "in_progress" | "not_started";
+  isFreemium?: boolean;
+  enrolled?: boolean;
+  isPublished?: boolean;
+  isSubmitted?: boolean;
+  createdAt?: string;
+  quizCount?: number;
 } & {
+  /** @format uuid */
+  courseId?: string;
+};
+
+export interface UpdateChapterResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface UpdateChapterDisplayOrderBody {
   /** @format uuid */
   chapterId: string;
   displayOrder: number;
@@ -836,12 +874,12 @@ export interface BetaCreateLessonResponse {
   };
 }
 
-export type BetaUpdateLessonBody = {
-  title?: string;
-  type?: string;
-  description?: string | null;
-  fileS3Key?: string | null;
-  fileType?: string | null;
+export type BetaCreateQuizLessonBody = {
+  title: string;
+  type: string;
+  description?: string;
+  fileS3Key?: string;
+  fileType?: string;
   questions?: {
     /** @format uuid */
     id?: string;
@@ -888,85 +926,44 @@ export interface BetaCreateQuizLessonResponse {
   };
 }
 
-export interface GetChapterWithLessonResponse {
-  data: {
+export type BetaUpdateQuizLessonBody = {
+  title?: string;
+  type?: string;
+  description?: string;
+  fileS3Key?: string;
+  fileType?: string;
+  questions?: {
     /** @format uuid */
-    id: string;
-    title: string;
-    lessonCount: number;
-    lessons: {
-      /** @format uuid */
-      id: string;
-      title: string;
-      type: "quiz" | "presentation" | "video" | "text";
-      displayOrder: number;
-      status: "completed" | "in_progress" | "not_started";
-      quizQuestionCount: number | null;
-    }[];
-    completedLessonCount?: number;
-    chapterProgress?: "completed" | "in_progress" | "not_started";
-    isFreemium?: boolean;
-    enrolled?: boolean;
-    isPublished?: boolean;
-    isSubmitted?: boolean;
-    createdAt?: string;
-    quizCount?: number;
-    displayOrder: number;
-  };
-}
-
-export type BetaCreateChapterBody = {
-  title: string;
-  lessons?: {
-    /** @format uuid */
-    id: string;
-    title: string;
-    type: string;
+    id?: string;
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "true_or_false"
+      | "photo_question"
+      | "fill_in_the_blanks_text"
+      | "fill_in_the_blanks_dnd"
+      | "brief_response"
+      | "detailed_response"
+      | "match_words"
+      | "scale_1_5";
     description?: string | null;
-    displayOrder: number;
-    fileS3Key?: string | null;
-    fileType?: string | null;
-    questions?: {
+    title: string;
+    displayOrder?: number;
+    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+    photoS3Key?: string | null;
+    options?: {
       /** @format uuid */
       id?: string;
-      type:
-        | "single_choice"
-        | "multiple_choice"
-        | "true_or_false"
-        | "photo_question"
-        | "fill_in_the_blanks_text"
-        | "fill_in_the_blanks_dnd"
-        | "brief_response"
-        | "detailed_response"
-        | "match_words"
-        | "scale_1_5";
-      description?: string | null;
-      title: string;
-      displayOrder?: number;
-      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
-      photoS3Key?: string | null;
-      options?: {
-        /** @format uuid */
-        id?: string;
-        optionText: string;
-        displayOrder: number | null;
-        isStudentAnswer?: boolean;
-        isCorrect: boolean;
-        /** @format uuid */
-        questionId?: string;
-        matchedWord?: string | null;
-        scaleAnswer?: number | null;
-      }[];
+      optionText: string;
+      displayOrder: number | null;
+      isStudentAnswer?: boolean;
+      isCorrect: boolean;
+      /** @format uuid */
+      questionId?: string;
+      matchedWord?: string | null;
+      scaleAnswer?: number | null;
     }[];
-    updatedAt?: string;
   }[];
-  chapterProgress?: "completed" | "in_progress" | "not_started";
-  isFreemium?: boolean;
-  enrolled?: boolean;
-  isPublished?: boolean;
-  isSubmitted?: boolean;
-  createdAt?: string;
-  quizCount?: number;
 } & {
   /** @format uuid */
   chapterId?: string;
@@ -981,56 +978,43 @@ export interface BetaUpdateQuizLessonResponse {
 
 export type BetaUpdateLessonBody = {
   title?: string;
-  lessons?: {
+  type?: string;
+  description?: string | null;
+  fileS3Key?: string | null;
+  fileType?: string | null;
+  questions?: {
     /** @format uuid */
-    id: string;
-    title: string;
-    type: string;
+    id?: string;
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "true_or_false"
+      | "photo_question"
+      | "fill_in_the_blanks_text"
+      | "fill_in_the_blanks_dnd"
+      | "brief_response"
+      | "detailed_response"
+      | "match_words"
+      | "scale_1_5";
     description?: string | null;
-    displayOrder: number;
-    fileS3Key?: string | null;
-    fileType?: string | null;
-    questions?: {
+    title: string;
+    displayOrder?: number;
+    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+    photoS3Key?: string | null;
+    options?: {
       /** @format uuid */
       id?: string;
-      type:
-        | "single_choice"
-        | "multiple_choice"
-        | "true_or_false"
-        | "photo_question"
-        | "fill_in_the_blanks_text"
-        | "fill_in_the_blanks_dnd"
-        | "brief_response"
-        | "detailed_response"
-        | "match_words"
-        | "scale_1_5";
-      description?: string | null;
-      title: string;
-      displayOrder?: number;
-      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
-      photoS3Key?: string | null;
-      options?: {
-        /** @format uuid */
-        id?: string;
-        optionText: string;
-        displayOrder: number | null;
-        isStudentAnswer?: boolean;
-        isCorrect: boolean;
-        /** @format uuid */
-        questionId?: string;
-        matchedWord?: string | null;
-        scaleAnswer?: number | null;
-      }[];
+      optionText: string;
+      displayOrder: number | null;
+      isStudentAnswer?: boolean;
+      isCorrect: boolean;
+      /** @format uuid */
+      questionId?: string;
+      matchedWord?: string | null;
+      scaleAnswer?: number | null;
     }[];
-    updatedAt?: string;
   }[];
-  chapterProgress?: "completed" | "in_progress" | "not_started";
-  isFreemium?: boolean;
-  enrolled?: boolean;
-  isPublished?: boolean;
-  isSubmitted?: boolean;
-  createdAt?: string;
-  quizCount?: number;
+  updatedAt?: string;
 } & {
   /** @format uuid */
   chapterId?: string;

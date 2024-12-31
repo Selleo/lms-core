@@ -25,9 +25,15 @@ export class AdminChapterService {
         .from(chapters)
         .where(eq(chapters.courseId, body.courseId));
 
+      // TODO: decide if we need to isPublished
       const [chapter] = await trx
         .insert(chapters)
-        .values({ ...body, authorId, displayOrder: maxDisplayOrder.displayOrder + 1 })
+        .values({
+          ...body,
+          authorId,
+          displayOrder: maxDisplayOrder.displayOrder + 1,
+          isPublished: true,
+        })
         .returning();
 
       if (!chapter) throw new NotFoundException("Lesson not found");

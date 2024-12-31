@@ -42,7 +42,12 @@ export class StudentLessonProgressService {
 
     const [createdLessonProgress] = await this.db
       .insert(studentLessonProgress)
-      .values({ studentId, lessonId: lesson.id, completedAt: sql`now()` })
+      .values({
+        studentId,
+        lessonId: lesson.id,
+        chapterId: lesson.chapterId,
+        completedAt: sql`now()`,
+      })
       .onConflictDoNothing()
       .returning();
 

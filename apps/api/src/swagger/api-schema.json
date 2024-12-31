@@ -4519,40 +4519,7 @@
               "title": {
                 "type": "string"
               },
-              "type": {
-                "type": "string"
-              },
-              "description": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "fileS3Key": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "fileType": {
-                "anyOf": [
-                  {
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
-              },
-              "questions": {
+              "lessons": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -4561,49 +4528,11 @@
                       "format": "uuid",
                       "type": "string"
                     },
+                    "title": {
+                      "type": "string"
+                    },
                     "type": {
-                      "anyOf": [
-                        {
-                          "const": "single_choice",
-                          "type": "string"
-                        },
-                        {
-                          "const": "multiple_choice",
-                          "type": "string"
-                        },
-                        {
-                          "const": "true_or_false",
-                          "type": "string"
-                        },
-                        {
-                          "const": "photo_question",
-                          "type": "string"
-                        },
-                        {
-                          "const": "fill_in_the_blanks_text",
-                          "type": "string"
-                        },
-                        {
-                          "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
-                          "type": "string"
-                        }
-                      ]
+                      "type": "string"
                     },
                     "description": {
                       "anyOf": [
@@ -4615,32 +4544,10 @@
                         }
                       ]
                     },
-                    "title": {
-                      "type": "string"
-                    },
                     "displayOrder": {
                       "type": "number"
                     },
-                    "photoQuestionType": {
-                      "anyOf": [
-                        {
-                          "anyOf": [
-                            {
-                              "const": "single_choice",
-                              "type": "string"
-                            },
-                            {
-                              "const": "multiple_choice",
-                              "type": "string"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "photoS3Key": {
+                    "fileS3Key": {
                       "anyOf": [
                         {
                           "type": "string"
@@ -4650,7 +4557,17 @@
                         }
                       ]
                     },
-                    "options": {
+                    "fileType": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "questions": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -4659,30 +4576,51 @@
                             "format": "uuid",
                             "type": "string"
                           },
-                          "optionText": {
-                            "type": "string"
-                          },
-                          "displayOrder": {
+                          "type": {
                             "anyOf": [
                               {
-                                "type": "number"
+                                "const": "single_choice",
+                                "type": "string"
                               },
                               {
-                                "type": "null"
+                                "const": "multiple_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "true_or_false",
+                                "type": "string"
+                              },
+                              {
+                                "const": "photo_question",
+                                "type": "string"
+                              },
+                              {
+                                "const": "fill_in_the_blanks_text",
+                                "type": "string"
+                              },
+                              {
+                                "const": "fill_in_the_blanks_dnd",
+                                "type": "string"
+                              },
+                              {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
                               }
                             ]
                           },
-                          "isStudentAnswer": {
-                            "type": "boolean"
-                          },
-                          "isCorrect": {
-                            "type": "boolean"
-                          },
-                          "questionId": {
-                            "format": "uuid",
-                            "type": "string"
-                          },
-                          "matchedWord": {
+                          "description": {
                             "anyOf": [
                               {
                                 "type": "string"
@@ -4692,38 +4630,157 @@
                               }
                             ]
                           },
-                          "scaleAnswer": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "displayOrder": {
+                            "type": "number"
+                          },
+                          "photoQuestionType": {
                             "anyOf": [
                               {
-                                "type": "number"
+                                "anyOf": [
+                                  {
+                                    "const": "single_choice",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "const": "multiple_choice",
+                                    "type": "string"
+                                  }
+                                ]
                               },
                               {
                                 "type": "null"
                               }
                             ]
+                          },
+                          "photoS3Key": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "options": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "optionText": {
+                                  "type": "string"
+                                },
+                                "displayOrder": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "isStudentAnswer": {
+                                  "type": "boolean"
+                                },
+                                "isCorrect": {
+                                  "type": "boolean"
+                                },
+                                "questionId": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "matchedWord": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "scaleAnswer": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "optionText",
+                                "displayOrder",
+                                "isCorrect"
+                              ]
+                            }
                           }
                         },
                         "required": [
-                          "optionText",
-                          "displayOrder",
-                          "isCorrect"
+                          "type",
+                          "title"
                         ]
                       }
+                    },
+                    "updatedAt": {
+                      "type": "string"
                     }
                   },
                   "required": [
+                    "id",
+                    "title",
                     "type",
-                    "title"
+                    "displayOrder"
                   ]
                 }
               },
-              "updatedAt": {
+              "chapterProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
+              },
+              "isFreemium": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "isPublished": {
+                "type": "boolean"
+              },
+              "isSubmitted": {
+                "type": "boolean"
+              },
+              "createdAt": {
                 "type": "string"
+              },
+              "quizCount": {
+                "type": "number"
               }
             },
             "required": [
-              "title",
-              "type"
+              "title"
             ]
           },
           {
@@ -4773,19 +4830,7 @@
               "title": {
                 "type": "string"
               },
-              "type": {
-                "type": "string"
-              },
-              "description": {
-                "type": "string"
-              },
-              "fileS3Key": {
-                "type": "string"
-              },
-              "fileType": {
-                "type": "string"
-              },
-              "questions": {
+              "lessons": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -4794,49 +4839,11 @@
                       "format": "uuid",
                       "type": "string"
                     },
+                    "title": {
+                      "type": "string"
+                    },
                     "type": {
-                      "anyOf": [
-                        {
-                          "const": "single_choice",
-                          "type": "string"
-                        },
-                        {
-                          "const": "multiple_choice",
-                          "type": "string"
-                        },
-                        {
-                          "const": "true_or_false",
-                          "type": "string"
-                        },
-                        {
-                          "const": "photo_question",
-                          "type": "string"
-                        },
-                        {
-                          "const": "fill_in_the_blanks_text",
-                          "type": "string"
-                        },
-                        {
-                          "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
-                          "type": "string"
-                        }
-                      ]
+                      "type": "string"
                     },
                     "description": {
                       "anyOf": [
@@ -4848,32 +4855,10 @@
                         }
                       ]
                     },
-                    "title": {
-                      "type": "string"
-                    },
                     "displayOrder": {
                       "type": "number"
                     },
-                    "photoQuestionType": {
-                      "anyOf": [
-                        {
-                          "anyOf": [
-                            {
-                              "const": "single_choice",
-                              "type": "string"
-                            },
-                            {
-                              "const": "multiple_choice",
-                              "type": "string"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "photoS3Key": {
+                    "fileS3Key": {
                       "anyOf": [
                         {
                           "type": "string"
@@ -4883,7 +4868,17 @@
                         }
                       ]
                     },
-                    "options": {
+                    "fileType": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "questions": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -4892,30 +4887,51 @@
                             "format": "uuid",
                             "type": "string"
                           },
-                          "optionText": {
-                            "type": "string"
-                          },
-                          "displayOrder": {
+                          "type": {
                             "anyOf": [
                               {
-                                "type": "number"
+                                "const": "single_choice",
+                                "type": "string"
                               },
                               {
-                                "type": "null"
+                                "const": "multiple_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "true_or_false",
+                                "type": "string"
+                              },
+                              {
+                                "const": "photo_question",
+                                "type": "string"
+                              },
+                              {
+                                "const": "fill_in_the_blanks_text",
+                                "type": "string"
+                              },
+                              {
+                                "const": "fill_in_the_blanks_dnd",
+                                "type": "string"
+                              },
+                              {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
                               }
                             ]
                           },
-                          "isStudentAnswer": {
-                            "type": "boolean"
-                          },
-                          "isCorrect": {
-                            "type": "boolean"
-                          },
-                          "questionId": {
-                            "format": "uuid",
-                            "type": "string"
-                          },
-                          "matchedWord": {
+                          "description": {
                             "anyOf": [
                               {
                                 "type": "string"
@@ -4925,52 +4941,200 @@
                               }
                             ]
                           },
-                          "scaleAnswer": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "displayOrder": {
+                            "type": "number"
+                          },
+                          "photoQuestionType": {
                             "anyOf": [
                               {
-                                "type": "number"
+                                "anyOf": [
+                                  {
+                                    "const": "single_choice",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "const": "multiple_choice",
+                                    "type": "string"
+                                  }
+                                ]
                               },
                               {
                                 "type": "null"
                               }
                             ]
+                          },
+                          "photoS3Key": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "options": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "optionText": {
+                                  "type": "string"
+                                },
+                                "displayOrder": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "isStudentAnswer": {
+                                  "type": "boolean"
+                                },
+                                "isCorrect": {
+                                  "type": "boolean"
+                                },
+                                "questionId": {
+                                  "format": "uuid",
+                                  "type": "string"
+                                },
+                                "matchedWord": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "scaleAnswer": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "optionText",
+                                "displayOrder",
+                                "isCorrect"
+                              ]
+                            }
                           }
                         },
                         "required": [
-                          "optionText",
-                          "displayOrder",
-                          "isCorrect"
+                          "type",
+                          "title"
                         ]
                       }
+                    },
+                    "updatedAt": {
+                      "type": "string"
                     }
                   },
                   "required": [
+                    "id",
+                    "title",
                     "type",
-                    "title"
+                    "displayOrder"
                   ]
                 }
+              },
+              "chapterProgress": {
+                "anyOf": [
+                  {
+                    "const": "completed",
+                    "type": "string"
+                  },
+                  {
+                    "const": "in_progress",
+                    "type": "string"
+                  },
+                  {
+                    "const": "not_started",
+                    "type": "string"
+                  }
+                ]
+              },
+              "isFreemium": {
+                "type": "boolean"
+              },
+              "enrolled": {
+                "type": "boolean"
+              },
+              "isPublished": {
+                "type": "boolean"
+              },
+              "isSubmitted": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string"
+              },
+              "quizCount": {
+                "type": "number"
               }
-            },
-            "required": [
-              "title",
-              "type"
-            ]
+            }
           },
           {
             "type": "object",
             "properties": {
-              "chapterId": {
+              "courseId": {
                 "format": "uuid",
                 "type": "string"
-              },
-              "displayOrder": {
-                "type": "number"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateChapterResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string"
               }
             },
             "required": [
-              "chapterId"
+              "message"
             ]
           }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "UpdateChapterDisplayOrderBody": {
+        "type": "object",
+        "properties": {
+          "chapterId": {
+            "format": "uuid",
+            "type": "string"
+          },
+          "displayOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "chapterId",
+          "displayOrder"
         ]
       },
       "UpdateChapterDisplayOrderResponse": {
@@ -5030,180 +5194,125 @@
             "properties": {
               "message": {
                 "type": "string"
-              },
-              "questions": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "format": "uuid",
-                      "type": "string"
-                    },
-                    "type": {
-                      "anyOf": [
-                        {
-                          "const": "single_choice",
-                          "type": "string"
-                        },
-                        {
-                          "const": "multiple_choice",
-                          "type": "string"
-                        },
-                        {
-                          "const": "true_or_false",
-                          "type": "string"
-                        },
-                        {
-                          "const": "photo_question",
-                          "type": "string"
-                        },
-                        {
-                          "const": "fill_in_the_blanks_text",
-                          "type": "string"
-                        },
-                        {
-                          "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "description": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "title": {
-                      "type": "string"
-                    },
-                    "displayOrder": {
-                      "type": "number"
-                    },
-                    "photoQuestionType": {
-                      "anyOf": [
-                        {
-                          "anyOf": [
-                            {
-                              "const": "single_choice",
-                              "type": "string"
-                            },
-                            {
-                              "const": "multiple_choice",
-                              "type": "string"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "photoS3Key": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "options": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "format": "uuid",
-                            "type": "string"
-                          },
-                          "optionText": {
-                            "type": "string"
-                          },
-                          "displayOrder": {
-                            "anyOf": [
-                              {
-                                "type": "number"
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
-                          },
-                          "isStudentAnswer": {
-                            "type": "boolean"
-                          },
-                          "isCorrect": {
-                            "type": "boolean"
-                          },
-                          "questionId": {
-                            "format": "uuid",
-                            "type": "string"
-                          },
-                          "matchedWord": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
-                          },
-                          "scaleAnswer": {
-                            "anyOf": [
-                              {
-                                "type": "number"
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
-                          }
-                        },
-                        "required": [
-                          "optionText",
-                          "displayOrder",
-                          "isCorrect"
-                        ]
-                      }
-                    }
-                  },
-                  "required": [
-                    "type",
-                    "title"
-                  ]
-                }
               }
-            }
-          },
-          {
+            },
+            "required": [
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "GetLessonByIdResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
             "type": "object",
             "properties": {
-              "chapterId": {
+              "id": {
                 "format": "uuid",
                 "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "type": {
+                "anyOf": [
+                  {
+                    "const": "text",
+                    "type": "string"
+                  },
+                  {
+                    "const": "file",
+                    "type": "string"
+                  },
+                  {
+                    "const": "presentation",
+                    "type": "string"
+                  },
+                  {
+                    "const": "video",
+                    "type": "string"
+                  },
+                  {
+                    "const": "quiz",
+                    "type": "string"
+                  }
+                ]
+              },
+              "description": {
+                "type": "string"
+              },
+              "fileType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "fileUrl": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "quizDetails": {
+                "type": "object",
+                "properties": {
+                  "questions": {
+                    "type": "array",
+                    "items": {}
+                  },
+                  "questionCount": {
+                    "type": "number"
+                  },
+                  "correctAnswerCount": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "wrongAnswerCount": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "score": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "questions",
+                  "questionCount",
+                  "correctAnswerCount",
+                  "wrongAnswerCount",
+                  "score"
+                ]
               },
               "displayOrder": {
                 "type": "number"
@@ -5544,6 +5653,14 @@
                         {
                           "const": "detailed_response",
                           "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
                         }
                       ]
                     },
@@ -5623,6 +5740,26 @@
                           "questionId": {
                             "format": "uuid",
                             "type": "string"
+                          },
+                          "matchedWord": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "scaleAnswer": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           }
                         },
                         "required": [
@@ -5652,7 +5789,62 @@
                 "format": "uuid",
                 "type": "string"
               },
-              "lessons": {
+              "displayOrder": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "chapterId"
+            ]
+          }
+        ]
+      },
+      "BetaCreateQuizLessonResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "message"
+            ]
+          }
+        },
+        "required": [
+          "data"
+        ]
+      },
+      "BetaUpdateQuizLessonBody": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "fileS3Key": {
+                "type": "string"
+              },
+              "fileType": {
+                "type": "string"
+              },
+              "questions": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -5661,11 +5853,49 @@
                       "format": "uuid",
                       "type": "string"
                     },
-                    "title": {
-                      "type": "string"
-                    },
                     "type": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "const": "single_choice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "multiple_choice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "true_or_false",
+                          "type": "string"
+                        },
+                        {
+                          "const": "photo_question",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
+                          "type": "string"
+                        },
+                        {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        }
+                      ]
                     },
                     "description": {
                       "anyOf": [
@@ -5677,10 +5907,32 @@
                         }
                       ]
                     },
+                    "title": {
+                      "type": "string"
+                    },
                     "displayOrder": {
                       "type": "number"
                     },
-                    "fileS3Key": {
+                    "photoQuestionType": {
+                      "anyOf": [
+                        {
+                          "anyOf": [
+                            {
+                              "const": "single_choice",
+                              "type": "string"
+                            },
+                            {
+                              "const": "multiple_choice",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "photoS3Key": {
                       "anyOf": [
                         {
                           "type": "string"
@@ -5690,17 +5942,7 @@
                         }
                       ]
                     },
-                    "fileType": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "questions": {
+                    "options": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -5709,86 +5951,30 @@
                             "format": "uuid",
                             "type": "string"
                           },
-                          "type": {
-                            "anyOf": [
-                              {
-                                "const": "single_choice",
-                                "type": "string"
-                              },
-                              {
-                                "const": "multiple_choice",
-                                "type": "string"
-                              },
-                              {
-                                "const": "true_or_false",
-                                "type": "string"
-                              },
-                              {
-                                "const": "photo_question",
-                                "type": "string"
-                              },
-                              {
-                                "const": "fill_in_the_blanks_text",
-                                "type": "string"
-                              },
-                              {
-                                "const": "fill_in_the_blanks_dnd",
-                                "type": "string"
-                              },
-                              {
-                                "const": "brief_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "detailed_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "match_words",
-                                "type": "string"
-                              },
-                              {
-                                "const": "scale_1_5",
-                                "type": "string"
-                              }
-                            ]
-                          },
-                          "description": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
-                          },
-                          "title": {
+                          "optionText": {
                             "type": "string"
                           },
                           "displayOrder": {
-                            "type": "number"
-                          },
-                          "photoQuestionType": {
                             "anyOf": [
                               {
-                                "anyOf": [
-                                  {
-                                    "const": "single_choice",
-                                    "type": "string"
-                                  },
-                                  {
-                                    "const": "multiple_choice",
-                                    "type": "string"
-                                  }
-                                ]
+                                "type": "number"
                               },
                               {
                                 "type": "null"
                               }
                             ]
                           },
-                          "photoS3Key": {
+                          "isStudentAnswer": {
+                            "type": "boolean"
+                          },
+                          "isCorrect": {
+                            "type": "boolean"
+                          },
+                          "questionId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "matchedWord": {
                             "anyOf": [
                               {
                                 "type": "string"
@@ -5798,123 +5984,32 @@
                               }
                             ]
                           },
-                          "options": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "format": "uuid",
-                                  "type": "string"
-                                },
-                                "optionText": {
-                                  "type": "string"
-                                },
-                                "displayOrder": {
-                                  "anyOf": [
-                                    {
-                                      "type": "number"
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
-                                },
-                                "isStudentAnswer": {
-                                  "type": "boolean"
-                                },
-                                "isCorrect": {
-                                  "type": "boolean"
-                                },
-                                "questionId": {
-                                  "format": "uuid",
-                                  "type": "string"
-                                },
-                                "matchedWord": {
-                                  "anyOf": [
-                                    {
-                                      "type": "string"
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
-                                },
-                                "scaleAnswer": {
-                                  "anyOf": [
-                                    {
-                                      "type": "number"
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
-                                }
+                          "scaleAnswer": {
+                            "anyOf": [
+                              {
+                                "type": "number"
                               },
-                              "required": [
-                                "optionText",
-                                "displayOrder",
-                                "isCorrect"
-                              ]
-                            }
+                              {
+                                "type": "null"
+                              }
+                            ]
                           }
                         },
                         "required": [
-                          "type",
-                          "title"
+                          "optionText",
+                          "displayOrder",
+                          "isCorrect"
                         ]
                       }
-                    },
-                    "updatedAt": {
-                      "type": "string"
                     }
                   },
                   "required": [
-                    "id",
-                    "title",
                     "type",
-                    "displayOrder"
+                    "title"
                   ]
                 }
-              },
-              "chapterProgress": {
-                "anyOf": [
-                  {
-                    "const": "completed",
-                    "type": "string"
-                  },
-                  {
-                    "const": "in_progress",
-                    "type": "string"
-                  },
-                  {
-                    "const": "not_started",
-                    "type": "string"
-                  }
-                ]
-              },
-              "isFreemium": {
-                "type": "boolean"
-              },
-              "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
-                "type": "boolean"
-              },
-              "isSubmitted": {
-                "type": "boolean"
-              },
-              "createdAt": {
-                "type": "string"
-              },
-              "quizCount": {
-                "type": "number"
               }
-            },
-            "required": [
-              "title"
-            ]
+            }
           },
           {
             "type": "object",
@@ -5958,7 +6053,40 @@
               "title": {
                 "type": "string"
               },
-              "lessons": {
+              "type": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "fileS3Key": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "fileType": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "questions": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -5967,11 +6095,49 @@
                       "format": "uuid",
                       "type": "string"
                     },
-                    "title": {
-                      "type": "string"
-                    },
                     "type": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "const": "single_choice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "multiple_choice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "true_or_false",
+                          "type": "string"
+                        },
+                        {
+                          "const": "photo_question",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "fill_in_the_blanks_dnd",
+                          "type": "string"
+                        },
+                        {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        }
+                      ]
                     },
                     "description": {
                       "anyOf": [
@@ -5983,10 +6149,32 @@
                         }
                       ]
                     },
+                    "title": {
+                      "type": "string"
+                    },
                     "displayOrder": {
                       "type": "number"
                     },
-                    "fileS3Key": {
+                    "photoQuestionType": {
+                      "anyOf": [
+                        {
+                          "anyOf": [
+                            {
+                              "const": "single_choice",
+                              "type": "string"
+                            },
+                            {
+                              "const": "multiple_choice",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "photoS3Key": {
                       "anyOf": [
                         {
                           "type": "string"
@@ -5996,17 +6184,7 @@
                         }
                       ]
                     },
-                    "fileType": {
-                      "anyOf": [
-                        {
-                          "type": "string"
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
-                    },
-                    "questions": {
+                    "options": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -6015,86 +6193,30 @@
                             "format": "uuid",
                             "type": "string"
                           },
-                          "type": {
-                            "anyOf": [
-                              {
-                                "const": "single_choice",
-                                "type": "string"
-                              },
-                              {
-                                "const": "multiple_choice",
-                                "type": "string"
-                              },
-                              {
-                                "const": "true_or_false",
-                                "type": "string"
-                              },
-                              {
-                                "const": "photo_question",
-                                "type": "string"
-                              },
-                              {
-                                "const": "fill_in_the_blanks_text",
-                                "type": "string"
-                              },
-                              {
-                                "const": "fill_in_the_blanks_dnd",
-                                "type": "string"
-                              },
-                              {
-                                "const": "brief_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "detailed_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "match_words",
-                                "type": "string"
-                              },
-                              {
-                                "const": "scale_1_5",
-                                "type": "string"
-                              }
-                            ]
-                          },
-                          "description": {
-                            "anyOf": [
-                              {
-                                "type": "string"
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
-                          },
-                          "title": {
+                          "optionText": {
                             "type": "string"
                           },
                           "displayOrder": {
-                            "type": "number"
-                          },
-                          "photoQuestionType": {
                             "anyOf": [
                               {
-                                "anyOf": [
-                                  {
-                                    "const": "single_choice",
-                                    "type": "string"
-                                  },
-                                  {
-                                    "const": "multiple_choice",
-                                    "type": "string"
-                                  }
-                                ]
+                                "type": "number"
                               },
                               {
                                 "type": "null"
                               }
                             ]
                           },
-                          "photoS3Key": {
+                          "isStudentAnswer": {
+                            "type": "boolean"
+                          },
+                          "isCorrect": {
+                            "type": "boolean"
+                          },
+                          "questionId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "matchedWord": {
                             "anyOf": [
                               {
                                 "type": "string"
@@ -6104,118 +6226,33 @@
                               }
                             ]
                           },
-                          "options": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "format": "uuid",
-                                  "type": "string"
-                                },
-                                "optionText": {
-                                  "type": "string"
-                                },
-                                "displayOrder": {
-                                  "anyOf": [
-                                    {
-                                      "type": "number"
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
-                                },
-                                "isStudentAnswer": {
-                                  "type": "boolean"
-                                },
-                                "isCorrect": {
-                                  "type": "boolean"
-                                },
-                                "questionId": {
-                                  "format": "uuid",
-                                  "type": "string"
-                                },
-                                "matchedWord": {
-                                  "anyOf": [
-                                    {
-                                      "type": "string"
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
-                                },
-                                "scaleAnswer": {
-                                  "anyOf": [
-                                    {
-                                      "type": "number"
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
-                                }
+                          "scaleAnswer": {
+                            "anyOf": [
+                              {
+                                "type": "number"
                               },
-                              "required": [
-                                "optionText",
-                                "displayOrder",
-                                "isCorrect"
-                              ]
-                            }
+                              {
+                                "type": "null"
+                              }
+                            ]
                           }
                         },
                         "required": [
-                          "type",
-                          "title"
+                          "optionText",
+                          "displayOrder",
+                          "isCorrect"
                         ]
                       }
-                    },
-                    "updatedAt": {
-                      "type": "string"
                     }
                   },
                   "required": [
-                    "id",
-                    "title",
                     "type",
-                    "displayOrder"
+                    "title"
                   ]
                 }
               },
-              "chapterProgress": {
-                "anyOf": [
-                  {
-                    "const": "completed",
-                    "type": "string"
-                  },
-                  {
-                    "const": "in_progress",
-                    "type": "string"
-                  },
-                  {
-                    "const": "not_started",
-                    "type": "string"
-                  }
-                ]
-              },
-              "isFreemium": {
-                "type": "boolean"
-              },
-              "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
-                "type": "boolean"
-              },
-              "isSubmitted": {
-                "type": "boolean"
-              },
-              "createdAt": {
+              "updatedAt": {
                 "type": "string"
-              },
-              "quizCount": {
-                "type": "number"
               }
             }
           },
