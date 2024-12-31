@@ -120,6 +120,16 @@ export const lessonForChapterSchema = Type.Array(
   }),
 );
 
+export const answerQuestionsForLessonBody = Type.Object({
+  lessonId: UUIDSchema,
+  answers: Type.Array(
+    Type.Object({
+      questionId: UUIDSchema,
+      answer: Type.Array(Type.Object({ index: Type.Number(), value: Type.String() })),
+    }),
+  ),
+});
+
 export type AdminLessonWithContentSchema = Static<typeof adminLessonSchema>;
 export type LessonForChapterSchema = Static<typeof lessonForChapterSchema>;
 export type CreateLessonBody = Static<typeof createLessonSchema>;
@@ -132,3 +142,4 @@ export type QuestionBody = Static<typeof questionSchema>;
 export type QuestionSchema = Static<typeof questionSchema>;
 export type LessonShow = Static<typeof lessonShowSchema>;
 export type LessonSchema = Static<typeof lessonSchema>;
+export type AnswerQuestionBody = Static<typeof answerQuestionsForLessonBody>;

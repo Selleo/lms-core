@@ -618,6 +618,151 @@ export interface FileUploadResponse {
   fileUrl: string;
 }
 
+export interface GetChapterWithLessonResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    title: string;
+    lessonCount: number;
+    lessons: {
+      /** @format uuid */
+      id: string;
+      title: string;
+      type: "quiz" | "presentation" | "video" | "text";
+      displayOrder: number;
+      status: "completed" | "in_progress" | "not_started";
+      quizQuestionCount: number | null;
+    }[];
+    completedLessonCount?: number;
+    chapterProgress?: "completed" | "in_progress" | "not_started";
+    isFreemium?: boolean;
+    enrolled?: boolean;
+    isPublished?: boolean;
+    isSubmitted?: boolean;
+    createdAt?: string;
+    quizCount?: number;
+    displayOrder: number;
+  };
+}
+
+export type BetaCreateLessonBody = {
+  title: string;
+  type: string;
+  description?: string | null;
+  fileS3Key?: string | null;
+  fileType?: string | null;
+  questions?: {
+    /** @format uuid */
+    id?: string;
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "true_or_false"
+      | "photo_question"
+      | "fill_in_the_blanks_text"
+      | "fill_in_the_blanks_dnd"
+      | "brief_response"
+      | "detailed_response"
+      | "match_words"
+      | "scale_1_5";
+    description?: string | null;
+    title: string;
+    displayOrder?: number;
+    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+    photoS3Key?: string | null;
+    options?: {
+      /** @format uuid */
+      id?: string;
+      optionText: string;
+      displayOrder: number | null;
+      isStudentAnswer?: boolean;
+      isCorrect: boolean;
+      /** @format uuid */
+      questionId?: string;
+      matchedWord?: string | null;
+      scaleAnswer?: number | null;
+    }[];
+  }[];
+  updatedAt?: string;
+} & {
+  /** @format uuid */
+  courseId: string;
+};
+
+export interface BetaCreateChapterResponse {
+  data: {
+    /** @format uuid */
+    id: string;
+    message: string;
+  };
+}
+
+export type BetaCreateQuizLessonBody = {
+  title: string;
+  type: string;
+  description?: string;
+  fileS3Key?: string;
+  fileType?: string;
+  questions?: {
+    /** @format uuid */
+    id?: string;
+    type:
+      | "single_choice"
+      | "multiple_choice"
+      | "true_or_false"
+      | "photo_question"
+      | "fill_in_the_blanks_text"
+      | "fill_in_the_blanks_dnd"
+      | "brief_response"
+      | "detailed_response"
+      | "match_words"
+      | "scale_1_5";
+    description?: string | null;
+    title: string;
+    displayOrder?: number;
+    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+    photoS3Key?: string | null;
+    options?: {
+      /** @format uuid */
+      id?: string;
+      optionText: string;
+      displayOrder: number | null;
+      isStudentAnswer?: boolean;
+      isCorrect: boolean;
+      /** @format uuid */
+      questionId?: string;
+      matchedWord?: string | null;
+      scaleAnswer?: number | null;
+    }[];
+  }[];
+} & {
+  /** @format uuid */
+  chapterId: string;
+  displayOrder: number;
+}
+
+export interface UpdateChapterDisplayOrderResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface RemoveChapterResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface UpdateFreemiumStatusBody {
+  isFreemium: boolean;
+}
+
+export interface UpdateFreemiumStatusResponse {
+  data: {
+    message: string;
+  };
+}
+
 export interface GetLessonByIdResponse {
   data: {
     /** @format uuid */
@@ -691,12 +836,12 @@ export interface BetaCreateLessonResponse {
   };
 }
 
-export type BetaCreateQuizLessonBody = {
-  title: string;
-  type: string;
-  description?: string;
-  fileS3Key?: string;
-  fileType?: string;
+export type BetaUpdateLessonBody = {
+  title?: string;
+  type?: string;
+  description?: string | null;
+  fileS3Key?: string | null;
+  fileType?: string | null;
   questions?: {
     /** @format uuid */
     id?: string;
@@ -739,125 +884,6 @@ export interface BetaCreateQuizLessonResponse {
   data: {
     /** @format uuid */
     id: string;
-    message: string;
-  };
-}
-
-export type BetaUpdateQuizLessonBody = {
-  title?: string;
-  type?: string;
-  description?: string;
-  fileS3Key?: string;
-  fileType?: string;
-  questions?: {
-    /** @format uuid */
-    id?: string;
-    type:
-      | "single_choice"
-      | "multiple_choice"
-      | "true_or_false"
-      | "photo_question"
-      | "fill_in_the_blanks_text"
-      | "fill_in_the_blanks_dnd"
-      | "brief_response"
-      | "detailed_response"
-      | "match_words"
-      | "scale_1_5";
-    description?: string | null;
-    title: string;
-    displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
-    photoS3Key?: string | null;
-    options?: {
-      /** @format uuid */
-      id?: string;
-      optionText: string;
-      displayOrder: number | null;
-      isStudentAnswer?: boolean;
-      isCorrect: boolean;
-      /** @format uuid */
-      questionId?: string;
-      matchedWord?: string | null;
-      scaleAnswer?: number | null;
-    }[];
-  }[];
-} & {
-  /** @format uuid */
-  chapterId?: string;
-  displayOrder?: number;
-};
-
-export interface BetaUpdateQuizLessonResponse {
-  data: {
-    message: string;
-  };
-}
-
-export type BetaUpdateLessonBody = {
-  title?: string;
-  type?: string;
-  description?: string | null;
-  fileS3Key?: string | null;
-  fileType?: string | null;
-  questions?: {
-    /** @format uuid */
-    id?: string;
-    type:
-      | "single_choice"
-      | "multiple_choice"
-      | "true_or_false"
-      | "photo_question"
-      | "fill_in_the_blanks_text"
-      | "fill_in_the_blanks_dnd"
-      | "brief_response"
-      | "detailed_response"
-      | "match_words"
-      | "scale_1_5";
-    description?: string | null;
-    title: string;
-    displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
-    photoS3Key?: string | null;
-    options?: {
-      /** @format uuid */
-      id?: string;
-      optionText: string;
-      displayOrder: number | null;
-      isStudentAnswer?: boolean;
-      isCorrect: boolean;
-      /** @format uuid */
-      questionId?: string;
-      matchedWord?: string | null;
-      scaleAnswer?: number | null;
-    }[];
-  }[];
-  updatedAt?: string;
-} & {
-  /** @format uuid */
-  chapterId?: string;
-  displayOrder?: number;
-};
-
-export interface BetaUpdateLessonResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface RemoveLessonResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface UpdateLessonDisplayOrderBody {
-  /** @format uuid */
-  lessonId: string;
-  displayOrder: number;
-}
-
-export interface UpdateLessonDisplayOrderResponse {
-  data: {
     message: string;
   };
 }
@@ -943,18 +969,17 @@ export type BetaCreateChapterBody = {
   quizCount?: number;
 } & {
   /** @format uuid */
-  courseId: string;
+  chapterId?: string;
+  displayOrder?: number;
 };
 
-export interface BetaCreateChapterResponse {
+export interface BetaUpdateQuizLessonResponse {
   data: {
-    /** @format uuid */
-    id: string;
     message: string;
   };
 }
 
-export type UpdateChapterBody = {
+export type BetaUpdateLessonBody = {
   title?: string;
   lessons?: {
     /** @format uuid */
@@ -1008,38 +1033,48 @@ export type UpdateChapterBody = {
   quizCount?: number;
 } & {
   /** @format uuid */
-  courseId?: string;
+  chapterId?: string;
+  displayOrder?: number;
 };
 
-export interface UpdateChapterResponse {
+export interface BetaUpdateLessonResponse {
   data: {
     message: string;
   };
 }
 
-export interface UpdateChapterDisplayOrderBody {
+export interface RemoveLessonResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface EvaluationQuizBody {
   /** @format uuid */
-  chapterId: string;
+  lessonId: string;
+  answers: {
+    /** @format uuid */
+    questionId: string;
+    answer: {
+      index: number;
+      value: string;
+    }[];
+  }[];
+}
+
+export interface EvaluationQuizResponse {
+  data: {
+    message: string;
+  };
+}
+
+export interface UpdateLessonDisplayOrderBody {
+  /** @format uuid */
+  lessonId: string;
   displayOrder: number;
 }
 
-export interface UpdateChapterDisplayOrderResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface RemoveChapterResponse {
-  data: {
-    message: string;
-  };
-}
-
-export interface UpdateFreemiumStatusBody {
-  isFreemium: boolean;
-}
-
-export interface UpdateFreemiumStatusResponse {
+export interface UpdateLessonDisplayOrderResponse {
   data: {
     message: string;
   };
@@ -2068,6 +2103,131 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
+     * @name ChapterControllerGetChapterWithLesson
+     * @request GET:/api/chapter
+     */
+    chapterControllerGetChapterWithLesson: (
+      query: {
+        /** @format uuid */
+        id: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<GetChapterWithLessonResponse, any>({
+        path: `/api/chapter`,
+        method: "GET",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerUpdateChapter
+     * @request PATCH:/api/chapter
+     */
+    chapterControllerUpdateChapter: (
+      data: UpdateChapterBody,
+      query?: {
+        /** @format uuid */
+        id?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateChapterResponse, any>({
+        path: `/api/chapter`,
+        method: "PATCH",
+        query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerRemoveChapter
+     * @request DELETE:/api/chapter
+     */
+    chapterControllerRemoveChapter: (
+      query: {
+        /** @format uuid */
+        chapterId: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<RemoveChapterResponse, any>({
+        path: `/api/chapter`,
+        method: "DELETE",
+        query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerBetaCreateChapter
+     * @request POST:/api/chapter/beta-create-chapter
+     */
+    chapterControllerBetaCreateChapter: (data: BetaCreateChapterBody, params: RequestParams = {}) =>
+      this.request<BetaCreateChapterResponse, any>({
+        path: `/api/chapter/beta-create-chapter`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerUpdateChapterDisplayOrder
+     * @request PATCH:/api/chapter/chapter-display-order
+     */
+    chapterControllerUpdateChapterDisplayOrder: (
+      data: UpdateChapterDisplayOrderBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateChapterDisplayOrderResponse, any>({
+        path: `/api/chapter/chapter-display-order`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name ChapterControllerUpdateFreemiumStatus
+     * @request PATCH:/api/chapter/freemium-status
+     */
+    chapterControllerUpdateFreemiumStatus: (
+      data: UpdateFreemiumStatusBody,
+      query?: {
+        /** @format uuid */
+        chapterId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateFreemiumStatusResponse, any>({
+        path: `/api/chapter/freemium-status`,
+        method: "PATCH",
+        query: query,
+        body: data,
+        type: ContentType.Json,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
      * @name LessonControllerGetLessonById
      * @request GET:/api/lesson/{id}
      */
@@ -2186,97 +2346,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name LessonControllerUpdateLessonDisplayOrder
-     * @request PATCH:/api/lesson/lesson-display-order
+     * @name LessonControllerEvaluationQuiz
+     * @request POST:/api/lesson/evaluation-quiz
      */
-    lessonControllerUpdateLessonDisplayOrder: (
-      data: UpdateLessonDisplayOrderBody,
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateLessonDisplayOrderResponse, any>({
-        path: `/api/lesson/lesson-display-order`,
-        method: "PATCH",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChapterControllerGetChapterWithLesson
-     * @request GET:/api/chapter
-     */
-    chapterControllerGetChapterWithLesson: (
-      query: {
-        /** @format uuid */
-        id: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<GetChapterWithLessonResponse, any>({
-        path: `/api/chapter`,
-        method: "GET",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChapterControllerUpdateChapter
-     * @request PATCH:/api/chapter
-     */
-    chapterControllerUpdateChapter: (
-      data: UpdateChapterBody,
-      query?: {
-        /** @format uuid */
-        id?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateChapterResponse, any>({
-        path: `/api/chapter`,
-        method: "PATCH",
-        query: query,
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChapterControllerRemoveChapter
-     * @request DELETE:/api/chapter
-     */
-    chapterControllerRemoveChapter: (
-      query: {
-        /** @format uuid */
-        chapterId: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<RemoveChapterResponse, any>({
-        path: `/api/chapter`,
-        method: "DELETE",
-        query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChapterControllerBetaCreateChapter
-     * @request POST:/api/chapter/beta-create-chapter
-     */
-    chapterControllerBetaCreateChapter: (data: BetaCreateChapterBody, params: RequestParams = {}) =>
-      this.request<BetaCreateChapterResponse, any>({
-        path: `/api/chapter/beta-create-chapter`,
+    lessonControllerEvaluationQuiz: (data: EvaluationQuizBody, params: RequestParams = {}) =>
+      this.request<EvaluationQuizResponse, any>({
+        path: `/api/lesson/evaluation-quiz`,
         method: "POST",
         body: data,
         type: ContentType.Json,
@@ -2287,40 +2362,16 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name ChapterControllerUpdateChapterDisplayOrder
-     * @request PATCH:/api/chapter/chapter-display-order
+     * @name LessonControllerUpdateLessonDisplayOrder
+     * @request PATCH:/api/lesson/lesson-display-order
      */
-    chapterControllerUpdateChapterDisplayOrder: (
-      data: UpdateChapterDisplayOrderBody,
+    lessonControllerUpdateLessonDisplayOrder: (
+      data: UpdateLessonDisplayOrderBody,
       params: RequestParams = {},
     ) =>
-      this.request<UpdateChapterDisplayOrderResponse, any>({
-        path: `/api/chapter/chapter-display-order`,
+      this.request<UpdateLessonDisplayOrderResponse, any>({
+        path: `/api/lesson/lesson-display-order`,
         method: "PATCH",
-        body: data,
-        type: ContentType.Json,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name ChapterControllerUpdateFreemiumStatus
-     * @request PATCH:/api/chapter/freemium-status
-     */
-    chapterControllerUpdateFreemiumStatus: (
-      data: UpdateFreemiumStatusBody,
-      query?: {
-        /** @format uuid */
-        chapterId?: string;
-      },
-      params: RequestParams = {},
-    ) =>
-      this.request<UpdateFreemiumStatusResponse, any>({
-        path: `/api/chapter/freemium-status`,
-        method: "PATCH",
-        query: query,
         body: data,
         type: ContentType.Json,
         format: "json",

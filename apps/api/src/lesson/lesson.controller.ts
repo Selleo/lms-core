@@ -19,6 +19,7 @@ import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import {
+  answerQuestionsForLessonBody,
   CreateLessonBody,
   createLessonSchema,
   CreateQuizLessonBody,
@@ -28,12 +29,12 @@ import {
   updateLessonSchema,
   UpdateQuizLessonBody,
   updateQuizLessonSchema,
+  AnswerQuestionBody,
 } from "./lesson.schema";
 import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
 
 import type { LessonShow } from "./lesson.schema";
-import { user } from "src/seed/seed.types";
 
 @Controller("lesson")
 @UseGuards(RolesGuard)
@@ -164,21 +165,21 @@ export class LessonController {
     });
   }
 
-  // @Post("evaluation-quiz")
-  // @Roles(USER_ROLES.STUDENT)
-  // @Validate({
-  //   request: [{ type: "query", name: "lessonId", schema: UUIDSchema, required: true }],
-  //   response: baseResponse(Type.Object({ message: Type.String() })),
-  // })
-  // async evaluationQuiz(
-  //   @Query("lessonId") lessonId: string,
-  //   @CurrentUser("userId") currentUserId: UUIDType,
-  // ): Promise<BaseResponse<{ message: string }>> {
-  //   await this.lessonService.evaluationQuiz(lessonId, currentUserId);
-  //   return new BaseResponse({
-  //     message: "Evaluation quiz successfully",
-  //   });
-  // }
+  @Post("evaluation-quiz")
+  @Roles(USER_ROLES.STUDENT, USER_ROLES.ADMIN)
+  @Validate({
+    request: [{ type: "body", schema: answerQuestionsForLessonBody, required: true }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async evaluationQuiz(
+    @Body() answers: AnswerQuestionBody,
+    @CurrentUser("userId") currentUserId: UUIDType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.lessonService.evaluationQuiz(answers, currentUserId);
+    return new BaseResponse({
+      message: "Evaluation quiz successfully",
+    });
+  }
 
   //   @Delete("clear-quiz-progress")
   //   @Roles(USER_ROLES.STUDENT)

@@ -1,7 +1,6 @@
 import { Module } from "@nestjs/common";
 import { CqrsModule } from "@nestjs/cqrs";
 
-import { LessonModule } from "src/lesson/lesson.module";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
 import { StatisticsHandler } from "./handlers/statistics.handler";
@@ -10,7 +9,7 @@ import { StatisticsCron } from "./statistics.cron";
 import { StatisticsService } from "./statistics.service";
 
 @Module({
-  imports: [CqrsModule, LessonModule],
+  imports: [CqrsModule],
   controllers: [StatisticsController],
   providers: [StatisticsHandler, StatisticsRepository, StatisticsService, StatisticsCron],
   exports: [StatisticsRepository],

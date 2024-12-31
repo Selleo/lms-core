@@ -11,41 +11,6 @@ import type { ProgressStatus } from "src/utils/types/progress.type";
 export class ChapterRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  async getChapterWithDetails(id: UUIDType) {
-    return this.db
-      .select({
-        id: chapters.id,
-        title: chapters.title,
-        displayOrder: chapters.displayOrder,
-        lessonCount: chapters.lessonCount,
-        isFree: chapters.isFreemium,
-        lessons: sql<string>`
-          COALESCE(
-            (
-              SELECT json_agg(
-                json_build_object(
-                  'id', ${lessons.id},
-                  'type', ${lessons.type},
-                  'displayOrder', ${lessons.displayOrder}
-                  'title', ${lessons.title},
-                  'description', ${lessons.description},
-                  'fileS3Key', ${lessons.fileS3Key},
-                  'fileType', ${lessons.fileType},
-                )
-              )
-              FROM ${lessons}
-              WHERE ${lessons.chapterId} = ${chapters.id}
-              ORDER BY ${lessons.displayOrder}
-            ),
-            '[]'::json
-          )
-        `,
-      })
-      .from(chapters)
-      .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
-      .orderBy(chapters.displayOrder);
-  }
-
   async checkChapterAssignment(id: UUIDType, userId: UUIDType) {
     return this.db
       .select({

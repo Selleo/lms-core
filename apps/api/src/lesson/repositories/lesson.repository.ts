@@ -87,37 +87,38 @@ export class LessonRepository {
       .orderBy(lessons.displayOrder);
   }
 
-  //   async completeQuiz(
-  //     courseId: UUIDType,
-  //     lessonId: UUIDType,
-  //     userId: UUIDType,
-  //     completedLessonItemCount: number,
-  //     quizScore: number,
-  //   ) {
-  //     return await this.db
-  //       .insert(studentLessonsProgress)
-  //       .values({
-  //         studentId: userId,
-  //         lessonId: lessonId,
-  //         courseId: courseId,
-  //         quizCompleted: true,
-  //         completedLessonItemCount,
-  //         quizScore,
-  //       })
-  //       .onConflictDoUpdate({
-  //         target: [
-  //           studentLessonsProgress.studentId,
-  //           studentLessonsProgress.lessonId,
-  //           studentLessonsProgress.courseId,
-  //         ],
-  //         set: {
-  //           quizCompleted: true,
-  //           completedLessonItemCount,
-  //           quizScore,
-  //         },
-  //       })
-  //       .returning();
-  //   }
+  async completeQuiz(
+    chapterId: UUIDType,
+    lessonId: UUIDType,
+    userId: UUIDType,
+    completedQuestionCount: number,
+    quizScore: number,
+    trx: PostgresJsDatabase<typeof schema>,
+  ) {
+    return trx
+      .insert(studentLessonProgress)
+      .values({
+        studentId: userId,
+        lessonId,
+        chapterId,
+        completedAt: sql`now()`,
+        completedQuestionCount,
+        quizScore,
+      })
+      .onConflictDoUpdate({
+        target: [
+          studentLessonProgress.studentId,
+          studentLessonProgress.lessonId,
+          studentLessonProgress.chapterId,
+        ],
+        set: {
+          completedAt: sql`now()`,
+          completedQuestionCount,
+          quizScore,
+        },
+      })
+      .returning();
+  }
 
   //   async getLastInteractedOrNextLessonItemForUser(userId: UUIDType) {
   //     const [lastLessonItem] = await this.db

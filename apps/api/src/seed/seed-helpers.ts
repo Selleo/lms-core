@@ -103,7 +103,7 @@ export async function createNiceCourses(
         if (lessonData.type === LESSON_TYPES.QUIZ && lessonData.questions) {
           for (const questionData of lessonData.questions) {
             const questionId = crypto.randomUUID();
-            // TODO: add displayOrder to questions
+
             await db
               .insert(questions)
               .values({

@@ -44,11 +44,12 @@ export const e2eCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "E2E Testing Question",
                 description: "E2E Testing Question",
+                displayOrder: 1,
                 options: [
                   {
                     optionText: "E2E Testing Answer",
                     isCorrect: true,
-                    displayOrder: 0,
+                    displayOrder: 1,
                   },
                 ],
               },
@@ -57,16 +58,17 @@ export const e2eCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "E2E Testing Question 2",
                 description: "E2E Testing Question 2",
+                displayOrder: 2,
                 options: [
                   {
                     optionText: "single true",
                     isCorrect: true,
-                    displayOrder: 0,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "single false",
                     isCorrect: false,
-                    displayOrder: 1,
+                    displayOrder: 2,
                   },
                 ],
               },
@@ -75,21 +77,22 @@ export const e2eCourses: NiceCourseData[] = [
                 type: QuestionType.MultipleChoice,
                 title: "E2E Testing Question 3",
                 description: "E2E Testing Question 3",
+                displayOrder: 3,
                 options: [
                   {
                     optionText: "multiple true a",
                     isCorrect: true,
-                    displayOrder: 0,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "multiple true b",
                     isCorrect: false,
-                    displayOrder: 1,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "multiple false c",
                     isCorrect: false,
-                    displayOrder: 2,
+                    displayOrder: 3,
                   },
                 ],
               },
