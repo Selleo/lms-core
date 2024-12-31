@@ -68,8 +68,6 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
     [form, questionIndex, questionType],
   );
 
-  console.log(form.getValues(`questions.${questionIndex}.options`));
-
   const isOptionEmpty =
     !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
     form.getValues(`questions.${questionIndex}.options`)?.length === 0;
