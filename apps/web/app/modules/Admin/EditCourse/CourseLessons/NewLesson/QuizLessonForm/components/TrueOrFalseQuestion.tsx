@@ -19,6 +19,7 @@ type TrueOrFalseQuestionProps = {
 
 const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) => {
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
+  const errors = form.formState.errors;
 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
@@ -168,6 +169,11 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
               />
             )}
           </div>
+          {errors && (
+            <p className="text-red-500 text-sm ml-14">
+              {(errors?.questions as { options?: { message?: string } })?.options?.message}
+            </p>
+          )}
           <div className="mt-4 flex gap-2 mb-4 ml-14">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
               Add Option

@@ -238,7 +238,8 @@ export class AdminChapterRepository {
                     'optionText', ${questionAnswerOptions.optionText},
                     'isCorrect', ${questionAnswerOptions.isCorrect},
                     'displayOrder', ${questionAnswerOptions.displayOrder},
-                    'matchedWord', ${questionAnswerOptions.matchedWord}
+                    'matchedWord', ${questionAnswerOptions.matchedWord},
+                    'scaleAnswer', ${questionAnswerOptions.scaleAnswer}
                   )
                   FROM ${questionAnswerOptions} questionAnswerOptions
                   WHERE questionAnswerOptions.question_id = questions.id

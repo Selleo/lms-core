@@ -34,6 +34,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
   const { mutateAsync: uploadFile } = useUploadFile();
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(undefined);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
+  const errors = form.formState.errors;
 
   useEffect(() => {
     setDisplayImageUrl(lessonToEdit?.questions?.[questionIndex]?.photoS3SingedUrl);
@@ -138,6 +139,11 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                   </FormControl>
 
                   {isUploading && <p>Uploading image...</p>}
+                  {errors && (
+                    <p className="text-red-500 text-sm ">
+                      {(errors?.questions as { image?: { message?: string } })?.image?.message}
+                    </p>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -284,6 +290,11 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
               />
             )}
           </div>
+          {errors && (
+            <p className="text-red-500 text-sm ml-14">
+              {(errors?.questions as { options?: { message?: string } })?.options?.message}
+            </p>
+          )}
           <div className="mt-4 flex gap-2 mb-4 ml-14">
             <Button className="bg-primary-700" type="button" onClick={handleAddOption}>
               Add Option

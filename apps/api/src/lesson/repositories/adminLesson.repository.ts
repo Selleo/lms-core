@@ -178,41 +178,50 @@ export class AdminLessonRepository {
       .from(questions)
       .where(eq(questions.lessonId, lessonId));
   }
-  
+
   async getExistingOptions(questionId: UUIDType, trx: PostgresJsDatabase<typeof schema>) {
     const existingOptions = await trx
       .select({ id: questionAnswerOptions.id })
       .from(questionAnswerOptions)
       .where(eq(questionAnswerOptions.questionId, questionId));
-  
+
     return { existingOptions };
   }
-  
-  async updateOption(optionId: UUIDType, optionData: OptionBody, trx: PostgresJsDatabase<typeof schema>) {
+
+  async updateOption(
+    optionId: UUIDType,
+    optionData: OptionBody,
+    trx: PostgresJsDatabase<typeof schema>,
+  ) {
     await trx
       .update(questionAnswerOptions)
       .set(optionData)
       .where(eq(questionAnswerOptions.id, optionId));
   }
-  
-  async insertOption(questionId: UUIDType, optionData: OptionBody, trx: PostgresJsDatabase<typeof schema>) {
+
+  async insertOption(
+    questionId: UUIDType,
+    optionData: OptionBody,
+    trx: PostgresJsDatabase<typeof schema>,
+  ) {
     await trx.insert(questionAnswerOptions).values({
       questionId,
       ...optionData,
     });
   }
-  
+
   async deleteOptions(optionIds: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
-    await trx
-      .delete(questionAnswerOptions)
-      .where(inArray(questionAnswerOptions.id, optionIds));
+    await trx.delete(questionAnswerOptions).where(inArray(questionAnswerOptions.id, optionIds));
   }
-  
+
   async deleteQuestions(questionsToDelete: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
     await trx.delete(questions).where(inArray(questions.id, questionsToDelete));
   }
-  
-  async deleteQuestionOptions(questionsToDelete: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
+
+  async deleteQuestionOptions(
+    questionsToDelete: UUIDType[],
+    trx: PostgresJsDatabase<typeof schema>,
+  ) {
     await trx
       .delete(questionAnswerOptions)
       .where(inArray(questionAnswerOptions.questionId, questionsToDelete));
@@ -225,7 +234,6 @@ export class AdminLessonRepository {
     trx: PostgresJsDatabase<typeof schema>,
     questionId?: UUIDType,
   ): Promise<UUIDType> {
-  
     const [result] = await trx
       .insert(questions)
       .values({
@@ -235,7 +243,7 @@ export class AdminLessonRepository {
         ...questionData,
       })
       .onConflictDoUpdate({
-        target: questions.id, 
+        target: questions.id,
         set: {
           lessonId,
           authorId,
@@ -243,7 +251,7 @@ export class AdminLessonRepository {
         },
       })
       .returning({ id: questions.id });
-  
+
     return result.id;
   }
 

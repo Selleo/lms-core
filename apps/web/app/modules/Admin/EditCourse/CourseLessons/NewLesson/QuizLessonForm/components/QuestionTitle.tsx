@@ -39,6 +39,7 @@ const QuestionTitle = ({
     [QuestionType.FILL_IN_THE_BLANKS_TEXT]: QuestionIcons.FillInTheBlanks,
     [QuestionType.FILL_IN_THE_BLANKS_DND]: QuestionIcons.FillInTheBlanks,
     [QuestionType.MATCH_WORDS]: QuestionIcons.MatchWords,
+    [QuestionType.SCALE_1_5]: QuestionIcons.Scale_1_5,
   };
 
   const isOpenQuestion =
@@ -60,7 +61,6 @@ const QuestionTitle = ({
     },
     [form, questionIndex, questionType],
   );
-
   return (
     <div className="flex items-center gap-2 p-2 border-neutral-200">
       {dragTrigger}
@@ -91,7 +91,6 @@ const QuestionTitle = ({
         required
         className="flex-1"
       />
-
       {isOpenQuestion && (
         <TooltipProvider delayDuration={0}>
           <Tooltip>

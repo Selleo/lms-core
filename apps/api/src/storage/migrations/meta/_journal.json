@@ -57,6 +57,13 @@
       "when": 1735549766763,
       "tag": "0007_add_matched_word_column",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1735647659585,
+      "tag": "0008_add_scale_answer_columns",
+      "breakpoints": true
     }
   ]
 }

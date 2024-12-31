@@ -2,20 +2,27 @@ import { useCallback } from "react";
 import { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import { QuestionOption } from "../QuizLessonForm.types";
 import { UseFormReturn } from "react-hook-form";
-import * as Accordion from "@radix-ui/react-accordion";
 import { Label } from "~/components/ui/label";
 import { SortableList } from "~/components/SortableList";
 import { Icon } from "~/components/Icon";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Accordion, AccordionItem } from "~/components/ui/accordion";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
 
-type MatchWordsQuestionProps = {
+type ScaleQustionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
   questionIndex: number;
 };
 
-const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) => {
+const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
   const questionType = form.getValues(`questions.${questionIndex}.type`);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
@@ -50,7 +57,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
   }, [form, questionIndex]);
 
   const handleOptionChange = useCallback(
-    (optionIndex: number, field: "optionText" | "matchedWord", value: string) => {
+    (optionIndex: number, field: "optionText" | "scaleAnswer", value: string | number) => {
       const currentOptions: QuestionOption[] =
         form.getValues(`questions.${questionIndex}.options`) || [];
       const updatedOptions = [...currentOptions];
@@ -61,13 +68,15 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
     [form, questionIndex, questionType],
   );
 
+  console.log(form.getValues(`questions.${questionIndex}.options`));
+
   const isOptionEmpty =
     !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
     form.getValues(`questions.${questionIndex}.options`)?.length === 0;
 
   return (
-    <Accordion.Root key={questionIndex} type="single" collapsible>
-      <Accordion.Item value={`item-${questionIndex}`}>
+    <Accordion key={questionIndex} type="single" collapsible>
+      <AccordionItem value={`item-${questionIndex}`}>
         <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
           <div className="ml-14">
             {!isOptionEmpty ? (
@@ -93,7 +102,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                         <SortableList.DragHandle>
                           <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
                         </SortableList.DragHandle>
-                        <div className="flex gap-2 w-full">
+                        <div className="flex items-center w-full gap-2">
                           <Input
                             type="text"
                             name={`questions.${questionIndex}.options.${index}.optionText`}
@@ -101,22 +110,39 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                             onChange={(e) =>
                               handleOptionChange(index, "optionText", e.target.value)
                             }
-                            placeholder={`Option`}
+                            placeholder={`Option ${index + 1}`}
                             required
-                            className="w-[50%]"
+                            className="flex-1 w-[90%]"
                           />
-                          <Input
-                            type="text"
-                            name={`questions.${questionIndex}.options.${index}.matchedWord`}
-                            value={item.matchedWord}
-                            onChange={(e) =>
-                              handleOptionChange(index, "matchedWord", e.target.value)
-                            }
-                            placeholder={`Matched word`}
-                            required
-                            className="w-[50%]"
-                          />
+                          <div className="w-[10%]">
+                            <Select
+                              name={`questions.${questionIndex}.options.${index}.scaleAnswer`}
+                              value={form
+                                .getValues(
+                                  `questions.${questionIndex}.options.${index}.scaleAnswer`,
+                                )
+                                ?.toString()}
+                              onValueChange={(value) =>
+                                handleOptionChange(index, "scaleAnswer", Number(value))
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue
+                                  className="text-left body-base-md"
+                                  placeholder={`Scale`}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {[1, 2, 3, 4, 5].map((option) => (
+                                  <SelectItem key={option} value={option.toString()}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
                         </div>
+
                         <div className="flex items-center">
                           <TooltipProvider delayDuration={0}>
                             <Tooltip>
@@ -164,9 +190,9 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
             </Button>
           </div>
         </div>
-      </Accordion.Item>
-    </Accordion.Root>
+      </AccordionItem>
+    </Accordion>
   );
 };
 
-export default MatchWordsQuestion;
+export default ScaleQuestion;

@@ -51,6 +51,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
       icon: QuestionIcons.DetailedResponse,
     },
     { type: QuestionType.MATCH_WORDS, label: "Match words", icon: QuestionIcons.MatchWords },
+    { type: QuestionType.SCALE_1_5, label: "Scale 1 to 5", icon: QuestionIcons.Scale_1_5 },
   ];
 
   useEffect(() => {

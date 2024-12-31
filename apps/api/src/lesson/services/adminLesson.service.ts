@@ -165,6 +165,7 @@ export class AdminLessonService {
             isCorrect: option.isCorrect,
             displayOrder: option.displayOrder,
             matchedWord: option.matchedWord,
+            scaleAnswer: option.scaleAnswer,
           })) || [],
       );
 
@@ -209,18 +210,20 @@ export class AdminLessonService {
             photoS3Key: question.photoS3Key,
             photoQuestionType: question.photoQuestionType || null,
           };
-      
+
           const questionId = await this.adminLessonRepository.upsertQuestion(
             questionData,
             id,
             authorId,
-            trx,    
-            question.id,      
+            trx,
+            question.id,
           );
 
           if (question.options) {
-            const { existingOptions } =
-              await this.adminLessonRepository.getExistingOptions(questionId, trx);
+            const { existingOptions } = await this.adminLessonRepository.getExistingOptions(
+              questionId,
+              trx,
+            );
 
             const existingOptionIds = existingOptions.map((option) => option.id);
             const inputOptionIds = question.options.map((option) => option.id).filter(Boolean);
@@ -238,6 +241,7 @@ export class AdminLessonService {
                 isCorrect: option.isCorrect,
                 displayOrder: option.displayOrder,
                 matchedWord: option.matchedWord,
+                scaleAnswer: option.scaleAnswer,
               };
 
               if (option.id) {

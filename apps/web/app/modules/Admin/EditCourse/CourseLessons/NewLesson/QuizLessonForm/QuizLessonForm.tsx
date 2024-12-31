@@ -9,7 +9,7 @@ import PhotoQuestion from "./components/PhotoQuestion";
 import QuestionSelector from "./components/QuestionSelector";
 import TrueOrFalseQuestion from "./components/TrueOrFalseQuestion";
 import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
-import { Question, QuestionType } from "./QuizLessonForm.types";
+import { Question, QuestionOption, QuestionType } from "./QuizLessonForm.types";
 import type { UseFormReturn } from "react-hook-form";
 import { Chapter, ContentTypes, DeleteContentType, Lesson } from "../../../EditCourse.types";
 import { useCallback, useEffect, useState } from "react";
@@ -23,6 +23,7 @@ import LeaveConfirmationModal from "~/modules/Admin/components/LeaveConfirmation
 import { useLeaveModal } from "~/context/LeaveModalContext";
 import MatchWordsQuestion from "./components/MatchWordsQuestion";
 import { match } from "ts-pattern";
+import ScaleQuestion from "./components/ScaleQuestion";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -105,20 +106,52 @@ const QuizLessonForm = ({
   const addQuestion = useCallback(
     (questionType: string) => {
       const questions = form.getValues("questions") || [];
-
+  
+      const getOptionsForQuestionType = (type: string): QuestionOption[] => {
+        const singleChoiceTypes = [
+          QuestionType.SINGLE_CHOICE,
+          QuestionType.MULTIPLE_CHOICE,
+          QuestionType.MATCH_WORDS,
+          QuestionType.PHOTO_QUESTION,
+        ];
+  
+        const noOptionsRequiredTypes = [
+          QuestionType.FILL_IN_THE_BLANKS_TEXT,
+          QuestionType.FILL_IN_THE_BLANKS_DND,
+          QuestionType.BRIEF_RESPONSE,
+          QuestionType.DETAILED_RESPONSE,
+        ];
+  
+        if (singleChoiceTypes.includes(type as QuestionType)) {
+          return [
+            { optionText: "", isCorrect: false, displayOrder: 1 },
+            { optionText: "", isCorrect: false, displayOrder: 2 },
+          ];
+        }
+  
+        if (!noOptionsRequiredTypes.includes(type as QuestionType)) {
+          return [{ optionText: "", isCorrect: false, displayOrder: 1 }];
+        }
+  
+        return [];
+      };
+  
+      const options = getOptionsForQuestionType(questionType);
+  
       const newQuestion: Question = {
         title: "",
         type: questionType as QuestionType,
         displayOrder: questions.length + 1,
         photoQuestionType:
           questionType === QuestionType.PHOTO_QUESTION ? QuestionType.SINGLE_CHOICE : undefined,
+        options: options,
       };
-
+  
       form.setValue("questions", [...questions, newQuestion], { shouldDirty: true });
     },
-    [form],
+    [form]
   );
-
+  
   const renderQuestion = useCallback(
     (
       question: Question,
@@ -154,6 +187,9 @@ const QuizLessonForm = ({
             ))
             .with(QuestionType.FILL_IN_THE_BLANKS_TEXT, QuestionType.FILL_IN_THE_BLANKS_DND, () => (
               <FillInTheBlanksQuestion questionIndex={questionIndex} form={form} />
+            ))
+            .with(QuestionType.SCALE_1_5, () => (
+              <ScaleQuestion questionIndex={questionIndex} form={form} />
             ))
             .otherwise(() => null)}
         </QuestionWrapper>
