@@ -9,8 +9,8 @@ import type { UserWithCredentials } from "test/factory/user.factory";
 type CamelToSnake<T extends string, P extends string = ""> = string extends T
   ? string
   : T extends `${infer C0}${infer R}`
-  ? CamelToSnake<R, `${P}${C0 extends Lowercase<C0> ? "" : "_"}${Lowercase<C0>}`>
-  : P;
+    ? CamelToSnake<R, `${P}${C0 extends Lowercase<C0> ? "" : "_"}${Lowercase<C0>}`>
+    : P;
 
 type StringKeys<T> = Extract<keyof T, string>;
 
@@ -49,12 +49,10 @@ export async function truncateTables(
 }
 
 export async function cookieFor(user: UserWithCredentials, app: INestApplication<any>) {
-  const loginResponse = await request(app.getHttpServer())
-    .post("/api/auth/login")
-    .send({
-      email: user.email,
-      password: user.credentials?.password,
-    });
+  const loginResponse = await request(app.getHttpServer()).post("/api/auth/login").send({
+    email: user.email,
+    password: user.credentials?.password,
+  });
 
   return loginResponse.headers["set-cookie"];
 }
