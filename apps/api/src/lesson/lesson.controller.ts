@@ -16,9 +16,10 @@ import { baseResponse, BaseResponse, UUIDSchema, type UUIDType } from "src/commo
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/user/schemas/userRoles";
+import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import {
+  answerQuestionsForLessonBody,
   CreateLessonBody,
   createLessonSchema,
   CreateQuizLessonBody,
@@ -28,6 +29,7 @@ import {
   updateLessonSchema,
   UpdateQuizLessonBody,
   updateQuizLessonSchema,
+  AnswerQuestionBody,
 } from "./lesson.schema";
 import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
@@ -47,8 +49,14 @@ export class LessonController {
   @Validate({
     response: baseResponse(lessonShowSchema),
   })
-  async getLessonById(@Param("id") id: UUIDType): Promise<BaseResponse<LessonShow>> {
-    return new BaseResponse(await this.lessonService.getLessonById(id));
+  async getLessonById(
+    @Param("id") id: UUIDType,
+    @CurrentUser("userId") userId: UUIDType,
+    @CurrentUser("role") userRole: UserRole,
+  ): Promise<BaseResponse<LessonShow>> {
+    return new BaseResponse(
+      await this.lessonService.getLessonById(id, userId, userRole === USER_ROLES.STUDENT),
+    );
   }
 
   @Post("beta-create-lesson")
@@ -64,9 +72,8 @@ export class LessonController {
   })
   async betaCreateLesson(
     @Body() createLessonBody: CreateLessonBody,
-    @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
-    const id = await this.adminLessonsService.createLessonForChapter(createLessonBody, userId);
+    const id = await this.adminLessonsService.createLessonForChapter(createLessonBody);
 
     return new BaseResponse({ id, message: "Lesson created successfully" });
   }
@@ -158,21 +165,21 @@ export class LessonController {
     });
   }
 
-  // @Post("evaluation-quiz")
-  // @Roles(USER_ROLES.STUDENT)
-  // @Validate({
-  //   request: [{ type: "query", name: "lessonId", schema: UUIDSchema, required: true }],
-  //   response: baseResponse(Type.Object({ message: Type.String() })),
-  // })
-  // async evaluationQuiz(
-  //   @Query("lessonId") lessonId: string,
-  //   @CurrentUser("userId") currentUserId: UUIDType,
-  // ): Promise<BaseResponse<{ message: string }>> {
-  //   await this.lessonService.evaluationQuiz(lessonId, currentUserId);
-  //   return new BaseResponse({
-  //     message: "Evaluation quiz successfully",
-  //   });
-  // }
+  @Post("evaluation-quiz")
+  @Roles(USER_ROLES.STUDENT, USER_ROLES.ADMIN)
+  @Validate({
+    request: [{ type: "body", schema: answerQuestionsForLessonBody, required: true }],
+    response: baseResponse(Type.Object({ message: Type.String() })),
+  })
+  async evaluationQuiz(
+    @Body() answers: AnswerQuestionBody,
+    @CurrentUser("userId") currentUserId: UUIDType,
+  ): Promise<BaseResponse<{ message: string }>> {
+    await this.lessonService.evaluationQuiz(answers, currentUserId);
+    return new BaseResponse({
+      message: "Evaluation quiz successfully",
+    });
+  }
 
   //   @Delete("clear-quiz-progress")
   //   @Roles(USER_ROLES.STUDENT)

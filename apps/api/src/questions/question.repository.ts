@@ -10,11 +10,12 @@ import {
 } from "src/storage/schema";
 
 import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
+import type { QuestionTypes } from "./schema/question.types";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
 @Injectable()
-export class QuestionsRepository {
+export class QuestionRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
   async getQuestions(
@@ -112,5 +113,46 @@ export class QuestionsRepository {
     });
 
     return;
+  }
+
+  async getQuizQuestions(lessonId: UUIDType) {
+    return this.db
+      .select({
+        id: questions.id,
+        type: sql<QuestionTypes>`${questions.type}`,
+        correctAnswers: sql<{ displayOrder: number; value: string }[]>`
+            COALESCE(
+              (
+                SELECT json_agg(
+                  json_build_object(
+                    'displayOrder', ${questionAnswerOptions.displayOrder},
+                    'value', ${questionAnswerOptions.optionText}
+                  )
+                )
+                FROM ${questionAnswerOptions}
+                WHERE ${questionAnswerOptions.questionId} = ${questions.id} AND ${questionAnswerOptions.isCorrect} = TRUE
+                GROUP BY ${questionAnswerOptions.displayOrder}
+                ORDER BY ${questionAnswerOptions.displayOrder}
+              ),
+              '[]'::json
+          )
+        `,
+      })
+      .from(questions)
+      .leftJoin(questionAnswerOptions, eq(questions.id, questionAnswerOptions.questionId))
+      .where(and(eq(questions.lessonId, lessonId), eq(questionAnswerOptions.isCorrect, true)))
+      .orderBy(questions.displayOrder, questionAnswerOptions.displayOrder);
+  }
+
+  async insertQuizAnswers(
+    answers: {
+      questionId: string;
+      answer: unknown;
+      studentId: string;
+      isCorrect: boolean;
+    }[],
+    trx: PostgresJsDatabase<typeof schema>,
+  ) {
+    return trx.insert(studentQuestionAnswers).values(answers);
   }
 }

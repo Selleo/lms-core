@@ -183,16 +183,16 @@ export class StatisticsService {
   //   };
   // }
 
-  // async createQuizAttempt(data: {
-  //   userId: string;
-  //   courseId: string;
-  //   lessonId: string;
-  //   correctAnswers: number;
-  //   wrongAnswers: number;
-  //   score: number;
-  // }) {
-  //   await this.statisticsRepository.createQuizAttempt(data);
-  // }
+  async createQuizAttempt(data: {
+    userId: string;
+    courseId: string;
+    lessonId: string;
+    correctAnswers: number;
+    wrongAnswers: number;
+    score: number;
+  }) {
+    await this.statisticsRepository.createQuizAttempt(data);
+  }
 
   // async updateUserActivity(userId: string) {
   //   const today = startOfDay(new Date());

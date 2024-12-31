@@ -21,3 +21,18 @@ export const questionSchema = Type.Object({
 
 export type AnswerQuestionSchema = Static<typeof answerQuestionSchema>;
 export type QuestionSchema = Static<typeof questionSchema>;
+
+export const quizEvaluationSchema = Type.Object({
+  answers: Type.Array(
+    Type.Object({
+      questionId: UUIDSchema,
+      studentId: UUIDSchema,
+      answer: Type.Unknown(),
+      isCorrect: Type.Boolean(),
+    }),
+  ),
+  correctAnswerCount: Type.Number(),
+  wrongAnswerCount: Type.Number(),
+});
+
+export type QuizEvaluation = Static<typeof quizEvaluationSchema>;

@@ -1,219 +1,207 @@
-import {
-  BadRequestException,
-  Inject,
-  Injectable,
-  NotAcceptableException,
-  NotFoundException,
-} from "@nestjs/common";
+import { Inject, Injectable, NotAcceptableException } from "@nestjs/common";
+import { sql } from "drizzle-orm";
+import { match } from "ts-pattern";
 
 import { DatabasePg } from "src/common";
 
-import { QuestionsRepository } from "./questions.repository";
+import { QuestionRepository } from "./question.repository";
+import { QUESTION_TYPE } from "./schema/question.types";
 
-import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
+import type { QuizEvaluation } from "./schema/question.schema";
+import type { QuestionTypes } from "./schema/question.types";
+import type { SQL } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { UUIDType } from "src/common";
+import type { AnswerQuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class QuestionService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly questionsRepository: QuestionsRepository,
+    private readonly questionRepository: QuestionRepository,
   ) {}
 
-  // async questionAnswer(answerQuestion: AnswerQuestionSchema, userId: string) {
-  //   return await this.db.transaction(async (trx) => {
-  //     const questionData: QuestionSchema = await this.questionsRepository.fetchQuestionData(
-  //       answerQuestion,
-  //       trx,
-  //     );
-
-  //     if (!questionData || !questionData.questionId) {
-  //       throw new NotFoundException("Question not found");
-  //     }
-
-  //     const lesson = await this.lessonRepository.getLessonForUser(
-  //       answerQuestion.courseId,
-  //       answerQuestion.lessonId,
-  //       userId,
-  //     );
-
-  //     const quizProgress = await this.lessonRepository.getQuizProgress(
-  //       answerQuestion.courseId,
-  //       answerQuestion.lessonId,
-  //       userId,
-  //     );
-
-  //     if (lesson.type === "quiz" && quizProgress?.quizCompleted)
-  //       throw new ConflictException("Quiz already completed");
-
-  //     const lastAnswerId = await this.questionsRepository.findExistingAnswer(
-  //       userId,
-  //       questionData.questionId,
-  //       questionData.lessonId,
-  //       answerQuestion.courseId,
-  //       trx,
-  //     );
-
-  //     const questionTypeHandlers = {
-  //       [QUESTION_TYPE.single_choice.key]: this.handleChoiceAnswer.bind(this),
-  //       [QUESTION_TYPE.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
-  //       [QUESTION_TYPE.open_answer.key]: this.handleOpenAnswer.bind(this),
-  //       [QUESTION_TYPE.fill_in_the_blanks_text.key]: this.handleFillInTheBlanksAnswer.bind(this),
-  //       [QUESTION_TYPE.fill_in_the_blanks_dnd.key]: this.handleFillInTheBlanksAnswer.bind(this),
-  //     } as const;
-
-  //     const handler =
-  //       questionTypeHandlers[questionData.questionType as keyof typeof questionTypeHandlers];
-
-  //     if (!handler) {
-  //       throw new NotAcceptableException("Unknown question type");
-  //     }
-
-  //     await handler(trx, questionData, answerQuestion, lastAnswerId, userId);
-
-  //     await this.studentLessonProgressService.markLessonAsCompleted(questionData.lessonId, userId);
-
-  //     const [studentLessonProgress] = await this.lessonRepository.updateStudentLessonProgress(
-  //       userId,
-  //       questionData.lessonId,
-  //       answerQuestion.courseId,
-  //     );
-
-  //     if (
-  //       !quizProgress?.completedAt &&
-  //       studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
-  //     ) {
-  //       const isCompletedFreemiumLesson = lesson.isFree && !lesson.enrolled;
-
-  //       await this.lessonRepository.completeLessonProgress(
-  //         answerQuestion.courseId,
-  //         questionData.lessonId,
-  //         userId,
-  //         isCompletedFreemiumLesson,
-  //         trx,
-  //       );
-
-  //       const existingLessonProgress = await this.lessonRepository.getLessonsProgressByCourseId(
-  //         answerQuestion.courseId,
-  //         trx,
-  //       );
-
-  //       if (isCompletedFreemiumLesson && existingLessonProgress.length === 0) {
-  //         await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(userId, trx);
-  //       }
-  //     }
-  //   });
-  // }
-
-  private async handleChoiceAnswer(
+  async evaluationsQuestions(
+    quizQuestions: {
+      id: string;
+      type: QuestionTypes;
+      correctAnswers: { displayOrder: number; value: string }[];
+    }[],
+    quizAnswers: AnswerQuestionBody,
+    userId: UUIDType,
     trx: PostgresJsDatabase<typeof schema>,
-    questionData: QuestionSchema,
-    answerQuestion: AnswerQuestionSchema,
-    lastAnswerId: string | null,
-    userId: string,
-  ): Promise<void> {
-    if (!Array.isArray(answerQuestion.answer)) {
-      throw new BadRequestException("Answer must be more than one option");
-    }
+  ) {
+    try {
+      const quizEvaluationStats = quizQuestions.reduce(
+        (quizStats, question) => {
+          const questionAnswerList = quizAnswers.answers.filter(
+            (answer) => answer.questionId === question.id,
+          );
 
-    if (answerQuestion.answer.length < 1)
-      return await this.questionsRepository.upsertAnswer(
-        questionData.questionId,
-        userId,
-        lastAnswerId,
-        [],
-        trx,
+          if (questionAnswerList.length !== 1) throw new Error("Answer is not valid");
+
+          const questionAnswer = questionAnswerList[0];
+          const passQuestion = match(question.type)
+            .returnType<boolean>()
+            .with(
+              QUESTION_TYPE.fill_in_the_blanks_text.key || QUESTION_TYPE.fill_in_the_blanks_dnd.key,
+              () => {
+                let passQuestion = true;
+
+                for (const correctAnswer of question.correctAnswers) {
+                  if (
+                    questionAnswer.answer[correctAnswer.displayOrder - 1].value !==
+                    correctAnswer.value
+                  ) {
+                    passQuestion = false;
+                    break;
+                  }
+                }
+
+                return passQuestion;
+              },
+            )
+            .with(QUESTION_TYPE.open_answer.key, () => {
+              // TODO: implement this
+              return true;
+            })
+            .otherwise(() => {
+              let passQuestion = true;
+
+              for (const correctAnswer of question.correctAnswers) {
+                const studentAnswer = questionAnswer.answer.filter(
+                  (answer) => answer.value === correctAnswer.value,
+                );
+
+                if (studentAnswer.length !== 1) {
+                  passQuestion = false;
+                  break;
+                }
+              }
+
+              return passQuestion;
+            });
+
+          const formattedAnswer = this.questionAnswerToString(questionAnswer.answer, question.type);
+          const validAnswer = {
+            questionId: question.id,
+            studentId: userId,
+            answer: formattedAnswer,
+            isCorrect: passQuestion,
+          };
+
+          passQuestion ? quizStats.correctAnswerCount++ : quizStats.wrongAnswerCount++;
+          quizStats.answers.push(validAnswer);
+
+          return quizStats;
+        },
+        {
+          answers: [],
+          correctAnswerCount: 0,
+          wrongAnswerCount: 0,
+        } as QuizEvaluation,
       );
 
-    const answerList = answerQuestion.answer.map((answerElement) => {
-      if (typeof answerElement !== "string") {
-        return answerElement.value;
-      }
+      await this.questionRepository.insertQuizAnswers(quizEvaluationStats.answers, trx);
 
-      return answerElement;
-    });
-
-    if (!answerList?.length) throw new NotFoundException("User answers not found");
-
-    const answers: { answer: string }[] = await this.questionsRepository.getQuestionAnswers(
-      answerQuestion.questionId,
-      answerList,
-      trx,
-    );
-
-    if (!answers || answers.length !== answerQuestion.answer.length)
-      throw new NotFoundException("Answers not found");
-
-    const studentAnswer = answers.reduce((acc, answer, index) => {
-      acc.push(`'${index}'`, `'${answer.answer}'`);
-      return acc;
-    }, [] as string[]);
-
-    await this.questionsRepository.upsertAnswer(
-      questionData.questionId,
-      userId,
-      lastAnswerId,
-      studentAnswer,
-      trx,
-    );
+      return quizEvaluationStats;
+    } catch (error) {
+      console.log("error", error);
+      return error;
+    }
   }
 
-  private async handleFillInTheBlanksAnswer(
-    trx: PostgresJsDatabase<typeof schema>,
-    questionData: QuestionSchema,
-    answerQuestion: AnswerQuestionSchema,
-    lastAnswerId: string | null,
-    userId: string,
-  ): Promise<void> {
-    if (!Array.isArray(answerQuestion.answer)) {
-      throw new BadRequestException("Wrong answer format");
+  private questionAnswerToString(
+    answers: {
+      index: number;
+      value: string;
+    }[],
+    questionType: QuestionTypes,
+  ): SQL<unknown> {
+    const questionTypeHandlers = {
+      [QUESTION_TYPE.single_choice.key]: this.handleChoiceAnswer.bind(this),
+      [QUESTION_TYPE.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
+      [QUESTION_TYPE.open_answer.key]: this.handleOpenAnswer.bind(this),
+      [QUESTION_TYPE.fill_in_the_blanks_text.key]: this.handleFillInTheBlanksAnswer.bind(this),
+      [QUESTION_TYPE.fill_in_the_blanks_dnd.key]: this.handleFillInTheBlanksAnswer.bind(this),
+    } as const;
+
+    const handler = questionTypeHandlers[questionType];
+
+    if (!handler) {
+      throw new NotAcceptableException("Unknown question type");
     }
 
-    const studentAnswer = answerQuestion.answer.reduce((acc, answer) => {
+    return sql`json_build_object(${sql.raw(handler(answers).join(","))})`;
+
+    // TODO: decide how handle lesson progress
+    // await this.studentLessonProgressService.markLessonAsCompleted(questionData.lessonId, userId);
+
+    // const [studentLessonProgress] = await this.lessonRepository.updateStudentLessonProgress(
+    //   userId,
+    //   questionData.lessonId,
+    //   answerQuestion.courseId,
+    // );
+
+    // if (
+    //   !quizProgress?.completedAt &&
+    //   studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
+    // ) {
+    //   const isCompletedFreemiumLesson = lesson.isFree && !lesson.enrolled;
+
+    //   await this.lessonRepository.completeLessonProgress(
+    //     answerQuestion.courseId,
+    //     questionData.lessonId,
+    //     userId,
+    //     isCompletedFreemiumLesson,
+    //     trx,
+    //   );
+
+    //   const existingLessonProgress = await this.lessonRepository.getLessonsProgressByCourseId(
+    //     answerQuestion.courseId,
+    //     trx,
+    //   );
+
+    //   if (isCompletedFreemiumLesson && existingLessonProgress.length === 0) {
+    //     await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(userId, trx);
+    //   }
+    // }
+    // });
+  }
+
+  private handleChoiceAnswer(
+    answers: {
+      index: number;
+      value: string;
+    }[],
+  ) {
+    return answers.reduce((acc, answer, index) => {
+      acc.push(`'${index}'`, `'${answer.value}'`);
+      return acc;
+    }, [] as string[]);
+  }
+
+  private handleFillInTheBlanksAnswer(
+    answers: {
+      index: number;
+      value: string;
+    }[],
+  ) {
+    return answers.reduce((acc, answer) => {
       if (typeof answer === "string") return acc;
 
       acc.push(`'${answer.index}'`, `'${answer.value}'`);
       return acc;
     }, [] as string[]);
-
-    await this.questionsRepository.upsertAnswer(
-      questionData.questionId,
-      userId,
-      lastAnswerId,
-      studentAnswer,
-      trx,
-    );
   }
 
-  private async handleOpenAnswer(
-    trx: PostgresJsDatabase<typeof schema>,
-    questionData: QuestionSchema,
-    answerQuestion: AnswerQuestionSchema,
-    lastAnswerId: string | null,
-    userId: string,
-  ): Promise<void> {
-    if (Array.isArray(answerQuestion.answer))
-      throw new NotAcceptableException(
-        "Answer is required for open answer question and must be a string",
-      );
-
-    if (answerQuestion.answer.length < 1) {
-      if (!lastAnswerId) return;
-
-      await this.questionsRepository.deleteAnswer(lastAnswerId, trx);
-      return;
-    }
-
-    const studentAnswer = [`'1'`, `'${answerQuestion.answer}'`];
-
-    await this.questionsRepository.upsertAnswer(
-      questionData.questionId,
-      userId,
-      lastAnswerId,
-      studentAnswer,
-      trx,
-    );
-    return;
+  private handleOpenAnswer(
+    answers: {
+      index: number;
+      value: string;
+    }[],
+  ) {
+    return [`'1'`, `'${answers[0].value}'`];
   }
 }

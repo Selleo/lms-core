@@ -28,7 +28,7 @@ export class AdminLessonRepository {
     return await this.db.select().from(lessons).where(eq(lessons.id, id));
   }
 
-  async createLessonForChapter(data: CreateLessonBody, authorId: UUIDType) {
+  async createLessonForChapter(data: CreateLessonBody) {
     const [lesson] = await this.db.insert(lessons).values(data).returning();
     return lesson;
   }

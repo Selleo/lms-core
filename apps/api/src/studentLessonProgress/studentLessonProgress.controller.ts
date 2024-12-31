@@ -27,6 +27,6 @@ export class StudentLessonProgressController {
   ): Promise<BaseResponse<{ message: string }>> {
     await this.studentLessonProgressService.markLessonAsCompleted(id, currentUserId);
 
-    return new BaseResponse({ message: "Lesson item marked as completed" });
+    return new BaseResponse({ message: "Lesson marked as completed" });
   }
 }

@@ -24,7 +24,7 @@ export class AdminLessonService {
     private lessonRepository: LessonRepository,
   ) {}
 
-  async createLessonForChapter(data: CreateLessonBody, authorId: UUIDType) {
+  async createLessonForChapter(data: CreateLessonBody) {
     if (
       (data.type === LESSON_TYPES.PRESENTATION || data.type === LESSON_TYPES.VIDEO) &&
       (!data.fileS3Key || !data.fileType)
@@ -34,10 +34,10 @@ export class AdminLessonService {
 
     const maxDisplayOrder = await this.adminLessonRepository.getMaxDisplayOrder(data.chapterId);
 
-    const lesson = await this.adminLessonRepository.createLessonForChapter(
-      { ...data, displayOrder: maxDisplayOrder + 1 },
-      authorId,
-    );
+    const lesson = await this.adminLessonRepository.createLessonForChapter({
+      ...data,
+      displayOrder: maxDisplayOrder + 1,
+    });
     return lesson.id;
   }
 

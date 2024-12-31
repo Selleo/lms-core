@@ -72,22 +72,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "flexbox",
                     isCorrect: true,
-                    displayOrder: 0,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "color properties",
                     isCorrect: true,
-                    displayOrder: 1,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "grid",
                     isCorrect: false,
-                    displayOrder: 2,
+                    displayOrder: 3,
                   },
                   {
                     optionText: "flex",
                     isCorrect: false,
-                    displayOrder: 3,
+                    displayOrder: 4,
                   },
                 ],
               },
@@ -117,22 +117,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "<a>",
                     isCorrect: true,
-                    displayOrder: 0,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "<link>",
                     isCorrect: false,
-                    displayOrder: 1,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "<button>",
                     isCorrect: false,
-                    displayOrder: 2,
+                    displayOrder: 3,
                   },
                   {
                     optionText: "<input>",
                     isCorrect: false,
-                    displayOrder: 3,
+                    displayOrder: 4,
                   },
                 ],
               },
@@ -163,22 +163,22 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "<img>",
                     isCorrect: true,
-                    displayOrder: 0,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "<picture>",
                     isCorrect: false,
-                    displayOrder: 1,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "<video>",
                     isCorrect: false,
-                    displayOrder: 2,
+                    displayOrder: 3,
                   },
                   {
                     optionText: "<audio>",
                     isCorrect: false,
-                    displayOrder: 3,
+                    displayOrder: 4,
                   },
                 ],
               },
@@ -192,32 +192,32 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "<html>",
                     isCorrect: true,
-                    displayOrder: 0,
+                    displayOrder: 1,
                   },
                   {
                     optionText: "<head>",
                     isCorrect: true,
-                    displayOrder: 1,
+                    displayOrder: 2,
                   },
                   {
                     optionText: "<body>",
                     isCorrect: true,
-                    displayOrder: 2,
+                    displayOrder: 3,
                   },
                   {
                     optionText: "<title>",
                     isCorrect: true,
-                    displayOrder: 3,
+                    displayOrder: 4,
                   },
                   {
                     optionText: "<h1>",
                     isCorrect: false,
-                    displayOrder: 4,
+                    displayOrder: 5,
                   },
                   {
                     optionText: "<p>",
                     isCorrect: false,
-                    displayOrder: 5,
+                    displayOrder: 6,
                   },
                 ],
               },
@@ -1070,27 +1070,28 @@ export const niceCourses: NiceCourseData[] = [
             displayOrder: 1,
             questions: [
               {
-                displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.SingleChoice,
                 title: "Which of the following is an example of a geometric shape?",
+                displayOrder: 1,
                 options: [
-                  { optionText: "Triangle", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Variable", isCorrect: false, displayOrder: 1 },
-                  { optionText: "Equation", isCorrect: false, displayOrder: 2 },
-                  { optionText: "Sum", isCorrect: false, displayOrder: 3 },
+                  { optionText: "Triangle", isCorrect: true, displayOrder: 1 },
+                  { optionText: "Variable", isCorrect: false, displayOrder: 2 },
+                  { optionText: "Equation", isCorrect: false, displayOrder: 3 },
+                  { optionText: "Sum", isCorrect: false, displayOrder: 4 },
                 ],
               },
               {
                 id: crypto.randomUUID(),
                 type: QuestionType.MultipleChoice,
                 title: "Which operations are included in basic arithmetic? (Select all that apply)",
+                displayOrder: 2,
                 options: [
-                  { optionText: "Addition", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Subtraction", isCorrect: true, displayOrder: 1 },
-                  { optionText: "Multiplication", isCorrect: true, displayOrder: 2 },
-                  { optionText: "Division", isCorrect: true, displayOrder: 3 },
-                  { optionText: "Integration", isCorrect: false, displayOrder: 4 },
+                  { optionText: "Addition", isCorrect: true, displayOrder: 1 },
+                  { optionText: "Subtraction", isCorrect: true, displayOrder: 2 },
+                  { optionText: "Multiplication", isCorrect: true, displayOrder: 3 },
+                  { optionText: "Division", isCorrect: true, displayOrder: 4 },
+                  { optionText: "Integration", isCorrect: false, displayOrder: 5 },
                 ],
               },
               {
@@ -1100,9 +1101,10 @@ export const niceCourses: NiceCourseData[] = [
                   "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
                 description:
                   "<p>In algebra, <strong>variables</strong> are used to represent unknowns, while <strong>equations</strong> can be solved to find their values.</p>",
+                displayOrder: 3,
                 options: [
-                  { optionText: "variables", isCorrect: true, displayOrder: 0 },
-                  { optionText: "equations", isCorrect: true, displayOrder: 1 },
+                  { optionText: "variables", isCorrect: true, displayOrder: 1 },
+                  { optionText: "equations", isCorrect: true, displayOrder: 2 },
                 ],
               },
             ],
@@ -1452,9 +1454,39 @@ export const niceCourses: NiceCourseData[] = [
           {
             id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "What is the difference between a relative clause and a noun clause?",
+            title: "Difference between a relative clause and a noun clause",
             description: "Explain the difference between relative and noun clauses.",
             displayOrder: 3,
+            questions: [
+              {
+                id: crypto.randomUUID(),
+                type: QuestionType.SingleChoice,
+                title: "What is the difference between a relative clause and a noun clause?",
+                displayOrder: 1,
+                options: [
+                  {
+                    optionText: "Relative clauses are used to modify nouns",
+                    isCorrect: true,
+                    displayOrder: 1,
+                  },
+                  {
+                    optionText: "Relative clauses are used to introduce new information",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
+                  {
+                    optionText: "Noun clauses are used to modify nouns",
+                    isCorrect: false,
+                    displayOrder: 3,
+                  },
+                  {
+                    optionText: "Noun clauses are used to introduce new information",
+                    isCorrect: false,
+                    displayOrder: 4,
+                  },
+                ],
+              },
+            ],
           },
           {
             id: crypto.randomUUID(),

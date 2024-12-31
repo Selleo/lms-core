@@ -1,13 +1,35 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, sql } from "drizzle-orm";
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
+import { EventBus } from "@nestjs/cqrs";
+import { eq, sql, and, desc } from "drizzle-orm";
+import { isNumber } from "lodash";
 
 import { DatabasePg } from "src/common";
+import { QuizCompletedEvent } from "src/events";
 import { FileService } from "src/file/file.service";
-import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
+import { QuestionRepository } from "src/questions/question.repository";
+import { QuestionService } from "src/questions/question.service";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
+import {
+  chapters,
+  lessons,
+  questionAnswerOptions,
+  questions,
+  quizAttempts,
+  studentCourses,
+  studentLessonProgress,
+  studentQuestionAnswers,
+} from "src/storage/schema";
 
 import { LESSON_TYPES } from "../lesson.type";
+import { LessonRepository } from "../repositories/lesson.repository";
 
-import type { LessonShow, OptionBody, QuestionBody } from "../lesson.schema";
+import type { AnswerQuestionBody, LessonShow, OptionBody, QuestionBody } from "../lesson.schema";
 import type { LessonTypes, PhotoQuestionType, QuestionType } from "../lesson.type";
 import type { UUIDType } from "src/common";
 
@@ -15,12 +37,14 @@ import type { UUIDType } from "src/common";
 export class LessonService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly fileService: FileService, // TODO: add event bus
-  ) {
-    // private readonly eventBus: EventBus,
-  }
+    private readonly lessonRepository: LessonRepository,
+    private readonly questionService: QuestionService,
+    private readonly questionRepository: QuestionRepository,
+    private readonly fileService: FileService,
+    private readonly eventBus: EventBus,
+  ) {}
 
-  async getLessonById(id: UUIDType): Promise<LessonShow> {
+  async getLessonById(id: UUIDType, userId: UUIDType, isStudent: boolean): Promise<LessonShow> {
     const [lesson] = await this.db
       .select({
         id: lessons.id,
@@ -30,8 +54,17 @@ export class LessonService {
         fileUrl: lessons.fileS3Key,
         fileType: lessons.fileType,
         displayOrder: sql<number>`${lessons.displayOrder}`,
+        quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
+        quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
       })
       .from(lessons)
+      .leftJoin(
+        studentLessonProgress,
+        and(
+          eq(studentLessonProgress.lessonId, lessons.id),
+          eq(studentLessonProgress.studentId, userId),
+        ),
+      )
       .where(eq(lessons.id, id));
 
     if (!lesson) throw new NotFoundException("Lesson not found");
@@ -58,205 +91,186 @@ export class LessonService {
         type: sql<QuestionType>`${questions.type}`,
         title: questions.title,
         description: sql<string>`${questions.description}`,
-        photoS3Key: sql<string | undefined>`COALESCE(${questions.photoS3Key}, undefined)`,
-        photoQuestionType: sql<PhotoQuestionType | undefined>`COALESCE(
-          ${questions.photoQuestionType}, undefined
-        )`,
+        photoS3Key: sql<string>`COALESCE(${questions.photoS3Key})`,
+        photoQuestionType: sql<PhotoQuestionType>`COALESCE(${questions.photoQuestionType})`,
+        passQuestion: sql<boolean | null>`CASE
+          WHEN ${lesson.quizCompleted} THEN ${studentQuestionAnswers.isCorrect}
+          ELSE NULL END`,
         options: sql<OptionBody[]>`
-                  COALESCE(
-                    (
-                      SELECT json_agg(question_options)
-                      FROM (
-                        SELECT
-                          ${questionAnswerOptions.id} AS id,
-                          ${questionAnswerOptions.optionText} AS optionText,
-                          ${questionAnswerOptions.isCorrect} AS "isCorrect",
-                          ${questionAnswerOptions.displayOrder} AS "displayOrder",
-                        FROM ${questionAnswerOptions}
-                        WHERE ${questionAnswerOptions.questionId} = ${questions.id}
-                        GROUP BY
-                          ${questionAnswerOptions.id},
-                          ${questionAnswerOptions.optionText},
-                          ${questionAnswerOptions.isCorrect},
-                          ${questionAnswerOptions.displayOrder},
-                        ORDER BY ${questionAnswerOptions.displayOrder}
-                      ) AS question_options
-                    ),
-                    undefined
+              (
+                SELECT ARRAY(
+                  SELECT json_build_object(
+                    'id', qao.id,
+                    'optionText', qao.option_text,
+                    'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
+                    'displayOrder', qao.display_order,
+                    'isStudentAnswer',
+                      CASE
+                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                        WHEN ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text) = qao.option_text AND
+                        ${questions.type} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+                        THEN TRUE
+                        WHEN EXISTS (
+                        SELECT 1
+                        FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                        WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text)
+                        ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+                        THEN TRUE
+                        ELSE FALSE
+                      END
                   )
-                `,
+                  FROM ${questionAnswerOptions} qao
+                  WHERE qao.question_id = questions.id
+                  ORDER BY qao.display_order
+                )
+              )
+          `,
       })
       .from(questions)
-      .where(eq(questions.lessonId, id));
+      .leftJoin(
+        studentQuestionAnswers,
+        and(
+          eq(studentQuestionAnswers.questionId, questions.id),
+          eq(studentQuestionAnswers.studentId, userId),
+        ),
+      )
+      .where(eq(questions.lessonId, id))
+      .orderBy(questions.displayOrder);
+
+    if (isStudent && lesson.quizCompleted && isNumber(lesson.quizScore)) {
+      const [quizResult] = await this.db
+        .select({
+          score: sql<number>`${quizAttempts.score}`,
+          correctAnswerCount: sql<number>`${quizAttempts.correctAnswers}`,
+          wrongAnswerCount: sql<number>`${quizAttempts.wrongAnswers}`,
+        })
+        .from(quizAttempts)
+        .where(
+          and(
+            eq(quizAttempts.lessonId, id),
+            eq(quizAttempts.userId, userId),
+            eq(quizAttempts.score, lesson.quizScore),
+          ),
+        )
+        .orderBy(desc(quizAttempts.createdAt))
+        .limit(1);
+
+      const quizDetails = {
+        questions: questionList,
+        questionCount: questionList.length,
+        score: quizResult.score,
+        correctAnswerCount: quizResult.correctAnswerCount,
+        wrongAnswerCount: quizResult.wrongAnswerCount,
+      };
+
+      return { ...lesson, quizDetails };
+    }
 
     const quizDetails = {
       questions: questionList,
       questionCount: questionList.length,
-      score: 1,
-      correctAnswerCount: 1,
-      wrongAnswerCount: 1,
+      score: null,
+      correctAnswerCount: null,
+      wrongAnswerCount: null,
     };
+
     return { ...lesson, quizDetails };
   }
 
-  // async evaluationQuiz(lessonId: UUIDType, userId: UUIDType) {
-  //   const [accessCourseLessons] = await this.checkLessonAssignment(lessonId, userId);
+  async evaluationQuiz(quizAnswers: AnswerQuestionBody, userId: UUIDType) {
+    const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(
+      quizAnswers.lessonId,
+      userId,
+    );
 
-  //   if (!accessCourseLessons.isAssigned && !accessCourseLessons.isFree)
-  //     throw new UnauthorizedException("You don't have assignment to this lesson");
+    if (!accessCourseLessonWithDetails.isAssigned && !accessCourseLessonWithDetails.isFreemium)
+      throw new UnauthorizedException("You don't have assignment to this lesson");
 
-  //   const quizProgress = await this.chapterRepository.getQuizProgress(courseId, lessonId, userId);
+    if (accessCourseLessonWithDetails.lessonIsCompleted)
+      throw new ConflictException("Quiz already finished");
 
-  //   if (quizProgress?.quizCompleted) throw new ConflictException("Quiz already completed");
+    const quizQuestions = await this.questionRepository.getQuizQuestions(quizAnswers.lessonId);
 
-  //   const lessonItemsCount = await this.chapterRepository.getLessonItemCount(lessonId);
+    if (quizQuestions.length !== quizAnswers.answers.length)
+      throw new ConflictException("Quiz is not completed");
 
-  //   const completedLessonItemsCount = await this.chapterRepository.completedLessonItemsCount(
-  //     courseId,
-  //     lessonId,
-  //   );
+    this.db.transaction(async (trx) => {
+      const evaluationResult = await this.questionService.evaluationsQuestions(
+        quizQuestions,
+        quizAnswers,
+        userId,
+        trx,
+      );
 
-  //   if (lessonItemsCount.count !== completedLessonItemsCount.count)
-  //     throw new ConflictException("Lesson is not completed");
+      // TODO: add error handling
+      if (!evaluationResult) throw new ConflictException("Quiz evaluation failed");
 
-  //   const evaluationResult = await this.evaluationsQuestions(courseId, lessonId, userId);
+      const quizScore = Math.round(
+        (evaluationResult.correctAnswerCount /
+          (evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount)) *
+          100,
+      );
 
-  //   if (!evaluationResult) return false;
+      this.eventBus.publish(
+        new QuizCompletedEvent(
+          userId,
+          accessCourseLessonWithDetails.courseId,
+          quizAnswers.lessonId,
+          evaluationResult.correctAnswerCount,
+          evaluationResult.wrongAnswerCount,
+          quizScore,
+        ),
+      );
 
-  //   const quizScore = await this.chapterRepository.getQuizScore(courseId, lessonId, userId);
+      await this.lessonRepository.completeQuiz(
+        accessCourseLessonWithDetails.chapterId,
+        quizAnswers.lessonId,
+        userId,
+        evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
+        quizScore,
+        trx,
+      );
+    });
 
-  //   const updateQuizResult = await this.chapterRepository.completeQuiz(
-  //     courseId,
-  //     lessonId,
-  //     userId,
-  //     completedLessonItemsCount.count,
-  //     quizScore,
-  //   );
+    return true;
+  }
 
-  //   if (!updateQuizResult) return false;
+  async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
+    return this.db
+      .select({
+        isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
+        isFreemium: sql<boolean>`CASE WHEN ${chapters.isFreemium} THEN TRUE ELSE FALSE END`,
+        lessonIsCompleted: sql<boolean>`CASE WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN TRUE ELSE FALSE END`,
+        chapterId: sql<string>`${chapters.id}`,
+        courseId: sql<string>`${chapters.courseId}`,
+      })
+      .from(lessons)
+      .leftJoin(
+        studentLessonProgress,
+        and(
+          eq(studentLessonProgress.lessonId, lessons.id),
+          eq(studentLessonProgress.studentId, userId),
+        ),
+      )
+      .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+      )
+      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
+  }
 
-  //   return true;
-  // }
-
-  // async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
-  //   return this.db
-  //     .select({
-  //       isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
-  //     })
-  //     .from(lessons)
-  //     .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
-  //     .leftJoin(
-  //       studentCourses,
-  //       and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
-  //     )
-  //     .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
-  // }
-
-  // private async evaluationsQuestions(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {
-  //   const lesson = await this.chapterRepository.getLessonForUser(courseId, lessonId, userId);
-  //   const questionLessonItems = await this.getLessonQuestionsToEvaluation(
-  //     lesson,
-  //     courseId,
-  //     userId,
-  //     true,
-  //   );
-
-  //   try {
-  //     await this.db.transaction(async (trx) => {
-  //       await Promise.all(
-  //         questionLessonItems.map(async (questionLessonItem) => {
-  //           const answers = await this.chapterRepository.getQuestionAnswers(
-  //             questionLessonItem.content.id,
-  //             userId,
-  //             courseId,
-  //             lessonId,
-  //             lesson.type,
-  //             true,
-  //             trx,
-  //           );
-
-  //           const passQuestion = await match(questionLessonItem.content.questionType)
-  //             .returnType<Promise<boolean>>()
-  //             .with(QUESTION_TYPE.fill_in_the_blanks_text.key, async () => {
-  //               const question = questionLessonItem.content;
-  //               let passQuestion = true;
-
-  //               for (const answer of question.questionAnswers) {
-  //                 if (answer.optionText != answer.studentAnswerText) {
-  //                   passQuestion = false;
-  //                   break;
-  //                 }
-  //               }
-
-  //               return passQuestion;
-  //             })
-  //             .with(QUESTION_TYPE.fill_in_the_blanks_dnd.key, async () => {
-  //               const question = questionLessonItem.content;
-  //               let passQuestion = true;
-
-  //               for (const answer of question.questionAnswers) {
-  //                 if (answer.isStudentAnswer != answer.isCorrect) {
-  //                   passQuestion = false;
-  //                   break;
-  //                 }
-  //               }
-
-  //               return passQuestion;
-  //             })
-  //             .otherwise(async () => {
-  //               let passQuestion = true;
-  //               for (const answer of answers) {
-  //                 if (
-  //                   answer.isStudentAnswer !== answer.isCorrect ||
-  //                   isNull(answer.isStudentAnswer)
-  //                 ) {
-  //                   passQuestion = false;
-  //                   break;
-  //                 }
-  //               }
-
-  //               return passQuestion;
-  //             });
-
-  //           await this.chapterRepository.setCorrectAnswerForStudentAnswer(
-  //             courseId,
-  //             lessonId,
-  //             questionLessonItem.content.id,
-  //             userId,
-  //             passQuestion,
-  //             trx,
-  //           );
-  //         }),
-  //       );
-  //     });
-
-  //     const correctAnswers = await this.chapterRepository.getQuizQuestionsAnswers(
-  //       courseId,
-  //       lessonId,
-  //       userId,
-  //       true,
-  //     );
-  //     const correctAnswerCount = correctAnswers.length;
-  //     const totalQuestions = questionLessonItems.length;
-  //     const wrongAnswerCount = totalQuestions - correctAnswerCount;
-  //     const score = Math.round((correctAnswerCount / totalQuestions) * 100);
-
-  //     this.eventBus.publish(
-  //       new QuizCompletedEvent(
-  //         userId,
-  //         courseId,
-  //         lessonId,
-  //         correctAnswerCount,
-  //         wrongAnswerCount,
-  //         score,
-  //       ),
-  //     );
-
-  //     return true;
-  //   } catch (error) {
-  //     console.log("error", error);
-  //     return false;
-  //   }
+  // async studentAnswerOnQuestion(
+  //   questionId: UUIDType,
+  //   studentId: UUIDType,
+  //   isCorrect: boolean,
+  //   trx?: PostgresJsDatabase<typeof schema>,
+  // ) {
+  //   await this.db.insert(studentQuestionAnswers).values({
+  //     questionId,
+  //     studentId,
+  //     answer: isCorrect,
+  //   });
   // }
 
   // async clearQuizProgress(courseId: UUIDType, lessonId: UUIDType, userId: UUIDType) {

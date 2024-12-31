@@ -41,14 +41,14 @@ export class StatisticsHandler implements IEventHandler<QuizCompletedEvent | Use
   // TODO: repair this
 
   private async handleQuizCompleted(event: QuizCompletedEvent) {
-    // await this.statisticsService.createQuizAttempt({
-    //   userId: event.userId,
-    //   courseId: event.courseId,
-    //   lessonId: event.lessonId,
-    //   correctAnswers: event.correctAnswers,
-    //   wrongAnswers: event.wrongAnswers,
-    //   score: event.score,
-    // });
+    await this.statisticsService.createQuizAttempt({
+      userId: event.userId,
+      courseId: event.courseId,
+      lessonId: event.lessonId,
+      correctAnswers: event.correctAnswers,
+      wrongAnswers: event.wrongAnswers,
+      score: event.score,
+    });
   }
 
   private async handleUserActivity(event: UserActivityEvent) {

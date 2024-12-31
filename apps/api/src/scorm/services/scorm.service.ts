@@ -126,17 +126,14 @@ export class ScormService {
 
           // Create lessons
           for (const lesson of chapter.lessons) {
-            await this.adminLessonService.createLessonForChapter(
-              {
-                title: lesson.title,
-                chapterId: createdChapter.id,
-                type: lesson.type,
-                description: "",
-                fileS3Key: lesson.href ? `${s3BaseKey}/${lesson.href}` : undefined,
-                fileType: this.getContentType(lesson.href),
-              },
-              userId,
-            );
+            await this.adminLessonService.createLessonForChapter({
+              title: lesson.title,
+              chapterId: createdChapter.id,
+              type: lesson.type,
+              description: "",
+              fileS3Key: lesson.href ? `${s3BaseKey}/${lesson.href}` : undefined,
+              fileType: this.getContentType(lesson.href),
+            });
           }
         }
 
