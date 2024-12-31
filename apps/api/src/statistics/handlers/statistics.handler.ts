@@ -38,8 +38,6 @@ export class StatisticsHandler implements IEventHandler<QuizCompletedEvent | Use
     }
   }
 
-  // TODO: repair this
-
   private async handleQuizCompleted(event: QuizCompletedEvent) {
     await this.statisticsService.createQuizAttempt({
       userId: event.userId,
@@ -52,6 +50,6 @@ export class StatisticsHandler implements IEventHandler<QuizCompletedEvent | Use
   }
 
   private async handleUserActivity(event: UserActivityEvent) {
-    // await this.statisticsService.updateUserActivity(event.userId);
+    await this.statisticsService.updateUserActivity(event.userId);
   }
 }

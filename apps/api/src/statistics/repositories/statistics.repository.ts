@@ -14,6 +14,7 @@ import {
 } from "src/storage/schema";
 
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { UUIDType } from "src/common";
 import type { StatsByMonth, UserStatistic } from "src/statistics/schemas/userStats.schema";
 import type * as schema from "src/storage/schema";
 
@@ -22,7 +23,7 @@ import type * as schema from "src/storage/schema";
 export class StatisticsRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
 
-  async getQuizStats(userId: string) {
+  async getQuizStats(userId: UUIDType) {
     const [quizStatsResult] = await this.db
       .select({
         totalAttempts: sql<number>`count(*) :: INTEGER`,
@@ -38,48 +39,48 @@ export class StatisticsRepository {
     return quizStatsResult;
   }
 
-  // async getCoursesStatsByMonth(userId: string): Promise<StatsByMonth[]> {
-  //   return this.db.execute(sql`
-  //     WITH completed_courses AS (
-  //       SELECT
-  //         date_trunc('month', ${studentCourses.completedAt}) AS "month",
-  //         COUNT(*)::INTEGER AS "completed_courses_count"
-  //       FROM
-  //         ${studentCourses}
-  //       WHERE
-  //       ${studentCourses.studentId} = ${userId}
-  //         AND ${studentCourses.state} = ${LessonProgress.completed}
-  //         AND ${studentCourses.completedAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
-  //       GROUP BY
-  //         date_trunc('month', ${studentCourses.completedAt})
-  //     ),
-  //     month_stats AS (
-  //       SELECT
-  //         to_char(date_trunc('month', ${studentCourses.createdAt}), 'YYYY-MM') AS month,
-  //         COUNT(DISTINCT ${studentCourses.courseId})::INTEGER AS started,
-  //         (CASE WHEN completed_courses.completed_courses_count IS NOT NULL THEN completed_courses.completed_courses_count ELSE 0 END)::INTEGER AS completed
-  //       FROM
-  //       ${studentCourses}
-  //         LEFT JOIN completed_courses ON date_trunc('month', ${studentCourses.createdAt}) = completed_courses.month
-  //       WHERE
-  //       ${studentCourses.studentId} = ${userId}
-  //         AND ${studentCourses.createdAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
-  //       GROUP BY
-  //         date_trunc('month', ${studentCourses.createdAt}), completed_courses.month, completed_courses.completed_courses_count
-  //       ORDER BY
-  //         date_trunc('month', ${studentCourses.createdAt})
-  //     )
-  //     SELECT
-  //       month_stats.month AS month,
-  //       month_stats.started AS started,
-  //       month_stats.completed AS completed,
-  //       COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2), 0)::INTEGER AS "completionRate"
-  //     FROM
-  //       month_stats
-  //   `);
-  // }
+  async getCoursesStatsByMonth(userId: UUIDType): Promise<StatsByMonth[]> {
+    return this.db.execute(sql`
+      WITH completed_courses AS (
+        SELECT
+          date_trunc('month', ${studentCourses.completedAt}) AS "month",
+          COUNT(*)::INTEGER AS "completed_courses_count"
+        FROM
+          ${studentCourses}
+        WHERE
+        ${studentCourses.studentId} = ${userId}
+          AND ${studentCourses.completedAt} IS NOT NULL
+          AND ${studentCourses.completedAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
+        GROUP BY
+          date_trunc('month', ${studentCourses.completedAt})
+      ),
+      month_stats AS (
+        SELECT
+          to_char(date_trunc('month', ${studentCourses.createdAt}), 'YYYY-MM') AS month,
+          COUNT(DISTINCT ${studentCourses.courseId})::INTEGER AS started,
+          (CASE WHEN completed_courses.completed_courses_count IS NOT NULL THEN completed_courses.completed_courses_count ELSE 0 END)::INTEGER AS completed
+        FROM
+        ${studentCourses}
+          LEFT JOIN completed_courses ON date_trunc('month', ${studentCourses.createdAt}) = completed_courses.month
+        WHERE
+        ${studentCourses.studentId} = ${userId}
+          AND ${studentCourses.createdAt} >= date_trunc('month', CURRENT_DATE) - INTERVAL '11 months'
+        GROUP BY
+          date_trunc('month', ${studentCourses.createdAt}), completed_courses.month, completed_courses.completed_courses_count
+        ORDER BY
+          date_trunc('month', ${studentCourses.createdAt})
+      )
+      SELECT
+        month_stats.month AS month,
+        month_stats.started AS started,
+        month_stats.completed AS completed,
+        COALESCE(ROUND((month_stats.completed::NUMERIC / NULLIF(month_stats.started::NUMERIC, 0)) * 100, 2), 0)::INTEGER AS "completionRate"
+      FROM
+        month_stats
+    `);
+  }
 
-  async getLessonsStatsByMonth(userId: string): Promise<StatsByMonth[]> {
+  async getLessonsStatsByMonth(userId: UUIDType): Promise<StatsByMonth[]> {
     return this.db.execute(sql`
       WITH completed_lessons AS (
         SELECT
@@ -123,7 +124,7 @@ export class StatisticsRepository {
       `);
   }
 
-  async getActivityStats(userId: string) {
+  async getActivityStats(userId: UUIDType) {
     const [result] = await this.db
       .select({
         currentStreak: userStatistics.currentStreak,
@@ -136,7 +137,7 @@ export class StatisticsRepository {
     return result;
   }
 
-  async getFiveMostPopularCourses(userId: string) {
+  async getFiveMostPopularCourses(userId: UUIDType) {
     return this.db
       .select({
         courseName: courses.title,
@@ -151,7 +152,7 @@ export class StatisticsRepository {
       .limit(5);
   }
 
-  async getTotalCoursesCompletion(userId: string) {
+  async getTotalCoursesCompletion(userId: UUIDType) {
     return this.db
       .select({
         totalCoursesCompletion: sql<number>`COALESCE(SUM(${coursesSummaryStats.completedCourseStudentCount}), 0)::INTEGER`,
@@ -162,7 +163,7 @@ export class StatisticsRepository {
       .where(eq(coursesSummaryStats.authorId, userId));
   }
 
-  async getConversionAfterFreemiumLesson(userId: string) {
+  async getConversionAfterFreemiumLesson(userId: UUIDType) {
     return this.db
       .select({
         purchasedCourses: sql<number>`COALESCE(SUM(${coursesSummaryStats.paidPurchasedAfterFreemiumCount}), 0)::INTEGER`,
@@ -173,7 +174,7 @@ export class StatisticsRepository {
       .where(eq(coursesSummaryStats.authorId, userId));
   }
 
-  async getCourseStudentsStats(userId: string) {
+  async getCourseStudentsStats(userId: UUIDType) {
     return this.db
       .select({
         month: sql<string>`${courseStudentsStats.year} || '-' || ${courseStudentsStats.month}+1`,
@@ -186,7 +187,7 @@ export class StatisticsRepository {
       .limit(12);
   }
 
-  async getAvgQuizScore(userId: string) {
+  async getAvgQuizScore(userId: UUIDType) {
     return this.db
       .select({
         correctAnswersCount: sql<number>`COALESCE(SUM(${quizAttempts.correctAnswers}), 0)::INTEGER`,
@@ -198,9 +199,9 @@ export class StatisticsRepository {
   }
 
   async createQuizAttempt(data: {
-    userId: string;
-    courseId: string;
-    lessonId: string;
+    userId: UUIDType;
+    courseId: UUIDType;
+    lessonId: UUIDType;
     correctAnswers: number;
     wrongAnswers: number;
     score: number;
@@ -208,7 +209,7 @@ export class StatisticsRepository {
     return this.db.insert(quizAttempts).values(data);
   }
 
-  async upsertUserStatistic(userId: string, upsertUserStatistic: UserStatistic) {
+  async upsertUserStatistic(userId: UUIDType, upsertUserStatistic: UserStatistic) {
     await this.db
       .insert(userStatistics)
       .values({
@@ -223,7 +224,10 @@ export class StatisticsRepository {
       });
   }
 
-  async updateFreePurchasedCoursesStats(courseId: string, trx?: PostgresJsDatabase<typeof schema>) {
+  async updateFreePurchasedCoursesStats(
+    courseId: UUIDType,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
     const dbInstance = trx ?? this.db;
 
     return dbInstance
@@ -234,7 +238,10 @@ export class StatisticsRepository {
       .where(eq(coursesSummaryStats.courseId, courseId));
   }
 
-  async updatePaidPurchasedCoursesStats(courseId: string, trx?: PostgresJsDatabase<typeof schema>) {
+  async updatePaidPurchasedCoursesStats(
+    courseId: UUIDType,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
     const dbInstance = trx ?? this.db;
 
     return dbInstance
@@ -246,7 +253,7 @@ export class StatisticsRepository {
   }
 
   async updatePaidPurchasedAfterFreemiumCoursesStats(
-    courseId: string,
+    courseId: UUIDType,
     trx?: PostgresJsDatabase<typeof schema>,
   ) {
     const dbInstance = trx ?? this.db;
@@ -261,7 +268,7 @@ export class StatisticsRepository {
   }
 
   async updateCompletedAsFreemiumCoursesStats(
-    courseId: string,
+    courseId: UUIDType,
     trx?: PostgresJsDatabase<typeof schema>,
   ) {
     const dbInstance = trx ?? this.db;

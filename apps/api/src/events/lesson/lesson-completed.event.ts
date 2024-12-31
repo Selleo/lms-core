@@ -1,7 +1,9 @@
+import { UUIDType } from "src/common";
+
 export class LessonCompletedEvent {
   constructor(
-    public readonly userId: string,
-    public readonly courseId: string,
-    public readonly lessonId: string,
+    public readonly userId: UUIDType,
+    public readonly courseId: UUIDType,
+    public readonly lessonId: UUIDType,
   ) {}
 }

@@ -350,7 +350,6 @@ export class CourseService {
 
     if (!course) throw new NotFoundException("Course not found");
 
-    // TODO: to remove and start use getLessonsDetails form lessonsRepository
     const courseChapterList = await this.db
       .select({
         id: chapters.id,

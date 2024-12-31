@@ -1,8 +1,8 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq, sql } from "drizzle-orm";
+import { and, desc, eq, isNull, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-import { chapters, lessons, questions, studentLessonProgress } from "src/storage/schema";
+import { chapters, courses, lessons, questions, studentLessonProgress } from "src/storage/schema";
 
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { QuestionBody } from "src/lesson/lesson.schema";
@@ -17,6 +17,7 @@ export class LessonRepository {
     return lesson;
   }
 
+  // TODO: check if is not a duplicate with method below
   async getLessonsByChapterId(chapterId: UUIDType) {
     return this.db
       .select({
@@ -40,9 +41,10 @@ export class LessonRepository {
                   ${questions.photoQuestionType} AS photoQuestionType,
                   ${questions.photoS3Key} AS photoS3Key,
                   ${questions.solutionExplanation} AS solutionExplanation,
-                  -- TODO: add display order
+                  ${questions.displayOrder} AS displayOrder,
                 FROM ${questions}
                 WHERE ${lessons.id} = ${questions.lessonId}
+                ORDER BY ${questions.displayOrder}
               ) AS questions_data
             ), 
             '[]'::json
@@ -73,9 +75,10 @@ export class LessonRepository {
                   ${questions.photoQuestionType} AS photoQuestionType,
                   ${questions.photoS3Key} AS photoS3Key,
                   ${questions.solutionExplanation} AS solutionExplanation,
-                  -- TODO: add display order
+                  ${questions.displayOrder} AS displayOrder,
                 FROM ${questions}
                 WHERE ${lessons.id} = ${questions.lessonId}
+                ORDER BY ${questions.displayOrder}
               ) AS questions_data
             ), 
             '[]'::json
@@ -120,31 +123,26 @@ export class LessonRepository {
       .returning();
   }
 
-  //   async getLastInteractedOrNextLessonItemForUser(userId: UUIDType) {
-  //     const [lastLessonItem] = await this.db
-  //       .select({
-  //         id: sql<string>`${studentCompletedLessonItems.lessonItemId}`,
-  //         lessonId: sql<string>`${studentCompletedLessonItems.lessonId}`,
-  //         courseId: sql<string>`${studentCompletedLessonItems.courseId}`,
-  //         courseTitle: sql<string>`${courses.title}`,
-  //         courseDescription: sql<string>`${courses.description}`,
-  //       })
-  //       .from(studentLessonsProgress)
-  //       .leftJoin(studentCompletedLessonItems, and(eq(studentCompletedLessonItems.studentId, userId)))
-  //       .where(
-  //         and(
-  //           eq(studentCompletedLessonItems.studentId, userId),
-  //           eq(studentLessonsProgress.lessonId, studentCompletedLessonItems.lessonId),
-  //           eq(studentLessonsProgress.courseId, studentCompletedLessonItems.courseId),
-  //           isNull(studentLessonsProgress.completedAt),
-  //         ),
-  //       )
-  //       .leftJoin(courses, eq(studentCompletedLessonItems.courseId, courses.id))
-  //       .orderBy(desc(studentCompletedLessonItems.updatedAt))
-  //       .limit(1);
+  async getLastInteractedOrNextLessonItemForUser(userId: UUIDType) {
+    const [lastLesson] = await this.db
+      .select({
+        id: sql<string>`${studentLessonProgress.lessonId}`,
+        chapterId: sql<string>`${chapters.id}`,
+        courseId: sql<string>`${chapters.courseId}`,
+        courseTitle: sql<string>`${courses.title}`,
+        courseDescription: sql<string>`${courses.description}`,
+      })
+      .from(studentLessonProgress)
+      .leftJoin(chapters, eq(chapters.id, studentLessonProgress.chapterId))
+      .leftJoin(courses, eq(courses.id, chapters.courseId))
+      .where(
+        and(eq(studentLessonProgress.studentId, userId), isNull(studentLessonProgress.completedAt)),
+      )
+      .orderBy(desc(studentLessonProgress.createdAt))
+      .limit(1);
 
-  //     return lastLessonItem;
-  //   }
+    return lastLesson;
+  }
 
   async getLessonsProgressByCourseId(
     courseId: UUIDType,
