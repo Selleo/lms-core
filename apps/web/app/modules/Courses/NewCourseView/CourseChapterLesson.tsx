@@ -20,7 +20,7 @@ type CourseChapterLessonProps = {
 
 export const CourseChapterLesson = ({ lesson }: CourseChapterLessonProps) => {
   return (
-    <Link to={`lesson/${lesson.id}`} className="flex gap-x-2 w-full p-2 hover:bg-neutral-50">
+    <div className="flex gap-x-2 w-full p-2 hover:bg-neutral-50">
       <Icon name={LessonTypesIcons[lesson.type]} className="size-6 text-primary-700" />
       <div className="flex flex-col justify-center w-full">
         <p className="body-sm-md text-neutral-950">
@@ -32,6 +32,6 @@ export const CourseChapterLesson = ({ lesson }: CourseChapterLessonProps) => {
         <span className="text-neutral-800 details">{LessonTypes[lesson.type]}</span>
       </div>
       <ProgressBadge progress={progressBadge[lesson.status]} className="self-center" />
-    </Link>
+    </div>
   );
 };
