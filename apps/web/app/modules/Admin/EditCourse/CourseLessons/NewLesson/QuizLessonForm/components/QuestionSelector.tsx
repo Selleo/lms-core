@@ -7,7 +7,7 @@ import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
 
 type QuestionSelectorProps = {
-  addQuestion: (questionType: string) => void;
+  addQuestion: (questionType: QuestionType) => void;
 };
 
 const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
@@ -19,7 +19,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   const toggleOptions = () => setShowOptions(!showOptions);
 
   const onTypeChoose = useCallback(
-    (type: string) => {
+    (type: QuestionType) => {
       setShowOptions(false);
       addQuestion(type);
     },

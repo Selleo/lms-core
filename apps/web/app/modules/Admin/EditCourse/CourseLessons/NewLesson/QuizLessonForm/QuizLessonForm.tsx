@@ -104,10 +104,10 @@ const QuizLessonForm = ({
   }, [isCurrentFormDirty, isCanceling, onCancel]);
 
   const addQuestion = useCallback(
-    (questionType: string) => {
+    (questionType: QuestionType) => {
       const questions = form.getValues("questions") || [];
   
-      const getOptionsForQuestionType = (type: string): QuestionOption[] => {
+      const getOptionsForQuestionType = (type: QuestionType): QuestionOption[] => {
         const singleChoiceTypes = [
           QuestionType.SINGLE_CHOICE,
           QuestionType.MULTIPLE_CHOICE,
@@ -122,14 +122,14 @@ const QuizLessonForm = ({
           QuestionType.DETAILED_RESPONSE,
         ];
   
-        if (singleChoiceTypes.includes(type as QuestionType)) {
+        if (singleChoiceTypes.includes(type)) {
           return [
             { optionText: "", isCorrect: false, displayOrder: 1 },
             { optionText: "", isCorrect: false, displayOrder: 2 },
           ];
         }
   
-        if (!noOptionsRequiredTypes.includes(type as QuestionType)) {
+        if (!noOptionsRequiredTypes.includes(type)) {
           return [{ optionText: "", isCorrect: false, displayOrder: 1 }];
         }
   
