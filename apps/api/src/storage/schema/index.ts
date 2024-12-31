@@ -247,9 +247,9 @@ export const studentLessonProgress = pgTable(
     studentId: uuid("student_id")
       .references(() => users.id, { onDelete: "set null" })
       .notNull(),
-    chapterId: uuid("chapter_id").references(() => chapters.id, { onDelete: "cascade" }),
-    // TODO: add notNull after deploy
-    // .notNull(),
+    chapterId: uuid("chapter_id")
+      .references(() => chapters.id, { onDelete: "cascade" })
+      .notNull(),
     lessonId: uuid("lesson_id")
       .references(() => lessons.id, { onDelete: "cascade" })
       .notNull(),

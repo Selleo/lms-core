@@ -1,0 +1,1 @@
+ALTER TABLE "student_lesson_progress" ALTER COLUMN "chapter_id" SET NOT NULL;

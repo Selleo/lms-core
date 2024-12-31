@@ -824,6 +824,7 @@ export class CourseService {
             chapterLessons.map((lesson) => ({
               studentId,
               lessonId: lesson.id,
+              chapterId: chapter.id,
               completedQuestionCount: 0,
               quizScore: lesson.type === LESSON_TYPES.QUIZ ? 0 : null,
               completedAt: null,
