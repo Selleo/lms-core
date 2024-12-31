@@ -165,6 +165,7 @@ export class AdminLessonService {
             isCorrect: option.isCorrect,
             displayOrder: option.displayOrder,
             matchedWord: option.matchedWord,
+            scaleAnswer: option.scaleAnswer,
           })) || [],
       );
 
@@ -240,6 +241,7 @@ export class AdminLessonService {
                 isCorrect: option.isCorrect,
                 displayOrder: option.displayOrder,
                 matchedWord: option.matchedWord,
+                scaleAnswer: option.scaleAnswer,
               };
 
               if (option.id) {

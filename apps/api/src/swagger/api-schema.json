@@ -3924,6 +3924,10 @@
                                     {
                                       "const": "match_words",
                                       "type": "string"
+                                    },
+                                    {
+                                      "const": "scale_1_5",
+                                      "type": "string"
                                     }
                                   ]
                                 },
@@ -4008,6 +4012,16 @@
                                         "anyOf": [
                                           {
                                             "type": "string"
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
+                                      },
+                                      "scaleAnswer": {
+                                        "anyOf": [
+                                          {
+                                            "type": "number"
                                           },
                                           {
                                             "type": "null"
@@ -4543,6 +4557,10 @@
                         {
                           "const": "match_words",
                           "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
                         }
                       ]
                     },
@@ -4627,6 +4645,16 @@
                             "anyOf": [
                               {
                                 "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "scaleAnswer": {
+                            "anyOf": [
+                              {
+                                "type": "number"
                               },
                               {
                                 "type": "null"
@@ -4765,6 +4793,10 @@
                         {
                           "const": "match_words",
                           "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
                         }
                       ]
                     },
@@ -4849,6 +4881,16 @@
                             "anyOf": [
                               {
                                 "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "scaleAnswer": {
+                            "anyOf": [
+                              {
+                                "type": "number"
                               },
                               {
                                 "type": "null"
@@ -4984,6 +5026,10 @@
                         {
                           "const": "match_words",
                           "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
                         }
                       ]
                     },
@@ -5068,6 +5114,16 @@
                             "anyOf": [
                               {
                                 "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "scaleAnswer": {
+                            "anyOf": [
+                              {
+                                "type": "number"
                               },
                               {
                                 "type": "null"
@@ -5212,6 +5268,10 @@
                         {
                           "const": "match_words",
                           "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
                         }
                       ]
                     },
@@ -5296,6 +5356,16 @@
                             "anyOf": [
                               {
                                 "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "scaleAnswer": {
+                            "anyOf": [
+                              {
+                                "type": "number"
                               },
                               {
                                 "type": "null"
@@ -5654,6 +5724,10 @@
                               {
                                 "const": "match_words",
                                 "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
                               }
                             ]
                           },
@@ -5738,6 +5812,16 @@
                                   "anyOf": [
                                     {
                                       "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "scaleAnswer": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
                                     },
                                     {
                                       "type": "null"
@@ -5951,6 +6035,10 @@
                               {
                                 "const": "match_words",
                                 "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
                               }
                             ]
                           },
@@ -6035,6 +6123,16 @@
                                   "anyOf": [
                                     {
                                       "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "scaleAnswer": {
+                                  "anyOf": [
+                                    {
+                                      "type": "number"
                                     },
                                     {
                                       "type": "null"

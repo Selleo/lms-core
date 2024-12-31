@@ -83,6 +83,7 @@ export const useQuizLessonForm = ({
                 isCorrect: option.isCorrect,
                 displayOrder: option.displayOrder,
                 matchedWord: option.matchedWord || undefined,
+                scaleAnswer: option.scaleAnswer || undefined,
               })),
             };
           }) || [],

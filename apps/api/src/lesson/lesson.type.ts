@@ -16,6 +16,7 @@ export enum QuestionType {
   BriefResponse = "brief_response",
   DetailedResponse = "detailed_response",
   MatchWords = "match_words",
+  Scale_1_5 = "scale_1_5",
 }
 
 export enum PhotoQuestionType {

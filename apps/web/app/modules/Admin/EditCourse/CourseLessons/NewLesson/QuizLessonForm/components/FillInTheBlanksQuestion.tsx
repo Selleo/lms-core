@@ -57,6 +57,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   const [newWord, setNewWord] = useState("");
   const [isAddingWord, setIsAddingWord] = useState(false);
   const [addedWords, setAddedWords] = useState<string[]>([]);
+  const errors = form.formState.errors;
 
   const editor = useEditor({
     extensions: [
@@ -154,7 +155,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       };
 
       form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
-        shouldValidate: true,
         shouldDirty: true,
       });
 
@@ -363,6 +363,13 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                 </div>
               )}
             </div>
+            <>
+              {errors && (
+                <p className="text-red-500 text-sm ml-">
+                  {(errors?.questions as { options?: { message?: string } })?.options?.message}
+                </p>
+              )}
+            </>
 
             <FormField
               control={form.control}

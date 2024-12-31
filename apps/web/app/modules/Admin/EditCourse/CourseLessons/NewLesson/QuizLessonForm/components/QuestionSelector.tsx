@@ -7,7 +7,7 @@ import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
 
 type QuestionSelectorProps = {
-  addQuestion: (questionType: string) => void;
+  addQuestion: (questionType: QuestionType) => void;
 };
 
 const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
@@ -19,7 +19,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   const toggleOptions = () => setShowOptions(!showOptions);
 
   const onTypeChoose = useCallback(
-    (type: string) => {
+    (type: QuestionType) => {
       setShowOptions(false);
       addQuestion(type);
     },
@@ -51,6 +51,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
       icon: QuestionIcons.DetailedResponse,
     },
     { type: QuestionType.MATCH_WORDS, label: "Match words", icon: QuestionIcons.MatchWords },
+    { type: QuestionType.SCALE_1_5, label: "Scale 1 to 5", icon: QuestionIcons.Scale_1_5 },
   ];
 
   useEffect(() => {

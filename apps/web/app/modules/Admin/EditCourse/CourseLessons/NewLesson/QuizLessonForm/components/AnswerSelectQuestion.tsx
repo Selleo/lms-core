@@ -19,6 +19,7 @@ type AnswerSelectQuestionProps = {
 const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps) => {
   const questionType = form.getValues(`questions.${questionIndex}.type`);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
+  const errors = form.formState.errors;
 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
@@ -167,7 +168,11 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
               />
             )}
           </div>
-
+          {errors && (
+            <p className="text-red-500 text-sm ml-14">
+              {(errors?.questions as { options?: { message?: string } })?.options?.message}
+            </p>
+          )}
           <div className="mt-4 ml-14 flex gap-2">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
               Add Option
