@@ -21,8 +21,6 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
   const navigate = useNavigate();
   const nonStartedLessonId = findFirstNotStartedLessonId(course);
 
-  if (!nonStartedLessonId) throw new Error("Something went wrong");
-
   return (
     <>
       <h4 className="h6 text-neutral-950 pb-1">Course progress</h4>
@@ -35,7 +33,11 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
           <Icon name="Share" className="w-6 h-auto text-primary-800" />
           <span>Share this course</span>
         </CopyUrlButton>
-        <Button className="gap-x-2" onClick={() => navigate(`lesson/${nonStartedLessonId}`)}>
+        <Button
+          className="gap-x-2"
+          disabled={!nonStartedLessonId}
+          onClick={() => navigate(`lesson/${nonStartedLessonId}`)}
+        >
           <Icon name="Play" className="w-6 h-auto text-white" />
           <span>Continue learning</span>
         </Button>

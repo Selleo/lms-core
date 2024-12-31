@@ -29,11 +29,11 @@ export const LessonContent = ({
   isFirstLesson,
   isLastLesson,
 }: LessonContentProps) => {
-  const [isCompleteDisabled, setIsCompleteDisabled] = useState(false);
+  const [isNextDisabled, setIsNextDisabled] = useState(false);
   const { mutate: markLessonAsCompleted } = useMarkLessonAsCompleted();
 
   useEffect(() => {
-    if (lesson.type === "video") setIsCompleteDisabled(true);
+    if (lesson.type === "video") setIsNextDisabled(true);
   }, [lesson.type]);
 
   const Content = () =>
@@ -41,12 +41,13 @@ export const LessonContent = ({
       .with("text", () => <Viewer variant="lesson" content={lesson?.description} />)
       .with("quiz", () => <></>)
       .with("video", () => (
-        <VideoPlayer url={lesson.fileUrl} onVideoEnded={() => setIsCompleteDisabled(false)} />
+        <VideoPlayer url={lesson.fileUrl} onVideoEnded={() => setIsNextDisabled(false)} />
       ))
       .with("presentation", () => <Presentation url={lesson.fileUrl ?? ""} />)
       .otherwise(() => null);
 
   const handleMarkLessonAsComplete = () => {
+    handleNext();
     markLessonAsCompleted({ lessonId: lesson.id });
   };
 
@@ -67,20 +68,18 @@ export const LessonContent = ({
                 <span>Previous</span>
               </Button>
             )}
-            {!isLastLesson && (
-              <Button className="gap-x-1" onClick={handleNext}>
-                <Icon name="ArrowRight" className="w-4 h-auto" />
-                <span>Next</span>
-              </Button>
-            )}
+
+            <Button
+              className="gap-x-1"
+              disabled={isNextDisabled}
+              onClick={handleMarkLessonAsComplete}
+            >
+              <Icon name="ArrowRight" className="w-4 h-auto" />
+              <span>{isLastLesson ? "Complete" : "Next"}</span>
+            </Button>
           </div>
         </div>
         <Content />
-        <footer className="sticky bottom-0 border-t border-neutral-200 left-0 w-full py-4 grid place-items-center">
-          <Button onClick={handleMarkLessonAsComplete} disabled={isCompleteDisabled}>
-            Complete <Icon name="ArrowRight" className="w-4 h-auto" />
-          </Button>
-        </footer>
       </div>
     </div>
   );
