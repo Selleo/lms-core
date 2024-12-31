@@ -106,7 +106,7 @@ const QuizLessonForm = ({
   const addQuestion = useCallback(
     (questionType: QuestionType) => {
       const questions = form.getValues("questions") || [];
-  
+
       const getOptionsForQuestionType = (type: QuestionType): QuestionOption[] => {
         const singleChoiceTypes = [
           QuestionType.SINGLE_CHOICE,
@@ -114,30 +114,30 @@ const QuizLessonForm = ({
           QuestionType.MATCH_WORDS,
           QuestionType.PHOTO_QUESTION,
         ];
-  
+
         const noOptionsRequiredTypes = [
           QuestionType.FILL_IN_THE_BLANKS_TEXT,
           QuestionType.FILL_IN_THE_BLANKS_DND,
           QuestionType.BRIEF_RESPONSE,
           QuestionType.DETAILED_RESPONSE,
         ];
-  
+
         if (singleChoiceTypes.includes(type)) {
           return [
             { optionText: "", isCorrect: false, displayOrder: 1 },
             { optionText: "", isCorrect: false, displayOrder: 2 },
           ];
         }
-  
+
         if (!noOptionsRequiredTypes.includes(type)) {
           return [{ optionText: "", isCorrect: false, displayOrder: 1 }];
         }
-  
+
         return [];
       };
-  
+
       const options = getOptionsForQuestionType(questionType);
-  
+
       const newQuestion: Question = {
         title: "",
         type: questionType as QuestionType,
@@ -146,12 +146,12 @@ const QuizLessonForm = ({
           questionType === QuestionType.PHOTO_QUESTION ? QuestionType.SINGLE_CHOICE : undefined,
         options: options,
       };
-  
+
       form.setValue("questions", [...questions, newQuestion], { shouldDirty: true });
     },
-    [form]
+    [form],
   );
-  
+
   const renderQuestion = useCallback(
     (
       question: Question,

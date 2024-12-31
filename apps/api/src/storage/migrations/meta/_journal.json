@@ -64,6 +64,13 @@
       "when": 1735647659585,
       "tag": "0008_add_scale_answer_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1735657697342,
+      "tag": "0009_add_not_null_chapter_id_in_student_lesson_progress",
+      "breakpoints": true
     }
   ]
 }

@@ -618,6 +618,125 @@ export interface FileUploadResponse {
   fileUrl: string;
 }
 
+export interface GetUserStatisticsResponse {
+  data: {
+    averageStats: {
+      lessonStats: {
+        started: number;
+        completed: number;
+        completionRate: number;
+      };
+      courseStats: {
+        started: number;
+        completed: number;
+        completionRate: number;
+      };
+    };
+    quizzes: {
+      totalAttempts: number;
+      totalCorrectAnswers: number;
+      totalWrongAnswers: number;
+      totalQuestions: number;
+      averageScore: number;
+      uniqueQuizzesTaken: number;
+    };
+    courses: object;
+    lessons: object;
+    streak: {
+      current: number;
+      longest: number;
+      activityHistory: object;
+    };
+    lastLesson: null | {
+      /** @format uuid */
+      id: string;
+      title: string;
+      lessonCount: number;
+      lessons?: {
+        /** @format uuid */
+        id: string;
+        title: string;
+        type: string;
+        description?: string | null;
+        displayOrder: number;
+        fileS3Key?: string | null;
+        fileType?: string | null;
+        questions?: {
+          /** @format uuid */
+          id?: string;
+          type:
+            | "single_choice"
+            | "multiple_choice"
+            | "true_or_false"
+            | "photo_question"
+            | "fill_in_the_blanks_text"
+            | "fill_in_the_blanks_dnd"
+            | "brief_response"
+            | "detailed_response"
+            | "match_words"
+            | "scale_1_5";
+          description?: string | null;
+          title: string;
+          displayOrder?: number;
+          photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+          photoS3Key?: string | null;
+          options?: {
+            /** @format uuid */
+            id?: string;
+            optionText: string;
+            displayOrder: number | null;
+            isStudentAnswer?: boolean;
+            isCorrect: boolean;
+            /** @format uuid */
+            questionId?: string;
+            matchedWord?: string | null;
+            scaleAnswer?: number | null;
+          }[];
+        }[];
+        updatedAt?: string;
+      }[];
+      completedLessonCount?: number;
+      chapterProgress?: "completed" | "in_progress" | "not_started";
+      isFreemium?: boolean;
+      enrolled?: boolean;
+      isPublished?: boolean;
+      isSubmitted?: boolean;
+      createdAt?: string;
+      quizCount?: number;
+      displayOrder: number;
+      /** @format uuid */
+      courseId: string;
+      courseTitle: string;
+      courseDescription: string;
+    };
+  };
+}
+
+export interface GetTeacherStatsResponse {
+  data: {
+    fiveMostPopularCourses: {
+      courseName: string;
+      studentCount: number;
+    }[];
+    totalCoursesCompletionStats: {
+      completionPercentage: number;
+      totalCoursesCompletion: number;
+      totalCourses: number;
+    };
+    conversionAfterFreemiumLesson: {
+      conversionPercentage: number;
+      purchasedCourses: number;
+      remainedOnFreemium: number;
+    };
+    courseStudentsStats: object;
+    avgQuizScore: {
+      correctAnswerCount: number;
+      wrongAnswerCount: number;
+      answerCount: number;
+    };
+  };
+}
+
 export interface GetChapterWithLessonResponse {
   data: {
     /** @format uuid */
@@ -2081,6 +2200,34 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/api/file`,
         method: "DELETE",
         query: query,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StatisticsControllerGetUserStatistics
+     * @request GET:/api/statistics/user-stats
+     */
+    statisticsControllerGetUserStatistics: (params: RequestParams = {}) =>
+      this.request<GetUserStatisticsResponse, any>({
+        path: `/api/statistics/user-stats`,
+        method: "GET",
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name StatisticsControllerGetTeacherStats
+     * @request GET:/api/statistics/teacher-stats
+     */
+    statisticsControllerGetTeacherStats: (params: RequestParams = {}) =>
+      this.request<GetTeacherStatsResponse, any>({
+        path: `/api/statistics/teacher-stats`,
+        method: "GET",
+        format: "json",
         ...params,
       }),
 
