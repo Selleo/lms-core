@@ -47,6 +47,7 @@ const QuizLessonForm = ({
   const questions = form.watch("questions");
   const { isDirty } = form.formState;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [openQuestionIndexes, setOpenQuestionIndexes] = useState<Set<number>>(new Set());
   const {
     isLeaveModalOpen,
     closeLeaveModal,
@@ -148,9 +149,23 @@ const QuizLessonForm = ({
       };
 
       form.setValue("questions", [...questions, newQuestion], { shouldDirty: true });
+
+      setOpenQuestionIndexes((prev) => new Set(prev).add(questions.length));
     },
     [form],
   );
+
+  const handleToggleQuestion = (questionIndex: number) => {
+    setOpenQuestionIndexes((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(questionIndex)) {
+        newSet.delete(questionIndex);
+      } else {
+        newSet.add(questionIndex);
+      }
+      return newSet;
+    });
+  };
 
   const renderQuestion = useCallback(
     (
@@ -167,6 +182,8 @@ const QuizLessonForm = ({
           form={form}
           dragTrigger={dragTrigger}
           item={question}
+          isOpen={openQuestionIndexes.has(questionIndex)}
+          handleToggle={() => handleToggleQuestion(questionIndex)}
         >
           {match(question.type)
             .with(QuestionType.SINGLE_CHOICE, QuestionType.MULTIPLE_CHOICE, () => (
@@ -195,7 +212,7 @@ const QuizLessonForm = ({
         </QuestionWrapper>
       );
     },
-    [lessonToEdit],
+    [lessonToEdit, openQuestionIndexes],
   );
 
   return (

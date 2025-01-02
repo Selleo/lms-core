@@ -37,7 +37,12 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_DND,
-      label: "Fill in the blanks",
+      label: "Fill in the blanks dnd",
+      icon: QuestionIcons.FillInTheBlanks,
+    },
+    {
+      type: QuestionType.FILL_IN_THE_BLANKS_TEXT,
+      label: "Fill in the blanks text",
       icon: QuestionIcons.FillInTheBlanks,
     },
     {

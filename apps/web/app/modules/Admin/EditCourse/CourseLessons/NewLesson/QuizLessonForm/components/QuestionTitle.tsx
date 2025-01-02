@@ -18,6 +18,7 @@ interface QuestionTitleProps {
   handleToggle?: () => void;
   dragTrigger?: React.ReactNode;
   item: Question;
+  isOpenQuestion: boolean;
 }
 
 const QuestionTitle = ({
@@ -28,6 +29,7 @@ const QuestionTitle = ({
   handleToggle,
   dragTrigger,
   item,
+  isOpenQuestion,
 }: QuestionTitleProps) => {
   const questionTypeToIconMap: Record<QuestionType, QuestionIcons> = {
     [QuestionType.MULTIPLE_CHOICE]: QuestionIcons.MultiSelect,
@@ -41,9 +43,6 @@ const QuestionTitle = ({
     [QuestionType.MATCH_WORDS]: QuestionIcons.MatchWords,
     [QuestionType.SCALE_1_5]: QuestionIcons.Scale_1_5,
   };
-
-  const isOpenQuestion =
-    questionType === QuestionType.BRIEF_RESPONSE || questionType === QuestionType.DETAILED_RESPONSE;
 
   const getIconForQuestionType = (type: QuestionType): QuestionIcons => {
     return questionTypeToIconMap[type];
