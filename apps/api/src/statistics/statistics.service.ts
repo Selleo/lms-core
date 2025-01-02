@@ -11,7 +11,11 @@ import {
 
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
-import type { CourseStudentsStatsByMonth, StatsByMonth, UserStats } from "./schemas/userStats.schema";
+import type {
+  CourseStudentsStatsByMonth,
+  StatsByMonth,
+  UserStats,
+} from "./schemas/userStats.schema";
 import type { UUIDType } from "src/common";
 @Injectable()
 export class StatisticsService {

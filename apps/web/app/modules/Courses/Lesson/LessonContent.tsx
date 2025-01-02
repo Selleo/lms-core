@@ -29,6 +29,8 @@ export const LessonContent = ({
   isFirstLesson,
   isLastLesson,
 }: LessonContentProps) => {
+  //TODO: for demo purposes
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const { mutate: markLessonAsCompleted } = useMarkLessonAsCompleted();
 
@@ -71,7 +73,7 @@ export const LessonContent = ({
 
             <Button
               className="gap-x-1"
-              disabled={isNextDisabled}
+              // disabled={isNextDisabled}
               onClick={handleMarkLessonAsComplete}
             >
               <Icon name="ArrowRight" className="w-4 h-auto" />
