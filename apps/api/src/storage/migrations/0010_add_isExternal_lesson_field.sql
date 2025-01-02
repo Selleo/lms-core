@@ -1,0 +1,1 @@
+ALTER TABLE "lessons" ADD COLUMN "is_external" boolean DEFAULT false;

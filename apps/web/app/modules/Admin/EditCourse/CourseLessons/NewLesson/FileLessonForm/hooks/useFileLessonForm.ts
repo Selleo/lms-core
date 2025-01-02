@@ -35,10 +35,12 @@ export const useFileLessonForm = ({
   const form = useForm<FileLessonFormValues>({
     resolver: zodResolver(fileLessonFormSchema),
     defaultValues: {
-      title: lessonToEdit?.title || "",
-      description: lessonToEdit?.description || "",
-      type: (lessonToEdit?.type as LessonTypes) || "video",
-      fileType: lessonToEdit?.fileType || "mp4",
+      title: lessonToEdit?.title ?? "",
+      description: lessonToEdit?.description ?? "",
+      type: (lessonToEdit?.type as LessonTypes) ?? "video",
+      fileType: lessonToEdit?.fileType ?? "mp4",
+      isExternal: lessonToEdit?.isExternal ?? false,
+      fileS3Key: lessonToEdit?.fileS3Key ?? "",
     },
   });
 
@@ -46,12 +48,7 @@ export const useFileLessonForm = ({
 
   useEffect(() => {
     if (lessonToEdit) {
-      reset({
-        title: lessonToEdit.title,
-        description: lessonToEdit?.description,
-        type: (lessonToEdit.type as LessonTypes) || "video",
-        fileType: lessonToEdit?.fileType || "mp4",
-      });
+      reset();
     }
   }, [lessonToEdit, reset]);
 

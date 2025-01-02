@@ -71,6 +71,13 @@
       "when": 1735657697342,
       "tag": "0009_add_not_null_chapter_id_in_student_lesson_progress",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1735821625505,
+      "tag": "0010_add_isExternal_lesson_field",
+      "breakpoints": true
     }
   ]
 }

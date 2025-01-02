@@ -161,6 +161,7 @@ export const lessons = pgTable("lessons", {
   displayOrder: integer("display_order"),
   fileS3Key: varchar("file_s3_key", { length: 200 }),
   fileType: varchar("file_type", { length: 20 }),
+  isExternal: boolean("is_external").default(false),
 });
 
 export const questions = pgTable("questions", {

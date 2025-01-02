@@ -5,10 +5,7 @@ import { Play } from "~/assets/svgs/actions";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 
-type VideoPlayerProps = {
-  url: string | null;
-  onVideoEnded?: () => void;
-};
+import type { VideoPlayerProps } from "./VideoPlayer.types";
 
 export const VideoPlayer = ({ url, onVideoEnded }: VideoPlayerProps) => {
   const { isAdmin } = useUserRole();

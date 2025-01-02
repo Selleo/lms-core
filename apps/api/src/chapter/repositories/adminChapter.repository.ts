@@ -80,6 +80,7 @@ export class AdminChapterRepository {
         fileS3Key: sql<string>`${lessons.fileS3Key}`,
         fileType: sql<string>`${lessons.fileType}`,
         displayOrder: sql<number>`${lessons.displayOrder}`,
+        isExternal: sql<boolean>`${lessons.isExternal}`,
         questions: sql<QuestionSchema[]>`
         (
           SELECT ARRAY(

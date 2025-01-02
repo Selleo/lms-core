@@ -453,6 +453,7 @@ export interface GetCourseResponse {
         displayOrder: number;
         status: "completed" | "in_progress" | "not_started";
         quizQuestionCount: number | null;
+        isExternal?: boolean;
       }[];
       completedLessonCount?: number;
       chapterProgress?: "completed" | "in_progress" | "not_started";
@@ -751,6 +752,7 @@ export interface GetChapterWithLessonResponse {
       displayOrder: number;
       status: "completed" | "in_progress" | "not_started";
       quizQuestionCount: number | null;
+      isExternal?: boolean;
     }[];
     completedLessonCount?: number;
     chapterProgress?: "completed" | "in_progress" | "not_started";
@@ -937,6 +939,7 @@ export interface GetLessonByIdResponse {
       score: number | null;
     };
     displayOrder: number;
+    isExternal?: boolean;
   };
 }
 
