@@ -95,24 +95,22 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
                   <SortableList.Item id={item.displayOrder}>
-                    <div className="mt-2">
-                      <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
-                        <SortableList.DragHandle>
-                          <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
-                        </SortableList.DragHandle>
-                        <div className="flex items-center w-full gap-2">
-                          <Input
-                            type="text"
-                            name={`questions.${questionIndex}.options.${index}.optionText`}
-                            value={item.optionText}
-                            onChange={(e) =>
-                              handleOptionChange(index, "optionText", e.target.value)
-                            }
-                            placeholder={`Option ${index + 1}`}
-                            required
-                            className="flex-1 w-[90%]"
-                          />
-                          <div className="w-[10%]">
+                    <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
+                      <SortableList.DragHandle>
+                        <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
+                      </SortableList.DragHandle>
+                      <div className="flex items-center w-full gap-2">
+                        <Input
+                          type="text"
+                          name={`questions.${questionIndex}.options.${index}.optionText`}
+                          value={item.optionText}
+                          onChange={(e) => handleOptionChange(index, "optionText", e.target.value)}
+                          placeholder={`Option ${index + 1}`}
+                          required
+                          className="flex-1"
+                        />
+                        {/* This code is currently commented out temporarily */}
+                        {/* <div className="w-[10%]">
                             <Select
                               name={`questions.${questionIndex}.options.${index}.scaleAnswer`}
                               value={form
@@ -138,9 +136,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
                                 ))}
                               </SelectContent>
                             </Select>
-                          </div>
-                        </div>
-
+                          </div> */}
                         <div className="flex items-center">
                           <TooltipProvider delayDuration={0}>
                             <Tooltip>

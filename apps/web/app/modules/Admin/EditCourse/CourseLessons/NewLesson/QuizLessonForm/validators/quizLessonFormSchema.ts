@@ -127,27 +127,27 @@ export const quizLessonFormSchema = z.object({
         message: "All options must be correct for fill-in-the-blank questions.",
         path: ["options"],
       },
-    )
-    .refine(
-      (questions) => {
-        return questions.every((question) => {
-          if (question.type === QuestionType.SCALE_1_5) {
-            const allOptionsHaveScaleAnswer = question.options?.every(
-              (option) => option.scaleAnswer !== undefined,
-            );
-            if (!allOptionsHaveScaleAnswer) {
-              return false;
-            }
-          }
-
-          return true;
-        });
-      },
-      {
-        message: "All options must have a scale answer",
-        path: ["options"],
-      },
     ),
+  // .refine(
+  //   (questions) => {
+  //     return questions.every((question) => {
+  //       if (question.type === QuestionType.SCALE_1_5) {
+  //         const allOptionsHaveScaleAnswer = question.options?.every(
+  //           (option) => option.scaleAnswer !== undefined,
+  //         );
+  //         if (!allOptionsHaveScaleAnswer) {
+  //           return false;
+  //         }
+  //       }
+
+  //       return true;
+  //     });
+  //   },
+  //   {
+  //     message: "All options must have a scale answer",
+  //     path: ["options"],
+  //   },
+  // ),
 });
 
 export type QuizLessonFormValues = z.infer<typeof quizLessonFormSchema>;
