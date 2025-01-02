@@ -26,7 +26,7 @@ export class QuestionService {
     quizQuestions: {
       id: string;
       type: QuestionTypes;
-      correctAnswers: { displayOrder: number; value: string }[];
+      correctAnswers: { answerId: UUIDType; displayOrder: number }[];
     }[],
     quizAnswers: AnswerQuestionBody,
     userId: UUIDType,
@@ -35,6 +35,7 @@ export class QuestionService {
     try {
       const quizEvaluationStats = quizQuestions.reduce(
         (quizStats, question) => {
+          const answerToRecord = [];
           const questionAnswerList = quizAnswers.answers.filter(
             (answer) => answer.questionId === question.id,
           );
@@ -51,14 +52,13 @@ export class QuestionService {
 
                 for (const correctAnswer of question.correctAnswers) {
                   if (
-                    questionAnswer.answer[correctAnswer.displayOrder - 1].value !==
-                    correctAnswer.value
+                    questionAnswer.answer[correctAnswer.displayOrder - 1].answerId !==
+                    correctAnswer.answerId
                   ) {
                     passQuestion = false;
                     break;
                   }
                 }
-
                 return passQuestion;
               },
             )
@@ -71,7 +71,7 @@ export class QuestionService {
 
               for (const correctAnswer of question.correctAnswers) {
                 const studentAnswer = questionAnswer.answer.filter(
-                  (answer) => answer.value === correctAnswer.value,
+                  (answer) => answer.answerId === correctAnswer.answerId,
                 );
 
                 if (studentAnswer.length !== 1) {
@@ -83,7 +83,8 @@ export class QuestionService {
               return passQuestion;
             });
 
-          const formattedAnswer = this.questionAnswerToString(questionAnswer.answer, question.type);
+          // const formattedAnswer = this.questionAnswerToString(questionAnswer.answer, question.type);
+          const formattedAnswer = "";
           const validAnswer = {
             questionId: question.id,
             studentId: userId,

@@ -29,7 +29,13 @@ import {
 import { LESSON_TYPES } from "../lesson.type";
 import { LessonRepository } from "../repositories/lesson.repository";
 
-import type { AnswerQuestionBody, LessonShow, OptionBody, QuestionBody } from "../lesson.schema";
+import type {
+  AnswerQuestionBody,
+  LessonShow,
+  OptionBody,
+  QuestionBody,
+  QuestionDetails,
+} from "../lesson.schema";
 import type { LessonTypes, PhotoQuestionType, QuestionType } from "../lesson.type";
 import type { UUIDType } from "src/common";
 
@@ -92,11 +98,12 @@ export class LessonService {
         type: sql<QuestionType>`${questions.type}`,
         title: questions.title,
         description: sql<string>`${questions.description}`,
-        photoS3Key: sql<string>`COALESCE(${questions.photoS3Key})`,
+        photoS3Key: sql<string>`${questions.photoS3Key}`,
         photoQuestionType: sql<PhotoQuestionType>`COALESCE(${questions.photoQuestionType})`,
         passQuestion: sql<boolean | null>`CASE
           WHEN ${lesson.quizCompleted} THEN ${studentQuestionAnswers.isCorrect}
           ELSE NULL END`,
+        displayOrder: sql<number>`${questions.displayOrder}`,
         options: sql<OptionBody[]>`
               (
                 SELECT ARRAY(
@@ -104,25 +111,34 @@ export class LessonService {
                     'id', qao.id,
                     'optionText', qao.option_text,
                     'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
-                    'displayOrder', qao.display_order,
+                    'displayOrder', 
+                      CASE
+                        WHEN ${lesson.quizCompleted} THEN qao.display_order
+                        ELSE NULL
+                      END,
                     'isStudentAnswer',
                       CASE
                         WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
                         WHEN ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text) = qao.option_text AND
-                        ${questions.type} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+                          ${questions.type} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
                         THEN TRUE
                         WHEN EXISTS (
-                        SELECT 1
-                        FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                        WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text)
-                        ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+                          SELECT 1
+                          FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                          WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text)
+                            ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
                         THEN TRUE
                         ELSE FALSE
                       END
                   )
                   FROM ${questionAnswerOptions} qao
                   WHERE qao.question_id = questions.id
-                  ORDER BY qao.display_order
+                  ORDER BY 
+                    CASE 
+                      WHEN ${questions.type} in (${QUESTION_TYPE.fill_in_the_blanks_dnd}) AND ${lesson.quizCompleted} == FALSE
+                        THEN random()
+                      ELSE qao.display_order  
+                    END
                 )
               )
           `,
@@ -137,6 +153,23 @@ export class LessonService {
       )
       .where(eq(questions.lessonId, id))
       .orderBy(questions.displayOrder);
+
+    const questionListWithUrls: QuestionBody[] = await Promise.all(
+      questionList.map(async (question) => {
+        if (question.photoS3Key) {
+          if (question.photoS3Key.startsWith("https://")) return question;
+
+          try {
+            const signedUrl = await this.fileService.getFileUrl(question.photoS3Key);
+            return { ...question, photoS3Key: signedUrl };
+          } catch (error) {
+            console.error(`Failed to get signed URL for ${question.photoS3Key}:`, error);
+            return question;
+          }
+        }
+        return question;
+      }),
+    );
 
     if (isStudent && lesson.quizCompleted && isNumber(lesson.quizScore)) {
       const [quizResult] = await this.db
@@ -156,9 +189,9 @@ export class LessonService {
         .orderBy(desc(quizAttempts.createdAt))
         .limit(1);
 
-      const quizDetails = {
-        questions: questionList,
-        questionCount: questionList.length,
+      const quizDetails: QuestionDetails = {
+        questions: questionListWithUrls,
+        questionCount: questionListWithUrls.length,
         score: quizResult.score,
         correctAnswerCount: quizResult.correctAnswerCount,
         wrongAnswerCount: quizResult.wrongAnswerCount,
@@ -168,8 +201,8 @@ export class LessonService {
     }
 
     const quizDetails = {
-      questions: questionList,
-      questionCount: questionList.length,
+      questions: questionListWithUrls,
+      questionCount: questionListWithUrls.length,
       score: null,
       correctAnswerCount: null,
       wrongAnswerCount: null,
@@ -178,7 +211,15 @@ export class LessonService {
     return { ...lesson, quizDetails };
   }
 
-  async evaluationQuiz(quizAnswers: AnswerQuestionBody, userId: UUIDType) {
+  async evaluationQuiz(
+    quizAnswers: AnswerQuestionBody,
+    userId: UUIDType,
+  ): Promise<{
+    correctAnswerCount: number;
+    wrongAnswerCount: number;
+    questionCount: number;
+    score: number;
+  }> {
     const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(
       quizAnswers.lessonId,
       userId,
@@ -195,7 +236,7 @@ export class LessonService {
     if (quizQuestions.length !== quizAnswers.answers.length)
       throw new ConflictException("Quiz is not completed");
 
-    this.db.transaction(async (trx) => {
+    return await this.db.transaction(async (trx) => {
       const evaluationResult = await this.questionService.evaluationsQuestions(
         quizQuestions,
         quizAnswers,
@@ -212,6 +253,16 @@ export class LessonService {
           100,
       );
 
+      await this.lessonRepository.completeQuiz(
+        accessCourseLessonWithDetails.chapterId,
+        quizAnswers.lessonId,
+        userId,
+        evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
+        quizScore,
+        trx,
+      );
+
+      // TODO: check if it will be not sent when transaction is rolled back
       this.eventBus.publish(
         new QuizCompletedEvent(
           userId,
@@ -223,17 +274,13 @@ export class LessonService {
         ),
       );
 
-      await this.lessonRepository.completeQuiz(
-        accessCourseLessonWithDetails.chapterId,
-        quizAnswers.lessonId,
-        userId,
-        evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
-        quizScore,
-        trx,
-      );
+      return {
+        correctAnswerCount: evaluationResult.correctAnswerCount,
+        wrongAnswerCount: evaluationResult.wrongAnswerCount,
+        questionCount: evaluationResult.wrongAnswerCount + evaluationResult.correctAnswerCount,
+        score: quizScore,
+      };
     });
-
-    return true;
   }
 
   async checkLessonAssignment(id: UUIDType, userId: UUIDType) {

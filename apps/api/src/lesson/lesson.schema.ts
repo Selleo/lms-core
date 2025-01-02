@@ -80,7 +80,7 @@ export const createQuizLessonSchema = Type.Intersect([
 ]);
 
 export const questionDetails = Type.Object({
-  questions: Type.Array(Type.Any()),
+  questions: Type.Array(questionSchema),
   questionCount: Type.Number(),
   correctAnswerCount: Type.Union([Type.Number(), Type.Null()]),
   wrongAnswerCount: Type.Union([Type.Number(), Type.Null()]),
@@ -127,7 +127,7 @@ export const answerQuestionsForLessonBody = Type.Object({
   answers: Type.Array(
     Type.Object({
       questionId: UUIDSchema,
-      answer: Type.Array(Type.Object({ index: Type.Number(), value: Type.String() })),
+      answer: Type.Array(Type.Object({ answerId: UUIDSchema })),
     }),
   ),
 });
@@ -145,3 +145,4 @@ export type QuestionSchema = Static<typeof questionSchema>;
 export type LessonShow = Static<typeof lessonShowSchema>;
 export type LessonSchema = Static<typeof lessonSchema>;
 export type AnswerQuestionBody = Static<typeof answerQuestionsForLessonBody>;
+export type QuestionDetails = Static<typeof questionDetails>;

@@ -115,23 +115,25 @@ export class QuestionRepository {
     return;
   }
 
+  // TODO: check if it work correctly
   async getQuizQuestions(lessonId: UUIDType) {
     return this.db
       .select({
         id: questions.id,
         type: sql<QuestionTypes>`${questions.type}`,
-        correctAnswers: sql<{ displayOrder: number; value: string }[]>`
+        correctAnswers: sql<{ answerId: UUIDType; displayOrder: number; value: string }[]>`
             COALESCE(
               (
                 SELECT json_agg(
                   json_build_object(
-                    'displayOrder', ${questionAnswerOptions.displayOrder},
+                    'answerId', ${questionAnswerOptions.id}
+                    'displayOrder', ${questionAnswerOptions.displayOrder}
                     'value', ${questionAnswerOptions.optionText}
                   )
                 )
                 FROM ${questionAnswerOptions}
                 WHERE ${questionAnswerOptions.questionId} = ${questions.id} AND ${questionAnswerOptions.isCorrect} = TRUE
-                GROUP BY ${questionAnswerOptions.displayOrder}
+                GROUP BY ${questionAnswerOptions.id}, ${questionAnswerOptions.displayOrder}, ${questionAnswerOptions.optionText}
                 ORDER BY ${questionAnswerOptions.displayOrder}
               ),
               '[]'::json
@@ -141,7 +143,7 @@ export class QuestionRepository {
       .from(questions)
       .leftJoin(questionAnswerOptions, eq(questions.id, questionAnswerOptions.questionId))
       .where(and(eq(questions.lessonId, lessonId), eq(questionAnswerOptions.isCorrect, true)))
-      .orderBy(questions.displayOrder, questionAnswerOptions.displayOrder);
+      .orderBy(questions.displayOrder);
   }
 
   async insertQuizAnswers(
