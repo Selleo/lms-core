@@ -5892,7 +5892,168 @@
                 "properties": {
                   "questions": {
                     "type": "array",
-                    "items": {}
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        "type": {
+                          "anyOf": [
+                            {
+                              "const": "single_choice",
+                              "type": "string"
+                            },
+                            {
+                              "const": "multiple_choice",
+                              "type": "string"
+                            },
+                            {
+                              "const": "true_or_false",
+                              "type": "string"
+                            },
+                            {
+                              "const": "photo_question",
+                              "type": "string"
+                            },
+                            {
+                              "const": "fill_in_the_blanks_text",
+                              "type": "string"
+                            },
+                            {
+                              "const": "fill_in_the_blanks_dnd",
+                              "type": "string"
+                            },
+                            {
+                              "const": "brief_response",
+                              "type": "string"
+                            },
+                            {
+                              "const": "detailed_response",
+                              "type": "string"
+                            },
+                            {
+                              "const": "match_words",
+                              "type": "string"
+                            },
+                            {
+                              "const": "scale_1_5",
+                              "type": "string"
+                            }
+                          ]
+                        },
+                        "description": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "title": {
+                          "type": "string"
+                        },
+                        "displayOrder": {
+                          "type": "number"
+                        },
+                        "photoQuestionType": {
+                          "anyOf": [
+                            {
+                              "anyOf": [
+                                {
+                                  "const": "single_choice",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "multiple_choice",
+                                  "type": "string"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "photoS3Key": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "options": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "optionText": {
+                                "type": "string"
+                              },
+                              "displayOrder": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "isStudentAnswer": {
+                                "type": "boolean"
+                              },
+                              "isCorrect": {
+                                "type": "boolean"
+                              },
+                              "questionId": {
+                                "format": "uuid",
+                                "type": "string"
+                              },
+                              "matchedWord": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "scaleAnswer": {
+                                "anyOf": [
+                                  {
+                                    "type": "number"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "optionText",
+                              "displayOrder",
+                              "isCorrect"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "title"
+                      ]
+                    }
                   },
                   "questionCount": {
                     "type": "number"
@@ -6951,16 +7112,13 @@
                   "items": {
                     "type": "object",
                     "properties": {
-                      "index": {
-                        "type": "number"
-                      },
-                      "value": {
+                      "answerId": {
+                        "format": "uuid",
                         "type": "string"
                       }
                     },
                     "required": [
-                      "index",
-                      "value"
+                      "answerId"
                     ]
                   }
                 }
