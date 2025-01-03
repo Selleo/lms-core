@@ -1,15 +1,19 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { useCallback } from "react";
+
 import { Icon } from "~/components/Icon";
+import { SortableList } from "~/components/SortableList";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+
+import { QuestionType } from "../QuizLessonForm.types";
+
+import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { QuestionOption, QuestionType } from "../QuizLessonForm.types";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
-import { Checkbox } from "~/components/ui/checkbox";
-import { SortableList } from "~/components/SortableList";
-import { Label } from "~/components/ui/label";
 
 type AnswerSelectQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;

@@ -1,9 +1,12 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { useCallback, useEffect, useState } from "react";
+
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
 import { Icon } from "~/components/Icon";
+import { SortableList } from "~/components/SortableList";
 import { Button } from "~/components/ui/button";
+import { Checkbox } from "~/components/ui/checkbox";
 import { FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -14,13 +17,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+
+import { QuestionType } from "../QuizLessonForm.types";
+
+import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { QuestionOption, QuestionType } from "../QuizLessonForm.types";
-import { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
-import { Checkbox } from "~/components/ui/checkbox";
-import { SortableList } from "~/components/SortableList";
+import type { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;

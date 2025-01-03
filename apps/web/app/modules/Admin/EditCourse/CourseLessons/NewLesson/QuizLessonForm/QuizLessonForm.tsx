@@ -1,29 +1,34 @@
+import { useCallback, useEffect, useState } from "react";
+import { match } from "ts-pattern";
+
+import { Icon } from "~/components/Icon";
+import { SortableList } from "~/components/SortableList";
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { useLeaveModal } from "~/context/LeaveModalContext";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import LeaveConfirmationModal from "~/modules/Admin/components/LeaveConfirmationModal";
+import { QuestionType } from "~/modules/Admin/EditCourse/CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
+
+import { ContentTypes, DeleteContentType } from "../../../EditCourse.types";
+import Breadcrumb from "../components/Breadcrumb";
 
 import AnswerSelectQuestion from "./components/AnswerSelectQuestion";
 import FillInTheBlanksQuestion from "./components/FillInTheBlanksQuestion";
+import MatchWordsQuestion from "./components/MatchWordsQuestion";
 import PhotoQuestion from "./components/PhotoQuestion";
 import QuestionSelector from "./components/QuestionSelector";
+import QuestionWrapper from "./components/QuestionWrapper";
+import ScaleQuestion from "./components/ScaleQuestion";
 import TrueOrFalseQuestion from "./components/TrueOrFalseQuestion";
 import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
-import { Question, QuestionOption, QuestionType } from "./QuizLessonForm.types";
+
+import type { Question, QuestionOption } from "./QuizLessonForm.types";
+import type { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
+import type { Chapter, Lesson } from "../../../EditCourse.types";
 import type { UseFormReturn } from "react-hook-form";
-import { Chapter, ContentTypes, DeleteContentType, Lesson } from "../../../EditCourse.types";
-import { useCallback, useEffect, useState } from "react";
-import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import Breadcrumb from "../components/Breadcrumb";
-import { SortableList } from "~/components/SortableList";
-import { Icon } from "~/components/Icon";
-import QuestionWrapper from "./components/QuestionWrapper";
-import { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
-import LeaveConfirmationModal from "~/modules/Admin/components/LeaveConfirmationModal";
-import { useLeaveModal } from "~/context/LeaveModalContext";
-import MatchWordsQuestion from "./components/MatchWordsQuestion";
-import { match } from "ts-pattern";
-import ScaleQuestion from "./components/ScaleQuestion";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
