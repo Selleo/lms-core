@@ -93,7 +93,7 @@ export class LessonService {
 
     const questionList: QuestionBody[] = await this.db
       .select({
-        id: questions.id,
+        id: sql<UUIDType>`${questions.id}`,
         type: sql<QuestionType>`${questions.type}`,
         title: questions.title,
         description: sql<string>`${questions.description}`,
@@ -232,6 +232,8 @@ export class LessonService {
 
     const correctAnswersForQuizQuestions =
       await this.questionRepository.getQuizQuestionsToEvaluation(studentQuizAnswers.lessonId);
+
+    console.log();
 
     if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.answers.length)
       throw new ConflictException("Quiz is not completed");

@@ -12,8 +12,8 @@ import {
 import type {
   CreateLessonBody,
   CreateQuizLessonBody,
-  OptionBody,
-  QuestionBody,
+  AdminOptionBody,
+  AdminQuestionBody,
   UpdateLessonBody,
   UpdateQuizLessonBody,
 } from "../lesson.schema";
@@ -190,7 +190,7 @@ export class AdminLessonRepository {
 
   async updateOption(
     optionId: UUIDType,
-    optionData: OptionBody,
+    optionData: AdminOptionBody,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
     await trx
@@ -201,7 +201,7 @@ export class AdminLessonRepository {
 
   async insertOption(
     questionId: UUIDType,
-    optionData: OptionBody,
+    optionData: AdminOptionBody,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
     await trx.insert(questionAnswerOptions).values({
@@ -228,7 +228,7 @@ export class AdminLessonRepository {
   }
 
   async upsertQuestion(
-    questionData: QuestionBody,
+    questionData: AdminQuestionBody,
     lessonId: UUIDType,
     authorId: UUIDType,
     trx: PostgresJsDatabase<typeof schema>,
