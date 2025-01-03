@@ -9,12 +9,27 @@ type SubmitQuizProps = {
   handleOnSuccess: () => void;
 };
 
+type Answer = {
+  lessonId: string;
+  answers: {
+    questionId: string;
+    answer:
+      | {
+          answerId: string;
+          value?: string;
+        }[]
+      | {
+          answerId: string;
+        }[];
+  }[];
+};
+
 export function useSubmitQuiz({ handleOnSuccess }: SubmitQuizProps) {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (answer: { lessonId: string; courseId: string }) => {
-      const response = await ApiClient.api.lessonsControllerEvaluationQuiz(answer);
+    mutationFn: async (answer: Answer) => {
+      const response = await ApiClient.api.lessonControllerEvaluationQuiz(answer);
 
       return response.data;
     },

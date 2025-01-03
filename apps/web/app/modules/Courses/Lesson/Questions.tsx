@@ -2,23 +2,25 @@ import { Question } from "~/modules/Courses/Lesson/LessonItems/Question";
 
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 
+type Questions = NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"];
+
 type QuestionsProps = {
-  questions: GetLessonByIdResponse["data"]["quizDetails"]["questions"];
+  questions: Questions;
 };
 
 export const Questions = ({ questions }: QuestionsProps) => {
-  return questions.map(
-    (question: GetLessonByIdResponse["data"]["quizDetails"]["questions"][number]) => {
-      return (
-        <Question
-          key={question.id}
-          lessonItemId={question.id}
-          content={question}
-          lessonType="quiz"
-          isCompleted={false}
-          updateLessonItemCompletion={() => console.log("TODO: update Lesson Item Completion")}
-        />
-      );
-    },
-  );
+  return questions.map((question: Questions[number]) => {
+    if (!question) return null;
+
+    return (
+      <Question
+        key={question.id}
+        lessonItemId={question.id}
+        content={question}
+        lessonType="quiz"
+        isCompleted={false}
+        updateLessonItemCompletion={() => console.log("TODO: update Lesson Item Completion")}
+      />
+    );
+  });
 };

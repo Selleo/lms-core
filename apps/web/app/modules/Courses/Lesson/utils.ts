@@ -33,9 +33,9 @@ export const getQuestionsArray = (lesson: GetLessonResponse["data"]["lessonItems
   lesson.filter((lesson) => lesson.lessonItemType === "question").map((item) => item.content.id);
 
 export const getUserAnswers = (
-  questions: GetLessonByIdResponse["data"]["quizDetails"]["questions"],
+  questions: NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"],
 ): TQuestionsForm => {
-  const singleQuestionsFromApi = questions.filter((question) => question.type === "single_select");
+  const singleQuestionsFromApi = questions.filter((question) => question.type === "single_choice");
 
   const multiQuestionsFromApi = questions.filter((question) => question.type === "multiple_choice");
 

@@ -1,3 +1,4 @@
+import { useParams } from "@remix-run/react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useSubmitQuiz } from "~/api/mutations";
@@ -13,22 +14,81 @@ type QuizProps = {
   lesson: GetLessonByIdResponse["data"];
 };
 
+function transformData(input: TQuestionsForm) {
+  const result = [];
+
+  for (const questionId in input.openQuestions) {
+    result.push({
+      questionId: questionId,
+      answer: [
+        {
+          answerId: questionId,
+          value: input.openQuestions[questionId],
+        },
+      ],
+    });
+  }
+
+  for (const questionId in input.singleAnswerQuestions) {
+    const answers = input.singleAnswerQuestions[questionId];
+    const answerArray = [];
+    for (const answerId in answers) {
+      if (answers[answerId]) {
+        answerArray.push({
+          answerId: answerId,
+        });
+      }
+    }
+    if (answerArray.length > 0) {
+      result.push({
+        questionId: questionId,
+        answer: answerArray,
+      });
+    }
+  }
+
+  for (const questionId in input.multiAnswerQuestions) {
+    const answers = input.multiAnswerQuestions[questionId];
+    const answerArray = [];
+    for (const answerId in answers) {
+      if (answers[answerId]) {
+        answerArray.push({
+          answerId: answerId,
+        });
+      }
+    }
+    if (answerArray.length > 0) {
+      result.push({
+        questionId: questionId,
+        answer: answerArray,
+      });
+    }
+  }
+
+  return result;
+}
+
 export const Quiz = ({ lesson }: QuizProps) => {
+  const { lessonId = "" } = useParams();
+
   const questions = lesson.quizDetails?.questions;
 
   const methods = useForm<TQuestionsForm>({
     mode: "onChange",
-    defaultValues: getUserAnswers(questions),
+    defaultValues: getUserAnswers(questions ?? []),
   });
 
   const submitQuiz = useSubmitQuiz({
-    handleOnSuccess: async () => {},
+    handleOnSuccess: () => {
+      // TODO: Add logic to handle success
+    },
   });
 
   if (!questions?.length) return null;
 
-  const handleOnSubmit = () => {
-    // TODO: Add logic to submit quiz
+  const handleOnSubmit = async (data: TQuestionsForm) => {
+    // TODO: Quiz submit logic needs adjustment
+    submitQuiz.mutate({ lessonId, answers: transformData(data) });
   };
 
   return (

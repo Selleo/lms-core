@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { EventBus } from "@nestjs/cqrs";
-import { eq, sql, and, desc } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { isNumber } from "lodash";
 
 import { DatabasePg } from "src/common";
@@ -94,7 +94,7 @@ export class LessonService {
 
     const questionList: QuestionBody[] = await this.db
       .select({
-        id: questions.id,
+        id: sql<UUIDType>`${questions.id}`,
         type: sql<QuestionType>`${questions.type}`,
         title: questions.title,
         description: sql<string>`${questions.description}`,
@@ -234,8 +234,12 @@ export class LessonService {
     const correctAnswersForQuizQuestions =
       await this.questionRepository.getQuizQuestionsToEvaluation(studentQuizAnswers.lessonId);
 
-    if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.answers.length)
+    console.log(JSON.stringify(correctAnswersForQuizQuestions, null, 2));
+    console.log(JSON.stringify(studentQuizAnswers, null, 2));
+    if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.answers.length) {
+      console.log(correctAnswersForQuizQuestions.length, studentQuizAnswers.answers.length);
       throw new ConflictException("Quiz is not completed");
+    }
 
     return await this.db.transaction(async (trx) => {
       const evaluationResult = await this.questionService.evaluationsQuestions(

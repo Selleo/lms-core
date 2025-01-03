@@ -154,7 +154,8 @@ export class QuestionRepository {
       })
       .from(questions)
       .leftJoin(questionAnswerOptions, eq(questions.id, questionAnswerOptions.questionId))
-      .where(and(eq(questions.lessonId, lessonId), eq(questionAnswerOptions.isCorrect, true)))
+      .where(and(eq(questions.lessonId, lessonId)))
+      .groupBy(questions.id)
       .orderBy(questions.displayOrder);
   }
 

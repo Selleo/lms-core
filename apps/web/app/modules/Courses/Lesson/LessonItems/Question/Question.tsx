@@ -21,9 +21,11 @@ import type { DndWord } from "../FillInTheBlanks/dnd/types";
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
+type Questions = NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"];
+
 type QuestionProps = {
   lessonItemId: string;
-  content: GetLessonByIdResponse["data"]["quizDetails"]["questions"][number];
+  content: Questions[number];
   isSubmitted?: boolean;
   lessonType: string;
   isCompleted: boolean;
@@ -219,7 +221,7 @@ export const Question = ({
             isSubmitted={isSubmitted}
             content={content.options}
             handleClick={handleClick}
-            isMultiAnswer={isMultiQuestion || !isSingleChoicePhotoQuestion}
+            isMultiAnswer={isMultiQuestion || (isPhotoQuestion && !isSingleChoicePhotoQuestion)}
           />
           <QuestionCorrectAnswers
             canRenderAnswers={canRenderCorrectAnswers}

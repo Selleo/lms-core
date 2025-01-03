@@ -6055,7 +6055,14 @@
                                 ]
                               },
                               "isCorrect": {
-                                "type": "boolean"
+                                "anyOf": [
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
                               },
                               "questionId": {
                                 "format": "uuid",
@@ -6083,6 +6090,7 @@
                               }
                             },
                             "required": [
+                              "id",
                               "optionText",
                               "displayOrder",
                               "isCorrect"
@@ -6091,6 +6099,7 @@
                         }
                       },
                       "required": [
+                        "id",
                         "type",
                         "title"
                       ]

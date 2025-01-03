@@ -957,7 +957,7 @@ export interface GetLessonByIdResponse {
           optionText: string;
           displayOrder: number | null;
           isStudentAnswer?: boolean | null;
-          isCorrect: boolean;
+          isCorrect?: boolean | null;
           /** @format uuid */
           questionId?: string;
           matchedWord?: string | null;
