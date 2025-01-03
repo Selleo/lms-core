@@ -527,7 +527,7 @@ export interface GetBetaCourseByIdResponse {
             id?: string;
             optionText: string;
             displayOrder: number | null;
-            isStudentAnswer?: boolean;
+            isStudentAnswer?: boolean | null;
             isCorrect: boolean;
             /** @format uuid */
             questionId?: string;
@@ -686,7 +686,7 @@ export interface GetUserStatisticsResponse {
             id?: string;
             optionText: string;
             displayOrder: number | null;
-            isStudentAnswer?: boolean;
+            isStudentAnswer?: boolean | null;
             isCorrect: boolean;
             /** @format uuid */
             questionId?: string;
@@ -801,7 +801,7 @@ export type BetaCreateChapterBody = {
         id?: string;
         optionText: string;
         displayOrder: number | null;
-        isStudentAnswer?: boolean;
+        isStudentAnswer?: boolean | null;
         isCorrect: boolean;
         /** @format uuid */
         questionId?: string;
@@ -866,7 +866,7 @@ export type UpdateChapterBody = {
         id?: string;
         optionText: string;
         displayOrder: number | null;
-        isStudentAnswer?: boolean;
+        isStudentAnswer?: boolean | null;
         isCorrect: boolean;
         /** @format uuid */
         questionId?: string;
@@ -932,7 +932,38 @@ export interface GetLessonByIdResponse {
     fileType: string | null;
     fileUrl: string | null;
     quizDetails?: {
-      questions: any[];
+      questions: {
+        /** @format uuid */
+        id?: string;
+        type:
+          | "single_choice"
+          | "multiple_choice"
+          | "true_or_false"
+          | "photo_question"
+          | "fill_in_the_blanks_text"
+          | "fill_in_the_blanks_dnd"
+          | "brief_response"
+          | "detailed_response"
+          | "match_words"
+          | "scale_1_5";
+        description?: string | null;
+        title: string;
+        displayOrder?: number;
+        photoQuestionType?: ("single_choice" | "multiple_choice") | null;
+        photoS3Key?: string | null;
+        options?: {
+          /** @format uuid */
+          id?: string;
+          optionText: string;
+          displayOrder: number | null;
+          isStudentAnswer?: boolean | null;
+          isCorrect: boolean;
+          /** @format uuid */
+          questionId?: string;
+          matchedWord?: string | null;
+          scaleAnswer?: number | null;
+        }[];
+      }[];
       questionCount: number;
       correctAnswerCount: number | null;
       wrongAnswerCount: number | null;
@@ -973,7 +1004,7 @@ export type BetaCreateLessonBody = {
       id?: string;
       optionText: string;
       displayOrder: number | null;
-      isStudentAnswer?: boolean;
+      isStudentAnswer?: boolean | null;
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
@@ -1026,7 +1057,7 @@ export type BetaCreateQuizLessonBody = {
       id?: string;
       optionText: string;
       displayOrder: number | null;
-      isStudentAnswer?: boolean;
+      isStudentAnswer?: boolean | null;
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
@@ -1078,7 +1109,7 @@ export type BetaUpdateQuizLessonBody = {
       id?: string;
       optionText: string;
       displayOrder: number | null;
-      isStudentAnswer?: boolean;
+      isStudentAnswer?: boolean | null;
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
@@ -1128,7 +1159,7 @@ export type BetaUpdateLessonBody = {
       id?: string;
       optionText: string;
       displayOrder: number | null;
-      isStudentAnswer?: boolean;
+      isStudentAnswer?: boolean | null;
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
@@ -1162,8 +1193,9 @@ export interface EvaluationQuizBody {
     /** @format uuid */
     questionId: string;
     answer: {
-      index: number;
-      value: string;
+      /** @format uuid */
+      answerId: string;
+      value?: string;
     }[];
   }[];
 }
@@ -1171,6 +1203,12 @@ export interface EvaluationQuizBody {
 export interface EvaluationQuizResponse {
   data: {
     message: string;
+    data: {
+      correctAnswerCount: number;
+      wrongAnswerCount: number;
+      questionCount: number;
+      score: number;
+    };
   };
 }
 

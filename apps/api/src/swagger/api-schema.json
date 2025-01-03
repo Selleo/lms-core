@@ -4063,7 +4063,14 @@
                                         ]
                                       },
                                       "isStudentAnswer": {
-                                        "type": "boolean"
+                                        "anyOf": [
+                                          {
+                                            "type": "boolean"
+                                          },
+                                          {
+                                            "type": "null"
+                                          }
+                                        ]
                                       },
                                       "isCorrect": {
                                         "type": "boolean"
@@ -4748,7 +4755,14 @@
                                           ]
                                         },
                                         "isStudentAnswer": {
-                                          "type": "boolean"
+                                          "anyOf": [
+                                            {
+                                              "type": "boolean"
+                                            },
+                                            {
+                                              "type": "null"
+                                            }
+                                          ]
                                         },
                                         "isCorrect": {
                                           "type": "boolean"
@@ -5316,7 +5330,14 @@
                                   ]
                                 },
                                 "isStudentAnswer": {
-                                  "type": "boolean"
+                                  "anyOf": [
+                                    {
+                                      "type": "boolean"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
                                 },
                                 "isCorrect": {
                                   "type": "boolean"
@@ -5627,7 +5648,14 @@
                                   ]
                                 },
                                 "isStudentAnswer": {
-                                  "type": "boolean"
+                                  "anyOf": [
+                                    {
+                                      "type": "boolean"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
                                 },
                                 "isCorrect": {
                                   "type": "boolean"
@@ -6017,7 +6045,14 @@
                                 ]
                               },
                               "isStudentAnswer": {
-                                "type": "boolean"
+                                "anyOf": [
+                                  {
+                                    "type": "boolean"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
                               },
                               "isCorrect": {
                                 "type": "boolean"
@@ -6288,7 +6323,14 @@
                             ]
                           },
                           "isStudentAnswer": {
-                            "type": "boolean"
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           },
                           "isCorrect": {
                             "type": "boolean"
@@ -6524,7 +6566,14 @@
                             ]
                           },
                           "isStudentAnswer": {
-                            "type": "boolean"
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           },
                           "isCorrect": {
                             "type": "boolean"
@@ -6757,7 +6806,14 @@
                             ]
                           },
                           "isStudentAnswer": {
-                            "type": "boolean"
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           },
                           "isCorrect": {
                             "type": "boolean"
@@ -6999,7 +7055,14 @@
                             ]
                           },
                           "isStudentAnswer": {
-                            "type": "boolean"
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
                           },
                           "isCorrect": {
                             "type": "boolean"
@@ -7124,6 +7187,9 @@
                       "answerId": {
                         "format": "uuid",
                         "type": "string"
+                      },
+                      "value": {
+                        "type": "string"
                       }
                     },
                     "required": [
@@ -7152,10 +7218,34 @@
             "properties": {
               "message": {
                 "type": "string"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "correctAnswerCount": {
+                    "type": "number"
+                  },
+                  "wrongAnswerCount": {
+                    "type": "number"
+                  },
+                  "questionCount": {
+                    "type": "number"
+                  },
+                  "score": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "correctAnswerCount",
+                  "wrongAnswerCount",
+                  "questionCount",
+                  "score"
+                ]
               }
             },
             "required": [
-              "message"
+              "message",
+              "data"
             ]
           }
         },

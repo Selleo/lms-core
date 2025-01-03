@@ -135,7 +135,7 @@ export class LessonService {
                   WHERE qao.question_id = questions.id
                   ORDER BY 
                     CASE 
-                      WHEN ${questions.type} in (${QUESTION_TYPE.fill_in_the_blanks_dnd}) AND ${lesson.quizCompleted} == FALSE
+                      WHEN ${questions.type} in (${QUESTION_TYPE.fill_in_the_blanks_dnd}) AND ${lesson.quizCompleted} = FALSE
                         THEN random()
                       ELSE qao.display_order  
                     END
@@ -212,7 +212,7 @@ export class LessonService {
   }
 
   async evaluationQuiz(
-    quizAnswers: AnswerQuestionBody,
+    studentQuizAnswers: AnswerQuestionBody,
     userId: UUIDType,
   ): Promise<{
     correctAnswerCount: number;
@@ -221,7 +221,7 @@ export class LessonService {
     score: number;
   }> {
     const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(
-      quizAnswers.lessonId,
+      studentQuizAnswers.lessonId,
       userId,
     );
 
@@ -231,15 +231,16 @@ export class LessonService {
     if (accessCourseLessonWithDetails.lessonIsCompleted)
       throw new ConflictException("Quiz already finished");
 
-    const quizQuestions = await this.questionRepository.getQuizQuestions(quizAnswers.lessonId);
+    const correctAnswersForQuizQuestions =
+      await this.questionRepository.getQuizQuestionsToEvaluation(studentQuizAnswers.lessonId);
 
-    if (quizQuestions.length !== quizAnswers.answers.length)
+    if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.answers.length)
       throw new ConflictException("Quiz is not completed");
 
     return await this.db.transaction(async (trx) => {
       const evaluationResult = await this.questionService.evaluationsQuestions(
-        quizQuestions,
-        quizAnswers,
+        correctAnswersForQuizQuestions,
+        studentQuizAnswers,
         userId,
         trx,
       );
@@ -255,7 +256,7 @@ export class LessonService {
 
       await this.lessonRepository.completeQuiz(
         accessCourseLessonWithDetails.chapterId,
-        quizAnswers.lessonId,
+        studentQuizAnswers.lessonId,
         userId,
         evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
         quizScore,
@@ -267,7 +268,7 @@ export class LessonService {
         new QuizCompletedEvent(
           userId,
           accessCourseLessonWithDetails.courseId,
-          quizAnswers.lessonId,
+          studentQuizAnswers.lessonId,
           evaluationResult.correctAnswerCount,
           evaluationResult.wrongAnswerCount,
           quizScore,
