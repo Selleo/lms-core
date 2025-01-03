@@ -7,6 +7,7 @@ import { Icon } from "~/components/Icon";
 import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
 import { Video } from "~/components/VideoPlayer/Video";
+import { Quiz } from "~/modules/Courses/Lesson/Quiz";
 
 import Presentation from "../../../components/Presentation/Presentation";
 
@@ -41,7 +42,7 @@ export const LessonContent = ({
   const Content = () =>
     match(lesson.type)
       .with("text", () => <Viewer variant="lesson" content={lesson?.description} />)
-      .with("quiz", () => <></>)
+      .with("quiz", () => <Quiz lesson={lesson} />)
       .with("video", () => (
         <Video
           url={lesson.fileUrl}

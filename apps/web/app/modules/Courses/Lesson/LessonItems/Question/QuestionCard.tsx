@@ -1,5 +1,3 @@
-import { Card } from "~/components/ui/card";
-
 import type { ReactNode } from "react";
 
 type QuestionCardProps = {
@@ -16,11 +14,11 @@ export const QuestionCard = ({
   title,
 }: QuestionCardProps) => {
   return (
-    <Card className="flex flex-col gap-2 p-8 border-none drop-shadow-primary">
+    <div className="flex flex-col gap-2 p-8 border border-neutral-200 bg-white rounded-lg">
       <div className="details text-primary-700 uppercase">Question {questionNumber}</div>
       <div className="h6 text-neutral-950" dangerouslySetInnerHTML={{ __html: title }} />
-      <div className="body-base-md text-neutral-900">{questionType}</div>
+      <div className="body-base text-neutral-900">{questionType}</div>
       <div className="flex flex-col gap-4 mt-4">{children}</div>
-    </Card>
+    </div>
   );
 };

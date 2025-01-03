@@ -1,0 +1,9 @@
+export { default as BriefResponse } from "./brief-response.svg?react";
+export { default as DetailedResponse } from "./detailed-response.svg?react";
+export { default as FillInTheBlanks } from "./fill-in-the-blanks.svg?react";
+export { default as MultiSelect } from "./multi-select.svg?react";
+export { default as SingleSelect } from "./single-select.svg?react";
+export { default as PhotoQuestion } from "./photo-question.svg?react";
+export { default as TrueOrFalse } from "./true-or-false.svg?react";
+export { default as Equal } from "./equal.svg?react";
+export { default as Questionnaire } from "./questionnaire.svg?react";

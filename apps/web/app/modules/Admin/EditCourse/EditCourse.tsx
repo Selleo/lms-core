@@ -2,7 +2,9 @@ import { useParams, useSearchParams } from "@remix-run/react";
 
 import { useBetaCourseById } from "~/api/queries/admin/useBetaCourse";
 import { Icon } from "~/components/Icon";
+import { Button } from "~/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { LeaveModalProvider } from "~/context/LeaveModalContext";
 import { useTrackDataUpdatedAt } from "~/hooks/useTrackDataUpdatedAt";
 
 import CourseLessons from "./CourseLessons/CourseLessons";
@@ -11,8 +13,6 @@ import CourseSettings from "./CourseSettings/CourseSettings";
 import CourseStatus from "./CourseStatus/CourseStatus";
 
 import type { Chapter } from "./EditCourse.types";
-import { Button } from "~/components/ui/button";
-import { LeaveModalProvider } from "~/context/LeaveModalContext";
 
 const EditCourse = () => {
   const { id } = useParams();

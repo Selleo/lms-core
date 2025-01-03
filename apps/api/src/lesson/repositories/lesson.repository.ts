@@ -5,7 +5,7 @@ import { DatabasePg, type UUIDType } from "src/common";
 import { chapters, courses, lessons, questions, studentLessonProgress } from "src/storage/schema";
 
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type { QuestionBody } from "src/lesson/lesson.schema";
+import type { AdminQuestionBody, QuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 
 @Injectable()
@@ -28,7 +28,7 @@ export class LessonRepository {
         fileS3Key: sql<string | undefined>`${lessons.fileS3Key}`,
         fileType: sql<string | undefined>`${lessons.fileType}`,
         displayOrder: sql<number>`${lessons.displayOrder}`,
-        questions: sql<QuestionBody[]>`
+        questions: sql<AdminQuestionBody[]>`
           COALESCE(
             (
               SELECT json_agg(questions_data)
@@ -41,7 +41,7 @@ export class LessonRepository {
                   ${questions.photoQuestionType} AS photoQuestionType,
                   ${questions.photoS3Key} AS photoS3Key,
                   ${questions.solutionExplanation} AS solutionExplanation,
-                  ${questions.displayOrder} AS displayOrder,
+                  ${questions.displayOrder} AS displayOrder
                 FROM ${questions}
                 WHERE ${lessons.id} = ${questions.lessonId}
                 ORDER BY ${questions.displayOrder}

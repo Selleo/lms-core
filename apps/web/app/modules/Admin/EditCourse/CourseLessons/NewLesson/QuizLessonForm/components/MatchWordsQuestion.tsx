@@ -1,14 +1,16 @@
-import { useCallback } from "react";
-import { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
-import { QuestionOption } from "../QuizLessonForm.types";
-import { UseFormReturn } from "react-hook-form";
 import * as Accordion from "@radix-ui/react-accordion";
-import { Label } from "~/components/ui/label";
-import { SortableList } from "~/components/SortableList";
+import { useCallback } from "react";
+
 import { Icon } from "~/components/Icon";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { SortableList } from "~/components/SortableList";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+
+import type { QuestionOption } from "../QuizLessonForm.types";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
+import type { UseFormReturn } from "react-hook-form";
 
 type MatchWordsQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;

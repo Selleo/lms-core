@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotAcceptableException } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { sql } from "drizzle-orm";
 import { match } from "ts-pattern";
 
@@ -23,19 +23,20 @@ export class QuestionService {
   ) {}
 
   async evaluationsQuestions(
-    quizQuestions: {
+    correctAnswersForQuizQuestions: {
       id: string;
       type: QuestionTypes;
-      correctAnswers: { displayOrder: number; value: string }[];
+      correctAnswers: { answerId: UUIDType; displayOrder: number; value: string }[];
+      allAnswers: { answerId: UUIDType; displayOrder: number; value: string }[];
     }[],
-    quizAnswers: AnswerQuestionBody,
+    studentQuizAnswers: AnswerQuestionBody,
     userId: UUIDType,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
     try {
-      const quizEvaluationStats = quizQuestions.reduce(
+      const quizEvaluationStats = correctAnswersForQuizQuestions.reduce(
         (quizStats, question) => {
-          const questionAnswerList = quizAnswers.answers.filter(
+          const questionAnswerList = studentQuizAnswers.answers.filter(
             (answer) => answer.questionId === question.id,
           );
 
@@ -71,7 +72,7 @@ export class QuestionService {
 
               for (const correctAnswer of question.correctAnswers) {
                 const studentAnswer = questionAnswer.answer.filter(
-                  (answer) => answer.value === correctAnswer.value,
+                  (answer) => answer.answerId === correctAnswer.answerId,
                 );
 
                 if (studentAnswer.length !== 1) {
@@ -82,8 +83,16 @@ export class QuestionService {
 
               return passQuestion;
             });
+          const answersToRecord = question.allAnswers.map((answerOption) => {
+            if (questionAnswer.answer.find((answer) => answer.answerId === answerOption.answerId)) {
+              return answerOption.value;
+            }
+            // TODO: handle it, when value is not found
+            return "";
+          });
 
-          const formattedAnswer = this.questionAnswerToString(questionAnswer.answer, question.type);
+          const formattedAnswer = this.questionAnswerToString(answersToRecord);
+
           const validAnswer = {
             questionId: question.id,
             studentId: userId,
@@ -112,28 +121,13 @@ export class QuestionService {
     }
   }
 
-  private questionAnswerToString(
-    answers: {
-      index: number;
-      value: string;
-    }[],
-    questionType: QuestionTypes,
-  ): SQL<unknown> {
-    const questionTypeHandlers = {
-      [QUESTION_TYPE.single_choice.key]: this.handleChoiceAnswer.bind(this),
-      [QUESTION_TYPE.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
-      [QUESTION_TYPE.open_answer.key]: this.handleOpenAnswer.bind(this),
-      [QUESTION_TYPE.fill_in_the_blanks_text.key]: this.handleFillInTheBlanksAnswer.bind(this),
-      [QUESTION_TYPE.fill_in_the_blanks_dnd.key]: this.handleFillInTheBlanksAnswer.bind(this),
-    } as const;
+  private questionAnswerToString(answers: string[]): SQL<unknown> {
+    const convertedAnswers = answers.reduce((acc, answer, index) => {
+      acc.push(`'${index + 1}'`, `'${answer}'`);
+      return acc;
+    }, [] as string[]);
 
-    const handler = questionTypeHandlers[questionType];
-
-    if (!handler) {
-      throw new NotAcceptableException("Unknown question type");
-    }
-
-    return sql`json_build_object(${sql.raw(handler(answers).join(","))})`;
+    return sql`json_build_object(${sql.raw(convertedAnswers.join(","))})`;
 
     // TODO: decide how handle lesson progress
     // await this.studentLessonProgressService.markLessonAsCompleted(questionData.lessonId, userId);
@@ -168,40 +162,5 @@ export class QuestionService {
     //   }
     // }
     // });
-  }
-
-  private handleChoiceAnswer(
-    answers: {
-      index: number;
-      value: string;
-    }[],
-  ) {
-    return answers.reduce((acc, answer, index) => {
-      acc.push(`'${index}'`, `'${answer.value}'`);
-      return acc;
-    }, [] as string[]);
-  }
-
-  private handleFillInTheBlanksAnswer(
-    answers: {
-      index: number;
-      value: string;
-    }[],
-  ) {
-    return answers.reduce((acc, answer) => {
-      if (typeof answer === "string") return acc;
-
-      acc.push(`'${answer.index}'`, `'${answer.value}'`);
-      return acc;
-    }, [] as string[]);
-  }
-
-  private handleOpenAnswer(
-    answers: {
-      index: number;
-      value: string;
-    }[],
-  ) {
-    return [`'1'`, `'${answers[0].value}'`];
   }
 }

@@ -4,11 +4,11 @@ export const QUESTION_TYPE = {
   multiple_choice: { key: "multiple_choice", value: "Multiple Choice" },
   fill_in_the_blanks_text: {
     key: "fill_in_the_blanks_text",
-    value: "Fill in the blanks",
+    value: "Fill in the blanks text",
   },
   fill_in_the_blanks_dnd: {
     key: "fill_in_the_blanks_dnd",
-    value: "Fill in the blanks",
+    value: "Fill in the blanks drag and drop",
   },
 } as const;
 

@@ -54,7 +54,7 @@ export const FillInTheBlanks = ({
     })),
   );
 
-  const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
+  const maxAnswersAmount = content?.match(/\[word]/g)?.length ?? 0;
 
   const handleWordUpdate = (prevWords: Word[], index: number, value: string) => {
     const trimmedValue = value.trim();

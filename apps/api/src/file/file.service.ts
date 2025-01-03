@@ -17,7 +17,9 @@ export class FileService {
       if (cachedUrl) return cachedUrl;
 
       const signedUrl = await this.s3Service.getSignedUrl(fileKey);
-      await this.cacheManager.set(fileKey, signedUrl);
+      // TODO: extract to config constant
+      const ttl = 59 * 60 * 1000;
+      await this.cacheManager.set(fileKey, signedUrl, ttl);
 
       return signedUrl;
     } catch (error) {

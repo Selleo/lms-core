@@ -1,28 +1,23 @@
 import { useCallback } from "react";
-import { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
-import { QuestionOption } from "../QuizLessonForm.types";
-import { UseFormReturn } from "react-hook-form";
-import { Label } from "~/components/ui/label";
-import { SortableList } from "~/components/SortableList";
+
 import { Icon } from "~/components/Icon";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { SortableList } from "~/components/SortableList";
+import { Accordion, AccordionItem } from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Accordion, AccordionItem } from "~/components/ui/accordion";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
+import { Label } from "~/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 
-type ScaleQustionProps = {
+import type { QuestionOption } from "../QuizLessonForm.types";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
+import type { UseFormReturn } from "react-hook-form";
+
+type ScaleQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
   questionIndex: number;
 };
 
-const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
+const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
   const questionType = form.getValues(`questions.${questionIndex}.type`);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;

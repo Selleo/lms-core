@@ -3,8 +3,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
-import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
+
+import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 
 type QuestionSelectorProps = {
   addQuestion: (questionType: QuestionType) => void;
@@ -69,7 +70,6 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
       setOpenUpwards(spaceAbove > spaceBelow);
     }
   }, [showOptions]);
-
   return (
     <div className="relative mt-4">
       <Button
@@ -93,17 +93,19 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
           <p className="block p-2 text-left text-black border-b border-gray-300 body-base-md w-full">
             Select question type:
           </p>
-          {questionTypes.map(({ type, label, icon }) => (
-            <Button
-              key={type}
-              className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
-              type="button"
-              onClick={() => onTypeChoose(type)}
-            >
-              <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
-              {label}
-            </Button>
-          ))}
+          {questionTypes.map(({ type, label, icon }) => {
+            return (
+              <Button
+                key={type}
+                className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
+                type="button"
+                onClick={() => onTypeChoose(type)}
+              >
+                <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
+                {label}
+              </Button>
+            );
+          })}
         </Card>
       )}
     </div>

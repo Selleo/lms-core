@@ -1,10 +1,14 @@
-import React from "react";
-import QuestionTitle from "./QuestionTitle";
-import { Question, QuestionType } from "../QuizLessonForm.types";
-import { UseFormReturn } from "react-hook-form";
-import { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
-import { cn } from "~/lib/utils";
 import { Accordion, AccordionContent, AccordionItem } from "~/components/ui/accordion";
+import { cn } from "~/lib/utils";
+
+import { QuestionType } from "../QuizLessonForm.types";
+
+import QuestionTitle from "./QuestionTitle";
+
+import type { Question } from "../QuizLessonForm.types";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
+import type React from "react";
+import type { UseFormReturn } from "react-hook-form";
 
 const QuestionWrapper = ({
   questionType,

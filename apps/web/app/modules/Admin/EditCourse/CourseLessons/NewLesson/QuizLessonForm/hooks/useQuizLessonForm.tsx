@@ -1,24 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-import { quizLessonFormSchema } from "../validators/quizLessonFormSchema";
-
-import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
-import { useCreateQuizLesson } from "~/api/mutations/admin/useCreateQuizLesson";
-import { queryClient } from "~/api/queryClient";
-import {
-  Chapter,
-  ContentTypes,
-  Lesson,
-  LessonType,
-} from "~/modules/Admin/EditCourse/EditCourse.types";
-import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { useParams } from "@remix-run/react";
 import { useEffect } from "react";
-import { Question, QuestionOption, QuestionType } from "../QuizLessonForm.types";
-import { useUpdateQuizLesson } from "~/api/mutations/admin/useUpdateQuizLesson";
+import { useForm } from "react-hook-form";
+
+import { useCreateQuizLesson } from "~/api/mutations/admin/useCreateQuizLesson";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
+import { useUpdateQuizLesson } from "~/api/mutations/admin/useUpdateQuizLesson";
+import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
+import { queryClient } from "~/api/queryClient";
 import { useLeaveModal } from "~/context/LeaveModalContext";
+import { ContentTypes, LessonType } from "~/modules/Admin/EditCourse/EditCourse.types";
+
+import { QuestionType } from "../QuizLessonForm.types";
+import { quizLessonFormSchema } from "../validators/quizLessonFormSchema";
+
+import type { Question, QuestionOption } from "../QuizLessonForm.types";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
+import type { Chapter, Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type QuizLessonFormProps = {
   chapterToEdit: Chapter | null;

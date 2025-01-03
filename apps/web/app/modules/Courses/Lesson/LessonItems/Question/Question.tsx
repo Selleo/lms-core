@@ -2,6 +2,7 @@ import { useParams } from "@remix-run/react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
+import { Input } from "~/components/ui/input";
 import { Textarea } from "~/components/ui/textarea";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
@@ -17,13 +18,14 @@ import { QuestionCorrectAnswers } from "./QuestionCorrectAnswers";
 import { SelectAnswer } from "./SelectAnswer";
 
 import type { DndWord } from "../FillInTheBlanks/dnd/types";
-import type { GetLessonResponse } from "~/api/generated-api";
+import type { GetLessonByIdResponse } from "~/api/generated-api";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+
+type Questions = NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"];
 
 type QuestionProps = {
   lessonItemId: string;
-  content: GetLessonResponse["data"]["lessonItems"][number]["content"];
-  questionsArray: string[];
+  content: Questions[number];
   isSubmitted?: boolean;
   lessonType: string;
   isCompleted: boolean;
@@ -34,7 +36,6 @@ export const Question = ({
   lessonItemId,
   isSubmitted,
   content,
-  questionsArray,
   lessonType,
   isCompleted,
   updateLessonItemCompletion,
@@ -48,13 +49,14 @@ export const Question = ({
   if (!lessonId) throw new Error("Lesson ID not found");
 
   const questionId = content.id;
-  const isSingleQuestion = "questionType" in content && content.questionType === "single_choice";
-  const isMultiQuestion = "questionType" in content && content.questionType === "multiple_choice";
-  const isOpenAnswer = "questionType" in content && content.questionType === "open_answer";
-  const isTextFillInTheBlanks =
-    "questionType" in content && content.questionType === "fill_in_the_blanks_text";
-  const isDraggableFillInTheBlanks =
-    "questionType" in content && content.questionType === "fill_in_the_blanks_dnd";
+  const isTrueOrFalse = content.type === "true_or_false";
+  const isSingleQuestion = content.type === "single_choice";
+  const isMultiQuestion = content.type === "multiple_choice";
+  const isPhotoQuestion = content.type === "photo_question";
+  const isSingleChoicePhotoQuestion = content.photoQuestionType === "single_choice";
+  const isOpenAnswer = content.type === "brief_response" || content.type === "detailed_response";
+  const isTextFillInTheBlanks = content.type === "fill_in_the_blanks_text";
+  const isDraggableFillInTheBlanks = content.type === "fill_in_the_blanks_dnd";
 
   const { sendAnswer, sendOpenAnswer } = useQuestionQuery({
     lessonId,
@@ -78,7 +80,8 @@ export const Question = ({
   const handleClick = async (id: string) => {
     if (isSingleQuestion) {
       setSelectedOption([id]);
-      await sendAnswer([id]);
+      // TODO: Implement in the future
+      // await sendAnswer([id]);
       handleCompletion();
     } else {
       let newSelectedOptions: string[];
@@ -90,7 +93,8 @@ export const Question = ({
       }
 
       setSelectedOption(newSelectedOptions);
-      await sendAnswer(newSelectedOptions);
+      // TODO: Implement in the future
+      // await sendAnswer(newSelectedOptions);
       handleCompletion();
     }
   };
@@ -109,20 +113,16 @@ export const Question = ({
         )
       : false;
 
-  const questionNumber = questionsArray.indexOf(questionId) + 1;
+  const questionNumber = content.displayOrder;
 
   const getFillInTheBlanksDndAnswers = () => {
-    if (!("questionAnswers" in content) || !isDraggableFillInTheBlanks) {
-      return [];
-    }
-
-    const items: DndWord[] = content.questionAnswers.map(
+    const items: DndWord[] = content.options.map(
       ({ id, optionText, displayOrder, isStudentAnswer, isCorrect, studentAnswerText }) => ({
         id,
         index: displayOrder ?? null,
         value: optionText,
         blankId: typeof displayOrder === "number" ? `blank_${displayOrder}` : "blank_preset",
-        isCorrect,
+        isCorrect: isCorrect,
         isStudentAnswer,
         studentAnswerText,
       }),
@@ -138,13 +138,16 @@ export const Question = ({
   };
 
   const fillInTheBlanksDndData = getFillInTheBlanksDndAnswers();
-
   switch (true) {
     case isOpenAnswer:
       return (
         <QuestionCard
-          title={"questionBody" in content ? content.questionBody : ""}
-          questionType="Provide a brief response."
+          title={content.title}
+          questionType={
+            content.type === "brief_response"
+              ? "Instruction: Provide a brief response (1-2 sentences)."
+              : "Instruction: Write a detailed response (3-5 sentences)."
+          }
           questionNumber={questionNumber}
         >
           <Textarea
@@ -163,10 +166,10 @@ export const Question = ({
       return (
         <FillInTheBlanks
           isQuiz={isQuiz}
-          questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
-          content={content.questionBody}
+          questionLabel={`question ${content.displayOrder}`}
+          content={content.description}
           sendAnswer={sendAnswer}
-          answers={content.questionAnswers}
+          answers={content.options}
           isQuizSubmitted={isSubmitted}
           solutionExplanation={
             "solutionExplanation" in content ? content.solutionExplanation : null
@@ -182,8 +185,8 @@ export const Question = ({
       return (
         <FillInTheBlanksDnd
           isQuiz={isQuiz}
-          questionLabel={`question ${questionsArray.indexOf(questionId) + 1}`}
-          content={content.questionBody}
+          questionLabel={`question ${content.displayOrder}`}
+          content={content.description}
           sendAnswer={sendAnswer}
           answers={fillInTheBlanksDndData}
           isQuizSubmitted={isSubmitted}
@@ -196,23 +199,29 @@ export const Question = ({
           updateLessonItemCompletion={updateLessonItemCompletion}
         />
       );
-
-    case isSingleQuestion || isMultiQuestion:
+    case isSingleQuestion || isMultiQuestion || isPhotoQuestion:
       return (
         <QuestionCard
-          title={"questionBody" in content ? content.questionBody : ""}
-          questionType={`${isSingleQuestion ? "Single" : "Multiple"} select question.`}
+          title={content.title ?? ""}
+          questionType={`${isSingleQuestion || isSingleChoicePhotoQuestion ? "Single" : "Multiple"} select question.`}
           questionNumber={questionNumber}
         >
+          {isPhotoQuestion && (
+            <img
+              src={content.photoS3Key}
+              alt=""
+              className="w-full h-auto max-w-[960px] rounded-lg"
+            />
+          )}
           <SelectAnswer
             isQuiz={isQuiz}
             questionId={questionId}
             selectedOption={selectedOption}
             isAdmin={isAdmin}
             isSubmitted={isSubmitted}
-            content={content}
+            content={content.options}
             handleClick={handleClick}
-            isMultiAnswer={isMultiQuestion}
+            isMultiAnswer={isMultiQuestion || (isPhotoQuestion && !isSingleChoicePhotoQuestion)}
           />
           <QuestionCorrectAnswers
             canRenderAnswers={canRenderCorrectAnswers}
@@ -220,6 +229,48 @@ export const Question = ({
               questionAnswers: content.questionAnswers,
             })}
           />
+        </QuestionCard>
+      );
+
+    case isTrueOrFalse:
+      return (
+        <QuestionCard
+          title={content.title ?? ""}
+          questionType={`True or false question.`}
+          questionNumber={questionNumber}
+        >
+          {content.options?.map(({ optionText, id }, index) => (
+            <div
+              key={index}
+              className="body-base text-neutral-950 w-full gap-x-4 py-3 px-4 border border-neutral-200 rounded-lg flex"
+            >
+              <div className="w-full">{optionText}</div>
+              <div className="flex gap-x-4">
+                <label className="flex items-center gap-x-1">
+                  <Input
+                    className="size-4"
+                    readOnly
+                    type="radio"
+                    value="true"
+                    {...register(`singleAnswerQuestions.${questionId}.${id}`)}
+                    name={`trueOrFalseQuestions.${questionId}.${id}`}
+                  />{" "}
+                  True
+                </label>
+                <label className="flex items-center gap-x-1">
+                  <Input
+                    className="size-4"
+                    {...register(`singleAnswerQuestions.${questionId}.${id}`)}
+                    name={`trueOrFalseQuestions.${questionId}.${id}`}
+                    readOnly
+                    type="radio"
+                    value="false"
+                  />{" "}
+                  False
+                </label>
+              </div>
+            </div>
+          ))}
         </QuestionCard>
       );
 

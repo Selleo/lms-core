@@ -21,6 +21,7 @@ type SelectAnswerOptionQuizProps = {
   handleOnClick: (value: string) => void;
   isCorrectAnswerNotSelected?: boolean | null;
   isMultiAnswer: boolean;
+  isImageSelect?: boolean;
 };
 
 export const SelectAnswerOptionQuiz = ({

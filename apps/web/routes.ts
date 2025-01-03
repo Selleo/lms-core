@@ -15,10 +15,12 @@ export const routes: (
         index: true,
       });
       route("courses", "modules/Courses/Courses.page.tsx");
-      route("course/:id", "modules/Courses/NewCourseView/NewCourseView.page.tsx");
-      route("course/:courseId/lesson/:lessonId", "modules/Courses/Lesson/Lesson.page.tsx");
+      route("course/:id", "modules/Courses/CourseView/CourseView.page.tsx");
       route("settings", "modules/Dashboard/Settings/Settings.page.tsx");
       route("teachers/:id", "modules/Teacher/Teacher.page.tsx");
+    });
+    route("course/:courseId/lesson", "modules/Courses/Lesson/Lesson.layout.tsx", () => {
+      route(":lessonId", "modules/Courses/Lesson/Lesson.page.tsx");
     });
     route("admin", "modules/Admin/Admin.layout.tsx", () => {
       route("courses", "modules/Admin/Courses/Courses.page.tsx", {
