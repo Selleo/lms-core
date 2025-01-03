@@ -56,6 +56,7 @@ export class LessonService {
         displayOrder: sql<number>`${lessons.displayOrder}`,
         quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
         quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
+        isExternal: sql<boolean>`${lessons.isExternal}`,
       })
       .from(lessons)
       .leftJoin(

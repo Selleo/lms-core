@@ -3732,6 +3732,9 @@
                                 "type": "null"
                               }
                             ]
+                          },
+                          "isExternal": {
+                            "type": "boolean"
                           }
                         },
                         "required": [
@@ -5066,6 +5069,9 @@
                           "type": "null"
                         }
                       ]
+                    },
+                    "isExternal": {
+                      "type": "boolean"
                     }
                   },
                   "required": [
@@ -5938,6 +5944,9 @@
               },
               "displayOrder": {
                 "type": "number"
+              },
+              "isExternal": {
+                "type": "boolean"
               }
             },
             "required": [

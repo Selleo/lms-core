@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { useLeaveModal } from "~/context/LeaveModalContext";
 import { cn } from "~/lib/utils";
 import { LessonCardList } from "~/modules/Admin/EditCourse/CourseLessons/components/LessonCardList";
 
@@ -31,7 +32,6 @@ import { ContentTypes } from "../../EditCourse.types";
 
 import type { Chapter, Lesson } from "../../EditCourse.types";
 import type React from "react";
-import { useLeaveModal } from "~/context/LeaveModalContext";
 
 interface ChapterCardProps {
   chapter: Chapter;

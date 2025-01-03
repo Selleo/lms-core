@@ -2,11 +2,11 @@ import { useMemo } from "react";
 
 import { Icon } from "~/components/Icon";
 import { cn } from "~/lib/utils";
+import { LessonType, type Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import { mapItemType, mapTypeToIcon } from "../CourseLessons.helpers";
 
 import type { ReactNode } from "react";
-import { LessonType, type Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 import type { IconName } from "~/types/shared";
 
 interface LessonCardProps {

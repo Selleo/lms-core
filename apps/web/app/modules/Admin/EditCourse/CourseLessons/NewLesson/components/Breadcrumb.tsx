@@ -1,12 +1,16 @@
+import { useCallback, useEffect, useState } from "react";
+
 import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
-import { ContentTypes, Lesson } from "../../../EditCourse.types";
 import { useLeaveModal } from "~/context/LeaveModalContext";
-import { useCallback, useEffect, useState } from "react";
+
+import { ContentTypes } from "../../../EditCourse.types";
+
+import type { Lesson } from "../../../EditCourse.types";
 
 type BreadrumbProps = {
   lessonLabel: string;

@@ -1,4 +1,4 @@
-import { Question } from "./CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
+import type { Question } from "./CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
 
 export type NavigationTab = "Settings" | "Curriculum" | "Pricing" | "Status";
 
@@ -13,6 +13,7 @@ export interface Lesson {
   fileType?: string;
   chapterId?: string;
   questions?: Question[];
+  isExternal?: boolean;
 }
 
 export interface Chapter {

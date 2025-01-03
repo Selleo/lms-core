@@ -96,6 +96,7 @@ export const lessonShowSchema = Type.Object({
   fileUrl: Type.Union([Type.String(), Type.Null()]),
   quizDetails: Type.Optional(questionDetails),
   displayOrder: Type.Number(),
+  isExternal: Type.Optional(Type.Boolean()),
 });
 
 export const updateLessonSchema = Type.Partial(createLessonSchema);
@@ -117,6 +118,7 @@ export const lessonForChapterSchema = Type.Array(
       Type.Literal(PROGRESS_STATUSES.NOT_STARTED),
     ]),
     quizQuestionCount: Type.Union([Type.Number(), Type.Null()]),
+    isExternal: Type.Optional(Type.Boolean()),
   }),
 );
 

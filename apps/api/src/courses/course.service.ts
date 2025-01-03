@@ -390,6 +390,7 @@ export class CourseService {
                   ${lessons.title} AS title,
                   ${lessons.type} AS type,
                   ${lessons.displayOrder} AS "displayOrder",
+                  ${lessons.isExternal} AS "isExternal",
                   CASE
                     WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN 'completed'
                     WHEN ${studentLessonProgress.completedAt} IS NULL
