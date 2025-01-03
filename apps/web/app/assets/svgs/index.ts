@@ -28,13 +28,7 @@ export { default as UploadImageIcon } from "./upload-image.svg?react";
 export { default as User } from "./user.svg?react";
 export { default as Warning } from "./warning.svg?react";
 export { default as Admin } from "./admin.svg?react";
-export { default as BriefResponse } from "./brief-response.svg?react";
-export { default as DetailedResponse } from "./detailed-response.svg?react";
-export { default as FillInTheBlanks } from "./fill-in-the-blanks.svg?react";
-export { default as MultiSelect } from "./multi-select.svg?react";
-export { default as SingleSelect } from "./single-select.svg?react";
-export { default as PhotoQuestion } from "./photo-question.svg?react";
-export { default as TrueOrFalse } from "./true-or-false.svg?react";
+
 export { default as Success } from "./success.svg?react";
 export { default as CourseEmptyState } from "./course-empty-state.svg?react";
 export { default as DragAndDropIcon } from "./drag-and-drop.svg?react";
@@ -44,9 +38,8 @@ export { default as Flame } from "./flame.svg?react";
 export { default as FreeRight } from "./free-right.svg?react";
 export { default as NoData } from "./no-data.svg?react";
 export { default as Eye } from "./eye.svg?react";
-export { default as Equal } from "./equal.svg?react";
-export { default as Questionnaire } from "./questionnaire.svg?react";
 
 export * from "./lesson-types";
+export * from "./question-types";
 export * from "./arrows";
 export * from "./actions";
