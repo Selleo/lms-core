@@ -74,7 +74,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isQuizSubmitted]);
 
-  const maxAnswersAmount = content.match(/\[word]/g)?.length ?? 0;
+  const maxAnswersAmount = content?.match(/\[word]/g)?.length ?? 0;
 
   const handleDragStart = (event: DragStartEvent) => {
     if (isQuiz && isQuizSubmitted) return;
