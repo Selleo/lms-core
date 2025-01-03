@@ -4,7 +4,7 @@ import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
 import { useUserRole } from "~/hooks/useUserRole";
-import { ChapterCard } from "~/modules/Courses/CourseView/ChapterCard";
+import { ChapterCard } from "~/modules/Statistics/Client/components/ChapterCard";
 
 import type { GetUserStatisticsResponse } from "~/api/generated-api";
 

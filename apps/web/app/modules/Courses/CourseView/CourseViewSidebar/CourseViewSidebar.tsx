@@ -5,8 +5,8 @@ import { Gravatar } from "~/components/Gravatar";
 import { Avatar } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { useUserRole } from "~/hooks/useUserRole";
-import { CourseOptions } from "~/modules/Courses/NewCourseView/CourseViewSidebar/CourseOptions";
-import { CourseProgress } from "~/modules/Courses/NewCourseView/CourseViewSidebar/CourseProgress";
+import { CourseOptions } from "~/modules/Courses/CourseView/CourseViewSidebar/CourseOptions";
+import { CourseProgress } from "~/modules/Courses/CourseView/CourseViewSidebar/CourseProgress";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 

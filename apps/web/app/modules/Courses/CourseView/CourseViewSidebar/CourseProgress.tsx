@@ -4,7 +4,7 @@ import { find, flatMap } from "lodash-es";
 import { CopyUrlButton } from "~/components/CopyUrlButton";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
-import { CourseProgressChart } from "~/modules/Courses/NewCourseView/components/CourseProgressChart";
+import { CourseProgressChart } from "~/modules/Courses/CourseView/components/CourseProgressChart";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 
@@ -20,6 +20,9 @@ const findFirstNotStartedLessonId = (course: CourseProgressProps["course"]) => {
 export const CourseProgress = ({ course }: CourseProgressProps) => {
   const navigate = useNavigate();
   const nonStartedLessonId = findFirstNotStartedLessonId(course);
+  const notStartedChapterId = course.chapters.find((chapter) => {
+    return chapter.lessons.some((lesson) => lesson.id === nonStartedLessonId);
+  })?.id;
 
   return (
     <>
@@ -36,7 +39,11 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
         <Button
           className="gap-x-2"
           disabled={!nonStartedLessonId}
-          onClick={() => navigate(`lesson/${nonStartedLessonId}`)}
+          onClick={() =>
+            navigate(`lesson/${nonStartedLessonId}`, {
+              state: { chapterId: notStartedChapterId },
+            })
+          }
         >
           <Icon name="Play" className="w-6 h-auto text-white" />
           <span>Continue learning</span>
