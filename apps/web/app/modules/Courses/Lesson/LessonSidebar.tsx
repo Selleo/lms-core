@@ -1,5 +1,6 @@
-import { Link } from "@remix-run/react";
+import { Link, useLocation } from "@remix-run/react";
 import { startCase } from "lodash-es";
+import { useEffect, useState } from "react";
 
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
@@ -12,7 +13,7 @@ import {
 import { Badge } from "~/components/ui/badge";
 import { CategoryChip } from "~/components/ui/CategoryChip";
 import { cn } from "~/lib/utils";
-import { LessonTypesIcons } from "~/modules/Courses/NewCourseView/lessonTypes";
+import { LessonTypesIcons } from "~/modules/Courses/CourseView/lessonTypes";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 
@@ -28,6 +29,17 @@ const progressBadge = {
 } as const;
 
 export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
+  const { state } = useLocation();
+  const [activeChapter, setActiveChapter] = useState<string | undefined>(state?.chapterId);
+
+  useEffect(() => {
+    setActiveChapter(state?.chapterId);
+  }, [state?.chapterId]);
+
+  const handleAccordionChange = (value: string | undefined) => {
+    setActiveChapter(value);
+  };
+
   return (
     <div className="w-full bg-white h-full rounded-lg">
       <div className="flex flex-col gap-y-12">
@@ -45,7 +57,12 @@ export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
         <div className="flex flex-col px-4 gap-y-4">
           <p className="px-4 body-lg-md text-neutral-950">Table of content:</p>
           <div className="flex flex-col">
-            <Accordion type="single" collapsible>
+            <Accordion
+              type="single"
+              collapsible
+              value={activeChapter ?? course?.chapters?.[0]?.id}
+              onValueChange={handleAccordionChange}
+            >
               {course?.chapters?.map(({ id, title, lessons, chapterProgress }) => {
                 return (
                   <AccordionItem value={id} key={id}>
