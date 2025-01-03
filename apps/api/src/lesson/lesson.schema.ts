@@ -11,7 +11,7 @@ export const optionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
   optionText: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
-  isStudentAnswer: Type.Optional(Type.Boolean()),
+  isStudentAnswer: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
   isCorrect: Type.Boolean(),
   questionId: Type.Optional(UUIDSchema),
   matchedWord: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -125,7 +125,9 @@ export const answerQuestionsForLessonBody = Type.Object({
   answers: Type.Array(
     Type.Object({
       questionId: UUIDSchema,
-      answer: Type.Array(Type.Object({ answerId: UUIDSchema })),
+      answer: Type.Array(
+        Type.Object({ answerId: UUIDSchema, value: Type.Optional(Type.String()) }),
+      ),
     }),
   ),
 });

@@ -116,27 +116,39 @@ export class QuestionRepository {
   }
 
   // TODO: check if it work correctly
-  async getQuizQuestions(lessonId: UUIDType) {
+  async getQuizQuestionsToEvaluation(lessonId: UUIDType) {
     return this.db
       .select({
         id: questions.id,
         type: sql<QuestionTypes>`${questions.type}`,
         correctAnswers: sql<{ answerId: UUIDType; displayOrder: number; value: string }[]>`
-            COALESCE(
-              (
-                SELECT json_agg(
-                  json_build_object(
-                    'answerId', ${questionAnswerOptions.id}
-                    'displayOrder', ${questionAnswerOptions.displayOrder}
-                    'value', ${questionAnswerOptions.optionText}
-                  )
-                )
-                FROM ${questionAnswerOptions}
-                WHERE ${questionAnswerOptions.questionId} = ${questions.id} AND ${questionAnswerOptions.isCorrect} = TRUE
-                GROUP BY ${questionAnswerOptions.id}, ${questionAnswerOptions.displayOrder}, ${questionAnswerOptions.optionText}
-                ORDER BY ${questionAnswerOptions.displayOrder}
-              ),
-              '[]'::json
+          (
+            SELECT ARRAY(
+              SELECT json_build_object(
+                'answerId', ${questionAnswerOptions.id},
+                'displayOrder', ${questionAnswerOptions.displayOrder},
+                'value', ${questionAnswerOptions.optionText}
+              )
+              FROM ${questionAnswerOptions}
+              WHERE ${questionAnswerOptions.questionId} = ${questions.id} AND ${questionAnswerOptions.isCorrect} = TRUE
+              GROUP BY ${questionAnswerOptions.displayOrder}, ${questionAnswerOptions.id}, ${questionAnswerOptions.optionText}
+              ORDER BY ${questionAnswerOptions.displayOrder}
+            )
+          )
+        `,
+        allAnswers: sql<{ answerId: UUIDType; displayOrder: number; value: string }[]>`
+          (
+            SELECT ARRAY(
+              SELECT json_build_object(
+                'answerId', ${questionAnswerOptions.id},
+                'displayOrder', ${questionAnswerOptions.displayOrder},
+                'value', ${questionAnswerOptions.optionText}
+              )
+              FROM ${questionAnswerOptions}
+              WHERE ${questionAnswerOptions.questionId} = ${questions.id}
+              GROUP BY ${questionAnswerOptions.displayOrder}, ${questionAnswerOptions.id}, ${questionAnswerOptions.optionText}
+              ORDER BY ${questionAnswerOptions.displayOrder}
+            )
           )
         `,
       })
