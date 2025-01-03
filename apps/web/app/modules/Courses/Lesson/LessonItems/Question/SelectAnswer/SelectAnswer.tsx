@@ -1,17 +1,18 @@
 import { SelectAnswerOption } from "./SelectAnswerOption";
 import { SelectAnswerOptionQuiz } from "./SelectAnswerOptionQuiz";
 
-import type { GetLessonResponse } from "~/api/generated-api";
+import type { GetLessonByIdResponse } from "~/api/generated-api";
 
 type SingleSelectQuestionProps = {
   questionId: string;
-  content: GetLessonResponse["data"]["lessonItems"][number]["content"];
+  content: GetLessonByIdResponse["data"]["quizDetails"]["questions"][number];
   isAdmin: boolean;
   isSubmitted?: boolean;
   selectedOption: string[];
   handleClick: (value: string) => void;
   isQuiz: boolean;
   isMultiAnswer: boolean;
+  isImageSelect?: boolean;
 };
 
 export const SelectAnswer = ({
@@ -24,63 +25,50 @@ export const SelectAnswer = ({
   isQuiz = false,
   isMultiAnswer = false,
 }: SingleSelectQuestionProps) => {
-  if (!("questionAnswers" in content)) return null;
+  return content.map(({ isCorrect, optionText, id }) => {
+    const isFieldDisabled = isAdmin || typeof isCorrect === "boolean";
 
-  return content.questionAnswers
-    .sort((a, b) => {
-      if (a.displayOrder !== null && b.displayOrder !== null) {
-        return a.displayOrder - b.displayOrder;
-      }
+    const isCorrectAnswer = Boolean(isCorrect && selectedOption.includes(id));
+    const isWrongAnswer = Boolean(!isCorrect && selectedOption.includes(id));
+    const isCorrectAnswerNotSelected = isCorrect && !selectedOption.includes(id);
+    const isAnswerChecked = selectedOption.includes(id) && isCorrect === null;
 
-      return 0;
-    })
-    .map(({ isCorrect, isStudentAnswer, optionText, id }) => {
-      const isFieldDisabled = isAdmin || typeof isCorrect === "boolean";
+    const config = {
+      isFieldDisabled,
+      isWrongAnswer,
+      isCorrectAnswerNotSelected,
+      isAnswerChecked,
+      isCorrectAnswer: isCorrect,
+      isCorrectAnswerSelected: isCorrectAnswer,
+      isChecked: isAnswerChecked,
+      isStudentAnswer: selectedOption.includes(id),
+      isMultiAnswer,
+    };
 
-      const isCorrectAnswer = Boolean(isCorrect && isStudentAnswer);
-
-      const isWrongAnswer = Boolean(!isCorrect && isStudentAnswer);
-
-      const isCorrectAnswerNotSelected = isCorrect && !isStudentAnswer;
-
-      const isAnswerChecked = selectedOption.includes(id) && isCorrect === null;
-
-      const config = {
-        isFieldDisabled,
-        isWrongAnswer,
-        isCorrectAnswerNotSelected,
-        isAnswerChecked,
-        isCorrectAnswer: isCorrect,
-        isCorrectAnswerSelected: isCorrectAnswer,
-        isChecked: isAnswerChecked,
-        isStudentAnswer: !!isStudentAnswer,
-        isMultiAnswer,
-      };
-
-      if (isQuiz) {
-        return (
-          <SelectAnswerOptionQuiz
-            key={id}
-            answer={optionText}
-            answerId={id}
-            handleOnClick={handleClick}
-            isQuizSubmitted={!!isSubmitted}
-            questionId={questionId}
-            {...config}
-          />
-        );
-      }
-
+    if (isQuiz) {
       return (
-        <SelectAnswerOption
+        <SelectAnswerOptionQuiz
           key={id}
           answer={optionText}
           answerId={id}
           handleOnClick={handleClick}
+          isQuizSubmitted={!!isSubmitted}
           questionId={questionId}
           {...config}
-          isChecked={selectedOption.includes(id)}
         />
       );
-    });
+    }
+
+    return (
+      <SelectAnswerOption
+        key={id}
+        answer={optionText}
+        answerId={id}
+        handleOnClick={handleClick}
+        questionId={questionId}
+        {...config}
+        isChecked={selectedOption.includes(id)}
+      />
+    );
+  });
 };
