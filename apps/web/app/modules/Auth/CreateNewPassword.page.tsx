@@ -12,6 +12,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { cn } from "~/lib/utils";
 
 import type { ResetPasswordBody } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 const createNewPasswordSchema = z
   .object({
@@ -44,6 +45,7 @@ export default function CreateNewPasswordPage() {
     resolver: zodResolver(createNewPasswordSchema),
     mode: "onChange",
   });
+  const { t } = useTranslation();
 
   const onSubmit = (data: ResetPasswordBody) => {
     if (resetToken) {
@@ -51,7 +53,7 @@ export default function CreateNewPasswordPage() {
         data: { newPassword: data.newPassword, resetToken: resetToken },
       }).then(() => {
         toast({
-          description: "Password changed successfully",
+          description: t("passwordChangedSuccessfully"),
         });
         navigate("/auth/login");
       });
@@ -62,7 +64,7 @@ export default function CreateNewPasswordPage() {
         data: { password: data.newPassword, createToken: createToken },
       }).then(() => {
         toast({
-          description: "Password created successfully",
+          description: t("passwordCreatedSuccessfully"),
         });
         navigate("/auth/login");
       });
@@ -72,13 +74,15 @@ export default function CreateNewPasswordPage() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">Create new password</CardTitle>
-        <CardDescription>Enter a new password for {email}</CardDescription>
+        <CardTitle className="text-2xl">{t("createNewPassword")}</CardTitle>
+        <CardDescription>
+          {t("enterNewPasswordFor")} {email}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-2">
-            <Label htmlFor="newPassword">Password</Label>
+            <Label htmlFor="newPassword">{t("password")}</Label>
             <Input
               id="newPassword"
               type="password"
@@ -91,7 +95,7 @@ export default function CreateNewPasswordPage() {
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="newPasswordConfirmation">Confirm Password</Label>
+              <Label htmlFor="newPasswordConfirmation">{t("confirmPassword")}</Label>
             </div>
             <Input
               id="newPasswordConfirmation"
@@ -106,7 +110,7 @@ export default function CreateNewPasswordPage() {
             )}
           </div>
           <Button type="submit" className="w-full">
-            Change password
+            {t("changePassword")}
           </Button>
         </form>
       </CardContent>

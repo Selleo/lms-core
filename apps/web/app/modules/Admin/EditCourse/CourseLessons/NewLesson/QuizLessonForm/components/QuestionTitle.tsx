@@ -9,6 +9,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
 import { mapQuestionTypeToLabel } from "../../../CourseLessons.helpers";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 interface QuestionTitleProps {
   questionIndex: number;
@@ -48,6 +49,8 @@ const QuestionTitle = ({
     return questionTypeToIconMap[type];
   };
 
+  const { t } = useTranslation();
+
   const handleRemoveQuestion = useCallback(() => {
     const currentQuestions = form.getValues("questions") || [];
     const updatedQuestions = currentQuestions.filter((_, index) => index !== questionIndex);
@@ -78,7 +81,7 @@ const QuestionTitle = ({
             align="center"
             className="bg-black ml-4 text-white text-sm rounded shadow-md"
           >
-            {mapQuestionTypeToLabel(questionType)}
+            {t(mapQuestionTypeToLabel(questionType))}
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -107,7 +110,7 @@ const QuestionTitle = ({
               align="center"
               className="bg-black ml-4 text-white text-sm rounded shadow-md"
             >
-              Delete
+              {t("common.button.delete")}
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

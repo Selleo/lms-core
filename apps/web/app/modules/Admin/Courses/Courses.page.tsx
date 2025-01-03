@@ -39,6 +39,7 @@ import {
 
 import type { ClientLoaderFunctionArgs } from "@remix-run/react";
 import type { GetAllCoursesResponse } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 type TCourse = GetAllCoursesResponse["data"][number];
 
@@ -66,17 +67,18 @@ const Courses = () => {
   const { data } = useCoursesSuspense(searchParams);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const { t } = useTranslation();
 
   const filterConfig: FilterConfig[] = [
     {
       name: "title",
       type: "text",
-      placeholder: "Search by title...",
+      placeholder: t("adminCoursesView.filters.placeholder.title"),
     },
     {
       name: "category",
       type: "select",
-      placeholder: "Categories",
+      placeholder: t("adminCoursesView.filters.placeholder.categories"),
       options: categories?.map(({ title }) => ({
         value: title,
         label: title,
@@ -85,10 +87,10 @@ const Courses = () => {
     {
       name: "state",
       type: "state",
-      placeholder: "States",
+      placeholder: t("adminCoursesView.filters.placeholder.states"),
       options: [
-        { value: "draft", label: "Draft" },
-        { value: "published", label: "Published" },
+        { value: "draft", label: t("adminCoursesView.filters.other.draft") },
+        { value: "published", label: t("adminCoursesView.filters.other.published") },
       ],
     },
     {
@@ -128,29 +130,37 @@ const Courses = () => {
     },
     {
       accessorKey: "title",
-      header: ({ column }) => <SortButton<TCourse> column={column}>Title</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.title")}</SortButton>
+      ),
       cell: ({ row }) => (
         <div className="max-w-md truncate">{formatHtmlString(row.original.title)}</div>
       ),
     },
     {
       accessorKey: "author",
-      header: ({ column }) => <SortButton<TCourse> column={column}>Author</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.author")}</SortButton>
+      ),
     },
     {
       accessorKey: "category",
-      header: ({ column }) => <SortButton<TCourse> column={column}>Category</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.category")}</SortButton>
+      ),
     },
     {
       accessorKey: "priceInCents",
-      header: ({ column }) => <SortButton<TCourse> column={column}>Price</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.price")}</SortButton>
+      ),
       cell: ({ row }) => {
         return formatPrice(row.original.priceInCents, row.original.currency);
       },
     },
     {
       accessorKey: "state",
-      header: "State",
+      header: t("adminCoursesView.field.state"),
       cell: ({ row }) => (
         <Badge variant={row.original.state === "published" ? "secondary" : "outline"}>
           {row.original.state}
@@ -159,16 +169,18 @@ const Courses = () => {
     },
     {
       accessorKey: "archived",
-      header: "Status",
+      header: t("status"),
       cell: ({ row }) => (
         <Badge variant={row.original.archived ? "outline" : "secondary"}>
-          {row.original.archived ? "Archived" : "Active"}
+          {row.original.archived ? t("common.other.archived") : t("common.other.active")}
         </Badge>
       ),
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => <SortButton<TCourse> column={column}>Created At</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.createdAt")}</SortButton>
+      ),
       cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
@@ -203,10 +215,10 @@ const Courses = () => {
     <div className="flex flex-col">
       <div className="flex gap-3 ml-auto">
         <Link to="new-scorm">
-          <Button variant="outline">Upload SCORM</Button>
+          <Button variant="outline">{t("adminCoursesView.button.uploadScorm")}</Button>
         </Link>
         <Link to="/admin/beta-courses/new">
-          <Button variant="outline">Create New</Button>
+          <Button variant="outline">{t("adminCoursesView.button.createNew")}</Button>
         </Link>
       </div>
       <div className="flex items-center justify-between gap-2">
@@ -223,7 +235,7 @@ const Courses = () => {
               "text-neutral-500": isEmpty(selectedCourses),
             })}
           >
-            Selected ({selectedCourses.length})
+            {t("common.other.selected")} ({selectedCourses.length})
           </p>
           <Button
             onClick={handleDeleteCourses}
@@ -232,7 +244,7 @@ const Courses = () => {
             disabled={isEmpty(selectedCourses)}
           >
             <Trash className="h-3 w-3" />
-            <span className="text-xs">Delete selected</span>
+            <span className="text-xs">{t("adminCoursesView.button.deleteSelected")}</span>
           </Button>
         </div>
       </div>

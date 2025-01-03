@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@remix-run/react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
 import { useCreateUser } from "~/api/mutations/admin/useCreateUser";
@@ -35,6 +36,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function CreateNewUserPage() {
   const { mutateAsync: createUser } = useCreateUser();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,9 +59,8 @@ export default function CreateNewUserPage() {
   return (
     <div className="flex flex-col gap-y-6">
       <CreatePageHeader
-        title="Create New User"
-        description="Fill in the details to create a new user. Click save when
-            you're done."
+        title={t("adminUserView.header")}
+        description={t("adminUserView.subHeader")}
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -69,7 +70,7 @@ export default function CreateNewUserPage() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="firstName" className="text-right">
-                  First Name
+                  {t("adminUserView.field.firstName")}
                 </Label>
                 <FormControl>
                   <Input id="firstName" {...field} />
@@ -84,7 +85,7 @@ export default function CreateNewUserPage() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="lastName" className="text-right">
-                  Last Name
+                  {t("adminUserView.field.lastName")}
                 </Label>
                 <FormControl>
                   <Input id="lastName" {...field} />
@@ -99,7 +100,7 @@ export default function CreateNewUserPage() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="email" className="text-right">
-                  Email
+                  {t("adminUserView.field.email")}
                 </Label>
                 <FormControl>
                   <Input id="email" type="email" {...field} />
@@ -114,18 +115,18 @@ export default function CreateNewUserPage() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="role" className="text-right">
-                  Role
+                  {t("adminUserView.field.role")}
                 </Label>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger id="role">
-                      <SelectValue placeholder="Select a role" />
+                      <SelectValue placeholder={t("adminUserView.placeholder.role")} />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value={USER_ROLE.student}>Student</SelectItem>
-                    <SelectItem value={USER_ROLE.admin}>Admin</SelectItem>
-                    <SelectItem value={USER_ROLE.teacher}>Teacher</SelectItem>
+                    <SelectItem value={USER_ROLE.student}>{t("common.roles.student")}</SelectItem>
+                    <SelectItem value={USER_ROLE.admin}>{t("common.roles.admin")}</SelectItem>
+                    <SelectItem value={USER_ROLE.teacher}>{t("common.roles.teacher")}</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -134,7 +135,7 @@ export default function CreateNewUserPage() {
           />
           <DialogFooter>
             <Button type="submit" disabled={!isFormValid}>
-              Create User
+              {t("adminUserView.button.createUser")}
             </Button>
           </DialogFooter>
         </form>

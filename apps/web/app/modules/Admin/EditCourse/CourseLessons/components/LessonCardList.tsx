@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useChangeLessonDisplayOrder } from "~/api/mutations/admin/changeLessonDisplayOrder";
 import { Icon } from "~/components/Icon";
@@ -26,6 +27,7 @@ export const LessonCardList = ({
   const mutation = useChangeLessonDisplayOrder();
   const { openLeaveModal, isCurrentFormDirty, setIsLeavingContent } = useLeaveModal();
   const [pendingLesson, setPendingLesson] = useState<Lesson | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     setItems(lessons);
@@ -71,7 +73,7 @@ export const LessonCardList = ({
   }, [isCurrentFormDirty, pendingLesson, onClickLessonCard]);
 
   if (!lessons) {
-    return <p>No items for this lesson</p>;
+    return <p>{t("lessonEmptyState")}</p>;
   }
 
   return (

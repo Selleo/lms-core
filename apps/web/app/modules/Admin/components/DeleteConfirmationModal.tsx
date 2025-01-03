@@ -9,6 +9,7 @@ import {
 } from "~/components/ui/dialog";
 import { match } from "ts-pattern";
 import { DeleteContentType } from "../EditCourse/EditCourse.types";
+import { useTranslation } from "react-i18next";
 
 type DeleteConfirmationModalProps = {
   open: boolean;
@@ -23,23 +24,15 @@ const DeleteConfirmationModal = ({
   onDelete,
   contentType,
 }: DeleteConfirmationModalProps) => {
+  const { t } = useTranslation();
   const getDialogTitleText = (): string => {
     return match(contentType)
-      .with(
-        DeleteContentType.VIDEO,
-        () => "Are you sure you want to delete video lesson from the chapter?",
-      )
-      .with(
-        DeleteContentType.PRESENTATION,
-        () => "Are you sure you want to delete presentation from the chapter?",
-      )
-      .with(
-        DeleteContentType.TEXT,
-        () => "Are you sure you want to delete text content from the chapter?",
-      )
-      .with(DeleteContentType.QUIZ, () => "Are you sure you want to delete quiz from the chapter?")
-      .with(DeleteContentType.CHAPTER, () => "Are you sure you want to delete this chapter?")
-      .otherwise(() => "Are you sure you want to delete this content?");
+      .with(DeleteContentType.VIDEO, () => t("deleteVideoLessonModal"))
+      .with(DeleteContentType.PRESENTATION, () => t("deletePresentationLessonModal"))
+      .with(DeleteContentType.TEXT, () => t("deleteTextLessonModal"))
+      .with(DeleteContentType.QUIZ, () => t("deleteQuizLessonModal"))
+      .with(DeleteContentType.CHAPTER, () => t("deleteChapterModal"))
+      .otherwise(() => t("deleteConfirmation"));
   };
 
   return (
@@ -53,20 +46,20 @@ const DeleteConfirmationModal = ({
               {getDialogTitleText()}
             </DialogTitle>
             <DialogDescription className="mt-2 text-sm text-neutral-600">
-              This will remove all data provided including uploaded media.
+              {t("deleteConfirmationModalBody")}
             </DialogDescription>
             <div className="flex gap-4 mt-8">
               <Button
                 onClick={onDelete}
                 className="text-white bg-error-500 hover:bg-error-600 py-2 px-4 rounded"
               >
-                Delete
+                {t("common.button.delete")}
               </Button>
               <Button
                 onClick={onClose}
                 className="text-primary-800 border border-neutral-300 bg-neutrals-200 py-2 px-4 rounded"
               >
-                Cancel
+                {t("common.button.cancel")}
               </Button>
             </div>
           </div>

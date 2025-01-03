@@ -11,6 +11,7 @@ import { QuestionOption } from "../QuizLessonForm.types";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
 import { SortableList } from "~/components/SortableList";
 import { Label } from "~/components/ui/label";
+import { useTranslation } from "react-i18next";
 
 type TrueOrFalseQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -20,6 +21,7 @@ type TrueOrFalseQuestionProps = {
 const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) => {
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
+  const { t } = useTranslation();
 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
@@ -85,7 +87,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             {!isOptionEmpty && (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">Options</Label>
+                <Label className="body-sm-md">{t("options")}</Label>
               </>
             )}
             {watchedOptions && watchedOptions?.length > 0 && (
@@ -109,7 +111,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                           onChange={(e) =>
                             handleOptionChange(index as number, "optionText", e.target.value)
                           }
-                          placeholder={`Option ${index + 1}`}
+                          placeholder={`${t("option")} ${index + 1}`}
                           required
                           className="flex-1"
                         />
@@ -125,7 +127,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                             className="ml-2 text-neutral-900 body-base cursor-pointer"
                             onClick={() => handleOptionChange(index, "isCorrect", true)}
                           >
-                            True
+                            {t("true")}
                           </Label>
                           <Input
                             type="radio"
@@ -138,7 +140,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                             className="ml-2 text-neutral-900 body-base cursor-pointer"
                             onClick={() => handleOptionChange(index, "isCorrect", false)}
                           >
-                            False
+                            {t("false")}
                           </Label>
 
                           <TooltipProvider delayDuration={0}>
@@ -157,7 +159,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                                 align="center"
                                 className="bg-black ml-4 text-white text-sm rounded shadow-md"
                               >
-                                Delete
+                                {t("common.button.delete")}
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -176,14 +178,14 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
           )}
           <div className="mt-4 flex gap-2 mb-4 ml-14">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
-              Add Option
+              {t("addOption")}
             </Button>
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
               onClick={handleRemoveQuestion}
             >
-              Delete Question
+              {t("deleteQuestion")}
             </Button>
           </div>
         </div>

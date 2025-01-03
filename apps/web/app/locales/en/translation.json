@@ -1,0 +1,340 @@
+{
+  "common": {
+    "button": {
+      "save": "Save",
+      "delete": "Delete",
+      "create": "Create",
+      "cancel": "Cancel",
+      "back": "Back",
+      "proceed": "Proceed"
+    },
+    "roles": {
+      "admin": "Admin",
+      "teacher": "Teacher",
+      "student": "Student"
+    },
+    "other": {
+      "active": "Active",
+      "archived": "Archived",
+      "selected": "Selected",
+      "draft": "Draft",
+      "published": "published"
+    }
+  },
+  "adminCoursesView": {
+    "filters": {
+      "placeholder": {
+        "title": "Search by title ...",
+        "categories": "Categories",
+        "states": "States"
+      },
+      "other": {
+        "draft": "Draft",
+        "published": "Published"
+      }
+    },
+    "field": {
+      "title": "Title",
+      "author": "Author",
+      "category": "Category",
+      "price": "Price",
+      "state": "State",
+      "status": "Status",
+      "createdAt": "Created At"
+    },
+    "other": {
+      "selected": "Selected"
+    },
+    "button": {
+      "uploadScorm": "Upload SCORM",
+      "createNew": "Create new",
+      "deleteSelected": "Delete selected"
+    }
+  },
+  "adminCategoriesView": {
+    "filters": {
+      "placeholder": {
+        "title": "Search by title ..."
+      }
+    },
+    "field": {
+      "title": "Title",
+      "status": "Status",
+      "createdAt": "Created At"
+    },
+    "button": {
+      "createNew": "Create new",
+      "clearAll": "Clear all",
+      "deleteSelected": "Delete selected"
+    }
+  },
+  "adminCategoryView": {
+    "header": "Create new category",
+    "subHeader": "Enter a title for your new category. Click save when you're done.",
+    "editCategoryHeader": "Category Information",
+    "field": {
+      "title": "Title",
+      "status": "Status"
+    },
+    "button": {
+      "createCategory": "Create category"
+    },
+    "error": {
+      "categoryNotFound": "Category not found",
+      "categoryIdNotFound": "Category ID not found"
+    }
+  },
+  "adminUsersView": {
+    "filters": {
+      "placeholder": {
+        "searchByKeyword": "Search by keyword...",
+        "roles": "Roles"
+      }
+    },
+    "field": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status",
+      "createdAt": "Created At"
+    },
+    "other": {
+      "selected": "Selected"
+    },
+    "button": {
+      "createNew": "Create new",
+      "deleteSelected": "Delete selected"
+    }
+  },
+  "adminUserView": {
+    "header": "Create New User",
+    "subHeader": "Fill in the details to create a new user. Click save when you're done.",
+    "editUserHeader": "User Information",
+    "placeholder": {
+      "role": "Select a role"
+    },
+    "field": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "role": "Role",
+      "status": "Status"
+    },
+    "button": {
+      "createUser": "Create user"
+    },
+    "error": {
+      "userNotFound": "User not found"
+    }
+  },
+  "adminCourseView": {
+    "settings": {
+      "breadcrumbs": {
+        "back": "Back",
+        "myCourses": "My courses",
+        "createNew": "Create new"
+      },
+      "button": {
+        "removeThumbnail": "Remove Thumbnail"
+      },
+      "sideSection": {
+        "header": "Card Preview",
+        "subHeader": "This is how your Course will be visible to students.",
+        "button": {
+          "enroll": "Enroll"
+        },
+        "other": {
+          "noDescription": "No description yet.",
+          "untitled": "Untitled"
+        }
+      },
+      "field": {
+        "title": "Course title",
+        "category": "Category",
+        "description": "Description",
+        "thumbnail": "Thumbnail"
+      },
+      "placeholder": {
+        "title": "Enter title",
+        "category": "Select category",
+        "description": "Provide description about the course..."
+      },
+      "other": {
+        "uploadingImage": "Uploading image...",
+        "charactersLeft": "Characters left",
+        "reachedCharactersLimit": "You have reached the character limit."
+      },
+      "header": "Create new course",
+      "subHeader": "Provide the details to set up a new course. You’ll have more options to customize it later.",
+      "editHeader": "Basic settings",
+      "editSubHeader": "Fill in the details to create a new course."
+    },
+    "curriculum": {
+      "chapter": {
+        "button": {
+          "addChapter": "Add chapter"
+        },
+        "field": {
+          "title": "Title"
+        },
+        "other": {
+          "freemium": "Freemium",
+          "freemiumToolTip": "Students can access freemium chapters without enrolling in the course."
+        }
+      },
+      "lesson": {
+        "button": {
+          "addLesson": "Add lesson"
+        },
+        "breadcrumbs": {
+          "back": "Back"
+        },
+        "field": {
+          "title": "Title",
+          "description": "Description",
+          "video": "Upload video"
+        },
+        "placeholder": {
+          "title": "Provide lesson title...",
+          "fileDescription": "Provide description about the {{type}}..."
+        },
+        "other": {
+          "chooseType": "Choose type",
+          "text": "Text",
+          "video": "Video",
+          "quiz": "Quiz",
+          "presentation": "Presentation",
+          "textLessonDescription": "This type allows you to create text-based content via a rich text editor.",
+          "videoLessonDescription": "Choose this type if you want to embed video content files like MP4.",
+          "presentationLessonDescription": "Choose this type if you want to embed presentations files like PPTX.",
+          "quizLessonDescription": "This type allows you to build quizzes for your chapter using different types of questions."
+        }
+      },
+      "other": {
+        "chapter": "Chapter",
+        "lesson": "Lesson",
+        "edit": "Edit",
+        "create": "Create"
+      }
+    },
+    "status": {
+      "header": "Status",
+      "subHeader": "Set state for the course",
+      "draftHeader": "Draft",
+      "draftBody": "Students cannot purchase or enroll in this course. For those alreadyenrolled, the course will not appear in their Student Course List.",
+      "publishedHeader": "Published",
+      "publishedBody": "Students can purchase, enroll in, and access the course content. Once enrolled, the course will be displayed on their Student Dashboard."
+    },
+    "pricing": {
+      "header": "Pricing",
+      "subHeader": "Set pricing for the course",
+      "freeCourseHeader": "Free",
+      "freeCourseBody": "Students can enroll in, and access the course content without paying.",
+      "paidCourseHeader": "Paid course",
+      "paidCourseBody": "Students can purchase and access the course content. Once selected, you candefine currency and price.",
+      "field": {
+        "price": "Price"
+      }
+    },
+    "common": {
+      "settings": "Settings",
+      "curriculum": "Curriculum",
+      "status": "Status",
+      "pricing": "Pricing",
+      "preview": "Preview"
+    }
+  },
+  "registerView": {
+    "header": "Sign Up",
+    "subHeader": "Enter your information to create an account",
+    "field": {
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email",
+      "password": "Password"
+    },
+    "other": {
+      "allreadyHaveAccount": "Already have an account?"
+    },
+    "button": {
+      "createAccount": "Create an account",
+      "signIn": "Sign in"
+    },
+    "validation": {
+      "firstName": "First name is required",
+      "lastName": "Last name is required",
+      "email": "Invalid email",
+      "password": "Password must be at least 8 characters"
+    }
+  },
+  "forgotPasswordView": {
+    "header": "Forgot your password?",
+    "subHeader": "Enter the email address associated with your account and we'll send you a link to reset your password.",
+    "field": {
+      "email": "Email address"
+    },
+    "button": {
+      "resetPassword": "Reset password",
+      "backToLogin": "Back to login"
+    },
+    "toast": {
+      "resetPassword": "A link to reset your password has been sent to your email."
+    }
+  },
+  "loginView": {
+    "header": "Login",
+    "subHeader": "Enter your email below to login to your account",
+    "other": {
+      "forgotPassword": "Forgot your password?",
+      "dontHaveAccount": "Don't have an account?",
+      "rememberMe": "Remember me",
+      "signUp": "Sign up"
+    },
+    "button": {
+      "login": "Login"
+    },
+    "field": {
+      "email": "Email",
+      "password": "Password"
+    }
+  },
+  "studentCoursesView": {
+    "enroledCourses": {
+      "header": "Your Courses",
+      "subHeader": "Courses you are currently enrolled in"
+    },
+    "avaiableCourses": {
+      "header": "Available Courses",
+      "subHeader": "All available career courses available to enroll",
+      "filters": {
+        "placeholder": {
+          "title": "Search by title ..."
+        }
+      },
+      "studentCourseView": {
+        "header": "Chapters",
+        "subHeader": "Below you can see all chapters inside this course",
+        "recommendedHeader": "You may be interested in",
+        "recommendedSubheader": "Below you can see courses with similar topic or knowledge domain",
+        "otherAuthorCoursesHeader": "More courses by Ralph Admin",
+        "otherAuthorCoursesSubheader": "Below you can see more courses created by the same author",
+        "sideSection": {
+          "optionHeader": "Option",
+          "courseProgressHeader": "courseProgressHeader",
+          "button": {
+            "shareCourse": "Share this course",
+            "continueLearning": "Continue learning",
+            "enrollCourse": "Enroll to the course"
+          }
+        }
+      },
+      "studentChapterView": {
+        "chapterProgress": {
+          "header": "Table of content:",
+          "courseProgress": "Course progress"
+        }
+      }
+    }
+  }
+}

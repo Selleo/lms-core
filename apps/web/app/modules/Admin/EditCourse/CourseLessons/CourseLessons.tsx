@@ -15,6 +15,7 @@ import TextLessonForm from "./NewLesson/TextLessonForm/TextLessonForm";
 import type { Chapter, Lesson } from "../EditCourse.types";
 import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
 import { useLeaveModal } from "~/context/LeaveModalContext";
+import { useTranslation } from "react-i18next";
 
 interface CourseLessonsProps {
   chapters?: Chapter[];
@@ -27,6 +28,7 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
   const { setIsLeavingContent, isCurrentFormDirty, openLeaveModal } = useLeaveModal();
   const [isNewChapter, setIsNewChapter] = useState(false);
+  const { t } = useTranslation();
 
   const addChapter = useCallback(() => {
     if (isCurrentFormDirty) {
@@ -119,7 +121,7 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
           className="bg-primary-700 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
         >
           <Icon name="Plus" className="mr-2" />
-          Add Chapter
+          {t("adminCourseView.curriculum.chapter.button.addChapter")}
         </Button>
       </div>
       <div className="w-full h-auto overflow-y-auto">{renderContent}</div>

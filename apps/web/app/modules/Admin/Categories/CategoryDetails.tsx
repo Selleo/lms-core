@@ -5,12 +5,15 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 
 import type { GetCategoryByIdResponse, UpdateCategoryBody } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 export const CategoryDetails = memo<{
   name: keyof UpdateCategoryBody;
   control: Control<UpdateCategoryBody>;
   category: GetCategoryByIdResponse["data"];
 }>(({ name, control, category }) => {
+  const { t } = useTranslation();
+
   return (
     <Controller
       name={name}
@@ -29,7 +32,7 @@ export const CategoryDetails = memo<{
                 htmlFor="archived"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                Archived
+                {t("common.other.archived")}
               </label>
             </div>
           );

@@ -7,6 +7,7 @@ import {
 import { ContentTypes, Lesson } from "../../../EditCourse.types";
 import { useLeaveModal } from "~/context/LeaveModalContext";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 type BreadrumbProps = {
   lessonLabel: string;
@@ -22,6 +23,7 @@ const Breadcrumb = ({
   const { isCurrentFormDirty, setIsLeavingContent, openLeaveModal } = useLeaveModal();
   const [isEmptyStateClicked, setIsEmptyStateClicked] = useState(false);
   const [isChooseTypeClicked, setIsChooseTypeClicked] = useState(false);
+  const { t } = useTranslation();
 
   const onClickBack = useCallback(() => {
     if (isCurrentFormDirty) {
@@ -80,7 +82,7 @@ const Breadcrumb = ({
           onClick={onClickBack}
           className="text-primary-800 body-base-md cursor-pointer"
         >
-          Back
+          {t("adminCourseView.curriculum.lesson.breadcrumbs.back")}
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
@@ -89,7 +91,7 @@ const Breadcrumb = ({
           onClick={onClickChooseType}
           className="text-neutral-850 body-base-md cursor-pointer"
         >
-          Choose type
+          {t("adminCourseView.curriculum.lesson.other.chooseType")}
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />

@@ -22,6 +22,7 @@ import {
 } from "~/components/ui/select";
 import { QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
+import { useTranslation } from "react-i18next";
 
 type FillInTheBlankQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -58,6 +59,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   const [isAddingWord, setIsAddingWord] = useState(false);
   const [addedWords, setAddedWords] = useState<string[]>([]);
   const errors = form.formState.errors;
+  const { t } = useTranslation();
 
   const editor = useEditor({
     extensions: [
@@ -261,7 +263,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
         <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
           <div className="ml-14">
             <span className="text-red-500 mr-1">*</span>
-            <Label className="body-sm-md">Words</Label>
+            <Label className="body-sm-md">{t("words")}</Label>
             <div className="flex flex-wrap gap-2 items-center">
               {currentOptions.map((option, index) => (
                 <div
@@ -293,7 +295,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                     className="mt-4 bg-blue-700 text-white rounded-full flex items-center mb-4"
                   >
                     <Icon name="Plus" />
-                    Add Word
+                    {t("addWords")}
                   </Button>
                 )}
               </div>
@@ -304,18 +306,18 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                     type="text"
                     value={newWord}
                     onChange={(e) => setNewWord(e.target.value)}
-                    placeholder="Enter a word"
+                    placeholder={t("fillInTheBlankEnterWord")}
                     className="flex-1"
                   />
                   <Button onClick={handleAddWord} type="button" className="bg-blue-700 text-white">
-                    Add
+                    {t("add")}
                   </Button>
                   <Button
                     onClick={() => setIsAddingWord(false)}
                     type="button"
                     className="bg-red-500 border border-neutral-200 text-red-500 bg-color-transparent"
                   >
-                    Cancel
+                    {t("common.button.cancel")}
                   </Button>
                 </div>
               )}
@@ -335,7 +337,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                 <FormItem className="mt-5">
                   <Label htmlFor="description" className="body-sm-md">
                     <span className="text-red-500 mr-1">*</span>
-                    Sentences
+                    {t("sentences")}
                   </Label>
                   <FormControl>
                     <EditorContent
@@ -353,7 +355,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               className="text-error-700 bg-color-white mb-4 border border-neutral-300 mt-4"
               onClick={handleRemoveQuestion}
             >
-              Delete Question
+              {t("deleteQuestion")}
             </Button>
           </div>
         </div>

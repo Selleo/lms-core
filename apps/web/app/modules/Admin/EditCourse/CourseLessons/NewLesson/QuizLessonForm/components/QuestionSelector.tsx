@@ -5,6 +5,7 @@ import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
+import { useTranslation } from "react-i18next";
 
 type QuestionSelectorProps = {
   addQuestion: (questionType: QuestionType) => void;
@@ -17,6 +18,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   const cardRef = useRef<HTMLDivElement | null>(null);
 
   const toggleOptions = () => setShowOptions(!showOptions);
+  const { t } = useTranslation();
 
   const onTypeChoose = useCallback(
     (type: QuestionType) => {
@@ -27,36 +29,44 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   );
 
   const questionTypes = [
-    { type: QuestionType.SINGLE_CHOICE, label: "Single Select", icon: QuestionIcons.SingleSelect },
-    { type: QuestionType.MULTIPLE_CHOICE, label: "Multi Select", icon: QuestionIcons.MultiSelect },
-    { type: QuestionType.TRUE_OR_FALSE, label: "True or false", icon: QuestionIcons.TrueOrFalse },
+    {
+      type: QuestionType.SINGLE_CHOICE,
+      label: t("singleSelect"),
+      icon: QuestionIcons.SingleSelect,
+    },
+    {
+      type: QuestionType.MULTIPLE_CHOICE,
+      label: t("multiSelect"),
+      icon: QuestionIcons.MultiSelect,
+    },
+    { type: QuestionType.TRUE_OR_FALSE, label: t("trueOrFalse"), icon: QuestionIcons.TrueOrFalse },
     {
       type: QuestionType.PHOTO_QUESTION,
-      label: "Photo question",
+      label: t("photoQuestion"),
       icon: QuestionIcons.PhotoQuestion,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_DND,
-      label: "Fill in the blanks dnd",
+      label: t("fillInTheBlanksDragAndDrop"),
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_TEXT,
-      label: "Fill in the blanks text",
+      label: t("fillInTheBlanksText"),
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.BRIEF_RESPONSE,
-      label: "Brief response",
+      label: t("briefResponse"),
       icon: QuestionIcons.BriefResponse,
     },
     {
       type: QuestionType.DETAILED_RESPONSE,
-      label: "Detailed response",
+      label: t("detailedResponse"),
       icon: QuestionIcons.DetailedResponse,
     },
-    { type: QuestionType.MATCH_WORDS, label: "Match words", icon: QuestionIcons.MatchWords },
-    { type: QuestionType.SCALE_1_5, label: "Scale 1 to 5", icon: QuestionIcons.Scale_1_5 },
+    { type: QuestionType.MATCH_WORDS, label: t("matchWords"), icon: QuestionIcons.MatchWords },
+    { type: QuestionType.SCALE_1_5, label: t("scale_1_5"), icon: QuestionIcons.Scale_1_5 },
   ];
 
   useEffect(() => {
@@ -78,7 +88,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
         onClick={toggleOptions}
         ref={buttonRef}
       >
-        Add question{" "}
+        {t("addQuestion")}{" "}
         <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
       </Button>
 
@@ -91,7 +101,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
           ref={cardRef}
         >
           <p className="block p-2 text-left text-black border-b border-gray-300 body-base-md w-full">
-            Select question type:
+            {t("selectQuestionType")}
           </p>
           {questionTypes.map(({ type, label, icon }) => (
             <Button
