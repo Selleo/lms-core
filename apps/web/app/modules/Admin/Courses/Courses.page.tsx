@@ -152,17 +152,8 @@ const Courses = () => {
       accessorKey: "state",
       header: "State",
       cell: ({ row }) => (
-        <Badge variant={row.original.state === "published" ? "secondary" : "outline"}>
-          {row.original.state}
-        </Badge>
-      ),
-    },
-    {
-      accessorKey: "archived",
-      header: "Status",
-      cell: ({ row }) => (
-        <Badge variant={row.original.archived ? "outline" : "secondary"}>
-          {row.original.archived ? "Archived" : "Active"}
+        <Badge variant={row.original.isPublished ? "secondary" : "outline"}>
+          {row.original.isPublished ? "Published" : "Draft"}
         </Badge>
       ),
     },

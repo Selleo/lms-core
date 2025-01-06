@@ -46,7 +46,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
             currency,
             id,
             title,
-            imageUrl,
+            thumbnailUrl,
             description,
             category,
             enrolled = false,
@@ -55,7 +55,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
             <TableRow key={id} className="group hover:bg-primary-50 border-none">
               <TableCell className="p-4 rounded-s-lg">
                 <img
-                  src={imageUrl || "https://placehold.co/600x400/png"}
+                  src={thumbnailUrl || "https://placehold.co/600x400/png"}
                   alt={title}
                   loading="eager"
                   decoding="async"

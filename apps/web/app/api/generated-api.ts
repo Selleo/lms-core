@@ -934,7 +934,7 @@ export interface GetLessonByIdResponse {
     quizDetails?: {
       questions: {
         /** @format uuid */
-        id?: string;
+        id: string;
         type:
           | "single_choice"
           | "multiple_choice"
@@ -953,11 +953,11 @@ export interface GetLessonByIdResponse {
         photoS3Key?: string | null;
         options?: {
           /** @format uuid */
-          id?: string;
+          id: string;
           optionText: string;
           displayOrder: number | null;
           isStudentAnswer?: boolean | null;
-          isCorrect?: boolean | null;
+          isCorrect: boolean | null;
           /** @format uuid */
           questionId?: string;
           matchedWord?: string | null;
