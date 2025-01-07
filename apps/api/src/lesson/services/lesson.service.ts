@@ -129,7 +129,13 @@ export class LessonService {
                             ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
                         THEN TRUE
                         ELSE FALSE
-                      END
+                      END,
+                    'studentAnswer',  
+                      CASE
+                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                        ELSE
+                          ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
+                        END
                   )
                   FROM ${questionAnswerOptions} qao
                   WHERE qao.question_id = questions.id
@@ -252,13 +258,6 @@ export class LessonService {
             (evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount)) *
             100,
         );
-
-        console.log({
-          correctAnswerCount: evaluationResult.correctAnswerCount,
-          wrongAnswerCount: evaluationResult.wrongAnswerCount,
-          questionCount: evaluationResult.wrongAnswerCount + evaluationResult.correctAnswerCount,
-          score: quizScore,
-        });
 
         await this.lessonRepository.completeQuiz(
           accessCourseLessonWithDetails.chapterId,

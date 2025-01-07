@@ -179,9 +179,15 @@ export class QuestionService {
           question.type === QUESTION_TYPE.detailed_response.key
             ? [questionAnswer.answer[0]?.value || ""]
             : question.allAnswers.map((answerOption) => {
-                if (
-                  questionAnswer.answer.find((answer) => answer.answerId === answerOption.answerId)
-                ) {
+                const studentAnswer = questionAnswer.answer.find(
+                  (answer) => answer.answerId === answerOption.answerId,
+                );
+
+                if (studentAnswer?.value) {
+                  return studentAnswer.value;
+                }
+
+                if (studentAnswer?.answerId) {
                   return answerOption.value;
                 }
                 // TODO: handle it, when value is not found

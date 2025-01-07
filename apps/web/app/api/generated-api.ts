@@ -956,12 +956,11 @@ export interface GetLessonByIdResponse {
           id: string;
           optionText: string;
           displayOrder: number | null;
-          isStudentAnswer?: boolean | null;
+          isStudentAnswer: boolean | null;
+          studentAnswer: string | null;
           isCorrect: boolean | null;
           /** @format uuid */
           questionId?: string;
-          matchedWord?: string | null;
-          scaleAnswer?: number | null;
         }[];
         passQuestion: boolean | null;
       }[];
