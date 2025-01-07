@@ -50,7 +50,9 @@ export const LessonContent = ({
           isExternalUrl={lesson.isExternal}
         />
       ))
-      .with("presentation", () => <Presentation url={lesson.fileUrl ?? ""} />)
+      .with("presentation", () => (
+        <Presentation url={lesson.fileUrl ?? ""} isExternalUrl={lesson.isExternal} />
+      ))
       .otherwise(() => null);
 
   const handleMarkLessonAsComplete = () => {
