@@ -239,49 +239,61 @@ export class LessonService {
     }
 
     return await this.db.transaction(async (trx) => {
-      const evaluationResult = await this.questionService.evaluationsQuestions(
-        correctAnswersForQuizQuestions,
-        studentQuizAnswers,
-        userId,
-        trx,
-      );
-
-      // TODO: add error handling
-      if (!evaluationResult) throw new ConflictException("Quiz evaluation failed");
-
-      const quizScore = Math.round(
-        (evaluationResult.correctAnswerCount /
-          (evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount)) *
-          100,
-      );
-
-      await this.lessonRepository.completeQuiz(
-        accessCourseLessonWithDetails.chapterId,
-        studentQuizAnswers.lessonId,
-        userId,
-        evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
-        quizScore,
-        trx,
-      );
-
-      // TODO: check if it will be not sent when transaction is rolled back
-      this.eventBus.publish(
-        new QuizCompletedEvent(
+      try {
+        const evaluationResult = await this.questionService.evaluationsQuestions(
+          correctAnswersForQuizQuestions,
+          studentQuizAnswers,
           userId,
-          accessCourseLessonWithDetails.courseId,
-          studentQuizAnswers.lessonId,
-          evaluationResult.correctAnswerCount,
-          evaluationResult.wrongAnswerCount,
-          quizScore,
-        ),
-      );
+          trx,
+        );
 
-      return {
-        correctAnswerCount: evaluationResult.correctAnswerCount,
-        wrongAnswerCount: evaluationResult.wrongAnswerCount,
-        questionCount: evaluationResult.wrongAnswerCount + evaluationResult.correctAnswerCount,
-        score: quizScore,
-      };
+        const quizScore = Math.round(
+          (evaluationResult.correctAnswerCount /
+            (evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount)) *
+            100,
+        );
+
+        console.log({
+          correctAnswerCount: evaluationResult.correctAnswerCount,
+          wrongAnswerCount: evaluationResult.wrongAnswerCount,
+          questionCount: evaluationResult.wrongAnswerCount + evaluationResult.correctAnswerCount,
+          score: quizScore,
+        });
+
+        await this.lessonRepository.completeQuiz(
+          accessCourseLessonWithDetails.chapterId,
+          studentQuizAnswers.lessonId,
+          userId,
+          evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
+          quizScore,
+          trx,
+        );
+
+        this.eventBus.publish(
+          new QuizCompletedEvent(
+            userId,
+            accessCourseLessonWithDetails.courseId,
+            studentQuizAnswers.lessonId,
+            evaluationResult.correctAnswerCount,
+            evaluationResult.wrongAnswerCount,
+            quizScore,
+          ),
+        );
+
+        return {
+          correctAnswerCount: evaluationResult.correctAnswerCount,
+          wrongAnswerCount: evaluationResult.wrongAnswerCount,
+          questionCount: evaluationResult.wrongAnswerCount + evaluationResult.correctAnswerCount,
+          score: quizScore,
+        };
+      } catch (error) {
+        throw new ConflictException(
+          "Quiz evaluation failed, problem with question: " +
+            error.message +
+            " problem: " +
+            error.response.error,
+        );
+      }
     });
   }
 

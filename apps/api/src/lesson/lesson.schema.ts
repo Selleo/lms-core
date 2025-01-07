@@ -49,6 +49,7 @@ export const questionSchema = Type.Object({
   photoQuestionType: Type.Optional(Type.Union([Type.Enum(PhotoQuestionType), Type.Null()])),
   photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(optionSchema)),
+  passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
 });
 
 export const lessonSchema = Type.Object({

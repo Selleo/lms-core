@@ -6096,12 +6096,23 @@
                               "isCorrect"
                             ]
                           }
+                        },
+                        "passQuestion": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [
                         "id",
                         "type",
-                        "title"
+                        "title",
+                        "passQuestion"
                       ]
                     }
                   },

@@ -963,6 +963,7 @@ export interface GetLessonByIdResponse {
           matchedWord?: string | null;
           scaleAnswer?: number | null;
         }[];
+        passQuestion: boolean | null;
       }[];
       questionCount: number;
       correctAnswerCount: number | null;
