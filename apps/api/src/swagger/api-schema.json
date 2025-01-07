@@ -5899,7 +5899,14 @@
                 ]
               },
               "description": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "fileType": {
                 "anyOf": [

@@ -113,7 +113,7 @@ export const lessonShowSchema = Type.Object({
   id: UUIDSchema,
   title: Type.String(),
   type: Type.Enum(LESSON_TYPES),
-  description: Type.String(),
+  description: Type.Union([Type.String(), Type.Null()]),
   fileType: Type.Union([Type.String(), Type.Null()]),
   fileUrl: Type.Union([Type.String(), Type.Null()]),
   quizDetails: Type.Optional(questionDetails),

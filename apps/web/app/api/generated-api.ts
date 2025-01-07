@@ -928,7 +928,7 @@ export interface GetLessonByIdResponse {
     id: string;
     title: string;
     type: "text" | "file" | "presentation" | "video" | "quiz";
-    description: string;
+    description: string | null;
     fileType: string | null;
     fileUrl: string | null;
     quizDetails?: {
