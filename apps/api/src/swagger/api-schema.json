@@ -5899,7 +5899,14 @@
                 ]
               },
               "description": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "fileType": {
                 "anyOf": [
@@ -6054,6 +6061,16 @@
                                   }
                                 ]
                               },
+                              "studentAnswer": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
                               "isCorrect": {
                                 "anyOf": [
                                   {
@@ -6067,41 +6084,34 @@
                               "questionId": {
                                 "format": "uuid",
                                 "type": "string"
-                              },
-                              "matchedWord": {
-                                "anyOf": [
-                                  {
-                                    "type": "string"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
-                              },
-                              "scaleAnswer": {
-                                "anyOf": [
-                                  {
-                                    "type": "number"
-                                  },
-                                  {
-                                    "type": "null"
-                                  }
-                                ]
                               }
                             },
                             "required": [
                               "id",
                               "optionText",
                               "displayOrder",
+                              "isStudentAnswer",
+                              "studentAnswer",
                               "isCorrect"
                             ]
                           }
+                        },
+                        "passQuestion": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [
                         "id",
                         "type",
-                        "title"
+                        "title",
+                        "passQuestion"
                       ]
                     }
                   },

@@ -129,7 +129,13 @@ export class LessonService {
                             ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
                         THEN TRUE
                         ELSE FALSE
-                      END
+                      END,
+                    'studentAnswer',  
+                      CASE
+                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                        ELSE
+                          ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
+                        END
                   )
                   FROM ${questionAnswerOptions} qao
                   WHERE qao.question_id = questions.id
@@ -239,49 +245,54 @@ export class LessonService {
     }
 
     return await this.db.transaction(async (trx) => {
-      const evaluationResult = await this.questionService.evaluationsQuestions(
-        correctAnswersForQuizQuestions,
-        studentQuizAnswers,
-        userId,
-        trx,
-      );
-
-      // TODO: add error handling
-      if (!evaluationResult) throw new ConflictException("Quiz evaluation failed");
-
-      const quizScore = Math.round(
-        (evaluationResult.correctAnswerCount /
-          (evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount)) *
-          100,
-      );
-
-      await this.lessonRepository.completeQuiz(
-        accessCourseLessonWithDetails.chapterId,
-        studentQuizAnswers.lessonId,
-        userId,
-        evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
-        quizScore,
-        trx,
-      );
-
-      // TODO: check if it will be not sent when transaction is rolled back
-      this.eventBus.publish(
-        new QuizCompletedEvent(
+      try {
+        const evaluationResult = await this.questionService.evaluationsQuestions(
+          correctAnswersForQuizQuestions,
+          studentQuizAnswers,
           userId,
-          accessCourseLessonWithDetails.courseId,
-          studentQuizAnswers.lessonId,
-          evaluationResult.correctAnswerCount,
-          evaluationResult.wrongAnswerCount,
-          quizScore,
-        ),
-      );
+          trx,
+        );
 
-      return {
-        correctAnswerCount: evaluationResult.correctAnswerCount,
-        wrongAnswerCount: evaluationResult.wrongAnswerCount,
-        questionCount: evaluationResult.wrongAnswerCount + evaluationResult.correctAnswerCount,
-        score: quizScore,
-      };
+        const quizScore = Math.round(
+          (evaluationResult.correctAnswerCount /
+            (evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount)) *
+            100,
+        );
+
+        await this.lessonRepository.completeQuiz(
+          accessCourseLessonWithDetails.chapterId,
+          studentQuizAnswers.lessonId,
+          userId,
+          evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
+          quizScore,
+          trx,
+        );
+
+        this.eventBus.publish(
+          new QuizCompletedEvent(
+            userId,
+            accessCourseLessonWithDetails.courseId,
+            studentQuizAnswers.lessonId,
+            evaluationResult.correctAnswerCount,
+            evaluationResult.wrongAnswerCount,
+            quizScore,
+          ),
+        );
+
+        return {
+          correctAnswerCount: evaluationResult.correctAnswerCount,
+          wrongAnswerCount: evaluationResult.wrongAnswerCount,
+          questionCount: evaluationResult.wrongAnswerCount + evaluationResult.correctAnswerCount,
+          score: quizScore,
+        };
+      } catch (error) {
+        throw new ConflictException(
+          "Quiz evaluation failed, problem with question: " +
+            error.message +
+            " problem: " +
+            error.response.error,
+        );
+      }
     });
   }
 
