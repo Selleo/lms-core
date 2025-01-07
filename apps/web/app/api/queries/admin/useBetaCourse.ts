@@ -2,7 +2,7 @@ import { queryOptions, useQuery, useSuspenseQuery } from "@tanstack/react-query"
 
 import { ApiClient } from "../../api-client";
 
-import type { GetCourseByIdResponse } from "../../generated-api";
+import type { GetBetaCourseByIdResponse } from "../../generated-api";
 
 export const COURSE_QUERY_KEY = ["beta-course", "admin"];
 
@@ -15,7 +15,7 @@ export const courseQueryOptions = (id: string) =>
       });
       return response.data;
     },
-    select: (data: GetCourseByIdResponse) => data.data,
+    select: (data: GetBetaCourseByIdResponse) => data.data,
   });
 
 export function useBetaCourseById(id: string) {

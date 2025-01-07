@@ -136,13 +136,16 @@ export class QuestionRepository {
             )
           )
         `,
-        allAnswers: sql<{ answerId: UUIDType; displayOrder: number; value: string }[]>`
+        allAnswers: sql<
+          { answerId: UUIDType; displayOrder: number; value: string; isCorrect: boolean }[]
+        >`
           (
             SELECT ARRAY(
               SELECT json_build_object(
                 'answerId', ${questionAnswerOptions.id},
                 'displayOrder', ${questionAnswerOptions.displayOrder},
-                'value', ${questionAnswerOptions.optionText}
+                'value', ${questionAnswerOptions.optionText},
+                'isCorrect', ${questionAnswerOptions.isCorrect}
               )
               FROM ${questionAnswerOptions}
               WHERE ${questionAnswerOptions.questionId} = ${questions.id}

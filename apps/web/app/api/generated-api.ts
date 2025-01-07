@@ -928,7 +928,7 @@ export interface GetLessonByIdResponse {
     id: string;
     title: string;
     type: "text" | "file" | "presentation" | "video" | "quiz";
-    description: string;
+    description: string | null;
     fileType: string | null;
     fileUrl: string | null;
     quizDetails?: {
@@ -956,13 +956,13 @@ export interface GetLessonByIdResponse {
           id: string;
           optionText: string;
           displayOrder: number | null;
-          isStudentAnswer?: boolean | null;
+          isStudentAnswer: boolean | null;
+          studentAnswer: string | null;
           isCorrect: boolean | null;
           /** @format uuid */
           questionId?: string;
-          matchedWord?: string | null;
-          scaleAnswer?: number | null;
         }[];
+        passQuestion: boolean | null;
       }[];
       questionCount: number;
       correctAnswerCount: number | null;

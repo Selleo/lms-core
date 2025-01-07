@@ -3,9 +3,10 @@ import "@cyntler/react-doc-viewer/dist/index.css";
 
 type PresentationProps = {
   url: string;
+  isExternalUrl?: boolean;
 };
 
-export default function Presentation({ url }: PresentationProps) {
+export default function Presentation({ url, isExternalUrl }: PresentationProps) {
   const docs = [
     {
       uri: url,
@@ -13,6 +14,12 @@ export default function Presentation({ url }: PresentationProps) {
       fileName: "Presentation",
     },
   ];
+
+  if (isExternalUrl) {
+    return (
+      <iframe title="Presentation" src={`${url}/embed`} className="aspect-video" allowFullScreen />
+    );
+  }
 
   return (
     <DocViewer

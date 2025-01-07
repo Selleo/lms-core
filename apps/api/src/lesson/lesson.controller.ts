@@ -96,7 +96,7 @@ export class LessonController {
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const id = await this.adminLessonsService.createQuizLesson(createQuizLessonBody, userId);
 
-    return new BaseResponse({ id, message: "Lesson created successfully" }) as any;
+    return new BaseResponse({ id, message: "Quiz created successfully" }) as any;
   }
 
   @Patch("beta-update-lesson/quiz")
@@ -122,7 +122,7 @@ export class LessonController {
     @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
     await this.adminLessonsService.updateQuizLesson(id, data, userId);
-    return new BaseResponse({ message: "Text block updated successfully" });
+    return new BaseResponse({ message: "Quiz updated successfully" });
   }
 
   @Patch("beta-update-lesson")

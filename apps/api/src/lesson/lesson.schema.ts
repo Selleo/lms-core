@@ -33,11 +33,10 @@ export const optionSchema = Type.Object({
   id: UUIDSchema,
   optionText: Type.String(),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
-  isStudentAnswer: Type.Optional(Type.Union([Type.Boolean(), Type.Null()])),
+  isStudentAnswer: Type.Union([Type.Boolean(), Type.Null()]),
+  studentAnswer: Type.Union([Type.String(), Type.Null()]),
   isCorrect: Type.Union([Type.Boolean(), Type.Null()]),
   questionId: Type.Optional(UUIDSchema),
-  matchedWord: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-  scaleAnswer: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
 });
 
 export const questionSchema = Type.Object({
@@ -48,6 +47,7 @@ export const questionSchema = Type.Object({
   displayOrder: Type.Optional(Type.Number()),
   photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(optionSchema)),
+  passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
 });
 
 export const lessonSchema = Type.Object({
@@ -113,7 +113,7 @@ export const lessonShowSchema = Type.Object({
   id: UUIDSchema,
   title: Type.String(),
   type: Type.Enum(LESSON_TYPES),
-  description: Type.String(),
+  description: Type.Union([Type.String(), Type.Null()]),
   fileType: Type.Union([Type.String(), Type.Null()]),
   fileUrl: Type.Union([Type.String(), Type.Null()]),
   quizDetails: Type.Optional(questionDetails),
