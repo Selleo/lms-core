@@ -3966,7 +3966,11 @@
                                       "type": "string"
                                     },
                                     {
-                                      "const": "photo_question",
+                                      "const": "photo_question_single_choice",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "photo_question_multiple_choice",
                                       "type": "string"
                                     },
                                     {
@@ -4011,24 +4015,8 @@
                                 "displayOrder": {
                                   "type": "number"
                                 },
-                                "photoQuestionType": {
-                                  "anyOf": [
-                                    {
-                                      "anyOf": [
-                                        {
-                                          "const": "single_choice",
-                                          "type": "string"
-                                        },
-                                        {
-                                          "const": "multiple_choice",
-                                          "type": "string"
-                                        }
-                                      ]
-                                    },
-                                    {
-                                      "type": "null"
-                                    }
-                                  ]
+                                "solutionExplanation": {
+                                  "type": "string"
                                 },
                                 "photoS3Key": {
                                   "anyOf": [
@@ -4658,7 +4646,11 @@
                                         "type": "string"
                                       },
                                       {
-                                        "const": "photo_question",
+                                        "const": "photo_question_single_choice",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "photo_question_multiple_choice",
                                         "type": "string"
                                       },
                                       {
@@ -4703,24 +4695,8 @@
                                   "displayOrder": {
                                     "type": "number"
                                   },
-                                  "photoQuestionType": {
-                                    "anyOf": [
-                                      {
-                                        "anyOf": [
-                                          {
-                                            "const": "single_choice",
-                                            "type": "string"
-                                          },
-                                          {
-                                            "const": "multiple_choice",
-                                            "type": "string"
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
+                                  "solutionExplanation": {
+                                    "type": "string"
                                   },
                                   "photoS3Key": {
                                     "anyOf": [
@@ -5233,7 +5209,11 @@
                                 "type": "string"
                               },
                               {
-                                "const": "photo_question",
+                                "const": "photo_question_single_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "photo_question_multiple_choice",
                                 "type": "string"
                               },
                               {
@@ -5278,24 +5258,8 @@
                           "displayOrder": {
                             "type": "number"
                           },
-                          "photoQuestionType": {
-                            "anyOf": [
-                              {
-                                "anyOf": [
-                                  {
-                                    "const": "single_choice",
-                                    "type": "string"
-                                  },
-                                  {
-                                    "const": "multiple_choice",
-                                    "type": "string"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
+                          "solutionExplanation": {
+                            "type": "string"
                           },
                           "photoS3Key": {
                             "anyOf": [
@@ -5551,7 +5515,11 @@
                                 "type": "string"
                               },
                               {
-                                "const": "photo_question",
+                                "const": "photo_question_single_choice",
+                                "type": "string"
+                              },
+                              {
+                                "const": "photo_question_multiple_choice",
                                 "type": "string"
                               },
                               {
@@ -5596,24 +5564,8 @@
                           "displayOrder": {
                             "type": "number"
                           },
-                          "photoQuestionType": {
-                            "anyOf": [
-                              {
-                                "anyOf": [
-                                  {
-                                    "const": "single_choice",
-                                    "type": "string"
-                                  },
-                                  {
-                                    "const": "multiple_choice",
-                                    "type": "string"
-                                  }
-                                ]
-                              },
-                              {
-                                "type": "null"
-                              }
-                            ]
+                          "solutionExplanation": {
+                            "type": "string"
                           },
                           "photoS3Key": {
                             "anyOf": [
@@ -5948,7 +5900,11 @@
                               "type": "string"
                             },
                             {
-                              "const": "photo_question",
+                              "const": "photo_question_single_choice",
+                              "type": "string"
+                            },
+                            {
+                              "const": "photo_question_multiple_choice",
                               "type": "string"
                             },
                             {
@@ -5992,25 +5948,6 @@
                         },
                         "displayOrder": {
                           "type": "number"
-                        },
-                        "photoQuestionType": {
-                          "anyOf": [
-                            {
-                              "anyOf": [
-                                {
-                                  "const": "single_choice",
-                                  "type": "string"
-                                },
-                                {
-                                  "const": "multiple_choice",
-                                  "type": "string"
-                                }
-                              ]
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
                         },
                         "photoS3Key": {
                           "anyOf": [
@@ -6235,7 +6172,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "photo_question",
+                          "const": "photo_question_single_choice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "photo_question_multiple_choice",
                           "type": "string"
                         },
                         {
@@ -6280,24 +6221,8 @@
                     "displayOrder": {
                       "type": "number"
                     },
-                    "photoQuestionType": {
-                      "anyOf": [
-                        {
-                          "anyOf": [
-                            {
-                              "const": "single_choice",
-                              "type": "string"
-                            },
-                            {
-                              "const": "multiple_choice",
-                              "type": "string"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
+                    "solutionExplanation": {
+                      "type": "string"
                     },
                     "photoS3Key": {
                       "anyOf": [
@@ -6448,6 +6373,9 @@
               "description": {
                 "type": "string"
               },
+              "solutionExplanation": {
+                "type": "string"
+              },
               "fileS3Key": {
                 "type": "string"
               },
@@ -6478,7 +6406,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "photo_question",
+                          "const": "photo_question_single_choice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "photo_question_multiple_choice",
                           "type": "string"
                         },
                         {
@@ -6523,24 +6455,8 @@
                     "displayOrder": {
                       "type": "number"
                     },
-                    "photoQuestionType": {
-                      "anyOf": [
-                        {
-                          "anyOf": [
-                            {
-                              "const": "single_choice",
-                              "type": "string"
-                            },
-                            {
-                              "const": "multiple_choice",
-                              "type": "string"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
+                    "solutionExplanation": {
+                      "type": "string"
                     },
                     "photoS3Key": {
                       "anyOf": [
@@ -6688,6 +6604,9 @@
               "description": {
                 "type": "string"
               },
+              "solutionExplanation": {
+                "type": "string"
+              },
               "fileS3Key": {
                 "type": "string"
               },
@@ -6718,7 +6637,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "photo_question",
+                          "const": "photo_question_single_choice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "photo_question_multiple_choice",
                           "type": "string"
                         },
                         {
@@ -6763,24 +6686,8 @@
                     "displayOrder": {
                       "type": "number"
                     },
-                    "photoQuestionType": {
-                      "anyOf": [
-                        {
-                          "anyOf": [
-                            {
-                              "const": "single_choice",
-                              "type": "string"
-                            },
-                            {
-                              "const": "multiple_choice",
-                              "type": "string"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
+                    "solutionExplanation": {
+                      "type": "string"
                     },
                     "photoS3Key": {
                       "anyOf": [
@@ -6967,7 +6874,11 @@
                           "type": "string"
                         },
                         {
-                          "const": "photo_question",
+                          "const": "photo_question_single_choice",
+                          "type": "string"
+                        },
+                        {
+                          "const": "photo_question_multiple_choice",
                           "type": "string"
                         },
                         {
@@ -7012,24 +6923,8 @@
                     "displayOrder": {
                       "type": "number"
                     },
-                    "photoQuestionType": {
-                      "anyOf": [
-                        {
-                          "anyOf": [
-                            {
-                              "const": "single_choice",
-                              "type": "string"
-                            },
-                            {
-                              "const": "multiple_choice",
-                              "type": "string"
-                            }
-                          ]
-                        },
-                        {
-                          "type": "null"
-                        }
-                      ]
+                    "solutionExplanation": {
+                      "type": "string"
                     },
                     "photoS3Key": {
                       "anyOf": [

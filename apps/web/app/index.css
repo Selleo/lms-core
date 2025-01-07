@@ -7,6 +7,11 @@ html, body {
   font-family: "DM Sans", sans-serif;
 }
 
+.ProseMirror:focus {
+  outline: none;
+  box-shadow: none; 
+}
+
 @layer base {
   :root {
     --color-black: #121521;

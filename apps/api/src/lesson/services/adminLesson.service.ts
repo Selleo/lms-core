@@ -151,8 +151,8 @@ export class AdminLessonService {
         description: question.description || null,
         title: question.title,
         displayOrder: question.displayOrder,
+        solutionExplanation: question.solutionExplanation,
         photoS3Key: question.photoS3Key,
-        photoQuestionType: question.photoQuestionType || null,
       }));
 
       const insertedQuestions = await trx.insert(questions).values(questionsToInsert).returning();
@@ -207,8 +207,8 @@ export class AdminLessonService {
             description: question.description || null,
             title: question.title,
             displayOrder: question.displayOrder,
+            solutionExplanation: question.solutionExplanation,
             photoS3Key: question.photoS3Key,
-            photoQuestionType: question.photoQuestionType || null,
           };
 
           const questionId = await this.adminLessonRepository.upsertQuestion(

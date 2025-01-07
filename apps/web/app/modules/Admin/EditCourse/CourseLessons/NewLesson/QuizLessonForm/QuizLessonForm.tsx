@@ -118,7 +118,8 @@ const QuizLessonForm = ({
           QuestionType.SINGLE_CHOICE,
           QuestionType.MULTIPLE_CHOICE,
           QuestionType.MATCH_WORDS,
-          QuestionType.PHOTO_QUESTION,
+          QuestionType.PHOTO_QUESTION_SINGLE_CHOICE,
+          QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE,
         ];
 
         const noOptionsRequiredTypes = [
@@ -148,8 +149,6 @@ const QuizLessonForm = ({
         title: "",
         type: questionType as QuestionType,
         displayOrder: questions.length + 1,
-        photoQuestionType:
-          questionType === QuestionType.PHOTO_QUESTION ? QuestionType.SINGLE_CHOICE : undefined,
         options: options,
       };
 
@@ -197,13 +196,17 @@ const QuizLessonForm = ({
             .with(QuestionType.TRUE_OR_FALSE, () => (
               <TrueOrFalseQuestion questionIndex={questionIndex} form={form} />
             ))
-            .with(QuestionType.PHOTO_QUESTION, () => (
-              <PhotoQuestion
-                questionIndex={questionIndex}
-                form={form}
-                lessonToEdit={lessonToEdit}
-              />
-            ))
+            .with(
+              QuestionType.PHOTO_QUESTION_SINGLE_CHOICE,
+              QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE,
+              () => (
+                <PhotoQuestion
+                  questionIndex={questionIndex}
+                  form={form}
+                  lessonToEdit={lessonToEdit}
+                />
+              ),
+            )
             .with(QuestionType.MATCH_WORDS, () => (
               <MatchWordsQuestion questionIndex={questionIndex} form={form} />
             ))

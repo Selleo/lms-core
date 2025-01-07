@@ -91,7 +91,6 @@ export class AdminChapterRepository {
               'description', ${questions.description},
               'photoS3Key', ${questions.photoS3Key},
               'displayOrder', ${questions.displayOrder},
-              'photoQuestionType', ${questions.photoQuestionType},
               'options', (
                 SELECT ARRAY(
                   SELECT json_build_object(

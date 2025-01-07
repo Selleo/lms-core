@@ -2049,7 +2049,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.PhotoQuestion,
+                type: QuestionType.PhotoQuestionSingleChoice,
                 title: "Which image represents an AI-driven chatbot?",
                 options: [
                   {

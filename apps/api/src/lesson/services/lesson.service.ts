@@ -36,7 +36,7 @@ import type {
   QuestionBody,
   QuestionDetails,
 } from "../lesson.schema";
-import type { LessonTypes, PhotoQuestionType, QuestionType } from "../lesson.type";
+import type { LessonTypes, QuestionType } from "../lesson.type";
 import type { UUIDType } from "src/common";
 
 @Injectable()
@@ -99,7 +99,6 @@ export class LessonService {
         title: questions.title,
         description: sql<string>`${questions.description}`,
         photoS3Key: sql<string>`${questions.photoS3Key}`,
-        photoQuestionType: sql<PhotoQuestionType>`COALESCE(${questions.photoQuestionType})`,
         passQuestion: sql<boolean | null>`CASE
           WHEN ${lesson.quizCompleted} THEN ${studentQuestionAnswers.isCorrect}
           ELSE NULL END`,

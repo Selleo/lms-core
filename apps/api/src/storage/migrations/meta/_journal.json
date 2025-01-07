@@ -78,6 +78,13 @@
       "when": 1735821625505,
       "tag": "0010_add_isExternal_lesson_field",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1736261480672,
+      "tag": "0011_remove_photo_question_type_column",
+      "breakpoints": true
     }
   ]
 }

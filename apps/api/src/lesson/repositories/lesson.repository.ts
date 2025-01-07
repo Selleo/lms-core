@@ -38,7 +38,6 @@ export class LessonRepository {
                   ${questions.title} AS title,
                   ${questions.description} AS description,
                   ${questions.type} AS type,
-                  ${questions.photoQuestionType} AS photoQuestionType,
                   ${questions.photoS3Key} AS photoS3Key,
                   ${questions.solutionExplanation} AS solutionExplanation,
                   ${questions.displayOrder} AS displayOrder
@@ -72,7 +71,6 @@ export class LessonRepository {
                   ${questions.title} AS title,
                   ${questions.description} AS description,
                   ${questions.type} AS type,
-                  ${questions.photoQuestionType} AS photoQuestionType,
                   ${questions.photoS3Key} AS photoS3Key,
                   ${questions.solutionExplanation} AS solutionExplanation,
                   ${questions.displayOrder} AS displayOrder,

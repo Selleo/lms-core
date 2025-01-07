@@ -39,6 +39,7 @@ const DeleteConfirmationModal = ({
       )
       .with(DeleteContentType.QUIZ, () => "Are you sure you want to delete quiz from the chapter?")
       .with(DeleteContentType.CHAPTER, () => "Are you sure you want to delete this chapter?")
+      .with(DeleteContentType.QUESTION, () => "Are you sure you want to delete question?")
       .otherwise(() => "Are you sure you want to delete this content?");
   };
 
@@ -53,8 +54,11 @@ const DeleteConfirmationModal = ({
               {getDialogTitleText()}
             </DialogTitle>
             <DialogDescription className="mt-2 text-sm text-neutral-600">
-              This will remove all data provided including uploaded media.
+              {contentType === DeleteContentType.QUESTION
+                ? "This will remove question from quiz"
+                : "This will remove all data provided including uploaded media."}
             </DialogDescription>
+
             <div className="flex gap-4 mt-8">
               <Button
                 onClick={onDelete}

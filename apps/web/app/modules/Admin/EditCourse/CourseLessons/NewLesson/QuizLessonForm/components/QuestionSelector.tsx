@@ -32,31 +32,31 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
     { type: QuestionType.MULTIPLE_CHOICE, label: "Multi Select", icon: QuestionIcons.MultiSelect },
     { type: QuestionType.TRUE_OR_FALSE, label: "True or false", icon: QuestionIcons.TrueOrFalse },
     {
-      type: QuestionType.PHOTO_QUESTION,
+      type: QuestionType.PHOTO_QUESTION_SINGLE_CHOICE,
       label: "Photo question",
       icon: QuestionIcons.PhotoQuestion,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_DND,
-      label: "Fill in the blanks dnd",
+      label: "Fill in the blanks",
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_TEXT,
-      label: "Fill in the blanks text",
+      label: "Gap fill",
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.BRIEF_RESPONSE,
-      label: "Brief response",
+      label: "Short answer",
       icon: QuestionIcons.BriefResponse,
     },
     {
       type: QuestionType.DETAILED_RESPONSE,
-      label: "Detailed response",
+      label: "Free text",
       icon: QuestionIcons.DetailedResponse,
     },
-    { type: QuestionType.MATCH_WORDS, label: "Match words", icon: QuestionIcons.MatchWords },
+    { type: QuestionType.MATCH_WORDS, label: "Matching", icon: QuestionIcons.MatchWords },
     { type: QuestionType.SCALE_1_5, label: "Scale 1 to 5", icon: QuestionIcons.Scale_1_5 },
   ];
 
