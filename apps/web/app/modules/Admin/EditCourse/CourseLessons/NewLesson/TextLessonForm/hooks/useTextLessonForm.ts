@@ -68,9 +68,9 @@ export const useTextLessonForm = ({
           data: { ...values, chapterId: chapterToEdit.id },
         });
         setOpenChapter && setOpenChapter(chapterToEdit.id);
-        setContentTypeToDisplay(ContentTypes.EMPTY);
       }
 
+      setContentTypeToDisplay(ContentTypes.EMPTY);
       await queryClient.invalidateQueries({ queryKey: [COURSE_QUERY_KEY, { id: courseId }] });
     } catch (error) {
       console.error("Error creating text block:", error);

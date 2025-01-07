@@ -3,7 +3,7 @@ import { Type } from "@sinclair/typebox";
 import { UUIDSchema } from "src/common";
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
-import { LESSON_TYPES, PhotoQuestionType, QuestionType } from "./lesson.type";
+import { LESSON_TYPES, QuestionType } from "./lesson.type";
 
 import type { Static } from "@sinclair/typebox";
 
@@ -24,7 +24,7 @@ export const adminQuestionSchema = Type.Object({
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
   displayOrder: Type.Optional(Type.Number()),
-  photoQuestionType: Type.Optional(Type.Union([Type.Enum(PhotoQuestionType), Type.Null()])),
+  solutionExplanation: Type.Optional(Type.String()),
   photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(adminOptionSchema)),
 });
@@ -45,7 +45,6 @@ export const questionSchema = Type.Object({
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
   displayOrder: Type.Optional(Type.Number()),
-  photoQuestionType: Type.Optional(Type.Union([Type.Enum(PhotoQuestionType), Type.Null()])),
   photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(optionSchema)),
   passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
@@ -69,6 +68,7 @@ const lessonQuizSchema = Type.Object({
   type: Type.String(),
   displayOrder: Type.Number(),
   description: Type.Optional(Type.String()),
+  solutionExplanation: Type.Optional(Type.String()),
   fileS3Key: Type.Optional(Type.String()),
   fileType: Type.Optional(Type.String()),
   questions: Type.Optional(Type.Array(adminQuestionSchema)),

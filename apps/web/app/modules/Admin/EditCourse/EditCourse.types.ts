@@ -52,6 +52,7 @@ export type LessonType = (typeof LessonType)[keyof typeof LessonType];
 export const DeleteContentType = {
   ...LessonType,
   CHAPTER: "chapter",
+  QUESTION: "question",
 } as const;
 
 export type DeleteContentType = (typeof DeleteContentType)[keyof typeof DeleteContentType];

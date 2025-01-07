@@ -52,11 +52,12 @@ export const Question = ({
   const isTrueOrFalse = content.type === "true_or_false";
   const isSingleQuestion = content.type === "single_choice";
   const isMultiQuestion = content.type === "multiple_choice";
-  const isPhotoQuestion = content.type === "photo_question";
-  const isSingleChoicePhotoQuestion = content.photoQuestionType === "single_choice";
+  const isPhotoQuestionSingleChoice = content.type === "photo_question_single_choice";
+  const isPhotoQuestionMultipleChoice = content.type === "photo_question_multiple_choice";
   const isOpenAnswer = content.type === "brief_response" || content.type === "detailed_response";
   const isTextFillInTheBlanks = content.type === "fill_in_the_blanks_text";
   const isDraggableFillInTheBlanks = content.type === "fill_in_the_blanks_dnd";
+  const isPhotoQuestion = isPhotoQuestionSingleChoice || isPhotoQuestionMultipleChoice;
 
   const { sendAnswer, sendOpenAnswer } = useQuestionQuery({
     lessonId,
@@ -203,7 +204,7 @@ export const Question = ({
       return (
         <QuestionCard
           title={content.title ?? ""}
-          questionType={`${isSingleQuestion || isSingleChoicePhotoQuestion ? "Single" : "Multiple"} select question.`}
+          questionType={`${isSingleQuestion || isPhotoQuestionSingleChoice ? "Single" : "Multiple"} select question.`}
           questionNumber={questionNumber}
         >
           {isPhotoQuestion && (
@@ -221,7 +222,7 @@ export const Question = ({
             isSubmitted={isSubmitted}
             content={content.options}
             handleClick={handleClick}
-            isMultiAnswer={isMultiQuestion || (isPhotoQuestion && !isSingleChoicePhotoQuestion)}
+            isMultiAnswer={isMultiQuestion || (isPhotoQuestion && isPhotoQuestionMultipleChoice)}
           />
           <QuestionCorrectAnswers
             canRenderAnswers={canRenderCorrectAnswers}

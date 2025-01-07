@@ -1,5 +1,5 @@
 import * as Accordion from "@radix-ui/react-accordion";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { Icon } from "~/components/Icon";
 import { SortableList } from "~/components/SortableList";
@@ -11,6 +11,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/comp
 import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type TrueOrFalseQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -20,6 +22,7 @@ type TrueOrFalseQuestionProps = {
 const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) => {
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
@@ -72,6 +75,11 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
     },
     [form, questionIndex],
   );
+
+  const onDeleteQuestion = () => {
+    handleRemoveQuestion();
+    setIsDeleteModalOpen(false);
+  };
 
   const isOptionEmpty =
     !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
@@ -169,9 +177,9 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
               />
             )}
           </div>
-          {errors && (
+          {errors?.questions?.[questionIndex] && (
             <p className="text-red-500 text-sm ml-14">
-              {(errors?.questions as { options?: { message?: string } })?.options?.message}
+              {errors?.questions?.[questionIndex]?.options?.message}
             </p>
           )}
           <div className="mt-4 flex gap-2 mb-4 ml-14">
@@ -181,11 +189,17 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
-              onClick={handleRemoveQuestion}
+              onClick={() => setIsDeleteModalOpen(false)}
             >
               Delete Question
             </Button>
           </div>
+          <DeleteConfirmationModal
+            open={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            onDelete={onDeleteQuestion}
+            contentType={DeleteContentType.QUESTION}
+          />
         </div>
       </Accordion.Item>
     </Accordion.Root>

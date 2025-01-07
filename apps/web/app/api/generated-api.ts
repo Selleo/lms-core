@@ -510,7 +510,8 @@ export interface GetBetaCourseByIdResponse {
             | "single_choice"
             | "multiple_choice"
             | "true_or_false"
-            | "photo_question"
+            | "photo_question_single_choice"
+            | "photo_question_multiple_choice"
             | "fill_in_the_blanks_text"
             | "fill_in_the_blanks_dnd"
             | "brief_response"
@@ -520,7 +521,6 @@ export interface GetBetaCourseByIdResponse {
           description?: string | null;
           title: string;
           displayOrder?: number;
-          photoQuestionType?: ("single_choice" | "multiple_choice") | null;
           photoS3Key?: string | null;
           options?: {
             /** @format uuid */
@@ -669,7 +669,8 @@ export interface GetUserStatisticsResponse {
             | "single_choice"
             | "multiple_choice"
             | "true_or_false"
-            | "photo_question"
+            | "photo_question_single_choice"
+            | "photo_question_multiple_choice"
             | "fill_in_the_blanks_text"
             | "fill_in_the_blanks_dnd"
             | "brief_response"
@@ -679,7 +680,6 @@ export interface GetUserStatisticsResponse {
           description?: string | null;
           title: string;
           displayOrder?: number;
-          photoQuestionType?: ("single_choice" | "multiple_choice") | null;
           photoS3Key?: string | null;
           options?: {
             /** @format uuid */
@@ -784,7 +784,8 @@ export type BetaCreateChapterBody = {
         | "single_choice"
         | "multiple_choice"
         | "true_or_false"
-        | "photo_question"
+        | "photo_question_single_choice"
+        | "photo_question_multiple_choice"
         | "fill_in_the_blanks_text"
         | "fill_in_the_blanks_dnd"
         | "brief_response"
@@ -794,7 +795,6 @@ export type BetaCreateChapterBody = {
       description?: string | null;
       title: string;
       displayOrder?: number;
-      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
       photoS3Key?: string | null;
       options?: {
         /** @format uuid */
@@ -849,7 +849,8 @@ export type UpdateChapterBody = {
         | "single_choice"
         | "multiple_choice"
         | "true_or_false"
-        | "photo_question"
+        | "photo_question_single_choice"
+        | "photo_question_multiple_choice"
         | "fill_in_the_blanks_text"
         | "fill_in_the_blanks_dnd"
         | "brief_response"
@@ -859,7 +860,6 @@ export type UpdateChapterBody = {
       description?: string | null;
       title: string;
       displayOrder?: number;
-      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
       photoS3Key?: string | null;
       options?: {
         /** @format uuid */
@@ -939,7 +939,8 @@ export interface GetLessonByIdResponse {
           | "single_choice"
           | "multiple_choice"
           | "true_or_false"
-          | "photo_question"
+          | "photo_question_single_choice"
+          | "photo_question_multiple_choice"
           | "fill_in_the_blanks_text"
           | "fill_in_the_blanks_dnd"
           | "brief_response"
@@ -949,7 +950,6 @@ export interface GetLessonByIdResponse {
         description?: string | null;
         title: string;
         displayOrder?: number;
-        photoQuestionType?: ("single_choice" | "multiple_choice") | null;
         photoS3Key?: string | null;
         options?: {
           /** @format uuid */
@@ -987,7 +987,8 @@ export type BetaCreateLessonBody = {
       | "single_choice"
       | "multiple_choice"
       | "true_or_false"
-      | "photo_question"
+      | "photo_question_single_choice"
+      | "photo_question_multiple_choice"
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
@@ -997,7 +998,6 @@ export type BetaCreateLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
@@ -1040,7 +1040,8 @@ export type BetaCreateQuizLessonBody = {
       | "single_choice"
       | "multiple_choice"
       | "true_or_false"
-      | "photo_question"
+      | "photo_question_single_choice"
+      | "photo_question_multiple_choice"
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
@@ -1050,7 +1051,6 @@ export type BetaCreateQuizLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
@@ -1092,7 +1092,8 @@ export type BetaUpdateQuizLessonBody = {
       | "single_choice"
       | "multiple_choice"
       | "true_or_false"
-      | "photo_question"
+      | "photo_question_single_choice"
+      | "photo_question_multiple_choice"
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
@@ -1102,7 +1103,6 @@ export type BetaUpdateQuizLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
@@ -1142,7 +1142,8 @@ export type BetaUpdateLessonBody = {
       | "single_choice"
       | "multiple_choice"
       | "true_or_false"
-      | "photo_question"
+      | "photo_question_single_choice"
+      | "photo_question_multiple_choice"
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
@@ -1152,7 +1153,6 @@ export type BetaUpdateLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */

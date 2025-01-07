@@ -24,7 +24,8 @@ import { QuestionType } from "../QuizLessonForm.types";
 import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import type { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
+import { DeleteContentType, type Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -33,12 +34,13 @@ type PhotoQuestionProps = {
 };
 
 const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps) => {
-  const photoQuestionType = form.watch(`questions.${questionIndex}.photoQuestionType`);
+  const questionType = form.watch(`questions.${questionIndex}.type`);
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
   const [displayImageUrl, setDisplayImageUrl] = useState<string | undefined>(undefined);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   useEffect(() => {
     setDisplayImageUrl(lessonToEdit?.questions?.[questionIndex]?.photoS3SingedUrl);
@@ -84,11 +86,11 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
       const updatedOptions = [...currentOptions];
 
       if (field === "isCorrect") {
-        if (photoQuestionType === QuestionType.SINGLE_CHOICE) {
+        if (questionType === QuestionType.PHOTO_QUESTION_SINGLE_CHOICE) {
           updatedOptions.forEach((option, index) => {
             option.isCorrect = index === optionIndex;
           });
-        } else if (photoQuestionType === QuestionType.MULTIPLE_CHOICE) {
+        } else if (questionType === QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE) {
           updatedOptions[optionIndex].isCorrect = value as boolean;
         }
       } else {
@@ -97,7 +99,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
 
       form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldDirty: true });
     },
-    [form, questionIndex, photoQuestionType],
+    [form, questionIndex, questionType],
   );
 
   const handleImageUpload = useCallback(
@@ -119,6 +121,11 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
     [form, uploadFile, questionIndex],
   );
 
+  const onDeleteQuestion = () => {
+    handleRemoveQuestion();
+    setIsDeleteModalOpen(false);
+  };
+
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
@@ -129,7 +136,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
               name={`questions.${questionIndex}.photoS3Key`}
               render={({ field }) => (
                 <FormItem className="mt-5 w-1/3">
-                  <Label htmlFor="imageUrl" className="body-base-md ">
+                  <Label htmlFor="imageUrl" className="body-base-md">
                     <span className="text-red-500 mr-1">*</span>
                     Image
                   </Label>
@@ -141,20 +148,19 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                       imageUrl={displayImageUrl}
                     />
                   </FormControl>
-
                   {isUploading && <p>Uploading image...</p>}
-                  {errors && (
-                    <p className="text-red-500 text-sm ">
-                      {(errors?.questions as { image?: { message?: string } })?.image?.message}
+                  {errors?.questions?.[questionIndex]?.photoS3Key && (
+                    <p className="text-red-500 text-sm">
+                      {errors?.questions?.[questionIndex]?.photoS3Key?.message}
                     </p>
                   )}
-                  <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name={`questions.${questionIndex}.photoQuestionType`}
+              name={`questions.${questionIndex}.type`}
               render={({ field }) => (
                 <FormItem className="w-1/6 mt-4">
                   <Label htmlFor="type" className="body-base-md">
@@ -165,8 +171,8 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                     <Select
                       {...field}
                       onValueChange={(value) => field.onChange(value)}
-                      defaultValue={QuestionType.SINGLE_CHOICE}
-                      value={field.value || QuestionType.SINGLE_CHOICE}
+                      defaultValue={QuestionType.PHOTO_QUESTION_SINGLE_CHOICE}
+                      value={field.value || QuestionType.PHOTO_QUESTION_SINGLE_CHOICE}
                     >
                       <SelectTrigger>
                         <SelectValue
@@ -180,13 +186,13 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem
-                          value={QuestionType.SINGLE_CHOICE}
+                          value={QuestionType.PHOTO_QUESTION_SINGLE_CHOICE}
                           className="text-left body-base-md"
                         >
                           Single select
                         </SelectItem>
                         <SelectItem
-                          value={QuestionType.MULTIPLE_CHOICE}
+                          value={QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE}
                           className="text-left body-base-md"
                         >
                           Multi select
@@ -235,7 +241,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                           className="flex-1"
                         />
                         <div className="flex items-center">
-                          {photoQuestionType === QuestionType.SINGLE_CHOICE ? (
+                          {questionType === QuestionType.PHOTO_QUESTION_SINGLE_CHOICE ? (
                             <Input
                               type="radio"
                               className="w-4 h-4 cursor-pointer"
@@ -294,9 +300,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
               />
             )}
           </div>
-          {errors && (
+          {errors?.questions?.[questionIndex] && (
             <p className="text-red-500 text-sm ml-14">
-              {(errors?.questions as { options?: { message?: string } })?.options?.message}
+              {errors?.questions?.[questionIndex]?.options?.message}
             </p>
           )}
           <div className="mt-4 flex gap-2 mb-4 ml-14">
@@ -306,11 +312,17 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
-              onClick={handleRemoveQuestion}
+              onClick={() => setIsDeleteModalOpen(true)}
             >
               Delete Question
             </Button>
           </div>
+          <DeleteConfirmationModal
+            open={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            onDelete={onDeleteQuestion}
+            contentType={DeleteContentType.QUESTION}
+          />
         </div>
       </Accordion.Item>
     </Accordion.Root>
