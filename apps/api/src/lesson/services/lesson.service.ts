@@ -111,7 +111,7 @@ export class LessonService {
                     'id', qao.id,
                     'optionText', qao.option_text,
                     'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
-                    'displayOrder', 
+                    'displayOrder',
                       CASE
                         WHEN ${lesson.quizCompleted} THEN qao.display_order
                         ELSE NULL
@@ -133,11 +133,11 @@ export class LessonService {
                   )
                   FROM ${questionAnswerOptions} qao
                   WHERE qao.question_id = questions.id
-                  ORDER BY 
-                    CASE 
+                  ORDER BY
+                    CASE
                       WHEN ${questions.type} in (${QUESTION_TYPE.fill_in_the_blanks_dnd}) AND ${lesson.quizCompleted} = FALSE
                         THEN random()
-                      ELSE qao.display_order  
+                      ELSE qao.display_order
                     END
                 )
               )
@@ -234,10 +234,7 @@ export class LessonService {
     const correctAnswersForQuizQuestions =
       await this.questionRepository.getQuizQuestionsToEvaluation(studentQuizAnswers.lessonId);
 
-    console.log(JSON.stringify(correctAnswersForQuizQuestions, null, 2));
-    console.log(JSON.stringify(studentQuizAnswers, null, 2));
     if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.answers.length) {
-      console.log(correctAnswersForQuizQuestions.length, studentQuizAnswers.answers.length);
       throw new ConflictException("Quiz is not completed");
     }
 
