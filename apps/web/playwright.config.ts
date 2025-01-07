@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-const baseURL = "https://app.lms.localhost";
+const baseURL = process.env.VITE_APP_URL || "https://app.lms.localhost";
 
 export default defineConfig({
   testDir: "./e2e",

@@ -2,6 +2,26 @@ name: E2E Tests
 
 env:
   HUSKY: 0
+  JWT_SECRET: "test_secret"
+  JWT_REFRESH_SECRET: "test_refresh"
+  JWT_EXPIRATION_TIME: "15min"
+  CORS_ORIGIN: ""
+  EMAIL_ADAPTER: "mailhog"
+  DATABASE_URL: ""
+  REDIS_URL: ""
+  SMTP_HOST: ""
+  SMTP_PORT: "1025"
+  SMTP_USER: ""
+  SMTP_PASSWORD: ""
+  AWS_REGION: "us-east-1"
+  AWS_ACCESS_KEY_ID: ""
+  AWS_SECRET_ACCESS_KEY: ""
+  AWS_BUCKET_NAME: ""
+  SES_EMAIL: "noreply@lms.selleo.app"
+  STRIPE_SECRET_KEY: "test_secret"
+  STRIPE_PUBLISHABLE_KEY: "test_secret"
+  STRIPE_WEBHOOK_SECRET: "test_secret"
+
 
 on:
     push:
@@ -71,7 +91,7 @@ jobs:
           curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
           curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
           sudo apt-get update
-          sudo apt-get install caddy=2.8.4-1
+          sudo apt-get install caddy=2.8.4
 
       - name: Run tests
         run: pnpm playwright test
