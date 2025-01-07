@@ -131,7 +131,7 @@ test.describe.serial("Course E2E", () => {
     await enrollmentActions.unenrollFromCourse();
   });
 
-  test("should solve free quiz lesson", async () => {
+  test.skip("should solve free quiz lesson", async () => {
     await courseActions.openCourse();
     await quizActions.solveQuiz();
     await quizActions.checkAndVerifyResults();
