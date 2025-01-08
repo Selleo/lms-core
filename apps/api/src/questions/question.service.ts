@@ -227,39 +227,5 @@ export class QuestionService {
     }, [] as string[]);
 
     return sql`json_build_object(${sql.raw(convertedAnswers.join(","))})`;
-
-    // TODO: decide how handle lesson progress
-    // await this.studentLessonProgressService.markLessonAsCompleted(questionData.lessonId, userId);
-
-    // const [studentLessonProgress] = await this.lessonRepository.updateStudentLessonProgress(
-    //   userId,
-    //   questionData.lessonId,
-    //   answerQuestion.courseId,
-    // );
-
-    // if (
-    //   !quizProgress?.completedAt &&
-    //   studentLessonProgress?.completedLessonItemCount === lesson.itemsCount
-    // ) {
-    //   const isCompletedFreemiumLesson = lesson.isFree && !lesson.enrolled;
-
-    //   await this.lessonRepository.completeLessonProgress(
-    //     answerQuestion.courseId,
-    //     questionData.lessonId,
-    //     userId,
-    //     isCompletedFreemiumLesson,
-    //     trx,
-    //   );
-
-    //   const existingLessonProgress = await this.lessonRepository.getLessonsProgressByCourseId(
-    //     answerQuestion.courseId,
-    //     trx,
-    //   );
-
-    //   if (isCompletedFreemiumLesson && existingLessonProgress.length === 0) {
-    //     await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(userId, trx);
-    //   }
-    // }
-    // });
   }
 }

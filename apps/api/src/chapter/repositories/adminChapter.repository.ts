@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, eq, gte, lte, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-import { chapters, lessons, questionAnswerOptions, questions } from "src/storage/schema";
+import { chapters, courses, lessons, questionAnswerOptions, questions } from "src/storage/schema";
 
 import type { UpdateChapterBody } from "../schemas/chapter.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
@@ -122,5 +122,20 @@ export class AdminChapterRepository {
 
   async updateChapter(id: string, body: UpdateChapterBody) {
     return await this.db.update(chapters).set(body).where(eq(chapters.id, id)).returning();
+  }
+
+  async updateChapterCountForCourse(courseId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
+    const dbInstance = trx ?? this.db;
+
+    return await dbInstance
+      .update(courses)
+      .set({
+        chapterCount: sql<number>`(
+          SELECT COUNT(*)
+          FROM ${chapters}
+          WHERE ${chapters.courseId} = ${courseId}
+      )`,
+      })
+      .where(eq(courses.id, courseId));
   }
 }

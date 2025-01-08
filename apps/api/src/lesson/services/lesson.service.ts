@@ -25,6 +25,7 @@ import {
   studentLessonProgress,
   studentQuestionAnswers,
 } from "src/storage/schema";
+import { StudentLessonProgressService } from "src/studentLessonProgress/studentLessonProgress.service";
 
 import { LESSON_TYPES } from "../lesson.type";
 import { LessonRepository } from "../repositories/lesson.repository";
@@ -47,6 +48,7 @@ export class LessonService {
     private readonly questionService: QuestionService,
     private readonly questionRepository: QuestionRepository,
     private readonly fileService: FileService,
+    private readonly studentLessonProgressService: StudentLessonProgressService,
     private readonly eventBus: EventBus,
   ) {}
 
@@ -63,8 +65,15 @@ export class LessonService {
         quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
         quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
         isExternal: sql<boolean>`${lessons.isExternal}`,
+        isFreemium: sql<boolean>`${chapters.isFreemium}`,
+        isEnrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NULL THEN FALSE ELSE TRUE END`,
       })
       .from(lessons)
+      .leftJoin(chapters, eq(chapters.id, lessons.chapterId))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+      )
       .leftJoin(
         studentLessonProgress,
         and(
@@ -75,6 +84,11 @@ export class LessonService {
       .where(eq(lessons.id, id));
 
     if (!lesson) throw new NotFoundException("Lesson not found");
+
+    if (!lesson.isFreemium && !lesson.isEnrolled)
+      throw new UnauthorizedException("You don't have access");
+
+    console.log(lesson);
 
     if (lesson.type === LESSON_TYPES.TEXT && !lesson.fileUrl) return lesson;
 
@@ -225,7 +239,7 @@ export class LessonService {
     questionCount: number;
     score: number;
   }> {
-    const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(
+    const [accessCourseLessonWithDetails] = await this.lessonRepository.checkLessonAssignment(
       studentQuizAnswers.lessonId,
       userId,
     );
@@ -267,6 +281,12 @@ export class LessonService {
           trx,
         );
 
+        await this.studentLessonProgressService.markLessonAsCompleted(
+          studentQuizAnswers.lessonId,
+          userId,
+          true,
+        );
+
         this.eventBus.publish(
           new QuizCompletedEvent(
             userId,
@@ -293,31 +313,6 @@ export class LessonService {
         );
       }
     });
-  }
-
-  async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
-    return this.db
-      .select({
-        isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
-        isFreemium: sql<boolean>`CASE WHEN ${chapters.isFreemium} THEN TRUE ELSE FALSE END`,
-        lessonIsCompleted: sql<boolean>`CASE WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN TRUE ELSE FALSE END`,
-        chapterId: sql<string>`${chapters.id}`,
-        courseId: sql<string>`${chapters.courseId}`,
-      })
-      .from(lessons)
-      .leftJoin(
-        studentLessonProgress,
-        and(
-          eq(studentLessonProgress.lessonId, lessons.id),
-          eq(studentLessonProgress.studentId, userId),
-        ),
-      )
-      .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
-      .leftJoin(
-        studentCourses,
-        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
-      )
-      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
   }
 
   // async studentAnswerOnQuestion(
@@ -378,40 +373,5 @@ export class LessonService {
   //   } catch (error) {
   //     return false;
   //   }
-  // }
-
-  // private async getLessonQuestionsToEvaluation(
-  //   lesson: Lesson,
-  //   courseId: UUIDType,
-  //   userId: UUIDType,
-  //   quizCompleted: boolean,
-  // ) {
-  //   const lessonItemsList = await this.chapterRepository.getLessonItems(lesson.id, courseId);
-  //   const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
-
-  //   return await Promise.all(
-  //     validLessonItemsList.map(async (item) => {
-  //       const { lessonItemId, questionData, lessonItemType, displayOrder } = item;
-
-  //       if (isNull(questionData)) throw new Error("Question not found");
-
-  //       const content = await this.processQuestionItem(
-  //         { lessonItemId, displayOrder, lessonItemType, questionData },
-  //         userId,
-  //         courseId,
-  //         lesson.id,
-  //         lesson.type,
-  //         quizCompleted,
-  //         null,
-  //       );
-
-  //       return {
-  //         lessonItemId: item.lessonItemId,
-  //         lessonItemType: item.lessonItemType,
-  //         displayOrder: item.displayOrder,
-  //         content,
-  //       };
-  //     }),
-  //   );
   // }
 }
