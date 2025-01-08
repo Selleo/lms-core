@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Label, Pie, PieChart } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
@@ -18,11 +19,11 @@ const emptyChartData = {
 
 const chartConfig = {
   completed: {
-    label: "Completed Chapters",
+    label: "remainingChapters.sideSection.other.completedChapters",
     color: "var(--success-500)",
   },
   notCompleted: {
-    label: "Remaining chapters",
+    label: "remainingChapters.sideSection.other.remainingChapters",
     color: "var(--primary-100)",
   },
 } satisfies ChartConfig;
@@ -31,6 +32,7 @@ export const CourseProgressChart = ({
   chaptersCount = 0,
   completedChaptersCount = 0,
 }: CourseProgressChartProps) => {
+  const { t } = useTranslation();
   const chartData = useMemo(
     () => [
       {
@@ -79,7 +81,7 @@ export const CourseProgressChart = ({
                       dominantBaseline="middle"
                     >
                       <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                        {isEmptyChart ? "No data" : `${completedChaptersCount}/${chaptersCount}`}
+                        {isEmptyChart ? t('studentCourseView.sideSection.other.noData') : `${completedChaptersCount}/${chaptersCount}`}
                       </tspan>
                     </text>
                   );

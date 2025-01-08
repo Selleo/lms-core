@@ -13,6 +13,7 @@ import { cn } from "~/lib/utils";
 import { useScormFormStore } from "../store/scormForm.store";
 
 import type { CourseFormData, CourseStatus, StepComponentProps } from "../types/scorm.types";
+import { useTranslation } from "react-i18next";
 
 export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
   const navigate = useNavigate();
@@ -23,6 +24,7 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
     useUploadScormPackage();
 
   const status = watch("status");
+  const { t } = useTranslation();
 
   const { resetForm } = useScormFormStore();
 
@@ -84,10 +86,9 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
               htmlFor="draft"
               className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
             >
-              <div className="font-medium text-lg">Draft</div>
+              <div className="font-medium text-lg">{t('common.other.draft')}</div>
               <div className="text-sm font-normal">
-                Students cannot purchase or enroll in this course. For those already enrolled, the
-                course will not appear in their Student Course List.
+                {t('adminScorm.other.draftBody')}
               </div>
             </Label>
           </Card>
@@ -102,10 +103,9 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
               htmlFor="published"
               className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
             >
-              <div className="font-medium text-lg">Publish</div>
+              <div className="font-medium text-lg">{t('common.other.publish')}</div>
               <div className="text-sm font-normal">
-                Students can purchase, enroll in, and access the course content. Once enrolled, the
-                course will be displayed on their Student Dashboard.
+              {t('adminScorm.other.publishBody')}
               </div>
             </Label>
           </Card>
@@ -114,7 +114,7 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={handleBack}>
-          Back
+        {t('adminScorm.button.back')}
         </Button>
         <Button
           onClick={() => {
@@ -123,8 +123,9 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
           disabled={isCreateCoursePending || isUploadFilePending || isUploadScormPending}
         >
           {isCreateCoursePending || isUploadFilePending || isUploadScormPending
-            ? "Creating course..."
-            : "Create Course"}
+            ? t('adminScorm.button.creatingCourse')
+            : t('adminScorm.button.createCourse')
+          }
         </Button>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { useState, useCallback } from "react";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../api-client";
+import { useTranslation } from "react-i18next";
 
 type StripeClientPaymentIntent = {
   amount: number;
@@ -20,6 +21,7 @@ type StripePaymentIntentResult = {
 export function useStripePaymentIntent() {
   const { toast } = useToast();
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const mutation = useMutation<StripePaymentIntentResult, Error, StripeClientPaymentIntent>({
     mutationFn: async (options: StripeClientPaymentIntent) => {
@@ -38,12 +40,12 @@ export function useStripePaymentIntent() {
       if (error instanceof AxiosError) {
         toast({
           variant: "destructive",
-          description: error.response?.data.message || "Failed to create payment intent",
+          description: error.response?.data.message || t('paymentView.toast.failed'),
         });
       } else {
         toast({
           variant: "destructive",
-          description: error.message || "Something went wrong",
+          description: error.message || t('paymentView.toast.somethingWentWrong'),
         });
       }
     },

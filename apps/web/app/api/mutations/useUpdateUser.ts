@@ -8,6 +8,7 @@ import { currentUserQueryOptions, useCurrentUserSuspense } from "../queries/useC
 import { queryClient } from "../queryClient";
 
 import type { UpdateUserBody } from "../generated-api";
+import { useTranslation } from "react-i18next";
 
 type UpdateUserOptions = {
   data: UpdateUserBody;
@@ -16,6 +17,7 @@ type UpdateUserOptions = {
 export function useUpdateUser() {
   const { data: currentUser } = useCurrentUserSuspense();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: UpdateUserOptions) => {
@@ -30,7 +32,7 @@ export function useUpdateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: "User updated successfully" });
+      toast({ description: t('changeUserInformationView.toast.userUpdatedSuccessfully')});
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

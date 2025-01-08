@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { QuestionType } from "../QuizLessonForm.types";
 
-export const quizLessonFormSchema = z.object({
+export const quizLessonFormSchema = (t: (key: string) => string) => z.object({
   title: z.string(),
   questions: z
     .array(
@@ -22,7 +22,7 @@ export const quizLessonFormSchema = z.object({
           .array(
             z.object({
               id: z.optional(z.string()),
-              optionText: z.string().min(1, "Option text is required"),
+              optionText: z.string().min(1, t('adminCourseView.curriculum.lesson.validation.optionTextRequired')),
               isCorrect: z.boolean(),
               displayOrder: z.number(),
               matchedWord: z.optional(z.string()),
@@ -41,7 +41,7 @@ export const quizLessonFormSchema = z.object({
         ) {
           ctx.addIssue({
             path: [index, "options"],
-            message: `At least one option is required.`,
+            message: t('adminCourseView.curriculum.lesson.validation.atLeastOneOptionRequired'),
             code: z.ZodIssueCode.custom,
           });
         }
@@ -53,7 +53,7 @@ export const quizLessonFormSchema = z.object({
         ) {
           ctx.addIssue({
             path: [index, "photoS3Key"],
-            message: `Image is required.`,
+            message: t('adminCourseView.curriculum.lesson.validation.imageRequired'),
             code: z.ZodIssueCode.custom,
           });
         }
@@ -64,7 +64,7 @@ export const quizLessonFormSchema = z.object({
         ) {
           ctx.addIssue({
             path: [index, "description"],
-            message: `Description must have at least 10 characters.`,
+            message: t('adminCourseView.curriculum.lesson.validation.descriptionLength'),
             code: z.ZodIssueCode.custom,
           });
         }
@@ -77,7 +77,7 @@ export const quizLessonFormSchema = z.object({
         ) {
           ctx.addIssue({
             path: [index, "options"],
-            message: `At least one option must be marked as correct for question.`,
+            message: t('adminCourseView.curriculum.lesson.validation.atLeastOneOptionCorrect'),
             code: z.ZodIssueCode.custom,
           });
         }
@@ -89,7 +89,7 @@ export const quizLessonFormSchema = z.object({
         ) {
           ctx.addIssue({
             path: [index, "options"],
-            message: `All options must be correct.`,
+            message: t('adminCourseView.curriculum.lesson.validation.allOptionsMustBeCorrect'),
             code: z.ZodIssueCode.custom,
           });
         }
@@ -97,4 +97,4 @@ export const quizLessonFormSchema = z.object({
     }),
 });
 
-export type QuizLessonFormValues = z.infer<typeof quizLessonFormSchema>;
+export type QuizLessonFormValues = z.infer<ReturnType<typeof quizLessonFormSchema>>;

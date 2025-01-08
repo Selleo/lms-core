@@ -27,13 +27,13 @@ const DeleteConfirmationModal = ({
   const { t } = useTranslation();
   const getDialogTitleText = (): string => {
     return match(contentType)
-      .with(DeleteContentType.VIDEO, () => t("deleteVideoLessonModal"))
-      .with(DeleteContentType.PRESENTATION, () => t("deletePresentationLessonModal"))
-      .with(DeleteContentType.TEXT, () => t("deleteTextLessonModal"))
-      .with(DeleteContentType.QUIZ, () => t("deleteQuizLessonModal"))
-      .with(DeleteContentType.CHAPTER, () => t("deleteChapterModal"))
-      .with(DeleteContentType.QUESTION, () => "Are you sure you want to delete question?")
-      .otherwise(() => t("deleteConfirmation"));
+      .with(DeleteContentType.VIDEO, () => t("adminCourseView.curriculum.other.removeVideoLesson"))
+      .with(DeleteContentType.PRESENTATION, () => t("adminCourseView.curriculum.other.removePresentationLesson"))
+      .with(DeleteContentType.TEXT, () => t("adminCourseView.curriculum.other.removeTextLesson"))
+      .with(DeleteContentType.QUIZ, () => t("adminCourseView.curriculum.other.removeQuizLesson"))
+      .with(DeleteContentType.CHAPTER, () => t("adminCourseView.curriculum.other.removeChapter"))
+      .with(DeleteContentType.QUESTION, () => t("adminCourseView.curriculum.other.removeQuestion"))
+      .otherwise(() => t("adminCourseView.curriculum.other.removeContent"));
   };
 
   return (
@@ -48,8 +48,8 @@ const DeleteConfirmationModal = ({
             </DialogTitle>
             <DialogDescription className="mt-2 text-sm text-neutral-600">
               {contentType === DeleteContentType.QUESTION
-                ? "This will remove question from quiz"
-                : "This will remove all data provided including uploaded media."}
+                ? t('adminCourseView.curriculum.other.removeContentQuestionBody')
+                : t('adminCourseView.curriculum.other.removeContentBody')}
             </DialogDescription>
 
             <div className="flex gap-4 mt-8">

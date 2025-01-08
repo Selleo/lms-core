@@ -6,6 +6,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { ChartLegendBadge } from "~/modules/Statistics/Client/components/ChartLegendBadge";
 
 import type { ChartConfig } from "~/components/ui/chart";
+import { useTranslation } from "react-i18next";
 
 type AvgScoreAcrossAllQuizzesChartProps = {
   label: string;
@@ -28,6 +29,7 @@ export const AvgScoreAcrossAllQuizzesChart = ({
   chartData,
   isLoading = false,
 }: AvgScoreAcrossAllQuizzesChartProps) => {
+  const { t } = useTranslation();
   const chartLegend = useMemo(() => {
     return Object.values(chartConfig).map((config) => {
       return (
@@ -89,7 +91,7 @@ export const AvgScoreAcrossAllQuizzesChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {isEmptyChart ? "No data" : label}
+                          {isEmptyChart ? t('adminStatisticsView.other.noData') : label}
                         </tspan>
                       </text>
                     );

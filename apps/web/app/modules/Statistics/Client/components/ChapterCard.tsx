@@ -11,6 +11,7 @@ import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
 import type { GetCourseResponse } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 type Chapter = GetCourseResponse["data"]["chapters"][number];
 
@@ -98,6 +99,7 @@ export const ChapterCard = ({
     isAdmin,
     type,
   );
+  const { t } = useTranslation();
 
   const hrefToLessonPage = customHref ?? `lesson/${lessonId}`;
 
@@ -140,7 +142,7 @@ export const ChapterCard = ({
             <div className="flex justify-between items-center">
               <div className="flex flex-col h-full bg-white w-full">
                 <CourseProgress
-                  label={type === "quiz" ? "Quiz progress:" : "Lesson progress:"}
+                  label={type === "quiz" ? t('studentChapterCardView.other.quizProgress') : t('studentChapterCardView.other.lessonProgress')}
                   isCompleted={chapterProgress === "completed"}
                   completedLessonCount={itemsCompletedCount ?? 0}
                   courseLessonCount={itemsCount}

@@ -14,6 +14,7 @@ import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
 import { CourseCardTitle } from "./CourseCardTitle";
 
 import type { GetAvailableCoursesResponse } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 export type CourseCardProps = GetAvailableCoursesResponse["data"][number];
 
@@ -35,6 +36,7 @@ const CourseCard = ({
   const { isAdmin } = useUserRole();
   const { pathname } = useLocation();
   const isScormCreatePage = pathname.includes("/admin/courses/new-scorm");
+  const { t } = useTranslation();
 
   return (
     <Link
@@ -69,7 +71,7 @@ const CourseCard = ({
           {hasFreeChapters && !enrolled && (
             <CardBadge variant="successFilled">
               <Icon name="FreeRight" className="w-4" />
-              Free Lessons!
+              {t('studentCoursesView.other.freeLessons')}
             </CardBadge>
           )}
         </div>

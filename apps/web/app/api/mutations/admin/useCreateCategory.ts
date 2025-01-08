@@ -6,6 +6,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../../api-client";
 
 import type { CreateCategoryBody } from "../../generated-api";
+import { useTranslation } from "react-i18next";
 
 type CreateCategoryOptions = {
   data: CreateCategoryBody;
@@ -13,6 +14,7 @@ type CreateCategoryOptions = {
 
 export function useCreateCategory() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateCategoryOptions) => {
@@ -23,7 +25,7 @@ export function useCreateCategory() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: "Category created successfully",
+        description: t('adminCategoryView.toast.categoryCreatedSuccessfully'),
       });
     },
     onError: (error) => {

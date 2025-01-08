@@ -8,6 +8,7 @@ import { ApiClient } from "../api-client";
 import { queryClient } from "../queryClient";
 
 import type { CreateCourseBody } from "../generated-api";
+import { useTranslation } from "react-i18next";
 
 type CreateCourseOptions = {
   data: CreateCourseBody;
@@ -15,6 +16,7 @@ type CreateCourseOptions = {
 
 export function useCreateCourse() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateCourseOptions) => {
@@ -24,7 +26,7 @@ export function useCreateCourse() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: "Course created successfully" });
+      toast({ description: t('adminCourseView.toast.createCourseSuccessfully') });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

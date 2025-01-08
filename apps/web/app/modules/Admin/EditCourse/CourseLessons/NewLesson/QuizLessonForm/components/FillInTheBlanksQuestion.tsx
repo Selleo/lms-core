@@ -302,7 +302,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
         <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
           <div className="ml-14">
             <span className="text-red-500 mr-1">*</span>
-            <Label className="body-sm-md">{t("words")}</Label>
+            <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.words")}</Label>
             <div className="flex flex-wrap gap-2 items-center">
               {currentOptions.map((option, index) => (
                 <div
@@ -334,7 +334,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                     className="mt-4 bg-blue-700 text-white rounded-full flex items-center mb-4"
                   >
                     <Icon name="Plus" />
-                    {t("addWords")}
+                    {t("adminCourseView.curriculum.lesson.button.addWords")}
                   </Button>
                 )}
               </div>
@@ -345,11 +345,11 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                     type="text"
                     value={newWord}
                     onChange={(e) => setNewWord(e.target.value)}
-                    placeholder={t("fillInTheBlankEnterWord")}
+                    placeholder={t("adminCourseView.curriculum.lesson.placeholder.enterWord")}
                     className="flex-1"
                   />
                   <Button onClick={handleAddWord} type="button" className="bg-blue-700 text-white">
-                    {t("add")}
+                    {t("common.button.add")}
                   </Button>
                   <Button
                     onClick={() => setIsAddingWord(false)}
@@ -375,7 +375,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                 <FormItem className="mt-5">
                   <Label htmlFor="description" className="body-sm-md">
                     <span className="text-red-500 mr-1">*</span>
-                    {t("sentences")}
+                    {t("adminCourseView.curriculum.lesson.field.sentence")}
                   </Label>
                   <FormControl>
                     <EditorContent
@@ -398,7 +398,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               className="text-error-700 bg-color-white mb-4 border border-neutral-300 mt-4"
               onClick={() => setIsDeleteModalOpen(true)}
             >
-              {t("deleteQuestion")}
+              {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}
             </Button>
           </div>
           <DeleteConfirmationModal

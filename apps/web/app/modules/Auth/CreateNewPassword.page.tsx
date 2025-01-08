@@ -14,17 +14,24 @@ import { cn } from "~/lib/utils";
 import type { ResetPasswordBody } from "~/api/generated-api";
 import { useTranslation } from "react-i18next";
 
-const createNewPasswordSchema = z
-  .object({
-    newPassword: z.string().min(8, { message: "Password must be at least 8 characters" }),
-    newPasswordConfirmation: z
-      .string()
-      .min(8, { message: "Password must be at least 8 characters" }),
-  })
-  .refine(({ newPassword, newPasswordConfirmation }) => newPassword === newPasswordConfirmation, {
-    message: "Passwords don't match",
-    path: ["newPasswordConfirmation"],
-  });
+const createNewPasswordSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      newPassword: z
+        .string()
+        .min(8, { message: t("createPasswordView.validation.passwordMinLength") }),
+      newPasswordConfirmation: z
+        .string()
+        .min(8, { message: t("createPasswordView.validation.passwordMinLength") }),
+    })
+    .refine(
+      ({ newPassword, newPasswordConfirmation }) =>
+        newPassword === newPasswordConfirmation,
+      {
+        message: t("createPasswordView.validation.passwordsDontMatch"),
+        path: ["newPasswordConfirmation"],
+      }
+    );
 
 export default function CreateNewPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -36,16 +43,16 @@ export default function CreateNewPasswordPage() {
   const { mutateAsync: createNewPassword } = useCreateNewPassword({
     isCreate: !resetToken,
   });
+  const { t } = useTranslation();  
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ResetPasswordBody & { newPasswordConfirmation: string }>({
-    resolver: zodResolver(createNewPasswordSchema),
+    resolver: zodResolver(createNewPasswordSchema(t)),
     mode: "onChange",
   });
-  const { t } = useTranslation();
 
   const onSubmit = (data: ResetPasswordBody) => {
     if (resetToken) {
@@ -53,7 +60,7 @@ export default function CreateNewPasswordPage() {
         data: { newPassword: data.newPassword, resetToken: resetToken },
       }).then(() => {
         toast({
-          description: t("passwordChangedSuccessfully"),
+          description: t("changePasswordView.toast.passwordChangedSuccessfully"),
         });
         navigate("/auth/login");
       });
@@ -64,7 +71,7 @@ export default function CreateNewPasswordPage() {
         data: { password: data.newPassword, createToken: createToken },
       }).then(() => {
         toast({
-          description: t("passwordCreatedSuccessfully"),
+          description: t("changePasswordView.toast.passwordCreatedSuccessfully"),
         });
         navigate("/auth/login");
       });
@@ -74,15 +81,15 @@ export default function CreateNewPasswordPage() {
   return (
     <Card className="mx-auto max-w-sm">
       <CardHeader>
-        <CardTitle className="text-2xl">{t("createNewPassword")}</CardTitle>
+        <CardTitle className="text-2xl">{t("createPasswordView.header")}</CardTitle>
         <CardDescription>
-          {t("enterNewPasswordFor")} {email}
+          {t("createPasswordView.subHeader")} {email}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-2">
-            <Label htmlFor="newPassword">{t("password")}</Label>
+            <Label htmlFor="newPassword">{t("createPasswordView.field.password")}</Label>
             <Input
               id="newPassword"
               type="password"
@@ -95,7 +102,7 @@ export default function CreateNewPasswordPage() {
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="newPasswordConfirmation">{t("confirmPassword")}</Label>
+              <Label htmlFor="newPasswordConfirmation">{t("createPasswordView.field.confirmPassword")}</Label>
             </div>
             <Input
               id="newPasswordConfirmation"
@@ -110,7 +117,7 @@ export default function CreateNewPasswordPage() {
             )}
           </div>
           <Button type="submit" className="w-full">
-            {t("changePassword")}
+            {t("createPasswordView.button.changePassword")}
           </Button>
         </form>
       </CardContent>

@@ -14,22 +14,24 @@ import { cn } from "~/lib/utils";
 import type { LoginBody } from "~/api/generated-api";
 import { useTranslation } from "react-i18next";
 
-const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email" }),
-  password: z.string().min(1, { message: "Password is required" }),
-  rememberMe: z.boolean().optional(),
-});
+const loginSchema = (t: (key: string) => string) =>
+  z.object({
+    email: z.string().email({ message: t("loginView.validation.email") }),
+    password: z.string().min(1, { message: t("loginView.validation.password") }),
+    rememberMe: z.boolean().optional(),
+  });
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { mutateAsync: loginUser } = useLoginUser();
+  const { t } = useTranslation();
+
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<LoginBody>({ resolver: zodResolver(loginSchema) });
-  const { t } = useTranslation();
+  } = useForm<LoginBody>({ resolver: zodResolver(loginSchema(t)) });
 
   const onSubmit = (data: LoginBody) => {
     loginUser({ data }).then(() => {

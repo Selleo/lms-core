@@ -1,6 +1,7 @@
 import { cn } from "~/lib/utils";
 
 import { Icon } from "../Icon";
+import { useTranslation } from "react-i18next";
 
 interface ImageUploadProps {
   field: { value?: string };
@@ -15,6 +16,7 @@ const ImageUploadInput = ({
   isUploading,
   imageUrl,
 }: ImageUploadProps) => {
+  const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center flex-col gap-y-2">
       <div className="w-full h-80 rounded-lg border-solid border-2 border-gray-300 flex justify-center items-center bg-gray-100 relative cursor-pointer overflow-hidden flex-col">
@@ -34,9 +36,9 @@ const ImageUploadInput = ({
 
           <div className="flex items-center justify-center mt-2">
             <span className={`text-lg font-semibold text-primary-400`}>
-              {field.value ? "Click to replace" : "Click to upload"}
+              {field.value ? t('uploadFile.replace') : t('uploadFile.header')}
             </span>
-            <span className="ml-2 text-lg font-semibold">or drag and drop</span>
+            <span className="ml-2 text-lg font-semibold">{t('uploadFile.subHeader')}</span>
           </div>
 
           <div

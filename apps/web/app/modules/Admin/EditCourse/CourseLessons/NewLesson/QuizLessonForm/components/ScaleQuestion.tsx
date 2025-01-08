@@ -86,7 +86,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
             {!isOptionEmpty ? (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">{t("options")}</Label>
+                <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.options")}</Label>
               </>
             ) : null}
             {watchedOptions && watchedOptions.length > 0 && (
@@ -111,7 +111,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                           name={`questions.${questionIndex}.options.${index}.optionText`}
                           value={item.optionText}
                           onChange={(e) => handleOptionChange(index, "optionText", e.target.value)}
-                          placeholder={`${t("option")} ${index + 1}`}
+                          placeholder={`${t("adminCourseView.curriculum.lesson.placeholder.option")} ${index + 1}`}
                           required
                           className="flex-1"
                         />
@@ -160,7 +160,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                                 align="center"
                                 className="bg-black ml-4 text-white text-sm rounded shadow-md"
                               >
-                                {t("option")}
+                                {t("common.button.delete")}
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -179,14 +179,14 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
           )}
           <div className="mt-4 ml-14 flex gap-2">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
-              {t("addOption")}
+              {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
-              onClick={() => setIsDeleteModalOpen(false)}
+              onClick={() => setIsDeleteModalOpen(true)}
             >
-              {t("deleteQuestion")}
+              {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}
             </Button>
           </div>
           <DeleteConfirmationModal

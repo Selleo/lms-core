@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
+import { useTranslation } from "react-i18next";
 
 type ChangeLessonDisplayOrderOptions = {
   lesson: { lessonId: string; displayOrder: number };
@@ -11,6 +12,7 @@ type ChangeLessonDisplayOrderOptions = {
 
 export function useChangeLessonDisplayOrder() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: ChangeLessonDisplayOrderOptions) => {
@@ -19,17 +21,17 @@ export function useChangeLessonDisplayOrder() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "Lesson display order updated successfully" });
+      toast({ description: t('adminCourseView.curriculum.lessson.toast.lessonDisplayOrderUpdatedSuccessfully') });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
         return toast({
-          description: error.response?.data.message || "An error occurred while updating.",
+          description: error.response?.data.message || t('adminCourseView.curriculum.lessson.toast.errorWhileUpdating'),
           variant: "destructive",
         });
       }
       toast({
-        description: error.message || "An unexpected error occurred.",
+        description: error.message || t('adminCourseView.curriculum.lessson.toast.unexpectedError'),
         variant: "destructive",
       });
     },

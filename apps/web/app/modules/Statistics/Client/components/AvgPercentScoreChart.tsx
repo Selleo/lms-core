@@ -6,6 +6,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { ChartLegendBadge } from "~/modules/Statistics/Client/components/ChartLegendBadge";
 
 import type { ChartConfig } from "~/components/ui/chart";
+import { useTranslation } from "react-i18next";
 
 type AvgPercentScoreChartProps = {
   label: string;
@@ -28,6 +29,7 @@ export const AvgPercentScoreChart = ({
   chartData,
   isLoading = false,
 }: AvgPercentScoreChartProps) => {
+  const { t } = useTranslation();
   const chartLegend = useMemo(() => {
     return Object.values(chartConfig).map((config) => {
       return (
@@ -89,7 +91,7 @@ export const AvgPercentScoreChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {isEmptyChart ? "No data" : `${label}%`}
+                          {isEmptyChart ? t('clientStatisticsView.other.noData') : `${label}%`}
                         </tspan>
                       </text>
                     );

@@ -12,6 +12,7 @@ import { StatusStep } from "./components/StatusStep";
 import { useScormFormStore } from "./store/scormForm.store";
 
 import type { CourseCardProps } from "~/modules/Dashboard/Courses/CourseCard";
+import { useTranslation } from "react-i18next";
 
 type SideComponentProps =
   | {
@@ -22,8 +23,8 @@ type SideComponentProps =
 export const SCORM_CONFIG = [
   {
     id: "upload",
-    title: "Upload SCORM",
-    description: "Upload your SCORM .zip file.",
+    title: "adminScorm.header",
+    description: "adminScorm.subHeader",
     Component: ScormUploadStep,
     SideComponent: ({ className }: SideComponentProps) => (
       <Icon name="UploadIllustration" className={className} />
@@ -31,8 +32,8 @@ export const SCORM_CONFIG = [
   },
   {
     id: "details",
-    title: "Set up Course",
-    description: "Provide the details to set up a new course.",
+    title: "adminScorm.other.setUpCourse",
+    description: "adminScorm.other.provideDetails",
     Component: CourseDetailsStep,
     SideComponent: (props: SideComponentProps) => {
       const { data: categories } = useCategoriesSuspense();
@@ -43,6 +44,7 @@ export const SCORM_CONFIG = [
       } = useScormFormStore.getState();
 
       const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
+      const { t } = useTranslation();
 
       useEffect(() => {
         if (thumbnail) {
@@ -57,9 +59,9 @@ export const SCORM_CONFIG = [
       return (
         <CourseCard
           id={"scorm-card"}
-          title={title || "Untitled..."}
+          title={title || t('adminScorm.other.untitled')}
           thumbnailUrl={thumbnailUrl ?? ""}
-          description={description || "No description yet."}
+          description={description || t('adminScorm.other.noDescription')}
           author={`${firstName} ${lastName}`}
           authorEmail={email ?? ""}
           category={categoryName ?? ""}
@@ -75,8 +77,8 @@ export const SCORM_CONFIG = [
   },
   {
     id: "pricing",
-    title: "Pricing",
-    description: "Set pricing for the course",
+    title: "adminScorm.other.pricing",
+    description: "adminScorm.other.setUpPricing",
     Component: PricingStep,
     SideComponent: ({ className }: SideComponentProps) => (
       <Icon name="PricingIllustration" className={className} />
@@ -84,8 +86,8 @@ export const SCORM_CONFIG = [
   },
   {
     id: "status",
-    title: "Status",
-    description: "Set status for the course",
+    title: "adminScorm.other.status",
+    description: "adminScorm.other.setUpStatus",
     Component: StatusStep,
     SideComponent: ({ className }: SideComponentProps) => (
       <Icon name="StatusIllustration" className={className} />

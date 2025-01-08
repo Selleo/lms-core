@@ -19,6 +19,7 @@ import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 
 import type { UpdateUserBody } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(currentUserQueryOptions);
@@ -32,6 +33,7 @@ const updateUserSchema = z.object({
 export default function UserForm() {
   const { mutate: updateUser } = useUpdateUser();
   const { data: currentUser } = useCurrentUserSuspense();
+  const { t } = useTranslation();
 
   const {
     register,
@@ -47,11 +49,11 @@ export default function UserForm() {
     <Card id="change-password">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
-          <CardTitle>Change user information</CardTitle>
-          <CardDescription>Update your user information here.</CardDescription>
+          <CardTitle>{t('changeUserEmailView.header')}</CardTitle>
+          <CardDescription>{t('changeUserEmailView.subHeader')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{t('changeUserEmailView.field.email')}</Label>
           <Input
             id="email"
             placeholder="user@email.com"
@@ -59,12 +61,12 @@ export default function UserForm() {
             className={cn({
               "border-red-500 focus:!ring-red-500": errors.email,
             })}
-            {...register("email", { required: "Email is required" })}
+            {...register("email", { required: t('changeUserEmailView.validation.email') })}
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button>Save</Button>
+          <Button>{t('common.button.save')}</Button>
         </CardFooter>
       </form>
     </Card>

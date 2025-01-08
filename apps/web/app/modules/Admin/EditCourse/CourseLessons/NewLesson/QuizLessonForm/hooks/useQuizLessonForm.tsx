@@ -17,6 +17,7 @@ import { quizLessonFormSchema } from "../validators/quizLessonFormSchema";
 import type { Question, QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { Chapter, Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
+import { useTranslation } from "react-i18next";
 
 type QuizLessonFormProps = {
   chapterToEdit: Chapter | null;
@@ -34,8 +35,9 @@ export const useQuizLessonForm = ({
   const { mutateAsync: deleteLesson } = useDeleteLesson();
   const { isLeavingContent, setIsCurrectFormDirty } = useLeaveModal();
   const { id: courseId } = useParams();
+  const { t} = useTranslation()
   const form = useForm<QuizLessonFormValues>({
-    resolver: zodResolver(quizLessonFormSchema),
+    resolver: zodResolver(quizLessonFormSchema(t)),
     defaultValues: {
       title: "",
       questions: [],

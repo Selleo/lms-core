@@ -8,6 +8,7 @@ import { SCORM_CONFIG } from "./scorm.config";
 import { useScormFormStore } from "./store/scormForm.store";
 
 import type { CourseFormData } from "./types/scorm.types";
+import { useTranslation } from "react-i18next";
 
 function CreateNewScormCourse() {
   const { currentStep, formData, setCurrentStep, setFormData } = useScormFormStore();
@@ -59,13 +60,14 @@ function CreateNewScormCourse() {
     Component: CurrentStep,
     SideComponent,
   } = SCORM_CONFIG[currentStep];
+  const { t } = useTranslation()
 
   return (
     <div className="size-full gap-[120px] flex p-20 bg-white">
       <div className="flex-1">
         <FormProvider {...form}>
           <div className="max-w-2xl mx-auto p-6">
-            <StepWrapper title={stepTitle} description={stepDescription}>
+            <StepWrapper title={t(stepTitle)} description={t(stepDescription)}>
               <CurrentStep handleBack={prevStep} handleNext={nextStep} />
             </StepWrapper>
           </div>

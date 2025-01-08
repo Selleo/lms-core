@@ -6,6 +6,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../../api-client";
 
 import type { BetaCreateQuizLessonBody } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 type CreateQuizLessonOptions = {
   data: BetaCreateQuizLessonBody;
@@ -13,6 +14,7 @@ type CreateQuizLessonOptions = {
 
 export function useCreateQuizLesson() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateQuizLessonOptions) => {
@@ -23,7 +25,7 @@ export function useCreateQuizLesson() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: "Text block created successfully",
+        description: t("adminCourseView.curriculum.lesson.toast.quizItemCreatedSuccessfully"),
       });
     },
     onError: (error) => {

@@ -6,6 +6,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../../api-client";
 
 import type { UpsertQuestionOptionsBody } from "../../generated-api";
+import { useTranslation } from "react-i18next";
 
 type UpdateCategoryOptions = {
   data: UpsertQuestionOptionsBody;
@@ -14,6 +15,7 @@ type UpdateCategoryOptions = {
 
 export function useUpdateQuestionOptions() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: UpdateCategoryOptions) => {
@@ -24,7 +26,7 @@ export function useUpdateQuestionOptions() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "Question options updated successfully" });
+      toast({ description: t("adminCourseView.curriculum.lesson.toast.questionOptionsUpdatedSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

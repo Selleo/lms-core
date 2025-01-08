@@ -6,6 +6,7 @@ import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { ChartLegendBadge } from "~/modules/Statistics/Client/components";
 
 import type { GetTeacherStatsResponse } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 type Data = GetTeacherStatsResponse["data"]["fiveMostPopularCourses"];
 
@@ -33,6 +34,7 @@ const chartColors = [
 
 export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCoursesChartProps) => {
   const isTablet = useMediaQuery({ minWidth: 768 });
+  const { t } =useTranslation();
 
   function generateChartData(input: Data | undefined): {
     chartData: ChartData | undefined;
@@ -108,8 +110,8 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
     return (
       <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 gap-y-6 md:gap-y-4 xl:col-span-2 w-full flex flex-col">
         <hgroup>
-          <h2 className="body-lg-md text-neutral-950 text-center">Most Popular</h2>
-          <p className="body-sm-md text-center text-neutral-800">Your top 5 Courses</p>
+          <h2 className="body-lg-md text-neutral-950 text-center">{t('mostPopularCoursesView.header')}</h2>
+          <p className="body-sm-md text-center text-neutral-800">{t('mostPopularCoursesView.subHeader')}</p>
         </hgroup>
         <div className="md:flex md:gap-x-3 md:size-full">
           <div className="flex py-2 h-full items-center min-h-[200px] md:min-h-[316px] justify-between gap-y-3 w-full relative md:gap-y-10">
@@ -117,7 +119,7 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
               <div key={index} className="w-[1px] bg-neutral-100 h-full" />
             ))}
             <div className="flex text-primary-950 h5 md:h3 absolute z-0 top-0 left-0 size-full justify-center items-center">
-              No data available
+            {t('mostPopularCoursesView.other.noData')}
             </div>
           </div>
         </div>
@@ -128,8 +130,8 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
   return (
     <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 gap-y-6 2xl:gap-y-6 md:gap-y-4 w-full flex flex-col">
       <hgroup>
-        <h2 className="body-lg-md text-neutral-950 text-center">Most Popular</h2>
-        <p className="body-sm-md text-center text-neutral-800">Your top 5 Courses</p>
+        <h2 className="body-lg-md text-neutral-950 text-center">{t('mostPopularCoursesView.header')}</h2>
+        <p className="body-sm-md text-center text-neutral-800">{t('mostPopularCoursesView.subHeader')}</p>
       </hgroup>
       <ChartContainer config={chartConfig} className="h-[316px]">
         <BarChart

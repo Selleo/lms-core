@@ -6,6 +6,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../../api-client";
 
 import type { UpdateChapterBody } from "../../generated-api";
+import { useTranslation } from "react-i18next";
 
 type UpdateChapterOptions = {
   chapterId: string;
@@ -14,6 +15,7 @@ type UpdateChapterOptions = {
 
 export function useUpdateChapter() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: UpdateChapterOptions) => {
@@ -24,7 +26,7 @@ export function useUpdateChapter() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "Chapter updated successfully" });
+      toast({ description: t('adminCourseView.curriculum.chapter.toast.chapterUpdatedSuccessfully') });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

@@ -25,10 +25,10 @@ const LeaveConfirmationModal = ({ open, onClose, onSave }: LeaveConfirmationModa
           <Icon name="Warning" className="h-5 w-5 mt-0.5 text-yellow-600" />
           <div>
             <DialogTitle className="text-xl font-semibold text-neutral-900">
-              {t("leaveModalHeader")}
+              {t("adminCourseView.curriculum.lesson.other.leaveContentHeader")}
             </DialogTitle>
             <DialogDescription className="mt-2 text-sm text-neutral-600">
-              {t("leaveModalBody")}
+              {t("adminCourseView.curriculum.lesson.other.leaveContentBody")}
             </DialogDescription>
             <div className="flex gap-4 mt-8">
               <Button onClick={onSave} className="text-white bg-primary-700 py-2 px-4 rounded">
@@ -38,7 +38,7 @@ const LeaveConfirmationModal = ({ open, onClose, onSave }: LeaveConfirmationModa
                 onClick={onClose}
                 className="text-primary-800 border border-neutral-300 bg-neutrals-200 py-2 px-4 rounded"
               >
-                {t("close")}
+                {t("common.button.close")}
               </Button>
             </div>
           </div>

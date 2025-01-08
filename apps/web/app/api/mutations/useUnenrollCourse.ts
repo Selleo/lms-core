@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../api-client";
+import { useTranslation } from "react-i18next";
 
 type UnenrollCourseOptions = {
   id: string;
@@ -11,6 +12,7 @@ type UnenrollCourseOptions = {
 
 export function useUnenrollCourse() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: UnenrollCourseOptions) => {
@@ -23,7 +25,7 @@ export function useUnenrollCourse() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: "Course unenrolled successfully",
+        description: t('enrollCourseView.toast.unenrollCourseSuccessfully'),
       });
     },
     onError: (error) => {

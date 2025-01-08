@@ -6,6 +6,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../../api-client";
 
 import type { BetaCreateLessonBody } from "../../generated-api";
+import { useTranslation } from "react-i18next";
 
 type CreateFileOptions = {
   data: BetaCreateLessonBody;
@@ -13,6 +14,7 @@ type CreateFileOptions = {
 
 export function useBetaCreateFileItem() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateFileOptions) => {
@@ -23,7 +25,7 @@ export function useBetaCreateFileItem() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: "File item created successfully",
+        description: t('adminCourseView.curriculum.lesson.toast.fileItemCreatedSuccessfully'),
       });
     },
     onError: (error) => {

@@ -6,14 +6,15 @@ import { cn } from "~/lib/utils";
 import { ChartLegendBadge } from "~/modules/Statistics/Client/components/ChartLegendBadge";
 
 import type { ChartConfig } from "~/components/ui/chart";
+import { useTranslation } from "react-i18next";
 
 const chartConfig = {
   completed: {
-    label: "Completed",
+    label: "clientStatisticsView.other.completed",
     color: "var(--primary-700)",
   },
   started: {
-    label: "Started",
+    label: "clientStatisticsView.other.started",
     color: "var(--primary-300)",
   },
 } satisfies ChartConfig;
@@ -31,6 +32,7 @@ type RatesChartProps = {
 };
 
 export const RatesChart = ({ isLoading = false, resourceName, chartData }: RatesChartProps) => {
+  const { t } = useTranslation()
   const dataMax = Math.max(...chartData.map(({ started }) => started));
   const step = Math.ceil(dataMax / 10);
   const yAxisMax = dataMax + step;
@@ -90,8 +92,8 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
   return (
     <div className="w-full bg-white rounded-lg gap-4 drop-shadow-card p-8 flex flex-col">
       <hgroup>
-        <h2 className="body-lg-md text-neutral-950 text-center">{resourceName} Rates</h2>
-        <p className="body-sm-md text-center text-neutral-800">Number of {resourceName} in 2024</p>
+        <h2 className="body-lg-md text-neutral-950 text-center">{resourceName} {t('clientStatisticsView.other.rates')}</h2>
+        <p className="body-sm-md text-center text-neutral-800">{t('clientStatisticsView.other.numberOf')} {resourceName} in 2024</p>
       </hgroup>
       <div className="grid mt-2 place-items-center h-full">
         <ChartContainer
@@ -141,7 +143,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
           return (
             <ChartLegendBadge
               key={config.label as string}
-              label={`${config.label} ${resourceName}`}
+              label={`${t(config.label)} ${resourceName}`}
               dotColor={config.color}
             />
           );

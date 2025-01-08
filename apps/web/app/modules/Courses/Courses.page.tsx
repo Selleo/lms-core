@@ -32,6 +32,7 @@ import { CourseList } from "./components/CourseList";
 import { CoursesCarousel } from "./components/CoursesCarousel";
 
 import type { MetaFunction } from "@remix-run/node";
+import { useTranslation } from "react-i18next";
 
 type State = {
   searchTitle: string | undefined;
@@ -82,6 +83,7 @@ function reducer(state: State, action: Action): State {
 
 export default function CoursesPage() {
   const { isAdmin, isTeacher } = useUserRole();
+  const { t } = useTranslation()
   const [state, dispatch] = useReducer(reducer, {
     searchTitle: undefined,
     sort: undefined,
@@ -123,12 +125,12 @@ export default function CoursesPage() {
     {
       name: "title",
       type: "text",
-      placeholder: "Search by title...",
+      placeholder: t('studentCoursesView.avaiableCourses.filters.placeholder.title'),
     },
     {
       name: "category",
       type: "select",
-      placeholder: "Categories",
+      placeholder: t('studentCoursesView.avaiableCourses.filters.placeholder.categories'),
       options: categories?.map(({ title }) => ({
         value: title,
         label: title,
@@ -137,7 +139,7 @@ export default function CoursesPage() {
     {
       name: "sort",
       type: "select",
-      placeholder: "Sort",
+      placeholder: t('studentCoursesView.avaiableCourses.filters.placeholder.sort'),
       options: SORT_OPTIONS,
     },
   ];
@@ -161,9 +163,9 @@ export default function CoursesPage() {
       <div className="flex flex-1 flex-col gap-y-12 h-auto">
         <div className="flex flex-col gap-y-6">
           <div className="flex flex-col">
-            <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">Your Courses</h4>
+            <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">{t('studentCoursesView.enroledCourses.header')}</h4>
             <p className="text-lg leading-7 text-neutral-800">
-              Courses you are currently enrolled in
+              {t('studentCoursesView.enroledCourses.subHeader')}
             </p>
           </div>
           <div
@@ -178,10 +180,10 @@ export default function CoursesPage() {
                   </div>
                   <div className="flex flex-col justify-center gap-2">
                     <p className="text-lg font-bold leading-5 text-neutral-950">
-                      We could not find any courses
+                      {t('studentCoursesView.other.cannotFindCourses')}
                     </p>
                     <p className="text-neutral-800 text-base leading-6 font-normal">
-                      Please change the search criteria or try again later
+                      {t('studentCoursesView.other.changeSearchCriteria')}
                     </p>
                   </div>
                 </div>
@@ -197,10 +199,10 @@ export default function CoursesPage() {
         <div className="flex flex-col">
           <div className="flex flex-col lg:p-0">
             <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-              Available Courses
+            {t('studentCoursesView.avaiableCourses.header')}
             </h4>
             <p className="text-lg leading-7 text-neutral-800">
-              All available career courses available to enroll
+            {t('studentCoursesView.avaiableCourses.subHeader')}
             </p>
             <div className="flex justify-between gap-2 items-center">
               <SearchFilter
@@ -248,10 +250,10 @@ export default function CoursesPage() {
                   </div>
                   <div className="flex flex-col justify-center gap-2">
                     <p className="text-lg font-bold leading-5 text-neutral-950">
-                      We could not find any courses
+                      {t('studentCoursesView.other.cannotFindCourses')}
                     </p>
                     <p className="text-neutral-800 text-base leading-6 font-normal">
-                      Please change the search criteria or try again later
+                      {t('studentCoursesView.other.changeSearchCriteria')}
                     </p>
                   </div>
                 </div>

@@ -85,7 +85,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
             {!isOptionEmpty ? (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">{t("options")}</Label>
+                <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.options")}</Label>
               </>
             ) : null}
             {watchedOptions && watchedOptions.length > 0 && (
@@ -113,7 +113,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                             onChange={(e) =>
                               handleOptionChange(index, "optionText", e.target.value)
                             }
-                            placeholder={t("option")}
+                            placeholder={t("adminCourseView.curriculum.lesson.placeholder.option")}
                             required
                             className="w-[50%]"
                           />
@@ -124,7 +124,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                             onChange={(e) =>
                               handleOptionChange(index, "matchedWord", e.target.value)
                             }
-                            placeholder={t("matchedWord")}
+                            placeholder={t("adminCourseView.curriculum.lesson.placeholder.matchedWords")}
                             required
                             className="w-[50%]"
                           />
@@ -165,14 +165,14 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
           )}
           <div className="mt-4 ml-14 flex gap-2">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
-              {t("addOption")}
+              {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
               onClick={() => setIsDeleteModalOpen(true)}
             >
-              {t("deleteQuestion")}
+              {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}
             </Button>
           </div>
           <DeleteConfirmationModal

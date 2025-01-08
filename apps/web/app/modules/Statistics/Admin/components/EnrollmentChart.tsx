@@ -6,6 +6,7 @@ import { cn } from "~/lib/utils";
 import { ChartLegendBadge } from "~/modules/Statistics/Client/components/ChartLegendBadge";
 
 import type { ChartConfig } from "~/components/ui/chart";
+import { useTranslation } from "react-i18next";
 
 const chartConfig = {
   newStudentsCount: {
@@ -32,6 +33,7 @@ export const parseRatesChartData = (data: Data) => {
 
 export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProps) => {
   const parsedData = parseRatesChartData(data);
+  const { t } = useTranslation()
 
   const dataMax = Math.max(...parsedData.map(({ newStudentsCount }) => newStudentsCount));
   const step = Math.ceil(dataMax / 10);
@@ -92,8 +94,8 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
   return (
     <div className="p-8 bg-white flex flex-col rounded-lg gap-y-6 drop-shadow-card md:col-span-2 size-full">
       <hgroup>
-        <h2 className="body-lg-md text-neutral-950 text-center">Enrollment</h2>
-        <p className="body-sm-md text-center text-neutral-800">Numbers of enrollment in 2024</p>
+        <h2 className="body-lg-md text-neutral-950 text-center">{t('enrollmentChartView.header')}</h2>
+        <p className="body-sm-md text-center text-neutral-800">{t('enrollmentChartView.subHeader')}</p>
       </hgroup>
       <div className="grid mt-2 place-items-center h-full">
         <ChartContainer
@@ -110,7 +112,7 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
                     verticalAnchor="middle"
                     className="fill-primary-950 h5 md:h3 translate-x-1/2 translate-y-1/2"
                   >
-                    No data available
+                    {t('enrollmentChartView.other.noData')}
                   </Text>
                 ) : null;
               }}
@@ -132,7 +134,7 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
         </ChartContainer>
       </div>
       <div className="flex gap-2 justify-center">
-        <ChartLegendBadge label="Enrollments" dotColor={chartConfig.newStudentsCount.color} />
+        <ChartLegendBadge label={t('enrollmentChartView.other.enrollments')} dotColor={chartConfig.newStudentsCount.color} />
       </div>
     </div>
   );

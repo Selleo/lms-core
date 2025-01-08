@@ -9,6 +9,7 @@ import { useScormFormStore } from "../store/scormForm.store";
 import { Progress } from "./Progress";
 
 import type { PropsWithChildren } from "react";
+import { useTranslation } from "react-i18next";
 
 interface StepWrapperProps {
   title: string;
@@ -18,13 +19,14 @@ interface StepWrapperProps {
 export function StepWrapper({ title, description, children }: PropsWithChildren<StepWrapperProps>) {
   const navigate = useNavigate();
   const { currentStep } = useScormFormStore();
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-6">
       <div>
         <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
           <Icon name="ArrowRight" className="w-4 h-4 mr-2 rotate-180" />
-          <span>Back</span>
+          <span>{t('adminScorm.button.back')}</span>
         </Button>
       </div>
       <div className="flex flex-col gap-2">

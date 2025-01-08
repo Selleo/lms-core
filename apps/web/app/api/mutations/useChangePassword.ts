@@ -7,6 +7,7 @@ import { ApiClient } from "../api-client";
 import { useCurrentUserSuspense } from "../queries/useCurrentUser";
 
 import type { ChangePasswordBody } from "../generated-api";
+import { useTranslation } from "react-i18next";
 
 type ChangePasswordOptions = {
   data: ChangePasswordBody;
@@ -15,6 +16,7 @@ type ChangePasswordOptions = {
 export function useChangePassword() {
   const { data: currentUser } = useCurrentUserSuspense();
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: ChangePasswordOptions) => {
@@ -28,7 +30,7 @@ export function useChangePassword() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: "Password updated successfully",
+        description: t("changePasswordView.toast.passwordChangedSuccessfully"),
       });
     },
     onError: (error) => {

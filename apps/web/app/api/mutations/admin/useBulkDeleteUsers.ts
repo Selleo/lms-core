@@ -6,6 +6,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../../api-client";
 
 import type { DeleteBulkUsersBody } from "../../generated-api";
+import { useTranslation } from "react-i18next";
 
 type DeleteBulkUsers = {
   data: DeleteBulkUsersBody;
@@ -13,6 +14,7 @@ type DeleteBulkUsers = {
 
 export function useBulkDeleteUsers() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: DeleteBulkUsers) => {
@@ -25,7 +27,7 @@ export function useBulkDeleteUsers() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: "Successfully deleted selected users",
+        description: t('changeUserInformationView.toast.deletedSelectedUsersSuccessfully'),
       });
     },
     onError: (error) => {

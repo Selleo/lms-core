@@ -8,6 +8,7 @@ import { currentUserQueryOptions } from "../queries/useCurrentUser";
 import { queryClient } from "../queryClient";
 
 import type { UpsertUserDetailsBody } from "../generated-api";
+import { useTranslation } from "react-i18next";
 
 type UpdateUserDetailsOptions = {
   data: UpsertUserDetailsBody;
@@ -15,7 +16,7 @@ type UpdateUserDetailsOptions = {
 
 export function useUpsertUserDetails() {
   const { toast } = useToast();
-
+  const { t } = useTranslation();
   return useMutation({
     mutationFn: async (options: UpdateUserDetailsOptions) => {
       const response = await ApiClient.api.userControllerUpsertUserDetails(options.data);
@@ -24,7 +25,8 @@ export function useUpsertUserDetails() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: "User details updated successfully" });
+      
+      toast({ description: t('changeUserInformationView.toast.userDetailsUpdatedSuccessfully')});
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

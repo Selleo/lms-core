@@ -21,6 +21,7 @@ import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/lib/utils";
 
 import type { UpsertUserDetailsBody } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(currentUserQueryOptions);
@@ -37,6 +38,7 @@ const updateUserDetailsSchema = z.object({
 export default function UserForm() {
   const { data: currentUser } = useCurrentUserSuspense();
   const { data: currentUserDetails } = useUserDetailsSuspense(currentUser?.id ?? "");
+  const { t } = useTranslation();
 
   const { mutate: updateUserDetails } = useUpsertUserDetails();
 
@@ -56,14 +58,14 @@ export default function UserForm() {
     <Card id="user-details">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
-          <CardTitle>Change user details information</CardTitle>
-          <CardDescription>Update your bio here.</CardDescription>
+          <CardTitle>{t('changeUserInformationView.header')}</CardTitle>
+          <CardDescription>{t('changeUserInformationView.subHeader')}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
           <div>
-            <Label htmlFor="Bio - note">Description</Label>
+            <Label htmlFor="Bio - note">{t('changeUserInformationView.field.description')}</Label>
             <Textarea
-              placeholder="Your description"
+              placeholder={t('changeUserInformationView.placeholder.description')}
               {...(currentUserDetails?.description && {
                 defaultValue: currentUserDetails.description,
               })}
@@ -77,7 +79,7 @@ export default function UserForm() {
             )}
           </div>
           <div>
-            <Label htmlFor="contactEmail">Email</Label>
+            <Label htmlFor="contactEmail">{t('changeUserInformationView.field.email')}</Label>
             <Input
               {...(currentUser?.email && {
                 defaultValue: currentUser.email,
@@ -93,12 +95,12 @@ export default function UserForm() {
             )}
           </div>
           <div>
-            <Label htmlFor="contactPhoneNumber">Phone number</Label>
+            <Label htmlFor="contactPhoneNumber">{t('changeUserInformationView.field.phoneNumber')}</Label>
             <Input
               {...(currentUserDetails?.contactPhone && {
                 defaultValue: currentUserDetails.contactPhone,
               })}
-              placeholder="Your phone number"
+              placeholder={t('changeUserInformationView.placeholder.phoneNumber')}
               className={cn({
                 "border-red-500 focus:!ring-red-500": errors.contactPhoneNumber,
               })}
@@ -109,12 +111,12 @@ export default function UserForm() {
             )}
           </div>
           <div>
-            <Label htmlFor="jobTitle">Job title</Label>
+            <Label htmlFor="jobTitle">{t('changeUserInformationView.field.jobTitle')}</Label>
             <Input
               {...(currentUserDetails?.jobTitle && {
                 defaultValue: currentUserDetails.jobTitle,
               })}
-              placeholder="Your job title"
+              placeholder={t('changeUserInformationView.placeholder.jobTitle')}
               className={cn({
                 "border-red-500 focus:!ring-red-500": errors.jobTitle,
               })}
@@ -126,7 +128,7 @@ export default function UserForm() {
           </div>
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button type="submit">Save</Button>
+          <Button type="submit">{t('common.button.save')}</Button>
         </CardFooter>
       </form>
     </Card>

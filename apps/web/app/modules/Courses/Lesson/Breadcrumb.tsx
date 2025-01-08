@@ -6,6 +6,7 @@ import {
 } from "~/components/ui/breadcrumb";
 
 import type { GetLessonByIdResponse } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 type BreadcrumbProps = {
   lessonData: GetLessonByIdResponse["data"];
@@ -14,13 +15,14 @@ type BreadcrumbProps = {
 };
 
 export default function Breadcrumb({ lessonData, courseId, courseTitle }: BreadcrumbProps) {
-  const lessonTitle = lessonData?.title || "Lesson";
+  const { t } = useTranslation(); 
+  const lessonTitle = lessonData?.title || t('studentLessonView.breadcrumbs.lessonTitle');
 
   return (
     <div className="bg-primary-50">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
+          <BreadcrumbLink href={`/`}>{t('studentLessonView.breadcrumbs.dashboard')}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

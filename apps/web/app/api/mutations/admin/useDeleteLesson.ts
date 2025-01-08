@@ -4,6 +4,7 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
+import { useTranslation } from "react-i18next";
 
 type DeleteLessonOptions = {
   chapterId: string;
@@ -12,6 +13,7 @@ type DeleteLessonOptions = {
 
 export function useDeleteLesson() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: DeleteLessonOptions) => {
@@ -22,7 +24,7 @@ export function useDeleteLesson() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "Course updated successfully" });
+      toast({ description: t('adminCourseView.toast.courseUpdatedSuccessfully') });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

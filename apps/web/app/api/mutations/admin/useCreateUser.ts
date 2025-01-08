@@ -7,6 +7,7 @@ import { queryClient } from "~/api/queryClient";
 import { useToast } from "~/components/ui/use-toast";
 
 import type { CreateUserBody } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 type CreateUserOptions = {
   data: CreateUserBody;
@@ -14,6 +15,7 @@ type CreateUserOptions = {
 
 export function useCreateUser() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateUserOptions) => {
@@ -23,7 +25,7 @@ export function useCreateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: "User created successfully" });
+      toast({ description: t('adminUserView.toast.userCreatedSuccessfully') });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

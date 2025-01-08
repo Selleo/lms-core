@@ -141,7 +141,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 <FormItem className="mt-5 w-1/3">
                   <Label htmlFor="imageUrl" className="body-base-md">
                     <span className="text-red-500 mr-1">*</span>
-                    {t("image")}
+                    {t("adminCourseView.curriculum.lesson.field.options")}
                   </Label>
                   <FormControl>
                     <ImageUploadInput
@@ -151,7 +151,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                       imageUrl={displayImageUrl}
                     />
                   </FormControl>
-                  {isUploading && <p>Uploading image...</p>}
+                  {isUploading && <p>{t('common.other.uploadingImage')}</p>}
                   {errors?.questions?.[questionIndex]?.photoS3Key && (
                     <p className="text-red-500 text-sm">
                       {errors?.questions?.[questionIndex]?.photoS3Key?.message}
@@ -168,7 +168,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 <FormItem className="w-1/6 mt-4">
                   <Label htmlFor="type" className="body-base-md">
                     <span className="text-red-500 mr-1">*</span>
-                    {t("type")}
+                    {t("adminCourseView.curriculum.lesson.field.type")}
                   </Label>
                   <FormControl>
                     <Select
@@ -180,11 +180,11 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                       <SelectTrigger>
                         <SelectValue
                           className="text-left body-base-md"
-                          placeholder={t("singleSelect")}
+                          placeholder={t("adminCourseView.curriculum.lesson.placeholder.singleChoice")}
                         />
                         <SelectValue
                           className="text-left body-base-md"
-                          placeholder={t("multiSelect")}
+                          placeholder={t("adminCourseView.curriculum.lesson.placeholder.multipleChoice")}
                         />
                       </SelectTrigger>
                       <SelectContent>
@@ -192,13 +192,13 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                           value={QuestionType.PHOTO_QUESTION_SINGLE_CHOICE}
                           className="text-left body-base-md"
                         >
-                          {t("singleSelect")}
+                          {t("adminCourseView.curriculum.lesson.placeholder.singleChoice")}
                         </SelectItem>
                         <SelectItem
                           value={QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE}
                           className="text-left body-base-md"
                         >
-                          {t("multiSelect")}
+                          {t("adminCourseView.curriculum.lesson.placeholder.multipleChoice")}
                         </SelectItem>
                       </SelectContent>
                     </Select>
@@ -212,7 +212,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             {!isOptionEmpty && (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">{t("options")}</Label>
+                <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.options")}</Label>
               </>
             )}
             {watchedOptions && watchedOptions?.length > 0 && (
@@ -239,7 +239,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                           onChange={(e) =>
                             handleOptionChange(index as number, "optionText", e.target.value)
                           }
-                          placeholder={`${t("option")} ${index + 1}`}
+                          placeholder={`${t("adminCourseView.curriculum.lesson.placeholder.option")} ${index + 1}`}
                           required
                           className="flex-1"
                         />
@@ -273,7 +273,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                             onClick={() => handleOptionChange(index, "isCorrect", !item.isCorrect)}
                             className="ml-2 body-sm text-neutral-950 cursor-pointer"
                           >
-                            {t("correct")}
+                            {t("adminCourseView.curriculum.lesson.other.correct")}
                           </Label>
                           <TooltipProvider delayDuration={0}>
                             <Tooltip>
@@ -310,14 +310,14 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
           )}
           <div className="mt-4 flex gap-2 mb-4 ml-14">
             <Button className="bg-primary-700" type="button" onClick={handleAddOption}>
-              {t("addOption")}
+              {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
               onClick={() => setIsDeleteModalOpen(true)}
             >
-              {t("deleteQuestion")}
+              {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}
             </Button>
           </div>
           <DeleteConfirmationModal

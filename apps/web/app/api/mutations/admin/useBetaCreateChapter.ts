@@ -5,6 +5,7 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
 import { BetaCreateChapterBody } from "~/api/generated-api";
+import { useTranslation } from "react-i18next";
 
 type CreateChapterOptions = {
   data: BetaCreateChapterBody;
@@ -12,6 +13,7 @@ type CreateChapterOptions = {
 
 export function useBetaCreateChapter() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateChapterOptions) => {
@@ -22,7 +24,7 @@ export function useBetaCreateChapter() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: "Lesson created successfully",
+        description: t('adminCourseView.curriculum.chapter.toast.chapterCreatedSuccessfully'),
       });
     },
     onError: (error) => {

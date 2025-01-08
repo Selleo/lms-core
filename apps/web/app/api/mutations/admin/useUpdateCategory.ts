@@ -6,6 +6,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { ApiClient } from "../../api-client";
 
 import type { UpdateCategoryBody } from "../../generated-api";
+import { useTranslation } from "react-i18next";
 
 type UpdateCategoryOptions = {
   data: UpdateCategoryBody;
@@ -14,6 +15,7 @@ type UpdateCategoryOptions = {
 
 export function useUpdateCategory() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: UpdateCategoryOptions) => {
@@ -25,7 +27,7 @@ export function useUpdateCategory() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "Category updated successfully" });
+      toast({ description: t('adminCategoryView.toast.categoryUpdatedSuccessfully') });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

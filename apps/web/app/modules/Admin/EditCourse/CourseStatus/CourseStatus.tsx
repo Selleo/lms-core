@@ -100,7 +100,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
               </FormItem>
             )}
           />
-          <Button type="submit">Save</Button>
+          <Button type="submit">{t('common.button.save')}</Button>
         </form>
       </Form>
     </div>

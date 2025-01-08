@@ -152,7 +152,7 @@ const CourseSettings = ({
                         imageUrl={displayThumbnailUrl}
                       />
                     </FormControl>
-                    {isUploading && <p>{t("adminCourseView.settings.other.uploadingImage")}</p>}
+                    {isUploading && <p>{t("common.other.uploadingImage")}</p>}
                     <FormMessage />
                   </FormItem>
                 )}
