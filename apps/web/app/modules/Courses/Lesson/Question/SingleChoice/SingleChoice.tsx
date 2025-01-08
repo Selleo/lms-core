@@ -15,9 +15,9 @@ export const SingleChoice = ({ question, isQuizCompleted = false }: SingleChoice
 
   return (
     <QuestionCard
-      title={question.title || ""}
+      title={question.title}
       questionType="Single Choice question"
-      questionNumber={question.displayOrder || 0}
+      questionNumber={question.displayOrder}
     >
       <SingleChoiceOptionList
         options={question.options || []}

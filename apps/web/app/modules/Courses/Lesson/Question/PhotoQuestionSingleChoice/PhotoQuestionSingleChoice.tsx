@@ -18,9 +18,9 @@ export const PhotoQuestionSingleChoice = ({
 
   return (
     <QuestionCard
-      title={question.title ?? ""}
+      title={question.title}
       questionType="Single select question."
-      questionNumber={question.displayOrder ?? 0}
+      questionNumber={question.displayOrder}
     >
       <img
         src={question.photoS3Key || "https://placehold.co/960x620/png"}
