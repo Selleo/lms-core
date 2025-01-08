@@ -93,6 +93,17 @@ jobs:
           sudo apt-get update
           sudo apt-get install caddy=2.8.4
 
+    #   - name: Setup hosts
+    #     run: |
+    #       echo "127.0.0.1 app.lms.localhost" | sudo tee -a /etc/hosts
+
+      - name: Debug Caddy
+        working-directory: ./apps/reverse-proxy
+        run: |
+          caddy version
+          caddy adapt --config Caddyfile
+          caddy validate --config Caddyfile
+
       - name: Run tests
         run: pnpm playwright test
         working-directory: ./apps/web
