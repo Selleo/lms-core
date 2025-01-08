@@ -22,6 +22,8 @@ import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 import type { UUIDType } from "src/common";
 import type { ProgressStatus } from "src/utils/types/progress.type";
+import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class StudentLessonProgressService {
@@ -30,7 +32,14 @@ export class StudentLessonProgressService {
     private readonly statisticsRepository: StatisticsRepository,
   ) {}
 
-  async markLessonAsCompleted(id: UUIDType, studentId: UUIDType, quizCompleted = false) {
+  async markLessonAsCompleted(
+    id: UUIDType,
+    studentId: UUIDType,
+    quizCompleted = false,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
+    const dbInstance = trx ?? this.db;
+
     const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(id, studentId);
 
     if (!accessCourseLessonWithDetails.isAssigned && !accessCourseLessonWithDetails.isFreemium)
@@ -57,7 +66,7 @@ export class StudentLessonProgressService {
     if (lesson.type === LESSON_TYPES.QUIZ && !quizCompleted)
       throw new BadRequestException("Quiz not completed");
 
-    const [lessonProgress] = await this.db
+    const [lessonProgress] = await dbInstance
       .select()
       .from(studentLessonProgress)
       .where(
@@ -65,7 +74,7 @@ export class StudentLessonProgressService {
       );
 
     if (!lessonProgress) {
-      await this.db.insert(studentLessonProgress).values({
+      await dbInstance.insert(studentLessonProgress).values({
         studentId,
         lessonId: lesson.id,
         chapterId: lesson.chapterId,
@@ -74,12 +83,12 @@ export class StudentLessonProgressService {
     }
 
     if (!lessonProgress?.completedAt) {
-      await this.db
+      await dbInstance
         .update(studentLessonProgress)
         .set({ completedAt: sql`now()` })
         .where(
           and(
-            eq(studentLessonProgress.lessonId, id),
+            eq(studentLessonProgress.lessonId, lesson.id),
             eq(studentLessonProgress.studentId, studentId),
           ),
         );
@@ -94,6 +103,7 @@ export class StudentLessonProgressService {
       studentId,
       lesson.chapterLessonCount,
       isCompletedAsFreemium,
+      trx,
     );
 
     if (isCompletedAsFreemium) return;
@@ -107,8 +117,11 @@ export class StudentLessonProgressService {
     studentId: UUIDType,
     lessonCount: number,
     completedAsFreemium = false,
+    trx?: PostgresJsDatabase<typeof schema>,
   ) {
-    const [completedLessonCount] = await this.db
+    const dbInstance = trx ?? this.db;
+
+    const [completedLessonCount] = await dbInstance
       .select({ count: sql<number>`count(*)::INTEGER` })
       .from(studentLessonProgress)
       .where(
@@ -120,7 +133,7 @@ export class StudentLessonProgressService {
       );
 
     if (completedLessonCount.count === lessonCount) {
-      return await this.db
+      return await dbInstance
         .insert(studentChapterProgress)
         .values({
           completedLessonCount: completedLessonCount.count,
@@ -145,7 +158,7 @@ export class StudentLessonProgressService {
         .returning();
     }
 
-    return await this.db
+    return await dbInstance
       .update(studentChapterProgress)
       .set({
         completedLessonCount: completedLessonCount.count,

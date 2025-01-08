@@ -6023,6 +6023,16 @@
                               "questionId": {
                                 "format": "uuid",
                                 "type": "string"
+                              },
+                              "solutionExplanation": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
                               }
                             },
                             "required": [
@@ -6031,7 +6041,8 @@
                               "displayOrder",
                               "isStudentAnswer",
                               "studentAnswer",
-                              "isCorrect"
+                              "isCorrect",
+                              "solutionExplanation"
                             ]
                           }
                         }
