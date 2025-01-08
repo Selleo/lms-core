@@ -591,7 +591,12 @@ export class CourseService {
       conditions.push(inArray(courses.id, availableCourseIds));
     }
 
-    return this.db
+    const getImageUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.fileService.getFileUrl(url);
+    };
+
+    const teacherCourses = await this.db
       .select({
         id: courses.id,
         description: sql<string>`${courses.description}`,
@@ -639,6 +644,15 @@ export class CourseService {
         sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NULL THEN TRUE ELSE FALSE END`,
         courses.title,
       );
+
+    return await Promise.all(
+      teacherCourses.map(async (course) => ({
+        ...course,
+        thumbnailUrl: course.thumbnailUrl
+          ? await getImageUrl(course.thumbnailUrl)
+          : course.thumbnailUrl,
+      })),
+    );
   }
 
   async createCourse(createCourseBody: CreateCourseBody, authorId: UUIDType) {
