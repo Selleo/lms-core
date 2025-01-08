@@ -1,81 +1,95 @@
-import type { QuestionContent, TQuestionsForm } from "./types";
-import type { GetLessonByIdResponse, GetLessonResponse } from "~/api/generated-api";
+import type { GetLessonByIdResponse } from "~/api/generated-api";
 
-export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
-  const lessonItems = lesson.lessonItems;
-
-  return lessonItems
-    .filter((item) => item.lessonItemType !== "text_block")
-    .map((lessonItem) => {
-      if ("title" in lessonItem.content) {
-        return {
-          title: lessonItem.content.title,
-          displayOrder: lessonItem.displayOrder,
-          id: lessonItem.lessonItemId,
-          isCompleted: !!lessonItem.isCompleted,
-        };
-      } else {
-        return {
-          title: lessonItem.content.questionBody,
-          displayOrder: lessonItem.displayOrder,
-          id: lessonItem.content.id,
-          isCompleted: !!lessonItem.isCompleted,
-        };
-      }
-    })
-    .sort((a, b) => a.displayOrder || 0 - (b.displayOrder || 0));
-};
-
-export const getOrderedLessons = (lesson: GetLessonResponse["data"]) =>
-  lesson.lessonItems.sort((a, b) => a.displayOrder || 0 - (b.displayOrder || 0));
-
-export const getQuestionsArray = (lesson: GetLessonResponse["data"]["lessonItems"]) =>
-  lesson.filter((lesson) => lesson.lessonItemType === "question").map((item) => item.content.id);
+type Questions = NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"];
 
 export const getUserAnswers = (
-  questions: NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"],
-): TQuestionsForm => {
-  const singleQuestionsFromApi = questions.filter((question) => question.type === "single_choice");
-
-  const multiQuestionsFromApi = questions.filter((question) => question.type === "multiple_choice");
-
-  const openQuestionsFromApi = questions.filter((question) =>
-    ["brief_response", "detailed_response"].includes(question.type),
-  );
-
-  const singleAnswerQuestions = prepareQuestions(singleQuestionsFromApi);
-  const multiAnswerQuestions = prepareQuestions(multiQuestionsFromApi);
-  const openQuestions = prepareOpenQuestions(openQuestionsFromApi);
+  questions: Questions,
+): {
+  singleAnswerQuestions: Record<string, Record<string, string>>;
+  multiAnswerQuestions: Record<string, Record<string, string>>;
+  trueOrFalseQuestions: Record<string, Record<string, string>>;
+  photoQuestionSingleChoice: Record<string, Record<string, string>>;
+  photoQuestionMultipleChoice: Record<string, Record<string, string>>;
+  fillInTheBlanksText: Record<string, Record<string, string>>;
+  fillInTheBlanksDnd: Record<string, Record<string, string>>;
+  matchWords: Record<string, Record<string, string>>;
+  scaleQuestions: Record<string, Record<string, string>>;
+  briefResponses: Record<string, string>;
+} => {
+  const groupedQuestions = groupQuestionsByType(questions);
 
   return {
-    openQuestions,
-    singleAnswerQuestions,
-    multiAnswerQuestions,
+    singleAnswerQuestions: prepareAnswers(groupedQuestions.single_choice, "options"),
+    multiAnswerQuestions: prepareAnswers(groupedQuestions.multiple_choice, "options"),
+    trueOrFalseQuestions: prepareAnswers(groupedQuestions.true_or_false, "options"),
+    photoQuestionSingleChoice: prepareAnswers(
+      groupedQuestions.photo_question_single_choice,
+      "options",
+    ),
+    photoQuestionMultipleChoice: prepareAnswers(
+      groupedQuestions.photo_question_multiple_choice,
+      "options",
+    ),
+    fillInTheBlanksText: prepareAnswers(groupedQuestions.fill_in_the_blanks_text, "options"),
+    fillInTheBlanksDnd: prepareAnswers(groupedQuestions.fill_in_the_blanks_dnd, "options"),
+    matchWords: prepareAnswers(groupedQuestions.match_words, "options"),
+    scaleQuestions: prepareAnswers(groupedQuestions.scale_1_5, "options"),
+    briefResponses: prepareAnswers(groupedQuestions.brief_response, "open"),
   };
 };
 
-const prepareQuestions = (questions: QuestionContent[]): Record<string, Record<string, string>> =>
-  questions.reduce(
-    (acc, question) => {
-      acc[question.id] = question.options.reduce(
-        (innerAcc, option) => {
-          innerAcc[option.id ?? "0"] = option.isstudentanswer ? `${option.id}` : "";
-          return innerAcc;
-        },
-        {} as Record<string, string>,
-      );
-      return acc;
-    },
-    {} as Record<string, Record<string, string>>,
-  );
+const groupQuestionsByType = (questions: Questions) => {
+  return {
+    single_choice: questions.filter(({ type }) => type === "single_choice"),
+    multiple_choice: questions.filter(({ type }) => type === "multiple_choice"),
+    true_or_false: questions.filter(({ type }) => type === "true_or_false"),
+    photo_question_single_choice: questions.filter(
+      ({ type }) => type === "photo_question_single_choice",
+    ),
+    photo_question_multiple_choice: questions.filter(
+      ({ type }) => type === "photo_question_multiple_choice",
+    ),
+    fill_in_the_blanks_text: questions.filter(({ type }) => type === "fill_in_the_blanks_text"),
+    fill_in_the_blanks_dnd: questions.filter(({ type }) => type === "fill_in_the_blanks_dnd"),
+    match_words: questions.filter(({ type }) => type === "match_words"),
+    scale_1_5: questions.filter(({ type }) => type === "scale_1_5"),
+    brief_response: questions.filter(({ type }) => type === "brief_response"),
+  };
+};
 
-const prepareOpenQuestions = (questions: QuestionContent[]) =>
-  questions.reduce(
-    (acc, question) => {
-      const studentAnswer = question.options?.[0]?.optionText;
-      const isStudentAnswer = question.options?.[0]?.isstudentanswer;
-      acc[question.id] = isStudentAnswer ? (studentAnswer as unknown as string) : "";
-      return acc;
+const prepareAnswers = (questions: Questions, mode: "options" | "open"): Record<string, any> => {
+  return questions.reduce(
+    (result, question) => {
+      if (question.type === "true_or_false") {
+        result[question.id ?? ""] = question?.options?.reduce(
+          (optionMap, option) => {
+            optionMap[option.id ?? "0"] = option.isStudentAnswer ? `${option.id}` : "";
+            return optionMap;
+          },
+          {} as Record<string, string>,
+        );
+      }
+
+      if (mode === "options") {
+        result[question.id ?? ""] = question?.options?.reduce(
+          (optionMap, option) => {
+            optionMap[option.id ?? "0"] = option.isStudentAnswer ? `${option.id}` : null;
+            return optionMap;
+          },
+          {} as Record<string, string>,
+        );
+      }
+
+      if (mode === "open") {
+        const studentAnswer = question.options?.[0]?.optionText || "";
+        const isStudentAnswer = question.options?.[0]?.isStudentAnswer || false;
+        result[question.id] = isStudentAnswer ? studentAnswer : "";
+      }
+
+      return result;
     },
-    {} as Record<string, string>,
+    mode === "options"
+      ? ({} as Record<string, Record<string, string>>)
+      : ({} as Record<string, string>),
   );
+};
