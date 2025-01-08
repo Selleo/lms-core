@@ -8,10 +8,9 @@ import type { SortOption } from "~/types/sorting";
 type CourseParams = {
   title?: string;
   category?: string;
-  state?: string;
-  archived?: boolean;
+  isPublished?: boolean;
   sort?: SortOption;
-  userId?: string;
+  authorId?: string;
 };
 
 type QueryOptions = {
@@ -27,16 +26,15 @@ export const allCoursesQueryOptions = (
   queryKey: [...ALL_COURSES_QUERY_KEY, searchParams],
   queryFn: async () => {
     const response = await ApiClient.api.courseControllerGetAllCourses({
-      page: 1,
-      perPage: 100,
       ...(searchParams?.title && { title: searchParams.title }),
       ...(searchParams?.category && { category: searchParams.category }),
-      ...(searchParams?.state && { state: searchParams.state }),
-      ...(searchParams?.archived !== undefined && {
-        archived: String(searchParams.archived),
+      ...(searchParams?.authorId && { authorId: searchParams.authorId }),
+      ...(searchParams?.isPublished !== undefined && {
+        isPublished: String(searchParams.isPublished),
       }),
       ...(searchParams?.sort && { sort: searchParams.sort }),
-      ...(searchParams?.userId && { userId: searchParams.userId }),
+      page: 1,
+      perPage: 100,
     });
     return response.data;
   },
