@@ -88,8 +88,6 @@ export class LessonService {
     if (!lesson.isFreemium && !lesson.isEnrolled)
       throw new UnauthorizedException("You don't have access");
 
-    console.log(lesson);
-
     if (lesson.type === LESSON_TYPES.TEXT && !lesson.fileUrl) return lesson;
 
     if (lesson.type !== LESSON_TYPES.QUIZ) {

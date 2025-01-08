@@ -89,6 +89,7 @@ export class StudentLessonProgressService {
       !accessCourseLessonWithDetails.isAssigned && accessCourseLessonWithDetails.isFreemium;
 
     await this.updateChapterProgress(
+      lesson.courseId,
       lesson.chapterId,
       studentId,
       lesson.chapterLessonCount,
@@ -101,13 +102,14 @@ export class StudentLessonProgressService {
   }
 
   private async updateChapterProgress(
+    courseId: UUIDType,
     chapterId: UUIDType,
     studentId: UUIDType,
     lessonCount: number,
     completedAsFreemium = false,
   ) {
     const [completedLessonCount] = await this.db
-      .select({ count: sql<number>`count(*)` })
+      .select({ count: sql<number>`count(*)::INTEGER` })
       .from(studentLessonProgress)
       .where(
         and(
@@ -119,18 +121,27 @@ export class StudentLessonProgressService {
 
     if (completedLessonCount.count === lessonCount) {
       return await this.db
-        .update(studentChapterProgress)
-        .set({
+        .insert(studentChapterProgress)
+        .values({
           completedLessonCount: completedLessonCount.count,
           completedAt: sql`now()`,
           completedAsFreemium,
+          courseId,
+          chapterId,
+          studentId,
         })
-        .where(
-          and(
-            eq(studentChapterProgress.chapterId, chapterId),
-            eq(studentChapterProgress.studentId, studentId),
-          ),
-        )
+        .onConflictDoUpdate({
+          target: [
+            studentChapterProgress.studentId,
+            studentChapterProgress.chapterId,
+            studentChapterProgress.courseId,
+          ],
+          set: {
+            completedLessonCount: completedLessonCount.count,
+            completedAt: sql`now()`,
+            completedAsFreemium,
+          },
+        })
         .returning();
     }
 
