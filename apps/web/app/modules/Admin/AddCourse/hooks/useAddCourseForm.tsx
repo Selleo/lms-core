@@ -18,13 +18,15 @@ export const useAddCourseForm = () => {
       title: "",
       description: "",
       categoryId: "",
-      imageUrl: "",
+      thumbnailS3Key: "",
+      fileUrl: "",
     },
   });
 
   const onSubmit = (values: AddCourseFormValues) => {
+    const { fileUrl: _, ...rest } = values;
     createCourse({
-      data: { ...values, state: "draft" },
+      data: { ...rest, state: "draft" },
     }).then(({ data }) => {
       queryClient.invalidateQueries({ queryKey: ALL_COURSES_QUERY_KEY });
       navigate(`/admin/beta-courses/${data.id}`);

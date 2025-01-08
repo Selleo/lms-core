@@ -26,8 +26,8 @@ const AddCourse = () => {
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
   const { isValid: isFormValid } = form.formState;
-  const watchedImageUrl = form.watch("imageUrl");
-  const imageUrl = form.getValues("imageUrl");
+  const watchedImageUrl = form.watch("fileUrl");
+  const fileUrl = form.getValues("fileUrl");
   const maxDescriptionFieldLength = 800;
 
   const watchedDescriptionLength = form.watch("description").length;
@@ -38,7 +38,8 @@ const AddCourse = () => {
       setIsUploading(true);
       try {
         const result = await uploadFile({ file, resource: "course" });
-        form.setValue("imageUrl", result.fileUrl, { shouldValidate: true });
+        form.setValue("thumbnailS3Key", result.fileKey, { shouldValidate: true });
+        form.setValue("fileUrl", result.fileUrl, { shouldValidate: true });
       } catch (error) {
         console.error("Error uploading image:", error);
       } finally {
@@ -150,16 +151,16 @@ const AddCourse = () => {
 
             <FormField
               control={form.control}
-              name="imageUrl"
+              name="fileUrl"
               render={({ field }) => (
                 <FormItem className="mt-5">
-                  <Label htmlFor="imageUrl">Thumbnail</Label>
+                  <Label htmlFor="fileUrl">Thumbnail</Label>
                   <FormControl>
                     <ImageUploadInput
                       field={field}
                       handleImageUpload={handleImageUpload}
                       isUploading={isUploading}
-                      imageUrl={imageUrl}
+                      imageUrl={fileUrl}
                     />
                   </FormControl>
 
@@ -170,7 +171,7 @@ const AddCourse = () => {
             />
             {watchedImageUrl && (
               <Button
-                onClick={() => form.setValue("imageUrl", "")}
+                onClick={() => form.setValue("fileUrl", "")}
                 className="bg-red-500 text-white py-2 px-6 rounded mb-4 mt-4"
               >
                 <Icon name="TrashIcon" className="mr-2" />
