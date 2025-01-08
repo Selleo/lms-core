@@ -81,7 +81,7 @@ export default defineConfig({
       command: "cd ../reverse-proxy && pnpm run dev",
       url: "http://localhost:2019/config/",
       timeout: 120 * 1000,
-      reuseExistingServer: false,
+      reuseExistingServer: true,
     },
   ],
 });
