@@ -60,6 +60,8 @@ export default defineConfig({
         NODE_ENV: "test",
         MODE: "test",
       },
+      stderr: "pipe",
+      stdout: "pipe",
     },
     {
       command: "cd ../api && pnpm db:migrate && pnpm db:seed",
@@ -69,6 +71,8 @@ export default defineConfig({
         MODE: "test",
       },
       reuseExistingServer: false,
+      stderr: "pipe",
+      stdout: "pipe",
     },
     {
       command: "cd ../web && pnpm run dev",
@@ -80,6 +84,8 @@ export default defineConfig({
         NODE_ENV: "test",
         MODE: "test",
       },
+      stderr: "pipe",
+      stdout: "pipe",
     },
     // {
     //   command: "cd ../reverse-proxy && pnpm run dev",
