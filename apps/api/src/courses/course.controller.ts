@@ -68,9 +68,9 @@ export class CourseController {
     @Query("creationDateRange[0]") creationDateRangeStart: string,
     @Query("creationDateRange[1]") creationDateRangeEnd: string,
     @Query("isPublished") isPublished: boolean,
+    @Query("sort") sort: SortCourseFieldsOptions,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
-    @Query("sort") sort: SortCourseFieldsOptions,
     @CurrentUser("userId") currentUserId: UUIDType,
     @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {

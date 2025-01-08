@@ -1,7 +1,14 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
+import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import {
   chapters,
@@ -23,7 +30,14 @@ export class StudentLessonProgressService {
     private readonly statisticsRepository: StatisticsRepository,
   ) {}
 
-  async markLessonAsCompleted(id: UUIDType, studentId: UUIDType) {
+  async markLessonAsCompleted(id: UUIDType, studentId: UUIDType, quizCompleted = false) {
+    const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(id, studentId);
+
+    if (!accessCourseLessonWithDetails.isAssigned && !accessCourseLessonWithDetails.isFreemium)
+      throw new UnauthorizedException("You don't have assignment to this lesson");
+
+    if (accessCourseLessonWithDetails.lessonIsCompleted) return;
+
     const [lesson] = await this.db
       .select({
         id: lessons.id,
@@ -40,31 +54,62 @@ export class StudentLessonProgressService {
       throw new NotFoundException(`Lesson with id ${id} not found`);
     }
 
-    const [createdLessonProgress] = await this.db
-      .insert(studentLessonProgress)
-      .values({
+    if (lesson.type === LESSON_TYPES.QUIZ && !quizCompleted)
+      throw new BadRequestException("Quiz not completed");
+
+    const [lessonProgress] = await this.db
+      .select()
+      .from(studentLessonProgress)
+      .where(
+        and(eq(studentLessonProgress.lessonId, id), eq(studentLessonProgress.studentId, studentId)),
+      );
+
+    if (!lessonProgress) {
+      await this.db.insert(studentLessonProgress).values({
         studentId,
         lessonId: lesson.id,
         chapterId: lesson.chapterId,
         completedAt: sql`now()`,
-      })
-      .onConflictDoNothing()
-      .returning();
+      });
+    }
 
-    if (!createdLessonProgress) return;
+    if (!lessonProgress?.completedAt) {
+      await this.db
+        .update(studentLessonProgress)
+        .set({ completedAt: sql`now()` })
+        .where(
+          and(
+            eq(studentLessonProgress.lessonId, id),
+            eq(studentLessonProgress.studentId, studentId),
+          ),
+        );
+    }
 
-    await this.updateChapterProgress(lesson.chapterId, studentId, lesson.chapterLessonCount);
+    const isCompletedAsFreemium =
+      !accessCourseLessonWithDetails.isAssigned && accessCourseLessonWithDetails.isFreemium;
+
+    await this.updateChapterProgress(
+      lesson.courseId,
+      lesson.chapterId,
+      studentId,
+      lesson.chapterLessonCount,
+      isCompletedAsFreemium,
+    );
+
+    if (isCompletedAsFreemium) return;
 
     await this.checkCourseIsCompletedForUser(lesson.courseId, studentId);
   }
 
   private async updateChapterProgress(
+    courseId: UUIDType,
     chapterId: UUIDType,
     studentId: UUIDType,
     lessonCount: number,
+    completedAsFreemium = false,
   ) {
     const [completedLessonCount] = await this.db
-      .select({ count: sql<number>`count(*)` })
+      .select({ count: sql<number>`count(*)::INTEGER` })
       .from(studentLessonProgress)
       .where(
         and(
@@ -76,17 +121,27 @@ export class StudentLessonProgressService {
 
     if (completedLessonCount.count === lessonCount) {
       return await this.db
-        .update(studentChapterProgress)
-        .set({
+        .insert(studentChapterProgress)
+        .values({
           completedLessonCount: completedLessonCount.count,
           completedAt: sql`now()`,
+          completedAsFreemium,
+          courseId,
+          chapterId,
+          studentId,
         })
-        .where(
-          and(
-            eq(studentChapterProgress.chapterId, chapterId),
-            eq(studentChapterProgress.studentId, studentId),
-          ),
-        )
+        .onConflictDoUpdate({
+          target: [
+            studentChapterProgress.studentId,
+            studentChapterProgress.chapterId,
+            studentChapterProgress.courseId,
+          ],
+          set: {
+            completedLessonCount: completedLessonCount.count,
+            completedAt: sql`now()`,
+            completedAsFreemium,
+          },
+        })
         .returning();
     }
 
@@ -182,5 +237,30 @@ export class StudentLessonProgressService {
       .update(studentCourses)
       .set({ progress, finishedChapterCount })
       .where(and(eq(studentCourses.studentId, studentId), eq(studentCourses.courseId, courseId)));
+  }
+
+  private async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
+    return this.db
+      .select({
+        isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
+        isFreemium: sql<boolean>`CASE WHEN ${chapters.isFreemium} THEN TRUE ELSE FALSE END`,
+        lessonIsCompleted: sql<boolean>`CASE WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN TRUE ELSE FALSE END`,
+        chapterId: sql<string>`${chapters.id}`,
+        courseId: sql<string>`${chapters.courseId}`,
+      })
+      .from(lessons)
+      .leftJoin(
+        studentLessonProgress,
+        and(
+          eq(studentLessonProgress.lessonId, lessons.id),
+          eq(studentLessonProgress.studentId, userId),
+        ),
+      )
+      .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+      )
+      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
   }
 }

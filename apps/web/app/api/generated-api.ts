@@ -521,6 +521,7 @@ export interface GetBetaCourseByIdResponse {
           description?: string | null;
           title: string;
           displayOrder?: number;
+          solutionExplanation?: string;
           photoS3Key?: string | null;
           options?: {
             /** @format uuid */
@@ -680,6 +681,7 @@ export interface GetUserStatisticsResponse {
           description?: string | null;
           title: string;
           displayOrder?: number;
+          solutionExplanation?: string;
           photoS3Key?: string | null;
           options?: {
             /** @format uuid */
@@ -795,6 +797,7 @@ export type BetaCreateChapterBody = {
       description?: string | null;
       title: string;
       displayOrder?: number;
+      solutionExplanation?: string;
       photoS3Key?: string | null;
       options?: {
         /** @format uuid */
@@ -860,6 +863,7 @@ export type UpdateChapterBody = {
       description?: string | null;
       title: string;
       displayOrder?: number;
+      solutionExplanation?: string;
       photoS3Key?: string | null;
       options?: {
         /** @format uuid */
@@ -998,6 +1002,7 @@ export type BetaCreateLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
+    solutionExplanation?: string;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
@@ -1031,6 +1036,7 @@ export type BetaCreateQuizLessonBody = {
   title: string;
   type: string;
   description?: string;
+  solutionExplanation?: string;
   fileS3Key?: string;
   fileType?: string;
   questions?: {
@@ -1051,6 +1057,7 @@ export type BetaCreateQuizLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
+    solutionExplanation?: string;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
@@ -1083,6 +1090,7 @@ export type BetaUpdateQuizLessonBody = {
   title?: string;
   type?: string;
   description?: string;
+  solutionExplanation?: string;
   fileS3Key?: string;
   fileType?: string;
   questions?: {
@@ -1103,6 +1111,7 @@ export type BetaUpdateQuizLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
+    solutionExplanation?: string;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
@@ -1153,6 +1162,7 @@ export type BetaUpdateLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
+    solutionExplanation?: string;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
@@ -1940,6 +1950,12 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     courseControllerGetAllCourses: (
       query?: {
+        title?: string;
+        category?: string;
+        author?: string;
+        "creationDateRange[0]"?: string;
+        "creationDateRange[1]"?: string;
+        isPublished?: string;
         sort?:
           | "title"
           | "category"
@@ -1953,13 +1969,6 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
           | "-author"
           | "-chapterCount"
           | "-enrolledParticipantsCount";
-        title?: string;
-        category?: string;
-        author?: string;
-        "creationDateRange[0]"?: string;
-        "creationDateRange[1]"?: string;
-        state?: string;
-        archived?: string;
         /** @min 1 */
         page?: number;
         perPage?: number;

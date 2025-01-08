@@ -7,7 +7,6 @@ import {
 } from "@nestjs/common";
 import {
   and,
-  asc,
   between,
   count,
   countDistinct,
@@ -78,18 +77,15 @@ export class CourseService {
     pagination: Pagination;
   }> {
     const {
-      sort = CourseSortFields.title,
-      perPage = DEFAULT_PAGE_SIZE,
-      page = 1,
       filters = {},
+      page = 1,
+      perPage = DEFAULT_PAGE_SIZE,
+      sort = CourseSortFields.title,
       currentUserId,
       currentUserRole,
     } = query;
 
-    // TODO: repair it
-    // const { sortOrder, sortedField } = getSortOptions(sort);
-    const sortOrder = asc;
-    const sortedField = CourseSortFields.title;
+    const { sortOrder, sortedField } = getSortOptions(sort);
 
     return await this.db.transaction(async (trx) => {
       const conditions = this.getFiltersConditions(filters, false);
