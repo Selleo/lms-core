@@ -5,10 +5,10 @@ import {
   BreadcrumbSeparator,
 } from "~/components/ui/breadcrumb";
 
-import type { GetLessonResponse } from "~/api/generated-api";
+import type { GetLessonByIdResponse } from "~/api/generated-api";
 
 type BreadcrumbProps = {
-  lessonData: GetLessonResponse["data"];
+  lessonData: GetLessonByIdResponse["data"];
   courseId: string;
   courseTitle: string;
 };

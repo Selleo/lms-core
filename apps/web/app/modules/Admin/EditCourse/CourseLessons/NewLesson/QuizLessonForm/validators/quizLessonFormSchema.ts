@@ -8,9 +8,7 @@ export const quizLessonFormSchema = z.object({
       z.object({
         id: z.optional(z.string()),
         type: z.nativeEnum(QuestionType),
-        description: z.optional(
-          z.string().min(10, "Question body must be at least 10 characters."),
-        ),
+        description: z.optional(z.string()),
         photoS3Key: z.optional(z.string()),
         displayOrder: z.number(),
         thumbnailS3: z.optional(
@@ -19,7 +17,6 @@ export const quizLessonFormSchema = z.object({
             key: z.string(),
           }),
         ),
-        photoQuestionType: z.optional(z.enum(["single_choice", "multiple_choice"])),
         title: z.string(),
         options: z
           .array(
@@ -35,119 +32,69 @@ export const quizLessonFormSchema = z.object({
           .optional(),
       }),
     )
-    .refine(
-      (questions) => {
-        return questions.every((question) => {
-          if (
-            question.type !== QuestionType.BRIEF_RESPONSE &&
-            question.type !== QuestionType.DETAILED_RESPONSE
-          ) {
-            return Array.isArray(question.options) && question.options.length > 0;
-          }
-          return true;
-        });
-      },
-      {
-        message: "At least one option is required.",
-        path: ["options"],
-      },
-    )
-    .refine(
-      (questions) => {
-        return questions.every((question) => {
-          if (question.type === QuestionType.PHOTO_QUESTION) {
-            return !!question.photoS3Key;
-          }
+    .superRefine((questions, ctx) => {
+      questions.forEach((question, index) => {
+        if (
+          question.type !== QuestionType.BRIEF_RESPONSE &&
+          question.type !== QuestionType.DETAILED_RESPONSE &&
+          (!question.options || question.options.length === 0)
+        ) {
+          ctx.addIssue({
+            path: [index, "options"],
+            message: `At least one option is required.`,
+            code: z.ZodIssueCode.custom,
+          });
+        }
 
-          return true;
-        });
-      },
-      {
-        message: "Image is required.",
-        path: ["image"],
-      },
-    )
-    .refine(
-      (questions) => {
-        return questions.every((question) => {
-          if (
-            question.type === QuestionType.SINGLE_CHOICE ||
-            question.photoQuestionType === QuestionType.SINGLE_CHOICE
-          ) {
-            return (
-              Array.isArray(question.options) &&
-              question.options.some((option) => option.isCorrect === true)
-            );
-          }
-          return true;
-        });
-      },
-      {
-        message: "At least one option must be marked as correct for single choice questions.",
-        path: ["options"],
-      },
-    )
-    .refine(
-      (questions) => {
-        return questions.every((question) => {
-          if (
+        if (
+          (question.type === QuestionType.PHOTO_QUESTION_SINGLE_CHOICE ||
+            question.type === QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE) &&
+          !question.photoS3Key
+        ) {
+          ctx.addIssue({
+            path: [index, "photoS3Key"],
+            message: `Image is required.`,
+            code: z.ZodIssueCode.custom,
+          });
+        }
+        if (
+          (question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
+            question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
+          (question?.description?.replace(/<\/?[^>]+(>|$)/g, "")?.length ?? 0) < 10
+        ) {
+          ctx.addIssue({
+            path: [index, "description"],
+            message: `Description must have at least 10 characters.`,
+            code: z.ZodIssueCode.custom,
+          });
+        }
+        if (
+          (question.type === QuestionType.SINGLE_CHOICE ||
+            question.type === QuestionType.PHOTO_QUESTION_SINGLE_CHOICE ||
             question.type === QuestionType.MULTIPLE_CHOICE ||
-            question.photoQuestionType === QuestionType.MULTIPLE_CHOICE
-          ) {
-            const correctOptions = question.options?.filter((option) => option.isCorrect);
-            if (correctOptions) {
-              return correctOptions?.length >= 2;
-            }
-          }
-          return true;
-        });
-      },
-      {
-        message: "At least two options must be marked as correct for multiple choice questions.",
-        path: ["options"],
-      },
-    )
-    .refine(
-      (questions) => {
-        return questions.every((question) => {
-          if (
-            question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
-            question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT
-          ) {
-            const allOptionsCorrect = question.options?.every(
-              (option) => option.isCorrect === true,
-            );
-            return allOptionsCorrect ?? true;
-          }
+            question.type === QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE) &&
+          (!question.options || !question.options.some((option) => option.isCorrect === true))
+        ) {
+          ctx.addIssue({
+            path: [index, "options"],
+            message: `At least one option must be marked as correct for question.`,
+            code: z.ZodIssueCode.custom,
+          });
+        }
 
-          return true;
-        });
-      },
-      {
-        message: "All options must be correct for fill-in-the-blank questions.",
-        path: ["options"],
-      },
-    ),
-  // .refine(
-  //   (questions) => {
-  //     return questions.every((question) => {
-  //       if (question.type === QuestionType.SCALE_1_5) {
-  //         const allOptionsHaveScaleAnswer = question.options?.every(
-  //           (option) => option.scaleAnswer !== undefined,
-  //         );
-  //         if (!allOptionsHaveScaleAnswer) {
-  //           return false;
-  //         }
-  //       }
-
-  //       return true;
-  //     });
-  //   },
-  //   {
-  //     message: "All options must have a scale answer",
-  //     path: ["options"],
-  //   },
-  // ),
+        if (
+          (question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
+            question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
+          question.options?.some((option) => option.isCorrect !== true)
+        ) {
+          ctx.addIssue({
+            path: [index, "options"],
+            message: `All options must be correct.`,
+            code: z.ZodIssueCode.custom,
+          });
+        }
+      });
+    }),
 });
 
 export type QuizLessonFormValues = z.infer<typeof quizLessonFormSchema>;

@@ -10,8 +10,6 @@ export enum QuestionIcons {
   Scale_1_5 = "Questionnaire",
 }
 
-export type PhotoQuestionType = "single_choice" | "multiple_choice";
-
 export type QuestionOption = {
   id?: string;
   optionText: string;
@@ -28,7 +26,6 @@ export type Question = {
   photoS3Key?: string;
   photoS3SingedUrl?: string;
   displayOrder: number;
-  photoQuestionType?: PhotoQuestionType;
   title: string;
   options?: QuestionOption[];
 };
@@ -40,7 +37,8 @@ export enum QuestionType {
   TRUE_OR_FALSE = "true_or_false",
   BRIEF_RESPONSE = "brief_response",
   DETAILED_RESPONSE = "detailed_response",
-  PHOTO_QUESTION = "photo_question",
+  PHOTO_QUESTION_SINGLE_CHOICE = "photo_question_single_choice",
+  PHOTO_QUESTION_MULTIPLE_CHOICE = "photo_question_multiple_choice",
   FILL_IN_THE_BLANKS_TEXT = "fill_in_the_blanks_text",
   FILL_IN_THE_BLANKS_DND = "fill_in_the_blanks_dnd",
   SCALE_1_5 = "scale_1_5",

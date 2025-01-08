@@ -453,6 +453,7 @@ export interface GetCourseResponse {
         displayOrder: number;
         status: "completed" | "in_progress" | "not_started";
         quizQuestionCount: number | null;
+        isExternal?: boolean;
       }[];
       completedLessonCount?: number;
       chapterProgress?: "completed" | "in_progress" | "not_started";
@@ -509,7 +510,8 @@ export interface GetBetaCourseByIdResponse {
             | "single_choice"
             | "multiple_choice"
             | "true_or_false"
-            | "photo_question"
+            | "photo_question_single_choice"
+            | "photo_question_multiple_choice"
             | "fill_in_the_blanks_text"
             | "fill_in_the_blanks_dnd"
             | "brief_response"
@@ -519,14 +521,13 @@ export interface GetBetaCourseByIdResponse {
           description?: string | null;
           title: string;
           displayOrder?: number;
-          photoQuestionType?: ("single_choice" | "multiple_choice") | null;
           photoS3Key?: string | null;
           options?: {
             /** @format uuid */
             id?: string;
             optionText: string;
             displayOrder: number | null;
-            isStudentAnswer?: boolean;
+            isStudentAnswer?: boolean | null;
             isCorrect: boolean;
             /** @format uuid */
             questionId?: string;
@@ -668,7 +669,8 @@ export interface GetUserStatisticsResponse {
             | "single_choice"
             | "multiple_choice"
             | "true_or_false"
-            | "photo_question"
+            | "photo_question_single_choice"
+            | "photo_question_multiple_choice"
             | "fill_in_the_blanks_text"
             | "fill_in_the_blanks_dnd"
             | "brief_response"
@@ -678,14 +680,13 @@ export interface GetUserStatisticsResponse {
           description?: string | null;
           title: string;
           displayOrder?: number;
-          photoQuestionType?: ("single_choice" | "multiple_choice") | null;
           photoS3Key?: string | null;
           options?: {
             /** @format uuid */
             id?: string;
             optionText: string;
             displayOrder: number | null;
-            isStudentAnswer?: boolean;
+            isStudentAnswer?: boolean | null;
             isCorrect: boolean;
             /** @format uuid */
             questionId?: string;
@@ -751,6 +752,7 @@ export interface GetChapterWithLessonResponse {
       displayOrder: number;
       status: "completed" | "in_progress" | "not_started";
       quizQuestionCount: number | null;
+      isExternal?: boolean;
     }[];
     completedLessonCount?: number;
     chapterProgress?: "completed" | "in_progress" | "not_started";
@@ -782,7 +784,8 @@ export type BetaCreateChapterBody = {
         | "single_choice"
         | "multiple_choice"
         | "true_or_false"
-        | "photo_question"
+        | "photo_question_single_choice"
+        | "photo_question_multiple_choice"
         | "fill_in_the_blanks_text"
         | "fill_in_the_blanks_dnd"
         | "brief_response"
@@ -792,14 +795,13 @@ export type BetaCreateChapterBody = {
       description?: string | null;
       title: string;
       displayOrder?: number;
-      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
       photoS3Key?: string | null;
       options?: {
         /** @format uuid */
         id?: string;
         optionText: string;
         displayOrder: number | null;
-        isStudentAnswer?: boolean;
+        isStudentAnswer?: boolean | null;
         isCorrect: boolean;
         /** @format uuid */
         questionId?: string;
@@ -847,7 +849,8 @@ export type UpdateChapterBody = {
         | "single_choice"
         | "multiple_choice"
         | "true_or_false"
-        | "photo_question"
+        | "photo_question_single_choice"
+        | "photo_question_multiple_choice"
         | "fill_in_the_blanks_text"
         | "fill_in_the_blanks_dnd"
         | "brief_response"
@@ -857,14 +860,13 @@ export type UpdateChapterBody = {
       description?: string | null;
       title: string;
       displayOrder?: number;
-      photoQuestionType?: ("single_choice" | "multiple_choice") | null;
       photoS3Key?: string | null;
       options?: {
         /** @format uuid */
         id?: string;
         optionText: string;
         displayOrder: number | null;
-        isStudentAnswer?: boolean;
+        isStudentAnswer?: boolean | null;
         isCorrect: boolean;
         /** @format uuid */
         questionId?: string;
@@ -926,17 +928,49 @@ export interface GetLessonByIdResponse {
     id: string;
     title: string;
     type: "text" | "file" | "presentation" | "video" | "quiz";
-    description: string;
+    description: string | null;
     fileType: string | null;
     fileUrl: string | null;
     quizDetails?: {
-      questions: any[];
+      questions: {
+        /** @format uuid */
+        id: string;
+        type:
+          | "single_choice"
+          | "multiple_choice"
+          | "true_or_false"
+          | "photo_question_single_choice"
+          | "photo_question_multiple_choice"
+          | "fill_in_the_blanks_text"
+          | "fill_in_the_blanks_dnd"
+          | "brief_response"
+          | "detailed_response"
+          | "match_words"
+          | "scale_1_5";
+        description?: string | null;
+        title: string;
+        displayOrder?: number;
+        photoS3Key?: string | null;
+        options?: {
+          /** @format uuid */
+          id: string;
+          optionText: string;
+          displayOrder: number | null;
+          isStudentAnswer: boolean | null;
+          studentAnswer: string | null;
+          isCorrect: boolean | null;
+          /** @format uuid */
+          questionId?: string;
+        }[];
+        passQuestion: boolean | null;
+      }[];
       questionCount: number;
       correctAnswerCount: number | null;
       wrongAnswerCount: number | null;
       score: number | null;
     };
     displayOrder: number;
+    isExternal?: boolean;
   };
 }
 
@@ -953,7 +987,8 @@ export type BetaCreateLessonBody = {
       | "single_choice"
       | "multiple_choice"
       | "true_or_false"
-      | "photo_question"
+      | "photo_question_single_choice"
+      | "photo_question_multiple_choice"
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
@@ -963,14 +998,13 @@ export type BetaCreateLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
       id?: string;
       optionText: string;
       displayOrder: number | null;
-      isStudentAnswer?: boolean;
+      isStudentAnswer?: boolean | null;
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
@@ -1006,7 +1040,8 @@ export type BetaCreateQuizLessonBody = {
       | "single_choice"
       | "multiple_choice"
       | "true_or_false"
-      | "photo_question"
+      | "photo_question_single_choice"
+      | "photo_question_multiple_choice"
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
@@ -1016,14 +1051,13 @@ export type BetaCreateQuizLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
       id?: string;
       optionText: string;
       displayOrder: number | null;
-      isStudentAnswer?: boolean;
+      isStudentAnswer?: boolean | null;
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
@@ -1058,7 +1092,8 @@ export type BetaUpdateQuizLessonBody = {
       | "single_choice"
       | "multiple_choice"
       | "true_or_false"
-      | "photo_question"
+      | "photo_question_single_choice"
+      | "photo_question_multiple_choice"
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
@@ -1068,14 +1103,13 @@ export type BetaUpdateQuizLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
       id?: string;
       optionText: string;
       displayOrder: number | null;
-      isStudentAnswer?: boolean;
+      isStudentAnswer?: boolean | null;
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
@@ -1108,7 +1142,8 @@ export type BetaUpdateLessonBody = {
       | "single_choice"
       | "multiple_choice"
       | "true_or_false"
-      | "photo_question"
+      | "photo_question_single_choice"
+      | "photo_question_multiple_choice"
       | "fill_in_the_blanks_text"
       | "fill_in_the_blanks_dnd"
       | "brief_response"
@@ -1118,14 +1153,13 @@ export type BetaUpdateLessonBody = {
     description?: string | null;
     title: string;
     displayOrder?: number;
-    photoQuestionType?: ("single_choice" | "multiple_choice") | null;
     photoS3Key?: string | null;
     options?: {
       /** @format uuid */
       id?: string;
       optionText: string;
       displayOrder: number | null;
-      isStudentAnswer?: boolean;
+      isStudentAnswer?: boolean | null;
       isCorrect: boolean;
       /** @format uuid */
       questionId?: string;
@@ -1159,8 +1193,9 @@ export interface EvaluationQuizBody {
     /** @format uuid */
     questionId: string;
     answer: {
-      index: number;
-      value: string;
+      /** @format uuid */
+      answerId: string;
+      value?: string;
     }[];
   }[];
 }
@@ -1168,6 +1203,12 @@ export interface EvaluationQuizBody {
 export interface EvaluationQuizResponse {
   data: {
     message: string;
+    data: {
+      correctAnswerCount: number;
+      wrongAnswerCount: number;
+      questionCount: number;
+      score: number;
+    };
   };
 }
 

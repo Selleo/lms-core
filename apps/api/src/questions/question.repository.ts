@@ -115,33 +115,51 @@ export class QuestionRepository {
     return;
   }
 
-  async getQuizQuestions(lessonId: UUIDType) {
+  // TODO: check if it work correctly
+  async getQuizQuestionsToEvaluation(lessonId: UUIDType) {
     return this.db
       .select({
         id: questions.id,
         type: sql<QuestionTypes>`${questions.type}`,
-        correctAnswers: sql<{ displayOrder: number; value: string }[]>`
-            COALESCE(
-              (
-                SELECT json_agg(
-                  json_build_object(
-                    'displayOrder', ${questionAnswerOptions.displayOrder},
-                    'value', ${questionAnswerOptions.optionText}
-                  )
-                )
-                FROM ${questionAnswerOptions}
-                WHERE ${questionAnswerOptions.questionId} = ${questions.id} AND ${questionAnswerOptions.isCorrect} = TRUE
-                GROUP BY ${questionAnswerOptions.displayOrder}
-                ORDER BY ${questionAnswerOptions.displayOrder}
-              ),
-              '[]'::json
+        correctAnswers: sql<{ answerId: UUIDType; displayOrder: number; value: string }[]>`
+          (
+            SELECT ARRAY(
+              SELECT json_build_object(
+                'answerId', ${questionAnswerOptions.id},
+                'displayOrder', ${questionAnswerOptions.displayOrder},
+                'value', ${questionAnswerOptions.optionText}
+              )
+              FROM ${questionAnswerOptions}
+              WHERE ${questionAnswerOptions.questionId} = ${questions.id} AND ${questionAnswerOptions.isCorrect} = TRUE
+              GROUP BY ${questionAnswerOptions.displayOrder}, ${questionAnswerOptions.id}, ${questionAnswerOptions.optionText}
+              ORDER BY ${questionAnswerOptions.displayOrder}
+            )
+          )
+        `,
+        allAnswers: sql<
+          { answerId: UUIDType; displayOrder: number; value: string; isCorrect: boolean }[]
+        >`
+          (
+            SELECT ARRAY(
+              SELECT json_build_object(
+                'answerId', ${questionAnswerOptions.id},
+                'displayOrder', ${questionAnswerOptions.displayOrder},
+                'value', ${questionAnswerOptions.optionText},
+                'isCorrect', ${questionAnswerOptions.isCorrect}
+              )
+              FROM ${questionAnswerOptions}
+              WHERE ${questionAnswerOptions.questionId} = ${questions.id}
+              GROUP BY ${questionAnswerOptions.displayOrder}, ${questionAnswerOptions.id}, ${questionAnswerOptions.optionText}
+              ORDER BY ${questionAnswerOptions.displayOrder}
+            )
           )
         `,
       })
       .from(questions)
       .leftJoin(questionAnswerOptions, eq(questions.id, questionAnswerOptions.questionId))
-      .where(and(eq(questions.lessonId, lessonId), eq(questionAnswerOptions.isCorrect, true)))
-      .orderBy(questions.displayOrder, questionAnswerOptions.displayOrder);
+      .where(and(eq(questions.lessonId, lessonId)))
+      .groupBy(questions.id)
+      .orderBy(questions.displayOrder);
   }
 
   async insertQuizAnswers(

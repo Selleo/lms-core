@@ -1,4 +1,4 @@
-import { Question } from "./CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
+import type { Question } from "./CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
 
 export type NavigationTab = "Settings" | "Curriculum" | "Pricing" | "Status";
 
@@ -13,6 +13,7 @@ export interface Lesson {
   fileType?: string;
   chapterId?: string;
   questions?: Question[];
+  isExternal?: boolean;
 }
 
 export interface Chapter {
@@ -51,6 +52,7 @@ export type LessonType = (typeof LessonType)[keyof typeof LessonType];
 export const DeleteContentType = {
   ...LessonType,
   CHAPTER: "chapter",
+  QUESTION: "question",
 } as const;
 
 export type DeleteContentType = (typeof DeleteContentType)[keyof typeof DeleteContentType];

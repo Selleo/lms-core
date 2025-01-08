@@ -7,6 +7,7 @@ export const fileLessonFormSchema = z.object({
   displayOrder: z.number().optional(),
   fileS3Key: z.string(),
   fileType: z.string(),
+  isExternal: z.boolean(),
 });
 
 export type FileLessonFormValues = z.infer<typeof fileLessonFormSchema>;

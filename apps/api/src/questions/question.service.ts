@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotAcceptableException } from "@nestjs/common";
+import { ConflictException, Inject, Injectable } from "@nestjs/common";
 import { sql } from "drizzle-orm";
 import { match } from "ts-pattern";
 
@@ -23,117 +23,210 @@ export class QuestionService {
   ) {}
 
   async evaluationsQuestions(
-    quizQuestions: {
+    correctAnswersForQuizQuestions: {
       id: string;
       type: QuestionTypes;
-      correctAnswers: { displayOrder: number; value: string }[];
+      correctAnswers: { answerId: UUIDType; displayOrder: number; value: string }[];
+      allAnswers: { answerId: UUIDType; displayOrder: number; value: string; isCorrect: boolean }[];
     }[],
-    quizAnswers: AnswerQuestionBody,
+    studentQuizAnswers: AnswerQuestionBody,
     userId: UUIDType,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
-    try {
-      const quizEvaluationStats = quizQuestions.reduce(
-        (quizStats, question) => {
-          const questionAnswerList = quizAnswers.answers.filter(
-            (answer) => answer.questionId === question.id,
-          );
+    const quizEvaluationStats = correctAnswersForQuizQuestions.reduce(
+      (quizStats, question) => {
+        const questionAnswerList = studentQuizAnswers.answers.filter(
+          (answer) => answer.questionId === question.id,
+        );
 
-          if (questionAnswerList.length !== 1) throw new Error("Answer is not valid");
+        if (questionAnswerList.length !== 1) throw new Error("Answer is not valid");
 
-          const questionAnswer = questionAnswerList[0];
-          const passQuestion = match(question.type)
-            .returnType<boolean>()
-            .with(
-              QUESTION_TYPE.fill_in_the_blanks_text.key || QUESTION_TYPE.fill_in_the_blanks_dnd.key,
-              () => {
-                let passQuestion = true;
-
-                for (const correctAnswer of question.correctAnswers) {
-                  if (
-                    questionAnswer.answer[correctAnswer.displayOrder - 1].value !==
-                    correctAnswer.value
-                  ) {
-                    passQuestion = false;
-                    break;
-                  }
-                }
-
-                return passQuestion;
-              },
-            )
-            .with(QUESTION_TYPE.open_answer.key, () => {
-              // TODO: implement this
-              return true;
-            })
-            .otherwise(() => {
+        const questionAnswer = questionAnswerList[0];
+        const passQuestion = match(question.type)
+          .returnType<boolean>()
+          .with(
+            QUESTION_TYPE.fill_in_the_blanks_text.key,
+            QUESTION_TYPE.fill_in_the_blanks_dnd.key,
+            () => {
               let passQuestion = true;
 
               for (const correctAnswer of question.correctAnswers) {
-                const studentAnswer = questionAnswer.answer.filter(
-                  (answer) => answer.value === correctAnswer.value,
-                );
-
-                if (studentAnswer.length !== 1) {
+                if (
+                  questionAnswer.answer[correctAnswer.displayOrder - 1].value !==
+                  correctAnswer.value
+                ) {
                   passQuestion = false;
                   break;
                 }
               }
 
               return passQuestion;
-            });
+            },
+          )
+          .with(QUESTION_TYPE.brief_response.key, QUESTION_TYPE.detailed_response.key, () => {
+            // TODO: implement this
 
-          const formattedAnswer = this.questionAnswerToString(questionAnswer.answer, question.type);
-          const validAnswer = {
-            questionId: question.id,
-            studentId: userId,
-            answer: formattedAnswer,
-            isCorrect: passQuestion,
-          };
+            return true;
+          })
+          .with(QUESTION_TYPE.single_choice.key, () => {
+            let passQuestion = true;
+            if (question.correctAnswers.length !== questionAnswer.answer.length) {
+              throw new ConflictException(
+                question.id,
+                "Single choice question has only one answer",
+              );
+            }
 
-          passQuestion ? quizStats.correctAnswerCount++ : quizStats.wrongAnswerCount++;
-          quizStats.answers.push(validAnswer);
+            if (question.correctAnswers[0].answerId !== questionAnswer.answer[0].answerId) {
+              passQuestion = false;
+            }
 
-          return quizStats;
-        },
-        {
-          answers: [],
-          correctAnswerCount: 0,
-          wrongAnswerCount: 0,
-        } as QuizEvaluation,
-      );
+            return passQuestion;
+          })
+          .with(QUESTION_TYPE.multiple_choice.key, () => {
+            let passQuestion = true;
 
-      await this.questionRepository.insertQuizAnswers(quizEvaluationStats.answers, trx);
+            if (question.correctAnswers.length !== questionAnswer.answer.length) {
+              return false;
+            }
 
-      return quizEvaluationStats;
-    } catch (error) {
-      console.log("error", error);
-      return error;
-    }
+            for (const correctAnswer of question.correctAnswers) {
+              const studentAnswer = questionAnswer.answer.filter(
+                (answer) => answer.answerId === correctAnswer.answerId,
+              );
+
+              if (studentAnswer.length !== 1) {
+                passQuestion = false;
+                break;
+              }
+            }
+
+            return passQuestion;
+          })
+          .with(QUESTION_TYPE.true_or_false.key, () => {
+            let passQuestion = true;
+            if (question.allAnswers.length !== questionAnswer.answer.length) {
+              throw new ConflictException(
+                question.id,
+                "Too many answers for true or false question",
+              );
+            }
+
+            for (const answer of question.allAnswers) {
+              const studentAnswer = questionAnswer.answer.filter(
+                (answerOption) => answerOption.answerId === answer.answerId,
+              );
+
+              const answerValueToString = studentAnswer[0].value === true.toString();
+
+              if (studentAnswer.length !== 1 || answerValueToString !== answer.isCorrect) {
+                passQuestion = false;
+                break;
+              }
+            }
+
+            return passQuestion;
+          })
+          .with(QUESTION_TYPE.photo_question.key, () => {
+            // TODO: add new types for this case
+            let passQuestion = true;
+
+            if (question.correctAnswers.length !== questionAnswer.answer.length) {
+              return false;
+            }
+
+            for (const correctAnswer of question.correctAnswers) {
+              const studentAnswer = questionAnswer.answer.filter(
+                (answer) => answer.answerId === correctAnswer.answerId,
+              );
+
+              if (studentAnswer.length !== 1) {
+                passQuestion = false;
+                break;
+              }
+            }
+
+            return passQuestion;
+          })
+          .with(QUESTION_TYPE.match_words.key, () => {
+            let passQuestion = true;
+
+            for (const correctAnswer of question.correctAnswers) {
+              const studentAnswer = questionAnswer.answer.filter(
+                (answer) => answer.answerId === correctAnswer.answerId,
+              );
+
+              if (studentAnswer.length !== 1) {
+                passQuestion = false;
+                break;
+              }
+            }
+
+            return passQuestion;
+          })
+          .with(QUESTION_TYPE.scale_1_5.key, () => {
+            // TODO: implement this
+            return true;
+          })
+          .otherwise(() => {
+            // TODO: add error handling
+
+            return false;
+          });
+
+        const answersToRecord =
+          question.type === QUESTION_TYPE.brief_response.key ||
+          question.type === QUESTION_TYPE.detailed_response.key
+            ? [questionAnswer.answer[0]?.value || ""]
+            : question.allAnswers.map((answerOption) => {
+                const studentAnswer = questionAnswer.answer.find(
+                  (answer) => answer.answerId === answerOption.answerId,
+                );
+
+                if (studentAnswer?.value) {
+                  return studentAnswer.value;
+                }
+
+                if (studentAnswer?.answerId) {
+                  return answerOption.value;
+                }
+                // TODO: handle it, when value is not found
+                return "";
+              });
+
+        const formattedAnswer = this.questionAnswerToString(answersToRecord);
+
+        const validAnswer = {
+          questionId: question.id,
+          studentId: userId,
+          answer: formattedAnswer,
+          isCorrect: passQuestion,
+        };
+
+        passQuestion ? quizStats.correctAnswerCount++ : quizStats.wrongAnswerCount++;
+        quizStats.answers.push(validAnswer);
+
+        return quizStats;
+      },
+      {
+        answers: [],
+        correctAnswerCount: 0,
+        wrongAnswerCount: 0,
+      } as QuizEvaluation,
+    );
+
+    await this.questionRepository.insertQuizAnswers(quizEvaluationStats.answers, trx);
+
+    return quizEvaluationStats;
   }
 
-  private questionAnswerToString(
-    answers: {
-      index: number;
-      value: string;
-    }[],
-    questionType: QuestionTypes,
-  ): SQL<unknown> {
-    const questionTypeHandlers = {
-      [QUESTION_TYPE.single_choice.key]: this.handleChoiceAnswer.bind(this),
-      [QUESTION_TYPE.multiple_choice.key]: this.handleChoiceAnswer.bind(this),
-      [QUESTION_TYPE.open_answer.key]: this.handleOpenAnswer.bind(this),
-      [QUESTION_TYPE.fill_in_the_blanks_text.key]: this.handleFillInTheBlanksAnswer.bind(this),
-      [QUESTION_TYPE.fill_in_the_blanks_dnd.key]: this.handleFillInTheBlanksAnswer.bind(this),
-    } as const;
+  private questionAnswerToString(answers: string[]): SQL<unknown> {
+    const convertedAnswers = answers.reduce((acc, answer, index) => {
+      acc.push(`'${index + 1}'`, `'${answer}'`);
+      return acc;
+    }, [] as string[]);
 
-    const handler = questionTypeHandlers[questionType];
-
-    if (!handler) {
-      throw new NotAcceptableException("Unknown question type");
-    }
-
-    return sql`json_build_object(${sql.raw(handler(answers).join(","))})`;
+    return sql`json_build_object(${sql.raw(convertedAnswers.join(","))})`;
 
     // TODO: decide how handle lesson progress
     // await this.studentLessonProgressService.markLessonAsCompleted(questionData.lessonId, userId);
@@ -168,40 +261,5 @@ export class QuestionService {
     //   }
     // }
     // });
-  }
-
-  private handleChoiceAnswer(
-    answers: {
-      index: number;
-      value: string;
-    }[],
-  ) {
-    return answers.reduce((acc, answer, index) => {
-      acc.push(`'${index}'`, `'${answer.value}'`);
-      return acc;
-    }, [] as string[]);
-  }
-
-  private handleFillInTheBlanksAnswer(
-    answers: {
-      index: number;
-      value: string;
-    }[],
-  ) {
-    return answers.reduce((acc, answer) => {
-      if (typeof answer === "string") return acc;
-
-      acc.push(`'${answer.index}'`, `'${answer.value}'`);
-      return acc;
-    }, [] as string[]);
-  }
-
-  private handleOpenAnswer(
-    answers: {
-      index: number;
-      value: string;
-    }[],
-  ) {
-    return [`'1'`, `'${answers[0].value}'`];
   }
 }

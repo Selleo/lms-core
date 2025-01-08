@@ -162,17 +162,8 @@ const Courses = () => {
       accessorKey: "state",
       header: t("adminCoursesView.field.state"),
       cell: ({ row }) => (
-        <Badge variant={row.original.state === "published" ? "secondary" : "outline"}>
-          {row.original.state}
-        </Badge>
-      ),
-    },
-    {
-      accessorKey: "archived",
-      header: t("status"),
-      cell: ({ row }) => (
-        <Badge variant={row.original.archived ? "outline" : "secondary"}>
-          {row.original.archived ? t("common.other.archived") : t("common.other.active")}
+        <Badge variant={row.original.isPublished ? "secondary" : "outline"}>
+          {row.original.isPublished ? "Published" : "Draft"}
         </Badge>
       ),
     },

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
+import { useLeaveModal } from "~/context/LeaveModalContext";
 
 import { ContentTypes } from "../EditCourse.types";
 
@@ -10,11 +11,10 @@ import CourseLessonEmptyState from "./components/CourseLessonEmptyState";
 import NewChapter from "./NewChapter/NewChapter";
 import SelectLessonType from "./NewLesson/components/SelectLessonType";
 import FileLessonForm from "./NewLesson/FileLessonForm/FileLessonForm";
+import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
 import TextLessonForm from "./NewLesson/TextLessonForm/TextLessonForm";
 
 import type { Chapter, Lesson } from "../EditCourse.types";
-import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
-import { useLeaveModal } from "~/context/LeaveModalContext";
 import { useTranslation } from "react-i18next";
 
 interface CourseLessonsProps {

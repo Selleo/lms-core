@@ -6,10 +6,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "~/components/ui/accordion";
-import { Button } from "~/components/ui/button";
 import { formatWithPlural } from "~/lib/utils";
-import { ChapterCounter } from "~/modules/Courses/NewCourseView/components/ChapterCounter";
-import { CourseChapterLesson } from "~/modules/Courses/NewCourseView/CourseChapterLesson";
+import { ChapterCounter } from "~/modules/Courses/CourseView/components/ChapterCounter";
+import { CourseChapterLesson } from "~/modules/Courses/CourseView/CourseChapterLesson";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 

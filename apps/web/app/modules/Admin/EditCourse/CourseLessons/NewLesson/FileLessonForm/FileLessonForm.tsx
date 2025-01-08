@@ -5,17 +5,24 @@ import FileUploadInput from "~/components/FileUploadInput/FileUploadInput";
 import { FormTextareaField } from "~/components/Form/FormTextareaFiled";
 import { FormTextField } from "~/components/Form/FormTextField";
 import { Button } from "~/components/ui/button";
-import { Form, FormControl, FormItem, FormMessage } from "~/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Label } from "~/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 import { getFileTypeFromName } from "~/utils/getFileTypeFromName";
 
 import { ContentTypes, DeleteContentType } from "../../../EditCourse.types";
+import Breadcrumb from "../components/Breadcrumb";
 
 import { useFileLessonForm } from "./hooks/useFileLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
-import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import Breadcrumb from "../components/Breadcrumb";
 import { useTranslation } from "react-i18next";
 
 type FileLessonProps = {
@@ -25,6 +32,8 @@ type FileLessonProps = {
   lessonToEdit: Lesson | null;
   setSelectedLesson: (selectedLesson: Lesson | null) => void;
 };
+
+type SourceType = "upload" | "external";
 
 const FileLessonForm = ({
   contentTypeToDisplay,
@@ -44,6 +53,7 @@ const FileLessonForm = ({
   const fileType = form.watch("fileType");
   const { t } = useTranslation();
 
+  const isExternalUrl = form.watch("isExternal");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onCloseModal = () => {
@@ -57,11 +67,13 @@ const FileLessonForm = ({
   const handleFileUpload = useCallback(
     async (file: File) => {
       setIsUploading(true);
+
       try {
         const result = await uploadFile({ file, resource: "lesson" });
         setUrl(result.fileUrl);
         form.setValue("fileS3Key", result.fileKey);
         const fileType = getFileTypeFromName(file.name);
+
         if (fileType) {
           form.setValue("fileType", fileType);
         }
@@ -73,6 +85,14 @@ const FileLessonForm = ({
     },
     [uploadFile, form],
   );
+
+  const handleSourceTypeChange = (value: SourceType) => {
+    const isExternalUrlValue = value === "external" ? true : false;
+    form.setValue("isExternal", isExternalUrlValue);
+    form.setValue("fileS3Key", "");
+    setUrl("");
+  };
+
   useEffect(() => {
     form.setValue(
       "type",
@@ -120,23 +140,54 @@ const FileLessonForm = ({
             placeholder={t("adminCourseView.curriculum.lesson.placeholder.title")}
             required
           />
-          <FormItem>
-            <Label htmlFor="file" className="body-base-md text-neutral-950">
-              <span className="text-error-600">*</span>{" "}
-              {contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM
-                ? t("adminCourseView.curriculum.lesson.field.video")
-                : t("adminCourseView.curriculum.lesson.field.presentation")}
-            </Label>
-            <FormControl>
-              <FileUploadInput
-                handleFileUpload={handleFileUpload}
-                isUploading={isUploading}
-                contentTypeToDisplay={contentTypeToDisplay}
-                url={url}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
+          <FormField
+            control={form.control}
+            name="isExternal"
+            render={() => (
+              <FormItem>
+                <Label className="body-base-md text-neutral-950">Source Type</Label>
+                <Select
+                  value={isExternalUrl ? "external" : "upload"}
+                  onValueChange={(value: SourceType) => handleSourceTypeChange(value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select source type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="upload">Upload File</SelectItem>
+                    <SelectItem value="external">External (URL)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </FormItem>
+            )}
+          />
+          {isExternalUrl ? (
+            <FormTextField
+              control={form.control}
+              name="fileS3Key"
+              label="External URL"
+              placeholder="Enter URL..."
+              required
+            />
+          ) : (
+            <FormItem>
+              <Label htmlFor="file" className="body-base-md text-neutral-950">
+                <span className="text-error-600">*</span>{" "}
+                {contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM
+                  ? "Upload video"
+                  : "Upload presentation"}
+              </Label>
+              <FormControl>
+                <FileUploadInput
+                  handleFileUpload={handleFileUpload}
+                  isUploading={isUploading}
+                  contentTypeToDisplay={contentTypeToDisplay}
+                  url={url}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
           <FormTextareaField
             label="Description"
             name="description"

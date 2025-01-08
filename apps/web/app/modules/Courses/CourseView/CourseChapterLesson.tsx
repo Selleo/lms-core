@@ -1,8 +1,6 @@
-import { Link } from "@remix-run/react";
-
 import { ProgressBadge } from "~/components/Badges/ProgressBadge";
 import { Icon } from "~/components/Icon";
-import { LessonTypes, LessonTypesIcons } from "~/modules/Courses/NewCourseView/lessonTypes";
+import { LessonTypes, LessonTypesIcons } from "~/modules/Courses/CourseView/lessonTypes";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 

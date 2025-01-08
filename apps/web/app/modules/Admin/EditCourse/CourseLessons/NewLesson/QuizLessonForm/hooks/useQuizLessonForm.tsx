@@ -1,24 +1,22 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-
-import { quizLessonFormSchema } from "../validators/quizLessonFormSchema";
-
-import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
-import { useCreateQuizLesson } from "~/api/mutations/admin/useCreateQuizLesson";
-import { queryClient } from "~/api/queryClient";
-import {
-  Chapter,
-  ContentTypes,
-  Lesson,
-  LessonType,
-} from "~/modules/Admin/EditCourse/EditCourse.types";
-import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { useParams } from "@remix-run/react";
 import { useEffect } from "react";
-import { Question, QuestionOption, QuestionType } from "../QuizLessonForm.types";
-import { useUpdateQuizLesson } from "~/api/mutations/admin/useUpdateQuizLesson";
+import { useForm } from "react-hook-form";
+
+import { useCreateQuizLesson } from "~/api/mutations/admin/useCreateQuizLesson";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
+import { useUpdateQuizLesson } from "~/api/mutations/admin/useUpdateQuizLesson";
+import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
+import { queryClient } from "~/api/queryClient";
 import { useLeaveModal } from "~/context/LeaveModalContext";
+import { ContentTypes, LessonType } from "~/modules/Admin/EditCourse/EditCourse.types";
+
+import { QuestionType } from "../QuizLessonForm.types";
+import { quizLessonFormSchema } from "../validators/quizLessonFormSchema";
+
+import type { Question, QuestionOption } from "../QuizLessonForm.types";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
+import type { Chapter, Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type QuizLessonFormProps = {
   chapterToEdit: Chapter | null;
@@ -61,9 +59,7 @@ export const useQuizLessonForm = ({
               const option = question.options?.find((opt) => opt.displayOrder === displayOrder);
 
               if (option) {
-                const buttonHtml = `<button type="button" class="bg-primary-200 text-white px-4 rounded-xl cursor-pointer align-baseline">
-                  ${option.optionText} X
-                </button>`;
+                const buttonHtml = `<button type="button" class="bg-primary-200 text-white px-4 rounded-xl cursor-pointer align-baseline">${option.optionText} X</button>`;
 
                 processedDescription = processedDescription.replace(match[0], buttonHtml);
               }
@@ -74,7 +70,6 @@ export const useQuizLessonForm = ({
               type: question.type as QuestionType,
               description: processedDescription || undefined,
               photoS3Key: question.photoS3Key || undefined,
-              photoQuestionType: question.photoQuestionType || undefined,
               title: question.title,
               displayOrder: question.displayOrder,
               options: question.options?.map((option: QuestionOption) => ({
@@ -116,6 +111,22 @@ export const useQuizLessonForm = ({
     }
 
     const updatedQuestions = values.questions.map((question) => {
+      let updatedSolutionExplanation = question?.description;
+      const buttons = updatedSolutionExplanation?.match(/<button\b[^>]*>[\s\S]*?<\/button>/g);
+      if (buttons && question.options) {
+        question.options.sort((a, b) => a.displayOrder - b.displayOrder);
+
+        buttons.forEach((button, index) => {
+          if (question?.options?.[index]) {
+            const optionText = question?.options[index].optionText;
+            updatedSolutionExplanation = updatedSolutionExplanation?.replace(
+              button,
+              `<strong>${optionText}</strong>`,
+            );
+          }
+        });
+      }
+
       if (
         question.type ===
           (QuestionType.FILL_IN_THE_BLANKS_DND || QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
@@ -124,6 +135,7 @@ export const useQuizLessonForm = ({
         return {
           ...question,
           description: question.description.replace(/<button\b[^>]*>[\s\S]*?<\/button>/g, "[word]"),
+          solutionExplanation: updatedSolutionExplanation,
         };
       }
       return question;

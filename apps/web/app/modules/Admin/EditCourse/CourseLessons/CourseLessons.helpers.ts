@@ -1,5 +1,6 @@
 import { match } from "ts-pattern";
-import { QuestionType } from "./NewLesson/QuizLessonForm/QuizLessonForm.types";
+
+import { QuestionType } from "~/modules/Admin/EditCourse/CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
 
 export const mapItemType = (itemType: string | undefined): string =>
   match(itemType)

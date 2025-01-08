@@ -1,5 +1,5 @@
 import type { QuestionContent, TQuestionsForm } from "./types";
-import type { GetLessonResponse } from "~/api/generated-api";
+import type { GetLessonByIdResponse, GetLessonResponse } from "~/api/generated-api";
 
 export const getSummaryItems = (lesson: GetLessonResponse["data"]) => {
   const lessonItems = lesson.lessonItems;
@@ -32,21 +32,15 @@ export const getOrderedLessons = (lesson: GetLessonResponse["data"]) =>
 export const getQuestionsArray = (lesson: GetLessonResponse["data"]["lessonItems"]) =>
   lesson.filter((lesson) => lesson.lessonItemType === "question").map((item) => item.content.id);
 
-export const getUserAnswers = (lesson: GetLessonResponse["data"]): TQuestionsForm => {
-  const allQuestions = lesson.lessonItems
-    .filter((lesson) => lesson.lessonItemType === "question")
-    .map((item) => item.content) as QuestionContent[];
+export const getUserAnswers = (
+  questions: NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"],
+): TQuestionsForm => {
+  const singleQuestionsFromApi = questions.filter((question) => question.type === "single_choice");
 
-  const singleQuestionsFromApi = allQuestions.filter(
-    (question) => question.questionType === "single_choice",
-  );
+  const multiQuestionsFromApi = questions.filter((question) => question.type === "multiple_choice");
 
-  const multiQuestionsFromApi = allQuestions.filter(
-    (question) => question.questionType === "multiple_choice",
-  );
-
-  const openQuestionsFromApi = allQuestions.filter(
-    (question) => question.questionType === "open_answer",
+  const openQuestionsFromApi = questions.filter((question) =>
+    ["brief_response", "detailed_response"].includes(question.type),
   );
 
   const singleAnswerQuestions = prepareQuestions(singleQuestionsFromApi);
@@ -63,9 +57,9 @@ export const getUserAnswers = (lesson: GetLessonResponse["data"]): TQuestionsFor
 const prepareQuestions = (questions: QuestionContent[]): Record<string, Record<string, string>> =>
   questions.reduce(
     (acc, question) => {
-      acc[question.id] = question.questionAnswers.reduce(
-        (innerAcc, item) => {
-          innerAcc[item.id ?? 0] = item.isStudentAnswer ? `${item.id}` : "";
+      acc[question.id] = question.options.reduce(
+        (innerAcc, option) => {
+          innerAcc[option.id ?? "0"] = option.isstudentanswer ? `${option.id}` : "";
           return innerAcc;
         },
         {} as Record<string, string>,
@@ -78,8 +72,8 @@ const prepareQuestions = (questions: QuestionContent[]): Record<string, Record<s
 const prepareOpenQuestions = (questions: QuestionContent[]) =>
   questions.reduce(
     (acc, question) => {
-      const studentAnswer = question.questionAnswers?.[0]?.optionText;
-      const isStudentAnswer = question.questionAnswers?.[0]?.isStudentAnswer;
+      const studentAnswer = question.options?.[0]?.optionText;
+      const isStudentAnswer = question.options?.[0]?.isstudentanswer;
       acc[question.id] = isStudentAnswer ? (studentAnswer as unknown as string) : "";
       return acc;
     },

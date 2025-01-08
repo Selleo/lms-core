@@ -1,26 +1,32 @@
-import { useCallback } from "react";
-import { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
-import { QuestionOption } from "../QuizLessonForm.types";
-import { UseFormReturn } from "react-hook-form";
-import { Label } from "~/components/ui/label";
-import { SortableList } from "~/components/SortableList";
+import { useCallback, useState } from "react";
+
 import { Icon } from "~/components/Icon";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { SortableList } from "~/components/SortableList";
+import { Accordion, AccordionItem } from "~/components/ui/accordion";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { Accordion, AccordionItem } from "~/components/ui/accordion";
+import { Label } from "~/components/ui/label";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
 
-type ScaleQustionProps = {
+
+import type { QuestionOption } from "../QuizLessonForm.types";
+import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
+import type { UseFormReturn } from "react-hook-form";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
+
+type ScaleQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
   questionIndex: number;
 };
 
-const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
+const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
   const questionType = form.getValues(`questions.${questionIndex}.type`);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
   const { t } = useTranslation();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
@@ -62,6 +68,11 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
     },
     [form, questionIndex, questionType],
   );
+
+  const onDeleteQuestion = () => {
+    handleRemoveQuestion();
+    setIsDeleteModalOpen(false);
+  };
 
   const isOptionEmpty =
     !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||
@@ -161,9 +172,9 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
               />
             )}
           </div>
-          {errors && (
+          {errors?.questions?.[questionIndex] && (
             <p className="text-red-500 text-sm ml-14">
-              {(errors?.questions as { options?: { message?: string } })?.options?.message}
+              {errors?.questions?.[questionIndex]?.options?.message}
             </p>
           )}
           <div className="mt-4 ml-14 flex gap-2">
@@ -173,11 +184,17 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQustionProps) => {
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
-              onClick={handleRemoveQuestion}
+              onClick={() => setIsDeleteModalOpen(false)}
             >
               {t("deleteQuestion")}
             </Button>
           </div>
+          <DeleteConfirmationModal
+            open={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            onDelete={onDeleteQuestion}
+            contentType={DeleteContentType.QUESTION}
+          />
         </div>
       </AccordionItem>
     </Accordion>

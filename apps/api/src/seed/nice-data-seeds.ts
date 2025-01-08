@@ -70,21 +70,25 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "flexbox",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "color properties",
                     isCorrect: true,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "grid",
                     isCorrect: false,
                     displayOrder: 3,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "flex",
                     isCorrect: false,
                     displayOrder: 4,
@@ -115,21 +119,25 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<a>",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<link>",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<button>",
                     isCorrect: false,
                     displayOrder: 3,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<input>",
                     isCorrect: false,
                     displayOrder: 4,
@@ -161,21 +169,25 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<img>",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<picture>",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<video>",
                     isCorrect: false,
                     displayOrder: 3,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<audio>",
                     isCorrect: false,
                     displayOrder: 4,
@@ -190,31 +202,37 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 2,
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<html>",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<head>",
                     isCorrect: true,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<body>",
                     isCorrect: true,
                     displayOrder: 3,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<title>",
                     isCorrect: true,
                     displayOrder: 4,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<h1>",
                     isCorrect: false,
                     displayOrder: 5,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<p>",
                     isCorrect: false,
                     displayOrder: 6,
@@ -228,21 +246,25 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 3,
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<a>",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<link>",
                     isCorrect: false,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<button>",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "<input>",
                     isCorrect: false,
                     displayOrder: 3,
@@ -257,26 +279,31 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 4,
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "alt",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "src",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "width",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "height",
                     isCorrect: false,
                     displayOrder: 3,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "srcset",
                     isCorrect: false,
                     displayOrder: 4,
@@ -293,36 +320,43 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>CSS is used to style <strong>HTML</strong>, while JavaScript is used to add <strong>interactivity</strong> to web pages.</p>",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "HTML",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "interactivity",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "styles",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "functions",
                     isCorrect: false,
                     displayOrder: 3,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "content",
                     isCorrect: false,
                     displayOrder: 4,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "elements",
                     isCorrect: false,
                     displayOrder: 5,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "animations",
                     isCorrect: false,
                     displayOrder: 6,
@@ -339,11 +373,13 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "flexbox",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "color properties",
                     isCorrect: true,
                     displayOrder: 1,
@@ -360,11 +396,13 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>In JavaScript, <strong>variables</strong> are used to store data, while <strong>functions</strong> are used to perform actions.</p>",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "variables",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "functions",
                     isCorrect: true,
                     displayOrder: 1,
@@ -396,21 +434,25 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Which CSS property is used to change the text color of an element?",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "color",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "text-color",
                     isCorrect: false,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "font-color",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "text-style",
                     isCorrect: false,
                     displayOrder: 3,
@@ -424,26 +466,31 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 2,
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: ".class-name",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "#id-name",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "element",
                     isCorrect: true,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "[attribute]",
                     isCorrect: true,
                     displayOrder: 3,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "$variable",
                     isCorrect: false,
                     displayOrder: 4,
@@ -460,21 +507,25 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 3,
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "flexbox",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "color properties",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "grid",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "flex",
                     isCorrect: false,
                     displayOrder: 3,
@@ -490,11 +541,13 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>To center an element horizontally, you can use 'margin: <strong>0 auto</strong>;'.</p>",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "0",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "auto",
                     isCorrect: true,
                     displayOrder: 1,
@@ -561,21 +614,25 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "flexbox",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "color properties",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "grid",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "flex",
                     isCorrect: false,
                     displayOrder: 3,
@@ -653,11 +710,13 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>In Java, <strong>classes</strong> are used to define the blueprint of objects, while <strong>objects</strong> are instances of these blueprints.</p>",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "classes",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "objects",
                     isCorrect: true,
                     displayOrder: 1,
@@ -684,11 +743,13 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>In Android development, <strong>layouts</strong> are used to define the user interface, while <strong>activities</strong> handle user interactions and app logic.</p>",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "layouts",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "activities",
                     isCorrect: true,
                     displayOrder: 1,
@@ -718,21 +779,25 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Which keyword is used to create a new instance of a class in Java?",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "new",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "create",
                     isCorrect: false,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "instance",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "object",
                     isCorrect: false,
                     displayOrder: 3,
@@ -763,21 +828,25 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Which of the following is the entry point of an Android application?",
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "Activity",
                     isCorrect: true,
                     displayOrder: 0,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "Service",
                     isCorrect: false,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "BroadcastReceiver",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "ContentProvider",
                     isCorrect: false,
                     displayOrder: 3,
@@ -834,10 +903,15 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which keyword is used to declare a variable in Kotlin?",
                 options: [
-                  { optionText: "var", isCorrect: true, displayOrder: 0 },
-                  { optionText: "val", isCorrect: false, displayOrder: 1 },
-                  { optionText: "let", isCorrect: false, displayOrder: 2 },
-                  { optionText: "data", isCorrect: false, displayOrder: 3 },
+                  { id: crypto.randomUUID(), optionText: "var", isCorrect: true, displayOrder: 0 },
+                  { id: crypto.randomUUID(), optionText: "val", isCorrect: false, displayOrder: 1 },
+                  { id: crypto.randomUUID(), optionText: "let", isCorrect: false, displayOrder: 2 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "data",
+                    isCorrect: false,
+                    displayOrder: 3,
+                  },
                 ],
               },
             ],
@@ -881,8 +955,8 @@ export const niceCourses: NiceCourseData[] = [
                 description:
                   "<p>In Kotlin, <strong>val</strong> are immutable variables, while <strong>var</strong> are mutable variables.</p>",
                 options: [
-                  { optionText: "val", isCorrect: true, displayOrder: 0 },
-                  { optionText: "var", isCorrect: true, displayOrder: 1 },
+                  { id: crypto.randomUUID(), optionText: "val", isCorrect: true, displayOrder: 0 },
+                  { id: crypto.randomUUID(), optionText: "var", isCorrect: true, displayOrder: 1 },
                 ],
               },
             ],
@@ -955,8 +1029,13 @@ export const niceCourses: NiceCourseData[] = [
                 description:
                   "<p>In arithmetic, <strong>sum</strong> is the result of addition, while <strong>difference</strong> is the result of subtraction.</p>",
                 options: [
-                  { optionText: "sum", isCorrect: true, displayOrder: 0 },
-                  { optionText: "difference", isCorrect: true, displayOrder: 1 },
+                  { id: crypto.randomUUID(), optionText: "sum", isCorrect: true, displayOrder: 0 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "difference",
+                    isCorrect: true,
+                    displayOrder: 1,
+                  },
                 ],
               },
             ],
@@ -998,10 +1077,30 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which formula is used to calculate the area of a rectangle?",
                 options: [
-                  { optionText: "length × width", isCorrect: true, displayOrder: 0 },
-                  { optionText: "length + width", isCorrect: false, displayOrder: 1 },
-                  { optionText: "length × height", isCorrect: false, displayOrder: 2 },
-                  { optionText: "2 × (length + width)", isCorrect: false, displayOrder: 3 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "length × width",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "length + width",
+                    isCorrect: false,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "length × height",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "2 × (length + width)",
+                    isCorrect: false,
+                    displayOrder: 3,
+                  },
                 ],
               },
             ],
@@ -1039,8 +1138,18 @@ export const niceCourses: NiceCourseData[] = [
                 description:
                   "<p>In algebra, <strong>variables</strong> represent unknown values, while <strong>expressions</strong> are mathematical phrases that combine numbers and variables.</p>",
                 options: [
-                  { optionText: "variables", isCorrect: true, displayOrder: 0 },
-                  { optionText: "expressions", isCorrect: true, displayOrder: 1 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "variables",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "expressions",
+                    isCorrect: true,
+                    displayOrder: 1,
+                  },
                 ],
               },
             ],
@@ -1075,10 +1184,25 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Which of the following is an example of a geometric shape?",
                 displayOrder: 1,
                 options: [
-                  { optionText: "Triangle", isCorrect: true, displayOrder: 1 },
-                  { optionText: "Variable", isCorrect: false, displayOrder: 2 },
-                  { optionText: "Equation", isCorrect: false, displayOrder: 3 },
-                  { optionText: "Sum", isCorrect: false, displayOrder: 4 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Triangle",
+                    isCorrect: true,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Variable",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Equation",
+                    isCorrect: false,
+                    displayOrder: 3,
+                  },
+                  { id: crypto.randomUUID(), optionText: "Sum", isCorrect: false, displayOrder: 4 },
                 ],
               },
               {
@@ -1087,11 +1211,36 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Which operations are included in basic arithmetic? (Select all that apply)",
                 displayOrder: 2,
                 options: [
-                  { optionText: "Addition", isCorrect: true, displayOrder: 1 },
-                  { optionText: "Subtraction", isCorrect: true, displayOrder: 2 },
-                  { optionText: "Multiplication", isCorrect: true, displayOrder: 3 },
-                  { optionText: "Division", isCorrect: true, displayOrder: 4 },
-                  { optionText: "Integration", isCorrect: false, displayOrder: 5 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Addition",
+                    isCorrect: true,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Subtraction",
+                    isCorrect: true,
+                    displayOrder: 2,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Multiplication",
+                    isCorrect: true,
+                    displayOrder: 3,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Division",
+                    isCorrect: true,
+                    displayOrder: 4,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Integration",
+                    isCorrect: false,
+                    displayOrder: 5,
+                  },
                 ],
               },
               {
@@ -1103,8 +1252,18 @@ export const niceCourses: NiceCourseData[] = [
                   "<p>In algebra, <strong>variables</strong> are used to represent unknowns, while <strong>equations</strong> can be solved to find their values.</p>",
                 displayOrder: 3,
                 options: [
-                  { optionText: "variables", isCorrect: true, displayOrder: 1 },
-                  { optionText: "equations", isCorrect: true, displayOrder: 2 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "variables",
+                    isCorrect: true,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "equations",
+                    isCorrect: true,
+                    displayOrder: 2,
+                  },
                 ],
               },
             ],
@@ -1182,8 +1341,8 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Fill in the blanks: 'She [word] to the store yesterday.'",
                 description: "<p>She <strong>went</strong> to the store yesterday.</p>",
                 options: [
-                  { optionText: "went", isCorrect: true, displayOrder: 0 },
-                  { optionText: "go", isCorrect: false, displayOrder: 1 },
+                  { id: crypto.randomUUID(), optionText: "went", isCorrect: true, displayOrder: 0 },
+                  { id: crypto.randomUUID(), optionText: "go", isCorrect: false, displayOrder: 1 },
                 ],
               },
             ],
@@ -1232,9 +1391,19 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which word is the synonym of 'happy'?",
                 options: [
-                  { optionText: "Joyful", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Sad", isCorrect: false, displayOrder: 1 },
-                  { optionText: "Angry", isCorrect: false, displayOrder: 2 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Joyful",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  { id: crypto.randomUUID(), optionText: "Sad", isCorrect: false, displayOrder: 1 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Angry",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
                 ],
               },
             ],
@@ -1252,8 +1421,13 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "I [word] to the park every day.",
                 options: [
-                  { optionText: "go", isCorrect: true, displayOrder: 0 },
-                  { optionText: "went", isCorrect: false, displayOrder: 1 },
+                  { id: crypto.randomUUID(), optionText: "go", isCorrect: true, displayOrder: 0 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "went",
+                    isCorrect: false,
+                    displayOrder: 1,
+                  },
                 ],
               },
             ],
@@ -1297,9 +1471,9 @@ export const niceCourses: NiceCourseData[] = [
                 title:
                   "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
                 options: [
-                  { optionText: "Th", isCorrect: true, displayOrder: 0 },
-                  { optionText: "S", isCorrect: false, displayOrder: 1 },
-                  { optionText: "K", isCorrect: false, displayOrder: 2 },
+                  { id: crypto.randomUUID(), optionText: "Th", isCorrect: true, displayOrder: 0 },
+                  { id: crypto.randomUUID(), optionText: "S", isCorrect: false, displayOrder: 1 },
+                  { id: crypto.randomUUID(), optionText: "K", isCorrect: false, displayOrder: 2 },
                 ],
               },
             ],
@@ -1324,7 +1498,14 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "I love [word] (swimming/swim).",
                 description: "I love <strong>swimming</strong> (swimming/swim).",
-                options: [{ optionText: "swimming", isCorrect: true, displayOrder: 0 }],
+                options: [
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "swimming",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                ],
               },
             ],
           },
@@ -1351,9 +1532,24 @@ export const niceCourses: NiceCourseData[] = [
                 title:
                   "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
                 options: [
-                  { optionText: "Adverb", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Verb", isCorrect: false, displayOrder: 1 },
-                  { optionText: "Adjective", isCorrect: false, displayOrder: 2 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Adverb",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Verb",
+                    isCorrect: false,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Adjective",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
                 ],
               },
             ],
@@ -1372,8 +1568,13 @@ export const niceCourses: NiceCourseData[] = [
                 title: "She [word] to the park every day.",
                 description: "She <strong>went</strong> to the park every day.",
                 options: [
-                  { optionText: "goes", isCorrect: true, displayOrder: 0 },
-                  { optionText: "went", isCorrect: false, displayOrder: 1 },
+                  { id: crypto.randomUUID(), optionText: "goes", isCorrect: true, displayOrder: 0 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "went",
+                    isCorrect: false,
+                    displayOrder: 1,
+                  },
                 ],
               },
             ],
@@ -1391,8 +1592,18 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "What is the plural form of 'child'?",
                 options: [
-                  { optionText: "Children", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Childs", isCorrect: false, displayOrder: 1 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Children",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Childs",
+                    isCorrect: false,
+                    displayOrder: 1,
+                  },
                 ],
               },
             ],
@@ -1410,9 +1621,14 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which of these words is a conjunction?",
                 options: [
-                  { optionText: "And", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Run", isCorrect: false, displayOrder: 1 },
-                  { optionText: "Quickly", isCorrect: false, displayOrder: 2 },
+                  { id: crypto.randomUUID(), optionText: "And", isCorrect: true, displayOrder: 0 },
+                  { id: crypto.randomUUID(), optionText: "Run", isCorrect: false, displayOrder: 1 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Quickly",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
                 ],
               },
             ],
@@ -1465,21 +1681,25 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 options: [
                   {
+                    id: crypto.randomUUID(),
                     optionText: "Relative clauses are used to modify nouns",
                     isCorrect: true,
                     displayOrder: 1,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "Relative clauses are used to introduce new information",
                     isCorrect: false,
                     displayOrder: 2,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "Noun clauses are used to modify nouns",
                     isCorrect: false,
                     displayOrder: 3,
                   },
                   {
+                    id: crypto.randomUUID(),
                     optionText: "Noun clauses are used to introduce new information",
                     isCorrect: false,
                     displayOrder: 4,
@@ -1510,8 +1730,8 @@ export const niceCourses: NiceCourseData[] = [
                 title: "The book [word] I borrowed yesterday was fascinating.",
                 description: "The book <strong>that</strong> I borrowed yesterday was fascinating.",
                 options: [
-                  { optionText: "that", isCorrect: true, displayOrder: 0 },
-                  { optionText: "who", isCorrect: false, displayOrder: 1 },
+                  { id: crypto.randomUUID(), optionText: "that", isCorrect: true, displayOrder: 0 },
+                  { id: crypto.randomUUID(), optionText: "who", isCorrect: false, displayOrder: 1 },
                 ],
               },
             ],
@@ -1560,9 +1780,19 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "Which word is an example of academic vocabulary?",
                 options: [
-                  { optionText: "Analyze", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Run", isCorrect: false, displayOrder: 1 },
-                  { optionText: "Quick", isCorrect: false, displayOrder: 2 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Analyze",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  { id: crypto.randomUUID(), optionText: "Run", isCorrect: false, displayOrder: 1 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Quick",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
                 ],
               },
             ],
@@ -1580,7 +1810,14 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "The results [word] the hypothesis.",
                 description: "The results <strong>support</strong> the hypothesis.",
-                options: [{ optionText: "support", isCorrect: true, displayOrder: 0 }],
+                options: [
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "support",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                ],
               },
             ],
           },
@@ -1635,7 +1872,14 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.FillInTheBlanksDnd,
                 title: "She was [word] when she heard the good news.",
                 description: "She was <strong>over the moon</strong> when she heard the good news.",
-                options: [{ optionText: "over the moon", isCorrect: true, displayOrder: 0 }],
+                options: [
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "over the moon",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                ],
               },
             ],
           },
@@ -1696,10 +1940,30 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.SingleChoice,
                 title: "What is the primary goal of AI in business?",
                 options: [
-                  { optionText: "Replace human workers", isCorrect: false, displayOrder: 0 },
-                  { optionText: "Automate repetitive tasks", isCorrect: false, displayOrder: 1 },
-                  { optionText: "Improve decision-making", isCorrect: true, displayOrder: 2 },
-                  { optionText: "Eliminate operational costs", isCorrect: false, displayOrder: 3 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Replace human workers",
+                    isCorrect: false,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Automate repetitive tasks",
+                    isCorrect: false,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Improve decision-making",
+                    isCorrect: true,
+                    displayOrder: 2,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Eliminate operational costs",
+                    isCorrect: false,
+                    displayOrder: 3,
+                  },
                 ],
               },
             ],
@@ -1718,10 +1982,30 @@ export const niceCourses: NiceCourseData[] = [
                 title:
                   "Which of the following are applications of AI in business? (Select all that apply)",
                 options: [
-                  { optionText: "Customer service chatbots", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Predictive analytics", isCorrect: true, displayOrder: 1 },
-                  { optionText: "Supply chain optimization", isCorrect: true, displayOrder: 2 },
-                  { optionText: "Space exploration tools", isCorrect: false, displayOrder: 3 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Customer service chatbots",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Predictive analytics",
+                    isCorrect: true,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Supply chain optimization",
+                    isCorrect: true,
+                    displayOrder: 2,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Space exploration tools",
+                    isCorrect: false,
+                    displayOrder: 3,
+                  },
                 ],
               },
             ],
@@ -1739,8 +2023,18 @@ export const niceCourses: NiceCourseData[] = [
                 type: QuestionType.TrueOrFalse,
                 title: "AI can function without any data input from humans.",
                 options: [
-                  { optionText: "True", isCorrect: false, displayOrder: 0 },
-                  { optionText: "False", isCorrect: true, displayOrder: 1 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "True",
+                    isCorrect: false,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "False",
+                    isCorrect: true,
+                    displayOrder: 1,
+                  },
                 ],
               },
             ],
@@ -1755,12 +2049,27 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.PhotoQuestion,
+                type: QuestionType.PhotoQuestionSingleChoice,
                 title: "Which image represents an AI-driven chatbot?",
                 options: [
-                  { optionText: "Image 1 (Chatbot Interface)", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Image 2 (Calculator)", isCorrect: false, displayOrder: 1 },
-                  { optionText: "Image 3 (Spreadsheet)", isCorrect: false, displayOrder: 2 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Image 1 (Chatbot Interface)",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Image 2 (Calculator)",
+                    isCorrect: false,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Image 3 (Spreadsheet)",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
                 ],
               },
             ],
@@ -1779,11 +2088,36 @@ export const niceCourses: NiceCourseData[] = [
                 title:
                   "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
                 options: [
-                  { optionText: "Intelligence", isCorrect: true, displayOrder: 0 },
-                  { optionText: "Automation", isCorrect: false, displayOrder: 1 },
-                  { optionText: "Learning", isCorrect: false, displayOrder: 2 },
-                  { optionText: "Human", isCorrect: true, displayOrder: 3 },
-                  { optionText: "Animal", isCorrect: false, displayOrder: 4 },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Intelligence",
+                    isCorrect: true,
+                    displayOrder: 0,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Automation",
+                    isCorrect: false,
+                    displayOrder: 1,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Learning",
+                    isCorrect: false,
+                    displayOrder: 2,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Human",
+                    isCorrect: true,
+                    displayOrder: 3,
+                  },
+                  {
+                    id: crypto.randomUUID(),
+                    optionText: "Animal",
+                    isCorrect: false,
+                    displayOrder: 4,
+                  },
                 ],
               },
             ],

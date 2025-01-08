@@ -157,7 +157,8 @@ export const ChapterCard = ({
             <button
               className={cn("text-xs mt-auto inline-flex self-start font-medium", buttonColorClass)}
             >
-              {buttonText} <Icon name="CaretRight" className="w-3 h-3 ml-1" />
+              {/*TODO: Change icon*/}
+              {buttonText} <Icon name="CarretDown" className="w-3 h-3 ml-1" />
             </button>
           </div>
         </Link>

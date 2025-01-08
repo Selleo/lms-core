@@ -1,14 +1,16 @@
 import { AccordionTrigger } from "@radix-ui/react-accordion";
+import { useCallback } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Input } from "~/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 
-import { Question, QuestionIcons, QuestionType } from "../QuizLessonForm.types";
+import { mapQuestionTypeToLabel } from "../../../CourseLessons.helpers";
+import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
+
+import type { Question } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "~/components/ui/tooltip";
-import { mapQuestionTypeToLabel } from "../../../CourseLessons.helpers";
-import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
 interface QuestionTitleProps {
@@ -38,7 +40,8 @@ const QuestionTitle = ({
     [QuestionType.TRUE_OR_FALSE]: QuestionIcons.TrueOrFalse,
     [QuestionType.BRIEF_RESPONSE]: QuestionIcons.BriefResponse,
     [QuestionType.DETAILED_RESPONSE]: QuestionIcons.DetailedResponse,
-    [QuestionType.PHOTO_QUESTION]: QuestionIcons.PhotoQuestion,
+    [QuestionType.PHOTO_QUESTION_SINGLE_CHOICE]: QuestionIcons.PhotoQuestion,
+    [QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE]: QuestionIcons.PhotoQuestion,
     [QuestionType.FILL_IN_THE_BLANKS_TEXT]: QuestionIcons.FillInTheBlanks,
     [QuestionType.FILL_IN_THE_BLANKS_DND]: QuestionIcons.FillInTheBlanks,
     [QuestionType.MATCH_WORDS]: QuestionIcons.MatchWords,
@@ -63,6 +66,7 @@ const QuestionTitle = ({
     },
     [form, questionIndex, questionType],
   );
+
   return (
     <div className="flex items-center gap-2 p-2 border-neutral-200">
       {dragTrigger}

@@ -17,9 +17,9 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 
-import { useAddCourseForm } from "./hooks/useAddCourseForm";
 import Breadcrumb from "./components/Breadcrumb";
 import { useTranslation } from "react-i18next";
+import { useAddCourseForm } from "./hooks/useAddCourseForm";
 
 const AddCourse = () => {
   const { form, onSubmit } = useAddCourseForm();

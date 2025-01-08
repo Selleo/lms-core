@@ -172,7 +172,6 @@ const Users = () => {
   const selectedUsers = table.getSelectedRowModel().rows.map((row) => row.original.id);
 
   const handleDeleteUsers = () => {
-    console.log(selectedUsers);
     deleteUsers({ data: { userIds: selectedUsers } }).then(() => {
       table.resetRowSelection();
       queryClient.invalidateQueries(usersQueryOptions());

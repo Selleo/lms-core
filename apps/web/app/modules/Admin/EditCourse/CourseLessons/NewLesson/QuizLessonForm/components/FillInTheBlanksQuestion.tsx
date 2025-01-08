@@ -2,7 +2,7 @@ import * as Accordion from "@radix-ui/react-accordion";
 import { Color } from "@tiptap/extension-color";
 import Highlight from "@tiptap/extension-highlight";
 import TextStyle from "@tiptap/extension-text-style";
-import { EditorContent, useEditor, Node } from "@tiptap/react";
+import { EditorContent, Node, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
 
@@ -11,17 +11,12 @@ import { Button } from "~/components/ui/button";
 import { FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { cn } from "~/lib/utils";
+
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
-import { QuestionType } from "../QuizLessonForm.types";
-import { cn } from "~/lib/utils";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 import { useTranslation } from "react-i18next";
 
 type FillInTheBlankQuestionProps = {
@@ -60,6 +55,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   const [addedWords, setAddedWords] = useState<string[]>([]);
   const errors = form.formState.errors;
   const { t } = useTranslation();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -73,6 +69,11 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   });
 
   const currentOptions = form.getValues(`questions.${questionIndex}.options`) || [];
+
+  const onDeleteQuestion = () => {
+    handleRemoveQuestion();
+    setIsDeleteModalOpen(false);
+  };
 
   const handleDragStart = (word: string, e: React.DragEvent) => {
     e.dataTransfer.setData("text", word);
@@ -92,11 +93,31 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   }
 
   const handleRemoveWord = (index: number) => {
+    const wordToRemove = currentOptions[index]?.optionText;
+
     const updatedOptions = currentOptions.filter((_, i) => i !== index);
     form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
-      shouldValidate: true,
       shouldDirty: true,
     });
+
+    if (wordToRemove && editor) {
+      const currentContent = editor.getHTML();
+
+      const escapedWord = wordToRemove.replace(/[.*+?^=!:${}()|[\]/\\]/g, "\\$&");
+
+      const buttonRegex = new RegExp(
+        `<button[^>]*class="[^"]*bg-primary-200[^"]*"[^>]*>[^<]*${escapedWord}[^<]*<\/button>`,
+        "gi",
+      );
+
+      const updatedContent = currentContent.replace(buttonRegex, "");
+
+      editor.commands.setContent(updatedContent);
+
+      form.setValue(`questions.${questionIndex}.description`, updatedContent, {
+        shouldDirty: true,
+      });
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -107,10 +128,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     if (containsButtonWithWord(word)) return;
 
-    const buttonHTML = `<button type="button" class="bg-primary-200 text-white px-4 rounded-xl cursor-pointer align-baseline">
-    ${word}
-    <span class="text-white cursor-pointer" data-word="${word}" onmousedown="event.preventDefault(); handleDelete(event)">X</span>
-  </button>`;
+    const buttonHTML = `<button type="button" class="bg-primary-200 text-white px-4 rounded-xl cursor-pointer align-baseline">${word} <span class="text-white cursor-pointer" data-word="${word}" onmousedown="event.preventDefault(); handleDelete(event)">X</span></button>`;
 
     editor.chain().focus().insertContent(buttonHTML).run();
 
@@ -139,7 +157,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     });
 
     form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
-      shouldValidate: true,
       shouldDirty: true,
     });
 
@@ -187,11 +204,28 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   }, [editor, form, questionIndex]);
 
   useEffect(() => {
-    if (editor && form.getValues(`questions.${questionIndex}.description`) !== editor.getHTML()) {
-      const content = form.getValues(`questions.${questionIndex}.description`);
-      editor.commands.setContent(content as string);
-    }
-  }, [form.getValues(`questions.${questionIndex}.description`), editor, questionIndex, form]);
+    if (!editor) return;
+
+    const currentDescription = form.getValues(`questions.${questionIndex}.description`);
+
+    const regex = /<button[^>]*class="[^"]*bg-primary-200[^"]*"[^>]*>([^<]+)<\/button>/g;
+    const buttonValues = currentDescription
+      ? [...currentDescription.matchAll(regex)]
+          .map((match) => match[1]?.trim() || "")
+          .map((text) => text.replace(/\n/g, "").split(" ")[0])
+      : [];
+
+    const updatedOptions = form.getValues(`questions.${questionIndex}.options`)?.map((option) => {
+      return {
+        ...option,
+        isCorrect: buttonValues.includes(option.optionText),
+      };
+    });
+
+    form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
+      shouldDirty: true,
+    });
+  }, [form.getValues(`questions.${questionIndex}.description`), form, questionIndex]);
 
   useEffect(() => {
     if (!editor) return;
@@ -217,7 +251,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               option.optionText === optionValue ? { ...option, isCorrect: false } : option,
             );
           form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
-            shouldValidate: true,
             shouldDirty: true,
           });
         }
@@ -244,7 +277,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
           });
 
         form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
-          shouldValidate: true,
           shouldDirty: true,
         });
       }
@@ -256,6 +288,13 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       editor.view.dom.removeEventListener("click", handleEditorClick);
     };
   }, [editor, form, questionIndex]);
+
+  useEffect(() => {
+    const editorElement = document.querySelector(".ProseMirror") as HTMLElement;
+    if (editorElement) {
+      editorElement.style.minHeight = "200px";
+    }
+  }, []);
 
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
@@ -323,13 +362,12 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               )}
             </div>
             <>
-              {errors && (
+              {errors?.questions?.[questionIndex] && (
                 <p className="text-red-500 text-sm ml-">
-                  {(errors?.questions as { options?: { message?: string } })?.options?.message}
+                  {errors?.questions?.[questionIndex]?.options?.message}
                 </p>
               )}
             </>
-
             <FormField
               control={form.control}
               name={`questions.${questionIndex}.description`}
@@ -342,22 +380,33 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                   <FormControl>
                     <EditorContent
                       editor={editor}
-                      className="w-full h-40 p-4 border border-gray-300 rounded-lg bg-white text-black"
+                      className="w-full h-full min-h-[200px] p-4 border border-gray-300 rounded-lg bg-white text-black overflow-y-auto focus:outline-none focus:ring-0 focus:border-none"
                       onDrop={handleDrop}
+                      onClick={() => editor?.commands.focus()}
                     />
                   </FormControl>
-                  <FormMessage />
+                  {errors?.questions?.[questionIndex]?.description && (
+                    <p className="text-red-500 text-sm">
+                      {errors?.questions?.[questionIndex]?.description?.message}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
             <Button
               type="button"
               className="text-error-700 bg-color-white mb-4 border border-neutral-300 mt-4"
-              onClick={handleRemoveQuestion}
+              onClick={() => setIsDeleteModalOpen(true)}
             >
               {t("deleteQuestion")}
             </Button>
           </div>
+          <DeleteConfirmationModal
+            open={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            onDelete={onDeleteQuestion}
+            contentType={DeleteContentType.QUESTION}
+          />
         </div>
       </Accordion.Item>
     </Accordion.Root>

@@ -3,9 +3,10 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
-import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 import { cn } from "~/lib/utils";
 import { useTranslation } from "react-i18next";
+
+import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 
 type QuestionSelectorProps = {
   addQuestion: (questionType: QuestionType) => void;
@@ -41,32 +42,32 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
     },
     { type: QuestionType.TRUE_OR_FALSE, label: t("trueOrFalse"), icon: QuestionIcons.TrueOrFalse },
     {
-      type: QuestionType.PHOTO_QUESTION,
+      type: QuestionType.PHOTO_QUESTION_SINGLE_CHOICE,
       label: t("photoQuestion"),
       icon: QuestionIcons.PhotoQuestion,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_DND,
-      label: t("fillInTheBlanksDragAndDrop"),
+      label: "Fill in the blanks",
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_TEXT,
-      label: t("fillInTheBlanksText"),
+      label: "Gap fill",
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.BRIEF_RESPONSE,
-      label: t("briefResponse"),
+      label: "Short answer",
       icon: QuestionIcons.BriefResponse,
     },
     {
       type: QuestionType.DETAILED_RESPONSE,
-      label: t("detailedResponse"),
+      label: "Free text",
       icon: QuestionIcons.DetailedResponse,
     },
-    { type: QuestionType.MATCH_WORDS, label: t("matchWords"), icon: QuestionIcons.MatchWords },
-    { type: QuestionType.SCALE_1_5, label: t("scale_1_5"), icon: QuestionIcons.Scale_1_5 },
+    { type: QuestionType.MATCH_WORDS, label: "Matching", icon: QuestionIcons.MatchWords },
+    { type: QuestionType.SCALE_1_5, label: "Scale 1 to 5", icon: QuestionIcons.Scale_1_5 },
   ];
 
   useEffect(() => {
@@ -79,7 +80,6 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
       setOpenUpwards(spaceAbove > spaceBelow);
     }
   }, [showOptions]);
-
   return (
     <div className="relative mt-4">
       <Button
@@ -103,17 +103,19 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
           <p className="block p-2 text-left text-black border-b border-gray-300 body-base-md w-full">
             {t("selectQuestionType")}
           </p>
-          {questionTypes.map(({ type, label, icon }) => (
-            <Button
-              key={type}
-              className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
-              type="button"
-              onClick={() => onTypeChoose(type)}
-            >
-              <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
-              {label}
-            </Button>
-          ))}
+          {questionTypes.map(({ type, label, icon }) => {
+            return (
+              <Button
+                key={type}
+                className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
+                type="button"
+                onClick={() => onTypeChoose(type)}
+              >
+                <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
+                {label}
+              </Button>
+            );
+          })}
         </Card>
       )}
     </div>

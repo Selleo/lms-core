@@ -10,10 +10,10 @@ import {
 } from "src/storage/schema";
 
 import type {
+  AdminOptionBody,
+  AdminQuestionBody,
   CreateLessonBody,
   CreateQuizLessonBody,
-  OptionBody,
-  QuestionBody,
   UpdateLessonBody,
   UpdateQuizLessonBody,
 } from "../lesson.schema";
@@ -152,7 +152,7 @@ export class AdminLessonRepository {
   async removeLesson(lessonId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
-    return await dbInstance.delete(lessons).where(eq(lessons.id, lessonId)).returning();
+    return dbInstance.delete(lessons).where(eq(lessons.id, lessonId)).returning();
   }
 
   async updateLessonDisplayOrder(chapterId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
@@ -173,10 +173,7 @@ export class AdminLessonRepository {
   }
 
   async getExistingQuestions(lessonId: UUIDType, trx: PostgresJsDatabase<typeof schema>) {
-    return await trx
-      .select({ id: questions.id })
-      .from(questions)
-      .where(eq(questions.lessonId, lessonId));
+    return trx.select({ id: questions.id }).from(questions).where(eq(questions.lessonId, lessonId));
   }
 
   async getExistingOptions(questionId: UUIDType, trx: PostgresJsDatabase<typeof schema>) {
@@ -190,7 +187,7 @@ export class AdminLessonRepository {
 
   async updateOption(
     optionId: UUIDType,
-    optionData: OptionBody,
+    optionData: AdminOptionBody,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
     await trx
@@ -201,7 +198,7 @@ export class AdminLessonRepository {
 
   async insertOption(
     questionId: UUIDType,
-    optionData: OptionBody,
+    optionData: AdminOptionBody,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
     await trx.insert(questionAnswerOptions).values({
@@ -228,7 +225,7 @@ export class AdminLessonRepository {
   }
 
   async upsertQuestion(
-    questionData: QuestionBody,
+    questionData: AdminQuestionBody,
     lessonId: UUIDType,
     authorId: UUIDType,
     trx: PostgresJsDatabase<typeof schema>,

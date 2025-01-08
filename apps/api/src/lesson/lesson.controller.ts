@@ -96,7 +96,7 @@ export class LessonController {
   ): Promise<BaseResponse<{ id: UUIDType; message: string }>> {
     const id = await this.adminLessonsService.createQuizLesson(createQuizLessonBody, userId);
 
-    return new BaseResponse({ id, message: "Lesson created successfully" }) as any;
+    return new BaseResponse({ id, message: "Quiz created successfully" }) as any;
   }
 
   @Patch("beta-update-lesson/quiz")
@@ -122,7 +122,7 @@ export class LessonController {
     @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
     await this.adminLessonsService.updateQuizLesson(id, data, userId);
-    return new BaseResponse({ message: "Text block updated successfully" });
+    return new BaseResponse({ message: "Quiz updated successfully" });
   }
 
   @Patch("beta-update-lesson")
@@ -169,15 +169,36 @@ export class LessonController {
   @Roles(USER_ROLES.STUDENT, USER_ROLES.ADMIN)
   @Validate({
     request: [{ type: "body", schema: answerQuestionsForLessonBody, required: true }],
-    response: baseResponse(Type.Object({ message: Type.String() })),
+    response: baseResponse(
+      Type.Object({
+        message: Type.String(),
+        data: Type.Object({
+          correctAnswerCount: Type.Number(),
+          wrongAnswerCount: Type.Number(),
+          questionCount: Type.Number(),
+          score: Type.Number(),
+        }),
+      }),
+    ),
   })
   async evaluationQuiz(
     @Body() answers: AnswerQuestionBody,
     @CurrentUser("userId") currentUserId: UUIDType,
-  ): Promise<BaseResponse<{ message: string }>> {
-    await this.lessonService.evaluationQuiz(answers, currentUserId);
+  ): Promise<
+    BaseResponse<{
+      message: string;
+      data: {
+        correctAnswerCount: number;
+        wrongAnswerCount: number;
+        questionCount: number;
+        score: number;
+      };
+    }>
+  > {
+    const evaluationResult = await this.lessonService.evaluationQuiz(answers, currentUserId);
     return new BaseResponse({
       message: "Evaluation quiz successfully",
+      data: evaluationResult,
     });
   }
 

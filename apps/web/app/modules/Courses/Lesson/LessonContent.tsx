@@ -6,7 +6,8 @@ import { useMarkLessonAsCompleted } from "~/api/mutations";
 import { Icon } from "~/components/Icon";
 import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
-import { VideoPlayer } from "~/components/VideoPlayer/VideoPlayer";
+import { Video } from "~/components/VideoPlayer/Video";
+import { Quiz } from "~/modules/Courses/Lesson/Quiz";
 
 import Presentation from "../../../components/Presentation/Presentation";
 
@@ -41,11 +42,17 @@ export const LessonContent = ({
   const Content = () =>
     match(lesson.type)
       .with("text", () => <Viewer variant="lesson" content={lesson?.description} />)
-      .with("quiz", () => <></>)
+      .with("quiz", () => <Quiz lesson={lesson} />)
       .with("video", () => (
-        <VideoPlayer url={lesson.fileUrl} onVideoEnded={() => setIsNextDisabled(false)} />
+        <Video
+          url={lesson.fileUrl}
+          onVideoEnded={() => setIsNextDisabled(false)}
+          isExternalUrl={lesson.isExternal}
+        />
       ))
-      .with("presentation", () => <Presentation url={lesson.fileUrl ?? ""} />)
+      .with("presentation", () => (
+        <Presentation url={lesson.fileUrl ?? ""} isExternalUrl={lesson.isExternal} />
+      ))
       .otherwise(() => null);
 
   const handleMarkLessonAsComplete = () => {
