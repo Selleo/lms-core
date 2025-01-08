@@ -19,12 +19,12 @@ export const useAddCourseForm = () => {
       description: "",
       categoryId: "",
       thumbnailS3Key: "",
-      fileUrl: "",
+      thumbnailUrl: "",
     },
   });
 
   const onSubmit = (values: AddCourseFormValues) => {
-    const { fileUrl: _, ...rest } = values;
+    const { thumbnailUrl: _, ...rest } = values;
     createCourse({
       data: { ...rest, state: "draft" },
     }).then(({ data }) => {
