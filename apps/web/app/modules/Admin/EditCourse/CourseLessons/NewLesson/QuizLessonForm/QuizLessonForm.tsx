@@ -129,6 +129,13 @@ const QuizLessonForm = ({
           QuestionType.DETAILED_RESPONSE,
         ];
 
+        if (type === QuestionType.MATCH_WORDS) {
+          return [
+            { optionText: "", isCorrect: true, displayOrder: 1 },
+            { optionText: "", isCorrect: true, displayOrder: 2 },
+          ];
+        }
+
         if (singleChoiceTypes.includes(type)) {
           return [
             { optionText: "", isCorrect: false, displayOrder: 1 },
