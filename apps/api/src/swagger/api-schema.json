@@ -5932,6 +5932,16 @@
                             }
                           ]
                         },
+                        "passQuestion": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "description": {
                           "anyOf": [
                             {
@@ -6024,23 +6034,13 @@
                               "isCorrect"
                             ]
                           }
-                        },
-                        "passQuestion": {
-                          "anyOf": [
-                            {
-                              "type": "boolean"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
                         }
                       },
                       "required": [
                         "id",
                         "type",
-                        "title",
-                        "passQuestion"
+                        "passQuestion",
+                        "title"
                       ]
                     }
                   },
