@@ -978,6 +978,8 @@ export interface GetLessonByIdResponse {
     quizCompleted?: boolean;
     displayOrder: number;
     isExternal?: boolean;
+    nextLessonId: string | null;
+    nextLessonChapterId: string | null;
   };
 }
 

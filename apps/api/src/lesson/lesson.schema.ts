@@ -123,6 +123,8 @@ export const lessonShowSchema = Type.Object({
   quizCompleted: Type.Optional(Type.Boolean()),
   displayOrder: Type.Number(),
   isExternal: Type.Optional(Type.Boolean()),
+  nextLessonId: Type.Union([UUIDSchema, Type.Null()]),
+  nextLessonChapterId: Type.Union([UUIDSchema, Type.Null()]),
 });
 
 export const updateLessonSchema = Type.Partial(createLessonSchema);

@@ -6116,6 +6116,28 @@
               },
               "isExternal": {
                 "type": "boolean"
+              },
+              "nextLessonId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "nextLessonChapterId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -6125,7 +6147,9 @@
               "description",
               "fileType",
               "fileUrl",
-              "displayOrder"
+              "displayOrder",
+              "nextLessonId",
+              "nextLessonChapterId"
             ]
           }
         },
