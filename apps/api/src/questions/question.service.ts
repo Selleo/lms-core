@@ -5,9 +5,10 @@ import { match } from "ts-pattern";
 import { DatabasePg } from "src/common";
 
 import { QuestionRepository } from "./question.repository";
-import { QUESTION_TYPE, QuestionType } from "./schema/question.types";
+import { QUESTION_TYPE } from "./schema/question.types";
 
 import type { QuizEvaluation } from "./schema/question.schema";
+import type { QuestionType } from "./schema/question.types";
 import type { SQL } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { UUIDType } from "src/common";

@@ -1,12 +1,12 @@
 import { Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 import { LESSON_TYPES } from "./lesson.type";
 
 import type { Static } from "@sinclair/typebox";
-import { QUESTION_TYPE } from "src/questions/schema/question.types";
 
 export const adminOptionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),

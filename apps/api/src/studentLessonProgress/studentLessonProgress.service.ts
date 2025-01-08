@@ -7,6 +7,7 @@ import {
 } from "@nestjs/common";
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 
+
 import { DatabasePg } from "src/common";
 import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
@@ -20,10 +21,10 @@ import {
 } from "src/storage/schema";
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { UUIDType } from "src/common";
-import type { ProgressStatus } from "src/utils/types/progress.type";
-import { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
+import type { ProgressStatus } from "src/utils/types/progress.type";
 
 @Injectable()
 export class StudentLessonProgressService {
@@ -36,6 +37,7 @@ export class StudentLessonProgressService {
     id: UUIDType,
     studentId: UUIDType,
     quizCompleted = false,
+    completedQuestionCount = 0,
     trx?: PostgresJsDatabase<typeof schema>,
   ) {
     const dbInstance = trx ?? this.db;
@@ -79,13 +81,14 @@ export class StudentLessonProgressService {
         lessonId: lesson.id,
         chapterId: lesson.chapterId,
         completedAt: sql`now()`,
+        completedQuestionCount,
       });
     }
 
     if (!lessonProgress?.completedAt) {
       await dbInstance
         .update(studentLessonProgress)
-        .set({ completedAt: sql`now()` })
+        .set({ completedAt: sql`now()`, completedQuestionCount })
         .where(
           and(
             eq(studentLessonProgress.lessonId, lesson.id),

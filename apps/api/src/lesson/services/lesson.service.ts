@@ -14,7 +14,7 @@ import { QuizCompletedEvent } from "src/events";
 import { FileService } from "src/file/file.service";
 import { QuestionRepository } from "src/questions/question.repository";
 import { QuestionService } from "src/questions/question.service";
-import { QUESTION_TYPE, QuestionType } from "src/questions/schema/question.types";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
 import {
   chapters,
   lessons,
@@ -39,6 +39,7 @@ import type {
 } from "../lesson.schema";
 import type { LessonTypes } from "../lesson.type";
 import type { UUIDType } from "src/common";
+import type { QuestionType } from "src/questions/schema/question.types";
 
 @Injectable()
 export class LessonService {
@@ -360,6 +361,7 @@ export class LessonService {
           studentQuizAnswers.lessonId,
           userId,
           true,
+          evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
           trx,
         );
 

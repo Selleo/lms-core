@@ -10,9 +10,9 @@ import {
 } from "src/storage/schema";
 
 import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
+import type { QuestionType } from "./schema/question.types";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
-import { QuestionType } from "./schema/question.types";
 
 @Injectable()
 export class QuestionRepository {

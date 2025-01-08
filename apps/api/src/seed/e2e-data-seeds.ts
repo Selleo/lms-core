@@ -1,7 +1,7 @@
 import { LESSON_TYPES } from "src/lesson/lesson.type";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
 
 import type { NiceCourseData } from "../utils/types/test-types";
-import { QUESTION_TYPE } from "src/questions/schema/question.types";
 
 export const e2eCourses: NiceCourseData[] = [
   {
