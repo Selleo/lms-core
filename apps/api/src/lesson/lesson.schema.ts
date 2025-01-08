@@ -3,9 +3,10 @@ import { Type } from "@sinclair/typebox";
 import { UUIDSchema } from "src/common";
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
-import { LESSON_TYPES, QuestionType } from "./lesson.type";
+import { LESSON_TYPES } from "./lesson.type";
 
 import type { Static } from "@sinclair/typebox";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
 
 export const adminOptionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
@@ -20,7 +21,7 @@ export const adminOptionSchema = Type.Object({
 
 export const adminQuestionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
-  type: Type.Enum(QuestionType),
+  type: Type.Enum(QUESTION_TYPE),
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
   displayOrder: Type.Optional(Type.Number()),
@@ -41,13 +42,13 @@ export const optionSchema = Type.Object({
 
 export const questionSchema = Type.Object({
   id: UUIDSchema,
-  type: Type.Enum(QuestionType),
-  passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
+  type: Type.Enum(QUESTION_TYPE),
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
   displayOrder: Type.Optional(Type.Number()),
   photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(optionSchema)),
+  passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
 });
 
 export const lessonSchema = Type.Object({

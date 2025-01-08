@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 
-import { LESSON_TYPES, QuestionType } from "src/lesson/lesson.type";
+import { LESSON_TYPES } from "src/lesson/lesson.type";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
 
 import type { NiceCourseData } from "src/utils/types/test-types";
 
@@ -38,7 +39,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 id: crypto.randomUUID(),
                 displayOrder: 1,
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title: "Why is HTML considered the backbone of any website?",
                 description: "Explain its role in web development.",
               },
@@ -63,7 +64,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 id: crypto.randomUUID(),
                 displayOrder: 1,
-                type: QuestionType.FillInTheBlanksText,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 title: "",
                 description:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -115,7 +116,7 @@ export const niceCourses: NiceCourseData[] = [
             questions: [
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which HTML tag is used to create a hyperlink?",
                 displayOrder: 1,
                 options: [
@@ -165,7 +166,7 @@ export const niceCourses: NiceCourseData[] = [
             questions: [
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of the following HTML tags is used to create an image?",
                 displayOrder: 1,
                 options: [
@@ -197,7 +198,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title:
                   "Which of the following are valid HTML elements for structuring content? (Select all that apply)",
                 displayOrder: 2,
@@ -242,7 +243,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which HTML tag is used to create a hyperlink?",
                 displayOrder: 3,
                 options: [
@@ -274,7 +275,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title:
                   "Which of the following attributes are commonly used with the <img> tag? (Select all that apply)",
                 displayOrder: 4,
@@ -313,7 +314,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description:
                   "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
@@ -367,7 +368,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksText,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 displayOrder: 6,
                 title: "",
                 description:
@@ -391,7 +392,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 displayOrder: 7,
                 title: "",
                 description:
@@ -434,7 +435,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 id: crypto.randomUUID(),
                 displayOrder: 1,
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which CSS property is used to change the text color of an element?",
                 options: [
                   {
@@ -465,7 +466,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title: "Which of the following are valid CSS selectors? (Select all that apply)",
                 displayOrder: 2,
                 options: [
@@ -503,7 +504,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description:
                   "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
@@ -539,7 +540,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 displayOrder: 4,
                 title: "",
                 description:
@@ -589,7 +590,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title:
                   "Why is HTML considered the backbone of any website? Explain its role in web development.",
               },
@@ -614,7 +615,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
@@ -687,7 +688,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title: "Explain why Java is the preferred language for Android development.",
                 description: "",
               },
@@ -712,7 +713,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description:
                   "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
@@ -747,7 +748,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 title: "",
                 description:
                   "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
@@ -787,7 +788,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which keyword is used to create a new instance of a class in Java?",
                 options: [
                   {
@@ -836,7 +837,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of the following is the entry point of an Android application?",
                 options: [
                   {
@@ -912,7 +913,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which keyword is used to declare a variable in Kotlin?",
                 options: [
                   { id: crypto.randomUUID(), optionText: "var", isCorrect: true, displayOrder: 0 },
@@ -963,7 +964,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description:
                   "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
@@ -1013,7 +1014,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title:
                   "Why is arithmetic fundamental in math? Give a real-life example of its use.",
               },
@@ -1039,7 +1040,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description:
                   "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
@@ -1091,7 +1092,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which formula is used to calculate the area of a rectangle?",
                 options: [
                   {
@@ -1149,7 +1150,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 title: "",
                 description:
                   "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
@@ -1198,7 +1199,7 @@ export const niceCourses: NiceCourseData[] = [
             questions: [
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of the following is an example of a geometric shape?",
                 displayOrder: 1,
                 options: [
@@ -1225,7 +1226,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title: "Which operations are included in basic arithmetic? (Select all that apply)",
                 displayOrder: 2,
                 options: [
@@ -1263,7 +1264,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description:
                   "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
@@ -1332,7 +1333,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title: "Explain the difference between a noun and a verb in a sentence.",
                 description: "Explain its role in sentence construction.",
               },
@@ -1356,7 +1357,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description: "Fill in the blanks: 'She [word] to the store yesterday.'",
                 solutionExplanation: "<p>She <strong>went</strong> to the store yesterday.</p>",
@@ -1408,7 +1409,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which word is the synonym of 'happy'?",
                 options: [
                   {
@@ -1439,7 +1440,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 title: "I [word] to the park every day.",
                 options: [
                   { id: crypto.randomUUID(), optionText: "go", isCorrect: true, displayOrder: 0 },
@@ -1488,7 +1489,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title:
                   "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
                 options: [
@@ -1516,7 +1517,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description: "I love [word] (swimming/swim).",
                 solutionExplanation: "I love <strong>swimming</strong> (swimming/swim).",
@@ -1550,7 +1551,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title:
                   "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
                 options: [
@@ -1587,7 +1588,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 title: "",
                 description: "She [word] to the park every day.",
                 solutionExplanation: "She <strong>went</strong> to the park every day.",
@@ -1613,7 +1614,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "What is the plural form of 'child'?",
                 options: [
                   {
@@ -1642,7 +1643,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of these words is a conjunction?",
                 options: [
                   { id: crypto.randomUUID(), optionText: "And", isCorrect: true, displayOrder: 0 },
@@ -1700,7 +1701,7 @@ export const niceCourses: NiceCourseData[] = [
             questions: [
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "What is the difference between a relative clause and a noun clause?",
                 displayOrder: 1,
                 options: [
@@ -1750,7 +1751,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description: "The book [word] I borrowed yesterday was fascinating.",
                 solutionExplanation:
@@ -1803,7 +1804,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which word is an example of academic vocabulary?",
                 options: [
                   {
@@ -1833,7 +1834,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 title: "",
                 description: "The results [word] the hypothesis.",
                 solutionExplanation: "The results <strong>support</strong> the hypothesis.",
@@ -1896,7 +1897,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description: "She was [word] when she heard the good news.",
                 solutionExplanation:
@@ -1966,7 +1967,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "What is the primary goal of AI in business?",
                 options: [
                   {
@@ -2007,7 +2008,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title:
                   "Which of the following are applications of AI in business? (Select all that apply)",
                 options: [
@@ -2049,7 +2050,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.TrueOrFalse,
+                type: QUESTION_TYPE.TRUE_OR_FALSE,
                 title: "AI can function without any data input from humans.",
                 options: [
                   {
@@ -2078,7 +2079,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.PhotoQuestionSingleChoice,
+                type: QUESTION_TYPE.PHOTO_QUESTION_SINGLE_CHOICE,
                 title: "Which image represents an AI-driven chatbot?",
                 options: [
                   {
@@ -2113,7 +2114,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
                 title: "",
                 description:
                   "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
@@ -2164,7 +2165,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title: "In one sentence, explain why businesses are adopting AI.",
               },
             ],
@@ -2179,7 +2180,7 @@ export const niceCourses: NiceCourseData[] = [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
-                type: QuestionType.DetailedResponse,
+                type: QUESTION_TYPE.DETAILED_RESPONSE,
                 title:
                   "Describe how AI can improve decision-making in a specific industry of your choice.",
               },

@@ -1,27 +1,15 @@
-// TODO: to remove and use QuestionType from lesson type
 export const QUESTION_TYPE = {
-  brief_response: { key: "brief_response", value: "Brief Response" },
-  detailed_response: { key: "detailed_response", value: "Detailed Response" },
-  match_words: { key: "match_words", value: "Match Words" },
-  scale_1_5: { key: "scale_1_5", value: "Scale 1 to 5" },
-  single_choice: { key: "single_choice", value: "Single Choice" },
-  multiple_choice: { key: "multiple_choice", value: "Multiple Choice" },
-  true_or_false: { key: "true_or_false", value: "True or False" },
-  photo_question: { key: "photo_question", value: "Photo Question" },
-  fill_in_the_blanks_text: {
-    key: "fill_in_the_blanks_text",
-    value: "Fill in the blanks text",
-  },
-  fill_in_the_blanks_dnd: {
-    key: "fill_in_the_blanks_dnd",
-    value: "Fill in the blanks drag and drop",
-  },
+  BRIEF_RESPONSE: "brief_response",
+  DETAILED_RESPONSE: "detailed_response",
+  MATCH_WORDS: "match_words",
+  SCALE_1_5: "scale_1_5",
+  SINGLE_CHOICE: "single_choice",
+  MULTIPLE_CHOICE: "multiple_choice",
+  TRUE_OR_FALSE: "true_or_false",
+  PHOTO_QUESTION_SINGLE_CHOICE: "photo_question_single_choice",
+  PHOTO_QUESTION_MULTIPLE_CHOICE: "photo_question_multiple_choice",
+  FILL_IN_THE_BLANKS_TEXT: "fill_in_the_blanks_text",
+  FILL_IN_THE_BLANKS_DND: "fill_in_the_blanks_dnd",
 } as const;
 
-export const QUESTION_TYPE_KEYS = Object.fromEntries(
-  Object.entries(QUESTION_TYPE).map(([key, { value }]) => [key, value]),
-) as {
-  [K in keyof typeof QUESTION_TYPE]: (typeof QUESTION_TYPE)[K]["value"];
-};
-
-export type QuestionTypes = (typeof QUESTION_TYPE)[keyof typeof QUESTION_TYPE]["key"];
+export type QuestionType = (typeof QUESTION_TYPE)[keyof typeof QUESTION_TYPE];

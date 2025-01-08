@@ -14,7 +14,7 @@ import { QuizCompletedEvent } from "src/events";
 import { FileService } from "src/file/file.service";
 import { QuestionRepository } from "src/questions/question.repository";
 import { QuestionService } from "src/questions/question.service";
-import { QUESTION_TYPE } from "src/questions/schema/question.types";
+import { QUESTION_TYPE, QuestionType } from "src/questions/schema/question.types";
 import {
   chapters,
   lessons,
@@ -37,7 +37,7 @@ import type {
   QuestionBody,
   QuestionDetails,
 } from "../lesson.schema";
-import type { LessonTypes, QuestionType } from "../lesson.type";
+import type { LessonTypes } from "../lesson.type";
 import type { UUIDType } from "src/common";
 
 @Injectable()
@@ -131,13 +131,13 @@ export class LessonService {
                       CASE
                         WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
                         WHEN ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text) = qao.option_text AND
-                          ${questions.type} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+                          ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})
                         THEN TRUE
                         WHEN EXISTS (
                           SELECT 1
                           FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
                           WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text)
-                            ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
+                            ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})})
                         THEN TRUE
                         ELSE FALSE
                       END,
@@ -152,7 +152,7 @@ export class LessonService {
                   WHERE qao.question_id = questions.id
                   ORDER BY
                     CASE
-                      WHEN ${questions.type} in (${QUESTION_TYPE.fill_in_the_blanks_dnd}) AND ${lesson.quizCompleted} = FALSE
+                      WHEN ${questions.type} in (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}) AND ${lesson.quizCompleted} = FALSE
                         THEN random()
                       ELSE qao.display_order
                     END

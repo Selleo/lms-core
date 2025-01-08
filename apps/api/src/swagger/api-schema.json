@@ -3946,6 +3946,22 @@
                                 "type": {
                                   "anyOf": [
                                     {
+                                      "const": "brief_response",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "detailed_response",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "match_words",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "scale_1_5",
+                                      "type": "string"
+                                    },
+                                    {
                                       "const": "single_choice",
                                       "type": "string"
                                     },
@@ -3971,22 +3987,6 @@
                                     },
                                     {
                                       "const": "fill_in_the_blanks_dnd",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "brief_response",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "detailed_response",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "match_words",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "scale_1_5",
                                       "type": "string"
                                     }
                                   ]
@@ -4626,6 +4626,22 @@
                                   "type": {
                                     "anyOf": [
                                       {
+                                        "const": "brief_response",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "detailed_response",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "match_words",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "scale_1_5",
+                                        "type": "string"
+                                      },
+                                      {
                                         "const": "single_choice",
                                         "type": "string"
                                       },
@@ -4651,22 +4667,6 @@
                                       },
                                       {
                                         "const": "fill_in_the_blanks_dnd",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "brief_response",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "detailed_response",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "match_words",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "scale_1_5",
                                         "type": "string"
                                       }
                                     ]
@@ -5189,6 +5189,22 @@
                           "type": {
                             "anyOf": [
                               {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
+                              },
+                              {
                                 "const": "single_choice",
                                 "type": "string"
                               },
@@ -5214,22 +5230,6 @@
                               },
                               {
                                 "const": "fill_in_the_blanks_dnd",
-                                "type": "string"
-                              },
-                              {
-                                "const": "brief_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "detailed_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "match_words",
-                                "type": "string"
-                              },
-                              {
-                                "const": "scale_1_5",
                                 "type": "string"
                               }
                             ]
@@ -5495,6 +5495,22 @@
                           "type": {
                             "anyOf": [
                               {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
+                              },
+                              {
                                 "const": "single_choice",
                                 "type": "string"
                               },
@@ -5520,22 +5536,6 @@
                               },
                               {
                                 "const": "fill_in_the_blanks_dnd",
-                                "type": "string"
-                              },
-                              {
-                                "const": "brief_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "detailed_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "match_words",
-                                "type": "string"
-                              },
-                              {
-                                "const": "scale_1_5",
                                 "type": "string"
                               }
                             ]
@@ -5887,6 +5887,22 @@
                         "type": {
                           "anyOf": [
                             {
+                              "const": "brief_response",
+                              "type": "string"
+                            },
+                            {
+                              "const": "detailed_response",
+                              "type": "string"
+                            },
+                            {
+                              "const": "match_words",
+                              "type": "string"
+                            },
+                            {
+                              "const": "scale_1_5",
+                              "type": "string"
+                            },
+                            {
                               "const": "single_choice",
                               "type": "string"
                             },
@@ -5912,22 +5928,6 @@
                             },
                             {
                               "const": "fill_in_the_blanks_dnd",
-                              "type": "string"
-                            },
-                            {
-                              "const": "brief_response",
-                              "type": "string"
-                            },
-                            {
-                              "const": "detailed_response",
-                              "type": "string"
-                            },
-                            {
-                              "const": "match_words",
-                              "type": "string"
-                            },
-                            {
-                              "const": "scale_1_5",
                               "type": "string"
                             }
                           ]
@@ -6162,6 +6162,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6187,22 +6203,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6396,6 +6396,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6421,22 +6437,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6627,6 +6627,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6652,22 +6668,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6864,6 +6864,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6889,22 +6905,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
