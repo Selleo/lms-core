@@ -6,7 +6,6 @@ import { cn } from "~/lib/utils";
 import type { DndWord } from "./types";
 
 type DraggableWordProps = {
-  isQuiz?: boolean;
   word: DndWord;
   isOverlay?: boolean;
   isCorrect?: boolean | null;
@@ -14,7 +13,6 @@ type DraggableWordProps = {
 };
 
 export const DraggableWord = ({
-  isQuiz = false,
   word,
   isOverlay,
   isCorrect,
@@ -22,7 +20,7 @@ export const DraggableWord = ({
 }: DraggableWordProps) => {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useSortable({
     id: word.id,
-    disabled: isQuiz && !!isStudentAnswer,
+    disabled: !!isStudentAnswer,
   });
 
   const wordStyle = {
@@ -30,10 +28,9 @@ export const DraggableWord = ({
   };
 
   const quizWordStyle = cn("px-2 py-1 rounded-md text-black", {
-    "bg-primary-200": (!isCorrect && !isStudentAnswer) || !isQuiz,
-    "bg-success-200": isCorrect && isStudentAnswer && isQuiz,
-    "bg-error-200":
-      (!isCorrect && isStudentAnswer && isQuiz) || (isCorrect && !isStudentAnswer && isQuiz),
+    "bg-primary-200": !isCorrect && !isStudentAnswer,
+    "bg-success-200": isCorrect && isStudentAnswer,
+    "bg-error-200": (!isCorrect && isStudentAnswer) || (isCorrect && !isStudentAnswer),
   });
 
   return (
