@@ -50,6 +50,7 @@ export const questionSchema = Type.Object({
   photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(optionSchema)),
   passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
+  solutionExplanation: Type.Union([Type.String(), Type.Null()]),
 });
 
 export const lessonSchema = Type.Object({
@@ -153,7 +154,7 @@ export const answerQuestionsForLessonBody = Type.Object({
     Type.Object({
       questionId: UUIDSchema,
       answer: Type.Array(
-        Type.Object({ answerId: UUIDSchema, value: Type.Optional(Type.String()) }),
+        Type.Object({ answerId: Type.Optional(UUIDSchema), value: Type.Optional(Type.String()) }),
       ),
     }),
   ),

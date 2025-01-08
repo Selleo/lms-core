@@ -110,6 +110,10 @@ export class LessonService {
         type: sql<QuestionType>`${questions.type}`,
         title: questions.title,
         description: sql<string>`${questions.description}`,
+        solutionExplanation: sql<string | null>`CASE
+          WHEN ${lesson.quizCompleted} THEN ${questions.solutionExplanation} 
+          ELSE NULL 
+        END`,
         photoS3Key: sql<string>`${questions.photoS3Key}`,
         passQuestion: sql<boolean | null>`CASE
           WHEN ${lesson.quizCompleted} THEN ${studentQuestionAnswers.isCorrect}

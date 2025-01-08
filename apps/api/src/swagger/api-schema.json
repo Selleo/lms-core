@@ -5932,16 +5932,6 @@
                             }
                           ]
                         },
-                        "passQuestion": {
-                          "anyOf": [
-                            {
-                              "type": "boolean"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
-                        },
                         "description": {
                           "anyOf": [
                             {
@@ -6045,13 +6035,34 @@
                               "solutionExplanation"
                             ]
                           }
+                        },
+                        "passQuestion": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "solutionExplanation": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [
                         "id",
                         "type",
+                        "title",
                         "passQuestion",
-                        "title"
+                        "solutionExplanation"
                       ]
                     }
                   },
@@ -7111,10 +7122,7 @@
                       "value": {
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "answerId"
-                    ]
+                    }
                   }
                 }
               },

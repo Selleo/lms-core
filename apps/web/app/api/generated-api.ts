@@ -950,11 +950,7 @@ export interface GetLessonByIdResponse {
           | "photo_question_single_choice"
           | "photo_question_multiple_choice"
           | "fill_in_the_blanks_text"
-          | "fill_in_the_blanks_dnd"
-          | "brief_response"
-          | "detailed_response"
-          | "match_words"
-          | "scale_1_5";
+          | "fill_in_the_blanks_dnd";
         description?: string | null;
         title: string;
         displayOrder?: number;
@@ -971,6 +967,8 @@ export interface GetLessonByIdResponse {
           questionId?: string;
           solutionExplanation: string | null;
         }[];
+        passQuestion: boolean | null;
+        solutionExplanation: string | null;
       }[];
       questionCount: number;
       correctAnswerCount: number | null;
@@ -1209,7 +1207,7 @@ export interface EvaluationQuizBody {
     questionId: string;
     answer: {
       /** @format uuid */
-      answerId: string;
+      answerId?: string;
       value?: string;
     }[];
   }[];
