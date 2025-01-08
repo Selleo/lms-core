@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-const baseURL = process.env.VITE_APP_URL || "https://app.lms.localhost";
+const baseURL = "http://localhost:5173";
 
 export default defineConfig({
   testDir: "./e2e",
@@ -58,6 +58,7 @@ export default defineConfig({
         REDIS_HOST: "localhost",
         REDIS_PORT: "6380",
         NODE_ENV: "test",
+        MODE: "test",
       },
     },
     {
@@ -65,6 +66,7 @@ export default defineConfig({
       env: {
         DATABASE_URL: `postgresql://test_user:test_password@localhost:54321/test_db`,
         NODE_ENV: "test",
+        MODE: "test",
       },
       reuseExistingServer: false,
     },
@@ -74,14 +76,16 @@ export default defineConfig({
       timeout: 120 * 1000,
       reuseExistingServer: false,
       env: {
-        API_URL: "https://app.lms.localhost/api",
+        API_URL: "http://localhost:3000/api",
+        NODE_ENV: "test",
+        MODE: "test",
       },
     },
-    {
-      command: "cd ../reverse-proxy && pnpm run dev",
-      url: "http://localhost:2019/config/",
-      timeout: 120 * 1000,
-      reuseExistingServer: true,
-    },
+    // {
+    //   command: "cd ../reverse-proxy && pnpm run dev",
+    //   url: "http://localhost:2019/config/",
+    //   timeout: 120 * 1000,
+    //   reuseExistingServer: true,
+    // },
   ],
 });
