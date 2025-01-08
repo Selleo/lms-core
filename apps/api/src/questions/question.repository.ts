@@ -10,7 +10,7 @@ import {
 } from "src/storage/schema";
 
 import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
-import type { QuestionTypes } from "./schema/question.types";
+import type { QuestionType } from "./schema/question.types";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type * as schema from "src/storage/schema";
 
@@ -120,7 +120,7 @@ export class QuestionRepository {
     return this.db
       .select({
         id: questions.id,
-        type: sql<QuestionTypes>`${questions.type}`,
+        type: sql<QuestionType>`${questions.type}`,
         correctAnswers: sql<{ answerId: UUIDType; displayOrder: number; value: string }[]>`
           (
             SELECT ARRAY(

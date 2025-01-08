@@ -37,8 +37,9 @@ import type {
   QuestionBody,
   QuestionDetails,
 } from "../lesson.schema";
-import type { LessonTypes, QuestionType } from "../lesson.type";
+import type { LessonTypes } from "../lesson.type";
 import type { UUIDType } from "src/common";
+import type { QuestionType } from "src/questions/schema/question.types";
 
 @Injectable()
 export class LessonService {
@@ -67,6 +68,45 @@ export class LessonService {
         isExternal: sql<boolean>`${lessons.isExternal}`,
         isFreemium: sql<boolean>`${chapters.isFreemium}`,
         isEnrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NULL THEN FALSE ELSE TRUE END`,
+        nextLessonId: sql<string | null>`
+          COALESCE(
+            (
+              SELECT l2.id
+              FROM ${lessons} l2
+              WHERE l2.chapter_id = ${lessons.chapterId}
+                AND l2.display_order > ${lessons.displayOrder}
+              ORDER BY l2.display_order
+              LIMIT 1),
+            (
+              SELECT l3.id
+              FROM ${lessons} l3
+              JOIN ${chapters} c2 ON c2.id = l3.chapter_id
+              WHERE c2.course_id = ${chapters.courseId}
+                AND c2.display_order > ${chapters.displayOrder}
+              ORDER BY c2.display_order, l3.display_order
+              LIMIT 1)
+          )
+        `,
+        nextLessonChapterId: sql<string | null>`
+          COALESCE(
+          (
+            SELECT l2.chapter_id
+            FROM ${lessons} l2
+            WHERE l2.chapter_id = ${lessons.chapterId}
+              AND l2.display_order > ${lessons.displayOrder}
+            ORDER BY l2.display_order
+            LIMIT 1
+          ),
+          (
+            SELECT c2.id
+            FROM ${chapters} c2
+            WHERE c2.course_id = ${chapters.courseId}
+              AND c2.display_order > ${chapters.displayOrder}
+            ORDER BY c2.display_order
+            LIMIT 1
+          )
+        )
+        `,
       })
       .from(lessons)
       .leftJoin(chapters, eq(chapters.id, lessons.chapterId))
@@ -110,55 +150,93 @@ export class LessonService {
         type: sql<QuestionType>`${questions.type}`,
         title: questions.title,
         description: sql<string>`${questions.description}`,
+        solutionExplanation: sql<string | null>`CASE
+          WHEN ${lesson.quizCompleted} THEN ${questions.solutionExplanation} 
+          ELSE NULL 
+        END`,
         photoS3Key: sql<string>`${questions.photoS3Key}`,
         passQuestion: sql<boolean | null>`CASE
           WHEN ${lesson.quizCompleted} THEN ${studentQuestionAnswers.isCorrect}
           ELSE NULL END`,
         displayOrder: sql<number>`${questions.displayOrder}`,
-        options: sql<OptionBody[]>`
-              (
-                SELECT ARRAY(
-                  SELECT json_build_object(
-                    'id', qao.id,
-                    'optionText', qao.option_text,
-                    'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
-                    'displayOrder',
-                      CASE
-                        WHEN ${lesson.quizCompleted} THEN qao.display_order
-                        ELSE NULL
-                      END,
-                    'isStudentAnswer',
-                      CASE
-                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                        WHEN ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text) = qao.option_text AND
-                          ${questions.type} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
-                        THEN TRUE
-                        WHEN EXISTS (
-                          SELECT 1
-                          FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                          WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text)
-                            ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
-                        THEN TRUE
-                        ELSE FALSE
-                      END,
-                    'studentAnswer',  
-                      CASE
-                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                        ELSE
-                          ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
-                        END
-                  )
-                  FROM ${questionAnswerOptions} qao
-                  WHERE qao.question_id = questions.id
-                  ORDER BY
-                    CASE
-                      WHEN ${questions.type} in (${QUESTION_TYPE.fill_in_the_blanks_dnd}) AND ${lesson.quizCompleted} = FALSE
-                        THEN random()
-                      ELSE qao.display_order
-                    END
-                )
+        options: sql<OptionBody[]>`CASE
+          WHEN ${questions.type} in (${QUESTION_TYPE.BRIEF_RESPONSE}, ${
+            QUESTION_TYPE.DETAILED_RESPONSE
+          }) AND ${lesson.quizCompleted} THEN
+            ARRAY[json_build_object(
+              'id', ${studentQuestionAnswers.id},
+              'optionText', '',
+              'isCorrect', TRUE,
+              'displayOrder', 1,
+              'isStudentAnswer', TRUE,
+              'studentAnswer', ${studentQuestionAnswers.answer}->>'1',
+              'solutionExplanation', NULL
+            )]
+          ELSE
+          (
+            SELECT ARRAY(
+              SELECT json_build_object(
+                'id', qao.id,
+                'optionText',  
+                  CASE 
+                    WHEN ${!lesson.quizCompleted} AND ${questions.type} = ${
+                      QUESTION_TYPE.BRIEF_RESPONSE
+                    } THEN NULL
+                    ELSE qao.option_text
+                  END,
+                'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
+                'displayOrder',
+                  CASE
+                    WHEN ${lesson.quizCompleted} THEN qao.display_order
+                    ELSE NULL
+                  END,
+                'isStudentAnswer',
+                  CASE
+                    WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                    WHEN ${
+                      studentQuestionAnswers.answer
+                    }->>CAST(qao.display_order AS text) = qao.option_text AND
+                      ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                        QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                      })
+                      THEN TRUE
+                    WHEN EXISTS (
+                      SELECT 1
+                      FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                      WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
+                        AND  ${questions.type} NOT IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                          QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                        })
+                      THEN TRUE
+                    ELSE FALSE
+                  END,
+                'studentAnswer',  
+                  CASE
+                    WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                    ELSE ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
+                  END,
+                'solutionExplanation',
+                  CASE
+                    WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                    ELSE ${questions.type} in (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                      QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                    })
+                  END
               )
-          `,
+              FROM ${questionAnswerOptions} qao
+              WHERE qao.question_id = questions.id
+              ORDER BY
+                CASE
+                  WHEN ${questions.type} in (${
+                    QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
+                  }) AND ${!lesson.quizCompleted}
+                    THEN random()
+                  ELSE qao.display_order
+                END
+            )
+          )
+        END
+      `,
       })
       .from(questions)
       .leftJoin(
@@ -283,6 +361,8 @@ export class LessonService {
           studentQuizAnswers.lessonId,
           userId,
           true,
+          evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
+          trx,
         );
 
         this.eventBus.publish(

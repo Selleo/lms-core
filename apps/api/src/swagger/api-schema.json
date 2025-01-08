@@ -3946,6 +3946,22 @@
                                 "type": {
                                   "anyOf": [
                                     {
+                                      "const": "brief_response",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "detailed_response",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "match_words",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "scale_1_5",
+                                      "type": "string"
+                                    },
+                                    {
                                       "const": "single_choice",
                                       "type": "string"
                                     },
@@ -3971,22 +3987,6 @@
                                     },
                                     {
                                       "const": "fill_in_the_blanks_dnd",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "brief_response",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "detailed_response",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "match_words",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "scale_1_5",
                                       "type": "string"
                                     }
                                   ]
@@ -4626,6 +4626,22 @@
                                   "type": {
                                     "anyOf": [
                                       {
+                                        "const": "brief_response",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "detailed_response",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "match_words",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "scale_1_5",
+                                        "type": "string"
+                                      },
+                                      {
                                         "const": "single_choice",
                                         "type": "string"
                                       },
@@ -4651,22 +4667,6 @@
                                       },
                                       {
                                         "const": "fill_in_the_blanks_dnd",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "brief_response",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "detailed_response",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "match_words",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "scale_1_5",
                                         "type": "string"
                                       }
                                     ]
@@ -5189,6 +5189,22 @@
                           "type": {
                             "anyOf": [
                               {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
+                              },
+                              {
                                 "const": "single_choice",
                                 "type": "string"
                               },
@@ -5214,22 +5230,6 @@
                               },
                               {
                                 "const": "fill_in_the_blanks_dnd",
-                                "type": "string"
-                              },
-                              {
-                                "const": "brief_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "detailed_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "match_words",
-                                "type": "string"
-                              },
-                              {
-                                "const": "scale_1_5",
                                 "type": "string"
                               }
                             ]
@@ -5495,6 +5495,22 @@
                           "type": {
                             "anyOf": [
                               {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
+                              },
+                              {
                                 "const": "single_choice",
                                 "type": "string"
                               },
@@ -5520,22 +5536,6 @@
                               },
                               {
                                 "const": "fill_in_the_blanks_dnd",
-                                "type": "string"
-                              },
-                              {
-                                "const": "brief_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "detailed_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "match_words",
-                                "type": "string"
-                              },
-                              {
-                                "const": "scale_1_5",
                                 "type": "string"
                               }
                             ]
@@ -5887,6 +5887,22 @@
                         "type": {
                           "anyOf": [
                             {
+                              "const": "brief_response",
+                              "type": "string"
+                            },
+                            {
+                              "const": "detailed_response",
+                              "type": "string"
+                            },
+                            {
+                              "const": "match_words",
+                              "type": "string"
+                            },
+                            {
+                              "const": "scale_1_5",
+                              "type": "string"
+                            },
+                            {
                               "const": "single_choice",
                               "type": "string"
                             },
@@ -5913,32 +5929,6 @@
                             {
                               "const": "fill_in_the_blanks_dnd",
                               "type": "string"
-                            },
-                            {
-                              "const": "brief_response",
-                              "type": "string"
-                            },
-                            {
-                              "const": "detailed_response",
-                              "type": "string"
-                            },
-                            {
-                              "const": "match_words",
-                              "type": "string"
-                            },
-                            {
-                              "const": "scale_1_5",
-                              "type": "string"
-                            }
-                          ]
-                        },
-                        "passQuestion": {
-                          "anyOf": [
-                            {
-                              "type": "boolean"
-                            },
-                            {
-                              "type": "null"
                             }
                           ]
                         },
@@ -6023,6 +6013,16 @@
                               "questionId": {
                                 "format": "uuid",
                                 "type": "string"
+                              },
+                              "solutionExplanation": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
                               }
                             },
                             "required": [
@@ -6031,16 +6031,38 @@
                               "displayOrder",
                               "isStudentAnswer",
                               "studentAnswer",
-                              "isCorrect"
+                              "isCorrect",
+                              "solutionExplanation"
                             ]
                           }
+                        },
+                        "passQuestion": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "solutionExplanation": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [
                         "id",
                         "type",
+                        "title",
                         "passQuestion",
-                        "title"
+                        "solutionExplanation"
                       ]
                     }
                   },
@@ -6086,11 +6108,36 @@
                   "score"
                 ]
               },
+              "quizCompleted": {
+                "type": "boolean"
+              },
               "displayOrder": {
                 "type": "number"
               },
               "isExternal": {
                 "type": "boolean"
+              },
+              "nextLessonId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "nextLessonChapterId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -6100,7 +6147,9 @@
               "description",
               "fileType",
               "fileUrl",
-              "displayOrder"
+              "displayOrder",
+              "nextLessonId",
+              "nextLessonChapterId"
             ]
           }
         },
@@ -6162,6 +6211,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6187,22 +6252,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6396,6 +6445,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6421,22 +6486,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6627,6 +6676,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6652,22 +6717,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6864,6 +6913,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6889,22 +6954,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -7097,10 +7146,7 @@
                       "value": {
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "answerId"
-                    ]
+                    }
                   }
                 }
               },

@@ -1,4 +1,5 @@
-import { LESSON_TYPES, QuestionType } from "src/lesson/lesson.type";
+import { LESSON_TYPES } from "src/lesson/lesson.type";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
 
 import type { NiceCourseData } from "../utils/types/test-types";
 
@@ -41,7 +42,7 @@ export const e2eCourses: NiceCourseData[] = [
             questions: [
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "E2E Testing Question",
                 description: "E2E Testing Question",
                 displayOrder: 1,
@@ -55,7 +56,7 @@ export const e2eCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "E2E Testing Question 2",
                 description: "E2E Testing Question 2",
                 displayOrder: 2,
@@ -74,7 +75,7 @@ export const e2eCourses: NiceCourseData[] = [
               },
               {
                 id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title: "E2E Testing Question 3",
                 description: "E2E Testing Question 3",
                 displayOrder: 3,
