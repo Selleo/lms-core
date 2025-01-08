@@ -116,7 +116,9 @@ export class LessonService {
           ELSE NULL END`,
         displayOrder: sql<number>`${questions.displayOrder}`,
         options: sql<OptionBody[]>`CASE
-          WHEN ${questions.type} in (${QUESTION_TYPE.BRIEF_RESPONSE}, ${QUESTION_TYPE.DETAILED_RESPONSE}) AND ${lesson.quizCompleted} THEN
+          WHEN ${questions.type} in (${QUESTION_TYPE.BRIEF_RESPONSE}, ${
+            QUESTION_TYPE.DETAILED_RESPONSE
+          }) AND ${lesson.quizCompleted} THEN
             ARRAY[json_build_object(
               'id', ${studentQuestionAnswers.id},
               'optionText', '',
@@ -131,7 +133,13 @@ export class LessonService {
             SELECT ARRAY(
               SELECT json_build_object(
                 'id', qao.id,
-                'optionText', qao.option_text,
+                'optionText',  
+                  CASE 
+                    WHEN ${!lesson.quizCompleted} AND ${questions.type} = ${
+                      QUESTION_TYPE.BRIEF_RESPONSE
+                    } THEN NULL
+                    ELSE qao.option_text
+                  END,
                 'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
                 'displayOrder',
                   CASE
@@ -141,14 +149,20 @@ export class LessonService {
                 'isStudentAnswer',
                   CASE
                     WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                    WHEN ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text) = qao.option_text AND
-                      ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})
+                    WHEN ${
+                      studentQuestionAnswers.answer
+                    }->>CAST(qao.display_order AS text) = qao.option_text AND
+                      ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                        QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                      })
                       THEN TRUE
                     WHEN EXISTS (
                       SELECT 1
                       FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
                       WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
-                        AND  ${questions.type} NOT IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})
+                        AND  ${questions.type} NOT IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                          QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                        })
                       THEN TRUE
                     ELSE FALSE
                   END,
@@ -160,14 +174,18 @@ export class LessonService {
                 'solutionExplanation',
                   CASE
                     WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                    ELSE ${questions.type} in (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})
+                    ELSE ${questions.type} in (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                      QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                    })
                   END
               )
               FROM ${questionAnswerOptions} qao
               WHERE qao.question_id = questions.id
               ORDER BY
                 CASE
-                  WHEN ${questions.type} in (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}) AND ${lesson.quizCompleted} = FALSE
+                  WHEN ${questions.type} in (${
+                    QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
+                  }) AND ${!lesson.quizCompleted}
                     THEN random()
                   ELSE qao.display_order
                 END

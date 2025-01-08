@@ -977,6 +977,7 @@ export interface GetLessonByIdResponse {
       wrongAnswerCount: number | null;
       score: number | null;
     };
+    quizCompleted?: boolean;
     displayOrder: number;
     isExternal?: boolean;
   };

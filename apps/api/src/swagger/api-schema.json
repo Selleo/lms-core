@@ -6097,6 +6097,9 @@
                   "score"
                 ]
               },
+              "quizCompleted": {
+                "type": "boolean"
+              },
               "displayOrder": {
                 "type": "number"
               },
