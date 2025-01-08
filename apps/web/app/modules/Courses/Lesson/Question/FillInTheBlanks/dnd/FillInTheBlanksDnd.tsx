@@ -24,10 +24,8 @@ import { WordBank } from "./WordBank";
 import type { DndWord } from "./types";
 
 type FillInTheBlanksDndProps = {
-  isQuiz: boolean;
   questionLabel: string;
   content: string;
-  sendAnswer: (selectedOption: { value: string; index: number }[]) => Promise<void>;
   answers: DndWord[];
   isQuizSubmitted?: boolean;
   solutionExplanation?: string | null;
@@ -38,10 +36,8 @@ type FillInTheBlanksDndProps = {
 };
 
 export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
-  isQuiz = false,
   questionLabel,
   content,
-  sendAnswer,
   answers,
   isQuizSubmitted,
   solutionExplanation,
@@ -56,13 +52,13 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: isQuiz && isQuizSubmitted ? Infinity : 0,
+        distance: isQuizSubmitted ? Infinity : 0,
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
       keyboardCodes: {
-        start: isQuiz && isQuizSubmitted ? [] : ["Space"],
+        start: isQuizSubmitted ? [] : ["Space"],
         cancel: ["Escape"],
         end: ["Space"],
       },
@@ -70,14 +66,14 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   );
 
   useEffect(() => {
-    if (isQuiz) setWords(answers);
+    setWords(answers);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isQuizSubmitted]);
 
   const maxAnswersAmount = content?.match(/\[word]/g)?.length ?? 0;
 
   const handleDragStart = (event: DragStartEvent) => {
-    if (isQuiz && isQuizSubmitted) return;
+    if (isQuizSubmitted) return;
 
     const { active } = event;
     const { id: activeId } = active;
@@ -90,7 +86,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   };
 
   const handleDragOver = (event: DragOverEvent) => {
-    if (isQuiz && isQuizSubmitted) return;
+    if (isQuizSubmitted) return;
 
     const { active, over } = event;
     const { id: activeId } = active;
@@ -116,8 +112,11 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
     });
   };
 
-  const handleCompletion = () =>
-    handleCompletionForMediaLesson(isCompleted, isQuiz) && updateLessonItemCompletion(lessonItemId);
+  const handleCompletion = () => {
+    return (
+      handleCompletionForMediaLesson(isCompleted, true) && updateLessonItemCompletion(lessonItemId)
+    );
+  };
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -193,7 +192,6 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         if (filteredWords.length >= 1 && filteredWords.length <= maxAnswersAmount) {
           const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
           if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
-            sendAnswer(sortedWords);
             handleCompletion();
           }
         }
@@ -214,7 +212,6 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
       if (filteredWords.length >= 1 && filteredWords.length <= maxAnswersAmount) {
         const sortedWords = filteredWords.sort((a, b) => a.index - b.index);
         if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
-          sendAnswer(sortedWords);
           handleCompletion();
         }
       }
@@ -239,9 +236,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         onDragEnd={handleDragEnd}
       >
         <DragOverlay>
-          {currentlyDraggedWord && (
-            <DraggableWord isQuiz={isQuiz} word={currentlyDraggedWord} isOverlay />
-          )}
+          {currentlyDraggedWord && <DraggableWord word={currentlyDraggedWord} isOverlay />}
         </DragOverlay>
         <SentenceBuilder
           content={content}
@@ -252,7 +247,6 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
 
             return (
               <DndBlank
-                isQuiz={isQuiz}
                 blankId={blankId}
                 words={wordsInBlank}
                 isCorrect={wordsInBlank[0]?.isCorrect}

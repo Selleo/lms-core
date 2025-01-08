@@ -30,9 +30,10 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
       form.getValues(`questions.${questionIndex}.options`) || [];
     const newOption: QuestionOption = {
       optionText: "",
-      isCorrect: false,
+      isCorrect: true,
       displayOrder: currentOptions.length + 1,
     };
+
     form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
       shouldDirty: true,
     });
@@ -111,20 +112,20 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                             onChange={(e) =>
                               handleOptionChange(index, "optionText", e.target.value)
                             }
-                            placeholder={`Option`}
+                            placeholder="Option"
                             required
-                            className="w-[50%]"
+                            className="w-1/2"
                           />
                           <Input
                             type="text"
                             name={`questions.${questionIndex}.options.${index}.matchedWord`}
                             value={item.matchedWord}
-                            onChange={(e) =>
-                              handleOptionChange(index, "matchedWord", e.target.value)
-                            }
-                            placeholder={`Matched word`}
+                            onChange={(e) => {
+                              handleOptionChange(index, "matchedWord", e.target.value);
+                            }}
+                            placeholder="Matched word"
                             required
-                            className="w-[50%]"
+                            className="w-1/2"
                           />
                         </div>
                         <div className="flex items-center">

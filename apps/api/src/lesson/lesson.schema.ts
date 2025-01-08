@@ -42,12 +42,12 @@ export const optionSchema = Type.Object({
 export const questionSchema = Type.Object({
   id: UUIDSchema,
   type: Type.Enum(QuestionType),
+  passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
   displayOrder: Type.Optional(Type.Number()),
   photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(optionSchema)),
-  passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
 });
 
 export const lessonSchema = Type.Object({

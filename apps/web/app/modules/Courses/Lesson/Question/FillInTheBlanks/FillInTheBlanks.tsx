@@ -2,9 +2,11 @@ import { useState } from "react";
 
 import Viewer from "~/components/RichText/Viever";
 import { Card } from "~/components/ui/card";
-import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/FillInTheTextBlanks";
-import { TextBlank } from "~/modules/Courses/Lesson/LessonItems/FillInTheBlanks/TextBlank";
+import { FillInTheTextBlanks } from "~/modules/Courses/Lesson/Question/FillInTheBlanks/FillInTheTextBlanks";
+import { TextBlank } from "~/modules/Courses/Lesson/Question/FillInTheBlanks/TextBlank";
 import { handleCompletionForMediaLesson } from "~/utils/handleCompletionForMediaLesson";
+
+import type { QuizQuestion } from "~/modules/Courses/Lesson/Question/types";
 
 type Answer = {
   id: string;
@@ -16,46 +18,35 @@ type Answer = {
 };
 
 type FillInTheBlanksProps = {
-  isQuiz: boolean;
-  content: string;
-  sendAnswer: (selectedOption: Word[]) => Promise<void>;
-  answers: Answer[];
-  questionLabel: string;
+  question: QuizQuestion;
   isQuizSubmitted?: boolean;
-  solutionExplanation?: string | null;
-  isPassed: boolean | null;
   lessonItemId: string;
   isCompleted: boolean;
-  updateLessonItemCompletion: (lessonItemId: string) => void;
 };
 
 type Word = {
-  index: number;
-  value: string;
+  index: number | null;
+  value: string | null;
 };
 
 export const FillInTheBlanks = ({
-  isQuiz = false,
-  questionLabel,
-  content,
-  sendAnswer,
-  answers,
+  question,
   isQuizSubmitted,
-  solutionExplanation,
-  isPassed,
-  lessonItemId,
   isCompleted,
-  updateLessonItemCompletion,
 }: FillInTheBlanksProps) => {
   const [_words, setWords] = useState<Word[]>(
-    answers.map(({ displayOrder, studentAnswerText }) => ({
-      index: displayOrder ?? 0,
-      value: studentAnswerText ?? "",
+    question.options!.map(({ displayOrder, studentAnswer }) => ({
+      index: displayOrder,
+      value: studentAnswer,
     })),
   );
 
-  const maxAnswersAmount = content?.match(/\[word]/g)?.length ?? 0;
+  if (!question.description || !question.options?.length) return null;
 
+  const solutionExplanation =
+    "solutionExplanation" in question ? (question.solutionExplanation as string) : null;
+
+  const maxAnswersAmount = question.description?.match(/\[word]/g)?.length ?? 0;
   const handleWordUpdate = (prevWords: Word[], index: number, value: string) => {
     const trimmedValue = value.trim();
     const existingWordIndex = prevWords.findIndex((word) => word.index === index);
@@ -75,12 +66,11 @@ export const FillInTheBlanks = ({
     const sortedWords = updatedWords.sort((a, b) => a.index - b.index);
 
     if (sortedWords.length > 0 && sortedWords.length <= maxAnswersAmount) {
-      sendAnswer(sortedWords);
       if (
-        handleCompletionForMediaLesson(isCompleted, isQuiz) &&
+        handleCompletionForMediaLesson(isCompleted, true) &&
         sortedWords.length === maxAnswersAmount
       ) {
-        updateLessonItemCompletion(lessonItemId);
+        // TODO: handle completion
       }
     }
 
@@ -93,15 +83,14 @@ export const FillInTheBlanks = ({
 
   return (
     <Card className="flex flex-col gap-4 p-8 border-none drop-shadow-primary">
-      <div className="details text-primary-700 uppercase">{questionLabel}</div>
+      <div className="details text-primary-700 uppercase">Question {question.displayOrder}</div>
       <div className="h6 text-neutral-950">Fill in the blanks.</div>
       <FillInTheTextBlanks
-        content={content}
+        content={question.description}
         replacement={(index) => {
           return (
             <TextBlank
-              isQuiz={isQuiz}
-              studentAnswer={answers[index]}
+              studentAnswer={question.options?.[index]}
               index={index}
               handleOnBlur={handleOnBlur}
               isQuizSubmitted={isQuizSubmitted}
@@ -109,7 +98,7 @@ export const FillInTheBlanks = ({
           );
         }}
       />
-      {solutionExplanation && !isPassed && (
+      {!!solutionExplanation && !question.passQuestion && (
         <div>
           <span className="body-base-md text-error-700">Correct sentence:</span>
           <Viewer content={solutionExplanation} />

@@ -209,9 +209,9 @@ export class LessonService {
       const quizDetails: QuestionDetails = {
         questions: questionListWithUrls,
         questionCount: questionListWithUrls.length,
-        score: quizResult.score,
-        correctAnswerCount: quizResult.correctAnswerCount,
-        wrongAnswerCount: quizResult.wrongAnswerCount,
+        score: quizResult?.score ?? 0,
+        correctAnswerCount: quizResult?.correctAnswerCount ?? 0,
+        wrongAnswerCount: quizResult?.wrongAnswerCount ?? 0,
       };
 
       return { ...lesson, quizDetails };

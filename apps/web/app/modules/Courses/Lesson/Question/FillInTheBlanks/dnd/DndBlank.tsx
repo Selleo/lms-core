@@ -6,14 +6,13 @@ import { DraggableWord } from "./DraggableWord";
 import type { DndWord } from "./types";
 
 type DndBlankProps = {
-  isQuiz: boolean;
   words: DndWord[];
   blankId: string;
   isCorrect?: boolean | null;
   isStudentAnswer?: boolean;
 };
 
-export const DndBlank = ({ isQuiz, words, blankId, isCorrect, isStudentAnswer }: DndBlankProps) => {
+export const DndBlank = ({ words, blankId, isCorrect, isStudentAnswer }: DndBlankProps) => {
   const { setNodeRef } = useDroppable({
     id: blankId,
   });
@@ -26,7 +25,6 @@ export const DndBlank = ({ isQuiz, words, blankId, isCorrect, isStudentAnswer }:
       >
         {words.map((word) => (
           <DraggableWord
-            isQuiz={isQuiz}
             key={word.id}
             word={word}
             isCorrect={isCorrect}

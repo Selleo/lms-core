@@ -1,0 +1,1 @@
+export { DetailedResponse } from "./DetailedResponse";

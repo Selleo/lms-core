@@ -58,8 +58,8 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
         customHref={`/course/${lesson.courseId}/lesson/${lesson.id}`}
         isAdmin={isAdmin}
         isEnrolled={!!lesson.enrolled}
-        itemsCount={lesson.itemsCount}
-        itemsCompletedCount={lesson.itemsCompletedCount}
+        itemsCount={lesson.lessonCount}
+        itemsCompletedCount={lesson.completedLessonCount}
         index={1}
       />
     </div>

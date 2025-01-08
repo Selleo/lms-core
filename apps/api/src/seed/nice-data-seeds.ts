@@ -64,9 +64,10 @@ export const niceCourses: NiceCourseData[] = [
                 id: crypto.randomUUID(),
                 displayOrder: 1,
                 type: QuestionType.FillInTheBlanksText,
-                title:
-                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                title: "",
                 description:
+                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                solutionExplanation:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
@@ -313,10 +314,11 @@ export const niceCourses: NiceCourseData[] = [
               {
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
+                title: "",
+                description:
                   "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
                 displayOrder: 5,
-                description:
+                solutionExplanation:
                   "<p>CSS is used to style <strong>HTML</strong>, while JavaScript is used to add <strong>interactivity</strong> to web pages.</p>",
                 options: [
                   {
@@ -367,9 +369,10 @@ export const niceCourses: NiceCourseData[] = [
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksText,
                 displayOrder: 6,
-                title:
-                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                title: "",
                 description:
+                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                solutionExplanation:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
@@ -390,9 +393,10 @@ export const niceCourses: NiceCourseData[] = [
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
                 displayOrder: 7,
-                title:
-                  "In JavaScript, [word] are used to store data, while [word] are used to perform actions.",
+                title: "",
                 description:
+                  "In JavaScript, [word] are used to store data, while [word] are used to perform actions.",
+                solutionExplanation:
                   "<p>In JavaScript, <strong>variables</strong> are used to store data, while <strong>functions</strong> are used to perform actions.</p>",
                 options: [
                   {
@@ -500,9 +504,10 @@ export const niceCourses: NiceCourseData[] = [
               {
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
+                title: "",
                 description:
+                  "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
+                solutionExplanation:
                   "<p>The CSS <strong>flexbox</strong> property is used for creating flexible box layouts, while <strong>color properties</strong> are used for creating grid layouts.</p>",
                 displayOrder: 3,
                 options: [
@@ -536,8 +541,10 @@ export const niceCourses: NiceCourseData[] = [
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
                 displayOrder: 4,
-                title: "To center an element horizontally, you can use 'margin: [word] [word];'.",
+                title: "",
                 description:
+                  "To center an element horizontally, you can use 'margin: [word] [word];'.",
+                solutionExplanation:
                   "<p>To center an element horizontally, you can use 'margin: <strong>0 auto</strong>;'.</p>",
                 options: [
                   {
@@ -608,9 +615,10 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                title: "",
                 description:
+                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                solutionExplanation:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
@@ -695,18 +703,20 @@ export const niceCourses: NiceCourseData[] = [
           {
             id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title:
+            title: "",
+            description:
               "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
-            description: "",
+            solutionExplanation: "",
             displayOrder: 4,
             questions: [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
+                title: "",
                 description:
+                  "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
+                solutionExplanation:
                   "<p>In Java, <strong>classes</strong> are used to define the blueprint of objects, while <strong>objects</strong> are instances of these blueprints.</p>",
                 options: [
                   {
@@ -728,18 +738,20 @@ export const niceCourses: NiceCourseData[] = [
           {
             id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title:
+            title: "",
+            description:
               "In Android dev, [word] are used to define the user interface, while [word] handle user interactions",
-            description: "",
+            solutionExplanation: "",
             displayOrder: 5,
             questions: [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
+                title: "",
                 description:
+                  "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
+                solutionExplanation:
                   "<p>In Android development, <strong>layouts</strong> are used to define the user interface, while <strong>activities</strong> handle user interactions and app logic.</p>",
                 options: [
                   {
@@ -942,17 +954,20 @@ export const niceCourses: NiceCourseData[] = [
           {
             id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
-            description: "",
+            title: "",
+            description:
+              "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
+            solutionExplanation: "",
             displayOrder: 3,
             questions: [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
+                title: "",
                 description:
+                  "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
+                solutionExplanation:
                   "<p>In Kotlin, <strong>val</strong> are immutable variables, while <strong>var</strong> are mutable variables.</p>",
                 options: [
                   { id: crypto.randomUUID(), optionText: "val", isCorrect: true, displayOrder: 0 },
@@ -1015,18 +1030,20 @@ export const niceCourses: NiceCourseData[] = [
           {
             id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title:
+            title: "",
+            description:
               "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
-            description: "",
+            solutionExplanation: "",
             displayOrder: 4,
             questions: [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
+                title: "",
                 description:
+                  "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
+                solutionExplanation:
                   "<p>In arithmetic, <strong>sum</strong> is the result of addition, while <strong>difference</strong> is the result of subtraction.</p>",
                 options: [
                   { id: crypto.randomUUID(), optionText: "sum", isCorrect: true, displayOrder: 0 },
@@ -1133,9 +1150,10 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
+                title: "",
                 description:
+                  "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
+                solutionExplanation:
                   "<p>In algebra, <strong>variables</strong> represent unknown values, while <strong>expressions</strong> are mathematical phrases that combine numbers and variables.</p>",
                 options: [
                   {
@@ -1246,9 +1264,10 @@ export const niceCourses: NiceCourseData[] = [
               {
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
+                title: "",
                 description:
+                  "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
+                solutionExplanation:
                   "<p>In algebra, <strong>variables</strong> are used to represent unknowns, while <strong>equations</strong> can be solved to find their values.</p>",
                 displayOrder: 3,
                 options: [
@@ -1338,8 +1357,9 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title: "Fill in the blanks: 'She [word] to the store yesterday.'",
-                description: "<p>She <strong>went</strong> to the store yesterday.</p>",
+                title: "",
+                description: "Fill in the blanks: 'She [word] to the store yesterday.'",
+                solutionExplanation: "<p>She <strong>went</strong> to the store yesterday.</p>",
                 options: [
                   { id: crypto.randomUUID(), optionText: "went", isCorrect: true, displayOrder: 0 },
                   { id: crypto.randomUUID(), optionText: "go", isCorrect: false, displayOrder: 1 },
@@ -1411,8 +1431,9 @@ export const niceCourses: NiceCourseData[] = [
           {
             id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "I [word] to the park every day.",
-            description: "Fill in the blank with the correct verb.",
+            title: "",
+            description: "I [word] to the park every day.",
+            solutionExplanation: "Fill in the blank with the correct verb.",
             displayOrder: 5,
             questions: [
               {
@@ -1496,8 +1517,9 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title: "I love [word] (swimming/swim).",
-                description: "I love <strong>swimming</strong> (swimming/swim).",
+                title: "",
+                description: "I love [word] (swimming/swim).",
+                solutionExplanation: "I love <strong>swimming</strong> (swimming/swim).",
                 options: [
                   {
                     id: crypto.randomUUID(),
@@ -1557,16 +1579,18 @@ export const niceCourses: NiceCourseData[] = [
           {
             id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "She [word] to the park every day.",
-            description: "Fill in the blank with the correct verb.",
+            title: "",
+            description: "She [word] to the park every day.",
+            solutionExplanation: "Fill in the blank with the correct verb.",
             displayOrder: 2,
             questions: [
               {
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title: "She [word] to the park every day.",
-                description: "She <strong>went</strong> to the park every day.",
+                title: "",
+                description: "She [word] to the park every day.",
+                solutionExplanation: "She <strong>went</strong> to the park every day.",
                 options: [
                   { id: crypto.randomUUID(), optionText: "goes", isCorrect: true, displayOrder: 0 },
                   {
@@ -1727,8 +1751,10 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title: "The book [word] I borrowed yesterday was fascinating.",
-                description: "The book <strong>that</strong> I borrowed yesterday was fascinating.",
+                title: "",
+                description: "The book [word] I borrowed yesterday was fascinating.",
+                solutionExplanation:
+                  "The book <strong>that</strong> I borrowed yesterday was fascinating.",
                 options: [
                   { id: crypto.randomUUID(), optionText: "that", isCorrect: true, displayOrder: 0 },
                   { id: crypto.randomUUID(), optionText: "who", isCorrect: false, displayOrder: 1 },
@@ -1808,8 +1834,9 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title: "The results [word] the hypothesis.",
-                description: "The results <strong>support</strong> the hypothesis.",
+                title: "",
+                description: "The results [word] the hypothesis.",
+                solutionExplanation: "The results <strong>support</strong> the hypothesis.",
                 options: [
                   {
                     id: crypto.randomUUID(),
@@ -1870,8 +1897,10 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title: "She was [word] when she heard the good news.",
-                description: "She was <strong>over the moon</strong> when she heard the good news.",
+                title: "",
+                description: "She was [word] when she heard the good news.",
+                solutionExplanation:
+                  "She was <strong>over the moon</strong> when she heard the good news.",
                 options: [
                   {
                     id: crypto.randomUUID(),
@@ -2085,7 +2114,10 @@ export const niceCourses: NiceCourseData[] = [
                 displayOrder: 1,
                 id: crypto.randomUUID(),
                 type: QuestionType.FillInTheBlanksDnd,
-                title:
+                title: "",
+                description:
+                  "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
+                solutionExplanation:
                   "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
                 options: [
                   {

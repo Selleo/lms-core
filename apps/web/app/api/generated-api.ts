@@ -951,6 +951,7 @@ export interface GetLessonByIdResponse {
           | "detailed_response"
           | "match_words"
           | "scale_1_5";
+        passQuestion: boolean | null;
         description?: string | null;
         title: string;
         displayOrder?: number;
@@ -966,7 +967,6 @@ export interface GetLessonByIdResponse {
           /** @format uuid */
           questionId?: string;
         }[];
-        passQuestion: boolean | null;
       }[];
       questionCount: number;
       correctAnswerCount: number | null;
