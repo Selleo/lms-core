@@ -10,7 +10,7 @@ import xml2js from "xml2js";
 import { AdminChapterService } from "src/chapter/adminChapter.service";
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
-import { LESSON_TYPES } from "src/lesson/lesson.type";
+import { LESSON_TYPES, LessonTypes } from "src/lesson/lesson.type";
 import { AdminLessonService } from "src/lesson/services/adminLesson.service";
 import { S3Service } from "src/s3/s3.service";
 
@@ -30,7 +30,7 @@ type ScormLesson = {
   title: string;
   identifier: string;
   href: string;
-  type: string;
+  type: LessonTypes;
   displayOrder: number;
   isQuiz: boolean;
 };

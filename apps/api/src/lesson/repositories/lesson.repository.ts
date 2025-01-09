@@ -14,6 +14,7 @@ import {
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { AdminQuestionBody, QuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
+import { LessonTypes } from "../lesson.type";
 
 @Injectable()
 export class LessonRepository {
@@ -24,13 +25,86 @@ export class LessonRepository {
     return lesson;
   }
 
+  async getLessonDetails(id: UUIDType, userId: UUIDType) {
+    const [lesson] = await this.db
+      .select({
+        id: lessons.id,
+        type: sql<LessonTypes>`${lessons.type}`,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        fileUrl: lessons.fileS3Key,
+        fileType: lessons.fileType,
+        displayOrder: sql<number>`${lessons.displayOrder}`,
+        quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
+        quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
+        isExternal: sql<boolean>`${lessons.isExternal}`,
+        isFreemium: sql<boolean>`${chapters.isFreemium}`,
+        isEnrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NULL THEN FALSE ELSE TRUE END`,
+        nextLessonId: sql<string | null>`
+              COALESCE(
+                (
+                  SELECT l2.id
+                  FROM ${lessons} l2
+                  WHERE l2.chapter_id = ${lessons.chapterId}
+                    AND l2.display_order > ${lessons.displayOrder}
+                  ORDER BY l2.display_order
+                  LIMIT 1),
+                (
+                  SELECT l3.id
+                  FROM ${lessons} l3
+                  JOIN ${chapters} c2 ON c2.id = l3.chapter_id
+                  WHERE c2.course_id = ${chapters.courseId}
+                    AND c2.display_order > ${chapters.displayOrder}
+                  ORDER BY c2.display_order, l3.display_order
+                  LIMIT 1)
+              )
+            `,
+        nextLessonChapterId: sql<string | null>`
+              COALESCE(
+              (
+                SELECT l2.chapter_id
+                FROM ${lessons} l2
+                WHERE l2.chapter_id = ${lessons.chapterId}
+                  AND l2.display_order > ${lessons.displayOrder}
+                ORDER BY l2.display_order
+                LIMIT 1
+              ),
+              (
+                SELECT c2.id
+                FROM ${chapters} c2
+                WHERE c2.course_id = ${chapters.courseId}
+                  AND c2.display_order > ${chapters.displayOrder}
+                ORDER BY c2.display_order
+                LIMIT 1
+              )
+            )
+            `,
+      })
+      .from(lessons)
+      .leftJoin(chapters, eq(chapters.id, lessons.chapterId))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+      )
+      .leftJoin(
+        studentLessonProgress,
+        and(
+          eq(studentLessonProgress.lessonId, lessons.id),
+          eq(studentLessonProgress.studentId, userId),
+        ),
+      )
+      .where(eq(lessons.id, id));
+
+    return lesson;
+  }
+
   // TODO: check if is not a duplicate with method below
   async getLessonsByChapterId(chapterId: UUIDType) {
     return this.db
       .select({
         id: lessons.id,
         title: lessons.title,
-        type: lessons.type,
+        type: sql<LessonTypes>`${lessons.type}`,
         description: sql<string>`${lessons.description}`,
         fileS3Key: sql<string | undefined>`${lessons.fileS3Key}`,
         fileType: sql<string | undefined>`${lessons.fileType}`,

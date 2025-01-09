@@ -466,15 +466,15 @@ export class CourseService {
         lessonCount: chapters.lessonCount,
         isFree: chapters.isFreemium,
         lessons: sql<LessonForChapterSchema>`
-        COALESCE(
-          (
-            SELECT array_agg(${lessons.id} ORDER BY ${lessons.displayOrder})
-            FROM ${lessons}
-            WHERE ${lessons.chapterId} = ${chapters.id}
-          ),
-          '{}'
-        )
-      `,
+          COALESCE(
+            (
+              SELECT array_agg(${lessons.id} ORDER BY ${lessons.displayOrder})
+              FROM ${lessons}
+              WHERE ${lessons.chapterId} = ${chapters.id}
+            ),
+            '{}'
+          )
+        `,
       })
       .from(chapters)
       .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))

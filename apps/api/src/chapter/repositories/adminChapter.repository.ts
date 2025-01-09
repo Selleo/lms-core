@@ -8,6 +8,7 @@ import type { UpdateChapterBody } from "../schemas/chapter.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { AdminLessonWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
+import { LessonTypes } from "src/lesson/lesson.type";
 
 @Injectable()
 export class AdminChapterRepository {
@@ -75,7 +76,7 @@ export class AdminChapterRepository {
         updatedAt: sql<string>`${lessons.updatedAt}`,
         id: lessons.id,
         title: lessons.title,
-        type: lessons.type,
+        type: sql<LessonTypes>`${lessons.type}`,
         description: sql<string>`${lessons.description}`,
         fileS3Key: sql<string>`${lessons.fileS3Key}`,
         fileType: sql<string>`${lessons.fileType}`,

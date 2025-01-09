@@ -3679,7 +3679,11 @@
                           "type": {
                             "anyOf": [
                               {
-                                "const": "quiz",
+                                "const": "text",
+                                "type": "string"
+                              },
+                              {
+                                "const": "file",
                                 "type": "string"
                               },
                               {
@@ -3691,7 +3695,7 @@
                                 "type": "string"
                               },
                               {
-                                "const": "text",
+                                "const": "quiz",
                                 "type": "string"
                               }
                             ]
@@ -3899,7 +3903,28 @@
                             "type": "string"
                           },
                           "type": {
-                            "type": "string"
+                            "anyOf": [
+                              {
+                                "const": "text",
+                                "type": "string"
+                              },
+                              {
+                                "const": "file",
+                                "type": "string"
+                              },
+                              {
+                                "const": "presentation",
+                                "type": "string"
+                              },
+                              {
+                                "const": "video",
+                                "type": "string"
+                              },
+                              {
+                                "const": "quiz",
+                                "type": "string"
+                              }
+                            ]
                           },
                           "description": {
                             "anyOf": [
@@ -4579,7 +4604,28 @@
                               "type": "string"
                             },
                             "type": {
-                              "type": "string"
+                              "anyOf": [
+                                {
+                                  "const": "text",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "file",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "presentation",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "video",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "quiz",
+                                  "type": "string"
+                                }
+                              ]
                             },
                             "description": {
                               "anyOf": [
@@ -5006,7 +5052,11 @@
                     "type": {
                       "anyOf": [
                         {
-                          "const": "quiz",
+                          "const": "text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file",
                           "type": "string"
                         },
                         {
@@ -5018,7 +5068,7 @@
                           "type": "string"
                         },
                         {
-                          "const": "text",
+                          "const": "quiz",
                           "type": "string"
                         }
                       ]
@@ -5142,7 +5192,28 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "const": "text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file",
+                          "type": "string"
+                        },
+                        {
+                          "const": "presentation",
+                          "type": "string"
+                        },
+                        {
+                          "const": "video",
+                          "type": "string"
+                        },
+                        {
+                          "const": "quiz",
+                          "type": "string"
+                        }
+                      ]
                     },
                     "description": {
                       "anyOf": [
@@ -5448,7 +5519,28 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "const": "text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file",
+                          "type": "string"
+                        },
+                        {
+                          "const": "presentation",
+                          "type": "string"
+                        },
+                        {
+                          "const": "video",
+                          "type": "string"
+                        },
+                        {
+                          "const": "quiz",
+                          "type": "string"
+                        }
+                      ]
                     },
                     "description": {
                       "anyOf": [
@@ -5968,7 +6060,14 @@
                                 "type": "string"
                               },
                               "optionText": {
-                                "type": "string"
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
                               },
                               "displayOrder": {
                                 "anyOf": [
@@ -6167,7 +6266,28 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "const": "text",
+                    "type": "string"
+                  },
+                  {
+                    "const": "file",
+                    "type": "string"
+                  },
+                  {
+                    "const": "presentation",
+                    "type": "string"
+                  },
+                  {
+                    "const": "video",
+                    "type": "string"
+                  },
+                  {
+                    "const": "quiz",
+                    "type": "string"
+                  }
+                ]
               },
               "description": {
                 "anyOf": [
@@ -6869,7 +6989,28 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "const": "text",
+                    "type": "string"
+                  },
+                  {
+                    "const": "file",
+                    "type": "string"
+                  },
+                  {
+                    "const": "presentation",
+                    "type": "string"
+                  },
+                  {
+                    "const": "video",
+                    "type": "string"
+                  },
+                  {
+                    "const": "quiz",
+                    "type": "string"
+                  }
+                ]
               },
               "description": {
                 "anyOf": [

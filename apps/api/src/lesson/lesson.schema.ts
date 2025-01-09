@@ -32,7 +32,7 @@ export const adminQuestionSchema = Type.Object({
 
 export const optionSchema = Type.Object({
   id: UUIDSchema,
-  optionText: Type.String(),
+  optionText: Type.Union([Type.String(), Type.Null()]),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Union([Type.Boolean(), Type.Null()]),
   studentAnswer: Type.Union([Type.String(), Type.Null()]),
@@ -56,7 +56,7 @@ export const questionSchema = Type.Object({
 export const lessonSchema = Type.Object({
   id: UUIDSchema,
   title: Type.String(),
-  type: Type.String(),
+  type: Type.Enum(LESSON_TYPES),
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   displayOrder: Type.Number(),
   fileS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -79,7 +79,7 @@ const lessonQuizSchema = Type.Object({
 
 export const adminLessonSchema = Type.Object({
   id: UUIDSchema,
-  type: Type.String(),
+  type: Type.Enum(LESSON_TYPES),
   displayOrder: Type.Number(),
   title: Type.String(),
   description: Type.String(),
@@ -133,12 +133,7 @@ export const lessonForChapterSchema = Type.Array(
   Type.Object({
     id: UUIDSchema,
     title: Type.String(),
-    type: Type.Union([
-      Type.Literal(LESSON_TYPES.QUIZ),
-      Type.Literal(LESSON_TYPES.PRESENTATION),
-      Type.Literal(LESSON_TYPES.VIDEO),
-      Type.Literal(LESSON_TYPES.TEXT),
-    ]),
+    type: Type.Enum(LESSON_TYPES),
     displayOrder: Type.Number(),
     status: Type.Union([
       Type.Literal(PROGRESS_STATUSES.COMPLETED),
