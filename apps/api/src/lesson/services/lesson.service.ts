@@ -305,9 +305,9 @@ export class LessonService {
       } catch (error) {
         throw new ConflictException(
           "Quiz evaluation failed, problem with question: " +
-            error.message +
+            error?.message +
             " problem: " +
-            error.response.error,
+            error?.response?.error,
         );
       }
     });

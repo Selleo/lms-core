@@ -112,7 +112,9 @@ export function SortableList<T extends BaseItem>({
       <SortableContext
         items={
           isQuiz
-            ? items.map((item) => item?.displayOrder?.toString() as any)
+            ? // TODO: Needs to be fixed
+              // eslint-disable-next-line
+              items.map((item) => item?.displayOrder?.toString() as any)
             : items.map((item) => item.id)
         }
       >

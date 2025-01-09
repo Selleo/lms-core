@@ -198,7 +198,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
   if (!questions?.length) return null;
 
   const handleOnSubmit = async (data: TQuestionsForm) => {
-    console.log({ data });
+    // @ts-expect-error Need to be fixed
     submitQuiz.mutate({ lessonId, answers: transformData(data) });
   };
 

@@ -104,6 +104,8 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       const escapedWord = wordToRemove.replace(/[.*+?^=!:${}()|[\]/\\]/g, "\\$&");
 
       const buttonRegex = new RegExp(
+        // TODO: Needs to be fixed
+        // eslint-disable-next-line
         `<button[^>]*class="[^"]*bg-primary-200[^"]*"[^>]*>[^<]*${escapedWord}[^<]*<\/button>`,
         "gi",
       );

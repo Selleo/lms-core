@@ -9,7 +9,7 @@ import { SELECT_OPTION_VARIANTS } from "~/modules/Courses/Lesson/constants";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type MultiSelectProps = {
-  answer: string;
+  answer: string | null;
   answerId: string;
   isCorrectAnswer?: boolean | null;
   isCorrectAnswerNotSelected?: boolean | null;

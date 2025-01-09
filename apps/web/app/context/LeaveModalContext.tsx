@@ -1,5 +1,8 @@
-import React, { createContext, useContext, ReactNode, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
+
 import { Chapter, Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
+
+import type { ReactNode} from "react";
 
 interface LeaveModalContextType {
   isLeaveModalOpen: boolean;
