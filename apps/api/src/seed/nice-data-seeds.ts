@@ -1,9 +1,12 @@
 import { faker } from "@faker-js/faker";
+import * as dotenv from "dotenv";
 
 import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { QUESTION_TYPE } from "src/questions/schema/question.types";
 
 import type { NiceCourseData } from "src/utils/types/test-types";
+
+dotenv.config({ path: "./.env" });
 
 export const niceCourses: NiceCourseData[] = [
   {
@@ -48,11 +51,11 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
             description:
-              "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+              "Test your knowledge of CSS concepts, including layout techniques and styling properties.",
             questions: [
               {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-                title: "",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
                 solutionExplanation:
@@ -76,6 +79,28 @@ export const niceCourses: NiceCourseData[] = [
                   },
                 ],
               },
+              {
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
+                title: "Which CSS property is used to set the background color of an element?",
+                options: [
+                  {
+                    optionText: "background-color",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "color",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "border-color",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "box-shadow",
+                    isCorrect: false,
+                  },
+                ],
+              },
             ],
           },
           {
@@ -87,7 +112,6 @@ export const niceCourses: NiceCourseData[] = [
           {
             type: LESSON_TYPES.QUIZ,
             title: "HTML Tag Quiz",
-            description: "Which HTML tag is used to create a hyperlink?",
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -107,6 +131,28 @@ export const niceCourses: NiceCourseData[] = [
                   },
                   {
                     optionText: "<input>",
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.SINGLE_CHOICE,
+                title: "Which HTML tag is used to define a table row?",
+                options: [
+                  {
+                    optionText: "<tr>",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "<td>",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "<table>",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "<th>",
                     isCorrect: false,
                   },
                 ],
@@ -230,7 +276,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
                 solutionExplanation:
@@ -267,8 +313,8 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-                title: "",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
                 solutionExplanation:
@@ -286,7 +332,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "In JavaScript, [word] are used to store data, while [word] are used to perform actions.",
                 solutionExplanation:
@@ -367,7 +413,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
                 solutionExplanation:
@@ -392,9 +438,8 @@ export const niceCourses: NiceCourseData[] = [
                 ],
               },
               {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-
-                title: "",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
                   "To center an element horizontally, you can use 'margin: [word] [word];'.",
                 solutionExplanation:
@@ -428,7 +473,7 @@ export const niceCourses: NiceCourseData[] = [
           {
             type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
-            description: "Why is HTML considered the backbone of any website?",
+            description: "",
             questions: [
               {
                 type: QUESTION_TYPE.BRIEF_RESPONSE,
@@ -446,12 +491,10 @@ export const niceCourses: NiceCourseData[] = [
           {
             type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
-            description:
-              "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
                 solutionExplanation:
@@ -471,6 +514,32 @@ export const niceCourses: NiceCourseData[] = [
                   },
                   {
                     optionText: "flex",
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description:
+                  "The [word] property is used to set the spacing between lines of text, and the [word] property is used to set the spacing outside an element.",
+                solutionExplanation:
+                  "<p>In CSS, the <strong>line-height</strong> property is used to set the spacing between lines of text, while the <strong>margin</strong> property is used to set the spacing outside an element.</p>",
+                options: [
+                  {
+                    optionText: "line-height",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "margin",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "padding",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "letter-spacing",
                     isCorrect: false,
                   },
                 ],
@@ -521,13 +590,11 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title: "",
-            description:
-              "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
+            title: "Test your knowledge",
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
                 solutionExplanation:
@@ -547,13 +614,11 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title: "",
-            description:
-              "In Android dev, [word] are used to define the user interface, while [word] handle user interactions",
+            title: "Test your knowledge",
             questions: [
               {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-                title: "",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
                   "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
                 solutionExplanation:
@@ -616,7 +681,6 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.QUIZ,
             title: "Which of the following is the entry point of an Android application?",
             description: "",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -659,7 +723,6 @@ export const niceCourses: NiceCourseData[] = [
         title: "Getting Started with Kotlin Programming",
         isPublished: true,
         isFreemium: false,
-
         lessons: [
           {
             type: LESSON_TYPES.TEXT,
@@ -677,7 +740,6 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to declare a variable in Kotlin?",
             description: "",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -714,13 +776,11 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title: "",
-            description:
-              "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
+            title: "Test your knowledge",
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
                 solutionExplanation:
@@ -749,7 +809,6 @@ export const niceCourses: NiceCourseData[] = [
         title: "Arithmetic Essentials: Numbers and Operations",
         isPublished: true,
         isFreemium: false,
-
         lessons: [
           {
             type: LESSON_TYPES.TEXT,
@@ -777,12 +836,11 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title: "",
-            description: "Math is the study of numbers, shapes, and quantities.",
+            title: "Math is the study of numbers, shapes, and quantities.",
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
                 solutionExplanation:
@@ -820,7 +878,6 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.QUIZ,
             title: "Which formula is used to calculate the area of a rectangle?",
             description: "",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -852,7 +909,6 @@ export const niceCourses: NiceCourseData[] = [
         title: "Algebra Introduction: Solving for the Unknown",
         isPublished: true,
         isFreemium: false,
-
         lessons: [
           {
             type: LESSON_TYPES.TEXT,
@@ -862,13 +918,11 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title:
-              "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
-            description: "",
+            title: "Test your knowledge",
             questions: [
               {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-                title: "",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
                   "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
                 solutionExplanation:
@@ -898,19 +952,16 @@ export const niceCourses: NiceCourseData[] = [
         title: "Mathematics Basics Quiz: Test Your Knowledge",
         isPublished: true,
         isFreemium: false,
-
         lessons: [
           {
             type: LESSON_TYPES.QUIZ,
             title: "Mathematics Basics Quiz: Test Your Knowledge",
             description:
               "Evaluate your understanding of arithmetic, geometry, and algebra with this comprehensive quiz.",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of the following is an example of a geometric shape?",
-
                 options: [
                   {
                     optionText: "Triangle",
@@ -955,12 +1006,11 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
                 solutionExplanation:
                   "<p>In algebra, <strong>variables</strong> are used to represent unknowns, while <strong>equations</strong> can be solved to find their values.</p>",
-
                 options: [
                   {
                     optionText: "variables",
@@ -991,7 +1041,6 @@ export const niceCourses: NiceCourseData[] = [
         title: "Mastering Basic Grammar Rules",
         isPublished: true,
         isFreemium: false,
-
         lessons: [
           {
             type: LESSON_TYPES.TEXT,
@@ -1009,7 +1058,6 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.QUIZ,
             title: "Explain the difference between a noun and a verb in a sentence.",
             description: "Explain the difference between a noun and a verb in a sentence.",
-
             questions: [
               {
                 type: QUESTION_TYPE.BRIEF_RESPONSE,
@@ -1026,12 +1074,11 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title: "Fill in the blanks: 'She [word] to the store yesterday.'",
-            description: "Fill in the blanks with the correct verb.",
+            title: "Test your knowledge",
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description: "Fill in the blanks: 'She [word] to the store yesterday.'",
                 solutionExplanation: "<p>She <strong>went</strong> to the store yesterday.</p>",
                 options: [
@@ -1069,7 +1116,6 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.QUIZ,
             title: "Which word is the synonym of 'happy'?",
             description: "Choose the correct synonym for 'happy'.",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -1090,8 +1136,7 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title: "",
-            description: "Fill in the blank with the correct verb.",
+            title: "Test your knowledge",
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
@@ -1113,7 +1158,6 @@ export const niceCourses: NiceCourseData[] = [
         title: "Mastering Pronunciation and Accent",
         isPublished: true,
         isFreemium: false,
-
         lessons: [
           {
             type: LESSON_TYPES.TEXT,
@@ -1132,7 +1176,6 @@ export const niceCourses: NiceCourseData[] = [
             title:
               "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
             description: "Choose the sound that is most commonly mispronounced.",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -1153,12 +1196,11 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title: "I love [word] (swimming/swim).",
-            description: "Choose the correct verb form.",
+            title: "Choose the correct verb form.",
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description: "I love [word] (swimming/swim).",
                 solutionExplanation: "I love <strong>swimming</strong> (swimming/swim).",
                 options: [
@@ -1176,14 +1218,12 @@ export const niceCourses: NiceCourseData[] = [
         title: "English Basics Quiz",
         isPublished: true,
         isFreemium: false,
-
         lessons: [
           {
             type: LESSON_TYPES.QUIZ,
             title:
               "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
             description: "Choose the correct part of speech.",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -1208,12 +1248,11 @@ export const niceCourses: NiceCourseData[] = [
           },
           {
             type: LESSON_TYPES.QUIZ,
-            title: "",
-            description: "Fill in the blank with the correct verb.",
+            title: "Fill in the blank with the correct verb.",
             questions: [
               {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-                title: "",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description: "She [word] to the park every day.",
                 solutionExplanation: "She <strong>went</strong> to the park every day.",
                 options: [
@@ -1230,7 +1269,6 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.QUIZ,
             title: "What is the plural form of 'child'?",
             description: "Choose the correct plural form of 'child'.",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -1252,7 +1290,6 @@ export const niceCourses: NiceCourseData[] = [
             type: LESSON_TYPES.QUIZ,
             title: "Which of these words is a conjunction?",
             description: "Choose the correct conjunction.",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
@@ -1282,212 +1319,18 @@ export const niceCourses: NiceCourseData[] = [
     thumbnailS3Key: faker.image.urlPicsumPhotos(),
     chapters: [
       {
-        title: "Advanced Grammar: Perfecting Sentence Structures",
-        isPublished: true,
-
-        lessons: [
-          {
-            type: LESSON_TYPES.TEXT,
-            title: "Complex Sentences and Their Use",
-            description:
-              "Learn how to form and use complex sentences to convey more detailed thoughts and ideas effectively.",
-          },
-          {
-            type: LESSON_TYPES.TEXT,
-            title: "Relative Clauses and Modifiers",
-            description:
-              "A deep dive into relative clauses and modifiers, which help to add extra information to sentences.",
-          },
-          {
-            type: LESSON_TYPES.QUIZ,
-            title: "Difference between a relative clause and a noun clause",
-            description: "Explain the difference between relative and noun clauses.",
-
-            questions: [
-              {
-                type: QUESTION_TYPE.SINGLE_CHOICE,
-                title: "What is the difference between a relative clause and a noun clause?",
-
-                options: [
-                  {
-                    optionText: "Relative clauses are used to modify nouns",
-                    isCorrect: true,
-                  },
-                  {
-                    optionText: "Relative clauses are used to introduce new information",
-                    isCorrect: false,
-                  },
-                  {
-                    optionText: "Noun clauses are used to modify nouns",
-                    isCorrect: false,
-                  },
-                  {
-                    optionText: "Noun clauses are used to introduce new information",
-                    isCorrect: false,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            type: LESSON_TYPES.VIDEO,
-            title: "Advanced Grammar Video Tutorial",
-            description:
-              "Watch this in-depth video to understand complex sentence structures and advanced grammar.",
-          },
-          {
-            type: LESSON_TYPES.QUIZ,
-            title: "Fill in the blanks: The book [word] I borrowed yesterday was fascinating.",
-            description: "Fill in the blank with the correct word.",
-            questions: [
-              {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
-                description: "The book [word] I borrowed yesterday was fascinating.",
-                solutionExplanation:
-                  "The book <strong>that</strong> I borrowed yesterday was fascinating.",
-                options: [
-                  { optionText: "that", isCorrect: true },
-                  { optionText: "who", isCorrect: false },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "Vocabulary Expansion: Academic and Formal English",
-        isPublished: true,
-        lessons: [
-          {
-            type: LESSON_TYPES.TEXT,
-            title: "Academic Vocabulary and Its Application",
-            description:
-              "Master vocabulary words commonly used in academic papers, essays, and formal discussions.",
-          },
-          {
-            type: LESSON_TYPES.TEXT,
-            title: "Using Formal Language in Communication",
-            description:
-              "Learn how to adjust your language for formal situations, such as presentations or professional meetings.",
-          },
-          {
-            type: LESSON_TYPES.PRESENTATION,
-            title: "Academic Vocabulary List",
-            description:
-              "Download this list of academic vocabulary and explore their meanings and usage in context.",
-          },
-          {
-            type: LESSON_TYPES.QUIZ,
-            title: "Which word is an example of academic vocabulary?",
-            description: "Select the correct academic word.",
-
-            questions: [
-              {
-                type: QUESTION_TYPE.SINGLE_CHOICE,
-                title: "Which word is an example of academic vocabulary?",
-                options: [
-                  {
-                    optionText: "Analyze",
-                    isCorrect: true,
-                  },
-                  { optionText: "Run", isCorrect: false },
-                  {
-                    optionText: "Quick",
-                    isCorrect: false,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            type: LESSON_TYPES.QUIZ,
-            title: "The results [word] the hypothesis.",
-            description: "Fill in the blank with the correct word.",
-            questions: [
-              {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-                title: "",
-                description: "The results [word] the hypothesis.",
-                solutionExplanation: "The results <strong>support</strong> the hypothesis.",
-                options: [
-                  {
-                    optionText: "support",
-                    isCorrect: true,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "Mastering Idiomatic Expressions",
-        isPublished: true,
-
-        lessons: [
-          {
-            type: LESSON_TYPES.TEXT,
-            title: "Understanding Idioms in Context",
-            description:
-              "Learn how idiomatic expressions are used in everyday conversations to sound more natural and fluent.",
-          },
-          {
-            type: LESSON_TYPES.TEXT,
-            title: "Common Idioms and Their Meanings",
-            description:
-              "A list of frequently used idioms, their meanings, and examples of how to use them.",
-          },
-          {
-            type: LESSON_TYPES.QUIZ,
-            title: "What does the idiom 'break the ice' mean?",
-            description: "Explain the meaning of the idiom 'break the ice'.",
-          },
-          {
-            type: LESSON_TYPES.VIDEO,
-            title: "Idiomatic Expressions Video Tutorial",
-            description:
-              "Watch this video to learn how to use idiomatic expressions in real conversations.",
-          },
-          {
-            type: LESSON_TYPES.QUIZ,
-            title: "She was [word] when she heard the good news.",
-            description: "Fill in the blank with the correct idiom.",
-            questions: [
-              {
-                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
-                description: "She was [word] when she heard the good news.",
-                solutionExplanation:
-                  "She was <strong>over the moon</strong> when she heard the good news.",
-                options: [
-                  {
-                    optionText: "over the moon",
-                    isCorrect: true,
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-
-      {
         title: "Elevate Your Writing: Advanced Clause Strategies",
         isPublished: true,
-
         lessons: [
           {
             type: LESSON_TYPES.QUIZ,
             title: "Using Adverbial Clauses to Improve Sentence Fluency",
             description:
               "Understand how adverbial clauses function to show time, reason, contrast, and condition in sentences.",
-
             questions: [
               {
                 type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "What does an adverbial clause typically express in a sentence?",
-
                 options: [
                   {
                     optionText: "Time, reason, contrast, or condition",
@@ -1542,33 +1385,11 @@ export const niceCourses: NiceCourseData[] = [
                 type: QUESTION_TYPE.SCALE_1_5,
                 title: "Select the correct answer.",
                 options: [
-                  // {
-                  //
-                  //   optionText: "1",
-                  //   isCorrect: false,
-                  //
-                  // },
-                  // {
-                  //
-                  //   optionText: "2",
-                  //   isCorrect: false,
-                  // },
                   {
                     optionText: "How confident are you in using adverbial clauses in your writing?",
                     isCorrect: true,
                     scaleAnswer: 3,
                   },
-                  // {
-                  //
-                  //   optionText: "4",
-                  //   isCorrect: false,
-                  //
-                  // },
-                  // {
-                  //
-                  //   optionText: "5",
-                  //   isCorrect: false,
-                  // },
                 ],
               },
               {
@@ -1602,7 +1423,6 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Determine whether the sentence is correct or incorrect:",
                 options: [
                   {
-                    //
                     optionText: "Adverbial clauses are used to modify nouns.",
                     isCorrect: false,
                   },
@@ -1634,7 +1454,7 @@ export const niceCourses: NiceCourseData[] = [
               },
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "The book was [word] by the author to explain complex [word] concepts.",
                 solutionExplanation:
@@ -1689,7 +1509,12 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Which sentence correctly uses an adverbial clause?",
                 description:
                   "Look at the image below. Which sentence correctly uses an adverbial clause?",
-                photoS3Key: "course/ae6c4e46-a445-4621-ab3e-fc3f66296910.png",
+                photoS3Key:
+                  process.env.NODE_ENV === "production"
+                    ? "course/adverbial_clause.png"
+                    : process.env.NODE_ENV === "staging"
+                      ? "course/c862d10e-b0fc-460d-a317-9a234cab62f6.png"
+                      : "course/ae6c4e46-a445-4621-ab3e-fc3f66296910.png",
                 options: [
                   {
                     optionText: "She went to the park after she finished her homework.",
@@ -1714,7 +1539,12 @@ export const niceCourses: NiceCourseData[] = [
                 title: "Select the sentence that depict examples of relative clauses.",
                 description:
                   "Look at the image below. Select all the sentences that depict examples of relative clauses.",
-                photoS3Key: "course/7635f98b-03c4-4065-bfbb-e518b3124a1b.png",
+                photoS3Key:
+                  process.env.NODE_ENV === "production"
+                    ? "course/relative_clause .png"
+                    : process.env.NODE_ENV === "staging"
+                      ? "course/ac0a916c-fae9-410e-8b98-50fe9dfeb9a9.png"
+                      : "course/7635f98b-03c4-4065-bfbb-e518b3124a1b.png",
                 options: [
                   {
                     optionText: "The man who is wearing a red shirt is my brother.",
@@ -1738,6 +1568,188 @@ export const niceCourses: NiceCourseData[] = [
           },
         ],
       },
+      {
+        title: "Advanced Grammar: Perfecting Sentence Structures",
+        isPublished: true,
+        lessons: [
+          {
+            type: LESSON_TYPES.TEXT,
+            title: "Complex Sentences and Their Use",
+            description:
+              "Learn how to form and use complex sentences to convey more detailed thoughts and ideas effectively.",
+          },
+          {
+            type: LESSON_TYPES.TEXT,
+            title: "Relative Clauses and Modifiers",
+            description:
+              "A deep dive into relative clauses and modifiers, which help to add extra information to sentences.",
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Difference between a relative clause and a noun clause",
+            description: "Explain the difference between relative and noun clauses.",
+            questions: [
+              {
+                type: QUESTION_TYPE.SINGLE_CHOICE,
+                title: "What is the difference between a relative clause and a noun clause?",
+                options: [
+                  {
+                    optionText: "Relative clauses are used to modify nouns",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "Relative clauses are used to introduce new information",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "Noun clauses are used to modify nouns",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "Noun clauses are used to introduce new information",
+                    isCorrect: false,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.VIDEO,
+            title: "Advanced Grammar Video Tutorial",
+            description:
+              "Watch this in-depth video to understand complex sentence structures and advanced grammar.",
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Test your knowledge",
+            questions: [
+              {
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "The book [word] I borrowed yesterday was fascinating.",
+                solutionExplanation:
+                  "The book <strong>that</strong> I borrowed yesterday was fascinating.",
+                options: [
+                  { optionText: "that", isCorrect: true },
+                  { optionText: "who", isCorrect: false },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "Vocabulary Expansion: Academic and Formal English",
+        isPublished: true,
+        lessons: [
+          {
+            type: LESSON_TYPES.TEXT,
+            title: "Academic Vocabulary and Its Application",
+            description:
+              "Master vocabulary words commonly used in academic papers, essays, and formal discussions.",
+          },
+          {
+            type: LESSON_TYPES.TEXT,
+            title: "Using Formal Language in Communication",
+            description:
+              "Learn how to adjust your language for formal situations, such as presentations or professional meetings.",
+          },
+          {
+            type: LESSON_TYPES.PRESENTATION,
+            title: "Academic Vocabulary List",
+            description:
+              "Download this list of academic vocabulary and explore their meanings and usage in context.",
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Which word is an example of academic vocabulary?",
+            description: "Select the correct academic word.",
+            questions: [
+              {
+                type: QUESTION_TYPE.SINGLE_CHOICE,
+                title: "Which word is an example of academic vocabulary?",
+                options: [
+                  {
+                    optionText: "Analyze",
+                    isCorrect: true,
+                  },
+                  { optionText: "Run", isCorrect: false },
+                  {
+                    optionText: "Quick",
+                    isCorrect: false,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Test your knowledge",
+            questions: [
+              {
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "The results [word] the hypothesis.",
+                solutionExplanation: "The results <strong>support</strong> the hypothesis.",
+                options: [
+                  {
+                    optionText: "support",
+                    isCorrect: true,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "Mastering Idiomatic Expressions",
+        isPublished: true,
+        lessons: [
+          {
+            type: LESSON_TYPES.TEXT,
+            title: "Understanding Idioms in Context",
+            description:
+              "Learn how idiomatic expressions are used in everyday conversations to sound more natural and fluent.",
+          },
+          {
+            type: LESSON_TYPES.TEXT,
+            title: "Common Idioms and Their Meanings",
+            description:
+              "A list of frequently used idioms, their meanings, and examples of how to use them.",
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "What does the idiom 'break the ice' mean?",
+            description: "Explain the meaning of the idiom 'break the ice'.",
+          },
+          {
+            type: LESSON_TYPES.VIDEO,
+            title: "Idiomatic Expressions Video Tutorial",
+            description:
+              "Watch this video to learn how to use idiomatic expressions in real conversations.",
+          },
+          {
+            type: LESSON_TYPES.QUIZ,
+            title: "Fill in the blank with the correct idiom.",
+            questions: [
+              {
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "She was [word] when she heard the good news.",
+                solutionExplanation:
+                  "She was <strong>over the moon</strong> when she heard the good news.",
+                options: [
+                  {
+                    optionText: "over the moon",
+                    isCorrect: true,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
     ],
   },
   {
@@ -1753,7 +1765,6 @@ export const niceCourses: NiceCourseData[] = [
         title: "Understanding AI Basics",
         isPublished: true,
         isFreemium: false,
-
         lessons: [
           {
             type: LESSON_TYPES.VIDEO,
@@ -1882,11 +1893,10 @@ export const niceCourses: NiceCourseData[] = [
           {
             type: LESSON_TYPES.QUIZ,
             title: "AI Fill in the Blanks",
-            description: "Complete the sentences with the correct AI-related terms.",
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
-                title: "",
+                title: "Fill blanks with the correct word.",
                 description:
                   "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
                 solutionExplanation:
