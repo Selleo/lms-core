@@ -82,11 +82,10 @@ export const quizLessonFormSchema = z.object({
             code: z.ZodIssueCode.custom,
           });
         }
-
         if (
           (question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
             question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
-          question.options?.some((option) => option.isCorrect !== true)
+          (!question.options || !question.options.some((option) => option.isCorrect === true))
         ) {
           ctx.addIssue({
             path: [index, "options"],

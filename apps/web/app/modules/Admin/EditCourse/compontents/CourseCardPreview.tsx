@@ -43,7 +43,7 @@ const CourseCardPreview = ({ imageUrl, title, description, category }: CourseCar
                 dangerouslySetInnerHTML={{ __html: description || "No description yet." }}
               />
               <div className="flex justify-center w-full mt-5">
-                <Button className="mt-4 mx-auto w-3/4">Enroll</Button>
+                <Button className="mt-4 mx-auto w-3/4 cursor-default">Enroll</Button>
               </div>
             </CardContent>
           </Card>

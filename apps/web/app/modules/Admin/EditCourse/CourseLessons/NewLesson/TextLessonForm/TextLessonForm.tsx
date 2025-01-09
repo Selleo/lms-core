@@ -14,7 +14,6 @@ import { useTextLessonForm } from "./hooks/useTextLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
 
-
 type TextLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   chapterToEdit: Chapter | null;
@@ -88,7 +87,6 @@ const TextLessonForm = ({
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />
