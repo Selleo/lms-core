@@ -50,7 +50,7 @@
     "@stripe/react-stripe-js": "2.8.0",
     "@stripe/stripe-js": "4.6.0",
     "@tanstack/react-query": "5.40.1",
-    "@tanstack/react-query-devtools": "5",
+    "@tanstack/react-query-devtools": "5.40.1",
     "@tanstack/react-table": "8.20.1",
     "@tiptap/extension-color": "2.10.3",
     "@tiptap/extension-document": "2.10.3",
