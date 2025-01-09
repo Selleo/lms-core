@@ -11,7 +11,7 @@ elif [ $COMMAND = "migrate" ]; then
   npm run db:migrate
 elif [ $COMMAND = "seed" ]; then
   echo "Running seeds..."
-  npm run db:seed-staging
+  npm run db:seed-prod
 elif [ $COMMAND = "seed-prod" ]; then
   echo "Running seeds..."
   npm run db:seed-prod
