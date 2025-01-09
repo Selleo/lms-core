@@ -66,8 +66,7 @@ jobs:
 
       - name: ECS Run seeds
         env:
-          AWS_REGION: ${{ vars.AWS_REGION }}
-          ECS_CLUSTER: ${{ vars.AWS_ECS_CLUSTER }}
-          ECS_SERVICE: ${{ vars.AWS_ECS_SERVICE }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          ECS_CLUSTER: ${{ secrets.AWS_ECS_CLUSTER }}
+          ECS_SERVICE: ${{ secrets.AWS_ECS_SERVICE }}
         run: selleo aws ecs run --region $AWS_REGION --cluster $ECS_CLUSTER --service $ECS_SERVICE --one-off seed
-
