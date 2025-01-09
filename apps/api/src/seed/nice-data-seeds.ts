@@ -1381,43 +1381,43 @@ export const niceCourses: NiceCourseData[] = [
                 title:
                   "Explain the role of adverbial clauses in improving sentence complexity and fluency. Provide examples to support your explanation.",
               },
-              {
-                type: QUESTION_TYPE.SCALE_1_5,
-                title: "Select the correct answer.",
-                options: [
-                  {
-                    optionText: "How confident are you in using adverbial clauses in your writing?",
-                    isCorrect: true,
-                    scaleAnswer: 3,
-                  },
-                ],
-              },
-              {
-                type: QUESTION_TYPE.MATCH_WORDS,
-                title: "Match the adverbial clauses to their correct usage:",
-                options: [
-                  {
-                    optionText: "because",
-                    isCorrect: true,
-                    matchedWord: "reason",
-                  },
-                  {
-                    optionText: "although",
-                    isCorrect: true,
-                    matchedWord: "contrast",
-                  },
-                  {
-                    optionText: "when",
-                    isCorrect: true,
-                    matchedWord: "time",
-                  },
-                  {
-                    optionText: "if",
-                    isCorrect: true,
-                    matchedWord: "condition",
-                  },
-                ],
-              },
+              // {
+              //   type: QUESTION_TYPE.SCALE_1_5,
+              //   title: "Select the correct answer.",
+              //   options: [
+              //     {
+              //       optionText: "How confident are you in using adverbial clauses in your writing?",
+              //       isCorrect: true,
+              //       scaleAnswer: 3,
+              //     },
+              //   ],
+              // },
+              // {
+              //   type: QUESTION_TYPE.MATCH_WORDS,
+              //   title: "Match the adverbial clauses to their correct usage:",
+              //   options: [
+              //     {
+              //       optionText: "because",
+              //       isCorrect: true,
+              //       matchedWord: "reason",
+              //     },
+              //     {
+              //       optionText: "although",
+              //       isCorrect: true,
+              //       matchedWord: "contrast",
+              //     },
+              //     {
+              //       optionText: "when",
+              //       isCorrect: true,
+              //       matchedWord: "time",
+              //     },
+              //     {
+              //       optionText: "if",
+              //       isCorrect: true,
+              //       matchedWord: "condition",
+              //     },
+              //   ],
+              // },
               {
                 type: QUESTION_TYPE.TRUE_OR_FALSE,
                 title: "Determine whether the sentence is correct or incorrect:",
@@ -1511,10 +1511,8 @@ export const niceCourses: NiceCourseData[] = [
                   "Look at the image below. Which sentence correctly uses an adverbial clause?",
                 photoS3Key:
                   process.env.NODE_ENV === "production"
-                    ? "course/adverbial_clause.png"
-                    : process.env.NODE_ENV === "staging"
-                      ? "course/c862d10e-b0fc-460d-a317-9a234cab62f6.png"
-                      : "course/ae6c4e46-a445-4621-ab3e-fc3f66296910.png",
+                    ? "course/c862d10e-b0fc-460d-a317-9a234cab62f6.png"
+                    : "course/ae6c4e46-a445-4621-ab3e-fc3f66296910.png",
                 options: [
                   {
                     optionText: "She went to the park after she finished her homework.",
@@ -1541,10 +1539,8 @@ export const niceCourses: NiceCourseData[] = [
                   "Look at the image below. Select all the sentences that depict examples of relative clauses.",
                 photoS3Key:
                   process.env.NODE_ENV === "production"
-                    ? "course/relative_clause .png"
-                    : process.env.NODE_ENV === "staging"
-                      ? "course/ac0a916c-fae9-410e-8b98-50fe9dfeb9a9.png"
-                      : "course/7635f98b-03c4-4065-bfbb-e518b3124a1b.png",
+                    ? "course/ac0a916c-fae9-410e-8b98-50fe9dfeb9a9.png"
+                    : "course/7635f98b-03c4-4065-bfbb-e518b3124a1b.png",
                 options: [
                   {
                     optionText: "The man who is wearing a red shirt is my brother.",
