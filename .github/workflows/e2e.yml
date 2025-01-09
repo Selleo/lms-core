@@ -24,6 +24,7 @@ env:
 
 
 on:
+    workflow_call:
     push:
         branches:
         - main
