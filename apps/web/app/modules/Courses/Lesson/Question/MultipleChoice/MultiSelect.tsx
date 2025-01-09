@@ -9,12 +9,12 @@ import { SELECT_OPTION_VARIANTS } from "~/modules/Courses/Lesson/constants";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type MultiSelectProps = {
-  answer: string;
+  answer: string | null;
   answerId: string;
   isCorrectAnswer?: boolean | null;
   isCorrectAnswerNotSelected?: boolean | null;
   isFieldDisabled: boolean;
-  isQuizSubmitted: boolean;
+  isCompleted: boolean;
   isStudentAnswer: boolean;
   isWrongAnswer: boolean;
   questionId: string;
@@ -29,15 +29,13 @@ export const MultiSelect = ({
   isWrongAnswer,
   isStudentAnswer,
   isCorrectAnswerNotSelected,
-  isQuizSubmitted,
+  isCompleted,
   answer,
   optionFieldId = "multiAnswerQuestions",
 }: MultiSelectProps) => {
   const { register, setValue, getValues } = useFormContext<TQuestionsForm>();
 
   const getAnswerClasses = () => {
-    // if (isChecked) return SELECT_OPTION_VARIANTS.checked;
-
     if (isCorrectAnswer === null) return SELECT_OPTION_VARIANTS.default;
 
     if (isCorrectAnswerNotSelected) {
@@ -58,7 +56,7 @@ export const MultiSelect = ({
   const classes = getAnswerClasses();
 
   const isInputToggleHidden =
-    isQuizSubmitted &&
+    isCompleted &&
     isStudentAnswer &&
     (isCorrectAnswerNotSelected || isWrongAnswer || isCorrectAnswer);
 
@@ -73,7 +71,7 @@ export const MultiSelect = ({
     >
       <Input
         className={cn("w-4 h-4", {
-          "not-sr-only": !isQuizSubmitted,
+          "not-sr-only": !isCompleted,
           "sr-only": isInputToggleHidden,
         })}
         id={answerId}
@@ -112,7 +110,7 @@ export const MultiSelect = ({
         }
         className={cn("!ml-0", {
           "sr-only":
-            !isQuizSubmitted ||
+            !isCompleted ||
             isCorrectAnswerNotSelected ||
             (!isCorrectAnswerNotSelected && !isStudentAnswer),
         })}
@@ -124,7 +122,7 @@ export const MultiSelect = ({
       >
         <span>{answer}</span>
         <span className={classes}>
-          {isStudentAnswer && isQuizSubmitted && "(Your answer)"}
+          {isStudentAnswer && isCompleted && "(Your answer)"}
           {isCorrectAnswerNotSelected && "(Missing answer)"}
         </span>
       </Label>

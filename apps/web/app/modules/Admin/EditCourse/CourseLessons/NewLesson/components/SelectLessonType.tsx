@@ -48,6 +48,12 @@ const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) =>
               className="px-6 border border-neutral-200 rounded-lg py-4 flex flex-col gap-y-6"
               role="button"
               onClick={() => setContentTypeToDisplay(type)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  setContentTypeToDisplay(type);
+                }
+              }}
+              tabIndex={0}
               aria-label={`Choose ${title} lesson type`}
             >
               <Icon name={icon as LessonIcons} className="mb-6 size-8 text-primary-700" />

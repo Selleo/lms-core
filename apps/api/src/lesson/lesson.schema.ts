@@ -38,7 +38,6 @@ export const optionSchema = Type.Object({
   studentAnswer: Type.Union([Type.String(), Type.Null()]),
   isCorrect: Type.Union([Type.Boolean(), Type.Null()]),
   questionId: Type.Optional(UUIDSchema),
-  solutionExplanation: Type.Union([Type.String(), Type.Null()]),
 });
 
 export const questionSchema = Type.Object({

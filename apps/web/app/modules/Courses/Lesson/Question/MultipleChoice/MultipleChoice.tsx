@@ -7,10 +7,10 @@ import type { QuizQuestion } from "../types";
 
 type MultipleChoiceProps = {
   question: QuizQuestion;
-  isQuizCompleted?: boolean;
+  isCompleted?: boolean;
 };
 
-export const MultipleChoice = ({ question, isQuizCompleted = false }: MultipleChoiceProps) => {
+export const MultipleChoice = ({ question, isCompleted = false }: MultipleChoiceProps) => {
   const { isAdmin } = useUserRole();
 
   return (
@@ -22,7 +22,7 @@ export const MultipleChoice = ({ question, isQuizCompleted = false }: MultipleCh
       <MultipleChoiceOptionList
         options={question.options ?? []}
         questionId={question.id}
-        isQuizCompleted={isQuizCompleted}
+        isCompleted={isCompleted}
         isAdmin={isAdmin}
       />
     </QuestionCard>

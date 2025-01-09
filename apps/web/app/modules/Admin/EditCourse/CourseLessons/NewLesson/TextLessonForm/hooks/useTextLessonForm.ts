@@ -62,9 +62,11 @@ export const useTextLessonForm = ({
 
     try {
       if (lessonToEdit) {
+        // @ts-expect-error - Need to be refactored
         await updateTextBlockItem({ data: { ...values }, lessonId: lessonToEdit.id });
       } else {
         await createTextBlock({
+          // @ts-expect-error - Need to be refactored
           data: { ...values, chapterId: chapterToEdit.id },
         });
         setOpenChapter && setOpenChapter(chapterToEdit.id);

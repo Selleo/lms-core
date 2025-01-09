@@ -7,12 +7,12 @@ import type { QuizQuestion } from "../types";
 
 type PhotoQuestionSingleChoiceProps = {
   question: QuizQuestion;
-  isQuizCompleted?: boolean;
+  isCompleted?: boolean;
 };
 
 export const PhotoQuestionSingleChoice = ({
   question,
-  isQuizCompleted = false,
+  isCompleted = false,
 }: PhotoQuestionSingleChoiceProps) => {
   const { isAdmin } = useUserRole();
 
@@ -31,7 +31,7 @@ export const PhotoQuestionSingleChoice = ({
         options={question.options || []}
         questionId={question.id}
         isAdmin={isAdmin}
-        isQuizCompleted={isQuizCompleted}
+        isCompleted={isCompleted}
         withPicture
       />
     </QuestionCard>
