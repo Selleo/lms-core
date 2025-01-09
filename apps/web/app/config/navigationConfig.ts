@@ -21,16 +21,36 @@ export type NavigationItem = {
   iconName: IconName;
 };
 
-export const navigationConfig: NavigationItem[] = [
+export const getNavigationConfig = (userId: string, isUser = true): NavigationItem[] => [
   {
     label: "dashboard",
     path: "",
     iconName: "Dashboard",
   },
   {
-    label: "courses",
-    path: "courses",
+    label: "My Courses",
+    path: "admin/courses",
     iconName: "Course",
+  },
+  {
+    label: isUser ? "Courses" : "Browse Courses",
+    path: "courses",
+    iconName: isUser ? "Course" : "Multi",
+  },
+  {
+    label: "categories",
+    path: "admin/categories",
+    iconName: "Category",
+  },
+  {
+    label: "users",
+    path: "admin/users",
+    iconName: "Hat",
+  },
+  {
+    label: "Profile",
+    path: `teachers/${userId}`,
+    iconName: "User",
   },
 ];
 
@@ -52,9 +72,56 @@ export const adminNavigationConfig: NavigationItem[] = [
   },
 ];
 
+/**
+ * Finds matching route access roles for a given path by checking different types of routes in order:
+ * 1. Exact matches (e.g., "courses/new" matches "courses/new")
+ * 2. Parameter routes (e.g., "teachers/123" matches "teachers/:id")
+ * 3. Wildcard routes (e.g., "teachers/123/settings" matches "teachers/*")
+ *
+ * @param path - The actual URL path to match (e.g., "teachers/123")
+ * @returns UserRole[] | undefined - Array of user roles that can access this path, or undefined if no match
+ *
+ * @example
+ * // Exact match
+ * findMatchingRoute("courses/new") // matches "courses/new" in config
+ *
+ * // Parameter match
+ * findMatchingRoute("teachers/123") // matches "teachers/:id" in config
+ * findMatchingRoute("course/456/lesson/789") // matches "course/:courseId/lesson/:lessonId"
+ *
+ * // Wildcard match
+ * findMatchingRoute("teachers/123/settings") // matches "teachers/*"
+ *
+ * How matching works:
+ * 1. First, tries to find an exact match in routeAccessConfig
+ * 2. If no exact match, looks for parameter routes (:id)
+ *    - Splits both paths into segments
+ *    - Segments with ":" are treated as valid matches for any value
+ *    - All other segments must match exactly
+ * 3. If still no match, checks wildcard routes (*)
+ *    - Matches if path starts with the part before "*"
+ */
 export const findMatchingRoute = (path: string) => {
   if (routeAccessConfig[path]) {
     return routeAccessConfig[path];
+  }
+
+  const paramRoutes = Object.entries(routeAccessConfig).filter(
+    ([route]) => route.includes(":") && !route.includes("*"),
+  );
+
+  for (const [route, roles] of paramRoutes) {
+    const routeParts = route.split("/");
+    const pathParts = path.split("/");
+
+    if (routeParts.length !== pathParts.length) continue;
+
+    const matches = routeParts.every((part, index) => {
+      if (part.startsWith(":")) return true;
+      return part === pathParts[index];
+    });
+
+    if (matches) return roles;
   }
 
   const wildcardRoutes = Object.entries(routeAccessConfig).filter(([route]) => route.includes("*"));

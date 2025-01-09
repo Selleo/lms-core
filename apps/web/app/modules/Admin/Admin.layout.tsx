@@ -5,10 +5,11 @@ import { match } from "ts-pattern";
 import { currentUserQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
 import { Navigation } from "~/components/Navigation";
-import { adminNavigationConfig, mapNavigationItems } from "~/config/navigationConfig";
+import { getNavigationConfig, mapNavigationItems } from "~/config/navigationConfig";
 import { RouteGuard } from "~/Guards/RouteGuard";
 import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
+import { useCurrentUserStore } from "~/modules/common/store/useCurrentUserStore";
 
 import Loader from "../common/Loader/Loader";
 
@@ -50,6 +51,7 @@ const AdminGuard = ({ children }: PropsWithChildren) => {
 };
 
 const AdminLayout = () => {
+  const { currentUser } = useCurrentUserStore();
   const { pathname } = useLocation();
 
   const hideTopbarAndSidebar = match(pathname)
@@ -61,7 +63,9 @@ const AdminLayout = () => {
     <div className="flex h-screen flex-col">
       <div className="flex flex-1 flex-col overflow-hidden 2xl:flex-row">
         {!hideTopbarAndSidebar && (
-          <Navigation menuItems={mapNavigationItems(adminNavigationConfig)} />
+          <Navigation
+            menuItems={mapNavigationItems(getNavigationConfig(currentUser?.id ?? "", false))}
+          />
         )}
         <main
           className={cn("bg-primary-50 flex-1 overflow-y-auto max-h-dvh p-6", {
