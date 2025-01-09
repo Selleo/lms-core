@@ -965,7 +965,6 @@ export interface GetLessonByIdResponse {
           isCorrect: boolean | null;
           /** @format uuid */
           questionId?: string;
-          solutionExplanation: string | null;
         }[];
         passQuestion: boolean | null;
         solutionExplanation: string | null;
