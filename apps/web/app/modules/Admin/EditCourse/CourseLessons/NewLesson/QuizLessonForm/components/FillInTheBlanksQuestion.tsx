@@ -361,7 +361,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
             </div>
             <>
               {errors?.questions?.[questionIndex] && (
-                <p className="text-red-500 text-sm ml-">
+                <p className="text-red-500 text-sm">
                   {errors?.questions?.[questionIndex]?.options?.message}
                 </p>
               )}

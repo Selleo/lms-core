@@ -1,5 +1,4 @@
 import { FormTextField } from "~/components/Form/FormTextField";
-import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Label } from "~/components/ui/label";
@@ -12,6 +11,7 @@ import type { Chapter, Lesson } from "../../../EditCourse.types";
 import { useState } from "react";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 import Breadcrumb from "../components/Breadcrumb";
+import Editor from "~/components/RichText/Editor";
 
 type TextLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
@@ -86,7 +86,6 @@ const TextLessonForm = ({
                     {...field}
                   />
                 </FormControl>
-                <FormMessage />
               </FormItem>
             )}
           />

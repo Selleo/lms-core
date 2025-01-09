@@ -19,6 +19,7 @@ import {
 
 import Breadcrumb from "./components/Breadcrumb";
 import { useAddCourseForm } from "./hooks/useAddCourseForm";
+import { useNavigate } from "@remix-run/react";
 
 const AddCourse = () => {
   const { form, onSubmit } = useAddCourseForm();
@@ -29,6 +30,7 @@ const AddCourse = () => {
   const watchedImageUrl = form.watch("thumbnailUrl");
   const thumbnailUrl = form.getValues("thumbnailUrl");
   const maxDescriptionFieldLength = 800;
+  const navigate = useNavigate();
 
   const watchedDescriptionLength = form.watch("description").length;
   const descriptionFieldCharactersLeft = maxDescriptionFieldLength - watchedDescriptionLength;
@@ -181,7 +183,11 @@ const AddCourse = () => {
 
             <div className="pb-5">
               <div className="flex space-x-5 mt-5 mb-10">
-                <Button className="bg-white text-primary-800 border-2 rounded px-6 py-2">
+                <Button
+                  type="button"
+                  className="bg-white text-primary-800 border-2 rounded px-6 py-2"
+                  onClick={() => navigate("/admin/courses")}
+                >
                   Cancel
                 </Button>
                 <Button
