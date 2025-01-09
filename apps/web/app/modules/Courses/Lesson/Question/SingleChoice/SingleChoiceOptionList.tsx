@@ -7,7 +7,7 @@ type SingleChoiceOptionListProps = {
   options: QuizQuestionOption[];
   questionId: string;
   isAdmin: boolean;
-  isQuizCompleted: boolean;
+  isCompleted: boolean;
   withPicture?: boolean;
 };
 
@@ -15,7 +15,7 @@ export const SingleChoiceOptionList = ({
   options,
   questionId,
   isAdmin,
-  isQuizCompleted,
+  isCompleted,
   withPicture = false,
 }: SingleChoiceOptionListProps) => (
   <>
@@ -25,7 +25,7 @@ export const SingleChoiceOptionList = ({
         answer={option.optionText}
         answerId={option.id}
         questionId={questionId}
-        isQuizSubmitted={isQuizCompleted}
+        isCompleted={isCompleted}
         optionFieldId={withPicture ? "photoQuestionSingleChoice" : "singleAnswerQuestions"}
         {...getOptionConfig(option, isAdmin)}
       />

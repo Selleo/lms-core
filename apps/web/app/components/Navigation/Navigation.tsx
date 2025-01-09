@@ -14,7 +14,7 @@ type DashboardNavigationProps = { menuItems: MenuItemType[] };
 
 export function Navigation({ menuItems }: DashboardNavigationProps) {
   const { isMobileNavOpen, setIsMobileNavOpen } = useMobileNavigation();
-  const { isAdmin, isTeacher, role } = useUserRole();
+  const { role } = useUserRole();
 
   return (
     <header className="3xl:w-60 3xl:p-4 sticky top-0 z-10 h-min w-full 2xl:static 2xl:flex 2xl:h-dvh 2xl:w-14 2xl:flex-col 2xl:gap-y-6 2xl:px-2 2xl:py-4">
@@ -33,12 +33,7 @@ export function Navigation({ menuItems }: DashboardNavigationProps) {
             role={role}
             setIsMobileNavOpen={setIsMobileNavOpen}
           />
-          <NavigationFooter
-            role={role}
-            isAdmin={isAdmin}
-            isTeacher={isTeacher}
-            setIsMobileNavOpen={setIsMobileNavOpen}
-          />
+          <NavigationFooter setIsMobileNavOpen={setIsMobileNavOpen} />
         </TooltipProvider>
       </nav>
     </header>

@@ -10,61 +10,33 @@ import { PhotoQuestionSingleChoice } from "./PhotoQuestionSingleChoice";
 import { SingleChoice } from "./SingleChoice/SingleChoice";
 import { TrueOrFalse } from "./TrueOrFalse";
 
-import type { DndWord } from "./FillInTheBlanks/dnd/types";
-import type { GetLessonByIdResponse } from "~/api/generated-api";
-
-type Questions = NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"];
+import type { QuizQuestion } from "./types";
 
 type QuestionProps = {
-  question: Questions[number];
+  question: QuizQuestion;
   isSubmitted?: boolean;
   isCompleted: boolean;
 };
 
-export const Question = ({ isSubmitted, question, isCompleted }: QuestionProps) => {
+export const Question = ({ question, isCompleted }: QuestionProps) => {
   const { lessonId = "" } = useParams();
 
   if (!lessonId) throw new Error("Lesson ID not found");
 
-  const questionId = question.id;
   const isTrueOrFalse = question.type === "true_or_false";
   const isSingleQuestion = question.type === "single_choice";
   const isMultiQuestion = question.type === "multiple_choice";
   const isPhotoQuestionSingleChoice = question.type === "photo_question_single_choice";
   const isPhotoQuestionMultipleChoice = question.type === "photo_question_multiple_choice";
-
   const isBriefResponse = question.type === "brief_response";
   const isDetailedResponse = question.type === "detailed_response";
   const isTextFillInTheBlanks = question.type === "fill_in_the_blanks_text";
   const isDraggableFillInTheBlanks = question.type === "fill_in_the_blanks_dnd";
 
-  const getFillInTheBlanksDndAnswers = () => {
-    const items: DndWord[] = question.options?.map(
-      ({ id, optionText, displayOrder, isStudentAnswer, isCorrect, studentAnswer }) => ({
-        id,
-        index: displayOrder ?? null,
-        value: optionText,
-        blankId: typeof displayOrder === "number" ? `blank_${displayOrder}` : "blank_preset",
-        isCorrect: isCorrect,
-        isStudentAnswer,
-        studentAnswerText: studentAnswer,
-      }),
-    );
-
-    return items.reduce<DndWord[]>((acc, item) => {
-      if (!acc.some(({ value }) => value === item.value)) {
-        acc.push(item);
-      }
-
-      return acc;
-    }, []);
-  };
-
-  const fillInTheBlanksDndData = getFillInTheBlanksDndAnswers();
-
   switch (true) {
     case isBriefResponse:
       return <BriefResponse question={question} />;
+
     case isDetailedResponse:
       return <DetailedResponse question={question} />;
 
@@ -72,33 +44,19 @@ export const Question = ({ isSubmitted, question, isCompleted }: QuestionProps) 
       return <FillInTheBlanks question={question} isCompleted={isCompleted} />;
 
     case isDraggableFillInTheBlanks:
-      return (
-        <FillInTheBlanksDnd
-          questionLabel={`question ${question.displayOrder}`}
-          content={question.description}
-          answers={fillInTheBlanksDndData}
-          isQuizSubmitted={isSubmitted}
-          solutionExplanation={
-            "solutionExplanation" in question ? question.solutionExplanation : null
-          }
-          isPassed={!!question.passQuestion}
-          lessonItemId={questionId}
-          isCompleted={isCompleted}
-          updateLessonItemCompletion={() => {}}
-        />
-      );
+      return <FillInTheBlanksDnd question={question} isCompleted={isCompleted} />;
 
     case isSingleQuestion:
-      return <SingleChoice question={question} isQuizCompleted={true} />;
+      return <SingleChoice question={question} isCompleted={isCompleted} />;
 
     case isMultiQuestion:
-      return <MultipleChoice question={question} isQuizCompleted={true} />;
+      return <MultipleChoice question={question} isCompleted={isCompleted} />;
 
     case isPhotoQuestionSingleChoice:
-      return <PhotoQuestionSingleChoice question={question} isQuizCompleted={true} />;
+      return <PhotoQuestionSingleChoice question={question} isCompleted={isCompleted} />;
 
     case isPhotoQuestionMultipleChoice:
-      return <PhotoQuestionMultipleChoice question={question} isQuizCompleted={true} />;
+      return <PhotoQuestionMultipleChoice question={question} isCompleted={isCompleted} />;
 
     case isTrueOrFalse:
       return <TrueOrFalse question={question} />;

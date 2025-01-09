@@ -58,6 +58,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
         customHref={`/course/${lesson.courseId}/lesson/${lesson.id}`}
         isAdmin={isAdmin}
         isEnrolled={!!lesson.enrolled}
+        // @ts-expect-error Need to fix this
         itemsCount={lesson.lessonCount}
         itemsCompletedCount={lesson.completedLessonCount}
         index={1}

@@ -9,12 +9,12 @@ import { SELECT_OPTION_VARIANTS } from "~/modules/Courses/Lesson/constants";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type SelectAnswerOptionQuizProps = {
-  answer: string;
+  answer: string | null;
   answerId: string;
   isCorrectAnswer?: boolean | null;
   isCorrectAnswerNotSelected?: boolean | null;
   isFieldDisabled: boolean;
-  isQuizSubmitted: boolean;
+  isCompleted: boolean;
   isStudentAnswer: boolean;
   isWrongAnswer: boolean;
   questionId: string;
@@ -27,7 +27,7 @@ export const SingleSelect = ({
   isCorrectAnswer,
   isCorrectAnswerNotSelected,
   isFieldDisabled,
-  isQuizSubmitted,
+  isCompleted,
   isStudentAnswer,
   isWrongAnswer,
   questionId,
@@ -52,8 +52,8 @@ export const SingleSelect = ({
   const classes = getAnswerClasses();
 
   const isInputToggleHidden =
-    (isQuizSubmitted && !isStudentAnswer && isCorrectAnswerNotSelected) ||
-    (isQuizSubmitted &&
+    (isCompleted && !isStudentAnswer && isCorrectAnswerNotSelected) ||
+    (isCompleted &&
       isStudentAnswer &&
       (isCorrectAnswerNotSelected || isWrongAnswer || isCorrectAnswer));
 
@@ -68,7 +68,7 @@ export const SingleSelect = ({
     >
       <Input
         className={cn("w-4 h-4", {
-          "not-sr-only": !isQuizSubmitted,
+          "not-sr-only": !isCompleted,
           "sr-only": isInputToggleHidden,
         })}
         id={answerId}
@@ -109,7 +109,7 @@ export const SingleSelect = ({
             : "InputRoundedMarkerError"
         }
         className={cn("!ml-0", {
-          "sr-only": !isQuizSubmitted || (!isCorrectAnswerNotSelected && !isStudentAnswer),
+          "sr-only": !isCompleted || (!isCorrectAnswerNotSelected && !isStudentAnswer),
         })}
       />
       <Label
@@ -118,7 +118,7 @@ export const SingleSelect = ({
         onClick={(e) => e.stopPropagation()}
       >
         <span>{answer}</span>
-        <span className={classes}>{isStudentAnswer && isQuizSubmitted && "(Your answer)"}</span>
+        <span className={classes}>{isStudentAnswer && isCompleted && "(Your answer)"}</span>
       </Label>
     </label>
   );

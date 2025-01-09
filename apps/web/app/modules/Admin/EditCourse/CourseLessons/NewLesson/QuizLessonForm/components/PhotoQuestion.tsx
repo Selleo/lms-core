@@ -18,14 +18,15 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType, type Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import { QuestionType } from "../QuizLessonForm.types";
 
 import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { DeleteContentType, type Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
-import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+
 
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
