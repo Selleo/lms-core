@@ -1,4 +1,4 @@
-import { useParams } from "@remix-run/react";
+import { useNavigate, useParams } from "@remix-run/react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useSubmitQuiz } from "~/api/mutations";
@@ -95,6 +95,25 @@ function transformData(input: TQuestionsForm) {
     }
   }
 
+  for (const questionId in input.fillInTheBlanksText) {
+    const answers = input.fillInTheBlanksText[questionId];
+    const answerArray = [];
+
+    for (const [key, value] of Object.entries(answers)) {
+      if (answers[key]) {
+        answerArray.push({
+          value,
+        });
+      }
+    }
+    if (answerArray.length > 0) {
+      result.push({
+        questionId: questionId,
+        answer: answerArray,
+      });
+    }
+  }
+
   for (const questionId in input.photoQuestionMultipleChoice) {
     const answers = input.photoQuestionMultipleChoice[questionId];
     const answerArray = [];
@@ -140,7 +159,8 @@ function transformData(input: TQuestionsForm) {
 }
 
 export const Quiz = ({ lesson }: QuizProps) => {
-  const { lessonId = "" } = useParams();
+  const { lessonId = "", courseId = "" } = useParams();
+  const navigate = useNavigate();
 
   const questions = lesson.quizDetails?.questions;
 
@@ -151,7 +171,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
 
   const submitQuiz = useSubmitQuiz({
     handleOnSuccess: () => {
-      // TODO: Add logic to handle success
+      navigate(`/course/${courseId}/lesson/${lesson.nextLessonId}`);
     },
   });
 
