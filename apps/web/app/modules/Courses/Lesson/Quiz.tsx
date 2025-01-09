@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "@remix-run/react";
+import { useParams } from "@remix-run/react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useSubmitQuiz } from "~/api/mutations";
@@ -12,6 +12,7 @@ import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type QuizProps = {
   lesson: GetLessonByIdResponse["data"];
+  handleNext: () => void;
 };
 
 function transformData(input: TQuestionsForm) {
@@ -178,9 +179,8 @@ function transformData(input: TQuestionsForm) {
   return result;
 }
 
-export const Quiz = ({ lesson }: QuizProps) => {
-  const { lessonId = "", courseId = "" } = useParams();
-  const navigate = useNavigate();
+export const Quiz = ({ lesson, handleNext }: QuizProps) => {
+  const { lessonId = "" } = useParams();
 
   const questions = lesson.quizDetails?.questions;
 
@@ -190,9 +190,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
   });
 
   const submitQuiz = useSubmitQuiz({
-    handleOnSuccess: () => {
-      navigate(`/course/${courseId}/lesson/${lesson.nextLessonId}`);
-    },
+    handleOnSuccess: handleNext,
   });
 
   if (!questions?.length) return null;
