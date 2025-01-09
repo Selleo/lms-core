@@ -1,34 +1,33 @@
 import { useEffect, useRef } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { cn } from "~/lib/utils";
 
+import type { QuizQuestionOption } from "../types";
+import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+
 type TextBlankProps = {
   index: number;
-  studentAnswer?: {
-    id: string;
-    optionText: string;
-    displayOrder: number | null;
-    isStudentAnswer?: boolean | null;
-    isCorrect?: boolean | null;
-    studentAnswerText?: string | null;
-  };
-  handleOnBlur: (value: string, index: number) => void;
+  studentAnswer?: QuizQuestionOption;
   isQuizSubmitted?: boolean;
+  questionId: string;
 };
 
 export const TextBlank = ({
   index,
   studentAnswer,
-  handleOnBlur,
   isQuizSubmitted,
+  questionId,
 }: TextBlankProps) => {
+  const { register } = useFormContext<TQuestionsForm>();
   const inputRef = useRef<HTMLInputElement>(null);
+  const formFieldId = `${index + 1}`;
 
   useEffect(() => {
     if (!inputRef?.current) return;
 
     if (isQuizSubmitted) {
-      inputRef.current.value = studentAnswer?.studentAnswerText ?? "";
+      inputRef.current.value = studentAnswer?.studentAnswer ?? "";
     } else {
       inputRef.current.value = "";
     }
@@ -51,18 +50,11 @@ export const TextBlank = ({
 
   return (
     <input
-      ref={inputRef}
       key={index}
       type="text"
       className={textBlankClasses}
       disabled={!!isDisabled}
-      {...(!isDisabled && {
-        onBlur: (e) => {
-          const value = e.target.value;
-
-          handleOnBlur(value, index);
-        },
-      })}
+      {...register(`fillInTheBlanksText.${questionId}.${formFieldId}`)}
     />
   );
 };

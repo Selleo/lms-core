@@ -69,14 +69,7 @@ export const Question = ({ isSubmitted, question, isCompleted }: QuestionProps) 
       return <DetailedResponse question={question} />;
 
     case isTextFillInTheBlanks:
-      return (
-        <FillInTheBlanks
-          question={question}
-          isQuizSubmitted={isSubmitted}
-          lessonItemId={questionId}
-          isCompleted={isCompleted}
-        />
-      );
+      return <FillInTheBlanks question={question} isCompleted={isCompleted} />;
 
     case isDraggableFillInTheBlanks:
       return (
@@ -94,6 +87,7 @@ export const Question = ({ isSubmitted, question, isCompleted }: QuestionProps) 
           updateLessonItemCompletion={() => {}}
         />
       );
+
     case isSingleQuestion:
       return <SingleChoice question={question} isQuizCompleted={true} />;
 

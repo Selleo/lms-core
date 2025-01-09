@@ -26,4 +26,9 @@ export type TQuestionsForm = {
       [key: string]: string | null;
     };
   };
+  fillInTheBlanksText: {
+    [key: string]: {
+      [key: string]: string | null;
+    };
+  };
 };

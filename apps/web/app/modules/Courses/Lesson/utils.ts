@@ -70,6 +70,12 @@ const prepareAnswers = (questions: Questions, mode: "options" | "open"): Record<
         );
       }
 
+      if (question.type === "fill_in_the_blanks_text") {
+        result[question.id ?? ""] = question?.options?.map(({ studentAnswer }, index) => {
+          return { [`${index + 1}`]: studentAnswer ?? null };
+        });
+      }
+
       if (mode === "options") {
         result[question.id ?? ""] = question?.options?.reduce(
           (optionMap, option) => {
