@@ -7,10 +7,10 @@ import type { QuizQuestion } from "../types";
 
 type SingleChoiceProps = {
   question: QuizQuestion;
-  isQuizCompleted?: boolean;
+  isCompleted?: boolean;
 };
 
-export const SingleChoice = ({ question, isQuizCompleted = false }: SingleChoiceProps) => {
+export const SingleChoice = ({ question, isCompleted = false }: SingleChoiceProps) => {
   const { isAdmin } = useUserRole();
 
   return (
@@ -23,7 +23,7 @@ export const SingleChoice = ({ question, isQuizCompleted = false }: SingleChoice
         options={question.options || []}
         questionId={question.id}
         isAdmin={isAdmin}
-        isQuizCompleted={isQuizCompleted}
+        isCompleted={isCompleted}
       />
     </QuestionCard>
   );

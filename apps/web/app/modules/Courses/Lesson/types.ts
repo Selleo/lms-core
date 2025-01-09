@@ -31,4 +31,9 @@ export type TQuestionsForm = {
       [key: string]: string | null;
     };
   };
+  fillInTheBlanksDnd: {
+    [key: string]: {
+      [key: string]: string | null;
+    };
+  };
 };

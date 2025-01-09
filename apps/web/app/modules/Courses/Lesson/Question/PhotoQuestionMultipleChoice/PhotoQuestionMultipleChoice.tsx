@@ -7,12 +7,12 @@ import type { QuizQuestion } from "../types";
 
 type PhotoQuestionMultipleChoiceProps = {
   question: QuizQuestion;
-  isQuizCompleted?: boolean;
+  isCompleted?: boolean;
 };
 
 export const PhotoQuestionMultipleChoice = ({
   question,
-  isQuizCompleted = false,
+  isCompleted = false,
 }: PhotoQuestionMultipleChoiceProps) => {
   const { isAdmin } = useUserRole();
 
@@ -30,7 +30,7 @@ export const PhotoQuestionMultipleChoice = ({
       <MultipleChoiceOptionList
         options={question.options ?? []}
         questionId={question.id}
-        isQuizCompleted={isQuizCompleted}
+        isCompleted={isCompleted}
         isAdmin={isAdmin}
         withPicture
       />

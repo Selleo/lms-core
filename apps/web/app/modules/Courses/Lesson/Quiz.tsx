@@ -114,6 +114,26 @@ function transformData(input: TQuestionsForm) {
     }
   }
 
+  for (const questionId in input.fillInTheBlanksDnd) {
+    const answers = input.fillInTheBlanksDnd[questionId];
+    const answerArray = [];
+
+    for (const [key, value] of Object.entries(answers)) {
+      if (answers[key]) {
+        answerArray.push({
+          answerId: key,
+          value,
+        });
+      }
+    }
+    if (answerArray.length > 0) {
+      result.push({
+        questionId: questionId,
+        answer: answerArray,
+      });
+    }
+  }
+
   for (const questionId in input.photoQuestionMultipleChoice) {
     const answers = input.photoQuestionMultipleChoice[questionId];
     const answerArray = [];
@@ -178,6 +198,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
   if (!questions?.length) return null;
 
   const handleOnSubmit = async (data: TQuestionsForm) => {
+    console.log({ data });
     submitQuiz.mutate({ lessonId, answers: transformData(data) });
   };
 

@@ -97,8 +97,7 @@ export class LessonService {
               'isCorrect', TRUE,
               'displayOrder', 1,
               'isStudentAnswer', TRUE,
-              'studentAnswer', ${studentQuestionAnswers.answer}->>'1',
-              'solutionExplanation', NULL
+              'studentAnswer', ${studentQuestionAnswers.answer}->>'1'
             )]
           ELSE
           (
@@ -142,13 +141,6 @@ export class LessonService {
                   CASE
                     WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
                     ELSE ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
-                  END,
-                'solutionExplanation',
-                  CASE
-                    WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                    ELSE ${questions.type} in (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
-                      QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
-                    })
                   END
               )
               FROM ${questionAnswerOptions} qao

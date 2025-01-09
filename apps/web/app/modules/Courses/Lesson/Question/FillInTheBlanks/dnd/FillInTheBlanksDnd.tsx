@@ -12,9 +12,9 @@ import {
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { type FC, useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
 import Viewer from "~/components/RichText/Viever";
-import { handleCompletionForMediaLesson } from "~/utils/handleCompletionForMediaLesson";
 
 import { DndBlank } from "./DndBlank";
 import { DraggableWord } from "./DraggableWord";
@@ -22,43 +22,55 @@ import { SentenceBuilder } from "./SentenceBuilder";
 import { WordBank } from "./WordBank";
 
 import type { DndWord } from "./types";
+import type { QuizQuestion, QuizQuestionOption } from "../../types";
+import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type FillInTheBlanksDndProps = {
-  questionLabel: string;
-  content: string;
-  answers: DndWord[];
-  isQuizSubmitted?: boolean;
-  solutionExplanation?: string | null;
-  isPassed: boolean | null;
-  lessonItemId: string;
-  isCompleted: boolean;
-  updateLessonItemCompletion: (lessonItemId: string) => void;
+  question: QuizQuestion;
+  isCompleted?: boolean;
 };
 
-export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
-  questionLabel,
-  content,
-  answers,
-  isQuizSubmitted,
-  solutionExplanation,
-  isPassed,
-  lessonItemId,
-  isCompleted,
-  updateLessonItemCompletion,
-}) => {
-  const [words, setWords] = useState<DndWord[]>(answers);
+const getAnswers = (options: QuizQuestionOption[] | undefined) => {
+  if (!options?.length) return [];
+
+  const items: DndWord[] = options.map(
+    ({ id, optionText, displayOrder, isStudentAnswer, isCorrect, studentAnswer }) => ({
+      id,
+      index: displayOrder ?? null,
+      value: optionText,
+      blankId: typeof displayOrder === "number" ? `${displayOrder}` : "blank_preset",
+      isCorrect: isCorrect,
+      isStudentAnswer,
+      studentAnswerText: studentAnswer,
+    }),
+  );
+
+  return items.reduce<DndWord[]>((acc, item) => {
+    if (!acc.some(({ value }) => value === item.value)) {
+      acc.push(item);
+    }
+
+    return acc;
+  }, []);
+};
+
+export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCompleted }) => {
+  const [words, setWords] = useState<DndWord[]>(getAnswers(question.options));
   const [currentlyDraggedWord, setCurrentlyDraggedWord] = useState<DndWord | null>(null);
+  const { setValue } = useFormContext<TQuestionsForm>();
+
+  const solutionExplanation = question.solutionExplanation;
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: isQuizSubmitted ? Infinity : 0,
+        distance: isCompleted ? Infinity : 0,
       },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
       keyboardCodes: {
-        start: isQuizSubmitted ? [] : ["Space"],
+        start: isCompleted ? [] : ["Space"],
         cancel: ["Escape"],
         end: ["Space"],
       },
@@ -66,14 +78,16 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   );
 
   useEffect(() => {
-    setWords(answers);
+    setWords(getAnswers(question.options));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isQuizSubmitted]);
+  }, [isCompleted]);
 
-  const maxAnswersAmount = content?.match(/\[word]/g)?.length ?? 0;
+  if (!question.description) return null;
+
+  const maxAnswersAmount = question.description?.match(/\[word]/g)?.length ?? 0;
 
   const handleDragStart = (event: DragStartEvent) => {
-    if (isQuizSubmitted) return;
+    if (isCompleted) return;
 
     const { active } = event;
     const { id: activeId } = active;
@@ -86,7 +100,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   };
 
   const handleDragOver = (event: DragOverEvent) => {
-    if (isQuizSubmitted) return;
+    if (isCompleted) return;
 
     const { active, over } = event;
     const { id: activeId } = active;
@@ -113,9 +127,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   };
 
   const handleCompletion = () => {
-    return (
-      handleCompletionForMediaLesson(isCompleted, true) && updateLessonItemCompletion(lessonItemId)
-    );
+    // return (
+    //   // handleCompletionForMediaLesson(, true))
+    // );
   };
 
   function handleDragEnd(event: DragEndEvent) {
@@ -216,6 +230,12 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         }
       }
 
+      for (const word of updatedWords) {
+        if (word.blankId !== "blank_preset") {
+          setValue(`fillInTheBlanksDnd.${question.id}.${word.id}`, word.value);
+        }
+      }
+
       return updatedWords;
     });
 
@@ -226,7 +246,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
 
   return (
     <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
-      <div className="details text-primary-700 uppercase">{questionLabel}</div>
+      <div className="details text-primary-700 uppercase">Question {question.displayOrder}</div>
       <div className="h6 text-neutral-950 my-4">Fill in the blanks.</div>
       <DndContext
         sensors={sensors}
@@ -239,9 +259,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           {currentlyDraggedWord && <DraggableWord word={currentlyDraggedWord} isOverlay />}
         </DragOverlay>
         <SentenceBuilder
-          content={content}
+          content={question.description}
           replacement={(index) => {
-            const blankId = `blank_${index}`;
+            const blankId = `${index + 1}`;
 
             const wordsInBlank = words.filter((word) => word.blankId === blankId);
 
@@ -256,7 +276,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
           }}
         />
         <WordBank words={wordBankWords} />
-        {solutionExplanation && !isPassed && (
+        {solutionExplanation && !question.passQuestion && (
           <div className="mt-4">
             <span className="body-base-md text-error-700">Correct sentence:</span>
             <Viewer content={solutionExplanation} />

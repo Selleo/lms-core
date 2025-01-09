@@ -128,8 +128,8 @@ export const useQuizLessonForm = ({
       }
 
       if (
-        question.type ===
-          (QuestionType.FILL_IN_THE_BLANKS_DND || QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
+        (question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
+          question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
         question.description
       ) {
         return {
@@ -138,7 +138,6 @@ export const useQuizLessonForm = ({
           solutionExplanation: updatedSolutionExplanation,
         };
       }
-      return question;
     });
 
     try {
