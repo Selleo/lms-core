@@ -53,6 +53,8 @@ export class LessonService {
     private readonly eventBus: EventBus,
   ) {}
 
+  // TODO: test commits
+
   async getLessonById(id: UUIDType, userId: UUIDType, isStudent: boolean): Promise<LessonShow> {
     const [lesson] = await this.db
       .select({
