@@ -2,7 +2,7 @@ import { Type } from "@sinclair/typebox";
 
 import { chapterSchema } from "src/chapter/schemas/chapter.schema";
 import { baseCourseSchema } from "src/courses/schemas/createCourse.schema";
-import { lessonSchema } from "src/lesson/lesson.schema";
+import { adminOptionSchema, adminQuestionSchema, lessonSchema } from "src/lesson/lesson.schema";
 
 import type { Static } from "@sinclair/typebox";
 
@@ -15,33 +15,44 @@ const niceCourseData = Type.Intersect([
         Type.Omit(chapterSchema, [
           "id",
           "lessonCount",
+          "lessons",
           "completedLessonCount",
           "chapterProgress",
+          "enrolled",
           "isSubmitted",
-          "quizScore",
+          "createdAt",
+          "quizCount",
+          "displayOrder",
         ]),
         Type.Object({
-          displayOrder: Type.Number(),
           lessons: Type.Array(
             Type.Intersect([
-              Type.Omit(lessonSchema, ["id", "fileS3Key", "fileType", "questions"]),
+              Type.Omit(lessonSchema, [
+                "id",
+                "displayOrder",
+                "fileS3Key",
+                "fileType",
+                "questions",
+                "updatedAt",
+              ]),
               Type.Partial(
                 Type.Object({
                   questions: Type.Array(
-                    Type.Object({
-                      type: Type.String(),
-                      title: Type.String(),
-                      description: Type.Optional(Type.String()),
-                      options: Type.Optional(
-                        Type.Array(
-                          Type.Object({
-                            optionText: Type.String(),
-                            isCorrect: Type.Boolean(),
-                            displayOrder: Type.Number(),
-                          }),
-                        ),
+                    Type.Intersect([
+                      Type.Omit(adminQuestionSchema, ["id", "displayOrder", "options"]),
+                      Type.Partial(
+                        Type.Object({
+                          options: Type.Array(
+                            Type.Omit(adminOptionSchema, [
+                              "id",
+                              "displayOrder",
+                              "isStudentAnswer",
+                              "questionId",
+                            ]),
+                          ),
+                        }),
                       ),
-                    }),
+                    ]),
                   ),
                 }),
               ),

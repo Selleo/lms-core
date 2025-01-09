@@ -11,6 +11,7 @@ import {
   studentLessonProgress,
 } from "src/storage/schema";
 
+import type { LessonTypes } from "../lesson.type";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { AdminQuestionBody, QuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
@@ -24,13 +25,62 @@ export class LessonRepository {
     return lesson;
   }
 
-  // TODO: check if is not a duplicate with method below
+  async getLessonDetails(id: UUIDType, userId: UUIDType) {
+    const [lesson] = await this.db
+      .select({
+        id: lessons.id,
+        type: sql<LessonTypes>`${lessons.type}`,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        fileUrl: lessons.fileS3Key,
+        fileType: lessons.fileType,
+        displayOrder: sql<number>`${lessons.displayOrder}`,
+        quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
+        quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
+        isExternal: sql<boolean>`${lessons.isExternal}`,
+        isFreemium: sql<boolean>`${chapters.isFreemium}`,
+        isEnrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NULL THEN FALSE ELSE TRUE END`,
+        nextLessonId: sql<string | null>`
+        COALESCE(
+          (
+            SELECT l2.id
+            FROM ${lessons} l2
+            JOIN ${chapters} c ON c.id = l2.chapter_id
+            LEFT JOIN ${studentLessonProgress} slp ON slp.lesson_id = l2.id AND slp.student_id = ${userId}
+            WHERE c.course_id = ${chapters.courseId}
+              AND l2.id != ${lessons.id}
+              AND slp.completed_at IS NULL
+            ORDER BY c.display_order, l2.display_order
+            LIMIT 1
+          ),
+          NULL
+        )
+      `,
+      })
+      .from(lessons)
+      .leftJoin(chapters, eq(chapters.id, lessons.chapterId))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+      )
+      .leftJoin(
+        studentLessonProgress,
+        and(
+          eq(studentLessonProgress.lessonId, lessons.id),
+          eq(studentLessonProgress.studentId, userId),
+        ),
+      )
+      .where(eq(lessons.id, id));
+
+    return lesson;
+  }
+
   async getLessonsByChapterId(chapterId: UUIDType) {
     return this.db
       .select({
         id: lessons.id,
         title: lessons.title,
-        type: lessons.type,
+        type: sql<LessonTypes>`${lessons.type}`,
         description: sql<string>`${lessons.description}`,
         fileS3Key: sql<string | undefined>`${lessons.fileS3Key}`,
         fileType: sql<string | undefined>`${lessons.fileType}`,
