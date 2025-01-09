@@ -11,9 +11,9 @@ import {
   Undo,
 } from "lucide-react";
 
+import { Button } from "~/components/ui/button";
 import { ToggleGroup, Toolbar } from "~/components/ui/toolbar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
-import { Button } from "~/components/ui/button";
 
 import { FormatType } from "./FormatType";
 

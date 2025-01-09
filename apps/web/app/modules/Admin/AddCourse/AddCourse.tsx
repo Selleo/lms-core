@@ -1,3 +1,4 @@
+import { useNavigate } from "@remix-run/react";
 import { useCallback, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
@@ -19,7 +20,6 @@ import {
 
 import Breadcrumb from "./components/Breadcrumb";
 import { useAddCourseForm } from "./hooks/useAddCourseForm";
-import { useNavigate } from "@remix-run/react";
 
 const AddCourse = () => {
   const { form, onSubmit } = useAddCourseForm();
