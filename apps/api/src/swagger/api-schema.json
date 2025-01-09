@@ -6226,17 +6226,6 @@
                     "type": "null"
                   }
                 ]
-              },
-              "nextLessonChapterId": {
-                "anyOf": [
-                  {
-                    "format": "uuid",
-                    "type": "string"
-                  },
-                  {
-                    "type": "null"
-                  }
-                ]
               }
             },
             "required": [
@@ -6247,8 +6236,7 @@
               "fileType",
               "fileUrl",
               "displayOrder",
-              "nextLessonId",
-              "nextLessonChapterId"
+              "nextLessonId"
             ]
           }
         },

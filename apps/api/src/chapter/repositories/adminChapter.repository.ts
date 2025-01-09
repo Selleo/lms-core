@@ -7,8 +7,8 @@ import { chapters, courses, lessons, questionAnswerOptions, questions } from "sr
 import type { UpdateChapterBody } from "../schemas/chapter.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { AdminLessonWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
+import type { LessonTypes } from "src/lesson/lesson.type";
 import type * as schema from "src/storage/schema";
-import { LessonTypes } from "src/lesson/lesson.type";
 
 @Injectable()
 export class AdminChapterRepository {

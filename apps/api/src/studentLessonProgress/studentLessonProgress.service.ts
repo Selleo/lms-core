@@ -7,7 +7,6 @@ import {
 } from "@nestjs/common";
 import { and, eq, isNotNull, sql } from "drizzle-orm";
 
-
 import { DatabasePg } from "src/common";
 import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";

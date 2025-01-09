@@ -10,7 +10,7 @@ import xml2js from "xml2js";
 import { AdminChapterService } from "src/chapter/adminChapter.service";
 import { DatabasePg } from "src/common";
 import { FileService } from "src/file/file.service";
-import { LESSON_TYPES, LessonTypes } from "src/lesson/lesson.type";
+import { LESSON_TYPES } from "src/lesson/lesson.type";
 import { AdminLessonService } from "src/lesson/services/adminLesson.service";
 import { S3Service } from "src/s3/s3.service";
 
@@ -18,6 +18,7 @@ import { SCORM } from "../constants/scorm.consts";
 import { ScormRepository } from "../repositories/scorm.repository";
 
 import type { UUIDType } from "src/common";
+import type { LessonTypes } from "src/lesson/lesson.type";
 
 type ScormChapter = {
   title: string;

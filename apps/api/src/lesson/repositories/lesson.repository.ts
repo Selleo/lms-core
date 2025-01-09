@@ -11,10 +11,10 @@ import {
   studentLessonProgress,
 } from "src/storage/schema";
 
+import type { LessonTypes } from "../lesson.type";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { AdminQuestionBody, QuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
-import { LessonTypes } from "../lesson.type";
 
 @Injectable()
 export class LessonRepository {
@@ -41,44 +41,21 @@ export class LessonRepository {
         isFreemium: sql<boolean>`${chapters.isFreemium}`,
         isEnrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NULL THEN FALSE ELSE TRUE END`,
         nextLessonId: sql<string | null>`
-              COALESCE(
-                (
-                  SELECT l2.id
-                  FROM ${lessons} l2
-                  WHERE l2.chapter_id = ${lessons.chapterId}
-                    AND l2.display_order > ${lessons.displayOrder}
-                  ORDER BY l2.display_order
-                  LIMIT 1),
-                (
-                  SELECT l3.id
-                  FROM ${lessons} l3
-                  JOIN ${chapters} c2 ON c2.id = l3.chapter_id
-                  WHERE c2.course_id = ${chapters.courseId}
-                    AND c2.display_order > ${chapters.displayOrder}
-                  ORDER BY c2.display_order, l3.display_order
-                  LIMIT 1)
-              )
-            `,
-        nextLessonChapterId: sql<string | null>`
-              COALESCE(
-              (
-                SELECT l2.chapter_id
-                FROM ${lessons} l2
-                WHERE l2.chapter_id = ${lessons.chapterId}
-                  AND l2.display_order > ${lessons.displayOrder}
-                ORDER BY l2.display_order
-                LIMIT 1
-              ),
-              (
-                SELECT c2.id
-                FROM ${chapters} c2
-                WHERE c2.course_id = ${chapters.courseId}
-                  AND c2.display_order > ${chapters.displayOrder}
-                ORDER BY c2.display_order
-                LIMIT 1
-              )
-            )
-            `,
+        COALESCE(
+          (
+            SELECT l2.id
+            FROM ${lessons} l2
+            JOIN ${chapters} c ON c.id = l2.chapter_id
+            LEFT JOIN ${studentLessonProgress} slp ON slp.lesson_id = l2.id AND slp.student_id = ${userId}
+            WHERE c.course_id = ${chapters.courseId}
+              AND l2.id != ${lessons.id}
+              AND slp.completed_at IS NULL
+            ORDER BY c.display_order, l2.display_order
+            LIMIT 1
+          ),
+          NULL
+        )
+      `,
       })
       .from(lessons)
       .leftJoin(chapters, eq(chapters.id, lessons.chapterId))
@@ -98,7 +75,6 @@ export class LessonRepository {
     return lesson;
   }
 
-  // TODO: check if is not a duplicate with method below
   async getLessonsByChapterId(chapterId: UUIDType) {
     return this.db
       .select({

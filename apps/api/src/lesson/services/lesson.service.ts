@@ -16,13 +16,9 @@ import { QuestionRepository } from "src/questions/question.repository";
 import { QuestionService } from "src/questions/question.service";
 import { QUESTION_TYPE } from "src/questions/schema/question.types";
 import {
-  chapters,
-  lessons,
   questionAnswerOptions,
   questions,
   quizAttempts,
-  studentCourses,
-  studentLessonProgress,
   studentQuestionAnswers,
 } from "src/storage/schema";
 import { StudentLessonProgressService } from "src/studentLessonProgress/studentLessonProgress.service";
@@ -37,7 +33,6 @@ import type {
   QuestionBody,
   QuestionDetails,
 } from "../lesson.schema";
-import type { LessonTypes } from "../lesson.type";
 import type { UUIDType } from "src/common";
 import type { QuestionType } from "src/questions/schema/question.types";
 
@@ -52,8 +47,6 @@ export class LessonService {
     private readonly studentLessonProgressService: StudentLessonProgressService,
     private readonly eventBus: EventBus,
   ) {}
-
-  // TODO: test commits
 
   async getLessonById(id: UUIDType, userId: UUIDType, isStudent: boolean): Promise<LessonShow> {
     const lesson = await this.lessonRepository.getLessonDetails(id, userId);
