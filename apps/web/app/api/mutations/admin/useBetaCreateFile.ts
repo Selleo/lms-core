@@ -25,7 +25,7 @@ export function useBetaCreateFileItem() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t('adminCourseView.curriculum.lesson.toast.fileItemCreatedSuccessfully'),
+        description: t("adminCourseView.curriculum.lesson.toast.fileItemCreatedSuccessfully"),
       });
     },
     onError: (error) => {

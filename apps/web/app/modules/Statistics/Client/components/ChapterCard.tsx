@@ -12,6 +12,7 @@ import { cn } from "~/lib/utils";
 
 import type { GetCourseResponse } from "~/api/generated-api";
 import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 
 type Chapter = GetCourseResponse["data"]["chapters"][number];
 
@@ -45,19 +46,19 @@ const getButtonProps = (chapterProgress: ChapterStatus, isAdmin: boolean, type?:
 
   if (chapterProgress === "completed") {
     return type === "quiz"
-      ? { text: "Try again", colorClass: "text-success-600" }
-      : { text: "Read more", colorClass: "text-success-600" };
+      ? { text: t("clientStatisticsView.button.tryAgain"), colorClass: "text-success-600" }
+      : { text: t("clientStatisticsView.button.readMore"), colorClass: "text-success-600" };
   }
 
   if (chapterProgress === "in_progress") {
-    return { text: "Continue", colorClass: "text-secondary-500" };
+    return { text: t("clientStatisticsView.button.continue"), colorClass: "text-secondary-500" };
   }
 
   if (chapterProgress === "not_started" && type === "quiz") {
-    return { text: "Start", colorClass: "text-primary-700" };
+    return { text: t("clientStatisticsView.button.start"), colorClass: "text-primary-700" };
   }
 
-  return { text: "Read more", colorClass: "text-primary-700" };
+  return { text: t("clientStatisticsView.button.readMore"), colorClass: "text-primary-700" };
 };
 
 const cardBadgeIcon = {
@@ -142,7 +143,11 @@ export const ChapterCard = ({
             <div className="flex justify-between items-center">
               <div className="flex flex-col h-full bg-white w-full">
                 <CourseProgress
-                  label={type === "quiz" ? t('studentChapterCardView.other.quizProgress') : t('studentChapterCardView.other.lessonProgress')}
+                  label={
+                    type === "quiz"
+                      ? t("studentChapterCardView.other.quizProgress")
+                      : t("studentChapterCardView.other.lessonProgress")
+                  }
                   isCompleted={chapterProgress === "completed"}
                   completedLessonCount={itemsCompletedCount ?? 0}
                   courseLessonCount={itemsCount}

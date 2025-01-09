@@ -9,7 +9,7 @@
       "proceed": "Proceed",
       "add": "Add",
       "close": "Close",
-      "goToDashboard": "Go to dashboard", 
+      "goToDashboard": "Go to dashboard",
       "goBack": "Go back",
       "clearAll": "Clear All"
     },
@@ -39,7 +39,7 @@
     "header": "Click to upload",
     "subHeader": "or drag and drop",
     "replace": "Click to replace",
-   
+
     "toast": {
       "fileUploadedSuccessfully": "File uploaded successfully"
     }
@@ -54,17 +54,17 @@
       "description": "Description",
       "thumbnail": "Upload thumbnail"
     },
-    "placeholder":{
+    "placeholder": {
       "price": "Amount",
       "title": "Enter title...",
-      "category":"Select category",
+      "category": "Select category",
       "description": "Provide description about the course..."
     },
     "other": {
       "setUpCourse": "Set up course",
       "provideDetails": "Provide the details to set up a new course",
       "uploadFileHeader": "Click to upload or drag and drop",
-      "uploadFileBody":"SCORM .zip file (max. to 500MB)",
+      "uploadFileBody": "SCORM .zip file (max. to 500MB)",
       "pricing": "Pricing",
       "status": "Status",
       "setUpPricing": "Set pricing for the course",
@@ -88,7 +88,6 @@
     "toast": {
       "scormUploadedSuccessfully": "SCORM package uploaded successfully"
     }
-  
   },
   "studentChapterCardView": {
     "other": {
@@ -96,7 +95,19 @@
       "quizProgress": "Quiz progress:"
     }
   },
-  "changeUserEmailView" : {
+  "navigationSideBar": {
+    "settings": "Settings",
+    "logout": "Logout",
+    "panel": "panel",
+    "menu": "Menu",
+    "close": "Close",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "courses": "Courses",
+    "categories": "Categories",
+    "users": "Users"
+  },
+  "changeUserEmailView": {
     "header": "Change user information",
     "subHeader": "Update your user information here.",
     "field": {
@@ -174,7 +185,7 @@
       "userUpdatedSuccessfully": "User updated successfully",
       "userDetailsUpdatedSuccessfully": "User details updated successfully",
       "deletedSelectedUsersSuccessfully": "Successfully deleted selected users"
-    }, 
+    },
     "field": {
       "description": "Description",
       "email": "Email",
@@ -190,7 +201,11 @@
   "clientStatisticsView": {
     "header": "Welcome back,",
     "button": {
-      "searchCourses": "Search courses"
+      "searchCourses": "Search courses",
+      "continue": "Continue",
+      "start": "Start",
+      "readMore": "Read More",
+      "tryAgain": "Try again"
     },
     "other": {
       "completedCourses": "Completed Courses",
@@ -204,6 +219,7 @@
       "lessons": "Lessons",
       "completed": "Completed",
       "started": "Started",
+      "noDataAvaiable": "No data available",
       "rates": "Rates",
       "numberOf": "Number of",
       "noLessonsToContiue": "Currently have no lessons to continue.",
@@ -218,11 +234,11 @@
     "other": {
       "dailyStreak": "Daily streak"
     }
-  }, 
+  },
   "adminStatisticsView": {
     "header": "Welcome back,",
     "other": {
-      "courseCompletitionPercentage" : "Course Completition Percentage",
+      "courseCompletitionPercentage": "Course Completition Percentage",
       "conversionsAfterFreemiumLessson": "Conversions After Freemium Lesson",
       "avgQuizScore": "Avg. Score Across All Quizze",
       "purchasedCourse": "Purchased Course",
@@ -292,7 +308,7 @@
     "button": {
       "createCategory": "Create category"
     },
-    "toast":{
+    "toast": {
       "categoryCreatedSuccessfully": "Category created successfully",
       "categoryUpdatedSuccessfully": "Category updated successfully"
     },
@@ -453,7 +469,6 @@
         "other": {
           "freemium": "Freemium",
           "freemiumToolTip": "Students can access freemium chapters without enrolling in the course."
-         
         }
       },
       "lesson": {
@@ -467,7 +482,7 @@
         "breadcrumbs": {
           "back": "Back"
         },
-        "validation":{
+        "validation": {
           "optionTextRequired": "Option text is required",
           "atLeastOneOptionRequired": "At least one option is requred",
           "imageRequired": "Image is required",
@@ -533,8 +548,8 @@
           "videoLessonDescription": "Choose this type if you want to embed video content files like MP4.",
           "presentationLessonDescription": "Choose this type if you want to embed presentations files like PPTX.",
           "quizLessonDescription": "This type allows you to build quizzes for your chapter using different types of questions.",
-           "leaveContentHeader": "Are you sure you want to leave this question editor?",
-        "leaveContentBody": "It will delete all unsaved progress"
+          "leaveContentHeader": "Are you sure you want to leave this question editor?",
+          "leaveContentBody": "It will delete all unsaved progress"
         }
       }
     },
@@ -582,7 +597,7 @@
     }
   },
   "courseChapterView": {
-    "other":{
+    "other": {
       "lesson": "Lesson",
       "lessons": "Lessons",
       "quiz": "Quiz",
@@ -596,7 +611,7 @@
     "field": {
       "email": "Email address"
     },
-    "validation":{
+    "validation": {
       "email": "Invalid email"
     },
     "button": {
@@ -656,13 +671,50 @@
       }
     }
   },
-  "studentLessonView": {
+  "studentQuizSummaryView": {
+    "header": "Congratulations!",
+    "subHeader": "You are finished the quiz.!",
     "other": {
-      "chapter": "Chapter"
+      "yourScore": "Your Score:",
+      "tryAgain": "Try again"
     },
-    "breadcrumbs":{
+    "button": {
+      "backToCourse": "Back to course"
+    }
+  },
+  "studentLessonView": {
+    "error": {
+      "lessonIdNotFound": "Lesson ID not found"
+    },
+    "other": {
+      "lesson": "Lesson",
+      "chapter": "Chapter",
+      "correctAnswers": "Correct answers:",
+      "correctSentence": "Correct sentence:",
+      "question": "Question",
+      "answers": "Answers:",
+      "true": "True",
+      "false": "False",
+      "briefResponseInstruction": "Instruction: Provide a brief response (1-2 sentences).",
+      "detailedResponseInstruction": "Instruction: Write a detailed response (3-5 sentences).",
+      "single": "Single",
+      "multiple": "Multiple",
+      "fillInTheBlanks": "Fill in the blanks.",
+      "selectQuestion": "select question.",
+      "trueOrFalseQuestion": "True or false question."
+    },
+    "placeholder": {
+      "openQuestion": "Type your answer here"
+    },
+    "breadcrumbs": {
       "dashboard": "Dashboard",
       "lessonTitle": "Lesson"
+    },
+    "button": {
+      "previous": "Previous",
+      "complete": "Complete",
+      "next": "Next",
+      "submit": "Submit"
     },
     "sideSection": {
       "header": "Table of content:",
@@ -680,7 +732,7 @@
     "otherAuthorCoursesSubheader": "Below you can see more courses created by the same author",
     "other": {
       "cannotFindCourses": "We could not find any courses",
-      "changeSearchCriteria":"Please change the search criteria or try again later"
+      "changeSearchCriteria": "Please change the search criteria or try again later"
     },
     "sideSection": {
       "optionHeader": "Option",

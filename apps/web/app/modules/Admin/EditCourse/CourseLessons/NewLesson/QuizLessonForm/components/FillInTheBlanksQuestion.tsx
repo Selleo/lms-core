@@ -302,7 +302,9 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
         <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
           <div className="ml-14">
             <span className="text-red-500 mr-1">*</span>
-            <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.words")}</Label>
+            <Label className="body-sm-md">
+              {t("adminCourseView.curriculum.lesson.field.words")}
+            </Label>
             <div className="flex flex-wrap gap-2 items-center">
               {currentOptions.map((option, index) => (
                 <div

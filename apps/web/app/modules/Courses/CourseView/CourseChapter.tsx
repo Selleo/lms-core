@@ -19,9 +19,17 @@ type CourseChapterProps = {
 };
 
 export const CourseChapter = ({ chapter, enrolled }: CourseChapterProps) => {
-  const { t } = useTranslation()
-  const lessonText = formatWithPlural(chapter.lessonCount ?? 0, t('courseChapterView.other.lesson'), t('courseChapterView.other.lessons'));
-  const quizText = formatWithPlural(chapter.quizCount ?? 0, t('courseChapterView.other.quiz'), t('courseChapterView.other.quizzes'));
+  const { t } = useTranslation();
+  const lessonText = formatWithPlural(
+    chapter.lessonCount ?? 0,
+    t("courseChapterView.other.lesson"),
+    t("courseChapterView.other.lessons"),
+  );
+  const quizText = formatWithPlural(
+    chapter.quizCount ?? 0,
+    t("courseChapterView.other.quiz"),
+    t("courseChapterView.other.quizzes"),
+  );
 
   return (
     <Accordion type="single" collapsible>
@@ -68,7 +76,7 @@ export const CourseChapter = ({ chapter, enrolled }: CourseChapterProps) => {
                 {chapter.isFreemium && (
                   <CardBadge variant="successFilled">
                     <Icon name="FreeRight" className="w-4" />
-                  {t('courseChapterView.other.free')}
+                    {t("courseChapterView.other.free")}
                   </CardBadge>
                 )}
               </div>

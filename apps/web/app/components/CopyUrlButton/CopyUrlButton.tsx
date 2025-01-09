@@ -35,7 +35,7 @@ export const CopyUrlButton = ({ children, ...props }: CopyUrlButtonProps) => {
             {children}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>{t('common.other.copyUrl')}</TooltipContent>
+        <TooltipContent>{t("common.other.copyUrl")}</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

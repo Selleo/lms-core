@@ -40,12 +40,12 @@ export function useStripePaymentIntent() {
       if (error instanceof AxiosError) {
         toast({
           variant: "destructive",
-          description: error.response?.data.message || t('paymentView.toast.failed'),
+          description: error.response?.data.message || t("paymentView.toast.failed"),
         });
       } else {
         toast({
           variant: "destructive",
-          description: error.message || t('paymentView.toast.somethingWentWrong'),
+          description: error.message || t("paymentView.toast.somethingWentWrong"),
         });
       }
     },

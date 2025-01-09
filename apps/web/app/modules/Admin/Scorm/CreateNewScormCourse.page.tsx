@@ -60,7 +60,7 @@ function CreateNewScormCourse() {
     Component: CurrentStep,
     SideComponent,
   } = SCORM_CONFIG[currentStep];
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <div className="size-full gap-[120px] flex p-20 bg-white">

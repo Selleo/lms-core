@@ -36,9 +36,9 @@ const ImageUploadInput = ({
 
           <div className="flex items-center justify-center mt-2">
             <span className={`text-lg font-semibold text-primary-400`}>
-              {field.value ? t('uploadFile.replace') : t('uploadFile.header')}
+              {field.value ? t("uploadFile.replace") : t("uploadFile.header")}
             </span>
-            <span className="ml-2 text-lg font-semibold">{t('uploadFile.subHeader')}</span>
+            <span className="ml-2 text-lg font-semibold">{t("uploadFile.subHeader")}</span>
           </div>
 
           <div

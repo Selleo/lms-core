@@ -24,7 +24,7 @@ export function useBetaCreateChapter() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t('adminCourseView.curriculum.chapter.toast.chapterCreatedSuccessfully'),
+        description: t("adminCourseView.curriculum.chapter.toast.chapterCreatedSuccessfully"),
       });
     },
     onError: (error) => {

@@ -95,7 +95,9 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             {!isOptionEmpty && (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.options")}</Label>
+                <Label className="body-sm-md">
+                  {t("adminCourseView.curriculum.lesson.field.options")}
+                </Label>
               </>
             )}
             {watchedOptions && watchedOptions?.length > 0 && (

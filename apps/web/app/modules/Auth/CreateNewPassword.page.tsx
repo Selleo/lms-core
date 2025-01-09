@@ -24,14 +24,10 @@ const createNewPasswordSchema = (t: (key: string) => string) =>
         .string()
         .min(8, { message: t("createPasswordView.validation.passwordMinLength") }),
     })
-    .refine(
-      ({ newPassword, newPasswordConfirmation }) =>
-        newPassword === newPasswordConfirmation,
-      {
-        message: t("createPasswordView.validation.passwordsDontMatch"),
-        path: ["newPasswordConfirmation"],
-      }
-    );
+    .refine(({ newPassword, newPasswordConfirmation }) => newPassword === newPasswordConfirmation, {
+      message: t("createPasswordView.validation.passwordsDontMatch"),
+      path: ["newPasswordConfirmation"],
+    });
 
 export default function CreateNewPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -43,7 +39,7 @@ export default function CreateNewPasswordPage() {
   const { mutateAsync: createNewPassword } = useCreateNewPassword({
     isCreate: !resetToken,
   });
-  const { t } = useTranslation();  
+  const { t } = useTranslation();
 
   const {
     register,
@@ -102,7 +98,9 @@ export default function CreateNewPasswordPage() {
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="newPasswordConfirmation">{t("createPasswordView.field.confirmPassword")}</Label>
+              <Label htmlFor="newPasswordConfirmation">
+                {t("createPasswordView.field.confirmPassword")}
+              </Label>
             </div>
             <Input
               id="newPasswordConfirmation"

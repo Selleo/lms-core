@@ -26,7 +26,7 @@ export function useCreateCourse() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: t('adminCourseView.toast.createCourseSuccessfully') });
+      toast({ description: t("adminCourseView.toast.createCourseSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

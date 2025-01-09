@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import CourseStartedImage from "~/assets/course-started.png";
 import { Icon } from "~/components/Icon";
@@ -24,6 +25,7 @@ export const QuizSummaryModal = ({
   setIsOpen,
   scoreLabel,
 }: QuizSummaryModalProps) => {
+  const { t } = useTranslation();
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="max-w-[368px]">
@@ -34,22 +36,30 @@ export const QuizSummaryModal = ({
           <div className="flex flex-col-reverse items-center gap-y-2">
             <DialogTitle>
               <hgroup className="text-center">
-                <h2 className="font-bold text-lg text-neutral-950">Congratulations!</h2>
-                <p className="body-base font-normal text-neutral-800">You are finished the quiz.</p>
+                <h2 className="font-bold text-lg text-neutral-950">
+                  {t("studentQuizSummaryView.header")}
+                </h2>
+                <p className="body-base font-normal text-neutral-800">
+                  {t("studentQuizSummaryView.subHeader")}
+                </p>
               </hgroup>
             </DialogTitle>
             <DialogDescription className="flex items-center gap-x-1 mb-1 text-neutral-950 bg-neutral-50 py-1 px-2 rounded-lg">
               <Icon name="QuizStar" />
-              <span className="body-sm-md">Your Score: {scoreLabel}</span>
+              <span className="body-sm-md">
+                {t("studentQuizSummaryView.other.yourScore")} {scoreLabel}
+              </span>
             </DialogDescription>
           </div>
           <div className="flex flex-col gap-y-2">
             <DialogTrigger asChild>
-              <Button variant="outline">Try Again</Button>
+              <Button variant="outline">{t("studentQuizSummaryView.other.tryAgain")}</Button>
             </DialogTrigger>
             <DialogTrigger asChild>
               <Link to={`/course/${courseId}`}>
-                <Button className="w-full">Back to Course</Button>
+                <Button className="w-full">
+                  {t("studentQuizSummaryView.button.backToCourse")}
+                </Button>
               </Link>
             </DialogTrigger>
           </div>

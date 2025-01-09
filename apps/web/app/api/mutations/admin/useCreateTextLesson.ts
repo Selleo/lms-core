@@ -24,7 +24,7 @@ export function useCreateTextLesson() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t('adminCourseView.curriculum.lesson.toast.textItemCreatedSuccessfully'),
+        description: t("adminCourseView.curriculum.lesson.toast.textItemCreatedSuccessfully"),
       });
     },
     onError: (error) => {

@@ -35,10 +35,8 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
               htmlFor="free"
               className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
             >
-              <div className="font-medium text-lg">{t('adminScorm.other.free')}</div>
-              <div className="text-sm font-normal">
-              {t('adminScorm.other.freeCourseBody')}
-              </div>
+              <div className="font-medium text-lg">{t("adminScorm.other.free")}</div>
+              <div className="text-sm font-normal">{t("adminScorm.other.freeCourseBody")}</div>
             </Label>
           </Card>
 
@@ -50,16 +48,14 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
             <RadioGroupItem value="paid" id="paid" className="my-5" />
             <div className="flex flex-col py-4">
               <Label htmlFor="paid" className="flex-1 gap-2 flex flex-col cursor-pointer size-full">
-                <div className="font-medium text-lg">{t('adminScorm.other.paidCourse')}</div>
-                <div className="text-sm font-normal">
-                {t('adminScorm.other.paidCourseBody')}
-                </div>
+                <div className="font-medium text-lg">{t("adminScorm.other.paidCourse")}</div>
+                <div className="text-sm font-normal">{t("adminScorm.other.paidCourseBody")}</div>
               </Label>
 
               {pricingType === "paid" && (
                 <>
                   <Label className="text-sm font-medium mt-6" htmlFor="price">
-                    <span className="text-destructive">*</span> {t('adminScorm.field.price')}
+                    <span className="text-destructive">*</span> {t("adminScorm.field.price")}
                   </Label>
                   <div className="relative">
                     <Input
@@ -67,7 +63,7 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
                       {...register("pricing.price", {
                         valueAsNumber: true,
                       })}
-                      placeholder={t('adminScorm.placeholder.price')}
+                      placeholder={t("adminScorm.placeholder.price")}
                       type="number"
                     />
                     <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4 uppercase">
@@ -83,9 +79,9 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={handleBack}>
-          {t('adminScorm.button.back')}
+          {t("adminScorm.button.back")}
         </Button>
-        <Button onClick={handleNext}>{t('adminScorm.button.status')}</Button>
+        <Button onClick={handleNext}>{t("adminScorm.button.status")}</Button>
       </div>
     </div>
   );

@@ -108,7 +108,9 @@ export default function LessonPage() {
         <div className="w-full bg-white rounded-lg flex flex-col h-full divide-y">
           <div className="flex items-center py-6 px-12">
             <p className="h6 text-neutral-950">
-              <span className="text-neutral-800">{t('studentLessonView.other.chapter')} {currentChapter?.displayOrder}:</span>{" "}
+              <span className="text-neutral-800">
+                {t("studentLessonView.other.chapter")} {currentChapter?.displayOrder}:
+              </span>{" "}
               {course?.title}
             </p>
           </div>

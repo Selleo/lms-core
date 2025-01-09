@@ -26,7 +26,9 @@ export function useUpdateChapter() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t('adminCourseView.curriculum.chapter.toast.chapterUpdatedSuccessfully') });
+      toast({
+        description: t("adminCourseView.curriculum.chapter.toast.chapterUpdatedSuccessfully"),
+      });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

@@ -24,10 +24,10 @@ export const YouMayBeInterestedIn = ({ category, courseId }: YouMayBeInterestedI
     <section className="flex flex-col gap-y-6 w-full h-full bg-white p-8 rounded-lg">
       <div className="flex flex-col">
         <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-          {t('studentCourseView.recommendedHeader')}
+          {t("studentCourseView.recommendedHeader")}
         </h4>
         <p className="text-lg leading-7 text-neutral-800">
-        {t('studentCourseView.recommendedSubheader')}
+          {t("studentCourseView.recommendedSubheader")}
         </p>
       </div>
       <div data-testid="enrolled-courses" className="flex gap-6w-full">
@@ -39,10 +39,10 @@ export const YouMayBeInterestedIn = ({ category, courseId }: YouMayBeInterestedI
               </div>
               <div className="flex flex-col justify-center gap-2">
                 <p className="text-lg font-bold leading-5 text-neutral-950">
-                  {t('studentCourseView.other.cannotFindCourses')}
+                  {t("studentCourseView.other.cannotFindCourses")}
                 </p>
                 <p className="text-neutral-800 text-base leading-6 font-normal">
-                {t('studentCourseView.other.changeSearchCriteria')}
+                  {t("studentCourseView.other.changeSearchCriteria")}
                 </p>
               </div>
             </div>

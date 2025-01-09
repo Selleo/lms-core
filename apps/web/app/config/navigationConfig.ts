@@ -2,6 +2,7 @@ import { routeAccessConfig } from "./routeAccessConfig";
 
 import type { UserRole } from "./userRoles";
 import type { IconName } from "~/types/shared";
+import { t } from "i18next";
 
 export interface BaseMenuItem {
   label: string;
@@ -23,12 +24,12 @@ export type NavigationItem = {
 
 export const navigationConfig: NavigationItem[] = [
   {
-    label: "dashboard",
+    label: t("navigationSideBar.dashboard"),
     path: "",
     iconName: "Dashboard",
   },
   {
-    label: "courses",
+    label: t("navigationSideBar.courses"),
     path: "courses",
     iconName: "Course",
   },
@@ -36,17 +37,17 @@ export const navigationConfig: NavigationItem[] = [
 
 export const adminNavigationConfig: NavigationItem[] = [
   {
-    label: "courses",
+    label: t("navigationSideBar.courses"),
     path: "admin/courses",
     iconName: "Course",
   },
   {
-    label: "categories",
+    label: t("navigationSideBar.categories"),
     path: "admin/categories",
     iconName: "Category",
   },
   {
-    label: "users",
+    label: t("navigationSideBar.users"),
     path: "admin/users",
     iconName: "User",
   },

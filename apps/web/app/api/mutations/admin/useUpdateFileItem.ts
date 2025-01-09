@@ -26,7 +26,9 @@ export function useUpdateFileItem() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t('adminCourseView.curriculum.lesson.toast.fileItemUpdatedSuccessfully') });
+      toast({
+        description: t("adminCourseView.curriculum.lesson.toast.fileItemUpdatedSuccessfully"),
+      });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

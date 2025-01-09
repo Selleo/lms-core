@@ -55,8 +55,8 @@ export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProp
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="font-medium">{t('adminScorm.other.uploadFileHeader')}</p>
-            <p className="text-sm text-muted-foreground">{t('adminScorm.other.uploadFileBody')}</p>
+            <p className="font-medium">{t("adminScorm.other.uploadFileHeader")}</p>
+            <p className="text-sm text-muted-foreground">{t("adminScorm.other.uploadFileBody")}</p>
           </div>
         )}
       </label>
@@ -67,9 +67,9 @@ export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProp
       <div className="flex gap-3">
         <Button variant="outline" onClick={() => navigate(-1)}>
           <Icon name="ArrowRight" className="w-4 h-4 mr-2 rotate-180" />
-          <span>{t('common.button.cancel')}</span>
+          <span>{t("common.button.cancel")}</span>
         </Button>
-        <Button onClick={handleNext}>{t('adminScorm.other.setUpCourse')}</Button>
+        <Button onClick={handleNext}>{t("adminScorm.other.setUpCourse")}</Button>
       </div>
     </div>
   );

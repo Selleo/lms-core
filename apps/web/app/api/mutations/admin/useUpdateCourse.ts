@@ -27,7 +27,7 @@ export function useUpdateCourse() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t('adminCourseView.toast.courseUpdatedSuccessfully') });
+      toast({ description: t("adminCourseView.toast.courseUpdatedSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

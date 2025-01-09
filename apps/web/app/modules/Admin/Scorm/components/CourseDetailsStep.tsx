@@ -34,9 +34,9 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
       <div className="flex justify-center items-center gap-6">
         <div className="flex-1">
           <Label className="text-sm font-medium">
-            <span className="text-destructive">*</span> {t('adminScorm.field.title')}
+            <span className="text-destructive">*</span> {t("adminScorm.field.title")}
           </Label>
-          <Input {...register("details.title")} placeholder={t('adminScorm.placeholder.title')}/>
+          <Input {...register("details.title")} placeholder={t("adminScorm.placeholder.title")} />
           {errors.details?.title && (
             <p className="text-sm text-destructive">{errors.details.title.message}</p>
           )}
@@ -44,7 +44,7 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
 
         <div className="flex-1">
           <Label className="text-sm font-medium">
-            <span className="text-destructive">*</span> {t('adminScorm.field.category')}
+            <span className="text-destructive">*</span> {t("adminScorm.field.category")}
           </Label>
           <FormField
             control={control}
@@ -52,7 +52,7 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
             render={({ field }) => (
               <Select onValueChange={(value) => setValue("details.category", value)} {...field}>
                 <SelectTrigger>
-                  <SelectValue placeholder={t('adminScorm.placeholder.category')} />
+                  <SelectValue placeholder={t("adminScorm.placeholder.category")} />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => (
@@ -73,17 +73,17 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
 
       <div className="space-y-2">
         <Label className="text-sm font-medium">
-          <span className="text-destructive">*</span> {t('adminScorm.field.description')}
+          <span className="text-destructive">*</span> {t("adminScorm.field.description")}
         </Label>
         <Textarea
           {...register("details.description")}
-          placeholder={t('adminScorm.placeholder.description')}
+          placeholder={t("adminScorm.placeholder.description")}
           className="resize-none h-40"
           maxLength={180}
         />
         <div className="flex justify-start">
           <span className="text-sm text-muted-foreground">
-            {180 - (courseDescription?.length || 0)} {t('adminScorm.other.charactersLeft')}
+            {180 - (courseDescription?.length || 0)} {t("adminScorm.other.charactersLeft")}
           </span>
         </div>
         {errors.details?.description && (
@@ -92,7 +92,7 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
       </div>
 
       <div className="space-y-2">
-        <Label className="text-sm font-medium">{t('adminScorm.field.thumbnail')}</Label>
+        <Label className="text-sm font-medium">{t("adminScorm.field.thumbnail")}</Label>
         <input
           type="file"
           accept=".svg,.png,.jpg"
@@ -108,16 +108,18 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
           className="cursor-pointer block border-2 border-dashed rounded-lg p-8 text-center hover:border-primary transition-colors"
         >
           <div className="space-y-2">
-            <p className="font-medium">{(t('uploadFile.header'))} {(t('uploadFile.subHeader'))}</p>
+            <p className="font-medium">
+              {t("uploadFile.header")} {t("uploadFile.subHeader")}
+            </p>
             <p className="text-sm text-muted-foreground">SVG, PNG, JPG (max. to 50MB)</p>
           </div>
         </Label>
       </div>
       <div className="flex gap-3">
         <Button variant="outline" onClick={handleBack}>
-          {t('adminScorm.button.back')}
+          {t("adminScorm.button.back")}
         </Button>
-        <Button onClick={handleNext}>{t('adminScorm.other.pricing')}</Button>
+        <Button onClick={handleNext}>{t("adminScorm.other.pricing")}</Button>
       </div>
     </div>
   );

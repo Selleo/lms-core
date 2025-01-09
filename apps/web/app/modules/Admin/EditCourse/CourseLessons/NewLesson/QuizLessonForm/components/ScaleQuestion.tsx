@@ -9,7 +9,6 @@ import { Label } from "~/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
 
-
 import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
@@ -86,7 +85,9 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
             {!isOptionEmpty ? (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.options")}</Label>
+                <Label className="body-sm-md">
+                  {t("adminCourseView.curriculum.lesson.field.options")}
+                </Label>
               </>
             ) : null}
             {watchedOptions && watchedOptions.length > 0 && (

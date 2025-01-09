@@ -43,11 +43,11 @@ export default function ClientStatistics() {
 
   const coursesChartConfig = {
     completed: {
-      label: t('clientStatisticsView.other.completedCourses'),
+      label: t("clientStatisticsView.other.completedCourses"),
       color: "var(--primary-700)",
     },
     notCompleted: {
-      label:t('clientStatisticsView.other.startedCourses'),
+      label: t("clientStatisticsView.other.startedCourses"),
       color: "var(--primary-300)",
     },
   } satisfies ChartConfig;
@@ -70,11 +70,11 @@ export default function ClientStatistics() {
 
   const quizzesChartConfig = {
     completed: {
-      label: t('clientStatisticsView.other.correctAnswers'),
+      label: t("clientStatisticsView.other.correctAnswers"),
       color: "var(--primary-700)",
     },
     notCompleted: {
-      label: t('clientStatisticsView.other.wrongAnswers'),
+      label: t("clientStatisticsView.other.wrongAnswers"),
       color: "var(--primary-300)",
     },
   } satisfies ChartConfig;
@@ -86,7 +86,9 @@ export default function ClientStatistics() {
     <PageWrapper className="2xl:!pt-8">
       <div className="flex flex-col gap-y-6 2xl:gap-y-6">
         <div className="gap-x-2 flex 2xl:gap-x-4 items-center">
-          <p className="h5 2xl:h2 text-neutral-950">{t('clientStatisticsView.header')} {user?.firstName}</p>
+          <p className="h5 2xl:h2 text-neutral-950">
+            {t("clientStatisticsView.header")} {user?.firstName}
+          </p>
           <Avatar className="size-12">
             <Gravatar email={user?.email} />
           </Avatar>
@@ -97,14 +99,14 @@ export default function ClientStatistics() {
               <ContinueLearningCard isLoading={isLoading} lesson={userStatistics?.lastLesson} />
               <AvgPercentScoreChart
                 label={`${userStatistics?.quizzes.averageScore}`}
-                title={t('clientStatisticsView.other.avgQuizScorePercentage')}
+                title={t("clientStatisticsView.other.avgQuizScorePercentage")}
                 chartConfig={quizzesChartConfig}
                 chartData={quizzesChartData}
                 isLoading={isLoading}
               />
               <AvgPercentScoreChart
                 label={`${userStatistics?.averageStats.courseStats.completionRate}`}
-                title={t('clientStatisticsView.other.avgQuizCompletitionPercentage')}
+                title={t("clientStatisticsView.other.avgQuizCompletitionPercentage")}
                 chartConfig={coursesChartConfig}
                 chartData={coursesChartData}
                 isLoading={isLoading}
@@ -112,12 +114,12 @@ export default function ClientStatistics() {
             </div>
             <div className="flex flex-col 2xl:gap-x-4 2xl:flex-row w-full h-full gap-y-4">
               <RatesChart
-                resourceName={t('clientStatisticsView.other.courses')}
+                resourceName={t("clientStatisticsView.other.courses")}
                 chartData={coursesRatesChartData}
                 isLoading={isLoading}
               />
               <RatesChart
-                resourceName={t('clientStatisticsView.other.lessons')}
+                resourceName={t("clientStatisticsView.other.lessons")}
                 chartData={lessonRatesChartData}
                 isLoading={isLoading}
               />

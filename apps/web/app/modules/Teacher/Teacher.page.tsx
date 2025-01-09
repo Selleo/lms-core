@@ -17,7 +17,7 @@ export default function TeacherPage() {
   const { id = "" } = useParams();
   const { data: userDetails } = useUserDetails(id);
   const { data: teacherCourses } = useTeacherCourses(id);
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   return (
     <PageWrapper>
@@ -37,7 +37,7 @@ export default function TeacherPage() {
               </h2>
               <div className="flex flex-col gap-y-1">
                 <p className="body-sm">
-                  <span className="text-neutral-900">{t('teacherView.other.title')}</span>{" "}
+                  <span className="text-neutral-900">{t("teacherView.other.title")}</span>{" "}
                   <span className="font-medium text-neutral-950">{userDetails?.jobTitle}</span>
                 </p>
               </div>
@@ -45,14 +45,14 @@ export default function TeacherPage() {
           </div>
           <div className="flex flex-col gap-y-2">
             <div className="flex gap-x-3 items-center">
-              <span className="text-neutral-900">{t('teacherView.other.about')}</span>
+              <span className="text-neutral-900">{t("teacherView.other.about")}</span>
               <div className="bg-primary-200 h-[1px] w-full" />
             </div>
             <p className="body-base mt-2 text-neutral-950">{userDetails?.description}</p>
           </div>
           <div className="flex xl:mt-auto flex-col gap-y-1 md:gap-y-4">
             <div className="flex gap-x-3 items-center">
-              <span className="text-neutral-900">{t('teacherView.other.contact')}</span>
+              <span className="text-neutral-900">{t("teacherView.other.contact")}</span>
               <div className="bg-primary-200 h-[1px] w-full" />
             </div>
             <div className="flex flex-col md:flex-row gap-3 md:*:w-full">
@@ -73,12 +73,12 @@ export default function TeacherPage() {
             </div>
           </div>
           <Button variant="outline" className="sr-only">
-            {t('teacherView.button.collapse')}
+            {t("teacherView.button.collapse")}
           </Button>
         </section>
         <section className="flex flex-col gap-y-6 p-6 bg-white rounded-t-2xl rounded-b-lg drop-shadow">
           <div className="flex flex-col gap-y-2">
-            <h2 className="h5">{t('teacherView.other.courses')}</h2>
+            <h2 className="h5">{t("teacherView.other.courses")}</h2>
             <ButtonGroup
               className="!w-full !max-w-none flex *:w-full md:!w-min"
               buttons={[
@@ -99,7 +99,7 @@ export default function TeacherPage() {
             {teacherCourses?.map((course) => <CourseCard key={course.id} {...course} />)}
           </div>
           <Button variant="outline" className="sr-only">
-            {t('teacherView.button.showMore')}
+            {t("teacherView.button.showMore")}
           </Button>
         </section>
       </div>

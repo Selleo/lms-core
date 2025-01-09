@@ -26,10 +26,11 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
     <section className="flex flex-col gap-y-6 w-full h-full bg-white p-8 rounded-lg">
       <div className="flex flex-col">
         <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-          {t('studentCourseView.otherAuthorCoursesHeader')} {teacherData?.firstName} {teacherData?.lastName}
+          {t("studentCourseView.otherAuthorCoursesHeader")} {teacherData?.firstName}{" "}
+          {teacherData?.lastName}
         </h4>
         <p className="text-lg leading-7 text-neutral-800">
-        {t('studentCourseView.otherAuthorCoursesSubheader')}
+          {t("studentCourseView.otherAuthorCoursesSubheader")}
         </p>
       </div>
       <div data-testid="enrolled-courses" className="flex gap-6 w-full">
@@ -41,10 +42,10 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
               </div>
               <div className="flex flex-col justify-center gap-2">
                 <p className="text-lg font-bold leading-5 text-neutral-950">
-                {t('studentCourseView.other.cannotFindCourses')}
+                  {t("studentCourseView.other.cannotFindCourses")}
                 </p>
                 <p className="text-neutral-800 text-base leading-6 font-normal">
-                {t('studentCourseView.other.changeSearchCriteria')}
+                  {t("studentCourseView.other.changeSearchCriteria")}
                 </p>
               </div>
             </div>

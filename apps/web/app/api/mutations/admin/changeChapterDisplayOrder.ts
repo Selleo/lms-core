@@ -23,17 +23,23 @@ export function useChangeChapterDisplayOrder() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t('adminCourseView.curriculum.chapter.toast.chapterDisplayOrderUpdatedSuccessfully') });
+      toast({
+        description: t(
+          "adminCourseView.curriculum.chapter.toast.chapterDisplayOrderUpdatedSuccessfully",
+        ),
+      });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
         return toast({
-          description: error.response?.data.message || t('adminCourseView.curriculum.chapter.toast.errorWhileUpdating'),
+          description:
+            error.response?.data.message ||
+            t("adminCourseView.curriculum.chapter.toast.errorWhileUpdating"),
           variant: "destructive",
         });
       }
       toast({
-        description: error.message || t('adminCourseView.curriculum.chapter.toast.unexpectedError'),
+        description: error.message || t("adminCourseView.curriculum.chapter.toast.unexpectedError"),
         variant: "destructive",
       });
     },

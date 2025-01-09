@@ -18,23 +18,25 @@ const CourseCardButton = ({
   priceInCents,
   isScormCreatePage,
 }: CourseCardButtonProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const getButtonLabel = (enrolled: boolean, isAdmin: boolean) => {
     if (enrolled) {
       return (
         <span className="flex gap-x-2 items-center">
-          <Icon name="ArrowRight" className="w-4 h-4 text-white" /> {t('studentCoursesView.button.continue')}
+          <Icon name="ArrowRight" className="w-4 h-4 text-white" />{" "}
+          {t("studentCoursesView.button.continue")}
         </span>
       );
     }
 
-    if (isScormCreatePage) return t('studentCoursesView.button.readMore');
+    if (isScormCreatePage) return t("studentCoursesView.button.readMore");
 
-    if (isAdmin) return t('studentCoursesView.button.view');
+    if (isAdmin) return t("studentCoursesView.button.view");
 
-    if (priceInCents) return `${t('studentCoursesView.button.enroll')} - ${formatPrice(priceInCents, currency)}`;
+    if (priceInCents)
+      return `${t("studentCoursesView.button.enroll")} - ${formatPrice(priceInCents, currency)}`;
 
-    return t('studentCoursesView.button.enroll')
+    return t("studentCoursesView.button.enroll");
   };
 
   const buttonLabel = getButtonLabel(enrolled, isAdmin);

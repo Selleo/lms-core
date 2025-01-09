@@ -25,7 +25,7 @@ export function useUnenrollCourse() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t('enrollCourseView.toast.unenrollCourseSuccessfully'),
+        description: t("enrollCourseView.toast.unenrollCourseSuccessfully"),
       });
     },
     onError: (error) => {

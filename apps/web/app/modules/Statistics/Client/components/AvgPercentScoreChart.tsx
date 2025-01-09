@@ -91,7 +91,7 @@ export const AvgPercentScoreChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {isEmptyChart ? t('clientStatisticsView.other.noData') : `${label}%`}
+                          {isEmptyChart ? t("clientStatisticsView.other.noData") : `${label}%`}
                         </tspan>
                       </text>
                     );

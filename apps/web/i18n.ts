@@ -5,7 +5,7 @@ import plTranslations from "../web/app/locales/pl/translation.json";
 
 i18next.use(initReactI18next).init({
   fallbackLng: "en",
-  lng: "en",
+  lng: "pl",
   ns: ["translation"],
   defaultNS: "translation",
   interpolation: {

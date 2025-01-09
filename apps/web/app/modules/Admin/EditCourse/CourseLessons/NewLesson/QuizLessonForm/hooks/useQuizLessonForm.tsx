@@ -35,7 +35,7 @@ export const useQuizLessonForm = ({
   const { mutateAsync: deleteLesson } = useDeleteLesson();
   const { isLeavingContent, setIsCurrectFormDirty } = useLeaveModal();
   const { id: courseId } = useParams();
-  const { t} = useTranslation()
+  const { t } = useTranslation();
   const form = useForm<QuizLessonFormValues>({
     resolver: zodResolver(quizLessonFormSchema(t)),
     defaultValues: {

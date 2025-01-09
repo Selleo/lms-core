@@ -15,14 +15,14 @@ type BreadcrumbProps = {
 };
 
 export default function Breadcrumb({ lessonData, courseId, courseTitle }: BreadcrumbProps) {
-  const { t } = useTranslation(); 
-  const lessonTitle = lessonData?.title || t('studentLessonView.breadcrumbs.lessonTitle');
+  const { t } = useTranslation();
+  const lessonTitle = lessonData?.title || t("studentLessonView.breadcrumbs.lessonTitle");
 
   return (
     <div className="bg-primary-50">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/`}>{t('studentLessonView.breadcrumbs.dashboard')}</BreadcrumbLink>
+          <BreadcrumbLink href={`/`}>{t("studentLessonView.breadcrumbs.dashboard")}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

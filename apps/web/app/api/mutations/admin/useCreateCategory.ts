@@ -25,7 +25,7 @@ export function useCreateCategory() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t('adminCategoryView.toast.categoryCreatedSuccessfully'),
+        description: t("adminCategoryView.toast.categoryCreatedSuccessfully"),
       });
     },
     onError: (error) => {

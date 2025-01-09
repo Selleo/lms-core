@@ -59,9 +59,9 @@ export const SCORM_CONFIG = [
       return (
         <CourseCard
           id={"scorm-card"}
-          title={title || t('adminScorm.other.untitled')}
+          title={title || t("adminScorm.other.untitled")}
           thumbnailUrl={thumbnailUrl ?? ""}
-          description={description || t('adminScorm.other.noDescription')}
+          description={description || t("adminScorm.other.noDescription")}
           author={`${firstName} ${lastName}`}
           authorEmail={email ?? ""}
           category={categoryName ?? ""}

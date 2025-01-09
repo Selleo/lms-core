@@ -10,7 +10,7 @@ import { MoreCoursesByAuthor } from "~/modules/Courses/CourseView/MoreCoursesByA
 import { YouMayBeInterestedIn } from "~/modules/Courses/CourseView/YouMayBeInterestedIn";
 
 export default function CourseViewPage() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const { id = "" } = useParams();
   const { data: course } = useCourse(id);
 
@@ -35,10 +35,8 @@ export default function CourseViewPage() {
           <CourseOverview course={course} />
           <div className="py-6 px-4 md:p-8 rounded-lg bg-white flex flex-col gap-y-4">
             <div className="flex flex-col gap-y-1">
-              <h4 className="h6 text-neutral-950">{t('studentCourseView.header')}</h4>
-              <p className="body-base-md text-neutral-800">
-              {t('studentCourseView.subHeader')}
-              </p>
+              <h4 className="h6 text-neutral-950">{t("studentCourseView.header")}</h4>
+              <p className="body-base-md text-neutral-800">{t("studentCourseView.subHeader")}</p>
             </div>
             {course?.chapters?.map((chapter) => {
               if (!chapter) return null;

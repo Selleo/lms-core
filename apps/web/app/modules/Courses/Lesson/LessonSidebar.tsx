@@ -51,13 +51,15 @@ export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
           </div>
           <h1 className="h6 text-neutral-950">{course.title}</h1>
           <CourseProgress
-            label={t('studentLessonView.sideSection.other.courseProgress')}
+            label={t("studentLessonView.sideSection.other.courseProgress")}
             completedLessonCount={course.completedChapterCount ?? 0}
             courseLessonCount={course.courseChapterCount ?? 0}
           />
         </div>
         <div className="flex flex-col px-4 gap-y-4">
-          <p className="px-4 body-lg-md text-neutral-950">{t('studentLessonView.sideSection.header')}</p>
+          <p className="px-4 body-lg-md text-neutral-950">
+            {t("studentLessonView.sideSection.header")}
+          </p>
           <div className="flex flex-col">
             <Accordion
               type="single"

@@ -63,7 +63,7 @@ export const PaymentForm = ({ price, currency, onPaymentSuccess, courseId }: Pay
         {processing ? (
           <Loader className="animate-spin" />
         ) : (
-          `${t('paymentView.other.buyFor')} ${formatPrice(price, currency)}`
+          `${t("paymentView.other.buyFor")} ${formatPrice(price, currency)}`
         )}
       </Button>
       {error && (

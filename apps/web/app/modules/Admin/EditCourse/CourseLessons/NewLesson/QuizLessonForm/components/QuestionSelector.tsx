@@ -40,7 +40,11 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
       label: t("adminCourseView.curriculum.lesson.other.multipleChoice"),
       icon: QuestionIcons.MultiSelect,
     },
-    { type: QuestionType.TRUE_OR_FALSE, label: t("adminCourseView.curriculum.lesson.other.trueOrFalse"), icon: QuestionIcons.TrueOrFalse },
+    {
+      type: QuestionType.TRUE_OR_FALSE,
+      label: t("adminCourseView.curriculum.lesson.other.trueOrFalse"),
+      icon: QuestionIcons.TrueOrFalse,
+    },
     {
       type: QuestionType.PHOTO_QUESTION_SINGLE_CHOICE,
       label: t("adminCourseView.curriculum.lesson.other.photoQuestion"),
@@ -48,26 +52,34 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_DND,
-      label: t('adminCourseView.curriculum.lesson.other.fillInTheBlanks'),
+      label: t("adminCourseView.curriculum.lesson.other.fillInTheBlanks"),
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_TEXT,
-      label: t('adminCourseView.curriculum.lesson.other.fillInTheBlanksText'),
+      label: t("adminCourseView.curriculum.lesson.other.fillInTheBlanksText"),
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.BRIEF_RESPONSE,
-      label: t('adminCourseView.curriculum.lesson.other.briefResponse'),
+      label: t("adminCourseView.curriculum.lesson.other.briefResponse"),
       icon: QuestionIcons.BriefResponse,
     },
     {
       type: QuestionType.DETAILED_RESPONSE,
-      label: t('adminCourseView.curriculum.lesson.other.detailedResponse'),
+      label: t("adminCourseView.curriculum.lesson.other.detailedResponse"),
       icon: QuestionIcons.DetailedResponse,
     },
-    { type: QuestionType.MATCH_WORDS, label: t('adminCourseView.curriculum.lesson.other.matchWords'), icon: QuestionIcons.MatchWords },
-    { type: QuestionType.SCALE_1_5, label: t('adminCourseView.curriculum.lesson.other.scale1_5'), icon: QuestionIcons.Scale_1_5 },
+    {
+      type: QuestionType.MATCH_WORDS,
+      label: t("adminCourseView.curriculum.lesson.other.matchWords"),
+      icon: QuestionIcons.MatchWords,
+    },
+    {
+      type: QuestionType.SCALE_1_5,
+      label: t("adminCourseView.curriculum.lesson.other.scale1_5"),
+      icon: QuestionIcons.Scale_1_5,
+    },
   ];
 
   useEffect(() => {

@@ -12,12 +12,12 @@ type TeacherPageBreadcrumbsProps = {
 };
 
 export const TeacherPageBreadcrumbs = ({ id, username }: TeacherPageBreadcrumbsProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   return (
     <div className="bg-primary-50 mb-4">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/`}>{t('teacherView.breadcrumbs.dashboard')}</BreadcrumbLink>
+          <BreadcrumbLink href={`/`}>{t("teacherView.breadcrumbs.dashboard")}</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem className="text-neutral-950">

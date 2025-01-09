@@ -25,8 +25,8 @@ export function useUpsertUserDetails() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      
-      toast({ description: t('changeUserInformationView.toast.userDetailsUpdatedSuccessfully')});
+
+      toast({ description: t("changeUserInformationView.toast.userDetailsUpdatedSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

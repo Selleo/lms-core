@@ -28,7 +28,9 @@ const DeleteConfirmationModal = ({
   const getDialogTitleText = (): string => {
     return match(contentType)
       .with(DeleteContentType.VIDEO, () => t("adminCourseView.curriculum.other.removeVideoLesson"))
-      .with(DeleteContentType.PRESENTATION, () => t("adminCourseView.curriculum.other.removePresentationLesson"))
+      .with(DeleteContentType.PRESENTATION, () =>
+        t("adminCourseView.curriculum.other.removePresentationLesson"),
+      )
       .with(DeleteContentType.TEXT, () => t("adminCourseView.curriculum.other.removeTextLesson"))
       .with(DeleteContentType.QUIZ, () => t("adminCourseView.curriculum.other.removeQuizLesson"))
       .with(DeleteContentType.CHAPTER, () => t("adminCourseView.curriculum.other.removeChapter"))
@@ -48,8 +50,8 @@ const DeleteConfirmationModal = ({
             </DialogTitle>
             <DialogDescription className="mt-2 text-sm text-neutral-600">
               {contentType === DeleteContentType.QUESTION
-                ? t('adminCourseView.curriculum.other.removeContentQuestionBody')
-                : t('adminCourseView.curriculum.other.removeContentBody')}
+                ? t("adminCourseView.curriculum.other.removeContentQuestionBody")
+                : t("adminCourseView.curriculum.other.removeContentBody")}
             </DialogDescription>
 
             <div className="flex gap-4 mt-8">

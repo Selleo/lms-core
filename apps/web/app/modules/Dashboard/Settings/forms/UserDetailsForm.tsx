@@ -58,14 +58,14 @@ export default function UserForm() {
     <Card id="user-details">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
-          <CardTitle>{t('changeUserInformationView.header')}</CardTitle>
-          <CardDescription>{t('changeUserInformationView.subHeader')}</CardDescription>
+          <CardTitle>{t("changeUserInformationView.header")}</CardTitle>
+          <CardDescription>{t("changeUserInformationView.subHeader")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
           <div>
-            <Label htmlFor="Bio - note">{t('changeUserInformationView.field.description')}</Label>
+            <Label htmlFor="Bio - note">{t("changeUserInformationView.field.description")}</Label>
             <Textarea
-              placeholder={t('changeUserInformationView.placeholder.description')}
+              placeholder={t("changeUserInformationView.placeholder.description")}
               {...(currentUserDetails?.description && {
                 defaultValue: currentUserDetails.description,
               })}
@@ -79,7 +79,7 @@ export default function UserForm() {
             )}
           </div>
           <div>
-            <Label htmlFor="contactEmail">{t('changeUserInformationView.field.email')}</Label>
+            <Label htmlFor="contactEmail">{t("changeUserInformationView.field.email")}</Label>
             <Input
               {...(currentUser?.email && {
                 defaultValue: currentUser.email,
@@ -95,12 +95,14 @@ export default function UserForm() {
             )}
           </div>
           <div>
-            <Label htmlFor="contactPhoneNumber">{t('changeUserInformationView.field.phoneNumber')}</Label>
+            <Label htmlFor="contactPhoneNumber">
+              {t("changeUserInformationView.field.phoneNumber")}
+            </Label>
             <Input
               {...(currentUserDetails?.contactPhone && {
                 defaultValue: currentUserDetails.contactPhone,
               })}
-              placeholder={t('changeUserInformationView.placeholder.phoneNumber')}
+              placeholder={t("changeUserInformationView.placeholder.phoneNumber")}
               className={cn({
                 "border-red-500 focus:!ring-red-500": errors.contactPhoneNumber,
               })}
@@ -111,12 +113,12 @@ export default function UserForm() {
             )}
           </div>
           <div>
-            <Label htmlFor="jobTitle">{t('changeUserInformationView.field.jobTitle')}</Label>
+            <Label htmlFor="jobTitle">{t("changeUserInformationView.field.jobTitle")}</Label>
             <Input
               {...(currentUserDetails?.jobTitle && {
                 defaultValue: currentUserDetails.jobTitle,
               })}
-              placeholder={t('changeUserInformationView.placeholder.jobTitle')}
+              placeholder={t("changeUserInformationView.placeholder.jobTitle")}
               className={cn({
                 "border-red-500 focus:!ring-red-500": errors.jobTitle,
               })}
@@ -128,7 +130,7 @@ export default function UserForm() {
           </div>
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button type="submit">{t('common.button.save')}</Button>
+          <Button type="submit">{t("common.button.save")}</Button>
         </CardFooter>
       </form>
     </Card>

@@ -85,7 +85,9 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
             {!isOptionEmpty ? (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.options")}</Label>
+                <Label className="body-sm-md">
+                  {t("adminCourseView.curriculum.lesson.field.options")}
+                </Label>
               </>
             ) : null}
             {watchedOptions && watchedOptions.length > 0 && (
@@ -124,7 +126,9 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                             onChange={(e) =>
                               handleOptionChange(index, "matchedWord", e.target.value)
                             }
-                            placeholder={t("adminCourseView.curriculum.lesson.placeholder.matchedWords")}
+                            placeholder={t(
+                              "adminCourseView.curriculum.lesson.placeholder.matchedWords",
+                            )}
                             required
                             className="w-[50%]"
                           />

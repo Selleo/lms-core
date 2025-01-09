@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import Viewer from "~/components/RichText/Viever";
 import { Card } from "~/components/ui/card";
@@ -53,6 +54,7 @@ export const FillInTheBlanks = ({
       value: studentAnswerText ?? "",
     })),
   );
+  const { t } = useTranslation();
 
   const maxAnswersAmount = content?.match(/\[word]/g)?.length ?? 0;
 
@@ -94,7 +96,7 @@ export const FillInTheBlanks = ({
   return (
     <Card className="flex flex-col gap-4 p-8 border-none drop-shadow-primary">
       <div className="details text-primary-700 uppercase">{questionLabel}</div>
-      <div className="h6 text-neutral-950">Fill in the blanks.</div>
+      <div className="h6 text-neutral-950">{t("studentLessonView.other.fillInTheBlanks")}</div>
       <FillInTheTextBlanks
         content={content}
         replacement={(index) => {
@@ -111,7 +113,9 @@ export const FillInTheBlanks = ({
       />
       {solutionExplanation && !isPassed && (
         <div>
-          <span className="body-base-md text-error-700">Correct sentence:</span>
+          <span className="body-base-md text-error-700">
+            {t("studentLessonView.other.correctSentence")}
+          </span>
           <Viewer content={solutionExplanation} />
         </div>
       )}

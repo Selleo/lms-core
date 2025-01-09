@@ -25,7 +25,7 @@ export function useCreateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: t('adminUserView.toast.userCreatedSuccessfully') });
+      toast({ description: t("adminUserView.toast.userCreatedSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

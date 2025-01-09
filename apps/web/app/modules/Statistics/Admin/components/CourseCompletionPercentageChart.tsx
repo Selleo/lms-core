@@ -29,7 +29,7 @@ export const CourseCompletionPercentageChart = ({
   chartData,
   isLoading = false,
 }: CourseCompletionPercentageChartProps) => {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   const chartLegend = useMemo(() => {
     return Object.values(chartConfig).map((config) => {
       return (
@@ -91,7 +91,7 @@ export const CourseCompletionPercentageChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {isEmptyChart ? t('adminStatisticsView.other.noData') : `${label}%`}
+                          {isEmptyChart ? t("adminStatisticsView.other.noData") : `${label}%`}
                         </tspan>
                       </text>
                     );

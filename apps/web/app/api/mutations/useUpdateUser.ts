@@ -32,7 +32,7 @@ export function useUpdateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: t('changeUserInformationView.toast.userUpdatedSuccessfully')});
+      toast({ description: t("changeUserInformationView.toast.userUpdatedSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

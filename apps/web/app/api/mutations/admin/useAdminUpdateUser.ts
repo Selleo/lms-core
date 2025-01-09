@@ -30,7 +30,7 @@ export function useAdminUpdateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(usersQueryOptions());
-      toast({ description: t('changeUserInformationView.toast.userUpdatedSuccessfully') });
+      toast({ description: t("changeUserInformationView.toast.userUpdatedSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

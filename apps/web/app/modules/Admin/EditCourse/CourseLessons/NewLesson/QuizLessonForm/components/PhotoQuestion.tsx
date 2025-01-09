@@ -28,7 +28,6 @@ import { DeleteContentType, type Lesson } from "~/modules/Admin/EditCourse/EditC
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 import { useTranslation } from "react-i18next";
 
-
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
   questionIndex: number;
@@ -151,7 +150,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                       imageUrl={displayImageUrl}
                     />
                   </FormControl>
-                  {isUploading && <p>{t('common.other.uploadingImage')}</p>}
+                  {isUploading && <p>{t("common.other.uploadingImage")}</p>}
                   {errors?.questions?.[questionIndex]?.photoS3Key && (
                     <p className="text-red-500 text-sm">
                       {errors?.questions?.[questionIndex]?.photoS3Key?.message}
@@ -180,11 +179,15 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                       <SelectTrigger>
                         <SelectValue
                           className="text-left body-base-md"
-                          placeholder={t("adminCourseView.curriculum.lesson.placeholder.singleChoice")}
+                          placeholder={t(
+                            "adminCourseView.curriculum.lesson.placeholder.singleChoice",
+                          )}
                         />
                         <SelectValue
                           className="text-left body-base-md"
-                          placeholder={t("adminCourseView.curriculum.lesson.placeholder.multipleChoice")}
+                          placeholder={t(
+                            "adminCourseView.curriculum.lesson.placeholder.multipleChoice",
+                          )}
                         />
                       </SelectTrigger>
                       <SelectContent>
@@ -212,7 +215,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             {!isOptionEmpty && (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">{t("adminCourseView.curriculum.lesson.field.options")}</Label>
+                <Label className="body-sm-md">
+                  {t("adminCourseView.curriculum.lesson.field.options")}
+                </Label>
               </>
             )}
             {watchedOptions && watchedOptions?.length > 0 && (

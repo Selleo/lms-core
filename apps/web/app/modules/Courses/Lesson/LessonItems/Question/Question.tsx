@@ -20,6 +20,7 @@ import { SelectAnswer } from "./SelectAnswer";
 import type { DndWord } from "../FillInTheBlanks/dnd/types";
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import { useTranslation } from "react-i18next";
 
 type Questions = NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"];
 
@@ -43,10 +44,11 @@ export const Question = ({
   const { lessonId = "", courseId = "" } = useParams();
   const { register, getValues } = useFormContext<TQuestionsForm>();
   const { isAdmin } = useUserRole();
+  const { t } = useTranslation();
 
   const isQuiz = lessonType === "quiz";
 
-  if (!lessonId) throw new Error("Lesson ID not found");
+  if (!lessonId) throw new Error(t("studentLessonView.error.lessonIdNotFound"));
 
   const questionId = content.id;
   const isTrueOrFalse = content.type === "true_or_false";
@@ -146,15 +148,15 @@ export const Question = ({
           title={content.title}
           questionType={
             content.type === "brief_response"
-              ? "Instruction: Provide a brief response (1-2 sentences)."
-              : "Instruction: Write a detailed response (3-5 sentences)."
+              ? t("studentLessonView.other.briefResponseInstruction")
+              : t("studentLessonView.other.detailedResponseInstruction")
           }
           questionNumber={questionNumber}
         >
           <Textarea
             {...register(`openQuestions.${questionId}`)}
             {...(!isAdmin && { onBlur: handleOpenAnswerRequest })}
-            placeholder="Type your answer here"
+            placeholder={t("studentLessonView.placeholder.openQuestion")}
             rows={5}
             className={cn({
               "cursor-not-allowed": isAdmin,
@@ -167,7 +169,7 @@ export const Question = ({
       return (
         <FillInTheBlanks
           isQuiz={isQuiz}
-          questionLabel={`question ${content.displayOrder}`}
+          questionLabel={`${t("")} ${content.displayOrder}`}
           content={content.description}
           sendAnswer={sendAnswer}
           answers={content.options}
@@ -186,7 +188,7 @@ export const Question = ({
       return (
         <FillInTheBlanksDnd
           isQuiz={isQuiz}
-          questionLabel={`question ${content.displayOrder}`}
+          questionLabel={`${t("studentLessonView.other.question")} ${content.displayOrder}`}
           content={content.description}
           sendAnswer={sendAnswer}
           answers={fillInTheBlanksDndData}
@@ -204,7 +206,7 @@ export const Question = ({
       return (
         <QuestionCard
           title={content.title ?? ""}
-          questionType={`${isSingleQuestion || isPhotoQuestionSingleChoice ? "Single" : "Multiple"} select question.`}
+          questionType={`${isSingleQuestion || isPhotoQuestionSingleChoice ? t("studentLessonView.other.single") : t("studentLessonView.other.multiple")} ${t("studentLessonView.other.selectQuestion")}`}
           questionNumber={questionNumber}
         >
           {isPhotoQuestion && (
@@ -237,7 +239,7 @@ export const Question = ({
       return (
         <QuestionCard
           title={content.title ?? ""}
-          questionType={`True or false question.`}
+          questionType={t("studentLessonView.other.trueOrFalseQuestion")}
           questionNumber={questionNumber}
         >
           {content.options?.map(({ optionText, id }, index) => (
@@ -256,7 +258,7 @@ export const Question = ({
                     {...register(`singleAnswerQuestions.${questionId}.${id}`)}
                     name={`trueOrFalseQuestions.${questionId}.${id}`}
                   />{" "}
-                  True
+                  {t("studentLessonView.other.true")}
                 </label>
                 <label className="flex items-center gap-x-1">
                   <Input
@@ -267,7 +269,7 @@ export const Question = ({
                     type="radio"
                     value="false"
                   />{" "}
-                  False
+                  {t("studentLessonView.other.false")}
                 </label>
               </div>
             </div>

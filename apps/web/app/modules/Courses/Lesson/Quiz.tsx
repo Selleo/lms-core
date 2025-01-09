@@ -9,6 +9,7 @@ import { getUserAnswers } from "~/modules/Courses/Lesson/utils";
 
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import { useTranslation } from "react-i18next";
 
 type QuizProps = {
   lesson: GetLessonByIdResponse["data"];
@@ -70,6 +71,7 @@ function transformData(input: TQuestionsForm) {
 
 export const Quiz = ({ lesson }: QuizProps) => {
   const { lessonId = "" } = useParams();
+  const { t } = useTranslation();
 
   const questions = lesson.quizDetails?.questions;
 
@@ -99,7 +101,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
       >
         <Questions questions={questions} />
         <Button type="submit" className="flex gap-x-2 items-center self-end">
-          <span>Submit</span>
+          <span>{t("studentLessonView.button.submit")}</span>
           <Icon name="ArrowRight" className="w-4 h-auto" />
         </Button>
       </form>

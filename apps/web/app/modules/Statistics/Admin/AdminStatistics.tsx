@@ -29,11 +29,11 @@ export const AdminStatistics = () => {
 
   const coursesCompletionChartConfig = {
     completed: {
-      label: `${t('adminStatisticsView.other.completed')} - ${totalCoursesCompletion}`,
+      label: `${t("adminStatisticsView.other.completed")} - ${totalCoursesCompletion}`,
       color: "var(--primary-700)",
     },
     notCompleted: {
-      label: `${t('adminStatisticsView.other.enrolled')} - ${totalCourses}`,
+      label: `${t("adminStatisticsView.other.enrolled")} - ${totalCourses}`,
       color: "var(--primary-300)",
     },
   } satisfies ChartConfig;
@@ -41,12 +41,12 @@ export const AdminStatistics = () => {
   const coursesCompletionChartData = useMemo(
     () => [
       {
-        state: "Completed",
+        state: t("adminStatisticsView.other.completed"),
         percentage: totalCoursesCompletion,
         fill: "var(--primary-700)",
       },
       {
-        state: "Enrolled",
+        state: t("adminStatisticsView.other.enrolled"),
         percentage: totalCourses,
         fill: "var(--primary-300)",
       },
@@ -56,11 +56,11 @@ export const AdminStatistics = () => {
 
   const conversionsChartConfig = {
     completed: {
-      label: `${t('adminStatisticsView.other.purchasedCourse')} - ${purchasedCourses}`,
+      label: `${t("adminStatisticsView.other.purchasedCourse")} - ${purchasedCourses}`,
       color: "var(--primary-700)",
     },
     notCompleted: {
-      label: `${t('adminStatisticsView.other.remainedOnFreemium')} - ${remainedOnFreemium}`,
+      label: `${t("adminStatisticsView.other.remainedOnFreemium")} - ${remainedOnFreemium}`,
       color: "var(--primary-300)",
     },
   } satisfies ChartConfig;
@@ -68,12 +68,12 @@ export const AdminStatistics = () => {
   const conversionsChartData = useMemo(
     () => [
       {
-        state: "Purchased Course",
+        state: t("adminStatisticsView.other.purchasedCourse"),
         percentage: purchasedCourses,
         fill: "var(--primary-700)",
       },
       {
-        state: "Remained on Freemium",
+        state: t("adminStatisticsView.other.remainedOnFreemium"),
         percentage: remainedOnFreemium,
         fill: "var(--primary-300)",
       },
@@ -83,11 +83,11 @@ export const AdminStatistics = () => {
 
   const avgQuizScoreChartConfig = {
     completed: {
-      label: t('adminStatisticsView.other.correct'),
+      label: t("adminStatisticsView.other.correct"),
       color: "var(--primary-700)",
     },
     notCompleted: {
-      label: t('adminStatisticsView.other.incorrect'),
+      label: t("adminStatisticsView.other.incorrect"),
       color: "var(--primary-300)",
     },
   } satisfies ChartConfig;
@@ -95,12 +95,12 @@ export const AdminStatistics = () => {
   const avgQuizScoreChartData = useMemo(
     () => [
       {
-        state: "Correct",
+        state: t("adminStatisticsView.other.correct"),
         percentage: 7,
         fill: "var(--primary-700)",
       },
       {
-        state: "Incorrect",
+        state: t("adminStatisticsView.other.incorrect"),
         percentage: 13,
         fill: "var(--primary-300)",
       },
@@ -111,7 +111,9 @@ export const AdminStatistics = () => {
   return (
     <PageWrapper className="flex flex-col gap-y-6 xl:gap-y-8 xl:!h-full 2xl:!h-auto">
       <div className="gap-x-2 flex xl:gap-x-4 items-center">
-        <p className="h5 xl:h2 text-neutral-950">{t('adminStatisticsView.header')} {user?.firstName}</p>
+        <p className="h5 xl:h2 text-neutral-950">
+          {t("adminStatisticsView.header")} {user?.firstName}
+        </p>
         <Avatar className="size-12">
           <Gravatar email={user?.email} />
         </Avatar>
@@ -124,14 +126,14 @@ export const AdminStatistics = () => {
         <CourseCompletionPercentageChart
           isLoading={isLoading}
           label={`${statistics?.totalCoursesCompletionStats.completionPercentage}`}
-          title={t('adminStatisticsView.other.courseCompletitionPercentage')}
+          title={t("adminStatisticsView.other.courseCompletitionPercentage")}
           chartConfig={coursesCompletionChartConfig}
           chartData={coursesCompletionChartData}
         />
         <ConversionsAfterFreemiumLessonChart
           isLoading={isLoading}
           label={`${statistics?.conversionAfterFreemiumLesson.conversionPercentage}`}
-          title={t('adminStatisticsView.other.conversionsAfterFreemiumLessson')}
+          title={t("adminStatisticsView.other.conversionsAfterFreemiumLessson")}
           chartConfig={conversionsChartConfig}
           chartData={conversionsChartData}
         />
@@ -139,7 +141,7 @@ export const AdminStatistics = () => {
         <AvgScoreAcrossAllQuizzesChart
           isLoading={isLoading}
           label={`${correctAnswers}/${totalAnswers}`}
-          title={t('adminStatisticsView.other.avgQuizScore')}
+          title={t("adminStatisticsView.other.avgQuizScore")}
           chartConfig={avgQuizScoreChartConfig}
           chartData={avgQuizScoreChartData}
         />

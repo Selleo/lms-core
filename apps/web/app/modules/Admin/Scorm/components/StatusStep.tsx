@@ -86,10 +86,8 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
               htmlFor="draft"
               className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
             >
-              <div className="font-medium text-lg">{t('common.other.draft')}</div>
-              <div className="text-sm font-normal">
-                {t('adminScorm.other.draftBody')}
-              </div>
+              <div className="font-medium text-lg">{t("common.other.draft")}</div>
+              <div className="text-sm font-normal">{t("adminScorm.other.draftBody")}</div>
             </Label>
           </Card>
 
@@ -103,10 +101,8 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
               htmlFor="published"
               className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
             >
-              <div className="font-medium text-lg">{t('common.other.publish')}</div>
-              <div className="text-sm font-normal">
-              {t('adminScorm.other.publishBody')}
-              </div>
+              <div className="font-medium text-lg">{t("common.other.publish")}</div>
+              <div className="text-sm font-normal">{t("adminScorm.other.publishBody")}</div>
             </Label>
           </Card>
         </div>
@@ -114,7 +110,7 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={handleBack}>
-        {t('adminScorm.button.back')}
+          {t("adminScorm.button.back")}
         </Button>
         <Button
           onClick={() => {
@@ -123,9 +119,8 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
           disabled={isCreateCoursePending || isUploadFilePending || isUploadScormPending}
         >
           {isCreateCoursePending || isUploadFilePending || isUploadScormPending
-            ? t('adminScorm.button.creatingCourse')
-            : t('adminScorm.button.createCourse')
-          }
+            ? t("adminScorm.button.creatingCourse")
+            : t("adminScorm.button.createCourse")}
         </Button>
       </div>
     </div>

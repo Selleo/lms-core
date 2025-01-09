@@ -54,7 +54,7 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
   return (
     <div className="size-full 2xl:divide-primary-200 2xl:divide-y 2xl:max-w-[384px] 2xl:flex-col md:flex-row 2xl:bg-white rounded-lg drop-shadow-card 2xl:p-8 flex flex-col 2xl:gap-6 gap-6">
       <div className="bg-white rounded-lg w-full p-6 gap-y-6 md:p-8 2xl:p-0">
-        <span className="body-lg-md text-neutral-900">{t('profilWithCalendarView.header')}</span>
+        <span className="body-lg-md text-neutral-900">{t("profilWithCalendarView.header")}</span>
         <div className="flex flex-col items-center gap-6">
           <Avatar className="size-[124px]">
             <Gravatar email={user?.email} />
@@ -68,7 +68,7 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
             </a>
           </div>
           <Link to="/settings" className="w-full">
-            <Button className="w-full">{t('profilWithCalendarView.button.settings')}</Button>
+            <Button className="w-full">{t("profilWithCalendarView.button.settings")}</Button>
           </Link>
         </div>
       </div>
@@ -78,7 +78,9 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
             <Icon name="Flame" />
             <span className="h1 text-neutral-950">{streak?.current}</span>
           </div>
-          <span className="text-neutral-800 body-lg-md">{t('profilWithCalendarView.other.dailyStreak')}</span>
+          <span className="text-neutral-800 body-lg-md">
+            {t("profilWithCalendarView.other.dailyStreak")}
+          </span>
         </div>
         <div className="flex justify-center w-full">
           <Calendar

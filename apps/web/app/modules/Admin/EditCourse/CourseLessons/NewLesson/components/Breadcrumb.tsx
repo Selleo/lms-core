@@ -13,7 +13,6 @@ import { ContentTypes } from "../../../EditCourse.types";
 import type { Lesson } from "../../../EditCourse.types";
 import { useTranslation } from "react-i18next";
 
-
 type BreadrumbProps = {
   lessonLabel: string;
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;

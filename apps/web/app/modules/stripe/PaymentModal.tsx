@@ -41,7 +41,7 @@ export function PaymentModal({
   const { currentUser } = useCurrentUserStore();
   const stripePromise = useStripePromise();
   const { clientSecret, createPaymentIntent, resetClientSecret } = useStripePaymentIntent();
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const handlePayment = async () => {
     try {
@@ -59,7 +59,7 @@ export function PaymentModal({
   const handlePaymentSuccess = async () => {
     resetClientSecret();
     toast({
-      description: t('paymentView.toast.successfull'),
+      description: t("paymentView.toast.successfull"),
     });
   };
 
@@ -81,7 +81,10 @@ export function PaymentModal({
             strokeLinejoin="round"
           />
         </svg>
-        <span> {t('paymentView.other.enrollCourse')} - {formatPrice(coursePrice, courseCurrency)}</span>
+        <span>
+          {" "}
+          {t("paymentView.other.enrollCourse")} - {formatPrice(coursePrice, courseCurrency)}
+        </span>
       </Button>
       {clientSecret && (
         <Elements stripe={stripePromise} options={{ clientSecret, appearance }}>

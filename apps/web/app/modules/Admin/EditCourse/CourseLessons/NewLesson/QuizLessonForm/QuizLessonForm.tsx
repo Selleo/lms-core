@@ -236,11 +236,13 @@ const QuizLessonForm = ({
         <div className="h5 text-neutral-950 mb-6">
           {lessonToEdit ? (
             <>
-              <span className="text-neutral-600">{t('adminCourseView.curriculum.other.edit')} </span>
+              <span className="text-neutral-600">
+                {t("adminCourseView.curriculum.other.edit")}{" "}
+              </span>
               <span className="font-bold">{lessonToEdit.title}</span>
             </>
           ) : (
-            t('adminCourseView.curriculum.other.create')
+            t("adminCourseView.curriculum.other.create")
           )}
         </div>
         <Form {...form}>
@@ -252,7 +254,7 @@ const QuizLessonForm = ({
                 <FormItem>
                   <Label htmlFor="title" className="body-base-md">
                     <span className="text-red-500 mr-1">*</span>
-                    {t('adminCourseView.curriculum.lesson.field.title')}
+                    {t("adminCourseView.curriculum.lesson.field.title")}
                   </Label>
                   <FormControl>
                     <Input id="title" {...field} required />
@@ -263,7 +265,8 @@ const QuizLessonForm = ({
             />
             <div className="mt-5">
               <Label className="body-base-md">
-                <span className="text-red-500 mr-1 body-base-md">*</span> {t('adminCourseView.curriculum.lesson.field.questions')}
+                <span className="text-red-500 mr-1 body-base-md">*</span>{" "}
+                {t("adminCourseView.curriculum.lesson.field.questions")}
                 <span className="text-neutral-600"> ({questions?.length || 0})</span>
               </Label>
             </div>
@@ -294,7 +297,7 @@ const QuizLessonForm = ({
             <QuestionSelector addQuestion={addQuestion} />
             <div className="flex space-x-4 mt-4">
               <Button type="submit" className="bg-primary-700">
-                {t('common.button.save')}
+                {t("common.button.save")}
               </Button>
               {lessonToEdit ? (
                 <Button
@@ -302,7 +305,7 @@ const QuizLessonForm = ({
                   onClick={onClickDelete}
                   className="text-error-700 bg-color-white border border-neutral-300"
                 >
-                  {t('common.button.delete')}
+                  {t("common.button.delete")}
                 </Button>
               ) : (
                 <Button
@@ -310,7 +313,7 @@ const QuizLessonForm = ({
                   type="button"
                   onClick={onCancel}
                 >
-                  {t('common.button.cancel')}
+                  {t("common.button.cancel")}
                 </Button>
               )}
             </div>

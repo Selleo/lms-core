@@ -26,7 +26,7 @@ export function StepWrapper({ title, description, children }: PropsWithChildren<
       <div>
         <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
           <Icon name="ArrowRight" className="w-4 h-4 mr-2 rotate-180" />
-          <span>{t('adminScorm.button.back')}</span>
+          <span>{t("adminScorm.button.back")}</span>
         </Button>
       </div>
       <div className="flex flex-col gap-2">

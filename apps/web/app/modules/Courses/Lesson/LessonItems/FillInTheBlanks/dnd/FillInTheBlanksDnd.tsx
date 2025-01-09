@@ -22,6 +22,7 @@ import { SentenceBuilder } from "./SentenceBuilder";
 import { WordBank } from "./WordBank";
 
 import type { DndWord } from "./types";
+import { useTranslation } from "react-i18next";
 
 type FillInTheBlanksDndProps = {
   isQuiz: boolean;
@@ -226,11 +227,12 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
   }
 
   const wordBankWords = words.filter(({ blankId }) => blankId === "blank_preset");
+  const { t } = useTranslation();
 
   return (
     <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
       <div className="details text-primary-700 uppercase">{questionLabel}</div>
-      <div className="h6 text-neutral-950 my-4">Fill in the blanks.</div>
+      <div className="h6 text-neutral-950 my-4">{t("studentLessonView.other.fillInTheBlanks")}</div>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -264,7 +266,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({
         <WordBank words={wordBankWords} />
         {solutionExplanation && !isPassed && (
           <div className="mt-4">
-            <span className="body-base-md text-error-700">Correct sentence:</span>
+            <span className="body-base-md text-error-700">
+              {t("studentLessonView.other.correctSentence")}
+            </span>
             <Viewer content={solutionExplanation} />
           </div>
         )}

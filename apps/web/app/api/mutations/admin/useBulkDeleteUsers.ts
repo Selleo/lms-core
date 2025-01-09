@@ -27,7 +27,7 @@ export function useBulkDeleteUsers() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t('changeUserInformationView.toast.deletedSelectedUsersSuccessfully'),
+        description: t("changeUserInformationView.toast.deletedSelectedUsersSuccessfully"),
       });
     },
     onError: (error) => {

@@ -27,7 +27,7 @@ export function useUpdateCategory() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t('adminCategoryView.toast.categoryUpdatedSuccessfully') });
+      toast({ description: t("adminCategoryView.toast.categoryUpdatedSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

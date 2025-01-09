@@ -103,7 +103,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
               <Input
                 ref={inputRef}
                 type="text"
-                placeholder={filter?.placeholder || `${t('common.other.search')}...`}
+                placeholder={filter?.placeholder || `${t("common.other.search")}...`}
                 className="w-full max-w-[320px] border border-neutral-300 py-2 pl-8 pr-4 md:max-w-none"
                 onChange={(e) => handleTextChange(filter?.name, e.target.value)}
                 defaultValue={values?.[filter?.name] as string}
@@ -123,10 +123,12 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
               disabled={isLoading}
             >
               <SelectTrigger className="w-full max-w-[320px] border border-neutral-300 sm:w-[180px]">
-                <SelectValue placeholder={filter?.placeholder || t('common.other.all')} />
+                <SelectValue placeholder={filter?.placeholder || t("common.other.all")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t('common.other.all')} {filter?.placeholder}</SelectItem>
+                <SelectItem value="all">
+                  {t("common.other.all")} {filter?.placeholder}
+                </SelectItem>
                 {filter?.options?.map(({ value, label }) => (
                   <SelectItem key={value} value={value}>
                     {label}
@@ -152,12 +154,12 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
               disabled={isLoading}
             >
               <SelectTrigger className="w-full max-w-[320px] border border-neutral-300 sm:w-[180px]">
-                <SelectValue placeholder={t('common.other.allStatuses')} />
+                <SelectValue placeholder={t("common.other.allStatuses")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t('common.other.allStatuses')}</SelectItem>
-                <SelectItem value="active">{t('common.other.active')}</SelectItem>
-                <SelectItem value="archived">{t('common.other.archived')}</SelectItem>
+                <SelectItem value="all">{t("common.other.allStatuses")}</SelectItem>
+                <SelectItem value="active">{t("common.other.active")}</SelectItem>
+                <SelectItem value="archived">{t("common.other.archived")}</SelectItem>
               </SelectContent>
             </Select>
           );
@@ -170,7 +172,7 @@ export const SearchFilter: React.FC<SearchFilterProps> = ({
           onClick={handleClearAll}
           disabled={isLoading}
         >
-          {t('common.button.clearAll')}
+          {t("common.button.clearAll")}
         </Button>
       )}
     </div>

@@ -91,7 +91,7 @@ export const AvgScoreAcrossAllQuizzesChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {isEmptyChart ? t('adminStatisticsView.other.noData') : label}
+                          {isEmptyChart ? t("adminStatisticsView.other.noData") : label}
                         </tspan>
                       </text>
                     );

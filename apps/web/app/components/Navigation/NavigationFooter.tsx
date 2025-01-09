@@ -1,6 +1,7 @@
 import { NavLink, useLocation } from "@remix-run/react";
 import { capitalize } from "lodash-es";
 import { type Dispatch, type SetStateAction, startTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useLogoutUser } from "~/api/mutations";
 import { Gravatar } from "~/components/Gravatar";
@@ -29,6 +30,7 @@ export function NavigationFooter({
   const { pathname } = useLocation();
   const isAdminRoute = pathname.startsWith("/admin");
 
+  const { t } = useTranslation();
   const isAllowed = isAdmin || isTeacher;
 
   return (
@@ -47,7 +49,13 @@ export function NavigationFooter({
               >
                 <Icon name={isAdminRoute ? "Dashboard" : "Admin"} className="size-6 pl-[2px]" />
                 <span className="3xl:not-sr-only 2xl:sr-only">
-                  {isAdminRoute ? "Dashboard" : <>{capitalize(role)} panel</>}{" "}
+                  {isAdminRoute ? (
+                    "Dashboard"
+                  ) : (
+                    <>
+                      {capitalize(role)} {t("navigationSideBar.panel")}
+                    </>
+                  )}{" "}
                 </span>
               </NavLink>
             </TooltipTrigger>
@@ -55,7 +63,13 @@ export function NavigationFooter({
               side="right"
               className="3xl:hidden hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white"
             >
-              {isAdminRoute ? "Dashboard" : <>{capitalize(role)} panel</>}
+              {isAdminRoute ? (
+                "Dashboard"
+              ) : (
+                <>
+                  {capitalize(role)} {t("navigationSideBar.panel")}
+                </>
+              )}
             </TooltipContent>
           </Tooltip>
         </li>
@@ -74,14 +88,14 @@ export function NavigationFooter({
               }
             >
               <Icon name="Settings" className="size-6" />
-              <span className="3xl:not-sr-only 2xl:sr-only">Settings</span>
+              <span className="3xl:not-sr-only 2xl:sr-only">{t("navigationSideBar.settings")}</span>
             </NavLink>
           </TooltipTrigger>
           <TooltipContent
             side="right"
             className="3xl:hidden hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white"
           >
-            Settings
+            {t("navigationSideBar.settings")}
           </TooltipContent>
         </Tooltip>
       </li>
@@ -97,7 +111,7 @@ export function NavigationFooter({
           }
         >
           <Icon name="User" className="size-6" />
-          <span className="3xl:not-sr-only 2xl:sr-only">Profile</span>
+          <span className="3xl:not-sr-only 2xl:sr-only">{t("navigationSideBar.profile")}</span>
         </NavLink>
       </li>
       <li className="sr-only 2xl:not-sr-only">
@@ -134,14 +148,14 @@ export function NavigationFooter({
               className="flex w-full items-center gap-x-3 rounded-lg bg-white px-4 py-3.5 text-neutral-900 2xl:p-2"
             >
               <Icon name="Logout" className="size-6" />
-              <span className="3xl:not-sr-only 2xl:sr-only">Logout</span>
+              <span className="3xl:not-sr-only 2xl:sr-only">{t("navigationSideBar.logout")}</span>
             </button>
           </TooltipTrigger>
           <TooltipContent
             side="right"
             className="3xl:hidden hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white"
           >
-            Logout
+            {t("navigationSideBar.logout")}
           </TooltipContent>
         </Tooltip>
       </li>

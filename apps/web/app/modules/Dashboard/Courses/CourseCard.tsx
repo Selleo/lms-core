@@ -71,7 +71,7 @@ const CourseCard = ({
           {hasFreeChapters && !enrolled && (
             <CardBadge variant="successFilled">
               <Icon name="FreeRight" className="w-4" />
-              {t('studentCoursesView.other.freeLessons')}
+              {t("studentCoursesView.other.freeLessons")}
             </CardBadge>
           )}
         </div>

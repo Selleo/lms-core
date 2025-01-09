@@ -26,7 +26,11 @@ export function useUpdateQuestionOptions() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t("adminCourseView.curriculum.lesson.toast.questionOptionsUpdatedSuccessfully") });
+      toast({
+        description: t(
+          "adminCourseView.curriculum.lesson.toast.questionOptionsUpdatedSuccessfully",
+        ),
+      });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

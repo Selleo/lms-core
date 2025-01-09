@@ -13,9 +13,10 @@ import { cn } from "~/lib/utils";
 import type { ForgotPasswordBody } from "~/api/generated-api";
 import { useTranslation } from "react-i18next";
 
-const passwordRecoverySchema = (t: (key: string) => string) => z.object({
-  email: z.string().email({ message:  t('forgotPasswordView.validation.email')}),
-});
+const passwordRecoverySchema = (t: (key: string) => string) =>
+  z.object({
+    email: z.string().email({ message: t("forgotPasswordView.validation.email") }),
+  });
 
 export default function PasswordRecoveryPage() {
   const { mutateAsync: recoverPassword } = usePasswordRecovery();

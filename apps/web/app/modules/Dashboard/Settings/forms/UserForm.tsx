@@ -49,11 +49,11 @@ export default function UserForm() {
     <Card id="change-password">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
-          <CardTitle>{t('changeUserEmailView.header')}</CardTitle>
-          <CardDescription>{t('changeUserEmailView.subHeader')}</CardDescription>
+          <CardTitle>{t("changeUserEmailView.header")}</CardTitle>
+          <CardDescription>{t("changeUserEmailView.subHeader")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Label htmlFor="email">{t('changeUserEmailView.field.email')}</Label>
+          <Label htmlFor="email">{t("changeUserEmailView.field.email")}</Label>
           <Input
             id="email"
             placeholder="user@email.com"
@@ -61,12 +61,12 @@ export default function UserForm() {
             className={cn({
               "border-red-500 focus:!ring-red-500": errors.email,
             })}
-            {...register("email", { required: t('changeUserEmailView.validation.email') })}
+            {...register("email", { required: t("changeUserEmailView.validation.email") })}
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button>{t('common.button.save')}</Button>
+          <Button>{t("common.button.save")}</Button>
         </CardFooter>
       </form>
     </Card>

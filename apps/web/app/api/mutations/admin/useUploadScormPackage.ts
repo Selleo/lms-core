@@ -14,7 +14,7 @@ interface UploadScormOptions {
 export function useUploadScormPackage() {
   const { toast } = useToast();
   const { t } = useTranslation();
-  
+
   return useMutation({
     mutationFn: async ({ file, courseId, resource }: UploadScormOptions) => {
       const formData = new FormData();
@@ -35,7 +35,7 @@ export function useUploadScormPackage() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t('adminScorm.toast.scormUploadedSuccessfully') });
+      toast({ description: t("adminScorm.toast.scormUploadedSuccessfully") });
     },
     onError: (error) => {
       toast({

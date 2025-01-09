@@ -33,7 +33,7 @@ export function useUploadFile() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t('uploadFile.toast.fileUploadedSuccessfully') });
+      toast({ description: t("uploadFile.toast.fileUploadedSuccessfully") });
     },
     onError: (error) => {
       toast({
