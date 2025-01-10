@@ -1,11 +1,9 @@
-// TODO: Need to be fixed
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { Link, useLocation } from "@remix-run/react";
-import { startCase } from "lodash-es";
+import { last, startCase } from "lodash-es";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { useCourse } from "~/api/queries";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
 import {
@@ -19,11 +17,9 @@ import { CategoryChip } from "~/components/ui/CategoryChip";
 import { cn } from "~/lib/utils";
 import { LessonTypesIcons } from "~/modules/Courses/CourseView/lessonTypes";
 
-import type { GetCourseResponse } from "~/api/generated-api";
-
 type LessonSidebarProps = {
-  course: GetCourseResponse["data"];
   courseId: string;
+  lessonId: string;
 };
 
 const progressBadge = {
@@ -32,7 +28,9 @@ const progressBadge = {
   not_started: "NotStartedRounded",
 } as const;
 
-export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
+export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
+  const { data: course } = useCourse(courseId);
+
   const { state } = useLocation();
   const [activeChapter, setActiveChapter] = useState<string | undefined>(state?.chapterId);
   const { t } = useTranslation();
@@ -44,6 +42,8 @@ export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
   const handleAccordionChange = (value: string | undefined) => {
     setActiveChapter(value);
   };
+
+  if (!course) return null;
 
   return (
     <div className="w-full bg-white h-full rounded-lg">
@@ -73,7 +73,15 @@ export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
               {course?.chapters?.map(({ id, title, lessons, chapterProgress }) => {
                 return (
                   <AccordionItem value={id} key={id}>
-                    <AccordionTrigger className="flex hover:bg-neutral-50 gap-x-4 px-6 py-4 text-start [&[data-state=open]>div>div>svg]:rotate-180 [&[data-state=open]>div>div>svg]:duration-200 [&[data-state=open]]:border-t [&[data-state=open]]:border-x [&[data-state=open]>div>div>svg]:ease-out data-[state=closed]:rounded-lg data-[state=open]:rounded-t-lg">
+                    <AccordionTrigger
+                      className={cn(
+                        "flex hover:bg-neutral-50 gap-x-4 px-6 py-4 text-start border border-neutral-200 [&[data-state=open]>div>div>svg]:rotate-180 [&[data-state=open]>div>div>svg]:duration-200 [&[data-state=open]>div>div>svg]:ease-out data-[state=closed]:border-t-transparent data-[state=closed]:border-x-transparent data-[state=closed]:rounded-none data-[state=open]:rounded-t-lg",
+                        {
+                          "data-[state=closed]:border-b-0":
+                            last(course?.chapters)?.id === id || activeChapter !== id,
+                        },
+                      )}
+                    >
                       <Badge
                         variant="icon"
                         icon={progressBadge[chapterProgress ?? "not_started"]}
@@ -82,21 +90,27 @@ export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
                       <div className="body-base-md text-neutral-950 text-start w-full">{title}</div>
                       <Icon name="CarretDownLarge" className="size-6 text-primary-700" />
                     </AccordionTrigger>
-                    <AccordionContent className="flex flex-col divide-y border-b">
+                    <AccordionContent className="flex flex-col border border-t-0 rounded-b-lg">
                       {lessons?.map(({ id, title, status, type }) => {
                         return (
                           <Link
                             key={id}
                             to={status === "completed" ? `/course/${courseId}/lesson/${id}` : "#"}
-                            className={cn("flex gap-x-4 py-2 px-6 border-x hover:bg-neutral-50", {
-                              "bg-primary-50 border-l-2 border-l-primary-600":
-                                status === "completed",
+                            className={cn("flex gap-x-4 py-2 px-6 hover:bg-neutral-50", {
                               "cursor-not-allowed": status === "not_started",
+                              "bg-primary-50 border-l-2 border-l-primary-600 last:rounded-es-lg":
+                                lessonId === id,
                             })}
                           >
                             <Badge
                               variant="icon"
-                              icon={progressBadge[status ?? "not_started"]}
+                              icon={
+                                progressBadge[
+                                  id === lessonId && status === "not_started"
+                                    ? "in_progress"
+                                    : status
+                                ]
+                              }
                               iconClasses="w-6 h-auto shrink-0"
                             />{" "}
                             <div className="flex flex-col w-full">
@@ -104,6 +118,7 @@ export const LessonSidebar = ({ course, courseId }: LessonSidebarProps) => {
                               <p className="details text-neutral-800">{startCase(type)}</p>
                             </div>
                             <Icon
+                              // @ts-expect-error - TODO: do we need the 'file' type?
                               name={LessonTypesIcons[type]}
                               className="size-6 text-primary-700"
                             />

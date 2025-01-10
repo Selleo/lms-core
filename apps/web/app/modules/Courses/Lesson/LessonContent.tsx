@@ -44,7 +44,7 @@ export const LessonContent = ({
   const Content = () =>
     match(lesson.type)
       .with("text", () => <Viewer variant="lesson" content={lesson?.description ?? ""} />)
-      .with("quiz", () => <Quiz lesson={lesson} />)
+      .with("quiz", () => <Quiz lesson={lesson} handleNext={handleNext} />)
       .with("video", () => (
         <Video
           url={lesson.fileUrl}
