@@ -119,7 +119,7 @@ export default function LessonPage() {
             isLastLesson={isLast}
           />
         </div>
-        <LessonSidebar course={course} courseId={courseId} />
+        <LessonSidebar courseId={courseId} lessonId={lessonId} />
       </div>
     </PageWrapper>
   );
