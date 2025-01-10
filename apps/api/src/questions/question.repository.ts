@@ -25,7 +25,7 @@ export class QuestionRepository {
     isCompleted: boolean,
     userId: UUIDType,
   ): Promise<QuestionBody[]> {
-    return await this.db
+    return this.db
       .select({
         id: sql<UUIDType>`${questions.id}`,
         type: sql<QuestionType>`${questions.type}`,
@@ -70,24 +70,29 @@ export class QuestionRepository {
                         WHEN ${isCompleted} THEN qao.display_order
                         ELSE NULL
                       END,
-                    'isStudentAnswer',
+                      'isStudentAnswer',
                       CASE
                         WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
                         WHEN ${
                           studentQuestionAnswers.answer
                         }->>CAST(qao.display_order AS text) = qao.option_text AND
-                          ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
-                            QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
-                          })
-                          THEN TRUE
-                        WHEN EXISTS (
-                          SELECT 1
-                          FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                          WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
-                            AND  ${questions.type} NOT IN (${
-                              QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
-                            }, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})
-                          THEN TRUE
+                        ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                          QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                        })
+                        THEN TRUE
+                      WHEN ${
+                        studentQuestionAnswers.answer
+                      }->>CAST(qao.display_order AS text) = qao.is_correct::text AND
+                        ${questions.type} = ${QUESTION_TYPE.TRUE_OR_FALSE}
+                        THEN TRUE
+                      WHEN EXISTS (
+                        SELECT 1
+                        FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                        WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
+                        AND  ${questions.type} NOT IN (${
+                          QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
+                        }, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})
+                        THEN TRUE
                         ELSE FALSE
                       END,
                     'studentAnswer',  
