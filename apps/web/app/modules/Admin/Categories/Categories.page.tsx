@@ -12,7 +12,6 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import { useState, useTransition } from "react";
-import { useTranslation } from "react-i18next";
 
 import { useCategoriesSuspense, usersQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -56,13 +55,12 @@ const Categories = () => {
   }>({ archived: false });
   const [isPending, startTransition] = useTransition();
   const { data } = useCategoriesSuspense(searchParams);
-  const { t } = useTranslation();
 
   const filterConfig: FilterConfig[] = [
     {
       name: "title",
       type: "text",
-      placeholder: t("adminCategoriesView.filters.placeholder.title"),
+      placeholder: "Search by title...",
     },
     {
       name: "archived",
@@ -101,32 +99,26 @@ const Categories = () => {
     },
     {
       accessorKey: "title",
-      header: ({ column }) => (
-        <SortButton<TCategory> column={column}>{t("adminCategoriesView.field.title")}</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCategory> column={column}>Title</SortButton>,
       cell: ({ row }) => (
         <div className="max-w-md truncate">{formatHtmlString(row.original.title)}</div>
       ),
     },
     {
       accessorKey: "archived",
-      header: t("adminCategoriesView.field.status"),
+      header: "Status",
       cell: ({ row }) => {
         const isArchived = row.original.archived;
         return (
           <Badge variant={isArchived ? "outline" : "secondary"} className="mx">
-            {isArchived ? t("common.other.archived") : t("common.other.active")}
+            {isArchived ? "Archived" : "Active"}
           </Badge>
         );
       },
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TCategory> column={column}>
-          {t("adminCategoriesView.field.createdAt")}
-        </SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCategory> column={column}>Created At</SortButton>,
       cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
@@ -158,7 +150,7 @@ const Categories = () => {
     <div className="flex flex-col">
       <div className="flex justify-between items-center gap-2">
         <Link to="new">
-          <Button variant="outline">{t("adminCategoriesView.button.createNew")}</Button>
+          <Button variant="outline">Create New</Button>
         </Link>
         <SearchFilter
           filters={filterConfig}
@@ -173,7 +165,7 @@ const Categories = () => {
               "text-neutral-900": !isEmpty(selectedCategories),
             })}
           >
-            {t("common.other.selected")} ({selectedCategories.length})
+            Selected ({selectedCategories.length})
           </p>
           <Button
             onClick={handleDelete}
@@ -182,7 +174,7 @@ const Categories = () => {
             disabled={isEmpty(selectedCategories)}
           >
             <Trash className="w-3 h-3" />
-            <span className="text-xs">{t("adminCategoriesView.button.deleteSelected")}</span>
+            <span className="text-xs">Delete selected</span>
           </Button>
         </div>
       </div>

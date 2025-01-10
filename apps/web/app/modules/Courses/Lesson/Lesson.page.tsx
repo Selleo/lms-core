@@ -1,6 +1,5 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { first, get, last, orderBy } from "lodash-es";
-import { useTranslation } from "react-i18next";
 
 import { useCourse, useLesson } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -30,7 +29,6 @@ export default function LessonPage() {
   const { data: lesson } = useLesson(lessonId);
   const { data: course } = useCourse(courseId);
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   if (!lesson || !course) return null;
 
@@ -108,9 +106,7 @@ export default function LessonPage() {
         <div className="w-full bg-white rounded-lg flex flex-col h-full divide-y">
           <div className="flex items-center py-6 px-12">
             <p className="h6 text-neutral-950">
-              <span className="text-neutral-800">
-                {t("studentLessonView.other.chapter")} {currentChapter?.displayOrder}:
-              </span>{" "}
+              <span className="text-neutral-800">Chapter {currentChapter?.displayOrder}:</span>{" "}
               {course?.title}
             </p>
           </div>

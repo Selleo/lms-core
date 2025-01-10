@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { SortableList } from "~/components/SortableList";
@@ -24,7 +23,6 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
   const questionType = form.getValues(`questions.${questionIndex}.type`);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
-  const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAddOption = useCallback(() => {
@@ -85,9 +83,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
             {!isOptionEmpty ? (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">
-                  {t("adminCourseView.curriculum.lesson.field.options")}
-                </Label>
+                <Label className="body-sm-md">Options</Label>
               </>
             ) : null}
             {watchedOptions && watchedOptions.length > 0 && (
@@ -112,7 +108,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                           name={`questions.${questionIndex}.options.${index}.optionText`}
                           value={item.optionText}
                           onChange={(e) => handleOptionChange(index, "optionText", e.target.value)}
-                          placeholder={`${t("adminCourseView.curriculum.lesson.placeholder.option")} ${index + 1}`}
+                          placeholder={`Option ${index + 1}`}
                           required
                           className="flex-1"
                         />
@@ -161,7 +157,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                                 align="center"
                                 className="bg-black ml-4 text-white text-sm rounded shadow-md"
                               >
-                                {t("common.button.delete")}
+                                Delete
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -180,14 +176,14 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
           )}
           <div className="mt-4 ml-14 flex gap-2">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
-              {t("adminCourseView.curriculum.lesson.button.addOption")}
+              Add Option
             </Button>
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
               onClick={() => setIsDeleteModalOpen(true)}
             >
-              {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}
+              Delete Question
             </Button>
           </div>
           <DeleteConfirmationModal

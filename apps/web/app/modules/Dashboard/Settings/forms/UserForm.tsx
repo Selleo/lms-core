@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useUpdateUser } from "~/api/mutations/useUpdateUser";
@@ -33,7 +32,6 @@ const updateUserSchema = z.object({
 export default function UserForm() {
   const { mutate: updateUser } = useUpdateUser();
   const { data: currentUser } = useCurrentUserSuspense();
-  const { t } = useTranslation();
 
   const {
     register,
@@ -49,11 +47,11 @@ export default function UserForm() {
     <Card id="change-password">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
-          <CardTitle>{t("changeUserEmailView.header")}</CardTitle>
-          <CardDescription>{t("changeUserEmailView.subHeader")}</CardDescription>
+          <CardTitle>Change user information</CardTitle>
+          <CardDescription>Update your user information here.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Label htmlFor="email">{t("changeUserEmailView.field.email")}</Label>
+          <Label htmlFor="email">Email</Label>
           <Input
             id="email"
             placeholder="user@email.com"
@@ -61,12 +59,12 @@ export default function UserForm() {
             className={cn({
               "border-red-500 focus:!ring-red-500": errors.email,
             })}
-            {...register("email", { required: t("changeUserEmailView.validation.email") })}
+            {...register("email", { required: "Email is required" })}
           />
           {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button>{t("common.button.save")}</Button>
+          <Button>Save</Button>
         </CardFooter>
       </form>
     </Card>

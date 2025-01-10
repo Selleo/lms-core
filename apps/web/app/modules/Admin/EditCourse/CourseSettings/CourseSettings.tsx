@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
@@ -53,7 +52,6 @@ const CourseSettings = ({
     thumbnailS3SingedUrl || undefined,
   );
 
-  const { t } = useTranslation();
   const watchedTitle = form.watch("title");
   const watchedDescription = form.watch("description");
   const watchedCategoryId = form.getValues("categoryId");
@@ -92,20 +90,15 @@ const CourseSettings = ({
       <div className="w-full basis-full">
         <div className="p-8 shadow-md border overflow-y-auto bg-white h-full flex flex-col gap-y-6 rounded-lg border-gray-200 w-full">
           <div className="flex flex-col gap-y-1">
-            <h5 className="text-neutral-950 h5">{t("adminCourseView.settings.editHeader")}</h5>
+            <h5 className="text-neutral-950 h5">Basic settings</h5>
             <p className="body-lg-md text-neutral-800">
-              {t("adminCourseView.settings.editSubHeader")}
+              Fill in the details to create a new course.
             </p>
           </div>
           <Form {...form}>
             <form className="flex flex-col gap-y-6" onSubmit={form.handleSubmit(onSubmit)}>
               <div className="flex gap-x-6 *:w-full">
-                <FormTextField
-                  control={form.control}
-                  name="title"
-                  required
-                  label={t("adminCourseView.settings.field.title")}
-                />
+                <FormTextField control={form.control} name="title" required label="Course title" />
                 <FormField
                   control={form.control}
                   name="categoryId"
@@ -113,12 +106,12 @@ const CourseSettings = ({
                     <FormItem className="flex flex-col gap-y-1.5">
                       <Label htmlFor="categoryId">
                         <span className="text-error-600 mr-1">*</span>
-                        {t("adminCourseView.settings.field.category")}
+                        Category
                       </Label>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger id="categoryId">
-                            <SelectValue placeholder={t("selectCategory")} />
+                            <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -137,7 +130,7 @@ const CourseSettings = ({
               <FormTextareaField
                 control={form.control}
                 name="description"
-                label={t("adminCourseView.settings.field.description")}
+                label="Description"
                 required
                 maxLength={maxDescriptionFieldLength}
               />
@@ -153,9 +146,7 @@ const CourseSettings = ({
                 name="thumbnailS3Key"
                 render={({ field }) => (
                   <FormItem className="max-h-[440px]">
-                    <Label htmlFor="thumbnailS3Key">
-                      {t("adminCourseView.settings.field.thumbnail")}
-                    </Label>
+                    <Label htmlFor="thumbnailS3Key">Thumbnail</Label>
                     <FormControl>
                       <ImageUploadInput
                         field={field}
@@ -164,7 +155,7 @@ const CourseSettings = ({
                         imageUrl={displayThumbnailUrl}
                       />
                     </FormControl>
-                    {isUploading && <p>{t("common.other.uploadingImage")}</p>}
+                    {isUploading && <p>Uploading image...</p>}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -173,13 +164,13 @@ const CourseSettings = ({
                 {displayThumbnailUrl && (
                   <Button onClick={removeThumbnail} className="bg-red-500 text-white py-2 px-6">
                     <Icon name="TrashIcon" className="mr-2" />
-                    {t("adminCourseView.settings.button.removeThumbnail")}
+                    Remove Thumbnail
                   </Button>
                 )}
               </div>
               <div className="flex space-x-5">
                 <Button type="submit" disabled={!isFormValid || isUploading}>
-                  {t("common.button.save")}
+                  Save
                 </Button>
               </div>
             </form>

@@ -1,5 +1,3 @@
-import { t } from "i18next";
-import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, Customized, Text, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
@@ -11,11 +9,11 @@ import type { ChartConfig } from "~/components/ui/chart";
 
 const chartConfig = {
   completed: {
-    label: t("clientStatisticsView.other.completed"),
+    label: "Completed",
     color: "var(--primary-700)",
   },
   started: {
-    label: t("clientStatisticsView.other.started"),
+    label: "Started",
     color: "var(--primary-300)",
   },
 } satisfies ChartConfig;
@@ -33,7 +31,6 @@ type RatesChartProps = {
 };
 
 export const RatesChart = ({ isLoading = false, resourceName, chartData }: RatesChartProps) => {
-  const { t } = useTranslation();
   const dataMax = Math.max(...chartData.map(({ started }) => started));
   const step = Math.ceil(dataMax / 10);
   const yAxisMax = dataMax + step;
@@ -93,12 +90,8 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
   return (
     <div className="w-full bg-white rounded-lg gap-4 drop-shadow-card p-8 flex flex-col">
       <hgroup>
-        <h2 className="body-lg-md text-neutral-950 text-center">
-          {resourceName} {t("clientStatisticsView.other.rates")}
-        </h2>
-        <p className="body-sm-md text-center text-neutral-800">
-          {t("clientStatisticsView.other.numberOf")} {resourceName} in 2024
-        </p>
+        <h2 className="body-lg-md text-neutral-950 text-center">{resourceName} Rates</h2>
+        <p className="body-sm-md text-center text-neutral-800">Number of {resourceName} in 2024</p>
       </hgroup>
       <div className="grid mt-2 place-items-center h-full">
         <ChartContainer
@@ -121,7 +114,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
                     verticalAnchor="middle"
                     className="fill-primary-950 h5 md:h3 translate-x-1/2 translate-y-1/2"
                   >
-                    {t("clientStatisticsView.other.noDataAvaiable")}
+                    No data available
                   </Text>
                 ) : null;
               }}
@@ -148,7 +141,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
           return (
             <ChartLegendBadge
               key={config.label as string}
-              label={`${t(config.label)} ${resourceName}`}
+              label={`${config.label} ${resourceName}`}
               dotColor={config.color}
             />
           );

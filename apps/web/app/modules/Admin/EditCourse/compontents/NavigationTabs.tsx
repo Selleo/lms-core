@@ -1,5 +1,4 @@
 import * as Tabs from "@radix-ui/react-tabs";
-import { useTranslation } from "react-i18next";
 
 import type { NavigationTab } from "../EditCourse.types";
 
@@ -17,7 +16,6 @@ const TabTrigger = ({ value, children }: { value: string; children: React.ReactN
 );
 
 const NavigationTabs = ({ setNavigationTabState }: NavigationTabsProps) => {
-  const { t } = useTranslation();
   const handleValueChange = (value: string) => {
     setNavigationTabState(value as NavigationTab);
   };
@@ -29,10 +27,10 @@ const NavigationTabs = ({ setNavigationTabState }: NavigationTabsProps) => {
       onValueChange={handleValueChange}
     >
       <Tabs.List className="flex items-center gap-5 border-b border-gray-200">
-        <TabTrigger value="Settings">{t("adminCourseView.common.settings")}</TabTrigger>
-        <TabTrigger value="Curriculum">{t("adminCourseView.common.curriculum")}</TabTrigger>
-        <TabTrigger value="Pricing">{t("adminCourseView.common.pricing")}</TabTrigger>
-        <TabTrigger value="Status">{t("adminCourseView.common.status")}</TabTrigger>
+        <TabTrigger value="Settings">Settings</TabTrigger>
+        <TabTrigger value="Curriculum">Curriculum</TabTrigger>
+        <TabTrigger value="Pricing">Pricing</TabTrigger>
+        <TabTrigger value="Status">Status</TabTrigger>
       </Tabs.List>
     </Tabs.Root>
   );

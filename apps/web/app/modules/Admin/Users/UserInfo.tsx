@@ -1,7 +1,6 @@
 import { capitalize } from "lodash-es";
 import { memo } from "react";
 import { type Control, Controller } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
@@ -23,7 +22,6 @@ export const UserInfo = memo<{
   isEditing: boolean;
   user: GetUserByIdResponse["data"];
 }>(({ name, control, isEditing, user }) => {
-  const { t } = useTranslation();
   return (
     <Controller
       name={name}
@@ -33,9 +31,7 @@ export const UserInfo = memo<{
         if (!isEditing) {
           if (name === "archived") {
             return (
-              <span className="font-semibold capitalize">
-                {user[name] ? t("common.other.archived") : t("common.other.active")}
-              </span>
+              <span className="font-semibold capitalize">{user[name] ? "Archived" : "Active"}</span>
             );
           }
           return <span className="font-semibold capitalize">{user[name]?.toString()}</span>;
@@ -57,7 +53,7 @@ export const UserInfo = memo<{
                 <SelectGroup>
                   {[USER_ROLE.student, USER_ROLE.admin, USER_ROLE.teacher].map((role) => (
                     <SelectItem className="capitalize" value={role} key={role}>
-                      {t(role)}
+                      {role}
                     </SelectItem>
                   ))}
                 </SelectGroup>
@@ -78,7 +74,7 @@ export const UserInfo = memo<{
                 htmlFor="archived"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                {t("common.other.archived")}
+                Archived
               </label>
             </div>
           );

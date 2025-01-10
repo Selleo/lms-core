@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useTranslation } from "react-i18next";
 import { Label, Pie, PieChart } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
@@ -29,7 +28,6 @@ export const AvgScoreAcrossAllQuizzesChart = ({
   chartData,
   isLoading = false,
 }: AvgScoreAcrossAllQuizzesChartProps) => {
-  const { t } = useTranslation();
   const chartLegend = useMemo(() => {
     return Object.values(chartConfig).map((config) => {
       return (
@@ -91,7 +89,7 @@ export const AvgScoreAcrossAllQuizzesChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {isEmptyChart ? t("adminStatisticsView.other.noData") : label}
+                          {isEmptyChart ? "No data" : label}
                         </tspan>
                       </text>
                     );

@@ -1,7 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "@remix-run/react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useLoginUser } from "~/api/mutations/useLoginUser";
@@ -14,24 +13,21 @@ import { cn } from "~/lib/utils";
 
 import type { LoginBody } from "~/api/generated-api";
 
-const loginSchema = (t: (key: string) => string) =>
-  z.object({
-    email: z.string().email({ message: t("loginView.validation.email") }),
-    password: z.string().min(1, { message: t("loginView.validation.password") }),
-    rememberMe: z.boolean().optional(),
-  });
+const loginSchema = z.object({
+  email: z.string().email({ message: "Invalid email" }),
+  password: z.string().min(1, { message: "Password is required" }),
+  rememberMe: z.boolean().optional(),
+});
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { mutateAsync: loginUser } = useLoginUser();
-  const { t } = useTranslation();
-
   const {
     register,
     handleSubmit,
     control,
     formState: { errors },
-  } = useForm<LoginBody>({ resolver: zodResolver(loginSchema(t)) });
+  } = useForm<LoginBody>({ resolver: zodResolver(loginSchema) });
 
   const onSubmit = (data: LoginBody) => {
     loginUser({ data }).then(() => {
@@ -43,14 +39,14 @@ export default function LoginPage() {
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle role="heading" className="text-2xl">
-          {t("loginView.header")}
+          Login
         </CardTitle>
-        <CardDescription>{t("loginView.subHeader")}</CardDescription>
+        <CardDescription>Enter your email below to login to your account</CardDescription>
       </CardHeader>
       <CardContent>
         <form className="grid gap-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-2">
-            <Label htmlFor="email">{t("loginView.field.email")}</Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
@@ -62,9 +58,9 @@ export default function LoginPage() {
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
-              <Label htmlFor="password">{t("loginView.field.password")}</Label>
+              <Label htmlFor="password">Password</Label>
               <Link to="/auth/password-recovery" className="ml-auto inline-block text-sm underline">
-                {t("loginView.other.forgotPassword")}
+                Forgot your password?
               </Link>
             </div>
             <Input
@@ -77,19 +73,15 @@ export default function LoginPage() {
               <div className="text-red-500 text-sm">{errors.password.message}</div>
             )}
           </div>
-          <FormCheckbox
-            control={control}
-            name="rememberMe"
-            label={t("loginView.other.rememberMe")}
-          />
+          <FormCheckbox control={control} name="rememberMe" label="Remember me" />
           <Button type="submit" className="w-full">
-            {t("loginView.button.login")}
+            Login
           </Button>
         </form>
         <div className="mt-4 text-center text-sm">
-          {t("loginView.other.dontHaveAccount")}{" "}
+          Don&apos;t have an account?{" "}
           <Link to="/auth/register" className="underline">
-            {t("loginView.other.signUp")}
+            Sign up
           </Link>
         </div>
       </CardContent>

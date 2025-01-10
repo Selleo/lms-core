@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
@@ -11,7 +10,6 @@ type CopyUrlButtonProps = PropsWithChildren<ButtonProps>;
 
 export const CopyUrlButton = ({ children, ...props }: CopyUrlButtonProps) => {
   const [isCopied, setIsCopied] = useState(false);
-  const { t } = useTranslation();
 
   const handleCopy = () => {
     const currentUrl = window.location.href;
@@ -35,7 +33,7 @@ export const CopyUrlButton = ({ children, ...props }: CopyUrlButtonProps) => {
             {children}
           </Button>
         </TooltipTrigger>
-        <TooltipContent>{t("common.other.copyUrl")}</TooltipContent>
+        <TooltipContent>The URL address was copied to the clipboard</TooltipContent>
       </Tooltip>
     </TooltipProvider>
   );

@@ -1,6 +1,5 @@
 import { startCase } from "lodash-es";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 
 import { useMarkLessonAsCompleted } from "~/api/mutations";
@@ -35,7 +34,6 @@ export const LessonContent = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const { mutate: markLessonAsCompleted } = useMarkLessonAsCompleted();
-  const { t } = useTranslation();
 
   useEffect(() => {
     if (lesson.type === "video") setIsNextDisabled(true);
@@ -68,8 +66,7 @@ export const LessonContent = ({
         <div className="flex w-full items-end">
           <div className="flex flex-col gap-y-2 w-full">
             <p className="body-sm-md text-neutral-800">
-              {t("studentLessonView.other.lesson")} {lesson.displayOrder}/{lessonsAmount} -{" "}
-              {startCase(lesson.type)}
+              Lesson {lesson.displayOrder}/{lessonsAmount} - {startCase(lesson.type)}
             </p>
             <p className="h4 text-neutral-950">{lesson.title}</p>
           </div>
@@ -77,7 +74,7 @@ export const LessonContent = ({
             {!isFirstLesson && (
               <Button variant="outline" className="gap-x-1" onClick={handlePrevious}>
                 <Icon name="ArrowRight" className="rotate-180 w-4 h-auto" />
-                <span>{t("studentLessonView.button.previous")}</span>
+                <span>Previous</span>
               </Button>
             )}
 
@@ -87,11 +84,7 @@ export const LessonContent = ({
               onClick={handleMarkLessonAsComplete}
             >
               <Icon name="ArrowRight" className="w-4 h-auto" />
-              <span>
-                {isLastLesson
-                  ? t("studentLessonView.button.complete")
-                  : t("studentLessonView.button.next")}
-              </span>
+              <span>{isLastLesson ? "Complete" : "Next"}</span>
             </Button>
           </div>
         </div>

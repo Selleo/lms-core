@@ -1,5 +1,4 @@
 import { useFormContext } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -16,7 +15,6 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
   const { setValue, watch, register } = useFormContext<CourseFormData>();
   const currency = useScormFormStore((state) => state.formData.pricing?.currency);
   const pricingType = watch("pricing.type");
-  const { t } = useTranslation();
 
   return (
     <div className="space-y-6">
@@ -35,8 +33,10 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
               htmlFor="free"
               className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
             >
-              <div className="font-medium text-lg">{t("adminScorm.other.free")}</div>
-              <div className="text-sm font-normal">{t("adminScorm.other.freeCourseBody")}</div>
+              <div className="font-medium text-lg">Free</div>
+              <div className="text-sm font-normal">
+                Students can enroll in, and access the course content without paying.
+              </div>
             </Label>
           </Card>
 
@@ -48,14 +48,17 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
             <RadioGroupItem value="paid" id="paid" className="my-5" />
             <div className="flex flex-col py-4">
               <Label htmlFor="paid" className="flex-1 gap-2 flex flex-col cursor-pointer size-full">
-                <div className="font-medium text-lg">{t("adminScorm.other.paidCourse")}</div>
-                <div className="text-sm font-normal">{t("adminScorm.other.paidCourseBody")}</div>
+                <div className="font-medium text-lg">Paid course</div>
+                <div className="text-sm font-normal">
+                  Students can purchase and access the course content. Once selected, you can define
+                  currency and price.
+                </div>
               </Label>
 
               {pricingType === "paid" && (
                 <>
                   <Label className="text-sm font-medium mt-6" htmlFor="price">
-                    <span className="text-destructive">*</span> {t("adminScorm.field.price")}
+                    <span className="text-destructive">*</span> Price
                   </Label>
                   <div className="relative">
                     <Input
@@ -63,7 +66,7 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
                       {...register("pricing.price", {
                         valueAsNumber: true,
                       })}
-                      placeholder={t("adminScorm.placeholder.price")}
+                      placeholder="Amount"
                       type="number"
                     />
                     <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4 uppercase">
@@ -79,9 +82,9 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={handleBack}>
-          {t("adminScorm.button.back")}
+          Back
         </Button>
-        <Button onClick={handleNext}>{t("adminScorm.button.status")}</Button>
+        <Button onClick={handleNext}>Status</Button>
       </div>
     </div>
   );

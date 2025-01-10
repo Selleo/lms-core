@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 import { useEnrollCourse } from "~/api/mutations";
 import { courseQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -16,7 +14,6 @@ type CourseOptionsProps = {
 
 export const CourseOptions = ({ course }: CourseOptionsProps) => {
   const { mutateAsync: enrollCourse } = useEnrollCourse();
-  const { t } = useTranslation();
 
   const handleEnrollCourse = async () => {
     await enrollCourse({ id: course?.id }).then(() => {
@@ -26,13 +23,11 @@ export const CourseOptions = ({ course }: CourseOptionsProps) => {
 
   return (
     <>
-      <h4 className="h6 text-neutral-950 pb-1">
-        {t("studentCourseView.sideSection.optionHeader")}
-      </h4>
+      <h4 className="h6 text-neutral-950 pb-1">Options</h4>
       <div className="flex flex-col gap-y-2">
         <CopyUrlButton variant="outline" className="gap-x-2">
           <Icon name="Share" className="w-6 h-auto text-primary-800" />
-          <span>{t("studentCourseView.sideSection.button.shareCourse")}</span>
+          <span>Share this course</span>
         </CopyUrlButton>
         {course.priceInCents && course.currency ? (
           <PaymentModal
@@ -58,7 +53,7 @@ export const CourseOptions = ({ course }: CourseOptionsProps) => {
                 strokeLinejoin="round"
               />
             </svg>
-            <span>{t("studentCourseView.sideSection.button.enrollCourse")}</span>
+            <span> Enroll to the course</span>
           </Button>
         )}
       </div>

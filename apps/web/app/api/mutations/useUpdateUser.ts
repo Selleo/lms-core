@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -17,7 +16,6 @@ type UpdateUserOptions = {
 export function useUpdateUser() {
   const { data: currentUser } = useCurrentUserSuspense();
   const { toast } = useToast();
-  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: UpdateUserOptions) => {
@@ -32,7 +30,7 @@ export function useUpdateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: t("changeUserInformationView.toast.userUpdatedSuccessfully") });
+      toast({ description: "User updated successfully" });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

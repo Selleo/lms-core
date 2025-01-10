@@ -1,5 +1,4 @@
 import { useParams, useSearchParams } from "@remix-run/react";
-import { useTranslation } from "react-i18next";
 
 import { useBetaCourseById } from "~/api/queries/admin/useBetaCourse";
 import { Icon } from "~/components/Icon";
@@ -19,7 +18,6 @@ const EditCourse = () => {
   const { id } = useParams();
   const params = new URLSearchParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const { t } = useTranslation();
 
   if (!id) throw new Error("Course ID not found");
   const { data: course, isLoading, dataUpdatedAt } = useBetaCourseById(id);
@@ -52,33 +50,27 @@ const EditCourse = () => {
             {course?.isPublished ? (
               <span className="ml-2 flex items-center text-success-800 bg-success-50 px-2 py-1 rounded-sm text-sm">
                 <Icon name="Success" className="mr-1" />
-                {t("common.other.published")}
+                Published
               </span>
             ) : (
               <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
                 <Icon name="Warning" className="mr-1" />
-                {t("common.other.draft")}
+                Draft
               </span>
             )}
           </h4>
           <Button className="bg-transparent text-primary-700 border border-neutral-200 flex justify-end">
             <Icon name="Eye" className="mr-2" />
-            {t("adminCourseView.common.preview")}{" "}
-            <Icon name="ArrowDown" className="text-neutral-500 ml-2" />
+            Preview <Icon name="ArrowDown" className="text-neutral-500 ml-2" />
           </Button>
         </div>
         <TabsList className="w-min">
-  {[
-    { label: t("adminCourseView.common.settings"), value: "Settings" },
-    { label: t("adminCourseView.common.curriculum"), value: "Curriculum" },
-    { label: t("adminCourseView.common.pricing"), value: "Pricing" },
-    { label: t("adminCourseView.common.status"), value: "Status" }
-  ].map(({ label, value }) => (
-    <TabsTrigger key={value} value={value} onClick={() => handleTabChange(value)}>
-      {label}
-    </TabsTrigger>
-  ))}
-</TabsList>
+          {["Settings", "Curriculum", "Pricing", "Status"].map((tab) => (
+            <TabsTrigger key={tab} value={tab} onClick={() => handleTabChange(tab)}>
+              {tab}
+            </TabsTrigger>
+          ))}
+        </TabsList>
       </div>
       <TabsContent value="Settings">
         <CourseSettings

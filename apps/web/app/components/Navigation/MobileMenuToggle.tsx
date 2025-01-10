@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 import type { Dispatch, SetStateAction } from "react";
 
 type MobileMenuToggleProps = {
@@ -8,7 +6,6 @@ type MobileMenuToggleProps = {
 };
 
 export function MobileMenuToggle({ isMobileNavOpen, setIsMobileNavOpen }: MobileMenuToggleProps) {
-  const { t } = useTranslation();
   return (
     <button
       onClick={() => setIsMobileNavOpen((prevState) => !prevState)}
@@ -30,7 +27,7 @@ export function MobileMenuToggle({ isMobileNavOpen, setIsMobileNavOpen }: Mobile
               fill="#121521"
             />
           </svg>
-          <span className="text-neutral-900 body-sm-md">{t("navigationSideBar.close")}</span>
+          <span className="text-neutral-900 body-sm-md">Close</span>
         </>
       ) : (
         <>
@@ -43,7 +40,7 @@ export function MobileMenuToggle({ isMobileNavOpen, setIsMobileNavOpen }: Mobile
           >
             <path d="M3 6H21V8H3V6ZM3 11H21V13H3V11ZM3 16H21V18H3V16Z" fill="black" />
           </svg>
-          <span className="text-neutral-900 body-sm-md">{t("navigationSideBar.menu")}</span>
+          <span className="text-neutral-900 body-sm-md">Menu</span>
         </>
       )}
     </button>

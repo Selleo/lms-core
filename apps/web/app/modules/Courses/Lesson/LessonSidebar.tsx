@@ -1,7 +1,6 @@
 import { Link, useLocation } from "@remix-run/react";
 import { last, startCase } from "lodash-es";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { useCourse } from "~/api/queries";
 import CourseProgress from "~/components/CourseProgress";
@@ -33,7 +32,6 @@ export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
 
   const { state } = useLocation();
   const [activeChapter, setActiveChapter] = useState<string | undefined>(state?.chapterId);
-  const { t } = useTranslation();
 
   useEffect(() => {
     setActiveChapter(state?.chapterId);
@@ -54,15 +52,13 @@ export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
           </div>
           <h1 className="h6 text-neutral-950">{course.title}</h1>
           <CourseProgress
-            label={t("studentLessonView.sideSection.other.courseProgress")}
+            label="Course progress:"
             completedLessonCount={course.completedChapterCount ?? 0}
             courseLessonCount={course.courseChapterCount ?? 0}
           />
         </div>
-        <div className="flex flex-col px-4 gap-y-4">
-          <p className="px-4 body-lg-md text-neutral-950">
-            {t("studentLessonView.sideSection.header")}
-          </p>
+        <div className="flex flex-col px-4 gap-y-4 pb-4">
+          <p className="px-4 body-lg-md text-neutral-950">Table of content:</p>
           <div className="flex flex-col">
             <Accordion
               type="single"

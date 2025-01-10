@@ -1,6 +1,5 @@
 import { useNavigate } from "@remix-run/react";
 import { useFormContext } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -9,7 +8,6 @@ import type { CourseFormData, StepComponentProps } from "../types/scorm.types";
 
 export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProps) {
   const navigate = useNavigate();
-  const { t } = useTranslation();
 
   const {
     setValue,
@@ -55,8 +53,8 @@ export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProp
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="font-medium">{t("adminScorm.other.uploadFileHeader")}</p>
-            <p className="text-sm text-muted-foreground">{t("adminScorm.other.uploadFileBody")}</p>
+            <p className="font-medium">Click to upload or drag and drop</p>
+            <p className="text-sm text-muted-foreground">SCORM .zip file (max. to 500MB)</p>
           </div>
         )}
       </label>
@@ -67,9 +65,9 @@ export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProp
       <div className="flex gap-3">
         <Button variant="outline" onClick={() => navigate(-1)}>
           <Icon name="ArrowRight" className="w-4 h-4 mr-2 rotate-180" />
-          <span>{t("common.button.cancel")}</span>
+          <span>Cancel</span>
         </Button>
-        <Button onClick={handleNext}>{t("adminScorm.other.setUpCourse")}</Button>
+        <Button onClick={handleNext}>Set up Course</Button>
       </div>
     </div>
   );
