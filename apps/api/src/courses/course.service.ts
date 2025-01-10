@@ -811,14 +811,12 @@ export class CourseService {
         trx,
       );
 
-      !paymentId
-        ? await this.statisticsRepository.updateFreePurchasedCoursesStats(courseId, trx)
-        : isEmpty(existingLessonProgress)
-          ? await this.statisticsRepository.updatePaidPurchasedCoursesStats(courseId, trx)
-          : await this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
-              courseId,
-              trx,
-            );
+      await this.createStatisicRecordForCourse(
+        courseId,
+        paymentId,
+        isEmpty(existingLessonProgress),
+        trx,
+      );
 
       if (courseChapterList.length > 0) {
         await trx.insert(studentChapterProgress).values(
@@ -926,21 +924,38 @@ export class CourseService {
     });
   }
 
+  private async createStatisicRecordForCourse(
+    courseId: UUIDType,
+    paymentId: string | null,
+    existingFreemiumLessonProgress: boolean,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
+    if (!paymentId) {
+      return this.statisticsRepository.updateFreePurchasedCoursesStats(courseId, dbInstance);
+    }
+
+    if (existingFreemiumLessonProgress) {
+      return this.statisticsRepository.updatePaidPurchasedCoursesStats(courseId, dbInstance);
+    }
+
+    return this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
+      courseId,
+      dbInstance,
+    );
+  }
+
   private async addS3SignedUrls(data: AllCoursesResponse): Promise<AllCoursesResponse> {
     return Promise.all(
       data.map(async (item) => {
-        if (item.thumbnailUrl) {
-          if (item.thumbnailUrl.startsWith("https://")) return item;
+        if (!item.thumbnailUrl) return item;
 
-          try {
-            const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
-            return { ...item, thumbnailUrl: signedUrl };
-          } catch (error) {
-            console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
-            return item;
-          }
+        try {
+          const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+          return { ...item, thumbnailUrl: signedUrl };
+        } catch (error) {
+          console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
+          return item;
         }
-        return item;
       }),
     );
   }
@@ -1046,7 +1061,6 @@ export class CourseService {
     return conditions ?? undefined;
   }
 
-  // TODO: repair last 2 functions
   private getColumnToSortBy(sort: CourseSortField) {
     switch (sort) {
       case CourseSortFields.author:
