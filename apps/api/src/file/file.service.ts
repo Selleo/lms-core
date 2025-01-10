@@ -2,6 +2,8 @@ import { BadRequestException, ConflictException, Inject, Injectable } from "@nes
 
 import { S3Service } from "src/s3/s3.service";
 
+import { MAX_FILE_SIZE, REDIS_TTL } from "./file.constants";
+
 import type { createCache } from "cache-manager";
 
 @Injectable()
@@ -12,14 +14,15 @@ export class FileService {
   ) {}
 
   async getFileUrl(fileKey: string): Promise<string> {
+    if (fileKey.startsWith("https://")) return fileKey;
+
     try {
       const cachedUrl = await this.cacheManager.get<string>(fileKey);
       if (cachedUrl) return cachedUrl;
 
       const signedUrl = await this.s3Service.getSignedUrl(fileKey);
-      // TODO: extract to config constant
-      const ttl = 59 * 60 * 1000;
-      await this.cacheManager.set(fileKey, signedUrl, ttl);
+
+      await this.cacheManager.set(fileKey, signedUrl, REDIS_TTL);
 
       return signedUrl;
     } catch (error) {
@@ -33,7 +36,6 @@ export class FileService {
       throw new BadRequestException("No file uploaded");
     }
 
-    const maxSize = 50 * 1024 * 1024; // 50MB
     const allowedMimeTypes = [
       "image/jpeg",
       "image/png",
@@ -43,9 +45,9 @@ export class FileService {
       "video/quicktime",
     ];
 
-    if (file.size > maxSize) {
+    if (file.size > MAX_FILE_SIZE) {
       throw new BadRequestException(
-        `File size exceeds the maximum allowed size of ${maxSize} bytes`,
+        `File size exceeds the maximum allowed size of ${MAX_FILE_SIZE} bytes`,
       );
     }
 

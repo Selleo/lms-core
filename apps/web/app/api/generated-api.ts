@@ -954,6 +954,7 @@ export interface GetLessonByIdResponse {
         description?: string | null;
         title: string;
         displayOrder?: number;
+        solutionExplanation: string | null;
         photoS3Key?: string | null;
         options?: {
           /** @format uuid */
@@ -967,7 +968,6 @@ export interface GetLessonByIdResponse {
           questionId?: string;
         }[];
         passQuestion: boolean | null;
-        solutionExplanation: string | null;
       }[];
       questionCount: number;
       correctAnswerCount: number | null;

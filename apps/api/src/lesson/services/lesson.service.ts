@@ -6,7 +6,6 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { EventBus } from "@nestjs/cqrs";
-import { and, desc, eq, sql } from "drizzle-orm";
 import { isNumber } from "lodash";
 
 import { DatabasePg } from "src/common";
@@ -14,13 +13,6 @@ import { QuizCompletedEvent } from "src/events";
 import { FileService } from "src/file/file.service";
 import { QuestionRepository } from "src/questions/question.repository";
 import { QuestionService } from "src/questions/question.service";
-import { QUESTION_TYPE } from "src/questions/schema/question.types";
-import {
-  questionAnswerOptions,
-  questions,
-  quizAttempts,
-  studentQuestionAnswers,
-} from "src/storage/schema";
 import { StudentLessonProgressService } from "src/studentLessonProgress/studentLessonProgress.service";
 
 import { LESSON_TYPES } from "../lesson.type";
@@ -29,12 +21,10 @@ import { LessonRepository } from "../repositories/lesson.repository";
 import type {
   AnswerQuestionBody,
   LessonShow,
-  OptionBody,
   QuestionBody,
   QuestionDetails,
 } from "../lesson.schema";
 import type { UUIDType } from "src/common";
-import type { QuestionType } from "src/questions/schema/question.types";
 
 @Injectable()
 export class LessonService {
@@ -72,102 +62,11 @@ export class LessonService {
       }
     }
 
-    const questionList: QuestionBody[] = await this.db
-      .select({
-        id: sql<UUIDType>`${questions.id}`,
-        type: sql<QuestionType>`${questions.type}`,
-        title: questions.title,
-        description: sql<string>`${questions.description}`,
-        solutionExplanation: sql<string | null>`CASE
-          WHEN ${lesson.quizCompleted} THEN ${questions.solutionExplanation} 
-          ELSE NULL 
-        END`,
-        photoS3Key: sql<string>`${questions.photoS3Key}`,
-        passQuestion: sql<boolean | null>`CASE
-          WHEN ${lesson.quizCompleted} THEN ${studentQuestionAnswers.isCorrect}
-          ELSE NULL END`,
-        displayOrder: sql<number>`${questions.displayOrder}`,
-        options: sql<OptionBody[]>`CASE
-          WHEN ${questions.type} in (${QUESTION_TYPE.BRIEF_RESPONSE}, ${
-            QUESTION_TYPE.DETAILED_RESPONSE
-          }) AND ${lesson.quizCompleted} THEN
-            ARRAY[json_build_object(
-              'id', ${studentQuestionAnswers.id},
-              'optionText', '',
-              'isCorrect', TRUE,
-              'displayOrder', 1,
-              'isStudentAnswer', TRUE,
-              'studentAnswer', ${studentQuestionAnswers.answer}->>'1'
-            )]
-          ELSE
-          (
-            SELECT ARRAY(
-              SELECT json_build_object(
-                'id', qao.id,
-                'optionText',  
-                  CASE 
-                    WHEN ${!lesson.quizCompleted} AND ${questions.type} = ${
-                      QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
-                    } THEN NULL
-                    ELSE qao.option_text
-                  END,
-                'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
-                'displayOrder',
-                  CASE
-                    WHEN ${lesson.quizCompleted} THEN qao.display_order
-                    ELSE NULL
-                  END,
-                'isStudentAnswer',
-                  CASE
-                    WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                    WHEN ${
-                      studentQuestionAnswers.answer
-                    }->>CAST(qao.display_order AS text) = qao.option_text AND
-                      ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
-                        QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
-                      })
-                      THEN TRUE
-                    WHEN EXISTS (
-                      SELECT 1
-                      FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                      WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
-                        AND  ${questions.type} NOT IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
-                          QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
-                        })
-                      THEN TRUE
-                    ELSE FALSE
-                  END,
-                'studentAnswer',  
-                  CASE
-                    WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                    ELSE ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
-                  END
-              )
-              FROM ${questionAnswerOptions} qao
-              WHERE qao.question_id = questions.id
-              ORDER BY
-                CASE
-                  WHEN ${questions.type} in (${
-                    QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
-                  }) AND ${!lesson.quizCompleted}
-                    THEN random()
-                  ELSE qao.display_order
-                END
-            )
-          )
-        END
-      `,
-      })
-      .from(questions)
-      .leftJoin(
-        studentQuestionAnswers,
-        and(
-          eq(studentQuestionAnswers.questionId, questions.id),
-          eq(studentQuestionAnswers.studentId, userId),
-        ),
-      )
-      .where(eq(questions.lessonId, id))
-      .orderBy(questions.displayOrder);
+    const questionList = await this.questionRepository.getQuestionsForLesson(
+      lesson.id,
+      lesson.quizCompleted,
+      userId,
+    );
 
     const questionListWithUrls: QuestionBody[] = await Promise.all(
       questionList.map(async (question) => {
@@ -187,22 +86,11 @@ export class LessonService {
     );
 
     if (isStudent && lesson.quizCompleted && isNumber(lesson.quizScore)) {
-      const [quizResult] = await this.db
-        .select({
-          score: sql<number>`${quizAttempts.score}`,
-          correctAnswerCount: sql<number>`${quizAttempts.correctAnswers}`,
-          wrongAnswerCount: sql<number>`${quizAttempts.wrongAnswers}`,
-        })
-        .from(quizAttempts)
-        .where(
-          and(
-            eq(quizAttempts.lessonId, id),
-            eq(quizAttempts.userId, userId),
-            eq(quizAttempts.score, lesson.quizScore),
-          ),
-        )
-        .orderBy(desc(quizAttempts.createdAt))
-        .limit(1);
+      const [quizResult] = await this.lessonRepository.getQuizResult(
+        lesson.id,
+        lesson.quizScore,
+        userId,
+      );
 
       const quizDetails: QuestionDetails = {
         questions: questionListWithUrls,
@@ -306,7 +194,7 @@ export class LessonService {
         throw new ConflictException(
           "Quiz evaluation failed, problem with question: " +
             error?.message +
-            " problem: " +
+            " problem is: " +
             error?.response?.error,
         );
       }

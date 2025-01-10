@@ -7,6 +7,7 @@ import {
   courses,
   lessons,
   questions,
+  quizAttempts,
   studentCourses,
   studentLessonProgress,
 } from "src/storage/schema";
@@ -41,21 +42,21 @@ export class LessonRepository {
         isFreemium: sql<boolean>`${chapters.isFreemium}`,
         isEnrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NULL THEN FALSE ELSE TRUE END`,
         nextLessonId: sql<string | null>`
-        COALESCE(
-          (
-            SELECT l2.id
-            FROM ${lessons} l2
-            JOIN ${chapters} c ON c.id = l2.chapter_id
-            LEFT JOIN ${studentLessonProgress} slp ON slp.lesson_id = l2.id AND slp.student_id = ${userId}
-            WHERE c.course_id = ${chapters.courseId}
-              AND l2.id != ${lessons.id}
-              AND slp.completed_at IS NULL
-            ORDER BY c.display_order, l2.display_order
-            LIMIT 1
-          ),
-          NULL
-        )
-      `,
+          COALESCE(
+            (
+              SELECT l2.id
+              FROM ${lessons} l2
+              JOIN ${chapters} c ON c.id = l2.chapter_id
+              LEFT JOIN ${studentLessonProgress} slp ON slp.lesson_id = l2.id AND slp.student_id = ${userId}
+              WHERE c.course_id = ${chapters.courseId}
+                AND l2.id != ${lessons.id}
+                AND slp.completed_at IS NULL
+              ORDER BY c.display_order, l2.display_order
+              LIMIT 1
+            ),
+            NULL
+          )
+        `,
       })
       .from(lessons)
       .leftJoin(chapters, eq(chapters.id, lessons.chapterId))
@@ -242,6 +243,25 @@ export class LessonRepository {
         and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
       )
       .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
+  }
+
+  async getQuizResult(lessonId: UUIDType, quizScore: number, userId: UUIDType) {
+    return await this.db
+      .select({
+        score: sql<number>`${quizAttempts.score}`,
+        correctAnswerCount: sql<number>`${quizAttempts.correctAnswers}`,
+        wrongAnswerCount: sql<number>`${quizAttempts.wrongAnswers}`,
+      })
+      .from(quizAttempts)
+      .where(
+        and(
+          eq(quizAttempts.lessonId, lessonId),
+          eq(quizAttempts.userId, userId),
+          eq(quizAttempts.score, quizScore),
+        ),
+      )
+      .orderBy(desc(quizAttempts.createdAt))
+      .limit(1);
   }
 
   //   async retireQuizProgress(

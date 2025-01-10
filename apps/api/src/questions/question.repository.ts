@@ -9,14 +9,119 @@ import {
   studentQuestionAnswers,
 } from "src/storage/schema";
 
+import { QUESTION_TYPE, type QuestionType } from "./schema/question.types";
+
 import type { AnswerQuestionSchema, QuestionSchema } from "./schema/question.schema";
-import type { QuestionType } from "./schema/question.types";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
+import type { OptionBody, QuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
 
 @Injectable()
 export class QuestionRepository {
   constructor(@Inject("DB") private readonly db: DatabasePg) {}
+
+  async getQuestionsForLesson(
+    lessonId: UUIDType,
+    isCompleted: boolean,
+    userId: UUIDType,
+  ): Promise<QuestionBody[]> {
+    return await this.db
+      .select({
+        id: sql<UUIDType>`${questions.id}`,
+        type: sql<QuestionType>`${questions.type}`,
+        title: questions.title,
+        description: sql<string>`${questions.description}`,
+        solutionExplanation: sql<string | null>`CASE
+              WHEN ${isCompleted} THEN ${questions.solutionExplanation} 
+              ELSE NULL 
+            END`,
+        photoS3Key: sql<string>`${questions.photoS3Key}`,
+        passQuestion: sql<boolean | null>`CASE
+              WHEN ${isCompleted} THEN ${studentQuestionAnswers.isCorrect}
+              ELSE NULL END`,
+        displayOrder: sql<number>`${questions.displayOrder}`,
+        options: sql<OptionBody[]>`CASE
+              WHEN ${questions.type} in (${QUESTION_TYPE.BRIEF_RESPONSE}, ${
+                QUESTION_TYPE.DETAILED_RESPONSE
+              }) AND ${isCompleted} THEN
+                ARRAY[json_build_object(
+                  'id', ${studentQuestionAnswers.id},
+                  'optionText', '',
+                  'isCorrect', TRUE,
+                  'displayOrder', 1,
+                  'isStudentAnswer', TRUE,
+                  'studentAnswer', ${studentQuestionAnswers.answer}->>'1'
+                )]
+              ELSE
+              (
+                SELECT ARRAY(
+                  SELECT json_build_object(
+                    'id', qao.id,
+                    'optionText',  
+                      CASE 
+                        WHEN ${!isCompleted} AND ${questions.type} = ${
+                          QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                        } THEN NULL
+                        ELSE qao.option_text
+                      END,
+                    'isCorrect', CASE WHEN ${isCompleted} THEN qao.is_correct ELSE NULL END,
+                    'displayOrder',
+                      CASE
+                        WHEN ${isCompleted} THEN qao.display_order
+                        ELSE NULL
+                      END,
+                    'isStudentAnswer',
+                      CASE
+                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                        WHEN ${
+                          studentQuestionAnswers.answer
+                        }->>CAST(qao.display_order AS text) = qao.option_text AND
+                          ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                            QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                          })
+                          THEN TRUE
+                        WHEN EXISTS (
+                          SELECT 1
+                          FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                          WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
+                            AND  ${questions.type} NOT IN (${
+                              QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
+                            }, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})
+                          THEN TRUE
+                        ELSE FALSE
+                      END,
+                    'studentAnswer',  
+                      CASE
+                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                        ELSE ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
+                      END
+                  )
+                  FROM ${questionAnswerOptions} qao
+                  WHERE qao.question_id = questions.id
+                  ORDER BY
+                    CASE
+                      WHEN ${questions.type} in (${
+                        QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
+                      }) AND ${!isCompleted}
+                        THEN random()
+                      ELSE qao.display_order
+                    END
+                )
+              )
+            END
+          `,
+      })
+      .from(questions)
+      .leftJoin(
+        studentQuestionAnswers,
+        and(
+          eq(studentQuestionAnswers.questionId, questions.id),
+          eq(studentQuestionAnswers.studentId, userId),
+        ),
+      )
+      .where(eq(questions.lessonId, lessonId))
+      .orderBy(questions.displayOrder);
+  }
 
   async getQuestions(
     answerQuestion: AnswerQuestionSchema,
