@@ -38,6 +38,7 @@ export const getUserAnswers = (
     matchWords: prepareAnswers(groupedQuestions.match_words, "options"),
     scaleQuestions: prepareAnswers(groupedQuestions.scale_1_5, "options"),
     briefResponses: prepareAnswers(groupedQuestions.brief_response, "open"),
+    detailedResponses: prepareAnswers(groupedQuestions.detailed_response, "open"),
   };
 };
 
@@ -57,6 +58,7 @@ const groupQuestionsByType = (questions: Questions) => {
     match_words: questions.filter(({ type }) => type === "match_words"),
     scale_1_5: questions.filter(({ type }) => type === "scale_1_5"),
     brief_response: questions.filter(({ type }) => type === "brief_response"),
+    detailed_response: questions.filter(({ type }) => type === "detailed_response"),
   };
 };
 
@@ -94,8 +96,9 @@ const prepareAnswers = (questions: Questions, mode: "options" | "open") => {
       }
 
       if (mode === "open") {
-        const studentAnswer = question.options?.[0]?.optionText || "";
+        const studentAnswer = question.options?.[0]?.studentAnswer || "";
         const isStudentAnswer = question.options?.[0]?.isStudentAnswer || false;
+
         result[question.id] = isStudentAnswer ? studentAnswer : "";
       }
 

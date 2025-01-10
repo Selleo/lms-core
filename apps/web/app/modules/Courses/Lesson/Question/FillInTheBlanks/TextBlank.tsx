@@ -41,7 +41,7 @@ export const TextBlank = ({
     {
       "border-b-success-500 text-success-500": isCorrectAnswer && studentAnswer?.isStudentAnswer,
       "border-b-error-500 text-error-500":
-        studentAnswer?.isCorrect && !studentAnswer?.isStudentAnswer,
+        typeof studentAnswer?.isStudentAnswer === "boolean" && !studentAnswer?.isStudentAnswer,
     },
   );
 
@@ -53,6 +53,7 @@ export const TextBlank = ({
       key={index}
       type="text"
       className={textBlankClasses}
+      {...(studentAnswer?.studentAnswer && { defaultValue: studentAnswer.studentAnswer })}
       disabled={!!isDisabled}
       {...register(`fillInTheBlanksText.${questionId}.${formFieldId}`)}
     />

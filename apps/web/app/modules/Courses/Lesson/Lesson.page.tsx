@@ -46,6 +46,11 @@ export default function LessonPage() {
   }
 
   function handleNextLesson(currentLessonId: string, chapters: Chapters) {
+    if (isLast) {
+      navigate(`/course/${courseId}`);
+      return;
+    }
+
     for (const chapter of chapters) {
       const lessonIndex = findCurrentLessonIndex(chapter.lessons, currentLessonId);
       if (lessonIndex !== -1) {

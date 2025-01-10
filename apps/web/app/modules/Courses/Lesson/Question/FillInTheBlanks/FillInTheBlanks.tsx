@@ -12,9 +12,6 @@ type FillInTheBlanksProps = {
 };
 
 export const FillInTheBlanks = ({ question, isCompleted }: FillInTheBlanksProps) => {
-  const solutionExplanation =
-    "solutionExplanation" in question ? (question.solutionExplanation as string) : null;
-
   if (!question.description) return null;
 
   return (
@@ -34,10 +31,10 @@ export const FillInTheBlanks = ({ question, isCompleted }: FillInTheBlanksProps)
           );
         }}
       />
-      {isCompleted && !!solutionExplanation && question.passQuestion && (
+      {isCompleted && !!question?.solutionExplanation && (
         <div>
           <span className="body-base-md text-error-700">Correct sentence:</span>
-          <Viewer content={solutionExplanation} />
+          <Viewer content={question.solutionExplanation} />
         </div>
       )}
     </Card>

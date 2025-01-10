@@ -30,19 +30,18 @@ export const LessonContent = ({
   isFirstLesson,
   isLastLesson,
 }: LessonContentProps) => {
-  //TODO: for demo purposes
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const { mutate: markLessonAsCompleted } = useMarkLessonAsCompleted();
 
   useEffect(() => {
     if (lesson.type === "video") setIsNextDisabled(true);
-  }, [lesson.type]);
+    if (lesson.type === "quiz") setIsNextDisabled(!lesson.quizCompleted);
+  }, [lesson.quizCompleted, lesson.type]);
 
   const Content = () =>
     match(lesson.type)
       .with("text", () => <Viewer variant="lesson" content={lesson?.description ?? ""} />)
-      .with("quiz", () => <Quiz lesson={lesson} handleNext={handleNext} />)
+      .with("quiz", () => <Quiz lesson={lesson} />)
       .with("video", () => (
         <Video
           url={lesson.fileUrl}
@@ -79,6 +78,7 @@ export const LessonContent = ({
             )}
 
             <Button
+              disabled={isNextDisabled}
               className="gap-x-1"
               // disabled={isNextDisabled}
               onClick={handleMarkLessonAsComplete}

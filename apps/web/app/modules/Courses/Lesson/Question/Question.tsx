@@ -59,7 +59,7 @@ export const Question = ({ question, isCompleted }: QuestionProps) => {
       return <PhotoQuestionMultipleChoice question={question} isCompleted={isCompleted} />;
 
     case isTrueOrFalse:
-      return <TrueOrFalse question={question} />;
+      return <TrueOrFalse question={question} isCompleted={isCompleted} />;
 
     default:
       return null;

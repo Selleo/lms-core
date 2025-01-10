@@ -2,6 +2,7 @@ import { useParams } from "@remix-run/react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { useSubmitQuiz } from "~/api/mutations";
+import { queryClient } from "~/api/queryClient";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Questions } from "~/modules/Courses/Lesson/Questions";
@@ -12,7 +13,6 @@ import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type QuizProps = {
   lesson: GetLessonByIdResponse["data"];
-  handleNext: () => void;
 };
 
 function transformData(input: TQuestionsForm) {
@@ -179,7 +179,7 @@ function transformData(input: TQuestionsForm) {
   return result;
 }
 
-export const Quiz = ({ lesson, handleNext }: QuizProps) => {
+export const Quiz = ({ lesson }: QuizProps) => {
   const { lessonId = "" } = useParams();
 
   const questions = lesson.quizDetails?.questions;
@@ -190,7 +190,7 @@ export const Quiz = ({ lesson, handleNext }: QuizProps) => {
   });
 
   const submitQuiz = useSubmitQuiz({
-    handleOnSuccess: handleNext,
+    handleOnSuccess: () => queryClient.invalidateQueries({ queryKey: ["lesson", lessonId] }),
   });
 
   if (!questions?.length) return null;
@@ -207,7 +207,11 @@ export const Quiz = ({ lesson, handleNext }: QuizProps) => {
         onSubmit={methods.handleSubmit(handleOnSubmit)}
       >
         <Questions questions={questions} isQuizCompleted={lesson.quizCompleted} />
-        <Button type="submit" className="flex gap-x-2 items-center self-end">
+        <Button
+          disabled={!!lesson.quizCompleted}
+          type="submit"
+          className="flex gap-x-2 items-center self-end"
+        >
           <span>Submit</span>
           <Icon name="ArrowRight" className="w-4 h-auto" />
         </Button>
