@@ -1,0 +1,767 @@
+{
+  "common": {
+    "button": {
+      "save": "Zapisz",
+      "delete": "Usuń",
+      "create": "Utwórz",
+      "cancel": "Anuluj",
+      "back": "Wstecz",
+      "proceed": "Kontynuuj",
+      "add": "Dodaj",
+      "close": "Zamknij",
+      "goToDashboard": "Przejdź do Panelu",
+      "goBack": "Wróć",
+      "clearAll": "Wyczyść wszystko"
+    },
+    "roles": {
+      "admin": "Administrator",
+      "teacher": "Nauczyciel",
+      "student": "Uczeń"
+    },
+    "error": {
+      "somethingWentWrong": "Ups! Coś poszło nie tak."
+    },
+    "other": {
+      "active": "Aktywny",
+      "archived": "Zarchiwizowany",
+      "selected": "Wybrany",
+      "allStatuses": "Wszystkie statusy",
+      "draft": "Szkic",
+      "all": "Wszystko",
+      "search": "Szukaj",
+      "published": "Opublikowany",
+      "publish": "Publikuj",
+      "uploadingImage": "Przesyłanie obrazu...",
+      "copyUrl": "Adres URL został skopiowany do schowka"
+    }
+  },
+  "uploadFile": {
+    "header": "Kliknij, aby przesłać",
+    "subHeader": "lub przeciągnij i upuść",
+    "replace": "Kliknij, aby zastąpić",
+    "toast": {
+      "fileUploadedSuccessfully": "Plik został pomyślnie przesłany"
+    }
+  },
+  "adminScorm": {
+    "header": "Prześlij SCORM",
+    "subHeader": "Prześlij swój plik SCORM w formacie .zip.",
+    "field": {
+      "price": "Cena",
+      "title": "Tytuł kursu",
+      "category": "Kategoria",
+      "description": "Opis",
+      "thumbnail": "Prześlij miniaturę"
+    },
+    "placeholder": {
+      "price": "Kwota",
+      "title": "Wprowadź tytuł...",
+      "category": "Wybierz kategorię",
+      "description": "Podaj opis kursu..."
+    },
+    "other": {
+      "setUpCourse": "Skonfiguruj kurs",
+      "provideDetails": "Podaj szczegóły, aby skonfigurować nowy kurs",
+      "uploadFileHeader": "Kliknij, aby przesłać lub przeciągnij i upuść",
+      "uploadFileBody": "Plik SCORM w formacie .zip (max. 500MB)",
+      "pricing": "Cennik",
+      "status": "Status",
+      "setUpPricing": "Ustaw cenę za kurs",
+      "setUpStatus": "Ustaw status kursu",
+      "noDescription": "Brak opisu.",
+      "untitled": "Bez tytułu",
+      "free": "Darmowy",
+      "paidCourse": "Kurs płatny",
+      "freeCourseBody": "Uczniowie mogą zapisać się i uzyskać dostęp do treści kursu bez płacenia.",
+      "paidCourseBody": "Uczniowie mogą kupić i uzyskać dostęp do treści kursu. Po wybraniu, możesz określić walutę i cenę.",
+      "draftBody": "Uczniowie nie mogą zakupić ani zapisać się na ten kurs. Dla tych, którzy już są zapisani, kurs nie będzie widoczny na liście kursów studenta.",
+      "publishBody": "Uczniowie mogą zakupić, zapisać się na kurs i uzyskać dostęp do jego treści. Po zapisaniu, kurs zostanie wyświetlony na Panelu Studenta.",
+      "charactersLeft": "pozostałe znaki"
+    },
+    "button": {
+      "back": "Wstecz",
+      "status": "Status",
+      "creatingCourse": "Tworzenie kursu...",
+      "createCourse": "Utwórz kurs"
+    },
+    "toast": {
+      "scormUploadedSuccessfully": "Pakiet SCORM został pomyślnie przesłany"
+    }
+  },
+
+  "studentChapterCardView": {
+    "other": {
+      "lessonProgress": "Postęp lekcji:",
+      "quizProgress": "Postęp quizu:"
+    }
+  },
+  "navigationSideBar": {
+    "settings": "Ustawienia",
+    "logout": "Wyloguj",
+    "panel": "Panel",
+    "menu": "Menu",
+    "close": "Zamknij",
+    "profile": "Profil",
+    "dashboard": "Pulpit",
+    "courses": "Kursy",
+    "myCourses": "Moje kursy",
+    "categories": "Kategorie",
+    "users": "Użytkownicy",
+    "browseCourses": "Przeglądaj kursy"
+  },
+  "changeUserEmailView": {
+    "header": "Zmień dane użytkownika",
+    "subHeader": "Zaktualizuj swoje dane użytkownika tutaj.",
+    "field": {
+      "email": "Email"
+    },
+    "validation": {
+      "email": "Email jest wymagany"
+    }
+  },
+  "mostPopularCoursesView": {
+    "header": "Najpopularniejsze",
+    "subHeader": "Twoje 5 najlepszych kursów",
+    "other": {
+      "noData": "Brak dostępnych danych"
+    }
+  },
+  "enrollmentChartView": {
+    "header": "Rejestracje",
+    "subHeader": "Liczba rejestracji w 2024 roku",
+    "other": {
+      "noData": "Brak danych",
+      "enrollments": "Rejestracje"
+    }
+  },
+  "createPasswordView": {
+    "header": "Utwórz nowe hasło",
+    "subHeader": "Wprowadź nowe hasło dla",
+    "field": {
+      "password": "Hasło",
+      "confirmPassword": "Potwierdź hasło"
+    },
+    "validation": {
+      "passwordMinLength": "Hasło musi mieć co najmniej 8 znaków",
+      "passwordsDontMatch": "Hasła się nie zgadzają"
+    },
+    "button": {
+      "changePassword": "Zmień hasło"
+    }
+  },
+  "changePasswordView": {
+    "header": "Zmień hasło",
+    "subHeader": "Zaktualizuj swoje hasło tutaj.",
+    "field": {
+      "oldPassword": "Stare hasło",
+      "newPassword": "Nowe hasło"
+    },
+    "validation": {
+      "oldPassword": "Stare hasło jest wymagane",
+      "newPassword": "Nowe hasło jest wymagane"
+    },
+    "toast": {
+      "passwordChangedSuccessfully": "Hasło zostało zmienione pomyślnie",
+      "passwordCreatedSuccessfully": "Hasło zostało utworzone pomyślnie"
+    }
+  },
+  "teacherView": {
+    "button": {
+      "collapse": "Zwiń",
+      "showMore": "Pokaż więcej"
+    },
+    "breadcrumbs": {
+      "dashboard": "Panel"
+    },
+    "other": {
+      "about": "O",
+      "contact": "Kontakt",
+      "courses": "Kursy",
+      "title": "Tytuł"
+    }
+  },
+  "changeUserInformationView": {
+    "header": "Zmień dane użytkownika",
+    "subHeader": "Zaktualizuj swoje dane biograficzne tutaj.",
+    "toast": {
+      "userUpdatedSuccessfully": "Użytkownik zaktualizowany pomyślnie",
+      "userDetailsUpdatedSuccessfully": "Szczegóły użytkownika zaktualizowane pomyślnie",
+      "deletedSelectedUsersSuccessfully": "Wybrani użytkownicy zostali pomyślnie usunięci"
+    },
+    "field": {
+      "description": "Opis",
+      "email": "Email",
+      "phoneNumber": "Numer telefonu",
+      "jobTitle": "Stanowisko"
+    },
+    "placeholder": {
+      "description": "Twój opis",
+      "phoneNumber": "Twój numer telefonu",
+      "jobTitle": "Twoje stanowisko"
+    }
+  },
+  "clientStatisticsView": {
+    "header": "Witaj ponownie,",
+    "button": {
+      "searchCourses": "Szukaj kursów",
+      "continue": "Kontynuuj",
+      "start": "Rozpocznij",
+      "readMore": "Czytaj więcej",
+      "tryAgain": "Spróbuj ponownie"
+    },
+    "other": {
+      "completedCourses": "Zakończone kursy",
+      "startedCourses": "Rozpoczęte kursy",
+      "correctAnswers": "Poprawne odpowiedzi",
+      "wrongAnswers": "Błędne odpowiedzi",
+      "avgQuizScorePercentage": "Średni wynik quizu",
+      "avgQuizCompletitionPercentage": "Średni procent ukończenia kursu",
+      "noData": "Brak danych",
+      "courses": "Kursy",
+      "lessons": "Lekcje",
+      "completed": "Zakończone",
+      "started": "Rozpoczęte",
+      "noDataAvaiable": "Brak dostępnych danych",
+      "rates": "Oceny",
+      "numberOf": "Liczba",
+      "noLessonsToContiue": "Brak lekcji do kontynuacji.",
+      "continueLearning": "Kontynuuj naukę w:"
+    }
+  },
+  "profilWithCalendarView": {
+    "header": "Mój profil",
+    "button": {
+      "settings": "Ustawienia"
+    },
+    "other": {
+      "dailyStreak": "Codzienny ciąg"
+    }
+  },
+  "adminStatisticsView": {
+    "header": "Witaj ponownie,",
+    "other": {
+      "courseCompletitionPercentage": "Procent ukończenia kursu",
+      "conversionsAfterFreemiumLessson": "Konwersje po lekcji freemium",
+      "avgQuizScore": "Średni wynik quizu",
+      "purchasedCourse": "Kupiony kurs",
+      "remainedOnFreemium": "Pozostało na freemium",
+      "correct": "Poprawne",
+      "incorrect": "Błędne",
+      "completed": "Ukończone",
+      "enrolled": "Zapisane",
+      "noData": "Brak danych"
+    }
+  },
+  "adminCoursesView": {
+    "filters": {
+      "placeholder": {
+        "title": "Szukaj po tytule ...",
+        "categories": "Kategorie",
+        "states": "Stany"
+      },
+      "other": {
+        "draft": "Szkic",
+        "published": "Opublikowane"
+      }
+    },
+    "field": {
+      "title": "Tytuł",
+      "author": "Autor",
+      "category": "Kategoria",
+      "price": "Cena",
+      "state": "Stan",
+      "status": "Status",
+      "createdAt": "Utworzono"
+    },
+    "other": {
+      "selected": "Wybrany"
+    },
+    "button": {
+      "uploadScorm": "Prześlij SCORM",
+      "createNew": "Utwórz nowy",
+      "deleteSelected": "Usuń wybrane"
+    }
+  },
+  "adminCategoriesView": {
+    "filters": {
+      "placeholder": {
+        "title": "Szukaj po tytule ..."
+      }
+    },
+    "field": {
+      "title": "Tytuł",
+      "status": "Status",
+      "createdAt": "Utworzono"
+    },
+    "button": {
+      "createNew": "Utwórz nowy",
+      "clearAll": "Wyczyść wszystko",
+      "deleteSelected": "Usuń wybrane"
+    }
+  },
+  "adminCategoryView": {
+    "header": "Utwórz nową kategorię",
+    "subHeader": "Wprowadź tytuł dla swojej nowej kategorii. Kliknij zapisz, gdy skończysz.",
+    "editCategoryHeader": "Informacje o kategorii",
+    "field": {
+      "title": "Tytuł",
+      "status": "Status"
+    },
+    "button": {
+      "createCategory": "Utwórz kategorię"
+    },
+    "toast": {
+      "categoryCreatedSuccessfully": "Kategoria została utworzona pomyślnie",
+      "categoryUpdatedSuccessfully": "Kategoria została zaktualizowana pomyślnie"
+    },
+    "error": {
+      "categoryNotFound": "Kategoria nie została znaleziona",
+      "categoryIdNotFound": "ID kategorii nie zostało znalezione"
+    }
+  },
+  "adminUsersView": {
+    "filters": {
+      "placeholder": {
+        "searchByKeyword": "Szukaj po słowie kluczowym...",
+        "roles": "Role"
+      }
+    },
+    "field": {
+      "firstName": "Imię",
+      "lastName": "Nazwisko",
+      "email": "Email",
+      "role": "Rola",
+      "status": "Status",
+      "createdAt": "Utworzono"
+    },
+    "other": {
+      "selected": "Wybrany"
+    },
+    "button": {
+      "createNew": "Utwórz nowego",
+      "deleteSelected": "Usuń wybrane"
+    }
+  },
+  "adminUserView": {
+    "header": "Utwórz nowego użytkownika",
+    "subHeader": "Wypełnij dane, aby utworzyć nowego użytkownika. Kliknij zapisz, gdy skończysz.",
+    "editUserHeader": "Informacje o użytkowniku",
+    "placeholder": {
+      "role": "Wybierz rolę"
+    },
+    "field": {
+      "firstName": "Imię",
+      "lastName": "Nazwisko",
+      "email": "Email",
+      "role": "Rola",
+      "status": "Status"
+    },
+    "toast": {
+      "userCreatedSuccessfully": "Użytkownik utworzony pomyślnie"
+    },
+    "button": {
+      "createUser": "Utwórz użytkownika"
+    },
+    "error": {
+      "userNotFound": "Użytkownik nie został znaleziony"
+    }
+  },
+  "enrollCourseView": {
+    "toast": {
+      "unenrollCourseSuccessfully": "Pomyślnie wypisano z kursu"
+    }
+  },
+  "paymentView": {
+    "toast": {
+      "successfull": "Płatność zakończona pomyślnie",
+      "failed": "Nie udało się utworzyć płatności",
+      "somethingWentWrong": "Coś poszło nie tak"
+    },
+    "other": {
+      "buyFor": "Kup dla",
+      "enrollCourse": "Zapisz na kurs"
+    }
+  },
+  "adminCourseView": {
+    "common": {
+      "settings": "Ustawienia",
+      "curriculum": "Program nauczania",
+      "status": "Status",
+      "pricing": "Cennik",
+      "preview": "Podgląd"
+    },
+    "toast": {
+      "createCourseSuccessfully": "Kurs utworzony pomyślnie",
+      "courseUpdatedSuccessfully": "Kurs zaktualizowany pomyślnie"
+    },
+    "settings": {
+      "breadcrumbs": {
+        "back": "Wstecz",
+        "myCourses": "Moje kursy",
+        "createNew": "Utwórz nowy"
+      },
+      "button": {
+        "removeThumbnail": "Usuń miniaturę"
+      },
+      "sideSection": {
+        "header": "Podgląd karty",
+        "subHeader": "Tak będzie wyglądał twój kurs dla studentów.",
+        "button": {
+          "enroll": "Zapisz"
+        },
+        "other": {
+          "noDescription": "Brak opisu.",
+          "untitled": "Bez tytułu"
+        }
+      },
+      "field": {
+        "title": "Tytuł kursu",
+        "category": "Kategoria",
+        "description": "Opis",
+        "thumbnail": "Miniatura"
+      },
+      "placeholder": {
+        "title": "Wprowadź tytuł",
+        "category": "Wybierz kategorię",
+        "description": "Podaj opis kursu..."
+      },
+      "other": {
+        "charactersLeft": "Pozostało znaków",
+        "reachedCharactersLimit": "Osiągnięto limit znaków."
+      },
+      "header": "Utwórz nowy kurs",
+      "subHeader": "Podaj szczegóły, aby utworzyć nowy kurs. Będziesz miał więcej opcji dostosowania później.",
+      "editHeader": "Podstawowe ustawienia",
+      "editSubHeader": "Wypełnij dane, aby utworzyć nowy kurs."
+    },
+    "curriculum": {
+      "emptyState": {
+        "header": "Dodaj treść do swojego rozdziału",
+        "subHeader": "Użyj panelu po lewej, aby utworzyć nowe lub zaktualizować istniejące rozdziały"
+      },
+      "other": {
+        "chapter": "Rozdział",
+        "lesson": "Lekcja",
+        "edit": "Edytuj",
+        "create": "Utwórz",
+        "removeContentQuestionBody": "To usunie pytanie z quizu",
+        "removeContentBody": "To usunie wszystkie dane, w tym przesłane media.",
+        "removeVideoLesson": "Czy na pewno chcesz usunąć tę lekcję wideo z rozdziału?",
+        "removePresentationLesson": "Czy na pewno chcesz usunąć tę lekcję prezentacyjną z rozdziału?",
+        "removeTextLesson": "Czy na pewno chcesz usunąć tę lekcję tekstową z rozdziału?",
+        "removeQuizLesson": "Czy na pewno chcesz usunąć tę lekcję quizową z rozdziału?",
+        "removeChapter": "Czy na pewno chcesz usunąć ten rozdział?",
+        "removeQuestion": "Czy na pewno chcesz usunąć pytanie?",
+        "removeContent": "Czy na pewno chcesz usunąć treść?"
+      },
+      "chapter": {
+        "button": {
+          "addChapter": "Dodaj rozdział"
+        },
+        "toast": {
+          "chapterCreatedSuccessfully": "Rozdział utworzony pomyślnie",
+          "chapterUpdatedSuccessfully": "Rozdział zaktualizowany pomyślnie",
+          "chapterDisplayOrderUpdatedSuccessfully": "Kolejność wyświetlania rozdziałów została pomyślnie zaktualizowana",
+          "errorWhileUpdating": "Wystąpił błąd podczas aktualizacji.",
+          "unexpectedError": "Wystąpił nieoczekiwany błąd."
+        },
+        "field": {
+          "title": "Tytuł"
+        },
+        "other": {
+          "freemium": "Freemium",
+          "freemiumToolTip": "Studenci mogą uzyskać dostęp do rozdziałów freemium bez zapisywania się na kurs."
+        }
+      },
+      "lesson": {
+        "button": {
+          "addLesson": "Dodaj lekcję",
+          "addQuestion": "Dodaj pytanie",
+          "addOption": "Dodaj opcję",
+          "deleteQuestion": "Usuń pytanie",
+          "addWords": "Dodaj słowa"
+        },
+        "breadcrumbs": {
+          "back": "Wstecz"
+        },
+        "validation": {
+          "optionTextRequired": "Tekst opcji jest wymagany",
+          "atLeastOneOptionRequired": "Wymagana jest przynajmniej jedna opcja",
+          "imageRequired": "Obrazek jest wymagany",
+          "descriptionLength": "Opis musi mieć co najmniej 10 znaków.",
+          "atLeastOneOptionCorrect": "Przynajmniej jedna opcja musi być oznaczona jako poprawna.",
+          "allOptionsCorrect": "Wszystkie opcje muszą być poprawne"
+        },
+        "toast": {
+          "lessonDisplayOrderUpdatedSuccessfully": "Kolejność wyświetlania lekcji została pomyślnie zaktualizowana",
+          "errorWhileUpdating": "Wystąpił błąd podczas aktualizacji.",
+          "unexpectedError": "Wystąpił nieoczekiwany błąd.",
+          "lessonCreatedSuccessfully": "Lekcja utworzona pomyślnie",
+          "fileLessonCreatedSuccessfully": "Plik utworzony pomyślnie",
+          "textLessonCreatedSuccessfully": "Blok tekstowy utworzony pomyślnie",
+          "quizLessonCreatedSuccessfully": "Quiz utworzony pomyślnie",
+          "lessonUpdatedSuccessfully": "Lekcja zaktualizowana pomyślnie",
+          "textLessonUpdatedSuccessfully": "Blok tekstowy zaktualizowany pomyślnie",
+          "fileLessonUpdatedSuccessfully": "Plik zaktualizowany pomyślnie",
+          "questionOptionsUpdatedSuccessfully": "Opcje pytania zostały pomyślnie zaktualizowane"
+        },
+        "field": {
+          "title": "Tytuł",
+          "description": "Opis",
+          "video": "Prześlij wideo",
+          "questions": "Pytania",
+          "options": "Opcje",
+          "image": "Obrazek",
+          "type": "Typ",
+          "words": "Słowa",
+          "sentence": "Zdanie"
+        },
+        "placeholder": {
+          "title": "Podaj tytuł lekcji...",
+          "fileDescription": "Podaj opis dla {{type}}...",
+          "option": "Opcja",
+          "matchedWords": "Dopasowane słowa",
+          "singleChoice": "Pojedynczy wybór",
+          "multipleChoice": "Wielokrotny wybór",
+          "enterWord": "Wprowadź słowo"
+        },
+        "other": {
+          "chooseType": "Wybierz typ",
+          "text": "Tekst",
+          "video": "Wideo",
+          "quiz": "Quiz",
+          "correct": "Poprawna",
+          "true": "Prawda",
+          "false": "Fałsz",
+          "option": "Opcja",
+          "presentation": "Prezentacja",
+          "singleChoice": "Pojedynczy wybór",
+          "multipleChoice": "Wielokrotny wybór",
+          "matchWords": "Dopasowanie",
+          "trueOrFalse": "Prawda/fałsz",
+          "fillInTheBlanks": "Uzupełnij luki",
+          "photoQuestion": "Pytanie z obrazkiem",
+          "fillInTheBlanksText": "Uzupełnij tekst",
+          "briefResponse": "Krótka odpowiedź",
+          "detailedResponse": "Odpowiedź rozwinięta",
+          "scale1_5": "Skala 1 do 5",
+          "selectQuestionType": "Wybierz typ pytania",
+          "textLessonDescription": "Ten typ pozwala na tworzenie treści tekstowych za pomocą edytora tekstu.",
+          "videoLessonDescription": "Wybierz ten typ, jeśli chcesz umieścić pliki wideo, takie jak MP4.",
+          "presentationLessonDescription": "Wybierz ten typ, jeśli chcesz umieścić pliki prezentacji, takie jak PPTX.",
+          "quizLessonDescription": "Ten typ pozwala na tworzenie quizów w ramach kursu z różnymi rodzajami pytań.",
+          "leaveContentHeader": "Czy na pewno chcesz opuścić ten edytor pytań?",
+          "leaveContentBody": "Spowoduje to utratę niezapisanych postępów"
+        }
+      }
+    },
+    "status": {
+      "header": "Status",
+      "subHeader": "Ustaw stan kursu",
+      "draftHeader": "Szkic",
+      "draftBody": "Studenci nie mogą zakupić ani zapisać się na ten kurs. Dla tych, którzy już się zapisali, kurs nie będzie widoczny na ich liście kursów.",
+      "publishedHeader": "Opublikowany",
+      "publishedBody": "Studenci mogą zakupić, zapisać się i uzyskać dostęp do treści kursu. Po zapisaniu kurs będzie widoczny na ich dashboardzie."
+    },
+    "pricing": {
+      "header": "Cennik",
+      "subHeader": "Ustaw cenę za kurs",
+      "freeCourseHeader": "Darmowy kurs",
+      "freeCourseBody": "Studenci mogą zapisać się na kurs i uzyskać dostęp do jego treści bez opłat.",
+      "paidCourseHeader": "Płatny kurs",
+      "paidCourseBody": "Studenci mogą zakupić kurs i uzyskać dostęp do jego treści. Po wybraniu możesz określić walutę i cenę.",
+      "field": {
+        "price": "Cena"
+      }
+    }
+  },
+  "registerView": {
+    "header": "Rejestracja",
+    "subHeader": "Wprowadź dane, aby utworzyć konto",
+    "field": {
+      "firstName": "Imię",
+      "lastName": "Nazwisko",
+      "email": "Email",
+      "password": "Hasło"
+    },
+    "other": {
+      "allreadyHaveAccount": "Masz już konto?"
+    },
+    "button": {
+      "createAccount": "Utwórz konto",
+      "signIn": "Zaloguj się"
+    },
+    "validation": {
+      "firstName": "Imię jest wymagane",
+      "lastName": "Nazwisko jest wymagane",
+      "email": "Nieprawidłowy email",
+      "password": "Hasło musi mieć co najmniej 8 znaków"
+    }
+  },
+  "courseChapterView": {
+    "other": {
+      "lesson": "Lekcja",
+      "lessons": "Lekcje",
+      "quiz": "Quiz",
+      "quizzes": "Quizy",
+      "free": "Darmowy"
+    }
+  },
+  "forgotPasswordView": {
+    "header": "Zapomniałeś hasła?",
+    "subHeader": "Wprowadź adres e-mail powiązany z Twoim kontem, a wyślemy Ci link do resetowania hasła.",
+    "field": {
+      "email": "Adres e-mail"
+    },
+    "validation": {
+      "email": "Nieprawidłowy email"
+    },
+    "button": {
+      "resetPassword": "Resetuj hasło",
+      "backToLogin": "Wróć do logowania"
+    },
+    "toast": {
+      "resetPassword": "Link do resetowania hasła został wysłany na Twój adres e-mail."
+    }
+  },
+  "loginView": {
+    "header": "Logowanie",
+    "subHeader": "Wprowadź swój email, aby zalogować się na swoje konto",
+    "validation": {
+      "email": "Nieprawidłowy email",
+      "password": "Hasło jest wymagane"
+    },
+    "other": {
+      "forgotPassword": "Zapomniałeś hasła?",
+      "dontHaveAccount": "Nie masz konta?",
+      "rememberMe": "Zapamiętaj mnie",
+      "signUp": "Zarejestruj się"
+    },
+    "button": {
+      "login": "Zaloguj się"
+    },
+    "field": {
+      "email": "Email",
+      "password": "Hasło"
+    }
+  },
+  "studentCoursesView": {
+    "other": {
+      "cannotFindCourses": "Nie znaleziono żadnych kursów",
+      "changeSearchCriteria": "Zmień kryteria wyszukiwania lub spróbuj ponownie później",
+      "freeLessons": "Darmowe lekcje!"
+    },
+    "button": {
+      "continue": "Kontynuuj",
+      "enroll": "Zapisz się",
+      "view": "Zobacz",
+      "readMore": "Czytaj więcej"
+    },
+    "enroledCourses": {
+      "header": "Twoje kursy",
+      "subHeader": "Kursy, w których jesteś obecnie zapisany"
+    },
+    "avaiableCourses": {
+      "header": "Dostępne kursy",
+      "subHeader": "Wszystkie dostępne kursy zawodowe, w które możesz się zapisać",
+      "filters": {
+        "placeholder": {
+          "title": "Szukaj po tytule...",
+          "categories": "Kategorie",
+          "sort": "Sortuj"
+        }
+      }
+    }
+  },
+  "studentQuizSummaryView": {
+    "header": "Gratulacje!",
+    "subHeader": "Zakończyłeś quiz!",
+    "other": {
+      "yourScore": "Twój wynik:",
+      "tryAgain": "Spróbuj ponownie"
+    },
+    "button": {
+      "backToCourse": "Wróć do kursu"
+    }
+  },
+  "studentLessonView": {
+    "error": {
+      "lessonIdNotFound": "Nie znaleziono ID lekcji"
+    },
+    "other": {
+      "lesson": "Lekcja",
+      "chapter": "Rozdział",
+      "correctAnswers": "Poprawne odpowiedzi:",
+      "correctSentence": "Poprawne zdanie:",
+      "question": "Pytanie",
+      "answers": "Odpowiedzi:",
+      "true": "Prawda",
+      "false": "Fałsz",
+      "briefResponseInstruction": "Instrukcja: Podaj krótką odpowiedź (1-2 zdania).",
+      "detailedResponseInstruction": "Instrukcja: Napisz szczegółową odpowiedź (3-5 zdań).",
+      "single": "Pojedyncza",
+      "multiple": "Wielokrotna",
+      "fillInTheBlanks": "Uzupełnij luki.",
+      "selectQuestion": "Wybierz pytanie.",
+      "trueOrFalseQuestion": "Pytanie prawda/fałsz."
+    },
+    "placeholder": {
+      "openQuestion": "Wpisz swoją odpowiedź tutaj"
+    },
+    "breadcrumbs": {
+      "dashboard": "Panel główny",
+      "lessonTitle": "Lekcja"
+    },
+    "button": {
+      "previous": "Poprzedni",
+      "complete": "Zakończ",
+      "next": "Następny",
+      "submit": "Prześlij"
+    },
+    "sideSection": {
+      "header": "Spis treści:",
+      "other": {
+        "courseProgress": "Postęp w kursie:"
+      }
+    }
+  },
+  "studentCourseView": {
+    "header": "Rozdziały",
+    "subHeader": "Poniżej znajdują się wszystkie rozdziały w tym kursie",
+    "recommendedHeader": "Może Cię zainteresować",
+    "recommendedSubheader": "Poniżej znajdują się kursy o podobnej tematyce lub dziedzinie wiedzy",
+    "otherAuthorCoursesHeader": "Więcej kursów od",
+    "otherAuthorCoursesSubheader": "Poniżej możesz zobaczyć więcej kursów stworzonych przez tego samego autora",
+    "other": {
+      "cannotFindCourses": "Nie znaleziono żadnych kursów",
+      "changeSearchCriteria": "Zmień kryteria wyszukiwania lub spróbuj ponownie później"
+    },
+    "sideSection": {
+      "optionHeader": "Opcja",
+      "courseProgressHeader": "Postęp kursu",
+      "other": {
+        "author": "Autor",
+        "title": "Tytuł",
+        "about": "O kursie",
+        "collapse": "Zwiń",
+        "courseProgress": "Postęp kursu",
+        "remainingChapters": "Pozostałe rozdziały",
+        "completedChapters": "Zakończone rozdziały",
+        "noData": "Brak danych",
+        "informationText": "Szybko wznowisz naukę od ostatniej lekcji."
+      },
+      "button": {
+        "shareCourse": "Udostępnij ten kurs",
+        "continueLearning": "Kontynuuj naukę",
+        "enrollCourse": "Zapisz się na kurs",
+        "goToTeacherPage": "Przejdź do strony nauczyciela"
+      }
+    }
+  },
+  "studentChapterView": {
+    "chapterProgress": {
+      "header": "Spis treści:",
+      "courseProgress": "Postęp kursu"
+    }
+  }
+}

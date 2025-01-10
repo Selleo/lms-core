@@ -65,9 +65,14 @@ const EditCourse = () => {
           </Button>
         </div>
         <TabsList className="w-min">
-          {["Settings", "Curriculum", "Pricing", "Status"].map((tab) => (
-            <TabsTrigger key={tab} value={tab} onClick={() => handleTabChange(tab)}>
-              {tab}
+          {[
+            { label: t("adminCourseView.common.settings"), value: "Settings" },
+            { label: t("adminCourseView.common.curriculum"), value: "Curriculum" },
+            { label: t("adminCourseView.common.pricing"), value: "Pricing" },
+            { label: t("adminCourseView.common.status"), value: "Status" },
+          ].map(({ label, value }) => (
+            <TabsTrigger key={value} value={value} onClick={() => handleTabChange(value)}>
+              {label}
             </TabsTrigger>
           ))}
         </TabsList>

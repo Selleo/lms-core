@@ -38,7 +38,7 @@ export const getNavigationConfig = (userId: string, isUser = true): NavigationIt
     iconName: isUser ? "Course" : "Multi",
   },
   {
-    label: "categories",
+    label: t("navigationSideBar.categories"),
     path: "admin/categories",
     iconName: "Category",
   },
