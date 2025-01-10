@@ -12,7 +12,6 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import { startTransition, useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { categoriesQueryOptions } from "~/api/queries";
 import { ALL_COURSES_QUERY_KEY, useCoursesSuspense } from "~/api/queries/useCourses";
@@ -67,18 +66,17 @@ const Courses = () => {
   const { data } = useCoursesSuspense(searchParams);
   const [sorting, setSorting] = useState<SortingState>([]);
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const { t } = useTranslation();
 
   const filterConfig: FilterConfig[] = [
     {
       name: "title",
       type: "text",
-      placeholder: t("adminCoursesView.filters.placeholder.title"),
+      placeholder: "Search by title...",
     },
     {
       name: "category",
       type: "select",
-      placeholder: t("adminCoursesView.filters.placeholder.categories"),
+      placeholder: "Categories",
       options: categories?.map(({ title }) => ({
         value: title,
         label: title,
@@ -87,10 +85,10 @@ const Courses = () => {
     {
       name: "state",
       type: "state",
-      placeholder: t("adminCoursesView.filters.placeholder.states"),
+      placeholder: "States",
       options: [
-        { value: "draft", label: t("adminCoursesView.filters.other.draft") },
-        { value: "published", label: t("adminCoursesView.filters.other.published") },
+        { value: "draft", label: "Draft" },
+        { value: "published", label: "Published" },
       ],
     },
     {
@@ -130,37 +128,29 @@ const Courses = () => {
     },
     {
       accessorKey: "title",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.title")}</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Title</SortButton>,
       cell: ({ row }) => (
         <div className="max-w-md truncate">{formatHtmlString(row.original.title)}</div>
       ),
     },
     {
       accessorKey: "author",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.author")}</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Author</SortButton>,
     },
     {
       accessorKey: "category",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.category")}</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Category</SortButton>,
     },
     {
       accessorKey: "priceInCents",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.price")}</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Price</SortButton>,
       cell: ({ row }) => {
         return formatPrice(row.original.priceInCents, row.original.currency);
       },
     },
     {
       accessorKey: "state",
-      header: t("adminCoursesView.field.state"),
+      header: "State",
       cell: ({ row }) => (
         <Badge variant={row.original.isPublished ? "secondary" : "outline"}>
           {row.original.isPublished ? "Published" : "Draft"}
@@ -169,9 +159,7 @@ const Courses = () => {
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => (
-        <SortButton<TCourse> column={column}>{t("adminCoursesView.field.createdAt")}</SortButton>
-      ),
+      header: ({ column }) => <SortButton<TCourse> column={column}>Created At</SortButton>,
       cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
@@ -206,10 +194,10 @@ const Courses = () => {
     <div className="flex flex-col">
       <div className="flex gap-3 ml-auto">
         <Link to="new-scorm">
-          <Button variant="outline">{t("adminCoursesView.button.uploadScorm")}</Button>
+          <Button variant="outline">Upload SCORM</Button>
         </Link>
         <Link to="/admin/beta-courses/new">
-          <Button variant="outline">{t("adminCoursesView.button.createNew")}</Button>
+          <Button variant="outline">Create New</Button>
         </Link>
       </div>
       <div className="flex items-center justify-between gap-2">
@@ -226,7 +214,7 @@ const Courses = () => {
               "text-neutral-500": isEmpty(selectedCourses),
             })}
           >
-            {t("common.other.selected")} ({selectedCourses.length})
+            Selected ({selectedCourses.length})
           </p>
           <Button
             onClick={handleDeleteCourses}
@@ -235,7 +223,7 @@ const Courses = () => {
             disabled={isEmpty(selectedCourses)}
           >
             <Trash className="h-3 w-3" />
-            <span className="text-xs">{t("adminCoursesView.button.deleteSelected")}</span>
+            <span className="text-xs">Delete selected</span>
           </Button>
         </div>
       </div>

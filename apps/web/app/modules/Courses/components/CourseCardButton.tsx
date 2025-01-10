@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { formatPrice } from "~/lib/formatters/priceFormatter";
@@ -19,25 +17,22 @@ const CourseCardButton = ({
   priceInCents,
   isScormCreatePage,
 }: CourseCardButtonProps) => {
-  const { t } = useTranslation();
   const getButtonLabel = (enrolled: boolean, isAdmin: boolean) => {
     if (enrolled) {
       return (
         <span className="flex gap-x-2 items-center">
-          <Icon name="ArrowRight" className="w-4 h-4 text-white" />{" "}
-          {t("clientStatisticsView.button.continue")}
+          <Icon name="ArrowRight" className="w-4 h-4 text-white" /> Continue
         </span>
       );
     }
 
-    if (isScormCreatePage) return t("clientStatisticsView.button.readMore");
+    if (isScormCreatePage) return "Read More";
 
-    if (isAdmin) return t("clientStatisticsView.button.view");
+    if (isAdmin) return "View";
 
-    if (priceInCents)
-      return `${t("clientStatisticsView.button.enroll")} - ${formatPrice(priceInCents, currency)}`;
+    if (priceInCents) return `Enroll - ${formatPrice(priceInCents, currency)}`;
 
-    return t("clientStatisticsView.button.enroll");
+    return "Enroll";
   };
 
   const buttonLabel = getButtonLabel(enrolled, isAdmin);

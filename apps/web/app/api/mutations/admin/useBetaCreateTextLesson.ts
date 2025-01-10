@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -14,7 +13,6 @@ type CreateTextBlockOptions = {
 
 export function useCreateBetaTextLesson() {
   const { toast } = useToast();
-  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateTextBlockOptions) => {
@@ -25,7 +23,7 @@ export function useCreateBetaTextLesson() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t("adminCourseView.curriculum.lesson.toast.textLessonCreatedSuccessfully"),
+        description: "Text block created successfully",
       });
     },
     onError: (error) => {

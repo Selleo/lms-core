@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "@remix-run/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 import { useCreateQuizLesson } from "~/api/mutations/admin/useCreateQuizLesson";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
@@ -38,9 +37,8 @@ export const useQuizLessonForm = ({
   const { mutateAsync: deleteLesson } = useDeleteLesson();
   const { isLeavingContent, setIsCurrectFormDirty } = useLeaveModal();
   const { id: courseId } = useParams();
-  const { t } = useTranslation();
   const form = useForm<QuizLessonFormValues>({
-    resolver: zodResolver(quizLessonFormSchema(t)),
+    resolver: zodResolver(quizLessonFormSchema),
     defaultValues: {
       title: "",
       questions: [],

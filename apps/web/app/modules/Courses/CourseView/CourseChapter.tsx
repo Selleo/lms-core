@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 import { CardBadge } from "~/components/CardBadge";
 import { Icon } from "~/components/Icon";
 import {
@@ -20,17 +18,8 @@ type CourseChapterProps = {
 };
 
 export const CourseChapter = ({ chapter, enrolled }: CourseChapterProps) => {
-  const { t } = useTranslation();
-  const lessonText = formatWithPlural(
-    chapter.lessonCount ?? 0,
-    t("courseChapterView.other.lesson"),
-    t("courseChapterView.other.lessons"),
-  );
-  const quizText = formatWithPlural(
-    chapter.quizCount ?? 0,
-    t("courseChapterView.other.quiz"),
-    t("courseChapterView.other.quizzes"),
-  );
+  const lessonText = formatWithPlural(chapter.lessonCount ?? 0, "Lesson", "Lessons");
+  const quizText = formatWithPlural(chapter.quizCount ?? 0, "Quiz", "Quizzes");
 
   return (
     <Accordion type="single" collapsible>
@@ -77,7 +66,7 @@ export const CourseChapter = ({ chapter, enrolled }: CourseChapterProps) => {
                 {chapter.isFreemium && (
                   <CardBadge variant="successFilled">
                     <Icon name="FreeRight" className="w-4" />
-                    {t("courseChapterView.other.free")}
+                    Free
                   </CardBadge>
                 )}
               </div>

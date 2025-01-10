@@ -1,7 +1,6 @@
 import { PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { Loader } from "lucide-react";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 
 import { courseQueryOptions } from "~/api/queries/useCourse";
 import { queryClient } from "~/api/queryClient";
@@ -20,7 +19,6 @@ export const PaymentForm = ({ price, currency, onPaymentSuccess, courseId }: Pay
   const elements = useElements();
   const [error, setError] = useState<string>();
   const [processing, setProcessing] = useState(false);
-  const { t } = useTranslation();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -63,7 +61,7 @@ export const PaymentForm = ({ price, currency, onPaymentSuccess, courseId }: Pay
         {processing ? (
           <Loader className="animate-spin" />
         ) : (
-          `${t("paymentView.other.buyFor")} ${formatPrice(price, currency)}`
+          `Buy for ${formatPrice(price, currency)}`
         )}
       </Button>
       {error && (

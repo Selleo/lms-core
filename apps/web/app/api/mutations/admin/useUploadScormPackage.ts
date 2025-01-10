@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -13,7 +12,6 @@ interface UploadScormOptions {
 
 export function useUploadScormPackage() {
   const { toast } = useToast();
-  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async ({ file, courseId, resource }: UploadScormOptions) => {
@@ -35,7 +33,7 @@ export function useUploadScormPackage() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: t("adminScorm.toast.scormUploadedSuccessfully") });
+      toast({ description: "SCORM package uploaded successfully" });
     },
     onError: (error) => {
       toast({

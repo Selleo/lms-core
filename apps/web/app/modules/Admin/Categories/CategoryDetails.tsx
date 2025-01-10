@@ -1,6 +1,5 @@
 import { memo } from "react";
 import { type Control, Controller } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
@@ -12,8 +11,6 @@ export const CategoryDetails = memo<{
   control: Control<UpdateCategoryBody>;
   category: GetCategoryByIdResponse["data"];
 }>(({ name, control, category }) => {
-  const { t } = useTranslation();
-
   return (
     <Controller
       name={name}
@@ -32,7 +29,7 @@ export const CategoryDetails = memo<{
                 htmlFor="archived"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
-                {t("common.other.archived")}
+                Archived
               </label>
             </div>
           );

@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useChangePassword } from "~/api/mutations/useChangePassword";
@@ -31,7 +30,6 @@ export default function ChangePasswordForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<ChangePasswordBody>({ resolver: zodResolver(passwordSchema) });
-  const { t } = useTranslation();
 
   const onSubmit = (data: ChangePasswordBody) => {
     changePassword({ data });
@@ -41,31 +39,31 @@ export default function ChangePasswordForm() {
     <Card id="user-info">
       <form onSubmit={handleSubmit(onSubmit)}>
         <CardHeader>
-          <CardTitle>{t("changePasswordView.header")}</CardTitle>
-          <CardDescription>{t("changePasswordView.subHeader")}</CardDescription>
+          <CardTitle>Change password</CardTitle>
+          <CardDescription>Update your password here.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
-          <Label htmlFor="oldPassword">{t("changePasswordView.field.oldPassword")}</Label>
+          <Label htmlFor="oldPassword">Old Password</Label>
           <Input
             id="oldPassword"
             className={cn({
               "border-red-500 focus:!ring-red-500": errors.oldPassword,
             })}
             {...register("oldPassword", {
-              required: t("changePasswordView.validation.oldPassword"),
+              required: "Old password is required",
             })}
           />
           {errors.oldPassword && (
             <p className="text-red-500 text-xs mt-1">{errors.oldPassword.message}</p>
           )}
-          <Label htmlFor="newPassword">{t("changePasswordView.field.newPassword")}</Label>
+          <Label htmlFor="newPassword">New Password</Label>
           <Input
             id="newPassword"
             className={cn({
               "border-red-500 focus:!ring-red-500": errors.newPassword,
             })}
             {...register("newPassword", {
-              required: t("changePasswordView.validation.newPassword"),
+              required: "New password is required",
             })}
           />
           {errors.newPassword && (
@@ -73,7 +71,7 @@ export default function ChangePasswordForm() {
           )}
         </CardContent>
         <CardFooter className="border-t px-6 py-4">
-          <Button type="submit">{t("common.button.save")}</Button>
+          <Button type="submit">Save</Button>
         </CardFooter>
       </form>
     </Card>

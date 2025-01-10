@@ -1,5 +1,4 @@
 import { Link, useLocation } from "@remix-run/react";
-import { useTranslation } from "react-i18next";
 
 import DefaultPhotoCourse from "~/assets/svgs/default-photo-course.svg";
 import { CardBadge } from "~/components/CardBadge";
@@ -36,7 +35,6 @@ const CourseCard = ({
   const { isAdmin } = useUserRole();
   const { pathname } = useLocation();
   const isScormCreatePage = pathname.includes("/admin/courses/new-scorm");
-  const { t } = useTranslation();
 
   return (
     <Link
@@ -71,7 +69,7 @@ const CourseCard = ({
           {hasFreeChapters && !enrolled && (
             <CardBadge variant="successFilled">
               <Icon name="FreeRight" className="w-4" />
-              {t("studentCoursesView.other.freeLessons")}
+              Free Lessons!
             </CardBadge>
           )}
         </div>

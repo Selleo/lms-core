@@ -1,6 +1,5 @@
 import { Link } from "@remix-run/react";
 import { keys, pickBy } from "lodash-es";
-import { useTranslation } from "react-i18next";
 
 import { Gravatar } from "~/components/Gravatar";
 import { Icon } from "~/components/Icon";
@@ -18,7 +17,6 @@ type ProfileWithCalendar = {
 };
 
 export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileWithCalendar) => {
-  const { t } = useTranslation();
   if (isLoading) {
     return (
       <div className="w-full 2xl:divide-neutral-100 2xl:divide-y h-full 2xl:max-w-[384px] 2xl:flex-col md:flex-row 2xl:bg-white rounded-lg drop-shadow-card 2xl:p-8 flex flex-col gap-6">
@@ -54,7 +52,7 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
   return (
     <div className="size-full 2xl:divide-primary-200 2xl:divide-y 2xl:max-w-[384px] 2xl:flex-col md:flex-row 2xl:bg-white rounded-lg drop-shadow-card 2xl:p-8 flex flex-col 2xl:gap-6 gap-6">
       <div className="bg-white rounded-lg w-full p-6 gap-y-6 md:p-8 2xl:p-0">
-        <span className="body-lg-md text-neutral-900">{t("profilWithCalendarView.header")}</span>
+        <span className="body-lg-md text-neutral-900">My Profile</span>
         <div className="flex flex-col items-center gap-6">
           <Avatar className="size-[124px]">
             <Gravatar email={user?.email} />
@@ -68,7 +66,7 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
             </a>
           </div>
           <Link to="/settings" className="w-full">
-            <Button className="w-full">{t("profilWithCalendarView.button.settings")}</Button>
+            <Button className="w-full">Settings</Button>
           </Link>
         </div>
       </div>
@@ -78,9 +76,7 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
             <Icon name="Flame" />
             <span className="h1 text-neutral-950">{streak?.current}</span>
           </div>
-          <span className="text-neutral-800 body-lg-md">
-            {t("profilWithCalendarView.other.dailyStreak")}
-          </span>
+          <span className="text-neutral-800 body-lg-md">Daily Streak</span>
         </div>
         <div className="flex justify-center w-full">
           <Calendar

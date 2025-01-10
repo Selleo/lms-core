@@ -1,8 +1,6 @@
 // TODO: Need to be fixed
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { useTranslation } from "react-i18next";
-
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
@@ -18,13 +16,12 @@ type CoursePublishStatusProps = {
 
 const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps) => {
   const { form, onSubmit } = useCourseStatusForm({ courseId, isPublished });
-  const { t } = useTranslation();
 
   return (
     <div className="flex flex-col p-8 w-full gap-y-6 bg-white max-w-[744px]">
       <div className="flex flex-col gap-y-1.5">
-        <h5 className="h5 text-neutral-950">{t("adminCourseView.status.header")}</h5>
-        <p className="text-neutral-900 body-base">{t("adminCourseView.status.subHeader")}</p>
+        <h5 className="h5 text-neutral-950">Status</h5>
+        <p className="text-neutral-900 body-base">Set state for the course</p>
       </div>
       <Form {...form}>
         <form className="flex flex-col gap-y-6" onSubmit={form.handleSubmit(onSubmit)}>
@@ -54,7 +51,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                     />
                     <div>
                       <Label htmlFor="draft" className="body-lg-md text-neutral-950">
-                        {t("adminCourseView.status.draftHeader")}
+                        Draft
                       </Label>
                       <p
                         className={cn("mt-1 text-sm", {
@@ -62,7 +59,8 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                           "text-gray-500": field.value !== false,
                         })}
                       >
-                        {t("adminCourseView.status.draftBody")}
+                        Students cannot purchase or enroll in this course. For those already
+                        enrolled, the course will not appear in their Student Course List.
                       </p>
                     </div>
                   </div>
@@ -87,7 +85,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                     />
                     <div>
                       <Label htmlFor="published" className="body-lg-md text-neutral-950">
-                        {t("adminCourseView.status.publishedHeader")}
+                        Published
                       </Label>
                       <p
                         className={cn("mt-1 text-sm", {
@@ -95,7 +93,8 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                           "text-neutral-900": field.value !== true,
                         })}
                       >
-                        {t("adminCourseView.status.publishedBody")}
+                        Students can purchase, enroll in, and access the course content. Once
+                        enrolled, the course will be displayed on their Student Dashboard.
                       </p>
                     </div>
                   </div>
@@ -104,7 +103,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
               </FormItem>
             )}
           />
-          <Button type="submit">{t("common.button.save")}</Button>
+          <Button type="submit">Save</Button>
         </form>
       </Form>
     </div>

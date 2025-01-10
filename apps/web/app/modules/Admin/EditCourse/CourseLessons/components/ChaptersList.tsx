@@ -2,7 +2,6 @@ import * as Switch from "@radix-ui/react-switch";
 import { useParams } from "@remix-run/react";
 import { useCallback, useEffect, useState } from "react";
 import { flushSync } from "react-dom";
-import { useTranslation } from "react-i18next";
 
 import { useChangeChapterDisplayOrder } from "~/api/mutations/admin/changeChapterDisplayOrder";
 import { useUpdateLessonFreemiumStatus } from "~/api/mutations/admin/useUpdateLessonFreemiumStatus";
@@ -60,7 +59,6 @@ const ChapterCard = ({
   const { openLeaveModal, isCurrentFormDirty, setIsLeavingContent } = useLeaveModal();
   const [isNewLesson, setIsNewLesson] = useState(false);
   const [pendingChapter, setPendingChapter] = useState<Chapter | null>(null);
-  const { t } = useTranslation();
 
   const addLessonLogic = useCallback(() => {
     setSelectedLesson(null);
@@ -150,8 +148,7 @@ const ChapterCard = ({
               <hgroup className="flex flex-col-reverse w-full">
                 <h3 className="body-base-md text-neutral-950">{chapter.title}</h3>
                 <div className="text-neutral-800 body-sm-md">
-                  {t("adminCourseView.curriculum.other.chapter")} {chapter.displayOrder} •{" "}
-                  {t("adminCourseView.curriculum.other.lesson")} {chapter.lessons.length}
+                  Chapter {chapter.displayOrder} • Lessons {chapter.lessons.length}
                 </div>
               </hgroup>
               <AccordionTrigger className="cursor-pointer p-2" onClick={onAccordionClick}>
@@ -170,7 +167,7 @@ const ChapterCard = ({
               <div className={cn("flex items-center space-x-2", { "ml-9": !isOpen })}>
                 <Button variant="outline" onClick={handleAddLessonClick} className="">
                   <Icon name="Plus" className="mr-2 text-primary-800" />
-                  {t("adminCourseView.curriculum.lesson.button.addLesson")}
+                  Add Lesson
                 </Button>
               </div>
               <div className="flex items-center gap-x-2">
@@ -189,9 +186,7 @@ const ChapterCard = ({
                     )}
                   />
                 </Switch.Root>
-                <span className="body-sm-md text-neutral-950">
-                  {t("adminCourseView.curriculum.chapter.other.freemium")}
-                </span>
+                <span className="body-sm-md text-neutral-950">Freemium</span>
                 <TooltipProvider delayDuration={0}>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -204,7 +199,7 @@ const ChapterCard = ({
                       align="center"
                       className="bg-black text-white text-sm px-2 py-1 rounded shadow-md"
                     >
-                      {t("adminCourseView.curriculum.chapter.other.freemiumToolTip")}
+                      Students can access freemium chapters without enrolling in the course.
                       <TooltipArrow className="fill-black" />
                     </TooltipContent>
                   </Tooltip>

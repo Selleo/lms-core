@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 type QuestionCorrectAnswersProps = {
   canRenderAnswers: boolean;
   questionAnswers?: {
@@ -15,7 +13,6 @@ export const QuestionCorrectAnswers = ({
   canRenderAnswers,
   questionAnswers,
 }: QuestionCorrectAnswersProps) => {
-  const { t } = useTranslation();
   if (!canRenderAnswers || !questionAnswers) return null;
 
   const answersString = questionAnswers
@@ -25,10 +22,7 @@ export const QuestionCorrectAnswers = ({
 
   return (
     <div>
-      <span className="body-base-md text-error-700">
-        {t("studentLessonView.other.correctAnswers")}
-      </span>{" "}
-      {answersString}
+      <span className="body-base-md text-error-700">Correct answers:</span> {answersString}
     </div>
   );
 };

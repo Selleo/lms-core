@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 import {
   BreadcrumbItem,
   BreadcrumbLink,
@@ -16,14 +14,13 @@ type BreadcrumbProps = {
 };
 
 export default function Breadcrumb({ lessonData, courseId, courseTitle }: BreadcrumbProps) {
-  const { t } = useTranslation();
-  const lessonTitle = lessonData?.title || t("studentLessonView.breadcrumbs.lessonTitle");
+  const lessonTitle = lessonData?.title || "Lesson";
 
   return (
     <div className="bg-primary-50">
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href={`/`}>{t("studentLessonView.breadcrumbs.dashboard")}</BreadcrumbLink>
+          <BreadcrumbLink href={`/`}>Dashboard</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
         <BreadcrumbItem>

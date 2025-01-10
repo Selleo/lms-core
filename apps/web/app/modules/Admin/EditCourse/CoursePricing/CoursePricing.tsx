@@ -1,5 +1,3 @@
-import { useTranslation } from "react-i18next";
-
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Form } from "~/components/ui/form";
@@ -18,14 +16,13 @@ type CoursePricingProps = {
 const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps) => {
   const { form, onSubmit } = useCoursePricingForm({ courseId, priceInCents, currency });
   const { setValue, register, watch } = form;
-  const { t } = useTranslation();
 
   const isFree = watch("isFree");
   return (
     <div className="flex flex-col p-8 w-full gap-y-6 bg-white max-w-[744px]">
       <div className="flex flex-col gap-y-1.5">
-        <h5 className="h5 text-neutral-950">{t("adminCourseView.pricing.header")}</h5>
-        <p className="text-neutral-900 body-base">{t("adminCourseView.pricing.subHeader")}</p>
+        <h5 className="h5 text-neutral-950">Pricing</h5>
+        <p className="text-neutral-900 body-base">Set pricing for the course</p>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
@@ -50,11 +47,9 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                 />
               </div>
               <Label htmlFor="isFree" className="body-lg-md text-neutral-950 cursor-pointer">
-                <div className="font-medium text-lg text-neutral-950 mb-2">
-                  {t("adminCourseView.pricing.freeCourseHeader")}
-                </div>
+                <div className="font-medium text-lg text-neutral-950 mb-2">Free</div>
                 <div className="text-sm font-normal">
-                  {t("adminCourseView.pricing.freeCourseBody")}
+                  Students can enroll in, and access the course content without paying.
                 </div>
               </Label>
             </Card>
@@ -80,19 +75,17 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               </div>
               <div>
                 <Label htmlFor="paid" className="body-lg-md text-neutral-950 cursor-pointer">
-                  <div className="font-medium text-lg text-neutral-950 mb-2">
-                    {t("adminCourseView.pricing.paidCourseHeader")}
-                  </div>
+                  <div className="font-medium text-lg text-neutral-950 mb-2">Paid course</div>
                   <div className="text-sm font-normal mb-6">
-                    {t("adminCourseView.pricing.paidCourseBody")}
+                    Students can purchase and access the course content. Once selected, you can
+                    define currency and price.
                   </div>
                 </Label>
                 {isFree === false && (
                   <>
                     <div className="mb-2">
                       <Label className="text-sm font-medium" htmlFor="price">
-                        <span className="text-destructive">*</span>{" "}
-                        {t("adminCourseView.pricing.field.price")}
+                        <span className="text-destructive">*</span> Price
                       </Label>
                     </div>
                     <div className="relative mb-2">
@@ -101,7 +94,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                         {...register("priceInCents", {
                           valueAsNumber: true,
                         })}
-                        placeholder={t("amount")}
+                        placeholder="Amount"
                         type="number"
                         className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance]:textfield"
                       />
@@ -115,7 +108,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
             </Card>
           </div>
           <Button className="w-20" type="submit">
-            {t("common.button.save")}
+            Save
           </Button>
         </form>
       </Form>

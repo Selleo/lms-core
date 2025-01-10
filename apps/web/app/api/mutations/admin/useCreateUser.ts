@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useTranslation } from "react-i18next";
 
 import { ApiClient } from "~/api/api-client";
 import { currentUserQueryOptions } from "~/api/queries";
@@ -15,7 +14,6 @@ type CreateUserOptions = {
 
 export function useCreateUser() {
   const { toast } = useToast();
-  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateUserOptions) => {
@@ -25,7 +23,7 @@ export function useCreateUser() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: t("adminUserView.toast.userCreatedSuccessfully") });
+      toast({ description: "User created successfully" });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

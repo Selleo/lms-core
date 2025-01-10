@@ -1,5 +1,4 @@
 import { Link } from "@remix-run/react";
-import { useTranslation } from "react-i18next";
 
 import { useUserDetails } from "~/api/queries/useUserDetails";
 import { Gravatar } from "~/components/Gravatar";
@@ -18,7 +17,6 @@ type CourseViewSidebar = {
 export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
   const { data: userDetails } = useUserDetails(course?.authorId ?? "");
   const { isAdmin, isTeacher } = useUserRole();
-  const { t } = useTranslation();
 
   const shouldShowCourseOptions = !isAdmin && !isTeacher && !course?.enrolled;
 
@@ -29,9 +27,7 @@ export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
       ) : (
         <CourseProgress course={course} />
       )}
-      <h4 className="h6 text-neutral-950 pb-1 pt-2">
-        {t("studentCourseView.sideSection.other.author")}
-      </h4>
+      <h4 className="h6 text-neutral-950 pb-1 pt-2">Author</h4>
       <div className="flex flex-col md:flex-row md:items-center gap-6">
         <Avatar className="w-20 h-20">
           <Gravatar email={userDetails?.contactEmail || ""} />
@@ -42,9 +38,7 @@ export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
           </h2>
           <div className="flex flex-col gap-y-1">
             <p className="body-sm">
-              <span className="text-neutral-900">
-                {t("studentCourseView.sideSection.other.title")}:
-              </span>{" "}
+              <span className="text-neutral-900">Title:</span>{" "}
               <span className="font-medium text-neutral-950">{userDetails?.jobTitle}</span>
             </p>
           </div>
@@ -52,17 +46,17 @@ export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
       </div>
       <div className="flex flex-col gap-y-2">
         <div className="flex gap-x-3 items-center">
-          <span className="text-neutral-900">{t("studentCourseView.sideSection.other.about")}</span>
+          <span className="text-neutral-900">About</span>
           <div className="bg-primary-200 h-[1px] w-full" />
         </div>
         <p className="body-sm mt-2 text-neutral-950">{userDetails?.description}</p>
       </div>
       <Button variant="outline" className="sr-only">
-        <span>{t("studentCourseView.sideSection.other.collapse")}</span>
+        <span>Collapse</span>
       </Button>
       <Button variant="outline">
         <Link to={`/teachers/${course?.authorId}`}>
-          <span>{t("studentCourseView.sideSection.button.goToTeacherPage")}</span>
+          <span>Go to teacher page</span>
         </Link>
       </Button>
     </section>

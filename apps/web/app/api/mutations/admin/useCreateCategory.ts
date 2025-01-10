@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -14,7 +13,6 @@ type CreateCategoryOptions = {
 
 export function useCreateCategory() {
   const { toast } = useToast();
-  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateCategoryOptions) => {
@@ -25,7 +23,7 @@ export function useCreateCategory() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t("adminCategoryView.toast.categoryCreatedSuccessfully"),
+        description: "Category created successfully",
       });
     },
     onError: (error) => {

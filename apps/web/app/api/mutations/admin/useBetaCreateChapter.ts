@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -14,7 +13,6 @@ type CreateChapterOptions = {
 
 export function useBetaCreateChapter() {
   const { toast } = useToast();
-  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateChapterOptions) => {
@@ -25,7 +23,7 @@ export function useBetaCreateChapter() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t("adminCourseView.curriculum.chapter.toast.chapterCreatedSuccessfully"),
+        description: "Lesson created successfully",
       });
     },
     onError: (error) => {
