@@ -156,15 +156,16 @@ const ChapterCard = ({
               </AccordionTrigger>
             </div>
             <AccordionContent className="mt-2 text-gray-700">
-              {chapter.lessonCount > 0 ? 
-              <LessonCardList
-                lessons={chapter.lessons}
-                selectedLesson={selectedLesson}
-                setSelectedLesson={setSelectedLesson}
-                setContentTypeToDisplay={setContentTypeToDisplay}
-              />: 
+              {chapter.lessonCount > 0 ? (
+                <LessonCardList
+                  lessons={chapter.lessons}
+                  selectedLesson={selectedLesson}
+                  setSelectedLesson={setSelectedLesson}
+                  setContentTypeToDisplay={setContentTypeToDisplay}
+                />
+              ) : (
                 <div className="ml-9">No lessons</div>
-              }
+              )}
             </AccordionContent>
             <div className="flex mt-3 justify-between items-center">
               <div
@@ -237,8 +238,6 @@ function getChapterWithLatestLesson(chapters: Chapter[]): string | null {
 
   chapters.map((chapter) => {
     const chapterTime = chapter.updatedAt ? new Date(chapter.updatedAt).getTime() : 0;
-    console.log(chapter)
-
 
     chapter.lessons.map((lesson) => {
       const lessonTime = new Date(lesson.updatedAt).getTime();

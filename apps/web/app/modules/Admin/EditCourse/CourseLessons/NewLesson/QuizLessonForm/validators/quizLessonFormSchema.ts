@@ -74,7 +74,7 @@ export const quizLessonFormSchema = z.object({
             question.type === QuestionType.PHOTO_QUESTION_SINGLE_CHOICE ||
             question.type === QuestionType.MULTIPLE_CHOICE ||
             question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
-            question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT || 
+            question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT ||
             question.type === QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE) &&
           (!question.options || !question.options.some((option) => option.isCorrect === true))
         ) {

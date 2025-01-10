@@ -3777,6 +3777,9 @@
                     "createdAt": {
                       "type": "string"
                     },
+                    "updatedAt": {
+                      "type": "string"
+                    },
                     "quizCount": {
                       "type": "number"
                     },
@@ -4163,6 +4166,9 @@
                       "type": "boolean"
                     },
                     "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
                       "type": "string"
                     },
                     "quizCount": {
@@ -4866,6 +4872,9 @@
                       "createdAt": {
                         "type": "string"
                       },
+                      "updatedAt": {
+                        "type": "string"
+                      },
                       "quizCount": {
                         "type": "number"
                       },
@@ -5148,6 +5157,9 @@
                 "type": "boolean"
               },
               "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
                 "type": "string"
               },
               "quizCount": {
@@ -5449,6 +5461,9 @@
                 "type": "boolean"
               },
               "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
                 "type": "string"
               },
               "quizCount": {
@@ -5776,6 +5791,9 @@
                 "type": "boolean"
               },
               "createdAt": {
+                "type": "string"
+              },
+              "updatedAt": {
                 "type": "string"
               },
               "quizCount": {
