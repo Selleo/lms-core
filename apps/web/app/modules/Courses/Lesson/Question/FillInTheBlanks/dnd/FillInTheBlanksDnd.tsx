@@ -242,7 +242,10 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
     setCurrentlyDraggedWord(null);
   }
 
-  const wordBankWords = words.filter(({ blankId }) => blankId === "blank_preset");
+  const wordBankWords = words.filter(
+    ({ studentAnswerText, blankId }) =>
+      blankId === "blank_preset" || (isCompleted && studentAnswerText === null),
+  );
 
   return (
     <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
