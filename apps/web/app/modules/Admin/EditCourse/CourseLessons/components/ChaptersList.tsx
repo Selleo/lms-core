@@ -76,7 +76,7 @@ const ChapterCard = ({
       event.stopPropagation();
       addLessonLogic();
     },
-    [chapter, openLeaveModal, addLessonLogic],
+    [openLeaveModal, addLessonLogic, isCurrentFormDirty],
   );
 
   const onClickChapterCard = useCallback(() => {
@@ -156,15 +156,22 @@ const ChapterCard = ({
               </AccordionTrigger>
             </div>
             <AccordionContent className="mt-2 text-gray-700">
+              {chapter.lessonCount > 0 ? 
               <LessonCardList
                 lessons={chapter.lessons}
                 selectedLesson={selectedLesson}
                 setSelectedLesson={setSelectedLesson}
                 setContentTypeToDisplay={setContentTypeToDisplay}
-              />
+              />: 
+                <div className="ml-9">No lessons</div>
+              }
             </AccordionContent>
             <div className="flex mt-3 justify-between items-center">
-              <div className={cn("flex items-center space-x-2", { "ml-9": !isOpen })}>
+              <div
+                className={cn("flex items-center space-x-2", {
+                  "ml-9": !isOpen || chapter.lessons.length === 0,
+                })}
+              >
                 <Button variant="outline" onClick={handleAddLessonClick} className="">
                   <Icon name="Plus" className="mr-2 text-primary-800" />
                   Add Lesson
@@ -230,6 +237,8 @@ function getChapterWithLatestLesson(chapters: Chapter[]): string | null {
 
   chapters.map((chapter) => {
     const chapterTime = chapter.updatedAt ? new Date(chapter.updatedAt).getTime() : 0;
+    console.log(chapter)
+
 
     chapter.lessons.map((lesson) => {
       const lessonTime = new Date(lesson.updatedAt).getTime();
@@ -268,7 +277,7 @@ const ChaptersList = ({
     if (canRefetchChapterList) {
       chapterId && setOpenItem(chapterId);
     }
-  }, [chapters]);
+  }, [chapters, canRefetchChapterList, chapterId]);
 
   if (!items) return;
 

@@ -46,11 +46,13 @@ const TextLessonForm = ({
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
       <div className="flex flex-col gap-y-1">
-        <Breadcrumb
-          lessonLabel="Text"
-          setContentTypeToDisplay={setContentTypeToDisplay}
-          setSelectedLesson={setSelectedLesson}
-        />
+        {!lessonToEdit && (
+          <Breadcrumb
+            lessonLabel="Text"
+            setContentTypeToDisplay={setContentTypeToDisplay}
+            setSelectedLesson={setSelectedLesson}
+          />
+        )}
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (
             <>

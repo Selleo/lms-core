@@ -233,11 +233,13 @@ const QuizLessonForm = ({
   return (
     <div className="w-full max-w-full">
       <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-8">
-        <Breadcrumb
-          lessonLabel="Quiz"
-          setContentTypeToDisplay={setContentTypeToDisplay}
-          setSelectedLesson={setSelectedLesson}
-        />
+        {!lessonToEdit && (
+          <Breadcrumb
+            lessonLabel="Quiz"
+            setContentTypeToDisplay={setContentTypeToDisplay}
+            setSelectedLesson={setSelectedLesson}
+          />
+        )}
         <div className="h5 text-neutral-950 mb-6">
           {lessonToEdit ? (
             <>

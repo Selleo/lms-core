@@ -22,7 +22,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
     <div className="flex flex-col p-8 w-full gap-y-6 bg-white max-w-[744px]">
       <div className="flex flex-col gap-y-1.5">
         <h5 className="h5 text-neutral-950">Pricing</h5>
-        <p className="text-neutral-900 body-base">Set pricing for the course</p>
+        <p className="body-lg-md text-neutral-800">Set pricing for the course</p>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
@@ -76,14 +76,14 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               <div>
                 <Label htmlFor="paid" className="body-lg-md text-neutral-950 cursor-pointer">
                   <div className="font-medium text-lg text-neutral-950 mb-2">Paid course</div>
-                  <div className="text-sm font-normal mb-6">
+                  <div className="text-sm font-normal">
                     Students can purchase and access the course content. Once selected, you can
                     define currency and price.
                   </div>
                 </Label>
                 {isFree === false && (
                   <>
-                    <div className="mb-2">
+                    <div className="mb-1 mt-4">
                       <Label className="text-sm font-medium" htmlFor="price">
                         <span className="text-destructive">*</span> Price
                       </Label>
@@ -93,12 +93,24 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                         id="priceInCents"
                         {...register("priceInCents", {
                           valueAsNumber: true,
+                          onChange: (e) => {
+                            const value = e.target.value;
+                            if (Number(value) <= 0) {
+                              e.target.value = "";
+                            }
+                          },
                         })}
                         placeholder="Amount"
                         type="number"
                         className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance]:textfield"
+                        onInput={(e) => {
+                          const input = e.target as HTMLInputElement;
+                          if (Number(input.value) <= 0) {
+                            input.value = "";
+                          }
+                        }}
                       />
-                      <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4 uppercase">
+                      <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4 uppercase cursor-default">
                         {currency}
                       </span>
                     </div>

@@ -21,7 +21,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
     <div className="flex flex-col p-8 w-full gap-y-6 bg-white max-w-[744px]">
       <div className="flex flex-col gap-y-1.5">
         <h5 className="h5 text-neutral-950">Status</h5>
-        <p className="text-neutral-900 body-base">Set state for the course</p>
+        <p className="body-lg-md text-neutral-800">Set state for the course</p>
       </div>
       <Form {...form}>
         <form className="flex flex-col gap-y-6" onSubmit={form.handleSubmit(onSubmit)}>
