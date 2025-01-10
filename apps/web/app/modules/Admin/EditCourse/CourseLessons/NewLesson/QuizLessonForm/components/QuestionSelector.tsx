@@ -1,9 +1,15 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
-import { Card } from "~/components/ui/card";
-import { cn } from "~/lib/utils";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 
 import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 
@@ -13,11 +19,6 @@ type QuestionSelectorProps = {
 
 const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   const [showOptions, setShowOptions] = useState(false);
-  const [openUpwards, setOpenUpwards] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const cardRef = useRef<HTMLDivElement | null>(null);
-
-  const toggleOptions = () => setShowOptions(!showOptions);
 
   const onTypeChoose = useCallback(
     (type: QuestionType) => {
@@ -60,55 +61,38 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
     { type: QuestionType.SCALE_1_5, label: "Scale 1 to 5", icon: QuestionIcons.Scale_1_5 },
   ];
 
-  useEffect(() => {
-    if (showOptions && buttonRef.current) {
-      const buttonRect = buttonRef.current.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-      const spaceBelow = windowHeight - buttonRect.bottom;
-      const spaceAbove = buttonRect.top;
-
-      setOpenUpwards(spaceAbove > spaceBelow);
-    }
-  }, [showOptions]);
   return (
-    <div className="relative mt-4">
-      <Button
-        type="button"
-        className="mt-3 mb-4 bg-primary-700"
-        onClick={toggleOptions}
-        ref={buttonRef}
-      >
-        Add question{" "}
-        <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
-      </Button>
-
-      {showOptions && (
-        <Card
-          className={cn(
-            "absolute w-64 p-2 bg-white text-black rounded shadow-lg z-50 transition-all duration-200",
-            openUpwards ? "bottom-full mb-2" : "top-full mt-2",
-          )}
-          ref={cardRef}
-        >
-          <p className="block p-2 text-left text-black border-b border-gray-300 body-base-md w-full">
-            Select question type:
-          </p>
+    <DropdownMenu onOpenChange={(open) => setShowOptions(open)}>
+      <DropdownMenuTrigger asChild>
+        <Button type="button" className="mt-3 mb-4 bg-primary-700">
+          Add question{" "}
+          <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-64 p-2 bg-white text-black rounded shadow-lg transition-all duration-200">
+        <DropdownMenuLabel className="p-2 text-left text-black body-base-md w-full">
+          Select question type:
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <div className="max-h-64 overflow-scroll scrollbar-thin">
           {questionTypes.map(({ type, label, icon }) => {
             return (
-              <Button
-                key={type}
-                className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
-                type="button"
-                onClick={() => onTypeChoose(type)}
-              >
-                <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
-                {label}
-              </Button>
+              <DropdownMenuItem key={label}>
+                <Button
+                  key={type}
+                  className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
+                  type="button"
+                  onClick={() => onTypeChoose(type)}
+                >
+                  <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
+                  {label}
+                </Button>
+              </DropdownMenuItem>
             );
           })}
-        </Card>
-      )}
-    </div>
+        </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 
