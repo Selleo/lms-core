@@ -242,10 +242,16 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
     setCurrentlyDraggedWord(null);
   }
 
-  const wordBankWords = words.filter(
-    ({ studentAnswerText, blankId }) =>
-      blankId === "blank_preset" || (isCompleted && studentAnswerText === null),
-  );
+  const wordBankWords = words.filter(({ studentAnswerText, blankId, value }) => {
+    const isBlankPreset = blankId === "blank_preset";
+    const isSubmitted = isCompleted;
+    const isValuesEqualStudentAnswer = studentAnswerText === value;
+
+    if (isBlankPreset && !isSubmitted) return true;
+    if (isValuesEqualStudentAnswer) return false;
+
+    if (isSubmitted) return true;
+  });
 
   return (
     <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
