@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { FormTextField } from "~/components/Form/FormTextField";
 import Editor from "~/components/RichText/Editor";
@@ -32,6 +33,7 @@ const TextLessonForm = ({
     lessonToEdit,
     setContentTypeToDisplay,
   });
+  const { t } = useTranslation();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -54,11 +56,13 @@ const TextLessonForm = ({
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (
             <>
-              <span className="text-neutral-600">Edit: </span>
+              <span className="text-neutral-600">
+                {t("adminCourseView.curriculum.other.edit")}:{" "}
+              </span>
               <span className="font-bold">{lessonToEdit.title}</span>
             </>
           ) : (
-            "Create"
+            t("common.button.create")
           )}
         </div>
       </div>
@@ -67,8 +71,8 @@ const TextLessonForm = ({
           <FormTextField
             control={form.control}
             name="title"
-            label="Title"
-            placeholder="Provide lesson title..."
+            label={t("adminCourseView.curriculum.lesson.field.title")}
+            placeholder={t("adminCourseView.curriculum.lesson.placeholder.title")}
             required
           />
           <FormField
@@ -77,7 +81,8 @@ const TextLessonForm = ({
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="description" className="body-base-md text-neutral-950">
-                  <span className="text-red-500">*</span> Description
+                  <span className="text-red-500">*</span>{" "}
+                  {t("adminCourseView.curriculum.lesson.field.description")}
                 </Label>
                 <FormControl>
                   <Editor
@@ -92,7 +97,7 @@ const TextLessonForm = ({
           />
           <div className="flex gap-x-3">
             <Button type="submit" className="bg-primary-700 hover:bg-blue-600 text-white">
-              Save
+              {t("common.button.save")}
             </Button>
             <Button
               type="button"
@@ -101,7 +106,7 @@ const TextLessonForm = ({
               }
               className="bg-transparent text-red-500 border border-red-500 hover:bg-red-100"
             >
-              {lessonToEdit ? "Delete" : "Cancel"}
+              {lessonToEdit ? t("common.button.delete") : t("common.button.cancel")}
             </Button>
           </div>
         </form>

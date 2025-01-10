@@ -1,4 +1,5 @@
 import { isEmpty } from "lodash-es";
+import { useTranslation } from "react-i18next";
 
 import { useAvailableCourses } from "~/api/queries";
 import { Icon } from "~/components/Icon";
@@ -15,6 +16,7 @@ export const YouMayBeInterestedIn = ({ category, courseId }: YouMayBeInterestedI
     category,
     excludeCourseId: courseId,
   });
+  const { t } = useTranslation();
 
   if (!relatedCourses?.length) return null;
 
@@ -22,10 +24,10 @@ export const YouMayBeInterestedIn = ({ category, courseId }: YouMayBeInterestedI
     <section className="flex flex-col gap-y-6 w-full h-full bg-white p-8 rounded-lg">
       <div className="flex flex-col">
         <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-          You may be interested in
+          {t("studentCourseView.recommendedHeader")}
         </h4>
         <p className="text-lg leading-7 text-neutral-800">
-          Below you can see courses with similar topic or knowledge domain{" "}
+          {t("studentCourseView.recommendedSubheader")}
         </p>
       </div>
       <div data-testid="enrolled-courses" className="flex gap-6w-full">
@@ -37,10 +39,10 @@ export const YouMayBeInterestedIn = ({ category, courseId }: YouMayBeInterestedI
               </div>
               <div className="flex flex-col justify-center gap-2">
                 <p className="text-lg font-bold leading-5 text-neutral-950">
-                  We could not find any courses
+                  {t("studentCourseView.other.cannotFindCourses")}
                 </p>
                 <p className="text-neutral-800 text-base leading-6 font-normal">
-                  Please change the search criteria or try again later
+                  {t("studentCourseView.other.changeSearchCriteria")}
                 </p>
               </div>
             </div>

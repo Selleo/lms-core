@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import { currentUserQueryOptions } from "~/api/queries";
 import { useToast } from "~/components/ui/use-toast";
@@ -15,6 +16,7 @@ type CreateCourseOptions = {
 
 export function useCreateCourse() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateCourseOptions) => {
@@ -24,7 +26,7 @@ export function useCreateCourse() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries(currentUserQueryOptions);
-      toast({ description: "Course created successfully" });
+      toast({ description: t("adminCourseView.toast.createCourseSuccessfully") });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {

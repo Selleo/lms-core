@@ -1,5 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { SortableList } from "~/components/SortableList";
@@ -23,6 +24,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
   const questionType = form.getValues(`questions.${questionIndex}.type`);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
+  const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAddOption = useCallback(() => {
@@ -84,7 +86,9 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
             {!isOptionEmpty ? (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">Options</Label>
+                <Label className="body-sm-md">
+                  {t("adminCourseView.curriculum.lesson.field.options")}
+                </Label>
               </>
             ) : null}
             {watchedOptions && watchedOptions.length > 0 && (
@@ -112,7 +116,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                             onChange={(e) =>
                               handleOptionChange(index, "optionText", e.target.value)
                             }
-                            placeholder="Option"
+                            placeholder={t("adminCourseView.curriculum.lesson.placeholder.option")}
                             required
                             className="w-1/2"
                           />
@@ -120,10 +124,12 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                             type="text"
                             name={`questions.${questionIndex}.options.${index}.matchedWord`}
                             value={item.matchedWord}
-                            onChange={(e) => {
-                              handleOptionChange(index, "matchedWord", e.target.value);
-                            }}
-                            placeholder="Matched word"
+                            onChange={(e) =>
+                              handleOptionChange(index, "matchedWord", e.target.value)
+                            }
+                            placeholder={t(
+                              "adminCourseView.curriculum.lesson.placeholder.matchedWords",
+                            )}
                             required
                             className="w-1/2"
                           />
@@ -145,7 +151,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                                 align="center"
                                 className="bg-black ml-4 text-white text-sm rounded shadow-md"
                               >
-                                Delete
+                                {t("common.button.delete")}
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -164,14 +170,14 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
           )}
           <div className="mt-4 ml-14 flex gap-2">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
-              Add Option
+              {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
               onClick={() => setIsDeleteModalOpen(true)}
             >
-              Delete Question
+              {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}
             </Button>
           </div>
           <DeleteConfirmationModal

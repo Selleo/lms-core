@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -11,6 +12,7 @@ interface UploadFileOptions {
 
 export function useUploadFile() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async ({ file, resource }: UploadFileOptions) => {
@@ -31,7 +33,7 @@ export function useUploadFile() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "File uploaded successfully" });
+      toast({ description: t("uploadFile.toast.fileUploadedSuccessfully") });
     },
     onError: (error) => {
       toast({

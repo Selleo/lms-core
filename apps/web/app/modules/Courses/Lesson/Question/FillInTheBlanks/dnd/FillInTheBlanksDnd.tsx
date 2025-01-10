@@ -13,6 +13,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { type FC, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import Viewer from "~/components/RichText/Viever";
 
@@ -58,6 +59,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
   const [words, setWords] = useState<DndWord[]>(getAnswers(question.options));
   const [currentlyDraggedWord, setCurrentlyDraggedWord] = useState<DndWord | null>(null);
   const { setValue } = useFormContext<TQuestionsForm>();
+  const { t } = useTranslation();
 
   const solutionExplanation = question.solutionExplanation;
 
@@ -246,8 +248,8 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
 
   return (
     <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
-      <div className="details text-primary-700 uppercase">Question {question.displayOrder}</div>
-      <div className="h6 text-neutral-950 my-4">Fill in the blanks.</div>
+      <div className="details text-primary-700 uppercase">{t("studentLessonView.other.question")} {question.displayOrder}</div>
+      <div className="h6 text-neutral-950 my-4">{t("studentLessonView.other.fillInTheBlanks")}</div>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}
@@ -278,7 +280,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
         <WordBank words={wordBankWords} />
         {solutionExplanation && !question.passQuestion && (
           <div className="mt-4">
-            <span className="body-base-md text-error-700">Correct sentence:</span>
+            <span className="body-base-md text-error-700">
+              {t("studentLessonView.other.correctSentence")}
+            </span>
             <Viewer content={solutionExplanation} />
           </div>
         )}

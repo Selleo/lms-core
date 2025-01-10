@@ -1,3 +1,5 @@
+import { t } from "i18next";
+
 import { routeAccessConfig } from "./routeAccessConfig";
 
 import type { UserRole } from "./userRoles";
@@ -23,32 +25,32 @@ export type NavigationItem = {
 
 export const getNavigationConfig = (userId: string, isUser = true): NavigationItem[] => [
   {
-    label: "dashboard",
+    label: t("navigationSideBar.dashboard"),
     path: "",
     iconName: "Dashboard",
   },
   {
-    label: "My Courses",
+    label: t("navigationSideBar.myCourses"),
     path: "admin/courses",
     iconName: "Course",
   },
   {
-    label: isUser ? "Courses" : "Browse Courses",
+    label: isUser ? t("navigationSideBar.courses") : t("navigationSideBar.browseCourses"),
     path: "courses",
     iconName: isUser ? "Course" : "Multi",
   },
   {
-    label: "categories",
+    label:  t("navigationSideBar.categories"),
     path: "admin/categories",
     iconName: "Category",
   },
   {
-    label: "users",
+    label: t("navigationSideBar.users"),
     path: "admin/users",
     iconName: "Hat",
   },
   {
-    label: "Profile",
+    label: t("navigationSideBar.profile"),
     path: `teachers/${userId}`,
     iconName: "User",
   },
@@ -56,17 +58,17 @@ export const getNavigationConfig = (userId: string, isUser = true): NavigationIt
 
 export const adminNavigationConfig: NavigationItem[] = [
   {
-    label: "courses",
+    label: t("navigationSideBar.courses"),
     path: "admin/courses",
     iconName: "Course",
   },
   {
-    label: "categories",
+    label: t("navigationSideBar.categories"),
     path: "admin/categories",
     iconName: "Category",
   },
   {
-    label: "users",
+    label: t("navigationSideBar.users"),
     path: "admin/users",
     iconName: "User",
   },
