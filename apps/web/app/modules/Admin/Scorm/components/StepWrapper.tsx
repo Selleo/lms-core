@@ -1,4 +1,5 @@
 import { useNavigate } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -9,7 +10,6 @@ import { useScormFormStore } from "../store/scormForm.store";
 import { Progress } from "./Progress";
 
 import type { PropsWithChildren } from "react";
-import { useTranslation } from "react-i18next";
 
 interface StepWrapperProps {
   title: string;

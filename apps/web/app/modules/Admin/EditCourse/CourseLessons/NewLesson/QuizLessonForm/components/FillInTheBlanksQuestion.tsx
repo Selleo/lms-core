@@ -5,6 +5,7 @@ import TextStyle from "@tiptap/extension-text-style";
 import { EditorContent, Node, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -17,7 +18,6 @@ import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 type FillInTheBlankQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import FileUploadInput from "~/components/FileUploadInput/FileUploadInput";
@@ -23,7 +24,6 @@ import Breadcrumb from "../components/Breadcrumb";
 import { useFileLessonForm } from "./hooks/useFileLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
-import { useTranslation } from "react-i18next";
 
 type FileLessonProps = {
   contentTypeToDisplay: string;

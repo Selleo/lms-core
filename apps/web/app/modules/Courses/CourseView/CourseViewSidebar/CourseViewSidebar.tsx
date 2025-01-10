@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import { useUserDetails } from "~/api/queries/useUserDetails";
 import { Gravatar } from "~/components/Gravatar";
@@ -9,7 +10,6 @@ import { CourseOptions } from "~/modules/Courses/CourseView/CourseViewSidebar/Co
 import { CourseProgress } from "~/modules/Courses/CourseView/CourseViewSidebar/CourseProgress";
 
 import type { GetCourseResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type CourseViewSidebar = {
   course: GetCourseResponse["data"];

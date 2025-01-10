@@ -1,6 +1,7 @@
 import { debounce } from "lodash-es";
 import { Search } from "lucide-react";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -13,7 +14,6 @@ import {
 } from "~/components/ui/select";
 
 import type React from "react";
-import { useTranslation } from "react-i18next";
 
 export type FilterType = "text" | "select" | "state" | "status";
 

@@ -1,9 +1,9 @@
 import { horizontalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import { useTranslation } from "react-i18next";
 
 import { DraggableWord } from "./DraggableWord";
 
 import type { DndWord } from "./types";
-import { useTranslation } from "react-i18next";
 
 type WordBankProps = {
   words: DndWord[];

@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import { ApiClient } from "~/api/api-client";
 import { currentUserQueryOptions } from "~/api/queries";
@@ -7,7 +8,6 @@ import { queryClient } from "~/api/queryClient";
 import { useToast } from "~/components/ui/use-toast";
 
 import type { CreateUserBody } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type CreateUserOptions = {
   data: CreateUserBody;

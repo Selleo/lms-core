@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { SortableList } from "~/components/SortableList";
@@ -7,7 +8,6 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
-import { useTranslation } from "react-i18next";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 

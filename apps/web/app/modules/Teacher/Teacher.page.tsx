@@ -1,4 +1,5 @@
 import { useParams } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import { useTeacherCourses } from "~/api/queries/useTeacherCourses";
 import { useUserDetails } from "~/api/queries/useUserDetails";
@@ -11,7 +12,6 @@ import { Button } from "~/components/ui/button";
 import CourseCard from "~/modules/Dashboard/Courses/CourseCard";
 
 import { TeacherPageBreadcrumbs } from "./TeacherPageBreadcrumbs";
-import { useTranslation } from "react-i18next";
 
 export default function TeacherPage() {
   const { id = "" } = useParams();

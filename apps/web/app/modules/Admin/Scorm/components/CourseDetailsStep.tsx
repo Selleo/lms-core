@@ -1,4 +1,5 @@
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useCategoriesSuspense } from "~/api/queries";
 import { Button } from "~/components/ui/button";
@@ -15,7 +16,6 @@ import {
 import { Textarea } from "~/components/ui/textarea";
 
 import type { CourseFormData, StepComponentProps } from "../types/scorm.types";
-import { useTranslation } from "react-i18next";
 
 export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps) {
   const { data: categories } = useCategoriesSuspense();

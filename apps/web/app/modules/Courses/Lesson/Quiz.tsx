@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useSubmitQuiz } from "~/api/mutations";
 import { Icon } from "~/components/Icon";
@@ -9,7 +10,6 @@ import { getUserAnswers } from "~/modules/Courses/Lesson/utils";
 
 import type { GetLessonByIdResponse } from "~/api/generated-api";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
-import { useTranslation } from "react-i18next";
 
 type QuizProps = {
   lesson: GetLessonByIdResponse["data"];

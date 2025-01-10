@@ -1,5 +1,6 @@
 import { startCase } from "lodash-es";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 
 import { useMarkLessonAsCompleted } from "~/api/mutations";
@@ -12,7 +13,6 @@ import { Quiz } from "~/modules/Courses/Lesson/Quiz";
 import Presentation from "../../../components/Presentation/Presentation";
 
 import type { GetLessonByIdResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type LessonContentProps = {
   lesson: GetLessonByIdResponse["data"];

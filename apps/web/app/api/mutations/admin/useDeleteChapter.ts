@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../../api-client";
-import { useTranslation } from "react-i18next";
 
 type DeleteChapterOptions = {
   chapterId: string;

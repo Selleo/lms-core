@@ -1,5 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
@@ -26,7 +27,6 @@ import { QuestionType } from "../QuizLessonForm.types";
 import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;

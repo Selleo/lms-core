@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate, useSearchParams } from "@remix-run/react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useCreateNewPassword } from "~/api/mutations/useCreateNewPassword";
@@ -12,7 +13,6 @@ import { useToast } from "~/components/ui/use-toast";
 import { cn } from "~/lib/utils";
 
 import type { ResetPasswordBody } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 const createNewPasswordSchema = (t: (key: string) => string) =>
   z

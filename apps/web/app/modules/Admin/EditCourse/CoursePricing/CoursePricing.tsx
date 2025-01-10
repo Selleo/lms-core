@@ -1,10 +1,11 @@
+import { useTranslation } from "react-i18next";
+
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Form } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
-import { useTranslation } from "react-i18next";
 
 import { useCoursePricingForm } from "./hooks/useCoursePricingForm";
 

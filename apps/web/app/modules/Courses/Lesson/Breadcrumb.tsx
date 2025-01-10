@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import {
   BreadcrumbItem,
   BreadcrumbLink,
@@ -6,7 +8,6 @@ import {
 } from "~/components/ui/breadcrumb";
 
 import type { GetLessonByIdResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type BreadcrumbProps = {
   lessonData: GetLessonByIdResponse["data"];

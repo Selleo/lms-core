@@ -1,5 +1,6 @@
 import { AccordionTrigger } from "@radix-ui/react-accordion";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Input } from "~/components/ui/input";
@@ -11,7 +12,6 @@ import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 import type { Question } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 interface QuestionTitleProps {
   questionIndex: number;

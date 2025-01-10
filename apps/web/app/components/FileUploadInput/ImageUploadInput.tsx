@@ -1,7 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 import { cn } from "~/lib/utils";
 
 import { Icon } from "../Icon";
-import { useTranslation } from "react-i18next";
 
 interface ImageUploadProps {
   field: { value?: string };

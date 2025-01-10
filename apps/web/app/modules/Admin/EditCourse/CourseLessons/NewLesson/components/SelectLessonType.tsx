@@ -1,9 +1,10 @@
+import { useTranslation } from "react-i18next";
+
 import { Icon } from "~/components/Icon";
 
 import { ContentTypes } from "../../../EditCourse.types";
 
 import type { LessonIcons } from "../../../EditCourse.types";
-import { useTranslation } from "react-i18next";
 
 type SelectLessonTypeProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;

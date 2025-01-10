@@ -1,5 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useCreateCourse } from "~/api/mutations";
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
@@ -13,7 +14,6 @@ import { cn } from "~/lib/utils";
 import { useScormFormStore } from "../store/scormForm.store";
 
 import type { CourseFormData, CourseStatus, StepComponentProps } from "../types/scorm.types";
-import { useTranslation } from "react-i18next";
 
 export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
   const navigate = useNavigate();

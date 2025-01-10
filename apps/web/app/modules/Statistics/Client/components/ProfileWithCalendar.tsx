@@ -1,5 +1,6 @@
 import { Link } from "@remix-run/react";
 import { keys, pickBy } from "lodash-es";
+import { useTranslation } from "react-i18next";
 
 import { Gravatar } from "~/components/Gravatar";
 import { Icon } from "~/components/Icon";
@@ -9,7 +10,6 @@ import { Calendar } from "~/components/ui/calendar";
 import { Skeleton } from "~/components/ui/skeleton";
 
 import type { CurrentUserResponse, GetUserStatisticsResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type ProfileWithCalendar = {
   user: CurrentUserResponse["data"] | undefined;

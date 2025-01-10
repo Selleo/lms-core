@@ -1,8 +1,9 @@
+import { t } from "i18next";
+
 import { routeAccessConfig } from "./routeAccessConfig";
 
 import type { UserRole } from "./userRoles";
 import type { IconName } from "~/types/shared";
-import { t } from "i18next";
 
 export interface BaseMenuItem {
   label: string;

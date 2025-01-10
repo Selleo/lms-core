@@ -1,5 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { SortableList } from "~/components/SortableList";
@@ -13,7 +14,6 @@ import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 type TrueOrFalseQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;

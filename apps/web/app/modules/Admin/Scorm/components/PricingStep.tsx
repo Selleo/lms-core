@@ -1,4 +1,5 @@
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -10,7 +11,6 @@ import { cn } from "~/lib/utils";
 import { useScormFormStore } from "../store/scormForm.store";
 
 import type { CourseFormData, PricingType, StepComponentProps } from "../types/scorm.types";
-import { useTranslation } from "react-i18next";
 
 export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
   const { setValue, watch, register } = useFormContext<CourseFormData>();

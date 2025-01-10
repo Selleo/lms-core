@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "@remix-run/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useCreateQuizLesson } from "~/api/mutations/admin/useCreateQuizLesson";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
@@ -20,7 +21,6 @@ import { quizLessonFormSchema } from "../validators/quizLessonFormSchema";
 import type { Question, QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { Chapter, Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
-import { useTranslation } from "react-i18next";
 
 type QuizLessonFormProps = {
   chapterToEdit: Chapter | null;

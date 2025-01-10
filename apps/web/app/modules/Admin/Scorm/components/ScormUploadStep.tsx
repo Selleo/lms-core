@@ -1,11 +1,11 @@
 import { useNavigate } from "@remix-run/react";
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 
 import type { CourseFormData, StepComponentProps } from "../types/scorm.types";
-import { useTranslation } from "react-i18next";
 
 export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProps) {
   const navigate = useNavigate();

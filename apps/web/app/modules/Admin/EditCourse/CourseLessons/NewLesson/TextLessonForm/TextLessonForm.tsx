@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { FormTextField } from "~/components/Form/FormTextField";
 import Editor from "~/components/RichText/Editor";
@@ -13,7 +14,6 @@ import Breadcrumb from "../components/Breadcrumb";
 import { useTextLessonForm } from "./hooks/useTextLessonForm";
 
 import type { Chapter, Lesson } from "../../../EditCourse.types";
-import { useTranslation } from "react-i18next";
 
 type TextLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;

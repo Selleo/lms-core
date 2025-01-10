@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { CardBadge } from "~/components/CardBadge";
 import { Icon } from "~/components/Icon";
 import {
@@ -11,7 +13,6 @@ import { ChapterCounter } from "~/modules/Courses/CourseView/components/ChapterC
 import { CourseChapterLesson } from "~/modules/Courses/CourseView/CourseChapterLesson";
 
 import type { GetCourseResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type CourseChapterProps = {
   chapter: GetCourseResponse["data"]["chapters"][0];

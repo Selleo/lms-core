@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 
 import { Icon } from "~/components/Icon";
@@ -29,7 +30,6 @@ import type { Question, QuestionOption } from "./QuizLessonForm.types";
 import type { QuizLessonFormValues } from "./validators/quizLessonFormSchema";
 import type { Chapter, Lesson } from "../../../EditCourse.types";
 import type { UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 type QuizLessonProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;

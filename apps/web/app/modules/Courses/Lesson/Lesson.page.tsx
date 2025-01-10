@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "@remix-run/react";
 import { first, get, last, orderBy } from "lodash-es";
+import { useTranslation } from "react-i18next";
 
 import { useCourse, useLesson } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -8,7 +9,6 @@ import { LessonContent } from "~/modules/Courses/Lesson/LessonContent";
 import { LessonSidebar } from "~/modules/Courses/Lesson/LessonSidebar";
 
 import type { GetCourseResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type Chapters = GetCourseResponse["data"]["chapters"];
 

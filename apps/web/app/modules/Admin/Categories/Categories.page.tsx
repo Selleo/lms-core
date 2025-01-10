@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import { useState, useTransition } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useCategoriesSuspense, usersQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -36,7 +37,6 @@ import {
 } from "~/modules/common/SearchFilter/SearchFilter";
 
 import type { GetAllCategoriesResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type TCategory = GetAllCategoriesResponse["data"][number];
 

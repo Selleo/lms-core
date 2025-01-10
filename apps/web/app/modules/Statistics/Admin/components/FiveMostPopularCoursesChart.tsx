@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
@@ -6,7 +7,6 @@ import { useMediaQuery } from "~/hooks/useMediaQuery";
 import { ChartLegendBadge } from "~/modules/Statistics/Client/components";
 
 import type { GetTeacherStatsResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type Data = GetTeacherStatsResponse["data"]["fiveMostPopularCourses"];
 

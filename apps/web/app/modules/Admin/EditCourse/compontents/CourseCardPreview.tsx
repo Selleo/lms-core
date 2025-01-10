@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+
 import DefaultCoursePhoto from "~/assets/svgs/default-photo-course.svg";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";

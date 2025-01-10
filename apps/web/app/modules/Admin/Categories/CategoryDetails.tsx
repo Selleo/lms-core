@@ -1,11 +1,11 @@
 import { memo } from "react";
 import { type Control, Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 
 import type { GetCategoryByIdResponse, UpdateCategoryBody } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 export const CategoryDetails = memo<{
   name: keyof UpdateCategoryBody;

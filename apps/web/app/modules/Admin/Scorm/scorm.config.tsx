@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useCategoriesSuspense } from "~/api/queries";
 import { Icon } from "~/components/Icon";
@@ -12,7 +13,6 @@ import { StatusStep } from "./components/StatusStep";
 import { useScormFormStore } from "./store/scormForm.store";
 
 import type { CourseCardProps } from "~/modules/Dashboard/Courses/CourseCard";
-import { useTranslation } from "react-i18next";
 
 type SideComponentProps =
   | {

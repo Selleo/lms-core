@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 
 import { Icon } from "~/components/Icon";
@@ -11,7 +12,6 @@ import {
 } from "~/components/ui/dialog";
 
 import { DeleteContentType } from "../EditCourse/EditCourse.types";
-import { useTranslation } from "react-i18next";
 
 type DeleteConfirmationModalProps = {
   open: boolean;

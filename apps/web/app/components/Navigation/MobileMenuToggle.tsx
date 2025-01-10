@@ -1,5 +1,6 @@
-import type { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
+
+import type { Dispatch, SetStateAction } from "react";
 
 type MobileMenuToggleProps = {
   isMobileNavOpen: boolean;

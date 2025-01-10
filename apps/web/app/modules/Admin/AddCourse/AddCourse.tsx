@@ -1,5 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
@@ -19,7 +20,6 @@ import {
 } from "~/components/ui/select";
 
 import Breadcrumb from "./components/Breadcrumb";
-import { useTranslation } from "react-i18next";
 import { useAddCourseForm } from "./hooks/useAddCourseForm";
 
 const AddCourse = () => {

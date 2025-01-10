@@ -1,4 +1,5 @@
 import { Link, useLocation } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import DefaultPhotoCourse from "~/assets/svgs/default-photo-course.svg";
 import { CardBadge } from "~/components/CardBadge";
@@ -14,7 +15,6 @@ import CourseCardButton from "~/modules/Dashboard/Courses/CourseCardButton";
 import { CourseCardTitle } from "./CourseCardTitle";
 
 import type { GetAvailableCoursesResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 export type CourseCardProps = GetAvailableCoursesResponse["data"][number];
 

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
@@ -20,7 +21,6 @@ import {
 import CourseCardPreview from "../compontents/CourseCardPreview";
 
 import { useCourseSettingsForm } from "./hooks/useCourseSettingsForm";
-import { useTranslation } from "react-i18next";
 
 type CourseSettingsProps = {
   courseId?: string;

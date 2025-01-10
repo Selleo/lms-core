@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@remix-run/react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useRegisterUser } from "~/api/mutations/useRegisterUser";
@@ -10,7 +11,6 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
 import type { RegisterBody } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 const registerSchema = z.object({
   firstName: z.string().min(2, { message: "registerView.validation.firstName" }),

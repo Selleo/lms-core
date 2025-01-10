@@ -1,3 +1,5 @@
+import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { Bar, BarChart, CartesianGrid, Customized, Text, XAxis, YAxis } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
@@ -6,8 +8,6 @@ import { cn } from "~/lib/utils";
 import { ChartLegendBadge } from "~/modules/Statistics/Client/components/ChartLegendBadge";
 
 import type { ChartConfig } from "~/components/ui/chart";
-import { useTranslation } from "react-i18next";
-import { t } from "i18next";
 
 const chartConfig = {
   completed: {

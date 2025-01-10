@@ -1,7 +1,7 @@
 import * as Tabs from "@radix-ui/react-tabs";
+import { useTranslation } from "react-i18next";
 
 import type { NavigationTab } from "../EditCourse.types";
-import { useTranslation } from "react-i18next";
 
 type NavigationTabsProps = {
   setNavigationTabState: (navigationTabState: NavigationTab) => void;

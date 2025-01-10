@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "@remix-run/react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { usePasswordRecovery } from "~/api/mutations/useRecoverPassword";
@@ -11,7 +12,6 @@ import { useToast } from "~/components/ui/use-toast";
 import { cn } from "~/lib/utils";
 
 import type { ForgotPasswordBody } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 const passwordRecoverySchema = (t: (key: string) => string) =>
   z.object({

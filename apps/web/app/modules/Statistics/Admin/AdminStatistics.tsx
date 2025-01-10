@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useCurrentUser, useTeacherStatistics } from "~/api/queries";
 import { Gravatar } from "~/components/Gravatar";
@@ -11,7 +12,6 @@ import { EnrollmentChart } from "~/modules/Statistics/Admin/components/Enrollmen
 import { CourseCompletionPercentageChart, FiveMostPopularCoursesChart } from "./components";
 
 import type { ChartConfig } from "~/components/ui/chart";
-import { useTranslation } from "react-i18next";
 
 export const AdminStatistics = () => {
   const { data: user } = useCurrentUser();

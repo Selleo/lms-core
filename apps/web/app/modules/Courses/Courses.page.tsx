@@ -1,5 +1,6 @@
 import { isEmpty } from "lodash-es";
 import { useReducer } from "react";
+import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 
 import {
@@ -32,7 +33,6 @@ import { CourseList } from "./components/CourseList";
 import { CoursesCarousel } from "./components/CoursesCarousel";
 
 import type { MetaFunction } from "@remix-run/node";
-import { useTranslation } from "react-i18next";
 
 type State = {
   searchTitle: string | undefined;

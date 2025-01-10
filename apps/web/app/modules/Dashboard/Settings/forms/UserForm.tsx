@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useUpdateUser } from "~/api/mutations/useUpdateUser";
@@ -19,7 +20,6 @@ import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 
 import type { UpdateUserBody } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 export const clientLoader = async () => {
   await queryClient.prefetchQuery(currentUserQueryOptions);

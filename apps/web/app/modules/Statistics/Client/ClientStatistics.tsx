@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useCurrentUser } from "~/api/queries";
 import { useUserStatistics } from "~/api/queries/useUserStatistics";
@@ -15,7 +16,6 @@ import {
 } from "./components";
 
 import type { ChartConfig } from "~/components/ui/chart";
-import { useTranslation } from "react-i18next";
 
 export default function ClientStatistics() {
   const { data: user, isLoading: isUserLoading } = useCurrentUser();

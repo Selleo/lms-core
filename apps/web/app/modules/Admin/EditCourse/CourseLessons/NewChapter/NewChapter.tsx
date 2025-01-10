@@ -1,5 +1,6 @@
 import { useParams } from "@remix-run/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
@@ -12,7 +13,6 @@ import { ContentTypes, DeleteContentType } from "../../EditCourse.types";
 import { useNewChapterForm } from "./hooks/useNewChapterForm";
 
 import type { Chapter } from "../../EditCourse.types";
-import { useTranslation } from "react-i18next";
 
 type NewChapterProps = {
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;

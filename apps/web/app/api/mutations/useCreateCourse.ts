@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import { currentUserQueryOptions } from "~/api/queries";
 import { useToast } from "~/components/ui/use-toast";
@@ -8,7 +9,6 @@ import { ApiClient } from "../api-client";
 import { queryClient } from "../queryClient";
 
 import type { CreateCourseBody } from "../generated-api";
-import { useTranslation } from "react-i18next";
 
 type CreateCourseOptions = {
   data: CreateCourseBody;

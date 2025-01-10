@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useChangePassword } from "~/api/mutations/useChangePassword";
@@ -17,7 +18,6 @@ import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 
 import type { ChangePasswordBody } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 const passwordSchema = z.object({
   oldPassword: z.string().min(8),

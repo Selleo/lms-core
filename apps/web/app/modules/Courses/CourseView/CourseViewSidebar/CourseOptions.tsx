@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { useEnrollCourse } from "~/api/mutations";
 import { courseQueryOptions } from "~/api/queries";
 import { queryClient } from "~/api/queryClient";
@@ -7,7 +9,6 @@ import { Button } from "~/components/ui/button";
 import { PaymentModal } from "~/modules/stripe/PaymentModal";
 
 import type { GetCourseResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type CourseOptionsProps = {
   course: GetCourseResponse["data"];

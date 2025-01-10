@@ -3,7 +3,9 @@
 // @ts-nocheck
 import { Link } from "@remix-run/react";
 import { cva } from "class-variance-authority";
+import { t } from "i18next";
 import { startCase } from "lodash-es";
+import { useTranslation } from "react-i18next";
 
 import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import { CardBadge } from "~/components/CardBadge";
@@ -14,8 +16,6 @@ import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
 import type { GetCourseResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
-import { t } from "i18next";
 
 type Chapter = GetCourseResponse["data"]["chapters"][number];
 

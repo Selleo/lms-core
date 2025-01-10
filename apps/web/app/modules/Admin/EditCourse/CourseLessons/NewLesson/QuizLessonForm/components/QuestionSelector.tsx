@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
-import { useTranslation } from "react-i18next";
 
 import { QuestionIcons, QuestionType } from "../QuizLessonForm.types";
 

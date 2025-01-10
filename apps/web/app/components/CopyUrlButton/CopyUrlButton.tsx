@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 
 import type { PropsWithChildren } from "react";
 import type { ButtonProps } from "~/components/ui/button";
-import { useTranslation } from "react-i18next";
 
 type CopyUrlButtonProps = PropsWithChildren<ButtonProps>;
 

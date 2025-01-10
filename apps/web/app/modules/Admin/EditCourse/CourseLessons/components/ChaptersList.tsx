@@ -2,6 +2,7 @@ import * as Switch from "@radix-ui/react-switch";
 import { useParams } from "@remix-run/react";
 import { useCallback, useEffect, useState } from "react";
 import { flushSync } from "react-dom";
+import { useTranslation } from "react-i18next";
 
 import { useChangeChapterDisplayOrder } from "~/api/mutations/admin/changeChapterDisplayOrder";
 import { useUpdateLessonFreemiumStatus } from "~/api/mutations/admin/useUpdateLessonFreemiumStatus";
@@ -32,7 +33,6 @@ import { ContentTypes } from "../../EditCourse.types";
 
 import type { Chapter, Lesson } from "../../EditCourse.types";
 import type React from "react";
-import { useTranslation } from "react-i18next";
 
 interface ChapterCardProps {
   chapter: Chapter;

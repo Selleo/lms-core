@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import { startTransition, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { categoriesQueryOptions } from "~/api/queries";
 import { ALL_COURSES_QUERY_KEY, useCoursesSuspense } from "~/api/queries/useCourses";
@@ -39,7 +40,6 @@ import {
 
 import type { ClientLoaderFunctionArgs } from "@remix-run/react";
 import type { GetAllCoursesResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type TCourse = GetAllCoursesResponse["data"][number];
 

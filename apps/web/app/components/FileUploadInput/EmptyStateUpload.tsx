@@ -1,9 +1,10 @@
+import { useTranslation } from "react-i18next";
+
 import { ContentTypes } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import { Icon } from "../Icon";
 
 import type { ChangeEvent } from "react";
-import { useTranslation } from "react-i18next";
 
 interface EmptyStateUploadProps {
   acceptedTypes: string;

@@ -4,6 +4,7 @@
 import { Link, useLocation } from "@remix-run/react";
 import { startCase } from "lodash-es";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
@@ -19,7 +20,6 @@ import { cn } from "~/lib/utils";
 import { LessonTypesIcons } from "~/modules/Courses/CourseView/lessonTypes";
 
 import type { GetCourseResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type LessonSidebarProps = {
   course: GetCourseResponse["data"];

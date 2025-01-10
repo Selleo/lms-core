@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { useBulkDeleteUsers } from "~/api/mutations/admin/useBulkDeleteUsers";
 import { useAllUsersSuspense, usersQueryOptions } from "~/api/queries/useUsers";
@@ -37,7 +38,6 @@ import {
 } from "~/modules/common/SearchFilter/SearchFilter";
 
 import type { GetUsersResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type TUser = GetUsersResponse["data"][number];
 

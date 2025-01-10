@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -15,7 +16,6 @@ import QuizLessonForm from "./NewLesson/QuizLessonForm/QuizLessonForm";
 import TextLessonForm from "./NewLesson/TextLessonForm/TextLessonForm";
 
 import type { Chapter, Lesson } from "../EditCourse.types";
-import { useTranslation } from "react-i18next";
 
 interface CourseLessonsProps {
   chapters?: Chapter[];

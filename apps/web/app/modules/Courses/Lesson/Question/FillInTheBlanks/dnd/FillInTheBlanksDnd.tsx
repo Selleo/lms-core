@@ -13,6 +13,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { type FC, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import Viewer from "~/components/RichText/Viever";
 
@@ -22,7 +23,6 @@ import { SentenceBuilder } from "./SentenceBuilder";
 import { WordBank } from "./WordBank";
 
 import type { DndWord } from "./types";
-import { useTranslation } from "react-i18next";
 import type { QuizQuestion, QuizQuestionOption } from "../../types";
 import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 

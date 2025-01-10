@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "@remix-run/react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useLoginUser } from "~/api/mutations/useLoginUser";
@@ -12,7 +13,6 @@ import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 
 import type { LoginBody } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 const loginSchema = (t: (key: string) => string) =>
   z.object({

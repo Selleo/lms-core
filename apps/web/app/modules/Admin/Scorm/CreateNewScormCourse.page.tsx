@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { StepWrapper } from "./components/StepWrapper";
 import { courseFormSchema } from "./schema/course.schema";
@@ -8,7 +9,6 @@ import { SCORM_CONFIG } from "./scorm.config";
 import { useScormFormStore } from "./store/scormForm.store";
 
 import type { CourseFormData } from "./types/scorm.types";
-import { useTranslation } from "react-i18next";
 
 function CreateNewScormCourse() {
   const { currentStep, formData, setCurrentStep, setFormData } = useScormFormStore();

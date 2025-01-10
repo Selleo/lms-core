@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -8,7 +9,6 @@ import { currentUserQueryOptions, useCurrentUserSuspense } from "../queries/useC
 import { queryClient } from "../queryClient";
 
 import type { UpdateUserBody } from "../generated-api";
-import { useTranslation } from "react-i18next";
 
 type UpdateUserOptions = {
   data: UpdateUserBody;

@@ -1,5 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import { find, flatMap } from "lodash-es";
+import { useTranslation } from "react-i18next";
 
 import { CopyUrlButton } from "~/components/CopyUrlButton";
 import { Icon } from "~/components/Icon";
@@ -7,7 +8,6 @@ import { Button } from "~/components/ui/button";
 import { CourseProgressChart } from "~/modules/Courses/CourseView/components/CourseProgressChart";
 
 import type { GetCourseResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type CourseProgressProps = {
   course: GetCourseResponse["data"];

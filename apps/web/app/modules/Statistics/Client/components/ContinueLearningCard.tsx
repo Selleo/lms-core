@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -7,7 +8,6 @@ import { useUserRole } from "~/hooks/useUserRole";
 import { ChapterCard } from "~/modules/Statistics/Client/components/ChapterCard";
 
 import type { GetUserStatisticsResponse } from "~/api/generated-api";
-import { useTranslation } from "react-i18next";
 
 type ContinueLearningCardProps = {
   isLoading: boolean;
