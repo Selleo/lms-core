@@ -3,6 +3,7 @@
 # LMS Core Project
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) [![Node.js](https://img.shields.io/badge/Node.js-20.15.0-brightgreen.svg)](https://nodejs.org/) [![pnpm](https://img.shields.io/badge/pnpm-supported-blue.svg)](https://pnpm.io/) [![NestJS](https://img.shields.io/badge/NestJS-10.x-red.svg)](https://nestjs.com/) [![Remix](https://img.shields.io/badge/Remix-Latest-purple.svg)](https://remix.run/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+</br>
 A modern, scalable Learning Management System built with cutting-edge technologies.
 
 [Features](#features) • [Getting Started](#getting-started) • [Development](#development) • [Contributing](#contributing)
@@ -86,7 +87,7 @@ Before you begin, make sure you have:
 - Node.js version 20.15.0 (stated in `.tool-versions`)
   - We recommend using [asdf](https://asdf-vm.com/) for version management
 - [pnpm](https://pnpm.io/) package manager
-- [Caddy](https://caddyserver.com/docs/install#homebrew-mac)
+- [Caddy](https://caddyserver.com/docs/install#homebrew-mac) v2.8.4
 - Docker and Docker Compose
 
 ### Installation
@@ -131,6 +132,9 @@ cp .env.example .env
 </div>
 
 ### Migrations
+
+> [!NOTE]
+> In project root.
 
 1. Start the database:
 
@@ -249,10 +253,22 @@ Email templates are automatically built when starting the development server. To
 
 - Frontend tests:
 
-  ```bash
-  pnpm test:web        # Unit tests
-  pnpm test:web:e2e    # E2E tests
-  ```
+  - Unit
+    ```bash
+    pnpm test:web
+    ```
+  - E2E
+
+    ```bash
+    bash test-e2e.sh
+    ```
+
+    or
+
+    ```bash
+    chmod +x test-e2e.sh
+    ./test-e2e.sh
+    ```
 
 - Backend tests:
   ```bash
