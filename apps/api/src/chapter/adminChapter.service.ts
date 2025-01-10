@@ -2,7 +2,6 @@ import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { eq, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-import { FileService } from "src/file/file.service";
 import { chapters } from "src/storage/schema";
 
 import { AdminChapterRepository } from "./repositories/adminChapter.repository";
@@ -14,7 +13,6 @@ import type { UUIDType } from "src/common";
 export class AdminChapterService {
   constructor(
     @Inject("DB") private readonly db: DatabasePg,
-    private readonly fileService: FileService,
     private readonly adminChapterRepository: AdminChapterRepository,
   ) {}
 
@@ -36,7 +34,9 @@ export class AdminChapterService {
         })
         .returning();
 
-      if (!chapter) throw new NotFoundException("Lesson not found");
+      if (!chapter) throw new NotFoundException("Chapter not found");
+
+      await this.adminChapterRepository.updateChapterCountForCourse(chapter.courseId, trx);
 
       return { id: chapter.id };
     });
@@ -73,7 +73,7 @@ export class AdminChapterService {
   async updateChapter(id: string, body: UpdateChapterBody) {
     const [chapter] = await this.adminChapterRepository.updateChapter(id, body);
 
-    if (!chapter) throw new NotFoundException("Lesson not found");
+    if (!chapter) throw new NotFoundException("Chapter not found");
   }
 
   async removeChapter(chapterId: UUIDType) {
@@ -84,6 +84,7 @@ export class AdminChapterService {
     await this.db.transaction(async (trx) => {
       await this.adminChapterRepository.removeChapter(chapterId, trx);
       await this.adminChapterRepository.updateChapterDisplayOrder(chapter.courseId, trx);
+      await this.adminChapterRepository.updateChapterCountForCourse(chapter.courseId, trx);
     });
   }
 }

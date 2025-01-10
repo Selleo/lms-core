@@ -1,0 +1,1 @@
+export { PhotoQuestionSingleChoice } from "./PhotoQuestionSingleChoice";

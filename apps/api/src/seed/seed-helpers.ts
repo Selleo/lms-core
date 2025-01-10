@@ -61,7 +61,7 @@ export async function createNiceCourses(
       })
       .returning();
 
-    for (const chapterData of courseData.chapters) {
+    for (const [index, chapterData] of courseData.chapters.entries()) {
       const [chapter] = await db
         .insert(chapters)
         .values({
@@ -73,7 +73,7 @@ export async function createNiceCourses(
           isFreemium: chapterData.isFreemium,
           createdAt: createdAt,
           updatedAt: createdAt,
-          displayOrder: chapterData.displayOrder,
+          displayOrder: index + 1,
           lessonCount: chapterData.lessons.length,
         })
         .returning();
@@ -101,7 +101,7 @@ export async function createNiceCourses(
           .returning();
 
         if (lessonData.type === LESSON_TYPES.QUIZ && lessonData.questions) {
-          for (const questionData of lessonData.questions) {
+          for (const [index, questionData] of lessonData.questions.entries()) {
             const questionId = crypto.randomUUID();
 
             await db
@@ -115,20 +115,26 @@ export async function createNiceCourses(
                 authorId: creatorUserId,
                 createdAt: createdAt,
                 updatedAt: createdAt,
-                displayOrder: questionData.displayOrder,
+                displayOrder: index + 1,
+                solutionExplanation: questionData.solutionExplanation ?? null,
+                photoS3Key: questionData.photoS3Key ?? null,
               })
               .returning();
 
             if (questionData.options) {
-              const questionAnswerOptionList = questionData.options.map((questionAnswerOption) => ({
-                id: crypto.randomUUID(),
-                createdAt: createdAt,
-                updatedAt: createdAt,
-                questionId,
-                optionText: questionAnswerOption.optionText,
-                isCorrect: questionAnswerOption.isCorrect || false,
-                displayOrder: questionAnswerOption.displayOrder,
-              }));
+              const questionAnswerOptionList = questionData.options.map(
+                (questionAnswerOption, index) => ({
+                  id: crypto.randomUUID(),
+                  createdAt: createdAt,
+                  updatedAt: createdAt,
+                  questionId,
+                  optionText: questionAnswerOption.optionText,
+                  isCorrect: questionAnswerOption.isCorrect || false,
+                  displayOrder: index + 1,
+                  matchedWord: questionAnswerOption.matchedWord || null,
+                  scaleAnswer: questionAnswerOption.scaleAnswer || null,
+                }),
+              );
 
               await db.insert(questionAnswerOptions).values(questionAnswerOptionList);
             }

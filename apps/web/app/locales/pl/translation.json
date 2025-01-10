@@ -95,17 +95,19 @@
         "quizProgress": "Postęp quizu:"
       }
     },
-    "navigationSideBar": {
+   "navigationSideBar": {
       "settings": "Ustawienia",
-      "logout": "Wyloguj się",
+      "logout": "Wyloguj",
       "panel": "Panel",
       "menu": "Menu",
       "close": "Zamknij",
       "profile": "Profil",
-      "dashboard": "Panel",
+      "dashboard": "Pulpit",
       "courses": "Kursy",
+      "myCourses": "Moje kursy",
       "categories": "Kategorie",
-      "users": "Użytkownicy"
+      "users": "Użytkownicy",
+      "browseCourses": "Przeglądaj kursy"
     },
     "changeUserEmailView": {
       "header": "Zmień dane użytkownika",
@@ -495,12 +497,12 @@
         "errorWhileUpdating": "Wystąpił błąd podczas aktualizacji.",
         "unexpectedError": "Wystąpił nieoczekiwany błąd.",
         "lessonCreatedSuccessfully": "Lekcja utworzona pomyślnie",
-        "fileItemCreatedSuccessfully": "Plik utworzony pomyślnie",
-        "textItemCreatedSuccessfully": "Blok tekstowy utworzony pomyślnie",
-        "quizItemCreatedSuccessfully": "Quiz utworzony pomyślnie",
+        "fileLessonCreatedSuccessfully": "Plik utworzony pomyślnie",
+        "textLessonCreatedSuccessfully": "Blok tekstowy utworzony pomyślnie",
+        "quizLessonCreatedSuccessfully": "Quiz utworzony pomyślnie",
         "lessonUpdatedSuccessfully": "Lekcja zaktualizowana pomyślnie",
-        "textItemUpdatedSuccessfully": "Blok tekstowy zaktualizowany pomyślnie",
-        "fileItemupdatedSuccessfully": "Plik zaktualizowany pomyślnie",
+        "textLessonUpdatedSuccessfully": "Blok tekstowy zaktualizowany pomyślnie",
+        "fileLessonUpdatedSuccessfully": "Plik zaktualizowany pomyślnie",
         "questionOptionsUpdatedSuccessfully": "Opcje pytania zostały pomyślnie zaktualizowane"
       },
       "field": {

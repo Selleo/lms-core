@@ -855,6 +855,54 @@
         "operationId": "CourseController_getAllCourses",
         "parameters": [
           {
+            "name": "title",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "author",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creationDateRange[0]",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creationDateRange[1]",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isPublished",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "sort",
             "required": false,
             "in": "query",
@@ -909,62 +957,6 @@
                   "type": "string"
                 }
               ]
-            }
-          },
-          {
-            "name": "title",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "category",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "author",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "creationDateRange[0]",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "creationDateRange[1]",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "state",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "archived",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
             }
           },
           {
@@ -3687,7 +3679,11 @@
                           "type": {
                             "anyOf": [
                               {
-                                "const": "quiz",
+                                "const": "text",
+                                "type": "string"
+                              },
+                              {
+                                "const": "file",
                                 "type": "string"
                               },
                               {
@@ -3699,7 +3695,7 @@
                                 "type": "string"
                               },
                               {
-                                "const": "text",
+                                "const": "quiz",
                                 "type": "string"
                               }
                             ]
@@ -3907,7 +3903,28 @@
                             "type": "string"
                           },
                           "type": {
-                            "type": "string"
+                            "anyOf": [
+                              {
+                                "const": "text",
+                                "type": "string"
+                              },
+                              {
+                                "const": "file",
+                                "type": "string"
+                              },
+                              {
+                                "const": "presentation",
+                                "type": "string"
+                              },
+                              {
+                                "const": "video",
+                                "type": "string"
+                              },
+                              {
+                                "const": "quiz",
+                                "type": "string"
+                              }
+                            ]
                           },
                           "description": {
                             "anyOf": [
@@ -3954,6 +3971,22 @@
                                 "type": {
                                   "anyOf": [
                                     {
+                                      "const": "brief_response",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "detailed_response",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "match_words",
+                                      "type": "string"
+                                    },
+                                    {
+                                      "const": "scale_1_5",
+                                      "type": "string"
+                                    },
+                                    {
                                       "const": "single_choice",
                                       "type": "string"
                                     },
@@ -3979,22 +4012,6 @@
                                     },
                                     {
                                       "const": "fill_in_the_blanks_dnd",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "brief_response",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "detailed_response",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "match_words",
-                                      "type": "string"
-                                    },
-                                    {
-                                      "const": "scale_1_5",
                                       "type": "string"
                                     }
                                   ]
@@ -4587,7 +4604,28 @@
                               "type": "string"
                             },
                             "type": {
-                              "type": "string"
+                              "anyOf": [
+                                {
+                                  "const": "text",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "file",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "presentation",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "video",
+                                  "type": "string"
+                                },
+                                {
+                                  "const": "quiz",
+                                  "type": "string"
+                                }
+                              ]
                             },
                             "description": {
                               "anyOf": [
@@ -4634,6 +4672,22 @@
                                   "type": {
                                     "anyOf": [
                                       {
+                                        "const": "brief_response",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "detailed_response",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "match_words",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "const": "scale_1_5",
+                                        "type": "string"
+                                      },
+                                      {
                                         "const": "single_choice",
                                         "type": "string"
                                       },
@@ -4659,22 +4713,6 @@
                                       },
                                       {
                                         "const": "fill_in_the_blanks_dnd",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "brief_response",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "detailed_response",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "match_words",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "scale_1_5",
                                         "type": "string"
                                       }
                                     ]
@@ -5014,7 +5052,11 @@
                     "type": {
                       "anyOf": [
                         {
-                          "const": "quiz",
+                          "const": "text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file",
                           "type": "string"
                         },
                         {
@@ -5026,7 +5068,7 @@
                           "type": "string"
                         },
                         {
-                          "const": "text",
+                          "const": "quiz",
                           "type": "string"
                         }
                       ]
@@ -5150,7 +5192,28 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "const": "text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file",
+                          "type": "string"
+                        },
+                        {
+                          "const": "presentation",
+                          "type": "string"
+                        },
+                        {
+                          "const": "video",
+                          "type": "string"
+                        },
+                        {
+                          "const": "quiz",
+                          "type": "string"
+                        }
+                      ]
                     },
                     "description": {
                       "anyOf": [
@@ -5197,6 +5260,22 @@
                           "type": {
                             "anyOf": [
                               {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
+                              },
+                              {
                                 "const": "single_choice",
                                 "type": "string"
                               },
@@ -5222,22 +5301,6 @@
                               },
                               {
                                 "const": "fill_in_the_blanks_dnd",
-                                "type": "string"
-                              },
-                              {
-                                "const": "brief_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "detailed_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "match_words",
-                                "type": "string"
-                              },
-                              {
-                                "const": "scale_1_5",
                                 "type": "string"
                               }
                             ]
@@ -5456,7 +5519,28 @@
                       "type": "string"
                     },
                     "type": {
-                      "type": "string"
+                      "anyOf": [
+                        {
+                          "const": "text",
+                          "type": "string"
+                        },
+                        {
+                          "const": "file",
+                          "type": "string"
+                        },
+                        {
+                          "const": "presentation",
+                          "type": "string"
+                        },
+                        {
+                          "const": "video",
+                          "type": "string"
+                        },
+                        {
+                          "const": "quiz",
+                          "type": "string"
+                        }
+                      ]
                     },
                     "description": {
                       "anyOf": [
@@ -5503,6 +5587,22 @@
                           "type": {
                             "anyOf": [
                               {
+                                "const": "brief_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "detailed_response",
+                                "type": "string"
+                              },
+                              {
+                                "const": "match_words",
+                                "type": "string"
+                              },
+                              {
+                                "const": "scale_1_5",
+                                "type": "string"
+                              },
+                              {
                                 "const": "single_choice",
                                 "type": "string"
                               },
@@ -5528,22 +5628,6 @@
                               },
                               {
                                 "const": "fill_in_the_blanks_dnd",
-                                "type": "string"
-                              },
-                              {
-                                "const": "brief_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "detailed_response",
-                                "type": "string"
-                              },
-                              {
-                                "const": "match_words",
-                                "type": "string"
-                              },
-                              {
-                                "const": "scale_1_5",
                                 "type": "string"
                               }
                             ]
@@ -5895,6 +5979,22 @@
                         "type": {
                           "anyOf": [
                             {
+                              "const": "brief_response",
+                              "type": "string"
+                            },
+                            {
+                              "const": "detailed_response",
+                              "type": "string"
+                            },
+                            {
+                              "const": "match_words",
+                              "type": "string"
+                            },
+                            {
+                              "const": "scale_1_5",
+                              "type": "string"
+                            },
+                            {
                               "const": "single_choice",
                               "type": "string"
                             },
@@ -5920,22 +6020,6 @@
                             },
                             {
                               "const": "fill_in_the_blanks_dnd",
-                              "type": "string"
-                            },
-                            {
-                              "const": "brief_response",
-                              "type": "string"
-                            },
-                            {
-                              "const": "detailed_response",
-                              "type": "string"
-                            },
-                            {
-                              "const": "match_words",
-                              "type": "string"
-                            },
-                            {
-                              "const": "scale_1_5",
                               "type": "string"
                             }
                           ]
@@ -5976,7 +6060,14 @@
                                 "type": "string"
                               },
                               "optionText": {
-                                "type": "string"
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
                               },
                               "displayOrder": {
                                 "anyOf": [
@@ -6042,13 +6133,24 @@
                               "type": "null"
                             }
                           ]
+                        },
+                        "solutionExplanation": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
                         }
                       },
                       "required": [
                         "id",
                         "type",
                         "title",
-                        "passQuestion"
+                        "passQuestion",
+                        "solutionExplanation"
                       ]
                     }
                   },
@@ -6094,11 +6196,25 @@
                   "score"
                 ]
               },
+              "quizCompleted": {
+                "type": "boolean"
+              },
               "displayOrder": {
                 "type": "number"
               },
               "isExternal": {
                 "type": "boolean"
+              },
+              "nextLessonId": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               }
             },
             "required": [
@@ -6108,7 +6224,8 @@
               "description",
               "fileType",
               "fileUrl",
-              "displayOrder"
+              "displayOrder",
+              "nextLessonId"
             ]
           }
         },
@@ -6126,7 +6243,28 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "const": "text",
+                    "type": "string"
+                  },
+                  {
+                    "const": "file",
+                    "type": "string"
+                  },
+                  {
+                    "const": "presentation",
+                    "type": "string"
+                  },
+                  {
+                    "const": "video",
+                    "type": "string"
+                  },
+                  {
+                    "const": "quiz",
+                    "type": "string"
+                  }
+                ]
               },
               "description": {
                 "anyOf": [
@@ -6170,6 +6308,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6195,22 +6349,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6404,6 +6542,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6429,22 +6583,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6635,6 +6773,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6660,22 +6814,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -6828,7 +6966,28 @@
                 "type": "string"
               },
               "type": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "const": "text",
+                    "type": "string"
+                  },
+                  {
+                    "const": "file",
+                    "type": "string"
+                  },
+                  {
+                    "const": "presentation",
+                    "type": "string"
+                  },
+                  {
+                    "const": "video",
+                    "type": "string"
+                  },
+                  {
+                    "const": "quiz",
+                    "type": "string"
+                  }
+                ]
               },
               "description": {
                 "anyOf": [
@@ -6872,6 +7031,22 @@
                     "type": {
                       "anyOf": [
                         {
+                          "const": "brief_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "detailed_response",
+                          "type": "string"
+                        },
+                        {
+                          "const": "match_words",
+                          "type": "string"
+                        },
+                        {
+                          "const": "scale_1_5",
+                          "type": "string"
+                        },
+                        {
                           "const": "single_choice",
                           "type": "string"
                         },
@@ -6897,22 +7072,6 @@
                         },
                         {
                           "const": "fill_in_the_blanks_dnd",
-                          "type": "string"
-                        },
-                        {
-                          "const": "brief_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "detailed_response",
-                          "type": "string"
-                        },
-                        {
-                          "const": "match_words",
-                          "type": "string"
-                        },
-                        {
-                          "const": "scale_1_5",
                           "type": "string"
                         }
                       ]
@@ -7105,10 +7264,7 @@
                       "value": {
                         "type": "string"
                       }
-                    },
-                    "required": [
-                      "answerId"
-                    ]
+                    }
                   }
                 }
               },

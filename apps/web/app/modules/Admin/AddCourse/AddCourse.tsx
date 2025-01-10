@@ -1,3 +1,4 @@
+import { useNavigate } from "@remix-run/react";
 import { useCallback, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
@@ -27,10 +28,11 @@ const AddCourse = () => {
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
   const { isValid: isFormValid } = form.formState;
-  const watchedImageUrl = form.watch("imageUrl");
-  const imageUrl = form.getValues("imageUrl");
+  const watchedImageUrl = form.watch("thumbnailUrl");
+  const thumbnailUrl = form.getValues("thumbnailUrl");
   const maxDescriptionFieldLength = 800;
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const watchedDescriptionLength = form.watch("description").length;
   const descriptionFieldCharactersLeft = maxDescriptionFieldLength - watchedDescriptionLength;
@@ -40,7 +42,8 @@ const AddCourse = () => {
       setIsUploading(true);
       try {
         const result = await uploadFile({ file, resource: "course" });
-        form.setValue("imageUrl", result.fileUrl, { shouldValidate: true });
+        form.setValue("thumbnailS3Key", result.fileKey, { shouldValidate: true });
+        form.setValue("thumbnailUrl", result.fileUrl, { shouldValidate: true });
       } catch (error) {
         console.error("Error uploading image:", error);
       } finally {
@@ -157,16 +160,16 @@ const AddCourse = () => {
 
             <FormField
               control={form.control}
-              name="imageUrl"
+              name="thumbnailUrl"
               render={({ field }) => (
                 <FormItem className="mt-5">
-                  <Label htmlFor="imageUrl">{t("adminCourseView.settings.field.thumbnail")}</Label>
+                  <Label htmlFor="fileUrl">{t("adminCourseView.settings.field.thumbnail")}</Label>
                   <FormControl>
                     <ImageUploadInput
                       field={field}
                       handleImageUpload={handleImageUpload}
                       isUploading={isUploading}
-                      imageUrl={imageUrl}
+                      imageUrl={thumbnailUrl}
                     />
                   </FormControl>
 
@@ -177,7 +180,7 @@ const AddCourse = () => {
             />
             {watchedImageUrl && (
               <Button
-                onClick={() => form.setValue("imageUrl", "")}
+                onClick={() => form.setValue("thumbnailUrl", "")}
                 className="bg-red-500 text-white py-2 px-6 rounded mb-4 mt-4"
               >
                 <Icon name="TrashIcon" className="mr-2" />
@@ -187,7 +190,11 @@ const AddCourse = () => {
 
             <div className="pb-5">
               <div className="flex space-x-5 mt-5 mb-10">
-                <Button className="bg-white text-primary-800 border-2 rounded px-6 py-2">
+                <Button
+                  type="button"
+                  className="bg-white text-primary-800 border-2 rounded px-6 py-2"
+                  onClick={() => navigate("/admin/courses")}
+                >
                   {t("common.button.cancel")}
                 </Button>
                 <Button

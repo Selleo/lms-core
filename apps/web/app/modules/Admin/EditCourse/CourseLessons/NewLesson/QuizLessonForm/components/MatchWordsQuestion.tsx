@@ -8,12 +8,12 @@ import { Input } from "~/components/ui/input";
 import { useTranslation } from "react-i18next";
 import { Label } from "~/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type MatchWordsQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -32,9 +32,10 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
       form.getValues(`questions.${questionIndex}.options`) || [];
     const newOption: QuestionOption = {
       optionText: "",
-      isCorrect: false,
+      isCorrect: true,
       displayOrder: currentOptions.length + 1,
     };
+
     form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
       shouldDirty: true,
     });
@@ -117,7 +118,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                             }
                             placeholder={t("adminCourseView.curriculum.lesson.placeholder.option")}
                             required
-                            className="w-[50%]"
+                            className="w-1/2"
                           />
                           <Input
                             type="text"
@@ -130,7 +131,7 @@ const MatchWordsQuestion = ({ form, questionIndex }: MatchWordsQuestionProps) =>
                               "adminCourseView.curriculum.lesson.placeholder.matchedWords",
                             )}
                             required
-                            className="w-[50%]"
+                            className="w-1/2"
                           />
                         </div>
                         <div className="flex items-center">

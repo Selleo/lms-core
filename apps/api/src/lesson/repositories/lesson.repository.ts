@@ -2,8 +2,16 @@ import { Inject, Injectable } from "@nestjs/common";
 import { and, desc, eq, isNull, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
-import { chapters, courses, lessons, questions, studentLessonProgress } from "src/storage/schema";
+import {
+  chapters,
+  courses,
+  lessons,
+  questions,
+  studentCourses,
+  studentLessonProgress,
+} from "src/storage/schema";
 
+import type { LessonTypes } from "../lesson.type";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import type { AdminQuestionBody, QuestionBody } from "src/lesson/lesson.schema";
 import type * as schema from "src/storage/schema";
@@ -17,13 +25,62 @@ export class LessonRepository {
     return lesson;
   }
 
-  // TODO: check if is not a duplicate with method below
+  async getLessonDetails(id: UUIDType, userId: UUIDType) {
+    const [lesson] = await this.db
+      .select({
+        id: lessons.id,
+        type: sql<LessonTypes>`${lessons.type}`,
+        title: lessons.title,
+        description: sql<string>`${lessons.description}`,
+        fileUrl: lessons.fileS3Key,
+        fileType: lessons.fileType,
+        displayOrder: sql<number>`${lessons.displayOrder}`,
+        quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
+        quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
+        isExternal: sql<boolean>`${lessons.isExternal}`,
+        isFreemium: sql<boolean>`${chapters.isFreemium}`,
+        isEnrolled: sql<boolean>`CASE WHEN ${studentCourses.id} IS NULL THEN FALSE ELSE TRUE END`,
+        nextLessonId: sql<string | null>`
+        COALESCE(
+          (
+            SELECT l2.id
+            FROM ${lessons} l2
+            JOIN ${chapters} c ON c.id = l2.chapter_id
+            LEFT JOIN ${studentLessonProgress} slp ON slp.lesson_id = l2.id AND slp.student_id = ${userId}
+            WHERE c.course_id = ${chapters.courseId}
+              AND l2.id != ${lessons.id}
+              AND slp.completed_at IS NULL
+            ORDER BY c.display_order, l2.display_order
+            LIMIT 1
+          ),
+          NULL
+        )
+      `,
+      })
+      .from(lessons)
+      .leftJoin(chapters, eq(chapters.id, lessons.chapterId))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+      )
+      .leftJoin(
+        studentLessonProgress,
+        and(
+          eq(studentLessonProgress.lessonId, lessons.id),
+          eq(studentLessonProgress.studentId, userId),
+        ),
+      )
+      .where(eq(lessons.id, id));
+
+    return lesson;
+  }
+
   async getLessonsByChapterId(chapterId: UUIDType) {
     return this.db
       .select({
         id: lessons.id,
         title: lessons.title,
-        type: lessons.type,
+        type: sql<LessonTypes>`${lessons.type}`,
         description: sql<string>`${lessons.description}`,
         fileS3Key: sql<string | undefined>`${lessons.fileS3Key}`,
         fileType: sql<string | undefined>`${lessons.fileType}`,
@@ -162,30 +219,30 @@ export class LessonRepository {
       .where(and(eq(chapters.courseId, courseId), eq(studentLessonProgress.studentId, userId)));
   }
 
-  //   async setCorrectAnswerForStudentAnswer(
-  //     courseId: UUIDType,
-  //     lessonId: UUIDType,
-  //     questionId: UUIDType,
-  //     userId: UUIDType,
-  //     isCorrect: boolean,
-  //     trx?: PostgresJsDatabase<typeof schema>,
-  //   ) {
-  //     const dbInstance = trx ?? this.db;
-
-  //     return await dbInstance
-  //       .update(studentQuestionAnswers)
-  //       .set({
-  //         isCorrect,
-  //       })
-  //       .where(
-  //         and(
-  //           eq(studentQuestionAnswers.studentId, userId),
-  //           eq(studentQuestionAnswers.questionId, questionId),
-  //           eq(studentQuestionAnswers.lessonId, lessonId),
-  //           eq(studentQuestionAnswers.courseId, courseId),
-  //         ),
-  //       );
-  //   }
+  async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
+    return this.db
+      .select({
+        isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
+        isFreemium: sql<boolean>`CASE WHEN ${chapters.isFreemium} THEN TRUE ELSE FALSE END`,
+        lessonIsCompleted: sql<boolean>`CASE WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN TRUE ELSE FALSE END`,
+        chapterId: sql<string>`${chapters.id}`,
+        courseId: sql<string>`${chapters.courseId}`,
+      })
+      .from(lessons)
+      .leftJoin(
+        studentLessonProgress,
+        and(
+          eq(studentLessonProgress.lessonId, lessons.id),
+          eq(studentLessonProgress.studentId, userId),
+        ),
+      )
+      .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
+      )
+      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
+  }
 
   //   async retireQuizProgress(
   //     courseId: UUIDType,
@@ -203,71 +260,6 @@ export class LessonRepository {
   //           eq(studentLessonsProgress.studentId, userId),
   //           eq(studentLessonsProgress.lessonId, lessonId),
   //           eq(studentLessonsProgress.courseId, courseId),
-  //         ),
-  //       );
-  //   }
-
-  //   async removeStudentCompletedLessonItems(
-  //     courseId: UUIDType,
-  //     lessonId: UUIDType,
-  //     userId: UUIDType,
-  //     trx?: PostgresJsDatabase<typeof schema>,
-  //   ) {
-  //     // TODO: remove this function, not deleting from the database, only clearing variables
-  //     const dbInstance = trx ?? this.db;
-
-  //     return await dbInstance
-  //       .delete(studentCompletedLessonItems)
-  //       .where(
-  //         and(
-  //           eq(studentCompletedLessonItems.studentId, userId),
-  //           eq(studentCompletedLessonItems.lessonId, lessonId),
-  //           eq(studentCompletedLessonItems.courseId, courseId),
-  //         ),
-  //       );
-  //   }
-
-  //   async updateStudentLessonProgress(userId: UUIDType, lessonId: UUIDType, courseId: UUIDType) {
-  //     return await this.db
-  //       .update(studentLessonsProgress)
-  //       .set({
-  //         completedLessonItemCount: sql<number>`
-  //           (SELECT COUNT(*)
-  //           FROM ${studentCompletedLessonItems}
-  //           WHERE ${studentCompletedLessonItems.lessonId} = ${lessonId}
-  //             AND ${studentCompletedLessonItems.courseId} = ${courseId}
-  //             AND ${studentCompletedLessonItems.studentId} = ${userId})`,
-  //       })
-  //       .where(
-  //         and(
-  //           eq(studentLessonsProgress.courseId, courseId),
-  //           eq(studentLessonsProgress.lessonId, lessonId),
-  //           eq(studentLessonsProgress.studentId, userId),
-  //         ),
-  //       )
-  //       .returning();
-  //   }
-
-  //   async completeLessonProgress(
-  //     courseId: UUIDType,
-  //     lessonId: UUIDType,
-  //     userId: UUIDType,
-  //     completedAsFreemium: boolean,
-  //     trx?: PostgresJsDatabase<typeof schema>,
-  //   ) {
-  //     const dbInstance = trx ?? this.db;
-
-  //     return await dbInstance
-  //       .update(studentLessonsProgress)
-  //       .set({
-  //         completedAt: sql<string>`now()`,
-  //         completedAsFreemium,
-  //       })
-  //       .where(
-  //         and(
-  //           eq(studentLessonsProgress.courseId, courseId),
-  //           eq(studentLessonsProgress.lessonId, lessonId),
-  //           eq(studentLessonsProgress.studentId, userId),
   //         ),
   //       );
   //   }

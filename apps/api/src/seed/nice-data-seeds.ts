@@ -1,8 +1,12 @@
 import { faker } from "@faker-js/faker";
+import * as dotenv from "dotenv";
 
-import { LESSON_TYPES, QuestionType } from "src/lesson/lesson.type";
+import { LESSON_TYPES } from "src/lesson/lesson.type";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
 
 import type { NiceCourseData } from "src/utils/types/test-types";
+
+dotenv.config({ path: "./.env" });
 
 export const niceCourses: NiceCourseData[] = [
   {
@@ -18,129 +22,138 @@ export const niceCourses: NiceCourseData[] = [
         title: "HTML Basics: Building the Structure of Your Website",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 1,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Introduction to HTML",
             description:
               "HTML (HyperText Markup Language) is the standard language used to create the structure of web pages. In this lesson, you'll explore basic HTML elements and how they are used to build the framework of a website.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
             description: "Why is HTML considered the backbone of any website?",
-            displayOrder: 2,
             questions: [
               {
-                id: crypto.randomUUID(),
-                displayOrder: 1,
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title: "Why is HTML considered the backbone of any website?",
                 description: "Explain its role in web development.",
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "HTML Elements Video",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
-            displayOrder: 3,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
             description:
-              "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
-            displayOrder: 4,
+              "Test your knowledge of CSS concepts, including layout techniques and styling properties.",
             questions: [
               {
-                id: crypto.randomUUID(),
-                displayOrder: 1,
-                type: QuestionType.FillInTheBlanksText,
-                title:
-                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                solutionExplanation:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "flexbox",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "color properties",
                     isCorrect: true,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "grid",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "flex",
                     isCorrect: false,
-                    displayOrder: 4,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
+                title: "Which CSS property is used to set the background color of an element?",
+                options: [
+                  {
+                    optionText: "background-color",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "color",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "border-color",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "box-shadow",
+                    isCorrect: false,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "HTML Hyperlinks Presentation",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
-            displayOrder: 5,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "HTML Tag Quiz",
-            description: "Which HTML tag is used to create a hyperlink?",
-            displayOrder: 6,
             questions: [
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which HTML tag is used to create a hyperlink?",
-                displayOrder: 1,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<a>",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<link>",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<button>",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<input>",
                     isCorrect: false,
-                    displayOrder: 4,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.SINGLE_CHOICE,
+                title: "Which HTML tag is used to define a table row?",
+                options: [
+                  {
+                    optionText: "<tr>",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "<td>",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "<table>",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "<th>",
+                    isCorrect: false,
                   },
                 ],
               },
@@ -152,260 +165,186 @@ export const niceCourses: NiceCourseData[] = [
         title: "HTML Basics: Test Your Knowledge",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 2,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "HTML Basics: Test Your Knowledge",
             description:
               "This lesson is designed to test your understanding of basic HTML concepts. You'll encounter a mix of multiple-choice and single-answer questions to evaluate your knowledge of HTML structure and common elements.",
-            displayOrder: 1,
             questions: [
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of the following HTML tags is used to create an image?",
-                displayOrder: 1,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<img>",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<picture>",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<video>",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<audio>",
                     isCorrect: false,
-                    displayOrder: 4,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title:
                   "Which of the following are valid HTML elements for structuring content? (Select all that apply)",
-                displayOrder: 2,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<html>",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<head>",
                     isCorrect: true,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<body>",
                     isCorrect: true,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<title>",
                     isCorrect: true,
-                    displayOrder: 4,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<h1>",
                     isCorrect: false,
-                    displayOrder: 5,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<p>",
                     isCorrect: false,
-                    displayOrder: 6,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which HTML tag is used to create a hyperlink?",
-                displayOrder: 3,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<a>",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<link>",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<button>",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "<input>",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title:
                   "Which of the following attributes are commonly used with the <img> tag? (Select all that apply)",
-                displayOrder: 4,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "alt",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "src",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "width",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "height",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "srcset",
                     isCorrect: false,
-                    displayOrder: 4,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
-                displayOrder: 5,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "CSS is used to style [word], while JavaScript is used to add [word] to web pages.",
+                solutionExplanation:
                   "<p>CSS is used to style <strong>HTML</strong>, while JavaScript is used to add <strong>interactivity</strong> to web pages.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "HTML",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "interactivity",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "styles",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "functions",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "content",
                     isCorrect: false,
-                    displayOrder: 4,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "elements",
                     isCorrect: false,
-                    displayOrder: 5,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "animations",
                     isCorrect: false,
-                    displayOrder: 6,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksText,
-                displayOrder: 6,
-                title:
-                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                solutionExplanation:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "flexbox",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "color properties",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                displayOrder: 7,
-                title:
-                  "In JavaScript, [word] are used to store data, while [word] are used to perform actions.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In JavaScript, [word] are used to store data, while [word] are used to perform actions.",
+                solutionExplanation:
                   "<p>In JavaScript, <strong>variables</strong> are used to store data, while <strong>functions</strong> are used to perform actions.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "variables",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "functions",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                 ],
               },
@@ -417,140 +356,102 @@ export const niceCourses: NiceCourseData[] = [
         title: "CSS Fundamentals: Put Your Skills to the Test",
         isPublished: true,
         isFreemium: true,
-        displayOrder: 3,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "CSS Fundamentals: Put Your Skills to the Test",
             description:
               "This lesson is a comprehensive quiz to evaluate your understanding of CSS fundamentals. You'll face a variety of question types covering selectors, properties, and layout techniques.",
-            displayOrder: 1,
             questions: [
               {
-                id: crypto.randomUUID(),
-                displayOrder: 1,
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which CSS property is used to change the text color of an element?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "color",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "text-color",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "font-color",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "text-style",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title: "Which of the following are valid CSS selectors? (Select all that apply)",
-                displayOrder: 2,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: ".class-name",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "#id-name",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "element",
                     isCorrect: true,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "[attribute]",
                     isCorrect: true,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "$variable",
                     isCorrect: false,
-                    displayOrder: 4,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "The CSS [word] property is used for creating flexible box layouts, while [word] is used for creating grid layouts.",
+                solutionExplanation:
                   "<p>The CSS <strong>flexbox</strong> property is used for creating flexible box layouts, while <strong>color properties</strong> are used for creating grid layouts.</p>",
-                displayOrder: 3,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "flexbox",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "color properties",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "grid",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "flex",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                displayOrder: 4,
-                title: "To center an element horizontally, you can use 'margin: [word] [word];'.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "To center an element horizontally, you can use 'margin: [word] [word];'.",
+                solutionExplanation:
                   "<p>To center an element horizontally, you can use 'margin: <strong>0 auto</strong>;'.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "0",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "auto",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                 ],
               },
@@ -562,80 +463,84 @@ export const niceCourses: NiceCourseData[] = [
         title: "HTML Basics: Building the Structure of Your Website",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 4,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Introduction to HTML",
             description:
               "HTML (HyperText Markup Language) is the standard language used to create the structure of web pages. In this lesson, you'll explore basic HTML elements and how they are used to build the framework of a website.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "HTML Quiz: Importance of HTML",
-            description: "Why is HTML considered the backbone of any website?",
-            displayOrder: 2,
+            description: "",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title:
                   "Why is HTML considered the backbone of any website? Explain its role in web development.",
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "HTML Elements Video",
             description:
               "Learn the basics of web development with HTML! Master the structure and tags needed to build professional websites from scratch.",
-            displayOrder: 3,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "CSS and Layout Quiz",
-            description:
-              "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
-            displayOrder: 4,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In CSS, [word] is used to style the layout, while [word] is used to change colors.",
+                solutionExplanation:
                   "<p>In CSS, <strong>flexbox</strong> is used to style the layout, while <strong>color properties</strong> are used to change colors.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "flexbox",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "color properties",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "grid",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "flex",
                     isCorrect: false,
-                    displayOrder: 3,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description:
+                  "The [word] property is used to set the spacing between lines of text, and the [word] property is used to set the spacing outside an element.",
+                solutionExplanation:
+                  "<p>In CSS, the <strong>line-height</strong> property is used to set the spacing between lines of text, while the <strong>margin</strong> property is used to set the spacing outside an element.</p>",
+                options: [
+                  {
+                    optionText: "line-height",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "margin",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "padding",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "letter-spacing",
+                    isCorrect: false,
                   },
                 ],
               },
@@ -659,148 +564,107 @@ export const niceCourses: NiceCourseData[] = [
         title: "Java Basics: Building Blocks of Android Development",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 1,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Introduction to Java for Android",
             description:
               "Java is the primary language used for Android app development. In this lesson, you'll learn about Java syntax, data types, and object-oriented programming principles that form the foundation of Android development.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Explain why Java is the preferred language for Android development",
             description: "",
-            displayOrder: 2,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title: "Explain why Java is the preferred language for Android development.",
                 description: "",
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Java Basics Video Tutorial",
             description: "Learn Java basics for Android development.",
-            displayOrder: 3,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title:
-              "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
-            description: "",
-            displayOrder: 4,
+            title: "Test your knowledge",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In Java, [word] are used to define the blueprint of objects, while [word] are instances.",
+                solutionExplanation:
                   "<p>In Java, <strong>classes</strong> are used to define the blueprint of objects, while <strong>objects</strong> are instances of these blueprints.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "classes",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "objects",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title:
-              "In Android dev, [word] are used to define the user interface, while [word] handle user interactions",
-            description: "",
-            displayOrder: 5,
+            title: "Test your knowledge",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In Android dev, [word] are used to define the user interface, while [word] handle user interactions.",
+                solutionExplanation:
                   "<p>In Android development, <strong>layouts</strong> are used to define the user interface, while <strong>activities</strong> handle user interactions and app logic.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "layouts",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "activities",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "Java OOP Concepts Presentation",
             description: "Explore Object-Oriented Programming principles in Java.",
-            displayOrder: 6,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to create a new instance of a class in Java?",
             description: "",
-            displayOrder: 7,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which keyword is used to create a new instance of a class in Java?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "new",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "create",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "instance",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "object",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
@@ -812,44 +676,31 @@ export const niceCourses: NiceCourseData[] = [
         title: "Android Development Basics: Test Your Knowledge",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 2,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which of the following is the entry point of an Android application?",
             description: "",
-            displayOrder: 1,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of the following is the entry point of an Android application?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Activity",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Service",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "BroadcastReceiver",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "ContentProvider",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
@@ -872,45 +723,34 @@ export const niceCourses: NiceCourseData[] = [
         title: "Getting Started with Kotlin Programming",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 1,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Introduction to Kotlin for Android",
             description:
               "Kotlin is a modern, concise language used for Android development. In this lesson, you'll learn about Kotlin syntax and basic concepts for creating Android apps.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Kotlin Basics Video Tutorial",
             description:
               "A video tutorial to help you learn Kotlin syntax, object-oriented principles, and how to apply them to Android development.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which keyword is used to declare a variable in Kotlin?",
             description: "",
-            displayOrder: 3,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which keyword is used to declare a variable in Kotlin?",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "var", isCorrect: true, displayOrder: 0 },
-                  { id: crypto.randomUUID(), optionText: "val", isCorrect: false, displayOrder: 1 },
-                  { id: crypto.randomUUID(), optionText: "let", isCorrect: false, displayOrder: 2 },
+                  { optionText: "var", isCorrect: true },
+                  { optionText: "val", isCorrect: false },
+                  { optionText: "let", isCorrect: false },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "data",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
@@ -922,41 +762,32 @@ export const niceCourses: NiceCourseData[] = [
         title: "Building Your First App with Kotlin",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 2,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Setting Up Your Android Studio Environment",
             description:
               "Learn how to configure Android Studio for Kotlin development and create your first Android project.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "Creating a Simple Kotlin App",
             description: "A step-by-step guide to building your first Android app using Kotlin.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
-            description: "",
-            displayOrder: 3,
+            title: "Test your knowledge",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In Kotlin, [word] are immutable variables, while [word] are mutable variables.",
+                solutionExplanation:
                   "<p>In Kotlin, <strong>val</strong> are immutable variables, while <strong>var</strong> are mutable variables.</p>",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "val", isCorrect: true, displayOrder: 0 },
-                  { id: crypto.randomUUID(), optionText: "var", isCorrect: true, displayOrder: 1 },
+                  { optionText: "val", isCorrect: true },
+                  { optionText: "var", isCorrect: true },
                 ],
               },
             ],
@@ -978,63 +809,47 @@ export const niceCourses: NiceCourseData[] = [
         title: "Arithmetic Essentials: Numbers and Operations",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 1,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Introduction to Arithmetic",
             description:
               "Arithmetic is the foundation of mathematics. In this lesson, you'll learn about numbers, basic operations, and their properties.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Why is arithmetic considered the foundation of mathematics? ",
             description: "",
-            displayOrder: 2,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title:
                   "Why is arithmetic fundamental in math? Give a real-life example of its use.",
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Basic Arithmetic Video Tutorial",
             description:
               "Learn the basics of arithmetic operations and how to use them in problem-solving scenarios.",
-            displayOrder: 3,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title:
-              "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
-            description: "",
-            displayOrder: 4,
+            title: "Math is the study of numbers, shapes, and quantities.",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In arithmetic, [word] is the result of addition, while [word] is the result of subtraction.",
+                solutionExplanation:
                   "<p>In arithmetic, <strong>sum</strong> is the result of addition, while <strong>difference</strong> is the result of subtraction.</p>",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "sum", isCorrect: true, displayOrder: 0 },
+                  { optionText: "sum", isCorrect: true },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "difference",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                 ],
               },
@@ -1046,60 +861,43 @@ export const niceCourses: NiceCourseData[] = [
         title: "Geometry Basics: Shapes and Measurements",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 2,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Understanding Geometry",
             description:
               "Geometry involves the study of shapes, sizes, and the properties of space. In this lesson, you'll learn about basic geometric figures and their properties.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "Geometric Shapes Presentation",
             description:
               "Explore various geometric shapes, their formulas for area and perimeter, and their real-life applications.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which formula is used to calculate the area of a rectangle?",
             description: "",
-            displayOrder: 3,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which formula is used to calculate the area of a rectangle?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "length × width",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "length + width",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "length × height",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "2 × (length + width)",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
@@ -1111,56 +909,42 @@ export const niceCourses: NiceCourseData[] = [
         title: "Algebra Introduction: Solving for the Unknown",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 3,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Getting Started with Algebra",
             description:
               "Algebra helps us solve problems by finding unknown values. In this lesson, you'll learn about variables, expressions, and simple equations.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title:
-              "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
-            description: "",
-            displayOrder: 2,
+            title: "Test your knowledge",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In algebra, [word] represent unknown values, while [word] are mathematical phrases",
+                solutionExplanation:
                   "<p>In algebra, <strong>variables</strong> represent unknown values, while <strong>expressions</strong> are mathematical phrases that combine numbers and variables.</p>",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "variables",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "expressions",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Basic Algebra Video Guide",
             description:
               "Learn to solve basic algebraic equations and understand how to work with variables.",
-            displayOrder: 3,
           },
         ],
       },
@@ -1168,101 +952,73 @@ export const niceCourses: NiceCourseData[] = [
         title: "Mathematics Basics Quiz: Test Your Knowledge",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 4,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Mathematics Basics Quiz: Test Your Knowledge",
             description:
               "Evaluate your understanding of arithmetic, geometry, and algebra with this comprehensive quiz.",
-            displayOrder: 1,
             questions: [
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of the following is an example of a geometric shape?",
-                displayOrder: 1,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Triangle",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Variable",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Equation",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
-                  { id: crypto.randomUUID(), optionText: "Sum", isCorrect: false, displayOrder: 4 },
+                  { optionText: "Sum", isCorrect: false },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title: "Which operations are included in basic arithmetic? (Select all that apply)",
-                displayOrder: 2,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Addition",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Subtraction",
                     isCorrect: true,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Multiplication",
                     isCorrect: true,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Division",
                     isCorrect: true,
-                    displayOrder: 4,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Integration",
                     isCorrect: false,
-                    displayOrder: 5,
                   },
                 ],
               },
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
-                  "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
                 description:
+                  "In algebra, [word] are used to represent unknowns, while [word] can be solved to find their values.",
+                solutionExplanation:
                   "<p>In algebra, <strong>variables</strong> are used to represent unknowns, while <strong>equations</strong> can be solved to find their values.</p>",
-                displayOrder: 3,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "variables",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "equations",
                     isCorrect: true,
-                    displayOrder: 2,
                   },
                 ],
               },
@@ -1285,64 +1041,49 @@ export const niceCourses: NiceCourseData[] = [
         title: "Mastering Basic Grammar Rules",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 1,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Introduction to English Grammar",
             description:
               "Learn the essential grammar rules that form the backbone of English communication, covering nouns, verbs, adjectives, and more.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Sentence Structure Basics",
             description:
               "Explore how sentences are structured, including subject-verb agreement and word order in affirmative, negative, and question forms.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Explain the difference between a noun and a verb in a sentence.",
             description: "Explain the difference between a noun and a verb in a sentence.",
-            displayOrder: 3,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title: "Explain the difference between a noun and a verb in a sentence.",
                 description: "Explain its role in sentence construction.",
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Grammar Rules Video Tutorial",
             description:
               "Watch this tutorial to get a comprehensive overview of essential English grammar rules.",
-            displayOrder: 4,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "Fill in the blanks: 'She [word] to the store yesterday.'",
-            description: "Fill in the blanks with the correct verb.",
-            displayOrder: 5,
+            title: "Test your knowledge",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title: "Fill in the blanks: 'She [word] to the store yesterday.'",
-                description: "<p>She <strong>went</strong> to the store yesterday.</p>",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "Fill in the blanks: 'She [word] to the store yesterday.'",
+                solutionExplanation: "<p>She <strong>went</strong> to the store yesterday.</p>",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "went", isCorrect: true, displayOrder: 0 },
-                  { id: crypto.randomUUID(), optionText: "go", isCorrect: false, displayOrder: 1 },
+                  { optionText: "went", isCorrect: true },
+                  { optionText: "go", isCorrect: false },
                 ],
               },
             ],
@@ -1353,80 +1094,59 @@ export const niceCourses: NiceCourseData[] = [
         title: "Building Vocabulary for Beginners",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 2,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Common English Words and Phrases",
             description:
               "A beginner-friendly list of common English words and phrases you can use in daily conversations.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Synonyms and Antonyms",
             description:
               "Learn about the importance of synonyms and antonyms in expanding your vocabulary and making your speech more varied.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "English Vocabulary Expansion Presentation",
             description: "A comprehensive slide presentation on expanding your vocabulary.",
-            displayOrder: 3,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which word is the synonym of 'happy'?",
             description: "Choose the correct synonym for 'happy'.",
-            displayOrder: 4,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which word is the synonym of 'happy'?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Joyful",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
-                  { id: crypto.randomUUID(), optionText: "Sad", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Sad", isCorrect: false },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Angry",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "I [word] to the park every day.",
-            description: "Fill in the blank with the correct verb.",
-            displayOrder: 5,
+            title: "Test your knowledge",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
                 title: "I [word] to the park every day.",
+                solutionExplanation: "I <strong>go</strong> to the park every day.",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "go", isCorrect: true, displayOrder: 0 },
+                  { optionText: "go", isCorrect: true },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "went",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                 ],
               },
@@ -1438,72 +1158,55 @@ export const niceCourses: NiceCourseData[] = [
         title: "Mastering Pronunciation and Accent",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 3,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Essential Pronunciation Tips",
             description:
               "Learn how to pronounce English words correctly and improve your accent with practical tips and exercises.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Common Pronunciation Mistakes",
             description:
               "Identify and work on common pronunciation challenges for non-native English speakers.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title:
               "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
             description: "Choose the sound that is most commonly mispronounced.",
-            displayOrder: 3,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title:
                   "Which of the following sounds is most commonly mispronounced by non-native English speakers?",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "Th", isCorrect: true, displayOrder: 0 },
-                  { id: crypto.randomUUID(), optionText: "S", isCorrect: false, displayOrder: 1 },
-                  { id: crypto.randomUUID(), optionText: "K", isCorrect: false, displayOrder: 2 },
+                  { optionText: "Th", isCorrect: true },
+                  { optionText: "S", isCorrect: false },
+                  { optionText: "K", isCorrect: false },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Pronunciation and Accent Video Tutorial",
             description: "A step-by-step video guide on mastering English pronunciation.",
-            displayOrder: 4,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "I love [word] (swimming/swim).",
-            description: "Choose the correct verb form.",
-            displayOrder: 5,
+            title: "Choose the correct verb form.",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title: "I love [word] (swimming/swim).",
-                description: "I love <strong>swimming</strong> (swimming/swim).",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "I love [word] (swimming/swim).",
+                solutionExplanation: "I love <strong>swimming</strong> (swimming/swim).",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "swimming",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                 ],
               },
@@ -1515,119 +1218,88 @@ export const niceCourses: NiceCourseData[] = [
         title: "English Basics Quiz",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 4,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title:
               "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
             description: "Choose the correct part of speech.",
-            displayOrder: 1,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title:
                   "Which part of speech is the word 'quickly' in the sentence 'She ran quickly to the store'?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Adverb",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Verb",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Adjective",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "She [word] to the park every day.",
-            description: "Fill in the blank with the correct verb.",
-            displayOrder: 2,
+            title: "Fill in the blank with the correct verb.",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title: "She [word] to the park every day.",
-                description: "She <strong>went</strong> to the park every day.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "She [word] to the park every day.",
+                solutionExplanation: "She <strong>went</strong> to the park every day.",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "goes", isCorrect: true, displayOrder: 0 },
+                  { optionText: "goes", isCorrect: true },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "went",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "What is the plural form of 'child'?",
             description: "Choose the correct plural form of 'child'.",
-            displayOrder: 3,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "What is the plural form of 'child'?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Children",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Childs",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which of these words is a conjunction?",
             description: "Choose the correct conjunction.",
-            displayOrder: 4,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which of these words is a conjunction?",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "And", isCorrect: true, displayOrder: 0 },
-                  { id: crypto.randomUUID(), optionText: "Run", isCorrect: false, displayOrder: 1 },
+                  { optionText: "And", isCorrect: true },
+                  { optionText: "Run", isCorrect: false },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Quickly",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                 ],
               },
@@ -1647,91 +1319,315 @@ export const niceCourses: NiceCourseData[] = [
     thumbnailS3Key: faker.image.urlPicsumPhotos(),
     chapters: [
       {
-        title: "Advanced Grammar: Perfecting Sentence Structures",
+        title: "Elevate Your Writing: Advanced Clause Strategies",
         isPublished: true,
-        displayOrder: 1,
         lessons: [
           {
-            id: crypto.randomUUID(),
+            type: LESSON_TYPES.QUIZ,
+            title: "Using Adverbial Clauses to Improve Sentence Fluency",
+            description:
+              "Understand how adverbial clauses function to show time, reason, contrast, and condition in sentences.",
+            questions: [
+              {
+                type: QUESTION_TYPE.SINGLE_CHOICE,
+                title: "What does an adverbial clause typically express in a sentence?",
+                options: [
+                  {
+                    optionText: "Time, reason, contrast, or condition",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "The subject of the sentence",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "Additional information about nouns",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "The main action in a sentence",
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
+                title: "Which of the following are examples of adverbial clause markers?",
+                options: [
+                  {
+                    optionText: "Although",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "However",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "Despite",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "Because",
+                    isCorrect: true,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
+                title: "Provide an example of a sentence using an adverbial clause of reason.",
+              },
+              {
+                type: QUESTION_TYPE.DETAILED_RESPONSE,
+                title:
+                  "Explain the role of adverbial clauses in improving sentence complexity and fluency. Provide examples to support your explanation.",
+              },
+              // {
+              //   type: QUESTION_TYPE.SCALE_1_5,
+              //   title: "Select the correct answer.",
+              //   options: [
+              //     {
+              //       optionText: "How confident are you in using adverbial clauses in your writing?",
+              //       isCorrect: true,
+              //       scaleAnswer: 3,
+              //     },
+              //   ],
+              // },
+              // {
+              //   type: QUESTION_TYPE.MATCH_WORDS,
+              //   title: "Match the adverbial clauses to their correct usage:",
+              //   options: [
+              //     {
+              //       optionText: "because",
+              //       isCorrect: true,
+              //       matchedWord: "reason",
+              //     },
+              //     {
+              //       optionText: "although",
+              //       isCorrect: true,
+              //       matchedWord: "contrast",
+              //     },
+              //     {
+              //       optionText: "when",
+              //       isCorrect: true,
+              //       matchedWord: "time",
+              //     },
+              //     {
+              //       optionText: "if",
+              //       isCorrect: true,
+              //       matchedWord: "condition",
+              //     },
+              //   ],
+              // },
+              {
+                type: QUESTION_TYPE.TRUE_OR_FALSE,
+                title: "Determine whether the sentence is correct or incorrect:",
+                options: [
+                  {
+                    optionText: "Adverbial clauses are used to modify nouns.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText:
+                      "Adverbial clauses provide information about the verb, adjective, or another adverb.",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "Noun clauses can modify adjectives and adverbs.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText:
+                      "Relative clauses are used to introduce more detail about the noun they modify.",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText:
+                      "A sentence can have multiple adverbial clauses with different functions.",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText:
+                      "A noun clause can act as a subject, object, or complement in a sentence.",
+                    isCorrect: true,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
+                title: "Fill blanks with the correct word.",
+                description:
+                  "The book was [word] by the author to explain complex [word] concepts.",
+                solutionExplanation:
+                  "The book was <strong>written</strong> by the author to explain complex <strong>grammatical</strong> concepts.",
+                options: [
+                  {
+                    optionText: "written",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "grammatical",
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description:
+                  "The [word] of the study focused on the effects of [word] in [word] language acquisition.",
+                solutionExplanation:
+                  "The <strong>focus</strong> of the study focused on the effects of <strong>context</strong> in <strong>second</strong> language acquisition.",
+                options: [
+                  {
+                    optionText: "focus",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "context",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "second",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "method",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "learning",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "primary",
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.PHOTO_QUESTION_SINGLE_CHOICE,
+                title: "Which sentence correctly uses an adverbial clause?",
+                description:
+                  "Look at the image below. Which sentence correctly uses an adverbial clause?",
+                photoS3Key:
+                  process.env.NODE_ENV === "production"
+                    ? "course/c862d10e-b0fc-460d-a317-9a234cab62f6.png"
+                    : "course/ae6c4e46-a445-4621-ab3e-fc3f66296910.png",
+                options: [
+                  {
+                    optionText: "She went to the park after she finished her homework.",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "The book was on the table.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "I like reading books because it's relaxing.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "He plays basketball every weekend.",
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.PHOTO_QUESTION_MULTIPLE_CHOICE,
+                title: "Select the sentence that depict examples of relative clauses.",
+                description:
+                  "Look at the image below. Select all the sentences that depict examples of relative clauses.",
+                photoS3Key:
+                  process.env.NODE_ENV === "production"
+                    ? "course/ac0a916c-fae9-410e-8b98-50fe9dfeb9a9.png"
+                    : "course/7635f98b-03c4-4065-bfbb-e518b3124a1b.png",
+                options: [
+                  {
+                    optionText: "The man who is wearing a red shirt is my brother.",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "She enjoys playing the piano every evening.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "This is the book that changed my life.",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "They are playing outside in the yard.",
+                    isCorrect: false,
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+      {
+        title: "Advanced Grammar: Perfecting Sentence Structures",
+        isPublished: true,
+        lessons: [
+          {
             type: LESSON_TYPES.TEXT,
             title: "Complex Sentences and Their Use",
             description:
               "Learn how to form and use complex sentences to convey more detailed thoughts and ideas effectively.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Relative Clauses and Modifiers",
             description:
               "A deep dive into relative clauses and modifiers, which help to add extra information to sentences.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Difference between a relative clause and a noun clause",
             description: "Explain the difference between relative and noun clauses.",
-            displayOrder: 3,
             questions: [
               {
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "What is the difference between a relative clause and a noun clause?",
-                displayOrder: 1,
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Relative clauses are used to modify nouns",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Relative clauses are used to introduce new information",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Noun clauses are used to modify nouns",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Noun clauses are used to introduce new information",
                     isCorrect: false,
-                    displayOrder: 4,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Advanced Grammar Video Tutorial",
             description:
               "Watch this in-depth video to understand complex sentence structures and advanced grammar.",
-            displayOrder: 4,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "Fill in the blanks: The book [word] I borrowed yesterday was fascinating.",
-            description: "Fill in the blank with the correct word.",
-            displayOrder: 5,
+            title: "Test your knowledge",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title: "The book [word] I borrowed yesterday was fascinating.",
-                description: "The book <strong>that</strong> I borrowed yesterday was fascinating.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "The book [word] I borrowed yesterday was fascinating.",
+                solutionExplanation:
+                  "The book <strong>that</strong> I borrowed yesterday was fascinating.",
                 options: [
-                  { id: crypto.randomUUID(), optionText: "that", isCorrect: true, displayOrder: 0 },
-                  { id: crypto.randomUUID(), optionText: "who", isCorrect: false, displayOrder: 1 },
+                  { optionText: "that", isCorrect: true },
+                  { optionText: "who", isCorrect: false },
                 ],
               },
             ],
@@ -1741,81 +1637,60 @@ export const niceCourses: NiceCourseData[] = [
       {
         title: "Vocabulary Expansion: Academic and Formal English",
         isPublished: true,
-        displayOrder: 2,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Academic Vocabulary and Its Application",
             description:
               "Master vocabulary words commonly used in academic papers, essays, and formal discussions.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Using Formal Language in Communication",
             description:
               "Learn how to adjust your language for formal situations, such as presentations or professional meetings.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "Academic Vocabulary List",
             description:
               "Download this list of academic vocabulary and explore their meanings and usage in context.",
-            displayOrder: 3,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Which word is an example of academic vocabulary?",
             description: "Select the correct academic word.",
-            displayOrder: 4,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "Which word is an example of academic vocabulary?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Analyze",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
-                  { id: crypto.randomUUID(), optionText: "Run", isCorrect: false, displayOrder: 1 },
+                  { optionText: "Run", isCorrect: false },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Quick",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "The results [word] the hypothesis.",
-            description: "Fill in the blank with the correct word.",
-            displayOrder: 5,
+            title: "Test your knowledge",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title: "The results [word] the hypothesis.",
-                description: "The results <strong>support</strong> the hypothesis.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "The results [word] the hypothesis.",
+                solutionExplanation: "The results <strong>support</strong> the hypothesis.",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "support",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                 ],
               },
@@ -1826,58 +1701,44 @@ export const niceCourses: NiceCourseData[] = [
       {
         title: "Mastering Idiomatic Expressions",
         isPublished: true,
-        displayOrder: 3,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Understanding Idioms in Context",
             description:
               "Learn how idiomatic expressions are used in everyday conversations to sound more natural and fluent.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Common Idioms and Their Meanings",
             description:
               "A list of frequently used idioms, their meanings, and examples of how to use them.",
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "What does the idiom 'break the ice' mean?",
             description: "Explain the meaning of the idiom 'break the ice'.",
-            displayOrder: 3,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "Idiomatic Expressions Video Tutorial",
             description:
               "Watch this video to learn how to use idiomatic expressions in real conversations.",
-            displayOrder: 4,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
-            title: "She was [word] when she heard the good news.",
-            description: "Fill in the blank with the correct idiom.",
-            displayOrder: 5,
+            title: "Fill in the blank with the correct idiom.",
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title: "She was [word] when she heard the good news.",
-                description: "She was <strong>over the moon</strong> when she heard the good news.",
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description: "She was [word] when she heard the good news.",
+                solutionExplanation:
+                  "She was <strong>over the moon</strong> when she heard the good news.",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "over the moon",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                 ],
               },
@@ -1900,254 +1761,185 @@ export const niceCourses: NiceCourseData[] = [
         title: "Understanding AI Basics",
         isPublished: true,
         isFreemium: false,
-        displayOrder: 1,
         lessons: [
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.VIDEO,
             title: "What is Artificial Intelligence? An Introductory Overview",
             description:
               "A comprehensive video introduction to the concept of Artificial Intelligence, its history, and its significance in business.",
-            displayOrder: 1,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.TEXT,
             title: "Key Concepts and Terminologies in AI",
             description:
               '<p>Artificial Intelligence (AI) refers to the simulation of human intelligence in machines programmed to think, learn, and make decisions. Below are some key concepts and terminologies essential to understanding AI:</p><ul><li><strong>Machine Learning (ML):</strong> A subset of AI focused on creating algorithms that allow computers to learn from and make predictions based on data. Example: A recommendation system suggesting movies based on your viewing history.</li><li><strong>Neural Networks:</strong> Inspired by the human brain, these are algorithms designed to recognize patterns and process data in layers, enabling tasks like image and speech recognition.</li><li><strong>Natural Language Processing (NLP):</strong> This involves teaching machines to understand, interpret, and generate human language. Example: Virtual assistants like Alexa or Siri.</li><li><strong>Computer Vision:</strong> A field of AI that enables computers to interpret and process visual data, such as images and videos. Example: Facial recognition technology.</li><li><strong>Deep Learning:</strong> A more complex subset of ML that uses large neural networks to analyze massive amounts of data and solve intricate problems, such as self-driving cars.</li><li><strong>Supervised vs. Unsupervised Learning:</strong><br>- <strong>Supervised Learning:</strong> The AI is trained on labeled data (e.g., images labeled as "cat" or "dog").<br>- <strong>Unsupervised Learning:</strong> The AI identifies patterns in unlabeled data without explicit instructions.</li><li><strong>Big Data:</strong> The large volume of structured and unstructured data generated by businesses and devices, which is essential for training AI models.</li><li><strong>Automation:</strong> AI is often used to automate repetitive tasks, freeing up human resources for more complex activities.</li><li><strong>Ethics in AI:</strong> As AI becomes more powerful, ensuring its ethical use (e.g., avoiding bias in decision-making) is critical for building trust.</li></ul><h3>Why These Concepts Matter</h3><p>Understanding these basic AI terms is the first step toward recognizing how AI can be applied in business. Each concept represents a building block of AI\'s potential to transform industries by increasing efficiency, improving decision-making, and creating innovative solutions.</p>',
-            displayOrder: 2,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.PRESENTATION,
             title: "AI Applications Across Industries",
             description:
               "A presentation exploring real-world AI applications in sectors like healthcare, finance, and retail.",
-            displayOrder: 3,
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "AI Quiz: Primary Goal of AI in Business",
             description:
               "Test your understanding of the fundamental goal of AI in business applications.",
-            displayOrder: 4,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.SingleChoice,
+                type: QUESTION_TYPE.SINGLE_CHOICE,
                 title: "What is the primary goal of AI in business?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Replace human workers",
                     isCorrect: false,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Automate repetitive tasks",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Improve decision-making",
                     isCorrect: true,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Eliminate operational costs",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "AI Quiz: Applications of AI",
             description: "Identify common AI applications in various business domains.",
-            displayOrder: 5,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.MultipleChoice,
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
                 title:
                   "Which of the following are applications of AI in business? (Select all that apply)",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Customer service chatbots",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Predictive analytics",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Supply chain optimization",
                     isCorrect: true,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Space exploration tools",
                     isCorrect: false,
-                    displayOrder: 3,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "AI Quiz: Can AI Function Without Data?",
             description: "Test your understanding of AI's reliance on data.",
-            displayOrder: 6,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.TrueOrFalse,
+                type: QUESTION_TYPE.TRUE_OR_FALSE,
                 title: "AI can function without any data input from humans.",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "True",
                     isCorrect: false,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "False",
                     isCorrect: true,
-                    displayOrder: 1,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Photo Identification: AI Solutions",
             description: "Identify the AI-driven solution from the provided images.",
-            displayOrder: 7,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.PhotoQuestionSingleChoice,
+                type: QUESTION_TYPE.PHOTO_QUESTION_SINGLE_CHOICE,
                 title: "Which image represents an AI-driven chatbot?",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Image 1 (Chatbot Interface)",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Image 2 (Calculator)",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Image 3 (Spreadsheet)",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "AI Fill in the Blanks",
-            description: "Complete the sentences with the correct AI-related terms.",
-            displayOrder: 8,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.FillInTheBlanksDnd,
-                title:
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill blanks with the correct word.",
+                description:
                   "Complete the blanks: Artificial [word] refers to the ability of machines to mimic [word] intelligence.",
+                solutionExplanation:
+                  "Complete the blanks: Artificial <strong>intelligence</strong> refers to the ability of machines to mimic <strong>human</strong> intelligence.",
                 options: [
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Intelligence",
                     isCorrect: true,
-                    displayOrder: 0,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Automation",
                     isCorrect: false,
-                    displayOrder: 1,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Learning",
                     isCorrect: false,
-                    displayOrder: 2,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Human",
                     isCorrect: true,
-                    displayOrder: 3,
                   },
                   {
-                    id: crypto.randomUUID(),
                     optionText: "Animal",
                     isCorrect: false,
-                    displayOrder: 4,
                   },
                 ],
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Brief Response: Why Businesses Adopt AI",
             description: "Explain in one sentence why businesses adopt AI.",
-            displayOrder: 9,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.BriefResponse,
+                type: QUESTION_TYPE.BRIEF_RESPONSE,
                 title: "In one sentence, explain why businesses are adopting AI.",
               },
             ],
           },
           {
-            id: crypto.randomUUID(),
             type: LESSON_TYPES.QUIZ,
             title: "Detailed Response: AI's Role in an Industry",
             description: "Describe how AI can improve decision-making in a specific industry.",
-            displayOrder: 10,
             questions: [
               {
-                displayOrder: 1,
-                id: crypto.randomUUID(),
-                type: QuestionType.DetailedResponse,
+                type: QUESTION_TYPE.DETAILED_RESPONSE,
                 title:
                   "Describe how AI can improve decision-making in a specific industry of your choice.",
               },

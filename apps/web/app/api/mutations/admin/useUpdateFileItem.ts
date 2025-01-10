@@ -27,7 +27,7 @@ export function useUpdateFileItem() {
     },
     onSuccess: () => {
       toast({
-        description: t("adminCourseView.curriculum.lesson.toast.fileItemUpdatedSuccessfully"),
+        description: t("adminCourseView.curriculum.lesson.toast.fileLessonUpdatedSuccessfully"),
       });
     },
     onError: (error) => {

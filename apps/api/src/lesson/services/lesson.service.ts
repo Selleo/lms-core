@@ -16,15 +16,12 @@ import { QuestionRepository } from "src/questions/question.repository";
 import { QuestionService } from "src/questions/question.service";
 import { QUESTION_TYPE } from "src/questions/schema/question.types";
 import {
-  chapters,
-  lessons,
   questionAnswerOptions,
   questions,
   quizAttempts,
-  studentCourses,
-  studentLessonProgress,
   studentQuestionAnswers,
 } from "src/storage/schema";
+import { StudentLessonProgressService } from "src/studentLessonProgress/studentLessonProgress.service";
 
 import { LESSON_TYPES } from "../lesson.type";
 import { LessonRepository } from "../repositories/lesson.repository";
@@ -36,8 +33,8 @@ import type {
   QuestionBody,
   QuestionDetails,
 } from "../lesson.schema";
-import type { LessonTypes, QuestionType } from "../lesson.type";
 import type { UUIDType } from "src/common";
+import type { QuestionType } from "src/questions/schema/question.types";
 
 @Injectable()
 export class LessonService {
@@ -47,34 +44,17 @@ export class LessonService {
     private readonly questionService: QuestionService,
     private readonly questionRepository: QuestionRepository,
     private readonly fileService: FileService,
+    private readonly studentLessonProgressService: StudentLessonProgressService,
     private readonly eventBus: EventBus,
   ) {}
 
   async getLessonById(id: UUIDType, userId: UUIDType, isStudent: boolean): Promise<LessonShow> {
-    const [lesson] = await this.db
-      .select({
-        id: lessons.id,
-        type: sql<LessonTypes>`${lessons.type}`,
-        title: lessons.title,
-        description: sql<string>`${lessons.description}`,
-        fileUrl: lessons.fileS3Key,
-        fileType: lessons.fileType,
-        displayOrder: sql<number>`${lessons.displayOrder}`,
-        quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
-        quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
-        isExternal: sql<boolean>`${lessons.isExternal}`,
-      })
-      .from(lessons)
-      .leftJoin(
-        studentLessonProgress,
-        and(
-          eq(studentLessonProgress.lessonId, lessons.id),
-          eq(studentLessonProgress.studentId, userId),
-        ),
-      )
-      .where(eq(lessons.id, id));
+    const lesson = await this.lessonRepository.getLessonDetails(id, userId);
 
     if (!lesson) throw new NotFoundException("Lesson not found");
+
+    if (!lesson.isFreemium && !lesson.isEnrolled)
+      throw new UnauthorizedException("You don't have access");
 
     if (lesson.type === LESSON_TYPES.TEXT && !lesson.fileUrl) return lesson;
 
@@ -98,55 +78,85 @@ export class LessonService {
         type: sql<QuestionType>`${questions.type}`,
         title: questions.title,
         description: sql<string>`${questions.description}`,
+        solutionExplanation: sql<string | null>`CASE
+          WHEN ${lesson.quizCompleted} THEN ${questions.solutionExplanation} 
+          ELSE NULL 
+        END`,
         photoS3Key: sql<string>`${questions.photoS3Key}`,
         passQuestion: sql<boolean | null>`CASE
           WHEN ${lesson.quizCompleted} THEN ${studentQuestionAnswers.isCorrect}
           ELSE NULL END`,
         displayOrder: sql<number>`${questions.displayOrder}`,
-        options: sql<OptionBody[]>`
-              (
-                SELECT ARRAY(
-                  SELECT json_build_object(
-                    'id', qao.id,
-                    'optionText', qao.option_text,
-                    'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
-                    'displayOrder',
-                      CASE
-                        WHEN ${lesson.quizCompleted} THEN qao.display_order
-                        ELSE NULL
-                      END,
-                    'isStudentAnswer',
-                      CASE
-                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                        WHEN ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text) = qao.option_text AND
-                          ${questions.type} IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
-                        THEN TRUE
-                        WHEN EXISTS (
-                          SELECT 1
-                          FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                          WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text)
-                            ) AND  ${questions.type} NOT IN (${QUESTION_TYPE.fill_in_the_blanks_dnd.key}, ${QUESTION_TYPE.fill_in_the_blanks_text.key})
-                        THEN TRUE
-                        ELSE FALSE
-                      END,
-                    'studentAnswer',  
-                      CASE
-                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                        ELSE
-                          ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
-                        END
-                  )
-                  FROM ${questionAnswerOptions} qao
-                  WHERE qao.question_id = questions.id
-                  ORDER BY
-                    CASE
-                      WHEN ${questions.type} in (${QUESTION_TYPE.fill_in_the_blanks_dnd}) AND ${lesson.quizCompleted} = FALSE
-                        THEN random()
-                      ELSE qao.display_order
-                    END
-                )
+        options: sql<OptionBody[]>`CASE
+          WHEN ${questions.type} in (${QUESTION_TYPE.BRIEF_RESPONSE}, ${
+            QUESTION_TYPE.DETAILED_RESPONSE
+          }) AND ${lesson.quizCompleted} THEN
+            ARRAY[json_build_object(
+              'id', ${studentQuestionAnswers.id},
+              'optionText', '',
+              'isCorrect', TRUE,
+              'displayOrder', 1,
+              'isStudentAnswer', TRUE,
+              'studentAnswer', ${studentQuestionAnswers.answer}->>'1'
+            )]
+          ELSE
+          (
+            SELECT ARRAY(
+              SELECT json_build_object(
+                'id', qao.id,
+                'optionText',  
+                  CASE 
+                    WHEN ${!lesson.quizCompleted} AND ${questions.type} = ${
+                      QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                    } THEN NULL
+                    ELSE qao.option_text
+                  END,
+                'isCorrect', CASE WHEN ${lesson.quizCompleted} THEN qao.is_correct ELSE NULL END,
+                'displayOrder',
+                  CASE
+                    WHEN ${lesson.quizCompleted} THEN qao.display_order
+                    ELSE NULL
+                  END,
+                'isStudentAnswer',
+                  CASE
+                    WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                    WHEN ${
+                      studentQuestionAnswers.answer
+                    }->>CAST(qao.display_order AS text) = qao.option_text AND
+                      ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                        QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                      })
+                      THEN TRUE
+                    WHEN EXISTS (
+                      SELECT 1
+                      FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                      WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
+                        AND  ${questions.type} NOT IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                          QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                        })
+                      THEN TRUE
+                    ELSE FALSE
+                  END,
+                'studentAnswer',  
+                  CASE
+                    WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                    ELSE ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
+                  END
               )
-          `,
+              FROM ${questionAnswerOptions} qao
+              WHERE qao.question_id = questions.id
+              ORDER BY
+                CASE
+                  WHEN ${questions.type} in (${
+                    QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
+                  }) AND ${!lesson.quizCompleted}
+                    THEN random()
+                  ELSE qao.display_order
+                END
+            )
+          )
+        END
+      `,
       })
       .from(questions)
       .leftJoin(
@@ -197,9 +207,9 @@ export class LessonService {
       const quizDetails: QuestionDetails = {
         questions: questionListWithUrls,
         questionCount: questionListWithUrls.length,
-        score: quizResult.score,
-        correctAnswerCount: quizResult.correctAnswerCount,
-        wrongAnswerCount: quizResult.wrongAnswerCount,
+        score: quizResult?.score ?? 0,
+        correctAnswerCount: quizResult?.correctAnswerCount ?? 0,
+        wrongAnswerCount: quizResult?.wrongAnswerCount ?? 0,
       };
 
       return { ...lesson, quizDetails };
@@ -225,7 +235,7 @@ export class LessonService {
     questionCount: number;
     score: number;
   }> {
-    const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(
+    const [accessCourseLessonWithDetails] = await this.lessonRepository.checkLessonAssignment(
       studentQuizAnswers.lessonId,
       userId,
     );
@@ -267,6 +277,14 @@ export class LessonService {
           trx,
         );
 
+        await this.studentLessonProgressService.markLessonAsCompleted(
+          studentQuizAnswers.lessonId,
+          userId,
+          true,
+          evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
+          trx,
+        );
+
         this.eventBus.publish(
           new QuizCompletedEvent(
             userId,
@@ -287,37 +305,12 @@ export class LessonService {
       } catch (error) {
         throw new ConflictException(
           "Quiz evaluation failed, problem with question: " +
-            error.message +
+            error?.message +
             " problem: " +
-            error.response.error,
+            error?.response?.error,
         );
       }
     });
-  }
-
-  async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
-    return this.db
-      .select({
-        isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
-        isFreemium: sql<boolean>`CASE WHEN ${chapters.isFreemium} THEN TRUE ELSE FALSE END`,
-        lessonIsCompleted: sql<boolean>`CASE WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN TRUE ELSE FALSE END`,
-        chapterId: sql<string>`${chapters.id}`,
-        courseId: sql<string>`${chapters.courseId}`,
-      })
-      .from(lessons)
-      .leftJoin(
-        studentLessonProgress,
-        and(
-          eq(studentLessonProgress.lessonId, lessons.id),
-          eq(studentLessonProgress.studentId, userId),
-        ),
-      )
-      .leftJoin(chapters, eq(lessons.chapterId, chapters.id))
-      .leftJoin(
-        studentCourses,
-        and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
-      )
-      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
   }
 
   // async studentAnswerOnQuestion(
@@ -378,40 +371,5 @@ export class LessonService {
   //   } catch (error) {
   //     return false;
   //   }
-  // }
-
-  // private async getLessonQuestionsToEvaluation(
-  //   lesson: Lesson,
-  //   courseId: UUIDType,
-  //   userId: UUIDType,
-  //   quizCompleted: boolean,
-  // ) {
-  //   const lessonItemsList = await this.chapterRepository.getLessonItems(lesson.id, courseId);
-  //   const validLessonItemsList = lessonItemsList.filter(this.isValidItem);
-
-  //   return await Promise.all(
-  //     validLessonItemsList.map(async (item) => {
-  //       const { lessonItemId, questionData, lessonItemType, displayOrder } = item;
-
-  //       if (isNull(questionData)) throw new Error("Question not found");
-
-  //       const content = await this.processQuestionItem(
-  //         { lessonItemId, displayOrder, lessonItemType, questionData },
-  //         userId,
-  //         courseId,
-  //         lesson.id,
-  //         lesson.type,
-  //         quizCompleted,
-  //         null,
-  //       );
-
-  //       return {
-  //         lessonItemId: item.lessonItemId,
-  //         lessonItemType: item.lessonItemType,
-  //         displayOrder: item.displayOrder,
-  //         content,
-  //       };
-  //     }),
-  //   );
   // }
 }

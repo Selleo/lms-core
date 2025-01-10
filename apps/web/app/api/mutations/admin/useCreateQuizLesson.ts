@@ -25,7 +25,7 @@ export function useCreateQuizLesson() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: t("adminCourseView.curriculum.lesson.toast.quizItemCreatedSuccessfully"),
+        description: t("adminCourseView.curriculum.lesson.toast.quizLessonCreatedSuccessfully"),
       });
     },
     onError: (error) => {

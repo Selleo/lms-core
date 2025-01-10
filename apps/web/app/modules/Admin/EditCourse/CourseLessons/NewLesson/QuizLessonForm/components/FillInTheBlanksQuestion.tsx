@@ -8,15 +8,15 @@ import { useEffect, useState } from "react";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
-import { FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import { FormControl, FormField, FormItem } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 import { useTranslation } from "react-i18next";
 
 type FillInTheBlankQuestionProps = {
@@ -106,6 +106,8 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
       const escapedWord = wordToRemove.replace(/[.*+?^=!:${}()|[\]/\\]/g, "\\$&");
 
       const buttonRegex = new RegExp(
+        // TODO: Needs to be fixed
+        // eslint-disable-next-line
         `<button[^>]*class="[^"]*bg-primary-200[^"]*"[^>]*>[^<]*${escapedWord}[^<]*<\/button>`,
         "gi",
       );
@@ -162,7 +164,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     setAddedWords(buttonValues);
   };
-
   const handleAddWord = () => {
     const trimmedWord = newWord.trim();
 
@@ -365,7 +366,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
             </div>
             <>
               {errors?.questions?.[questionIndex] && (
-                <p className="text-red-500 text-sm ml-">
+                <p className="text-red-500 text-sm">
                   {errors?.questions?.[questionIndex]?.options?.message}
                 </p>
               )}

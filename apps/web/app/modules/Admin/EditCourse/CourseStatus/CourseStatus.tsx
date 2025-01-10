@@ -1,10 +1,13 @@
+// TODO: Need to be fixed
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { Button } from "~/components/ui/button";
 import { Form, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 
 import { useCourseStatusForm } from "./hooks/useCourseStatusForm";
-import { Input } from "~/components/ui/input";
-import { Label } from "~/components/ui/label";
 import { useTranslation } from "react-i18next";
 
 type CoursePublishStatusProps = {

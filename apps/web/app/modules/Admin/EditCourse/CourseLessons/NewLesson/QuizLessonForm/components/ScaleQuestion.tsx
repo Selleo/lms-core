@@ -8,12 +8,12 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { useTranslation } from "react-i18next";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
+import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
-import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
-import { DeleteContentType } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 type ScaleQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
@@ -102,7 +102,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
                   <SortableList.Item id={item.displayOrder}>
-                    <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
+                    <div className="border mt-2 border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
                       <SortableList.DragHandle>
                         <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
                       </SortableList.DragHandle>

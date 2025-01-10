@@ -7,7 +7,6 @@ import {
 } from "@nestjs/common";
 import {
   and,
-  asc,
   between,
   count,
   countDistinct,
@@ -78,18 +77,15 @@ export class CourseService {
     pagination: Pagination;
   }> {
     const {
-      sort = CourseSortFields.title,
-      perPage = DEFAULT_PAGE_SIZE,
-      page = 1,
       filters = {},
+      page = 1,
+      perPage = DEFAULT_PAGE_SIZE,
+      sort = CourseSortFields.title,
       currentUserId,
       currentUserRole,
     } = query;
 
-    // TODO: repair it
-    // const { sortOrder, sortedField } = getSortOptions(sort);
-    const sortOrder = asc;
-    const sortedField = CourseSortFields.title;
+    const { sortOrder, sortedField } = getSortOptions(sort);
 
     return await this.db.transaction(async (trx) => {
       const conditions = this.getFiltersConditions(filters, false);
@@ -470,15 +466,15 @@ export class CourseService {
         lessonCount: chapters.lessonCount,
         isFree: chapters.isFreemium,
         lessons: sql<LessonForChapterSchema>`
-        COALESCE(
-          (
-            SELECT array_agg(${lessons.id} ORDER BY ${lessons.displayOrder})
-            FROM ${lessons}
-            WHERE ${lessons.chapterId} = ${chapters.id}
-          ),
-          '{}'
-        )
-      `,
+          COALESCE(
+            (
+              SELECT array_agg(${lessons.id} ORDER BY ${lessons.displayOrder})
+              FROM ${lessons}
+              WHERE ${lessons.chapterId} = ${chapters.id}
+            ),
+            '{}'
+          )
+        `,
       })
       .from(chapters)
       .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
@@ -595,7 +591,12 @@ export class CourseService {
       conditions.push(inArray(courses.id, availableCourseIds));
     }
 
-    return this.db
+    const getImageUrl = async (url: string) => {
+      if (!url || url.startsWith("https://")) return url;
+      return await this.fileService.getFileUrl(url);
+    };
+
+    const teacherCourses = await this.db
       .select({
         id: courses.id,
         description: sql<string>`${courses.description}`,
@@ -643,6 +644,15 @@ export class CourseService {
         sql<boolean>`CASE WHEN ${studentCourses.studentId} IS NULL THEN TRUE ELSE FALSE END`,
         courses.title,
       );
+
+    return await Promise.all(
+      teacherCourses.map(async (course) => ({
+        ...course,
+        thumbnailUrl: course.thumbnailUrl
+          ? await getImageUrl(course.thumbnailUrl)
+          : course.thumbnailUrl,
+      })),
+    );
   }
 
   async createCourse(createCourseBody: CreateCourseBody, authorId: UUIDType) {

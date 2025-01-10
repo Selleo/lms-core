@@ -1,17 +1,17 @@
 import { useParams } from "@remix-run/react";
+import { useState } from "react";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 
 import { ContentTypes, DeleteContentType } from "../../EditCourse.types";
 
 import { useNewChapterForm } from "./hooks/useNewChapterForm";
 
 import type { Chapter } from "../../EditCourse.types";
-import { useState } from "react";
-import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 import { useTranslation } from "react-i18next";
 
 type NewChapterProps = {

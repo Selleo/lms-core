@@ -9,6 +9,8 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
+const baseURL = "http://localhost:5173";
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -16,7 +18,7 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   workers: process.env.CI ? 1 : undefined,
   use: {
-    baseURL: process.env.CI ? "https://lms.beta.selleo.app" : "https://app.lms.localhost",
+    baseURL,
     ignoreHTTPSErrors: true,
     launchOptions: {
       args: [
@@ -44,5 +46,52 @@ export default defineConfig({
       },
       testMatch: /.*\.(spec|test)\.ts$/,
     },
+  ],
+  webServer: [
+    {
+      command: "cd ../api && pnpm run start:dev",
+      url: "http://localhost:3000/api/healthcheck",
+      timeout: 120 * 1000,
+      reuseExistingServer: false,
+      env: {
+        DATABASE_URL: `postgresql://test_user:test_password@localhost:54321/test_db`,
+        REDIS_HOST: "localhost",
+        REDIS_PORT: "6380",
+        NODE_ENV: "test",
+        MODE: "test",
+      },
+      stderr: "pipe",
+      stdout: "pipe",
+    },
+    {
+      command: "cd ../api && pnpm db:migrate && pnpm db:seed",
+      env: {
+        DATABASE_URL: `postgresql://test_user:test_password@localhost:54321/test_db`,
+        NODE_ENV: "test",
+        MODE: "test",
+      },
+      reuseExistingServer: false,
+      stderr: "pipe",
+      stdout: "pipe",
+    },
+    {
+      command: "cd ../web && pnpm run dev",
+      url: "http://localhost:5173/",
+      timeout: 120 * 1000,
+      reuseExistingServer: false,
+      env: {
+        API_URL: "http://localhost:3000/api",
+        NODE_ENV: "test",
+        MODE: "test",
+      },
+      stderr: "pipe",
+      stdout: "pipe",
+    },
+    // {
+    //   command: "cd ../reverse-proxy && pnpm run dev",
+    //   url: "http://localhost:2019/config/",
+    //   timeout: 120 * 1000,
+    //   reuseExistingServer: true,
+    // },
   ],
 });

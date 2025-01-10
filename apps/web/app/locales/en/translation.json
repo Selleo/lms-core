@@ -104,8 +104,10 @@
     "profile": "Profile",
     "dashboard": "Dashboard",
     "courses": "Courses",
+    "myCourses": "My courses",
     "categories": "Categories",
-    "users": "Users"
+    "users": "Users",
+    "browseCourses": "Browse Courses"
   },
   "changeUserEmailView": {
     "header": "Change user information",
@@ -495,12 +497,12 @@
           "errorWhileUpdating": "An error occurred while updating.",
           "unexpectedError": "An unexpected error occurred.",
           "lessonCreatedSuccessfully": "Lesson created successfully",
-          "fileItemCreatedSuccessfully": "File item created successfully",
-          "textItemCreatedSuccessfully": "Text block created successfully",
-          "quizItemCreatedSuccessfully": "Quiz created successfully",
+          "fileLessonCreatedSuccessfully": "File item created successfully",
+          "textLessonCreatedSuccessfully": "Text block created successfully",
+          "quizLessonCreatedSuccessfully": "Quiz created successfully",
           "lessonUpdatedSuccessfully": "Lesson updated successfully",
-          "textItemUpdatedSuccessfully": "Text block updated successfully",
-          "fileItemupdatedSuccessfully": "File item updated successfully",
+          "textLessonUpdatedSuccessfully": "Text block updated successfully",
+          "fileLessonUpdatedSuccessfully": "File item updated successfully",
           "questionOptionsUpdatedSuccessfully": "Question options updated successfully"
         },
         "field": {

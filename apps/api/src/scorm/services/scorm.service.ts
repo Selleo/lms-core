@@ -18,6 +18,7 @@ import { SCORM } from "../constants/scorm.consts";
 import { ScormRepository } from "../repositories/scorm.repository";
 
 import type { UUIDType } from "src/common";
+import type { LessonTypes } from "src/lesson/lesson.type";
 
 type ScormChapter = {
   title: string;
@@ -30,7 +31,7 @@ type ScormLesson = {
   title: string;
   identifier: string;
   href: string;
-  type: string;
+  type: LessonTypes;
   displayOrder: number;
   isQuiz: boolean;
 };

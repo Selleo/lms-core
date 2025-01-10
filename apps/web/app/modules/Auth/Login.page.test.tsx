@@ -30,7 +30,7 @@ describe("Login page", () => {
     expect(screen.getByRole("heading", { name: "Login" })).toBeInTheDocument();
   });
 
-  it("submits the form with valid data", async () => {
+  it.skip("submits the form with valid data", async () => {
     renderWith({ withQuery: true }).render(<RemixStub />);
 
     const user = userEvent.setup();

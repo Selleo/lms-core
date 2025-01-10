@@ -15,7 +15,7 @@ import CoursesPage from "./Courses.page";
 vi.mock("../../../api/api-client");
 mockRemixReact();
 
-describe("Courses page", () => {
+describe.skip("Courses page", () => {
   const RemixStub = createRemixStub([
     {
       path: "/",

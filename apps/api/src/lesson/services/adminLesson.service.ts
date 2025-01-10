@@ -38,17 +38,25 @@ export class AdminLessonService {
       ...data,
       displayOrder: maxDisplayOrder + 1,
     });
+
+    await this.adminLessonRepository.updateLessonCountForChapter(lesson.chapterId);
+
     return lesson.id;
   }
 
   async createQuizLesson(data: CreateQuizLessonBody, authorId: UUIDType) {
     const maxDisplayOrder = await this.adminLessonRepository.getMaxDisplayOrder(data.chapterId);
 
+    if (!data.questions?.length) throw new BadRequestException("Questions are required");
+
     const lesson = await this.createQuizLessonWithQuestionsAndOptions(
       data,
       authorId,
       maxDisplayOrder + 1,
     );
+
+    await this.adminLessonRepository.updateLessonCountForChapter(data.chapterId);
+
     return lesson?.id;
   }
 
@@ -58,6 +66,8 @@ export class AdminLessonService {
     if (!lesson) {
       throw new NotFoundException("Lesson not found");
     }
+
+    if (!data.questions?.length) throw new BadRequestException("Questions are required");
 
     const updatedLessonId = await this.updateQuizLessonWithQuestionsAndOptions(id, data, authorId);
     return updatedLessonId;
@@ -91,6 +101,7 @@ export class AdminLessonService {
     await this.db.transaction(async (trx) => {
       await this.adminLessonRepository.removeLesson(lessonId, trx);
       await this.adminLessonRepository.updateLessonDisplayOrder(lesson.chapterId, trx);
+      await this.adminLessonRepository.updateLessonCountForChapter(lesson.chapterId, trx);
     });
   }
 
@@ -131,7 +142,7 @@ export class AdminLessonService {
     });
   }
 
-  async createQuizLessonWithQuestionsAndOptions(
+  private async createQuizLessonWithQuestionsAndOptions(
     data: CreateQuizLessonBody,
     authorId: UUIDType,
     displayOrder: number,

@@ -27,7 +27,7 @@ export function useUpdateTextLesson() {
     },
     onSuccess: () => {
       toast({
-        description: t("adminCourseView.curriculum.lesson.toast.textItemUpdatedSuccessfully"),
+        description: t("adminCourseView.curriculum.lesson.toast.textLessonUpdatedSuccessfully"),
       });
     },
     onError: (error) => {

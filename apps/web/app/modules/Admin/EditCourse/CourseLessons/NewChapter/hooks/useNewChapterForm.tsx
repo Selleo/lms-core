@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 
 import { useBetaCreateChapter } from "~/api/mutations/admin/useBetaCreateChapter";
 import { useDeleteChapter } from "~/api/mutations/admin/useDeleteChapter";
+import { useUpdateChapter } from "~/api/mutations/admin/useUpdateChapter";
 import { COURSE_QUERY_KEY } from "~/api/queries/admin/useBetaCourse";
 import { queryClient } from "~/api/queryClient";
 
@@ -11,7 +12,6 @@ import { type Chapter, ContentTypes } from "../../../EditCourse.types";
 import { newChapterFormSchema } from "../validators/newChapterFormSchema";
 
 import type { NewChapterFormValues } from "../validators/newChapterFormSchema";
-import { useUpdateChapter } from "~/api/mutations/admin/useUpdateChapter";
 
 type UseNewChapterFormProps = {
   courseId: string;

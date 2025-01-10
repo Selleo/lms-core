@@ -22,21 +22,16 @@ export const allCoursesValidation = {
     },
     {
       type: "query" as const,
-      name: "state",
+      name: "isPublished",
       schema: Type.String(),
     },
-    {
-      type: "query" as const,
-      name: "archived",
-      schema: Type.String(),
-    },
+    { type: "query" as const, name: "sort", schema: sortCourseFieldsOptions },
     {
       type: "query" as const,
       name: "page",
       schema: Type.Number({ minimum: 1 }),
     },
     { type: "query" as const, name: "perPage", schema: Type.Number() },
-    { type: "query" as const, name: "sort", schema: sortCourseFieldsOptions },
   ],
 };
 

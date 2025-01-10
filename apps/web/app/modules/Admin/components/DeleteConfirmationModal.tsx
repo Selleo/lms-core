@@ -1,3 +1,5 @@
+import { match } from "ts-pattern";
+
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import {
@@ -7,7 +9,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "~/components/ui/dialog";
-import { match } from "ts-pattern";
+
 import { DeleteContentType } from "../EditCourse/EditCourse.types";
 import { useTranslation } from "react-i18next";
 

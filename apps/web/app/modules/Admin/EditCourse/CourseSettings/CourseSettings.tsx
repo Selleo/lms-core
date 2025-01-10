@@ -57,6 +57,10 @@ const CourseSettings = ({
   const watchedTitle = form.watch("title");
   const watchedDescription = form.watch("description");
   const watchedCategoryId = form.getValues("categoryId");
+  const maxDescriptionFieldLength = 800;
+
+  const watchedDescriptionLength = watchedDescription.length;
+  const descriptionFieldCharactersLeft = maxDescriptionFieldLength - watchedDescriptionLength;
 
   const categoryName = useMemo(() => {
     return categories.find((category) => category.id === watchedCategoryId)?.title;
@@ -135,7 +139,15 @@ const CourseSettings = ({
                 name="description"
                 label={t("adminCourseView.settings.field.description")}
                 required
+                maxLength={maxDescriptionFieldLength}
               />
+              {descriptionFieldCharactersLeft <= 0 ? (
+                <p className="text-red-500 text-sm">You have reached the character limit.</p>
+              ) : (
+                <p className="text-neutral-800 mt-1">
+                  {descriptionFieldCharactersLeft} characters left
+                </p>
+              )}
               <FormField
                 control={form.control}
                 name="thumbnailS3Key"

@@ -1,9 +1,10 @@
 import { Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
+import { QUESTION_TYPE } from "src/questions/schema/question.types";
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
-import { LESSON_TYPES, QuestionType } from "./lesson.type";
+import { LESSON_TYPES } from "./lesson.type";
 
 import type { Static } from "@sinclair/typebox";
 
@@ -20,7 +21,7 @@ export const adminOptionSchema = Type.Object({
 
 export const adminQuestionSchema = Type.Object({
   id: Type.Optional(UUIDSchema),
-  type: Type.Enum(QuestionType),
+  type: Type.Enum(QUESTION_TYPE),
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
   displayOrder: Type.Optional(Type.Number()),
@@ -31,7 +32,7 @@ export const adminQuestionSchema = Type.Object({
 
 export const optionSchema = Type.Object({
   id: UUIDSchema,
-  optionText: Type.String(),
+  optionText: Type.Union([Type.String(), Type.Null()]),
   displayOrder: Type.Union([Type.Number(), Type.Null()]),
   isStudentAnswer: Type.Union([Type.Boolean(), Type.Null()]),
   studentAnswer: Type.Union([Type.String(), Type.Null()]),
@@ -41,19 +42,20 @@ export const optionSchema = Type.Object({
 
 export const questionSchema = Type.Object({
   id: UUIDSchema,
-  type: Type.Enum(QuestionType),
+  type: Type.Enum(QUESTION_TYPE),
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
   displayOrder: Type.Optional(Type.Number()),
   photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   options: Type.Optional(Type.Array(optionSchema)),
   passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
+  solutionExplanation: Type.Union([Type.String(), Type.Null()]),
 });
 
 export const lessonSchema = Type.Object({
   id: UUIDSchema,
   title: Type.String(),
-  type: Type.String(),
+  type: Type.Enum(LESSON_TYPES),
   description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   displayOrder: Type.Number(),
   fileS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -76,7 +78,7 @@ const lessonQuizSchema = Type.Object({
 
 export const adminLessonSchema = Type.Object({
   id: UUIDSchema,
-  type: Type.String(),
+  type: Type.Enum(LESSON_TYPES),
   displayOrder: Type.Number(),
   title: Type.String(),
   description: Type.String(),
@@ -117,8 +119,10 @@ export const lessonShowSchema = Type.Object({
   fileType: Type.Union([Type.String(), Type.Null()]),
   fileUrl: Type.Union([Type.String(), Type.Null()]),
   quizDetails: Type.Optional(questionDetails),
+  quizCompleted: Type.Optional(Type.Boolean()),
   displayOrder: Type.Number(),
   isExternal: Type.Optional(Type.Boolean()),
+  nextLessonId: Type.Union([UUIDSchema, Type.Null()]),
 });
 
 export const updateLessonSchema = Type.Partial(createLessonSchema);
@@ -127,12 +131,7 @@ export const lessonForChapterSchema = Type.Array(
   Type.Object({
     id: UUIDSchema,
     title: Type.String(),
-    type: Type.Union([
-      Type.Literal(LESSON_TYPES.QUIZ),
-      Type.Literal(LESSON_TYPES.PRESENTATION),
-      Type.Literal(LESSON_TYPES.VIDEO),
-      Type.Literal(LESSON_TYPES.TEXT),
-    ]),
+    type: Type.Enum(LESSON_TYPES),
     displayOrder: Type.Number(),
     status: Type.Union([
       Type.Literal(PROGRESS_STATUSES.COMPLETED),
@@ -150,7 +149,7 @@ export const answerQuestionsForLessonBody = Type.Object({
     Type.Object({
       questionId: UUIDSchema,
       answer: Type.Array(
-        Type.Object({ answerId: UUIDSchema, value: Type.Optional(Type.String()) }),
+        Type.Object({ answerId: Type.Optional(UUIDSchema), value: Type.Optional(Type.String()) }),
       ),
     }),
   ),
