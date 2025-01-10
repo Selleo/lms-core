@@ -14,9 +14,9 @@ import { Public } from "src/common/decorators/public.decorator";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { USER_ROLES } from "src/user/schemas/userRoles";
 
-import { paymentIntentSchema } from "../schemas/payment";
-import { StripeService } from "../stripe.service";
-import { StripeWebhookHandler } from "../stripeWebhook.handler";
+import { paymentIntentSchema } from "./schemas/payment";
+import { StripeService } from "./stripe.service";
+import { StripeWebhookHandler } from "./stripeWebhook.handler";
 
 interface RequestWithRawBody extends Request {
   rawBody?: string;
