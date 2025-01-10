@@ -15,8 +15,8 @@ export const QuestionCorrectAnswers = ({
   canRenderAnswers,
   questionAnswers,
 }: QuestionCorrectAnswersProps) => {
-  if (!canRenderAnswers || !questionAnswers) return null;
   const { t } = useTranslation();
+  if (!canRenderAnswers || !questionAnswers) return null;
 
   const answersString = questionAnswers
     .filter((answer) => answer.isCorrect)

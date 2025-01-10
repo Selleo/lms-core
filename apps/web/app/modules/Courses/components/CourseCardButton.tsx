@@ -19,8 +19,8 @@ const CourseCardButton = ({
   priceInCents,
   isScormCreatePage,
 }: CourseCardButtonProps) => {
+  const { t } = useTranslation();
   const getButtonLabel = (enrolled: boolean, isAdmin: boolean) => {
-    const { t } = useTranslation();
     if (enrolled) {
       return (
         <span className="flex gap-x-2 items-center">

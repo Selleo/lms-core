@@ -59,6 +59,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
   const [words, setWords] = useState<DndWord[]>(getAnswers(question.options));
   const [currentlyDraggedWord, setCurrentlyDraggedWord] = useState<DndWord | null>(null);
   const { setValue } = useFormContext<TQuestionsForm>();
+  const { t } = useTranslation();
 
   const solutionExplanation = question.solutionExplanation;
 
@@ -244,7 +245,6 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
   }
 
   const wordBankWords = words.filter(({ blankId }) => blankId === "blank_preset");
-  const { t } = useTranslation();
 
   return (
     <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
