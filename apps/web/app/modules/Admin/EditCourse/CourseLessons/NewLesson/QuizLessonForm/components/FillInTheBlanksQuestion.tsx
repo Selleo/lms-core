@@ -1,9 +1,9 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { Color } from "@tiptap/extension-color";
-import Highlight from "@tiptap/extension-highlight";
-import TextStyle from "@tiptap/extension-text-style";
+import { Highlight } from "@tiptap/extension-highlight";
+import { TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, Node, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { StarterKit } from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
 
 import { Icon } from "~/components/Icon";
@@ -51,7 +51,9 @@ const ButtonNode = Node.create({
 const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestionProps) => {
   const [newWord, setNewWord] = useState("");
   const [isAddingWord, setIsAddingWord] = useState(false);
-  const [addedWords, setAddedWords] = useState<string[]>([]);
+  const currentOptions = form.getValues(`questions.${questionIndex}.options`) || [];
+  const currentDescription = form.getValues(`questions.${questionIndex}.description`);
+
   const errors = form.formState.errors;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -65,8 +67,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     ],
     content: form.getValues(`questions.${questionIndex}.description`) || "",
   });
-
-  const currentOptions = form.getValues(`questions.${questionIndex}.options`) || [];
 
   const onDeleteQuestion = () => {
     handleRemoveQuestion();
@@ -159,8 +159,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
       shouldDirty: true,
     });
-
-    setAddedWords(buttonValues);
   };
   const handleAddWord = () => {
     const trimmedWord = newWord.trim();
@@ -205,8 +203,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   useEffect(() => {
     if (!editor) return;
 
-    const currentDescription = form.getValues(`questions.${questionIndex}.description`);
-
     const regex = /<button[^>]*class="[^"]*bg-primary-200[^"]*"[^>]*>([^<]+)<\/button>/g;
     const buttonValues = currentDescription
       ? [...currentDescription.matchAll(regex)]
@@ -224,7 +220,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
       shouldDirty: true,
     });
-  }, [form.getValues(`questions.${questionIndex}.description`), form, questionIndex]);
+  }, [currentDescription, form, questionIndex, editor]);
 
   useEffect(() => {
     if (!editor) return;
@@ -298,11 +294,13 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
-        <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
+        <div className="p-3 rounded-xl border-0 transition-all duration-300">
           <div className="ml-14">
             <span className="text-red-500 mr-1">*</span>
             <Label className="body-sm-md">Words</Label>
-            <div className="flex flex-wrap gap-2 items-center">
+            <div
+              className={cn("flex flex-wrap items-center", currentOptions.length > 0 && "gap-2")}
+            >
               {currentOptions.map((option, index) => (
                 <div
                   key={index}
@@ -314,7 +312,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                   onDragStart={(e) => handleDragStart(option.optionText, e)}
                 >
                   <Icon name="DragAndDropIcon" />
-                  {addedWords.includes(option.optionText) && <Icon name="Success" />}
+                  {option.isCorrect && <Icon name="Success" />}
                   <span>{option.optionText}</span>
                   <Button
                     onClick={() => handleRemoveWord(index)}

@@ -50,7 +50,7 @@ const ImageUploadInput = ({
         </div>
         <input
           type="file"
-          accept="image/*"
+          accept=".svg, .png, .jpg, .jpeg, .gif"
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) {

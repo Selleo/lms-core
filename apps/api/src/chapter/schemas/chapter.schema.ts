@@ -22,6 +22,7 @@ export const chapterSchema = Type.Object({
   isPublished: Type.Optional(Type.Boolean()),
   isSubmitted: Type.Optional(Type.Boolean()),
   createdAt: Type.Optional(Type.String()),
+  updatedAt: Type.Optional(Type.String()),
   quizCount: Type.Optional(Type.Number()),
   displayOrder: Type.Number(),
 });

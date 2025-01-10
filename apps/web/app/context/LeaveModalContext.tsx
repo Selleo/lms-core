@@ -1,6 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
-
-import { Chapter, Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
+import { createContext, useContext, useState } from "react";
 
 import type { ReactNode } from "react";
 

@@ -96,18 +96,20 @@ const FileLessonForm = ({
       contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "video" : "presentation",
     );
     form.setValue("fileType", fileType);
-  }, [contentTypeToDisplay, form]);
+  }, [contentTypeToDisplay, form, fileType]);
 
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
       <div className="flex flex-col gap-y-1">
-        <Breadcrumb
-          lessonLabel={
-            contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "Video" : "Presentation"
-          }
-          setContentTypeToDisplay={setContentTypeToDisplay}
-          setSelectedLesson={setSelectedLesson}
-        />
+        {!lessonToEdit && (
+          <Breadcrumb
+            lessonLabel={
+              contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "Video" : "Presentation"
+            }
+            setContentTypeToDisplay={setContentTypeToDisplay}
+            setSelectedLesson={setSelectedLesson}
+          />
+        )}
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (
             <>

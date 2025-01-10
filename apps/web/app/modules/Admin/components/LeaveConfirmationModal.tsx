@@ -36,7 +36,7 @@ const LeaveConfirmationModal = ({ open, onClose, onSave }: LeaveConfirmationModa
                 onClick={onClose}
                 className="text-primary-800 border border-neutral-300 bg-neutrals-200 py-2 px-4 rounded"
               >
-                Close
+                Ignore
               </Button>
             </div>
           </div>

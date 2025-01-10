@@ -25,7 +25,7 @@ export const useCoursePricingForm = ({
   const form = useForm<CoursePricingFormValues>({
     resolver: zodResolver(coursePricingFormSchema),
     defaultValues: {
-      priceInCents: priceInCents || 0,
+      priceInCents: priceInCents || undefined,
       currency: currency || "",
       isFree: priceInCents === 0 ? true : false,
     },

@@ -162,7 +162,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
               control={form.control}
               name={`questions.${questionIndex}.type`}
               render={({ field }) => (
-                <FormItem className="w-1/6 mt-4">
+                <FormItem className="w-1/3 mt-4">
                   <Label htmlFor="type" className="body-base-md">
                     <span className="text-red-500 mr-1">*</span>
                     Type

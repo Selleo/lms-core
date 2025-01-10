@@ -458,6 +458,7 @@ export class CourseService {
         title: chapters.title,
         displayOrder: sql<number>`${chapters.displayOrder}`,
         lessonCount: chapters.lessonCount,
+        updatedAt: chapters.updatedAt,
         isFree: chapters.isFreemium,
         lessons: sql<LessonForChapterSchema>`
           COALESCE(
