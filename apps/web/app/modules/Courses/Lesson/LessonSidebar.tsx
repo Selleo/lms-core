@@ -66,7 +66,7 @@ export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
               value={activeChapter ?? course?.chapters?.[0]?.id}
               onValueChange={handleAccordionChange}
             >
-              {course?.chapters?.map(({ id, title, lessons, chapterProgress }) => {
+              {course?.chapters?.map(({ id, title, lessons, chapterProgress = "not_started" }) => {
                 return (
                   <AccordionItem value={id} key={id}>
                     <AccordionTrigger
@@ -80,7 +80,13 @@ export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
                     >
                       <Badge
                         variant="icon"
-                        icon={progressBadge[chapterProgress ?? "not_started"]}
+                        icon={
+                          progressBadge[
+                            state?.chapterId === id && chapterProgress === "not_started"
+                              ? "in_progress"
+                              : chapterProgress
+                          ]
+                        }
                         iconClasses="w-6 h-auto shrink-0"
                       />
                       <div className="body-base-md text-neutral-950 text-start w-full">{title}</div>
