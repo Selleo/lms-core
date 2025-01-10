@@ -6040,6 +6040,16 @@
                         "displayOrder": {
                           "type": "number"
                         },
+                        "solutionExplanation": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
                         "photoS3Key": {
                           "anyOf": [
                             {
@@ -6133,24 +6143,14 @@
                               "type": "null"
                             }
                           ]
-                        },
-                        "solutionExplanation": {
-                          "anyOf": [
-                            {
-                              "type": "string"
-                            },
-                            {
-                              "type": "null"
-                            }
-                          ]
                         }
                       },
                       "required": [
                         "id",
                         "type",
                         "title",
-                        "passQuestion",
-                        "solutionExplanation"
+                        "solutionExplanation",
+                        "passQuestion"
                       ]
                     }
                   },

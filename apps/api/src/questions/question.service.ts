@@ -112,7 +112,6 @@ export class QuestionService {
               const studentAnswer = questionAnswer.answer.filter(
                 (answerOption) => answerOption.answerId === answer.answerId,
               );
-
               const answerValueToString = studentAnswer[0].value === true.toString();
 
               if (studentAnswer.length !== 1 || answerValueToString !== answer.isCorrect) {
@@ -178,20 +177,17 @@ export class QuestionService {
           question.type === QUESTION_TYPE.BRIEF_RESPONSE ||
           question.type === QUESTION_TYPE.DETAILED_RESPONSE
             ? [questionAnswer.answer[0]?.value || ""]
-            : question.allAnswers.map((answerOption) => {
-                const studentAnswer = questionAnswer.answer.find(
-                  (answer) => answer.answerId === answerOption.answerId,
+            : questionAnswer.answer.map((studentAnswer) => {
+                const answerOption = question.allAnswers.find(
+                  (answer) => answer.answerId === studentAnswer.answerId,
                 );
 
                 if (studentAnswer?.value) {
                   return studentAnswer.value;
                 }
 
-                if (studentAnswer?.answerId) {
-                  return answerOption.value;
-                }
+                return answerOption?.value || "Error";
                 // TODO: handle it, when value is not found
-                return "";
               });
 
         const formattedAnswer = this.questionAnswerToString(answersToRecord);

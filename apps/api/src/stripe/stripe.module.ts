@@ -5,7 +5,7 @@ import { ConfigService } from "@nestjs/config";
 import { LessonModule } from "src/lesson/lesson.module";
 import { StatisticsModule } from "src/statistics/statistics.module";
 
-import { StripeController } from "./api/stripe.controller";
+import { StripeController } from "./stripe.controller";
 import { StripeService } from "./stripe.service";
 import { StripeWebhookHandler } from "./stripeWebhook.handler";
 

@@ -41,15 +41,11 @@ export const optionSchema = Type.Object({
 });
 
 export const questionSchema = Type.Object({
+  ...adminQuestionSchema.properties,
   id: UUIDSchema,
-  type: Type.Enum(QUESTION_TYPE),
-  description: Type.Optional(Type.Union([Type.String(), Type.Null()])),
-  title: Type.String(),
-  displayOrder: Type.Optional(Type.Number()),
-  photoS3Key: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  solutionExplanation: Type.Union([Type.String(), Type.Null()]),
   options: Type.Optional(Type.Array(optionSchema)),
   passQuestion: Type.Union([Type.Boolean(), Type.Null()]),
-  solutionExplanation: Type.Union([Type.String(), Type.Null()]),
 });
 
 export const lessonSchema = Type.Object({
@@ -161,12 +157,10 @@ export type CreateLessonBody = Static<typeof createLessonSchema>;
 export type UpdateLessonBody = Static<typeof updateLessonSchema>;
 export type UpdateQuizLessonBody = Static<typeof updateQuizLessonSchema>;
 export type CreateQuizLessonBody = Static<typeof createQuizLessonSchema>;
-// TODO: duplicate
 export type OptionBody = Static<typeof optionSchema>;
 export type AdminOptionBody = Static<typeof adminOptionSchema>;
 export type AdminQuestionBody = Static<typeof adminQuestionSchema>;
 export type QuestionBody = Static<typeof questionSchema>;
-export type QuestionSchema = Static<typeof adminQuestionSchema>;
 export type LessonShow = Static<typeof lessonShowSchema>;
 export type LessonSchema = Static<typeof lessonSchema>;
 export type AnswerQuestionBody = Static<typeof answerQuestionsForLessonBody>;

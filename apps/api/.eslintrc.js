@@ -52,4 +52,12 @@ module.exports = {
     ],
     "unused-imports/no-unused-imports": "error",
   },
+  overrides: [
+    {
+      files: ["src/seed/**/*.ts", "src/stripe/stripe.controller.ts", "test/jest-setup.ts"],
+      rules: {
+        "no-console": "off",
+      },
+    },
+  ],
 };

@@ -6,7 +6,7 @@ import { chapters, courses, lessons, questionAnswerOptions, questions } from "sr
 
 import type { UpdateChapterBody } from "../schemas/chapter.schema";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
-import type { AdminLessonWithContentSchema, QuestionSchema } from "src/lesson/lesson.schema";
+import type { AdminLessonWithContentSchema, AdminQuestionBody } from "src/lesson/lesson.schema";
 import type { LessonTypes } from "src/lesson/lesson.type";
 import type * as schema from "src/storage/schema";
 
@@ -82,7 +82,7 @@ export class AdminChapterRepository {
         fileType: sql<string>`${lessons.fileType}`,
         displayOrder: sql<number>`${lessons.displayOrder}`,
         isExternal: sql<boolean>`${lessons.isExternal}`,
-        questions: sql<QuestionSchema[]>`
+        questions: sql<AdminQuestionBody[]>`
         (
           SELECT ARRAY(
             SELECT json_build_object(

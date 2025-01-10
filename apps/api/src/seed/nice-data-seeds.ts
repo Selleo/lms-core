@@ -1466,7 +1466,7 @@ export const niceCourses: NiceCourseData[] = [
                   },
                   {
                     optionText: "grammatical",
-                    isCorrect: false,
+                    isCorrect: true,
                   },
                 ],
               },

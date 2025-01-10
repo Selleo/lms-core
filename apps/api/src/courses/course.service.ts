@@ -423,13 +423,7 @@ export class CourseService {
       )
       .orderBy(chapters.displayOrder);
 
-    // TODO: temporary fix
-    const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url ?? "";
-      return await this.fileService.getFileUrl(url);
-    };
-
-    const thumbnailUrl = await getImageUrl(course.thumbnailS3Key);
+    const thumbnailUrl = await this.fileService.getFileUrl(course.thumbnailS3Key);
 
     return {
       ...course,
@@ -480,12 +474,7 @@ export class CourseService {
       .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
       .orderBy(chapters.displayOrder);
 
-    const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url;
-      return await this.fileService.getFileUrl(url);
-    };
-
-    const thumbnailS3SingedUrl = await getImageUrl(course.thumbnailS3Key);
+    const thumbnailS3SingedUrl = await this.fileService.getFileUrl(course.thumbnailS3Key);
 
     const updatedCourseLessonList = await Promise.all(
       courseChapterList?.map(async (chapter) => {
@@ -547,12 +536,7 @@ export class CourseService {
       )
       .orderBy(chapters.displayOrder);
 
-    const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url;
-      return await this.fileService.getFileUrl(url);
-    };
-
-    const thumbnailS3SingedUrl = await getImageUrl(course.thumbnailS3Key);
+    const thumbnailS3SingedUrl = await this.fileService.getFileUrl(course.thumbnailS3Key);
 
     return {
       ...course,
@@ -590,11 +574,6 @@ export class CourseService {
 
       conditions.push(inArray(courses.id, availableCourseIds));
     }
-
-    const getImageUrl = async (url: string) => {
-      if (!url || url.startsWith("https://")) return url;
-      return await this.fileService.getFileUrl(url);
-    };
 
     const teacherCourses = await this.db
       .select({
@@ -649,7 +628,7 @@ export class CourseService {
       teacherCourses.map(async (course) => ({
         ...course,
         thumbnailUrl: course.thumbnailUrl
-          ? await getImageUrl(course.thumbnailUrl)
+          ? await this.fileService.getFileUrl(course.thumbnailUrl)
           : course.thumbnailUrl,
       })),
     );
