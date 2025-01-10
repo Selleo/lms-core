@@ -1,9 +1,9 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { Color } from "@tiptap/extension-color";
-import Highlight from "@tiptap/extension-highlight";
-import TextStyle from "@tiptap/extension-text-style";
+import { Highlight } from "@tiptap/extension-highlight";
+import { TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, Node, useEditor } from "@tiptap/react";
-import StarterKit from "@tiptap/starter-kit";
+import { StarterKit } from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
 
 import { Icon } from "~/components/Icon";
@@ -52,6 +52,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   const [newWord, setNewWord] = useState("");
   const [isAddingWord, setIsAddingWord] = useState(false);
   const currentOptions = form.getValues(`questions.${questionIndex}.options`) || [];
+  const currentDescription = form.getValues(`questions.${questionIndex}.description`);
 
   const errors = form.formState.errors;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -202,8 +203,6 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   useEffect(() => {
     if (!editor) return;
 
-    const currentDescription = form.getValues(`questions.${questionIndex}.description`);
-
     const regex = /<button[^>]*class="[^"]*bg-primary-200[^"]*"[^>]*>([^<]+)<\/button>/g;
     const buttonValues = currentDescription
       ? [...currentDescription.matchAll(regex)]
@@ -221,7 +220,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
       shouldDirty: true,
     });
-  }, [form.getValues(`questions.${questionIndex}.description`), form, questionIndex, editor]);
+  }, [currentDescription, form, questionIndex, editor]);
 
   useEffect(() => {
     if (!editor) return;

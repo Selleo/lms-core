@@ -42,6 +42,7 @@ const Breadcrumb = ({
     setIsEmptyStateClicked,
     openLeaveModal,
     setContentTypeToDisplay,
+    setSelectedLesson,
   ]);
 
   const onClickChooseType = useCallback(() => {
@@ -59,6 +60,7 @@ const Breadcrumb = ({
     setIsChooseTypeClicked,
     openLeaveModal,
     setContentTypeToDisplay,
+    setSelectedLesson,
   ]);
 
   useEffect(() => {
@@ -67,7 +69,7 @@ const Breadcrumb = ({
       setIsEmptyStateClicked(false);
       setIsLeavingContent(false);
     }
-  }, [isCurrentFormDirty, isEmptyStateClicked, onClickBack]);
+  }, [isCurrentFormDirty, isEmptyStateClicked, onClickBack, setIsLeavingContent]);
 
   useEffect(() => {
     if (!isCurrentFormDirty && isChooseTypeClicked) {
@@ -75,7 +77,7 @@ const Breadcrumb = ({
       setIsChooseTypeClicked(false);
       setIsLeavingContent(false);
     }
-  }, [isCurrentFormDirty, isChooseTypeClicked, onClickChooseType]);
+  }, [isCurrentFormDirty, isChooseTypeClicked, onClickChooseType, setIsLeavingContent]);
 
   return (
     <BreadcrumbList>

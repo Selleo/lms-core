@@ -73,7 +73,7 @@ const QuizLessonForm = ({
 
   useEffect(() => {
     setIsCurrectFormDirty(isDirty);
-  }, [isDirty]);
+  }, [isDirty, setIsCurrectFormDirty]);
 
   const onCancelModal = () => {
     closeLeaveModal();
@@ -107,7 +107,7 @@ const QuizLessonForm = ({
       setIsCanceling(false);
       setIsLeavingContent(false);
     }
-  }, [isCurrentFormDirty, isCanceling, onCancel]);
+  }, [isCurrentFormDirty, isCanceling, onCancel, setIsLeavingContent]);
 
   const addQuestion = useCallback(
     (questionType: QuestionType) => {

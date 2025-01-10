@@ -96,7 +96,7 @@ const FileLessonForm = ({
       contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "video" : "presentation",
     );
     form.setValue("fileType", fileType);
-  }, [contentTypeToDisplay, form]);
+  }, [contentTypeToDisplay, form, fileType]);
 
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
