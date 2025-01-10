@@ -18,12 +18,14 @@ import {
   ne,
   sql,
 } from "drizzle-orm";
+import { isEmpty } from "lodash";
 
 import { AdminChapterRepository } from "src/chapter/repositories/adminChapter.repository";
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import { FileService } from "src/file/file.service";
 import { LESSON_TYPES } from "src/lesson/lesson.type";
+import { LessonRepository } from "src/lesson/repositories/lesson.repository";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 import { USER_ROLES } from "src/user/schemas/userRoles";
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
@@ -69,6 +71,7 @@ export class CourseService {
     @Inject("DB") private readonly db: DatabasePg,
     private readonly adminChapterRepository: AdminChapterRepository,
     private readonly fileService: FileService,
+    private readonly lessonRepository: LessonRepository,
     private readonly statisticsRepository: StatisticsRepository,
   ) {}
 
@@ -776,14 +779,22 @@ export class CourseService {
     const isTest = testKey && testKey === process.env.TEST_KEY;
     if (!isTest && Boolean(course.price)) throw new ForbiddenException();
 
+    await this.createCourseDependencies(id, studentId);
+  }
+
+  async createCourseDependencies(
+    courseId: UUIDType,
+    studentId: UUIDType,
+    paymentId: string | null = null,
+  ) {
+    const [enrolledCourse] = await this.db
+      .insert(studentCourses)
+      .values({ studentId, courseId, paymentId })
+      .returning();
+
+    if (!enrolledCourse) throw new ConflictException("Course not enrolled");
+
     await this.db.transaction(async (trx) => {
-      const [enrolledCourse] = await trx
-        .insert(studentCourses)
-        .values({ studentId: studentId, courseId: id })
-        .returning();
-
-      if (!enrolledCourse) throw new ConflictException("Course not enrolled");
-
       const courseChapterList = await trx
         .select({
           id: chapters.id,
@@ -791,41 +802,54 @@ export class CourseService {
         })
         .from(chapters)
         .leftJoin(lessons, eq(lessons.chapterId, chapters.id))
-        .where(and(eq(chapters.courseId, course.id), eq(chapters.isPublished, true)))
+        .where(and(eq(chapters.courseId, courseId), eq(chapters.isPublished, true)))
         .groupBy(chapters.id);
+
+      const existingLessonProgress = await this.lessonRepository.getLessonsProgressByCourseId(
+        courseId,
+        studentId,
+        trx,
+      );
+
+      !paymentId
+        ? await this.statisticsRepository.updateFreePurchasedCoursesStats(courseId, trx)
+        : isEmpty(existingLessonProgress)
+          ? await this.statisticsRepository.updatePaidPurchasedCoursesStats(courseId, trx)
+          : await this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
+              courseId,
+              trx,
+            );
 
       if (courseChapterList.length > 0) {
         await trx.insert(studentChapterProgress).values(
           courseChapterList.map((chapter) => ({
             studentId,
             chapterId: chapter.id,
-            courseId: course.id,
+            courseId,
             completedLessonItemCount: 0,
           })),
         );
 
-        courseChapterList.forEach(async (chapter) => {
-          const chapterLessons = await trx
-            .select({ id: lessons.id, type: lessons.type })
-            .from(lessons)
-            .where(eq(lessons.chapterId, chapter.id));
+        await Promise.all(
+          courseChapterList.map(async (chapter) => {
+            const chapterLessons = await trx
+              .select({ id: lessons.id, type: lessons.type })
+              .from(lessons)
+              .where(eq(lessons.chapterId, chapter.id));
 
-          await trx.insert(studentLessonProgress).values(
-            chapterLessons.map((lesson) => ({
-              studentId,
-              lessonId: lesson.id,
-              chapterId: chapter.id,
-              completedQuestionCount: 0,
-              quizScore: lesson.type === LESSON_TYPES.QUIZ ? 0 : null,
-              completedAt: null,
-            })),
-          );
-        });
+            await trx.insert(studentLessonProgress).values(
+              chapterLessons.map((lesson) => ({
+                studentId,
+                lessonId: lesson.id,
+                chapterId: chapter.id,
+                completedQuestionCount: 0,
+                quizScore: lesson.type === LESSON_TYPES.QUIZ ? 0 : null,
+                completedAt: null,
+              })),
+            );
+          }),
+        );
       }
-
-      // TODO: add lesson progress records
-
-      await this.statisticsRepository.updateFreePurchasedCoursesStats(course.id, trx);
     });
   }
 
