@@ -27,7 +27,6 @@ import type { QuestionOption } from "../QuizLessonForm.types";
 import type { QuizLessonFormValues } from "../validators/quizLessonFormSchema";
 import type { UseFormReturn } from "react-hook-form";
 
-
 type PhotoQuestionProps = {
   form: UseFormReturn<QuizLessonFormValues>;
   questionIndex: number;

@@ -69,26 +69,28 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
           <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-64 p-2 bg-white rounded-lg text-black rounded shadow-lg transition-all duration-200">
-        <DropdownMenuLabel className="p-2 text-left text-black border-b border-gray-300 body-base-md w-full">
+      <DropdownMenuContent className="w-64 p-2 bg-white text-black rounded shadow-lg transition-all duration-200">
+        <DropdownMenuLabel className="p-2 text-left text-black body-base-md w-full">
           Select question type:
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        {questionTypes.map(({ type, label, icon }) => {
-          return (
-            <DropdownMenuItem key={label}>
-              <Button
-                key={type}
-                className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
-                type="button"
-                onClick={() => onTypeChoose(type)}
-              >
-                <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
-                {label}
-              </Button>
-            </DropdownMenuItem>
-          );
-        })}
+        <div className="max-h-64 overflow-scroll scrollbar-thin">
+          {questionTypes.map(({ type, label, icon }) => {
+            return (
+              <DropdownMenuItem key={label}>
+                <Button
+                  key={type}
+                  className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
+                  type="button"
+                  onClick={() => onTypeChoose(type)}
+                >
+                  <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
+                  {label}
+                </Button>
+              </DropdownMenuItem>
+            );
+          })}
+        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   );
