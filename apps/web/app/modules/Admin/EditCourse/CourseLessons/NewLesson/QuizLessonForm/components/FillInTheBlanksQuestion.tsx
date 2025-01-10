@@ -221,7 +221,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
     form.setValue(`questions.${questionIndex}.options`, updatedOptions, {
       shouldDirty: true,
     });
-  }, [form.getValues(`questions.${questionIndex}.description`), questionIndex, editor]);
+  }, [form.getValues(`questions.${questionIndex}.description`), form, questionIndex, editor]);
 
   useEffect(() => {
     if (!editor) return;
