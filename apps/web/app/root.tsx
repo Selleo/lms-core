@@ -10,7 +10,7 @@ import {
 
 import faviconHref from "~/assets/favicon.ico";
 import { Toaster } from "~/components/ui/toaster";
-import "../i18n";
+import "./i18n";
 
 import "./index.css";
 import CustomErrorBoundary from "./modules/common/ErrorBoundary/ErrorBoundary";
