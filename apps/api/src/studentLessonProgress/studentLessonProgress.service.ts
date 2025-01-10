@@ -43,6 +43,7 @@ export class StudentLessonProgressService {
 
     const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(id, studentId);
 
+    // TODO: handle block marking when user is teacher or admin
     if (!accessCourseLessonWithDetails.isAssigned && !accessCourseLessonWithDetails.isFreemium)
       throw new UnauthorizedException("You don't have assignment to this lesson");
 
