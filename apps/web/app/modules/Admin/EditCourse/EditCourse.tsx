@@ -1,4 +1,5 @@
 import { useParams, useSearchParams } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import { useBetaCourseById } from "~/api/queries/admin/useBetaCourse";
 import { Icon } from "~/components/Icon";
@@ -15,6 +16,7 @@ import CourseStatus from "./CourseStatus/CourseStatus";
 import type { Chapter } from "./EditCourse.types";
 
 const EditCourse = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const params = new URLSearchParams();
   const [searchParams, setSearchParams] = useSearchParams();

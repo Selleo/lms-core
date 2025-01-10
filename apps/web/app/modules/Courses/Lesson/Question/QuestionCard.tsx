@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import type { ReactNode } from "react";
 
 type QuestionCardProps = {
@@ -13,6 +15,7 @@ export const QuestionCard = ({
   questionType,
   title = "Question title not provided",
 }: QuestionCardProps) => {
+  const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2 p-8 border border-neutral-200 bg-white rounded-lg">
       <div className="details text-primary-700 uppercase">

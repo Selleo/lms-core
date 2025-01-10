@@ -1,6 +1,7 @@
 import { routeAccessConfig } from "./routeAccessConfig";
 
 import type { UserRole } from "./userRoles";
+import type i18next from "i18next";
 import type { IconName } from "~/types/shared";
 
 export interface BaseMenuItem {
@@ -21,7 +22,11 @@ export type NavigationItem = {
   iconName: IconName;
 };
 
-export const getNavigationConfig = (userId: string, isUser = true): NavigationItem[] => [
+export const getNavigationConfig = (
+  userId: string,
+  isUser = true,
+  t: typeof i18next.t,
+): NavigationItem[] => [
   {
     label: "dashboard",
     path: "",

@@ -13,6 +13,7 @@ import {
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { type FC, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import Viewer from "~/components/RichText/Viever";
 
@@ -55,6 +56,7 @@ const getAnswers = (options: QuizQuestionOption[] | undefined) => {
 };
 
 export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCompleted }) => {
+  const { t } = useTranslation();
   const [words, setWords] = useState<DndWord[]>(getAnswers(question.options));
   const [currentlyDraggedWord, setCurrentlyDraggedWord] = useState<DndWord | null>(null);
   const { setValue } = useFormContext<TQuestionsForm>();

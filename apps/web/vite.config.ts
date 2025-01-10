@@ -35,6 +35,10 @@ export default defineConfig(({ mode }) => {
             src: "app/assets/favicon.ico",
             dest: "",
           },
+          {
+            src: "app/locales/**/*",
+            dest: "locales",
+          },
         ],
       }),
       tsconfigPaths(),
@@ -66,6 +70,7 @@ export default defineConfig(({ mode }) => {
       },
     },
     build: {
+      outDir: "build",
       sourcemap: true,
       rollupOptions: {
         external: [],
