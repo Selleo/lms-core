@@ -111,7 +111,7 @@ export class StudentLessonProgressService {
 
     if (isCompletedAsFreemium) return;
 
-    await this.checkCourseIsCompletedForUser(lesson.courseId, studentId);
+    await this.checkCourseIsCompletedForUser(lesson.courseId, studentId, trx);
   }
 
   private async updateChapterProgress(
@@ -175,11 +175,16 @@ export class StudentLessonProgressService {
       .returning();
   }
 
-  private async checkCourseIsCompletedForUser(courseId: UUIDType, studentId: UUIDType) {
-    const courseProgress = await this.getCourseCompletionStatus(courseId, studentId);
+  private async checkCourseIsCompletedForUser(
+    courseId: UUIDType,
+    studentId: UUIDType,
+    trx?: PostgresJsDatabase<typeof schema>,
+  ) {
+    const courseProgress = await this.getCourseCompletionStatus(courseId, studentId, trx);
     const courseFinishedChapterCount = await this.getCourseFinishedChapterCount(
       courseId,
       studentId,
+      trx,
     );
 
     if (courseProgress.courseIsCompleted) {
@@ -188,25 +193,31 @@ export class StudentLessonProgressService {
         courseId,
         PROGRESS_STATUSES.COMPLETED,
         courseFinishedChapterCount,
+        trx,
       );
 
       return await this.statisticsRepository.updateCompletedAsFreemiumCoursesStats(courseId);
     }
 
-    if (courseProgress.progress !== PROGRESS_STATUSES.IN_PROGRESS) {
+    if (courseProgress.progress !== PROGRESS_STATUSES.COMPLETED) {
       return await this.updateStudentCourseStats(
         studentId,
         courseId,
         PROGRESS_STATUSES.IN_PROGRESS,
         courseFinishedChapterCount,
+        trx,
       );
     }
   }
 
-  private async getCourseFinishedChapterCount(courseId: UUIDType, studentId: UUIDType) {
-    const [finishedChapterCount] = await this.db
+  private async getCourseFinishedChapterCount(
+    courseId: UUIDType,
+    studentId: UUIDType,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
+    const [finishedChapterCount] = await dbInstance
       .select({
-        count: sql<number>`COUNT(DISTINCT ${studentChapterProgress.chapterId})`,
+        count: sql<number>`COUNT(DISTINCT ${studentChapterProgress.chapterId})::INTEGER`,
       })
       .from(studentChapterProgress)
       .where(
@@ -220,8 +231,12 @@ export class StudentLessonProgressService {
     return finishedChapterCount.count;
   }
 
-  private async getCourseCompletionStatus(courseId: UUIDType, studentId: UUIDType) {
-    const [courseCompletedStatus] = await this.db
+  private async getCourseCompletionStatus(
+    courseId: UUIDType,
+    studentId: UUIDType,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
+    const [courseCompletedStatus] = await dbInstance
       .select({
         courseIsCompleted: sql<boolean>`${studentCourses.finishedChapterCount} = ${courses.chapterCount}`,
         progress: sql<ProgressStatus>`${studentCourses.progress}`,
@@ -241,15 +256,16 @@ export class StudentLessonProgressService {
     courseId: UUIDType,
     progress: ProgressStatus,
     finishedChapterCount: number,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
   ) {
     if (progress === PROGRESS_STATUSES.COMPLETED) {
-      return await this.db
+      return await dbInstance
         .update(studentCourses)
         .set({ progress, completedAt: sql`now()`, finishedChapterCount })
         .where(and(eq(studentCourses.studentId, studentId), eq(studentCourses.courseId, courseId)));
     }
 
-    return await this.db
+    return await dbInstance
       .update(studentCourses)
       .set({ progress, finishedChapterCount })
       .where(and(eq(studentCourses.studentId, studentId), eq(studentCourses.courseId, courseId)));
