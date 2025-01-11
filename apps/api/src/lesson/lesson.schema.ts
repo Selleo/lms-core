@@ -151,6 +151,22 @@ export const answerQuestionsForLessonBody = Type.Object({
   ),
 });
 
+export const nextLessonSchema = Type.Union([
+  Type.Object({
+    courseId: UUIDSchema,
+    courseTitle: Type.String(),
+    courseDescription: Type.String(),
+    courseThumbnail: Type.String(),
+    lessonId: UUIDSchema,
+    chapterTitle: Type.String(),
+    chapterProgress: Type.Enum(PROGRESS_STATUSES),
+    completedLessonCount: Type.Number(),
+    lessonCount: Type.Number(),
+    chapterDisplayOrder: Type.Number(),
+  }),
+  Type.Null(),
+]);
+
 export type AdminLessonWithContentSchema = Static<typeof adminLessonSchema>;
 export type LessonForChapterSchema = Static<typeof lessonForChapterSchema>;
 export type CreateLessonBody = Static<typeof createLessonSchema>;
@@ -165,3 +181,4 @@ export type LessonShow = Static<typeof lessonShowSchema>;
 export type LessonSchema = Static<typeof lessonSchema>;
 export type AnswerQuestionBody = Static<typeof answerQuestionsForLessonBody>;
 export type QuestionDetails = Static<typeof questionDetails>;
+export type NextLesson = Static<typeof nextLessonSchema>;

@@ -707,14 +707,21 @@ export interface GetUserStatisticsResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
-      updatedAt?: string;
       quizCount?: number;
       displayOrder: number;
       /** @format uuid */
       courseId: string;
       courseTitle: string;
       courseDescription: string;
-    };
+      courseThumbnail: string;
+      /** @format uuid */
+      lessonId: string;
+      chapterTitle: string;
+      chapterProgress: "not_started" | "in_progress" | "completed";
+      completedLessonCount: number;
+      lessonCount: number;
+      chapterDisplayOrder: number;
+    } | null;
   };
 }
 

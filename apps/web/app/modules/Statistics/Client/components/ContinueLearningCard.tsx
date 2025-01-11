@@ -11,7 +11,7 @@ import type { GetUserStatisticsResponse } from "~/api/generated-api";
 
 type ContinueLearningCardProps = {
   isLoading: boolean;
-  lesson: GetUserStatisticsResponse["data"]["lastLesson"] | undefined;
+  lesson: GetUserStatisticsResponse["data"]["nextLesson"] | undefined;
 };
 
 export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLearningCardProps) => {
@@ -29,6 +29,8 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
       </div>
     );
   }
+
+  console.log(lesson);
 
   if (!lesson) {
     return (
@@ -61,9 +63,9 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
       </div>
       <ChapterCard
         {...lesson}
-        customHref={`/course/${lesson.courseId}/lesson/${lesson.id}`}
+        customHref={`/course/${lesson.courseId}/lesson/${lesson.lessonId}`}
         isAdmin={isAdmin}
-        isEnrolled={!!lesson.enrolled}
+        isEnrolled={false}
         // @ts-expect-error Need to fix this
         itemsCount={lesson.lessonCount}
         itemsCompletedCount={lesson.completedLessonCount}
