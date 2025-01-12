@@ -285,7 +285,9 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
         <WordBank words={wordBankWords} />
         {solutionExplanation && !question.passQuestion && (
           <div className="mt-4">
-            <span className="body-base-md text-error-700">Correct sentence:</span>
+            <span className="body-base-md text-error-700">
+              {t("studentLessonView.other.correctSentence")}
+            </span>
             <Viewer content={solutionExplanation} />
           </div>
         )}

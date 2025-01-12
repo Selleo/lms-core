@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import DefaultCoursePhoto from "~/assets/svgs/default-photo-course.svg";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
@@ -11,12 +13,14 @@ type CourseCardPreviewProps = {
 };
 
 const CourseCardPreview = ({ imageUrl, title, description, category }: CourseCardPreviewProps) => {
+  const { t } = useTranslation();
+
   return (
     <Card className="p-6 shadow-md border border-gray-200 w-3/10">
       <CardHeader className="relative flex flex-col !gap-y-1">
-        <h5 className="h5 text-neutral-950">Card Preview</h5>
+        <h5 className="h5 text-neutral-950">{t("adminCourseView.settings.sideSection.header")}</h5>
         <p className="text-neutral-800 body-lg-md">
-          This is how your Course will be visible to students.
+          {t("adminCourseView.settings.sideSection.subHeader")}
         </p>
       </CardHeader>
       <CardContent>
@@ -36,14 +40,21 @@ const CourseCardPreview = ({ imageUrl, title, description, category }: CourseCar
               )}
             </CardHeader>
             <CardContent className="flex flex-col justify-between p-3">
-              <h1 className="font-bold text-left break-words">{title || "Untitled"}</h1>
+              <h1 className="font-bold text-left break-words">
+                {title || t("adminCourseView.settings.sideSection.other.untitled")}
+              </h1>
               <UserProfile />
               <div
                 className="description text-left break-words line-clamp-3 text-gray-500"
-                dangerouslySetInnerHTML={{ __html: description || "No description yet." }}
+                dangerouslySetInnerHTML={{
+                  __html:
+                    description || t("adminCourseView.settings.sideSection.other.noDescription"),
+                }}
               />
               <div className="flex justify-center w-full mt-5">
-                <Button className="mt-4 mx-auto w-3/4 pointer-events-none">Enroll</Button>
+                <Button className="mt-4 mx-auto w-3/4">
+                  {t("adminCourseView.settings.sideSection.button.enroll")}
+                </Button>
               </div>
             </CardContent>
           </Card>

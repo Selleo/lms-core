@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "@remix-run/react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import * as z from "zod";
 
 import { useCreateCategory } from "~/api/mutations/admin/useCreateCategory";
@@ -29,6 +30,8 @@ export default function CreateNewCategoryPage() {
     },
   });
 
+  const { t } = useTranslation();
+
   const onSubmit = (values: FormValues) => {
     createCategory({
       data: values,
@@ -44,8 +47,8 @@ export default function CreateNewCategoryPage() {
   return (
     <div className="flex flex-col gap-y-6">
       <CreatePageHeader
-        title="Create new category"
-        description="Enter a title for your new category. Click save when you're done."
+        title={t("adminCategoryView.header")}
+        description={t("adminCategoryView.subHeader")}
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -55,7 +58,7 @@ export default function CreateNewCategoryPage() {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="title" className="text-right">
-                  Title
+                  {t("adminCategoryView.field.title")}
                 </Label>
                 <FormControl>
                   <Input id="title" {...field} />
@@ -66,7 +69,7 @@ export default function CreateNewCategoryPage() {
           />
           <DialogFooter>
             <Button type="submit" disabled={!isFormValid}>
-              Create Category
+              {t("adminCategoryView.button.createCategory")}
             </Button>
           </DialogFooter>
         </form>

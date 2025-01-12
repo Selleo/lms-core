@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -19,6 +20,12 @@ type QuestionSelectorProps = {
 
 const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   const [showOptions, setShowOptions] = useState(false);
+  const [openUpwards, setOpenUpwards] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
+
+  const toggleOptions = () => setShowOptions(!showOptions);
+  const { t } = useTranslation();
 
   const onTypeChoose = useCallback(
     (type: QuestionType) => {
@@ -29,49 +36,69 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   );
 
   const questionTypes = [
-    { type: QuestionType.SINGLE_CHOICE, label: "Single Select", icon: QuestionIcons.SingleSelect },
-    { type: QuestionType.MULTIPLE_CHOICE, label: "Multi Select", icon: QuestionIcons.MultiSelect },
-    { type: QuestionType.TRUE_OR_FALSE, label: "True or false", icon: QuestionIcons.TrueOrFalse },
+    {
+      type: QuestionType.SINGLE_CHOICE,
+      label: t("adminCourseView.curriculum.lesson.other.singleChoice"),
+      icon: QuestionIcons.SingleSelect,
+    },
+    {
+      type: QuestionType.MULTIPLE_CHOICE,
+      label: t("adminCourseView.curriculum.lesson.other.multipleChoice"),
+      icon: QuestionIcons.MultiSelect,
+    },
+    {
+      type: QuestionType.TRUE_OR_FALSE,
+      label: t("adminCourseView.curriculum.lesson.other.trueOrFalse"),
+      icon: QuestionIcons.TrueOrFalse,
+    },
     {
       type: QuestionType.PHOTO_QUESTION_SINGLE_CHOICE,
-      label: "Photo question",
+      label: t("adminCourseView.curriculum.lesson.other.photoQuestion"),
       icon: QuestionIcons.PhotoQuestion,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_DND,
-      label: "Fill in the blanks",
+      label: t("adminCourseView.curriculum.lesson.other.fillInTheBlanks"),
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.FILL_IN_THE_BLANKS_TEXT,
-      label: "Gap fill",
+      label: t("adminCourseView.curriculum.lesson.other.fillInTheBlanksText"),
       icon: QuestionIcons.FillInTheBlanks,
     },
     {
       type: QuestionType.BRIEF_RESPONSE,
-      label: "Short answer",
+      label: t("adminCourseView.curriculum.lesson.other.briefResponse"),
       icon: QuestionIcons.BriefResponse,
     },
     {
       type: QuestionType.DETAILED_RESPONSE,
-      label: "Free text",
+      label: t("adminCourseView.curriculum.lesson.other.detailedResponse"),
       icon: QuestionIcons.DetailedResponse,
     },
-    { type: QuestionType.MATCH_WORDS, label: "Matching", icon: QuestionIcons.MatchWords },
-    { type: QuestionType.SCALE_1_5, label: "Scale 1 to 5", icon: QuestionIcons.Scale_1_5 },
+    {
+      type: QuestionType.MATCH_WORDS,
+      label: t("adminCourseView.curriculum.lesson.other.matchWords"),
+      icon: QuestionIcons.MatchWords,
+    },
+    {
+      type: QuestionType.SCALE_1_5,
+      label: t("adminCourseView.curriculum.lesson.other.scale1_5"),
+      icon: QuestionIcons.Scale_1_5,
+    },
   ];
 
   return (
     <DropdownMenu onOpenChange={(open) => setShowOptions(open)}>
       <DropdownMenuTrigger asChild>
         <Button type="button" className="mt-3 mb-4 bg-primary-700">
-          Add question{" "}
+          {t("adminCourseView.curriculum.lesson.button.addQuestion")}{" "}
           <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64 p-2 bg-white text-black rounded shadow-lg transition-all duration-200">
         <DropdownMenuLabel className="p-2 text-left text-black body-base-md w-full">
-          Select question type:
+          {t("adminCourseView.curriculum.lesson.other.selectQuestionType")}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <div className="max-h-64 overflow-scroll scrollbar-thin">

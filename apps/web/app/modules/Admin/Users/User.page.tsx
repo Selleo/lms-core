@@ -1,6 +1,7 @@
 import { useParams } from "@remix-run/react";
 import { startCase } from "lodash-es";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useAdminUpdateUser } from "~/api/mutations/admin/useAdminUpdateUser";
 import { userQueryOptions, useUserById } from "~/api/queries/admin/useUserById";
@@ -23,7 +24,9 @@ const displayedFields: Array<keyof UpdateUserBody> = [
 
 const User = () => {
   const { id } = useParams<{ id: string }>();
-  if (!id) throw new Error("User ID not found");
+  const { t } = useTranslation();
+
+  if (!id) throw new Error(t("adminUserView.error.userNotFound"));
 
   const { data: user, isLoading } = useUserById(id);
   const { mutateAsync: updateUser } = useAdminUpdateUser();
@@ -42,7 +45,7 @@ const User = () => {
     );
   }
 
-  if (!user) throw new Error("User not found");
+  if (!user) throw new Error(t("adminUserView.error.userNotFound"));
 
   const onSubmit = (data: UpdateUserBody) => {
     updateUser({ data, userId: id }).then(() => {
@@ -54,16 +57,20 @@ const User = () => {
     <div className="flex flex-col">
       <form onSubmit={handleSubmit(onSubmit)} className="rounded-lg h-full">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl text-neutral-950 font-semibold mb-4">User Information</h2>
+          <h2 className="text-2xl text-neutral-950 font-semibold mb-4">
+            {t("adminUserView.editUserHeader")}
+          </h2>
           <Button type="submit" disabled={!isDirty} className="mr-2">
-            Save
+            {t("common.button.save")}
           </Button>
         </div>
         <div className="space-y-4 pt-4">
           {displayedFields.map((field) => (
             <div key={field} className="flex flex-col gap-y-2">
               <Label className="text-neutral-600 font-normal">
-                {field === "archived" ? "Status" : startCase(field)}
+                {field === "archived"
+                  ? t("adminUserView.field.status")
+                  : startCase(t(`adminUserView.field.${field}`))}
               </Label>
               <UserInfo name={field} control={control} isEditing user={user} />
             </div>

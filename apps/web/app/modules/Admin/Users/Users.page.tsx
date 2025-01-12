@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { isEmpty } from "lodash-es";
 import { Trash } from "lucide-react";
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 import { useBulkDeleteUsers } from "~/api/mutations/admin/useBulkDeleteUsers";
 import { useAllUsersSuspense, usersQueryOptions } from "~/api/queries/useUsers";
@@ -59,21 +60,22 @@ const Users = () => {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
   const { mutateAsync: deleteUsers } = useBulkDeleteUsers();
+  const { t } = useTranslation();
 
   const filterConfig: FilterConfig[] = [
     {
       name: "keyword",
       type: "text",
-      placeholder: "Search by keyword...",
+      placeholder: t("adminUsersView.filters.placeholder.searchByKeyword"),
     },
     {
       name: "role",
       type: "select",
-      placeholder: "Roles",
+      placeholder: t("adminUsersView.filters.placeholder.roles"),
       options: [
-        { value: USER_ROLE.admin, label: "Admin" },
-        { value: USER_ROLE.student, label: "Student" },
-        { value: USER_ROLE.teacher, label: "Teacher" },
+        { value: USER_ROLE.admin, label: t("common.roles.admin") },
+        { value: USER_ROLE.student, label: t("common.roles.student") },
+        { value: USER_ROLE.teacher, label: t("common.roles.teacher") },
       ],
     },
     {
@@ -113,35 +115,43 @@ const Users = () => {
     },
     {
       accessorKey: "firstName",
-      header: ({ column }) => <SortButton<TUser> column={column}>First Name</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TUser> column={column}>{t("adminUsersView.field.firstName")}</SortButton>
+      ),
     },
     {
       accessorKey: "lastName",
-      header: ({ column }) => <SortButton<TUser> column={column}>Last Name</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TUser> column={column}>{t("adminUsersView.field.lastName")}</SortButton>
+      ),
     },
     {
       accessorKey: "email",
-      header: ({ column }) => <SortButton<TUser> column={column}>Email</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TUser> column={column}>{t("adminUsersView.field.email")}</SortButton>
+      ),
     },
     {
       accessorKey: "role",
-      header: "Role",
+      header: t("adminUsersView.field.role"),
     },
     {
       accessorKey: "archived",
-      header: "Status",
+      header: t("adminUsersView.field.status"),
       cell: ({ row }) => {
         const isArchived = row.original.archived;
         return (
           <Badge variant={isArchived ? "outline" : "secondary"} className="mx">
-            {isArchived ? "Archived" : "Active"}
+            {isArchived ? t("common.other.archived") : t("common.other.active")}
           </Badge>
         );
       },
     },
     {
       accessorKey: "createdAt",
-      header: ({ column }) => <SortButton<TUser> column={column}>Created At</SortButton>,
+      header: ({ column }) => (
+        <SortButton<TUser> column={column}>{t("adminUsersView.field.createdAt")}</SortButton>
+      ),
       cell: ({ row }) => row.original.createdAt && format(new Date(row.original.createdAt), "PPpp"),
     },
   ];
@@ -176,7 +186,7 @@ const Users = () => {
     <div className="flex flex-col">
       <div className="flex justify-between items-center gap-2">
         <Link to="new">
-          <Button variant="outline">Create new</Button>
+          <Button variant="outline">{t("adminUsersView.button.createNew")}</Button>
         </Link>
         <SearchFilter
           filters={filterConfig}
@@ -191,7 +201,7 @@ const Users = () => {
               "text-neutral-500": isEmpty(selectedUsers),
             })}
           >
-            Selected ({selectedUsers.length})
+            {t("common.other.selected")} ({selectedUsers.length})
           </p>
           <Button
             onClick={handleDeleteUsers}
@@ -200,7 +210,7 @@ const Users = () => {
             disabled={isEmpty(selectedUsers)}
           >
             <Trash className="w-3 h-3" />
-            <span className="text-xs">Delete selected</span>
+            <span className="text-xs">{t("adminUsersView.button.deleteSelected")}</span>
           </Button>
         </div>
       </div>

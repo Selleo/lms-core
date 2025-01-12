@@ -1,5 +1,6 @@
 import { useParams } from "@remix-run/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
@@ -20,6 +21,8 @@ type NewChapterProps = {
 
 const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
   const { id: courseId } = useParams<{ id: string }>();
+  const { t } = useTranslation();
+
   if (!courseId) {
     throw new Error("courseId is required");
   }
@@ -49,15 +52,19 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
         <div className="h5 text-neutral-950">
           {chapter ? (
             <>
-              <span className="text-neutral-600">Edit: </span>
+              <span className="text-neutral-600">
+                {t("adminCourseView.curriculum.other.edit")}:{" "}
+              </span>
               <span className="font-bold">{chapter.title}</span>
             </>
           ) : (
-            "Create"
+            t("adminCourseView.curriculum.other.create")
           )}
         </div>
         <p className="body-base-md text-neutral-950">
-          {chapter ? `Chapter ${chapter.displayOrder}` : "Chapter"}
+          {chapter
+            ? `${t("adminCourseView.curriculum.other.chapter")} ${chapter.displayOrder}`
+            : t("adminCourseView.curriculum.other.chapter")}
         </p>
       </hgroup>
       <Form {...form}>
@@ -68,7 +75,8 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
             render={({ field }) => (
               <FormItem>
                 <Label htmlFor="title" className="body-base-md text-neutral-950">
-                  <span className="text-error-600">*</span> Title
+                  <span className="text-error-600">*</span>{" "}
+                  {t("adminCourseView.curriculum.chapter.field.title")}
                 </Label>
                 <FormControl>
                   <Input id="title" {...field} required />
@@ -79,7 +87,7 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
           />
           <div className="flex space-x-4 mt-4">
             <Button type="submit" className={saveButtonStyles}>
-              Save
+              {t("common.button.save")}
             </Button>
             {chapter ? (
               <Button
@@ -88,7 +96,7 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
                 className={buttonStyles}
                 onClick={onClickDelete}
               >
-                Delete
+                {t("common.button.delete")}
               </Button>
             ) : (
               <Button
@@ -96,7 +104,7 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
                 className={buttonStyles}
                 onClick={() => setContentTypeToDisplay(ContentTypes.EMPTY)}
               >
-                Cancel
+                {t("common.button.cancel")}
               </Button>
             )}
           </div>

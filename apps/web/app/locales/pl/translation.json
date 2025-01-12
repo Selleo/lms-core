@@ -11,7 +11,8 @@
       "close": "Zamknij",
       "goToDashboard": "Przejdź do Panelu",
       "goBack": "Wróć",
-      "clearAll": "Wyczyść wszystko"
+      "clearAll": "Wyczyść wszystko",
+      "ignore": "Ignoruj"
     },
     "roles": {
       "admin": "Administrator",

@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -13,6 +14,7 @@ type CreateFileOptions = {
 
 export function useBetaCreateFileItem() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: CreateFileOptions) => {
@@ -23,7 +25,7 @@ export function useBetaCreateFileItem() {
     onSuccess: () => {
       toast({
         variant: "default",
-        description: "File item created successfully",
+        description: t("adminCourseView.curriculum.lesson.toast.fileLessonCreatedSuccessfully"),
       });
     },
     onError: (error) => {

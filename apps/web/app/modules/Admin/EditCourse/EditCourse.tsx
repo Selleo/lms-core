@@ -52,18 +52,19 @@ const EditCourse = () => {
             {course?.isPublished ? (
               <span className="ml-2 flex items-center text-success-800 bg-success-50 px-2 py-1 rounded-sm text-sm">
                 <Icon name="Success" className="mr-1" />
-                Published
+                {t("common.other.published")}
               </span>
             ) : (
               <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
                 <Icon name="Warning" className="mr-1" />
-                Draft
+                {t("common.other.draft")}
               </span>
             )}
           </h4>
           <Button className="bg-transparent text-primary-700 border border-neutral-200 flex justify-end">
             <Icon name="Eye" className="mr-2" />
-            Preview <Icon name="ArrowDown" className="text-neutral-500 ml-2" />
+            {t("adminCourseView.common.preview")}{" "}
+            <Icon name="ArrowDown" className="text-neutral-500 ml-2" />
           </Button>
         </div>
         <TabsList className="w-min">

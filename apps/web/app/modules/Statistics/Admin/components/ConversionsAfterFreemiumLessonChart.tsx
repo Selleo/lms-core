@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Label, Pie, PieChart } from "recharts";
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "~/components/ui/chart";
@@ -28,6 +29,7 @@ export const ConversionsAfterFreemiumLessonChart = ({
   chartData,
   isLoading = false,
 }: ConversionsAfterFreemiumLessonChartProps) => {
+  const { t } = useTranslation();
   const chartLegend = useMemo(() => {
     return Object.values(chartConfig).map((config) => {
       return (
@@ -89,7 +91,7 @@ export const ConversionsAfterFreemiumLessonChart = ({
                         dominantBaseline="middle"
                       >
                         <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
-                          {isEmptyChart ? "No data" : `${label}%`}
+                          {isEmptyChart ? t("adminStatisticsView.other.noData") : `${label}%`}
                         </tspan>
                       </text>
                     );

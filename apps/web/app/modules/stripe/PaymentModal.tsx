@@ -1,4 +1,5 @@
 import { Elements } from "@stripe/react-stripe-js";
+import { useTranslation } from "react-i18next";
 
 import { useStripePaymentIntent } from "~/api/mutations/useStripePaymentIntent";
 import { currentUserQueryOptions } from "~/api/queries/useCurrentUser";
@@ -40,6 +41,7 @@ export function PaymentModal({
   const { currentUser } = useCurrentUserStore();
   const stripePromise = useStripePromise();
   const { clientSecret, createPaymentIntent, resetClientSecret } = useStripePaymentIntent();
+  const { t } = useTranslation();
 
   const handlePayment = async () => {
     try {
@@ -57,7 +59,7 @@ export function PaymentModal({
   const handlePaymentSuccess = async () => {
     resetClientSecret();
     toast({
-      description: "Payment successful",
+      description: t("paymentView.toast.successfull"),
     });
   };
 
@@ -79,7 +81,10 @@ export function PaymentModal({
             strokeLinejoin="round"
           />
         </svg>
-        <span> Enroll to the course - {formatPrice(coursePrice, courseCurrency)}</span>
+        <span>
+          {" "}
+          {t("paymentView.other.enrollCourse")} - {formatPrice(coursePrice, courseCurrency)}
+        </span>
       </Button>
       {clientSecret && (
         <Elements stripe={stripePromise} options={{ clientSecret, appearance }}>

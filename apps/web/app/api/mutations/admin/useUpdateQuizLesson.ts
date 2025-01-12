@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -14,6 +15,7 @@ type UpdateLessonOptions = {
 
 export function useUpdateQuizLesson() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: UpdateLessonOptions) => {
@@ -26,8 +28,8 @@ export function useUpdateQuizLesson() {
     onSuccess: () => {
       toast({
         variant: "default",
-        title: "Lesson updated successfully",
-        description: "Lesson updated successfully",
+        title: t("adminCourseView.curriculum.lesson.toast.lessonUpdatedSuccessfully"),
+        description: t("adminCourseView.curriculum.lesson.toast.lessonUpdatedSuccessfully"),
       });
     },
     onError: (error) => {

@@ -1,4 +1,5 @@
 import { isEmpty } from "lodash-es";
+import { useTranslation } from "react-i18next";
 
 import { useTeacherCourses } from "~/api/queries/useTeacherCourses";
 import { useUserDetails } from "~/api/queries/useUserDetails";
@@ -17,6 +18,7 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
     excludeCourseId: courseId,
   });
   const { data: teacherData } = useUserDetails(teacherId);
+  const { t } = useTranslation();
 
   if (!teacherCourses?.length) return null;
 
@@ -24,10 +26,11 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
     <section className="flex flex-col gap-y-6 w-full h-full bg-white p-8 rounded-lg">
       <div className="flex flex-col">
         <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-          More courses by {teacherData?.firstName} {teacherData?.lastName}
+          {t("studentCourseView.otherAuthorCoursesHeader")} {teacherData?.firstName}{" "}
+          {teacherData?.lastName}
         </h4>
         <p className="text-lg leading-7 text-neutral-800">
-          Below you can see more courses created by the same author
+          {t("studentCourseView.otherAuthorCoursesSubheader")}
         </p>
       </div>
       <div data-testid="enrolled-courses" className="flex gap-6 w-full">
@@ -39,10 +42,10 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
               </div>
               <div className="flex flex-col justify-center gap-2">
                 <p className="text-lg font-bold leading-5 text-neutral-950">
-                  We could not find any courses
+                  {t("studentCourseView.other.cannotFindCourses")}
                 </p>
                 <p className="text-neutral-800 text-base leading-6 font-normal">
-                  Please change the search criteria or try again later
+                  {t("studentCourseView.other.changeSearchCriteria")}
                 </p>
               </div>
             </div>

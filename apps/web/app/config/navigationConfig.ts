@@ -1,3 +1,5 @@
+import { t } from "i18next";
+
 import { routeAccessConfig } from "./routeAccessConfig";
 
 import type { UserRole } from "./userRoles";
@@ -28,17 +30,17 @@ export const getNavigationConfig = (
   t: typeof i18next.t,
 ): NavigationItem[] => [
   {
-    label: "dashboard",
+    label: t("navigationSideBar.dashboard"),
     path: "",
     iconName: "Dashboard",
   },
   {
-    label: "My Courses",
+    label: t("navigationSideBar.myCourses"),
     path: "admin/courses",
     iconName: "Course",
   },
   {
-    label: isUser ? "Courses" : "Browse Courses",
+    label: isUser ? t("navigationSideBar.courses") : t("navigationSideBar.browseCourses"),
     path: "courses",
     iconName: isUser ? "Course" : "Multi",
   },
@@ -48,12 +50,12 @@ export const getNavigationConfig = (
     iconName: "Category",
   },
   {
-    label: "users",
+    label: t("navigationSideBar.users"),
     path: "admin/users",
     iconName: "Hat",
   },
   {
-    label: "Profile",
+    label: t("navigationSideBar.profile"),
     path: `teachers/${userId}`,
     iconName: "User",
   },
@@ -61,17 +63,17 @@ export const getNavigationConfig = (
 
 export const adminNavigationConfig: NavigationItem[] = [
   {
-    label: "courses",
+    label: t("navigationSideBar.courses"),
     path: "admin/courses",
     iconName: "Course",
   },
   {
-    label: "categories",
+    label: t("navigationSideBar.categories"),
     path: "admin/categories",
     iconName: "Category",
   },
   {
-    label: "users",
+    label: t("navigationSideBar.users"),
     path: "admin/users",
     iconName: "User",
   },

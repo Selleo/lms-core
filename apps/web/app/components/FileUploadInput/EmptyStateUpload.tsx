@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import { ContentTypes } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import { Icon } from "../Icon";
@@ -22,6 +24,7 @@ const EmptyStateUpload = ({
   isUploading,
   contentTypeToDisplay,
 }: EmptyStateUploadProps) => {
+  const { t } = useTranslation();
   return (
     <label
       htmlFor="file-upload"
@@ -30,8 +33,8 @@ const EmptyStateUpload = ({
       <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
       <div className="flex flex-col gap-y-1 body-sm">
         <div className="text-center">
-          <span className="text-primary-700">Click to upload</span>{" "}
-          <span className="text-neutral-950">or drag and drop</span>
+          <span className="text-primary-700">{t("uploadFile.header")}</span>{" "}
+          <span className="text-neutral-950">{t("uploadFile.subHeader")}</span>
         </div>
         <div className="details text-neutral-600">{contentTypeFormats[contentTypeToDisplay]}</div>
       </div>
