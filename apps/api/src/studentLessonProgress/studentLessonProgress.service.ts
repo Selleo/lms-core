@@ -162,17 +162,23 @@ export class StudentLessonProgressService {
     }
 
     return await dbInstance
-      .update(studentChapterProgress)
-      .set({
+      .insert(studentChapterProgress)
+      .values({
         completedLessonCount: completedLessonCount.count,
+        courseId,
+        chapterId,
+        studentId,
       })
-      .where(
-        and(
-          eq(studentChapterProgress.chapterId, chapterId),
-          eq(studentChapterProgress.studentId, studentId),
-        ),
-      )
-      .returning();
+      .onConflictDoUpdate({
+        target: [
+          studentChapterProgress.studentId,
+          studentChapterProgress.chapterId,
+          studentChapterProgress.courseId,
+        ],
+        set: {
+          completedLessonCount: completedLessonCount.count,
+        },
+      });
   }
 
   private async checkCourseIsCompletedForUser(
