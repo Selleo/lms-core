@@ -475,7 +475,9 @@ export class CourseService {
       .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
       .orderBy(chapters.displayOrder);
 
-    const thumbnailS3SingedUrl = await this.fileService.getFileUrl(course.thumbnailS3Key);
+    const thumbnailS3SingedUrl = course.thumbnailS3Key
+      ? await this.fileService.getFileUrl(course.thumbnailS3Key)
+      : null;
 
     const updatedCourseLessonList = await Promise.all(
       courseChapterList?.map(async (chapter) => {

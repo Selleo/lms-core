@@ -6,6 +6,7 @@ import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
 import SplashScreenImage from "~/assets/svgs/splash-screen-image.svg";
 import ImageUploadInput from "~/components/FileUploadInput/ImageUploadInput";
+import { FormTextareaField } from "~/components/Form/FormTextareaFiled";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
@@ -143,11 +144,11 @@ const AddCourse = () => {
                     {t("adminCourseView.settings.field.description")}
                   </Label>
                   <FormControl>
-                    <textarea
+                    <FormTextareaField
+                      control={form.control}
                       id="description"
                       maxLength={maxDescriptionFieldLength}
                       placeholder={t("adminCourseView.settings.placeholder.description")}
-                      className="h-32 px-2 py-1 text-left text-neutral-950 body-base placeholder:body-base  placeholder:text-neutral-600 border border-neutral-300 rounded-lg focus:border-blue-500 focus:border-2 focus:outline-none"
                       {...field}
                       required
                     />

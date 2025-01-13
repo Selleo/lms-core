@@ -462,6 +462,7 @@ export interface GetCourseResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
+      updatedAt?: string;
       quizCount?: number;
       displayOrder: number;
     }[];
@@ -545,6 +546,7 @@ export interface GetBetaCourseByIdResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
+      updatedAt?: string;
       quizCount?: number;
       displayOrder: number;
     }[];
@@ -561,7 +563,7 @@ export interface GetBetaCourseByIdResponse {
     priceInCents: number;
     thumbnailUrl?: string;
     thumbnailS3Key?: string;
-    thumbnailS3SingedUrl?: string;
+    thumbnailS3SingedUrl?: string | null;
     title: string;
   };
 }
@@ -705,6 +707,7 @@ export interface GetUserStatisticsResponse {
       isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
+      updatedAt?: string;
       quizCount?: number;
       displayOrder: number;
       /** @format uuid */
@@ -763,6 +766,7 @@ export interface GetChapterWithLessonResponse {
     isPublished?: boolean;
     isSubmitted?: boolean;
     createdAt?: string;
+    updatedAt?: string;
     quizCount?: number;
     displayOrder: number;
   };
@@ -820,6 +824,7 @@ export type BetaCreateChapterBody = {
   isPublished?: boolean;
   isSubmitted?: boolean;
   createdAt?: string;
+  updatedAt?: string;
   quizCount?: number;
 } & {
   /** @format uuid */
@@ -886,6 +891,7 @@ export type UpdateChapterBody = {
   isPublished?: boolean;
   isSubmitted?: boolean;
   createdAt?: string;
+  updatedAt?: string;
   quizCount?: number;
 } & {
   /** @format uuid */

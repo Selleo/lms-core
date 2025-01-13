@@ -337,29 +337,28 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                   </Button>
                 )}
               </div>
-
-              {isAddingWord && (
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="text"
-                    value={newWord}
-                    onChange={(e) => setNewWord(e.target.value)}
-                    placeholder={t("adminCourseView.curriculum.lesson.placeholder.enterWord")}
-                    className="flex-1"
-                  />
-                  <Button onClick={handleAddWord} type="button" className="bg-blue-700 text-white">
-                    {t("common.button.add")}
-                  </Button>
-                  <Button
-                    onClick={() => setIsAddingWord(false)}
-                    type="button"
-                    className="bg-red-500 border border-neutral-200 text-red-500 bg-color-transparent"
-                  >
-                    {t("common.button.cancel")}
-                  </Button>
-                </div>
-              )}
             </div>
+            {isAddingWord && (
+              <div className="flex items-center gap-2 mt-4 w-1/3">
+                <Input
+                  type="text"
+                  value={newWord}
+                  onChange={(e) => setNewWord(e.target.value)}
+                  placeholder={t("adminCourseView.curriculum.lesson.placeholder.enterWord")}
+                  className="flex-1"
+                />
+                <Button onClick={handleAddWord} type="button" className="bg-blue-700 text-white">
+                  {t("common.button.add")}
+                </Button>
+                <Button
+                  onClick={() => setIsAddingWord(false)}
+                  type="button"
+                  className="bg-red-500 border border-neutral-200 text-red-500 bg-color-transparent"
+                >
+                  {t("common.button.cancel")}
+                </Button>
+              </div>
+            )}
             <>
               {errors?.questions?.[questionIndex] && (
                 <p className="text-red-500 text-sm">
