@@ -116,7 +116,7 @@ export default function LessonPage() {
               <span className="text-neutral-800">
                 {t("studentLessonView.other.chapter")} {currentChapter?.displayOrder}:
               </span>{" "}
-              {course?.title}
+              {currentChapter?.title}
             </p>
           </div>
           <LessonContent
