@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
@@ -52,6 +52,7 @@ const CourseSettings = ({
   const [displayThumbnailUrl, setDisplayThumbnailUrl] = useState<string | undefined>(
     thumbnailS3SingedUrl || undefined,
   );
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const { t } = useTranslation();
   const watchedTitle = form.watch("title");
@@ -85,6 +86,10 @@ const CourseSettings = ({
   const removeThumbnail = () => {
     form.setValue("thumbnailS3Key", "");
     setDisplayThumbnailUrl(undefined);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -162,6 +167,7 @@ const CourseSettings = ({
                         handleImageUpload={handleImageUpload}
                         isUploading={isUploading}
                         imageUrl={displayThumbnailUrl}
+                        fileInputRef={fileInputRef}
                       />
                     </FormControl>
                     {isUploading && <p>{t("common.other.uploadingImage")}</p>}

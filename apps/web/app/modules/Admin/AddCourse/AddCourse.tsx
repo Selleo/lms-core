@@ -1,5 +1,5 @@
 import { useNavigate } from "@remix-run/react";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
@@ -28,11 +28,11 @@ const AddCourse = () => {
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
   const { isValid: isFormValid } = form.formState;
-  const watchedImageUrl = form.watch("thumbnailUrl");
-  const thumbnailUrl = form.getValues("thumbnailUrl");
   const maxDescriptionFieldLength = 800;
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [displayThumbnailUrl, setDisplayThumbnailUrl] = useState<string | undefined>(undefined);
 
   const watchedDescriptionLength = form.watch("description").length;
   const descriptionFieldCharactersLeft = maxDescriptionFieldLength - watchedDescriptionLength;
@@ -43,7 +43,7 @@ const AddCourse = () => {
       try {
         const result = await uploadFile({ file, resource: "course" });
         form.setValue("thumbnailS3Key", result.fileKey, { shouldValidate: true });
-        form.setValue("thumbnailUrl", result.fileUrl, { shouldValidate: true });
+        setDisplayThumbnailUrl(result.fileUrl);
       } catch (error) {
         console.error("Error uploading image:", error);
       } finally {
@@ -52,6 +52,15 @@ const AddCourse = () => {
     },
     [form, uploadFile],
   );
+
+  const removeThumbnail = () => {
+    form.setValue("thumbnailS3Key", "");
+    setDisplayThumbnailUrl(undefined);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   return (
     <div className="flex h-screen bg-white px-20 py-8 overflow-auto">
@@ -160,7 +169,7 @@ const AddCourse = () => {
 
             <FormField
               control={form.control}
-              name="thumbnailUrl"
+              name="thumbnailS3Key"
               render={({ field }) => (
                 <FormItem className="mt-5">
                   <Label htmlFor="fileUrl">{t("adminCourseView.settings.field.thumbnail")}</Label>
@@ -169,7 +178,8 @@ const AddCourse = () => {
                       field={field}
                       handleImageUpload={handleImageUpload}
                       isUploading={isUploading}
-                      imageUrl={thumbnailUrl}
+                      imageUrl={displayThumbnailUrl}
+                      fileInputRef={fileInputRef}
                     />
                   </FormControl>
 
@@ -178,9 +188,9 @@ const AddCourse = () => {
                 </FormItem>
               )}
             />
-            {watchedImageUrl && (
+            {displayThumbnailUrl && (
               <Button
-                onClick={() => form.setValue("thumbnailUrl", "")}
+                onClick={removeThumbnail}
                 className="bg-red-500 text-white py-2 px-6 rounded mb-4 mt-4"
               >
                 <Icon name="TrashIcon" className="mr-2" />

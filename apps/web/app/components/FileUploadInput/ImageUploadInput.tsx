@@ -9,6 +9,7 @@ interface ImageUploadProps {
   handleImageUpload: (file: File) => void;
   isUploading: boolean;
   imageUrl?: string;
+  fileInputRef?: React.RefObject<HTMLInputElement>;
 }
 
 const ImageUploadInput = ({
@@ -16,6 +17,7 @@ const ImageUploadInput = ({
   handleImageUpload,
   isUploading,
   imageUrl,
+  fileInputRef,
 }: ImageUploadProps) => {
   const { t } = useTranslation();
   return (
@@ -52,6 +54,7 @@ const ImageUploadInput = ({
           </div>
         </div>
         <input
+          ref={fileInputRef}
           type="file"
           accept=".svg, .png, .jpg, .jpeg, .gif"
           onChange={(e) => {

@@ -11,7 +11,12 @@ type WordBankProps = {
 
 export const WordBank = ({ words }: WordBankProps) => {
   const renderDraggableWords = () => {
-    return words.map((word) => <DraggableWord key={word.id} word={word} />);
+    return words.map((word) => {
+      const updatedWord =
+        word.value !== word.studentAnswerText ? { ...word, studentAnswerText: word.value } : word;
+
+      return <DraggableWord key={word.id} word={updatedWord ?? word} />;
+    });
   };
   const { t } = useTranslation();
 

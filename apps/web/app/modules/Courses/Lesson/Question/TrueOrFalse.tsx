@@ -31,9 +31,9 @@ export const TrueOrFalse = ({ question, isCompleted }: TrueOrFalseProps) => {
               {
                 "border-success-700 bg-success-50": isCorrect && isStudentAnswer,
                 "border-error-700 bg-error-50":
-                  (!isCorrect && isStudentAnswer) ||
-                  (!isCorrect && !isStudentAnswer) ||
-                  (isCorrect && !isStudentAnswer),
+                  (!isCorrect && isStudentAnswer && isCompleted) ||
+                  (!isCorrect && !isStudentAnswer && isCompleted) ||
+                  (isCorrect && !isStudentAnswer && isCompleted),
                 "has-[input:checked]:bg-primary-50 [&]:has-[input:checked]:border-primary-500":
                   !isCompleted,
               },
