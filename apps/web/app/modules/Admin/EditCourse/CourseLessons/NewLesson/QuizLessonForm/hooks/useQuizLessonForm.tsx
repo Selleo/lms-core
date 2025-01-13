@@ -141,6 +141,7 @@ export const useQuizLessonForm = ({
           solutionExplanation: updatedSolutionExplanation,
         };
       }
+      return question;
     });
 
     try {
