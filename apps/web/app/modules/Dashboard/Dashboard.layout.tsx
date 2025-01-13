@@ -1,4 +1,5 @@
 import { Outlet, redirect } from "@remix-run/react";
+import { useTranslation } from "react-i18next";
 
 import { currentUserQueryOptions } from "~/api/queries/useCurrentUser";
 import { queryClient } from "~/api/queryClient";
@@ -24,6 +25,7 @@ export const clientLoader = async () => {
 };
 
 export default function DashboardLayout() {
+  const { t } = useTranslation();
   const { currentUser } = useCurrentUserStore();
   useAuthEffect();
 
@@ -32,7 +34,7 @@ export default function DashboardLayout() {
       <div className="flex flex-1 flex-col 2xl:flex-row overflow-hidden">
         <Navigation
           menuItems={mapNavigationItems(
-            getNavigationConfig(currentUser?.id ?? "", currentUser?.role === "user"),
+            getNavigationConfig(currentUser?.id ?? "", currentUser?.role === "user", t),
           )}
         />
         <main className="flex-1 overflow-y-auto bg-primary-50">

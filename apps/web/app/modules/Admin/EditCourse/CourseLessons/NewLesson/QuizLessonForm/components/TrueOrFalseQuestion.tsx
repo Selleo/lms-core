@@ -1,5 +1,6 @@
 import * as Accordion from "@radix-ui/react-accordion";
 import { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { SortableList } from "~/components/SortableList";
@@ -22,6 +23,7 @@ type TrueOrFalseQuestionProps = {
 const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) => {
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
+  const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleAddOption = useCallback(() => {
@@ -93,7 +95,9 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             {!isOptionEmpty && (
               <>
                 <span className="text-red-500 mr-1">*</span>
-                <Label className="body-sm-md">Options</Label>
+                <Label className="body-sm-md">
+                  {t("adminCourseView.curriculum.lesson.field.options")}
+                </Label>
               </>
             )}
             {watchedOptions && watchedOptions?.length > 0 && (
@@ -117,7 +121,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                           onChange={(e) =>
                             handleOptionChange(index as number, "optionText", e.target.value)
                           }
-                          placeholder={`Option ${index + 1}`}
+                          placeholder={`${t("adminCourseView.curriculum.lesson.placeholder.option")} ${index + 1}`}
                           required
                           className="flex-1"
                         />
@@ -133,7 +137,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                             className="ml-2 text-neutral-900 body-base cursor-pointer"
                             onClick={() => handleOptionChange(index, "isCorrect", true)}
                           >
-                            True
+                            {t("adminCourseView.curriculum.lesson.other.true")}
                           </Label>
                           <Input
                             type="radio"
@@ -146,7 +150,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                             className="ml-2 text-neutral-900 body-base cursor-pointer"
                             onClick={() => handleOptionChange(index, "isCorrect", false)}
                           >
-                            False
+                            {t("adminCourseView.curriculum.lesson.other.false")}
                           </Label>
 
                           <TooltipProvider delayDuration={0}>
@@ -165,7 +169,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                                 align="center"
                                 className="bg-black ml-4 text-white text-sm rounded shadow-md"
                               >
-                                Delete
+                                {t("common.button.delete")}
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -184,14 +188,14 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
           )}
           <div className="mt-4 flex gap-2 mb-4 ml-14">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
-              Add Option
+              {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>
             <Button
               type="button"
               className="text-error-700 bg-color-white border border-neutral-300"
               onClick={() => setIsDeleteModalOpen(true)}
             >
-              Delete Question
+              {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}
             </Button>
           </div>
           <DeleteConfirmationModal

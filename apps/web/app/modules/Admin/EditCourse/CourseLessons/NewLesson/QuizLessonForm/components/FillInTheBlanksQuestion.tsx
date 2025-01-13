@@ -5,6 +5,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import { EditorContent, Node, useEditor } from "@tiptap/react";
 import { StarterKit } from "@tiptap/starter-kit";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
@@ -55,6 +56,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   const currentDescription = form.getValues(`questions.${questionIndex}.description`);
 
   const errors = form.formState.errors;
+  const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const editor = useEditor({
@@ -297,10 +299,10 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
         <div className="p-3 rounded-xl border-0 transition-all duration-300">
           <div className="ml-14">
             <span className="text-red-500 mr-1">*</span>
-            <Label className="body-sm-md">Words</Label>
-            <div
-              className={cn("flex flex-wrap items-center", currentOptions.length > 0 && "gap-2")}
-            >
+            <Label className="body-sm-md">
+              {t("adminCourseView.curriculum.lesson.field.words")}
+            </Label>
+            <div className="flex flex-wrap gap-2 items-center">
               {currentOptions.map((option, index) => (
                 <div
                   key={index}
@@ -331,7 +333,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                     className="mt-4 bg-blue-700 text-white rounded-full flex items-center mb-4"
                   >
                     <Icon name="Plus" />
-                    Add Word
+                    {t("adminCourseView.curriculum.lesson.button.addWords")}
                   </Button>
                 )}
               </div>
@@ -342,18 +344,18 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                     type="text"
                     value={newWord}
                     onChange={(e) => setNewWord(e.target.value)}
-                    placeholder="Enter a word"
+                    placeholder={t("adminCourseView.curriculum.lesson.placeholder.enterWord")}
                     className="flex-1"
                   />
                   <Button onClick={handleAddWord} type="button" className="bg-blue-700 text-white">
-                    Add
+                    {t("common.button.add")}
                   </Button>
                   <Button
                     onClick={() => setIsAddingWord(false)}
                     type="button"
                     className="bg-red-500 border border-neutral-200 text-red-500 bg-color-transparent"
                   >
-                    Cancel
+                    {t("common.button.cancel")}
                   </Button>
                 </div>
               )}
@@ -372,7 +374,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                 <FormItem className="mt-5">
                   <Label htmlFor="description" className="body-sm-md">
                     <span className="text-red-500 mr-1">*</span>
-                    Sentences
+                    {t("adminCourseView.curriculum.lesson.field.sentence")}
                   </Label>
                   <FormControl>
                     <EditorContent
@@ -395,7 +397,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               className="text-error-700 bg-color-white mb-4 border border-neutral-300 mt-4"
               onClick={() => setIsDeleteModalOpen(true)}
             >
-              Delete Question
+              {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}
             </Button>
           </div>
           <DeleteConfirmationModal

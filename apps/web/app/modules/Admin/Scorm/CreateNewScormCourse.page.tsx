@@ -1,6 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { StepWrapper } from "./components/StepWrapper";
 import { courseFormSchema } from "./schema/course.schema";
@@ -59,13 +60,14 @@ function CreateNewScormCourse() {
     Component: CurrentStep,
     SideComponent,
   } = SCORM_CONFIG[currentStep];
+  const { t } = useTranslation();
 
   return (
     <div className="size-full gap-[120px] flex p-20 bg-white">
       <div className="flex-1">
         <FormProvider {...form}>
           <div className="max-w-2xl mx-auto p-6">
-            <StepWrapper title={stepTitle} description={stepDescription}>
+            <StepWrapper title={t(stepTitle)} description={t(stepDescription)}>
               <CurrentStep handleBack={prevStep} handleNext={nextStep} />
             </StepWrapper>
           </div>

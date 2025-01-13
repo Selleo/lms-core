@@ -1,5 +1,6 @@
 import { useParams } from "@remix-run/react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useSubmitQuiz } from "~/api/mutations";
 import { queryClient } from "~/api/queryClient";
@@ -181,6 +182,7 @@ function transformData(input: TQuestionsForm) {
 
 export const Quiz = ({ lesson }: QuizProps) => {
   const { lessonId = "" } = useParams();
+  const { t } = useTranslation();
 
   const questions = lesson.quizDetails?.questions;
 
@@ -207,12 +209,8 @@ export const Quiz = ({ lesson }: QuizProps) => {
         onSubmit={methods.handleSubmit(handleOnSubmit)}
       >
         <Questions questions={questions} isQuizCompleted={lesson.quizCompleted} />
-        <Button
-          disabled={!!lesson.quizCompleted}
-          type="submit"
-          className="flex gap-x-2 items-center self-end"
-        >
-          <span>Submit</span>
+        <Button type="submit" className="flex gap-x-2 items-center self-end">
+          <span>{t("studentLessonView.button.submit")}</span>
           <Icon name="ArrowRight" className="w-4 h-auto" />
         </Button>
       </form>

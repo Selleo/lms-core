@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
+import { useTranslation } from "react-i18next";
 
 import { useToast } from "~/components/ui/use-toast";
 
@@ -11,6 +12,7 @@ type ChangeChapterDisplayOrderOptions = {
 
 export function useChangeChapterDisplayOrder() {
   const { toast } = useToast();
+  const { t } = useTranslation();
 
   return useMutation({
     mutationFn: async (options: ChangeChapterDisplayOrderOptions) => {
@@ -21,17 +23,23 @@ export function useChangeChapterDisplayOrder() {
       return response.data;
     },
     onSuccess: () => {
-      toast({ description: "Chapter display order updated successfully" });
+      toast({
+        description: t(
+          "adminCourseView.curriculum.chapter.toast.chapterDisplayOrderUpdatedSuccessfully",
+        ),
+      });
     },
     onError: (error) => {
       if (error instanceof AxiosError) {
         return toast({
-          description: error.response?.data.message || "An error occurred while updating.",
+          description:
+            error.response?.data.message ||
+            t("adminCourseView.curriculum.chapter.toast.errorWhileUpdating"),
           variant: "destructive",
         });
       }
       toast({
-        description: error.message || "An unexpected error occurred.",
+        description: error.message || t("adminCourseView.curriculum.chapter.toast.unexpectedError"),
         variant: "destructive",
       });
     },

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import FileUploadInput from "~/components/FileUploadInput/FileUploadInput";
@@ -50,6 +51,8 @@ const FileLessonForm = ({
   const { mutateAsync: uploadFile } = useUploadFile();
   const [url, setUrl] = useState(lessonToEdit?.fileS3Key || "");
   const fileType = form.watch("fileType");
+  const { t } = useTranslation();
+
   const isExternalUrl = form.watch("isExternal");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -98,25 +101,33 @@ const FileLessonForm = ({
     form.setValue("fileType", fileType);
   }, [contentTypeToDisplay, form, fileType]);
 
+  const type =
+    contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM
+      ? t("video").toLowerCase()
+      : t("presentation").toLowerCase();
+
   return (
     <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
       <div className="flex flex-col gap-y-1">
-        {!lessonToEdit && (
-          <Breadcrumb
-            lessonLabel={
-              contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "Video" : "Presentation"
-            }
-            setContentTypeToDisplay={setContentTypeToDisplay}
-            setSelectedLesson={setSelectedLesson}
-          />
-        )}
+        <Breadcrumb
+          lessonLabel={
+            contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM
+              ? t("adminCourseView.curriculum.lesson.other.video")
+              : t("adminCourseView.curriculum.lesson.other.presentation")
+          }
+          setContentTypeToDisplay={setContentTypeToDisplay}
+          setSelectedLesson={setSelectedLesson}
+        />
         <div className="h5 text-neutral-950">
           {lessonToEdit ? (
             <>
-              <span className="text-neutral-600">Edit:</span> {lessonToEdit?.title}
+              <span className="text-neutral-600">
+                {t("adminCourseView.curriculum.other.edit")}:
+              </span>{" "}
+              {lessonToEdit?.title}
             </>
           ) : (
-            "Create"
+            t("common.button.create")
           )}
         </div>
       </div>
@@ -125,8 +136,8 @@ const FileLessonForm = ({
           <FormTextField
             control={form.control}
             name="title"
-            label="Lesson Title"
-            placeholder="Provide lesson title..."
+            label={t("adminCourseView.curriculum.lesson.field.title")}
+            placeholder={t("adminCourseView.curriculum.lesson.placeholder.title")}
             required
           />
           <FormField
@@ -181,13 +192,13 @@ const FileLessonForm = ({
             label="Description"
             name="description"
             control={form.control}
-            placeholder={`Provide description about the ${
-              contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM ? "video" : "presentation"
-            }...`}
+            placeholder={t("adminCourseView.curriculum.lesson.placeholder.fileDescription", {
+              type,
+            })}
           />
           <div className="flex gap-x-3">
             <Button type="submit" className="bg-primary-700 hover:bg-blue-600 text-white">
-              Save
+              {t("common.button.save")}
             </Button>
             <Button
               type="button"
@@ -196,7 +207,7 @@ const FileLessonForm = ({
               }
               className="bg-transparent text-red-500 border border-red-500 hover:bg-red-100"
             >
-              {lessonToEdit ? "Delete" : "Cancel"}
+              {lessonToEdit ? t("common.button.delete") : t("common.button.cancel")}
             </Button>
           </div>
         </form>

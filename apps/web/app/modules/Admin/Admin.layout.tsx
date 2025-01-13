@@ -1,5 +1,6 @@
 import { type MetaFunction, Outlet, redirect, useLocation, useNavigate } from "@remix-run/react";
 import { Suspense, useLayoutEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 
 import { currentUserQueryOptions } from "~/api/queries";
@@ -51,6 +52,7 @@ const AdminGuard = ({ children }: PropsWithChildren) => {
 };
 
 const AdminLayout = () => {
+  const { t } = useTranslation();
   const { currentUser } = useCurrentUserStore();
   const { pathname } = useLocation();
 
@@ -64,7 +66,7 @@ const AdminLayout = () => {
       <div className="flex flex-1 flex-col overflow-hidden 2xl:flex-row">
         {!hideTopbarAndSidebar && (
           <Navigation
-            menuItems={mapNavigationItems(getNavigationConfig(currentUser?.id ?? "", false))}
+            menuItems={mapNavigationItems(getNavigationConfig(currentUser?.id ?? "", false, t))}
           />
         )}
         <main

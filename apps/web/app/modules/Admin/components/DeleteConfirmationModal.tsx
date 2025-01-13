@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
 
 import { Icon } from "~/components/Icon";
@@ -25,24 +26,18 @@ const DeleteConfirmationModal = ({
   onDelete,
   contentType,
 }: DeleteConfirmationModalProps) => {
+  const { t } = useTranslation();
   const getDialogTitleText = (): string => {
     return match(contentType)
-      .with(
-        DeleteContentType.VIDEO,
-        () => "Are you sure you want to delete video lesson from the chapter?",
+      .with(DeleteContentType.VIDEO, () => t("adminCourseView.curriculum.other.removeVideoLesson"))
+      .with(DeleteContentType.PRESENTATION, () =>
+        t("adminCourseView.curriculum.other.removePresentationLesson"),
       )
-      .with(
-        DeleteContentType.PRESENTATION,
-        () => "Are you sure you want to delete presentation from the chapter?",
-      )
-      .with(
-        DeleteContentType.TEXT,
-        () => "Are you sure you want to delete text content from the chapter?",
-      )
-      .with(DeleteContentType.QUIZ, () => "Are you sure you want to delete quiz from the chapter?")
-      .with(DeleteContentType.CHAPTER, () => "Are you sure you want to delete this chapter?")
-      .with(DeleteContentType.QUESTION, () => "Are you sure you want to delete question?")
-      .otherwise(() => "Are you sure you want to delete this content?");
+      .with(DeleteContentType.TEXT, () => t("adminCourseView.curriculum.other.removeTextLesson"))
+      .with(DeleteContentType.QUIZ, () => t("adminCourseView.curriculum.other.removeQuizLesson"))
+      .with(DeleteContentType.CHAPTER, () => t("adminCourseView.curriculum.other.removeChapter"))
+      .with(DeleteContentType.QUESTION, () => t("adminCourseView.curriculum.other.removeQuestion"))
+      .otherwise(() => t("adminCourseView.curriculum.other.removeContent"));
   };
 
   return (
@@ -57,8 +52,8 @@ const DeleteConfirmationModal = ({
             </DialogTitle>
             <DialogDescription className="mt-2 text-sm text-neutral-600">
               {contentType === DeleteContentType.QUESTION
-                ? "This will remove question from quiz"
-                : "This will remove all data provided including uploaded media."}
+                ? t("adminCourseView.curriculum.other.removeContentQuestionBody")
+                : t("adminCourseView.curriculum.other.removeContentBody")}
             </DialogDescription>
 
             <div className="flex gap-4 mt-8">
@@ -66,13 +61,13 @@ const DeleteConfirmationModal = ({
                 onClick={onDelete}
                 className="text-white bg-error-500 hover:bg-error-600 py-2 px-4 rounded"
               >
-                Delete
+                {t("common.button.delete")}
               </Button>
               <Button
                 onClick={onClose}
                 className="text-primary-800 border border-neutral-300 bg-neutrals-200 py-2 px-4 rounded"
               >
-                Cancel
+                {t("common.button.cancel")}
               </Button>
             </div>
           </div>

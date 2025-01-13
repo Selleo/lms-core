@@ -14,6 +14,8 @@ import * as Sentry from "@sentry/react";
 import { startTransition, StrictMode, useEffect } from "react";
 import { hydrateRoot } from "react-dom/client";
 
+import i18next from "../i18n";
+
 import { Providers } from "./modules/Global/Providers";
 
 Sentry.init({
@@ -41,15 +43,21 @@ Sentry.init({
   },
 });
 
-startTransition(() => {
-  hydrateRoot(
-    document,
-    <StrictMode>
-      <Sentry.ErrorBoundary fallback={<div>An error occurred</div>}>
-        <Providers>
-          <RemixBrowser />
-        </Providers>
-      </Sentry.ErrorBoundary>
-    </StrictMode>,
-  );
-});
+const hydrate = async () => {
+  await i18next;
+
+  startTransition(() => {
+    hydrateRoot(
+      document,
+      <StrictMode>
+        <Sentry.ErrorBoundary fallback={<div>An error occurred</div>}>
+          <Providers>
+            <RemixBrowser />
+          </Providers>
+        </Sentry.ErrorBoundary>
+      </StrictMode>,
+    );
+  });
+};
+
+hydrate();

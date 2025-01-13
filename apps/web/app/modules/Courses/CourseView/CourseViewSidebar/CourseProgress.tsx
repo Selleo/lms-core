@@ -1,5 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import { find, flatMap } from "lodash-es";
+import { useTranslation } from "react-i18next";
 
 import { CopyUrlButton } from "~/components/CopyUrlButton";
 import { Icon } from "~/components/Icon";
@@ -19,6 +20,7 @@ const findFirstNotStartedLessonId = (course: CourseProgressProps["course"]) => {
 
 export const CourseProgress = ({ course }: CourseProgressProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const nonStartedLessonId = findFirstNotStartedLessonId(course);
   const notStartedChapterId = course.chapters.find((chapter) => {
     return chapter.lessons.some((lesson) => lesson.id === nonStartedLessonId);
@@ -26,7 +28,9 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
 
   return (
     <>
-      <h4 className="h6 text-neutral-950 pb-1">Course progress</h4>
+      <h4 className="h6 text-neutral-950 pb-1">
+        {t("studentCourseView.sideSection.other.courseProgress")}
+      </h4>
       <CourseProgressChart
         chaptersCount={course?.courseChapterCount}
         completedChaptersCount={course?.completedChapterCount}
@@ -34,7 +38,7 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
       <div className="flex flex-col gap-y-2">
         <CopyUrlButton className="gap-x-2" variant="outline">
           <Icon name="Share" className="w-6 h-auto text-primary-800" />
-          <span>Share this course</span>
+          <span>{t("studentCourseView.sideSection.button.shareCourse")}</span>
         </CopyUrlButton>
         <Button
           className="gap-x-2"
@@ -46,11 +50,11 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
           }
         >
           <Icon name="Play" className="w-6 h-auto text-white" />
-          <span>Continue learning</span>
+          <span>{t("studentCourseView.sideSection.button.continueLearning")}</span>
         </Button>
         <p className="text-neutral-800 details flex items-center justify-center gap-x-2">
           <Icon name="Info" className="w-4 h-auto text-neutral-800" />
-          <span>Quickly pick up where you left off with your most recent lesson.</span>
+          <span>{t("studentCourseView.sideSection.other.informationText")}</span>
         </p>
       </div>
     </>

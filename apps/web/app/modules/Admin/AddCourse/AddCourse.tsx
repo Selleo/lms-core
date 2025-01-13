@@ -1,5 +1,6 @@
 import { useNavigate } from "@remix-run/react";
 import { useCallback, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
@@ -28,6 +29,7 @@ const AddCourse = () => {
   const { mutateAsync: uploadFile } = useUploadFile();
   const { isValid: isFormValid } = form.formState;
   const maxDescriptionFieldLength = 800;
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [displayThumbnailUrl, setDisplayThumbnailUrl] = useState<string | undefined>(undefined);
@@ -68,11 +70,8 @@ const AddCourse = () => {
       <div className="w-full max-w-[820px] flex flex-col gap-y-6 px-8">
         <Breadcrumb />
         <hgroup className="flex flex-col gapy-y-1">
-          <h1 className="h3 text-neutral-950">Create new course</h1>
-          <p className="body-lg-md text-neutral-800">
-            Provide the details to set up a new course. You’ll have more options to customize it
-            later.
-          </p>
+          <h1 className="h3 text-neutral-950">{t("adminCourseView.settings.header")}</h1>
+          <p className="body-lg-md text-neutral-800">{t("adminCourseView.settings.subHeader")}</p>
         </hgroup>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -83,14 +82,15 @@ const AddCourse = () => {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <Label htmlFor="title" className="body-base-md">
-                      <span className="text-red-500">*</span> Course title
+                      <span className="text-red-500">*</span>{" "}
+                      {t("adminCourseView.settings.field.title")}
                     </Label>
                     <FormControl>
                       <Input
                         id="title"
                         {...field}
                         required
-                        placeholder="Enter title..."
+                        placeholder={t("adminCourseView.settings.placeholder.title")}
                         className="placeholder:body-base"
                       />
                     </FormControl>
@@ -104,7 +104,8 @@ const AddCourse = () => {
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <Label htmlFor="categoryId">
-                      <span className="text-red-500">*</span> Category
+                      <span className="text-red-500">*</span>{" "}
+                      {t("adminCourseView.settings.field.category")}
                     </Label>
                     <FormControl>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -113,7 +114,9 @@ const AddCourse = () => {
                             id="categoryId"
                             className="border border-neutral-300 focus:border-primary-800 focus:ring-primary-800 rounded-lg data-[placeholder]:body-base"
                           >
-                            <SelectValue placeholder="Select category" />
+                            <SelectValue
+                              placeholder={t("adminCourseView.settings.placeholder.category")}
+                            />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
@@ -136,13 +139,14 @@ const AddCourse = () => {
               render={({ field }) => (
                 <FormItem className="mt-5">
                   <Label htmlFor="description">
-                    <span className="text-red-500">*</span> Description
+                    <span className="text-red-500">*</span>{" "}
+                    {t("adminCourseView.settings.field.description")}
                   </Label>
                   <FormControl>
                     <textarea
                       id="description"
                       maxLength={maxDescriptionFieldLength}
-                      placeholder="Provide description about the course..."
+                      placeholder={t("adminCourseView.settings.placeholder.description")}
                       className="h-32 px-2 py-1 text-left text-neutral-950 body-base placeholder:body-base  placeholder:text-neutral-600 border border-neutral-300 rounded-lg focus:border-blue-500 focus:border-2 focus:outline-none"
                       {...field}
                       required
@@ -153,10 +157,13 @@ const AddCourse = () => {
               )}
             />
             {descriptionFieldCharactersLeft <= 0 ? (
-              <p className="text-red-500 text-sm">You have reached the character limit.</p>
+              <p className="text-red-500 text-sm">
+                {t("adminCourseView.settings.other.reachedCharactersLimit")}
+              </p>
             ) : (
               <p className="text-neutral-800 mt-1">
-                {descriptionFieldCharactersLeft} characters left
+                {descriptionFieldCharactersLeft}{" "}
+                {t("adminCourseView.settings.other.charactersLeft")}
               </p>
             )}
 
@@ -165,7 +172,7 @@ const AddCourse = () => {
               name="thumbnailS3Key"
               render={({ field }) => (
                 <FormItem className="mt-5">
-                  <Label htmlFor="fileUrl">Thumbnail</Label>
+                  <Label htmlFor="fileUrl">{t("adminCourseView.settings.field.thumbnail")}</Label>
                   <FormControl>
                     <ImageUploadInput
                       field={field}
@@ -176,7 +183,7 @@ const AddCourse = () => {
                     />
                   </FormControl>
 
-                  {isUploading && <p>Uploading image...</p>}
+                  {isUploading && <p>{t("common.other.uploadingImage")}</p>}
                   <FormMessage />
                 </FormItem>
               )}
@@ -187,7 +194,7 @@ const AddCourse = () => {
                 className="bg-red-500 text-white py-2 px-6 rounded mb-4 mt-4"
               >
                 <Icon name="TrashIcon" className="mr-2" />
-                Remove Thumbnail
+                {t("adminCourseView.settings.button.removeThumbnail")}
               </Button>
             )}
 
@@ -198,14 +205,14 @@ const AddCourse = () => {
                   className="bg-white text-primary-800 border-2 rounded px-6 py-2"
                   onClick={() => navigate("/admin/courses")}
                 >
-                  Cancel
+                  {t("common.button.cancel")}
                 </Button>
                 <Button
                   type="submit"
                   className="bg-primary-700 text-white rounded px-6 py-2"
                   disabled={!isFormValid || isUploading}
                 >
-                  Proceed
+                  {t("common.button.proceed")}
                 </Button>
               </div>
             </div>
