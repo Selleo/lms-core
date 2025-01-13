@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { useUploadFile } from "~/api/mutations/admin/useUploadFile";
 import { useCategoriesSuspense } from "~/api/queries/useCategories";
@@ -51,6 +51,7 @@ const CourseSettings = ({
   const [displayThumbnailUrl, setDisplayThumbnailUrl] = useState<string | undefined>(
     thumbnailS3SingedUrl || undefined,
   );
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const watchedTitle = form.watch("title");
   const watchedDescription = form.watch("description");
@@ -83,6 +84,10 @@ const CourseSettings = ({
   const removeThumbnail = () => {
     form.setValue("thumbnailS3Key", "");
     setDisplayThumbnailUrl(undefined);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   return (
@@ -153,6 +158,7 @@ const CourseSettings = ({
                         handleImageUpload={handleImageUpload}
                         isUploading={isUploading}
                         imageUrl={displayThumbnailUrl}
+                        fileInputRef={fileInputRef}
                       />
                     </FormControl>
                     {isUploading && <p>Uploading image...</p>}
