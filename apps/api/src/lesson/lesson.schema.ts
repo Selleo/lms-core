@@ -139,16 +139,29 @@ export const lessonForChapterSchema = Type.Array(
   }),
 );
 
+export const onlyAnswerIdSAnswerSchema = Type.Object({
+  answerId: UUIDSchema,
+});
+
+export const onlyValueAnswerSchema = Type.Object({
+  value: Type.String(),
+});
+
+export const fullAnswerSchema = Type.Object({
+  answerId: UUIDSchema,
+  value: Type.String(),
+});
+
+export const studentQuestionAnswersSchema = Type.Object({
+  questionId: UUIDSchema,
+  answers: Type.Array(
+    Type.Union([onlyAnswerIdSAnswerSchema, onlyValueAnswerSchema, fullAnswerSchema]),
+  ),
+});
+
 export const answerQuestionsForLessonBody = Type.Object({
   lessonId: UUIDSchema,
-  answers: Type.Array(
-    Type.Object({
-      questionId: UUIDSchema,
-      answer: Type.Array(
-        Type.Object({ answerId: Type.Optional(UUIDSchema), value: Type.Optional(Type.String()) }),
-      ),
-    }),
-  ),
+  questionsAnswers: Type.Array(studentQuestionAnswersSchema),
 });
 
 export const nextLessonSchema = Type.Union([
@@ -182,3 +195,7 @@ export type LessonSchema = Static<typeof lessonSchema>;
 export type AnswerQuestionBody = Static<typeof answerQuestionsForLessonBody>;
 export type QuestionDetails = Static<typeof questionDetails>;
 export type NextLesson = Static<typeof nextLessonSchema>;
+export type StudentQuestionAnswer = Static<typeof studentQuestionAnswersSchema>;
+export type OnlyAnswerIdAsnwer = Static<typeof onlyAnswerIdSAnswerSchema>;
+export type OnlyValueAnswer = Static<typeof onlyValueAnswerSchema>;
+export type FullAnswer = Static<typeof fullAnswerSchema>;

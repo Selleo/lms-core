@@ -2,6 +2,8 @@ import { type Static, Type } from "@sinclair/typebox";
 
 import { UUIDSchema } from "src/common";
 
+import { QUESTION_TYPE } from "./question.types";
+
 export const answerQuestionSchema = Type.Object({
   courseId: UUIDSchema,
   lessonId: UUIDSchema,
@@ -35,4 +37,25 @@ export const quizEvaluationSchema = Type.Object({
   wrongAnswerCount: Type.Number(),
 });
 
+const quizQuestionSchema = Type.Object({
+  id: Type.String(),
+  type: Type.Enum(QUESTION_TYPE),
+  correctAnswers: Type.Array(
+    Type.Object({
+      answerId: UUIDSchema,
+      displayOrder: Type.Number(),
+      value: Type.String(),
+    }),
+  ),
+  allAnswers: Type.Array(
+    Type.Object({
+      answerId: UUIDSchema,
+      displayOrder: Type.Number(),
+      value: Type.String(),
+      isCorrect: Type.Boolean(),
+    }),
+  ),
+});
+
+export type QuizQuestion = Static<typeof quizQuestionSchema>;
 export type QuizEvaluation = Static<typeof quizEvaluationSchema>;

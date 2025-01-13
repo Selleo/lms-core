@@ -135,7 +135,7 @@ export class LessonService {
     const correctAnswersForQuizQuestions =
       await this.questionRepository.getQuizQuestionsToEvaluation(studentQuizAnswers.lessonId);
 
-    if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.answers.length) {
+    if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.questionsAnswers.length) {
       throw new ConflictException("Quiz is not completed");
     }
 

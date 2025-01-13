@@ -105,11 +105,7 @@ export const ChapterCard = ({
             <div className="flex justify-between items-center">
               <div className="flex flex-col h-full bg-white w-full">
                 <CourseProgress
-                  label={
-                    type === "quiz"
-                      ? t("studentChapterCardView.other.quizProgress")
-                      : t("studentChapterCardView.other.lessonProgress")
-                  }
+                  label={t("studentChapterCardView.other.chapterProgress")}
                   isCompleted={chapterProgress === "completed"}
                   completedLessonCount={completedLessonCount ?? 0}
                   courseLessonCount={lessonCount}

@@ -7012,7 +7012,7 @@
             "format": "uuid",
             "type": "string"
           },
-          "answers": {
+          "questionsAnswers": {
             "type": "array",
             "items": {
               "type": "object",
@@ -7021,32 +7021,63 @@
                   "format": "uuid",
                   "type": "string"
                 },
-                "answer": {
+                "answers": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "answerId": {
-                        "format": "uuid",
-                        "type": "string"
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "answerId": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "answerId"
+                        ]
                       },
-                      "value": {
-                        "type": "string"
+                      {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "answerId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "answerId",
+                          "value"
+                        ]
                       }
-                    }
+                    ]
                   }
                 }
               },
               "required": [
                 "questionId",
-                "answer"
+                "answers"
               ]
             }
           }
         },
         "required": [
           "lessonId",
-          "answers"
+          "questionsAnswers"
         ]
       },
       "EvaluationQuizResponse": {
