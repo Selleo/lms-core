@@ -36,8 +36,12 @@ export default defineConfig(({ mode }) => {
             dest: "",
           },
           {
-            src: "app/locales/**/*",
-            dest: "locales",
+            src: "app/locales/en/translation.json",
+            dest: "locales/en",
+          },
+          {
+            src: "app/locales/pl/translation.json",
+            dest: "locales/pl",
           },
         ],
       }),
