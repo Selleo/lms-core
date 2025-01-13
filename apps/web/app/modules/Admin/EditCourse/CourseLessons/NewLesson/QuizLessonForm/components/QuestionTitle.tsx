@@ -64,7 +64,7 @@ const QuestionTitle = ({
     (value: string) => {
       form.setValue(`questions.${questionIndex}.title`, value, { shouldDirty: true });
     },
-    [form, questionIndex, questionType],
+    [form, questionIndex],
   );
 
   return (

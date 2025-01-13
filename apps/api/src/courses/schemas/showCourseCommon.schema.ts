@@ -41,7 +41,7 @@ export const commonShowBetaCourseSchema = Type.Object({
   priceInCents: Type.Number(),
   thumbnailUrl: Type.Optional(Type.String()),
   thumbnailS3Key: Type.Optional(Type.String()),
-  thumbnailS3SingedUrl: Type.Optional(Type.String()),
+  thumbnailS3SingedUrl: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   title: Type.String(),
 });
 

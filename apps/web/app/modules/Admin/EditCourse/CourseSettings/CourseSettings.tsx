@@ -27,7 +27,7 @@ type CourseSettingsProps = {
   title?: string;
   description?: string;
   categoryId?: string;
-  thumbnailS3SingedUrl?: string;
+  thumbnailS3SingedUrl?: string | null;
   thumbnailS3Key?: string;
 };
 const CourseSettings = ({

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useChangeLessonDisplayOrder } from "~/api/mutations/admin/changeLessonDisplayOrder";
@@ -61,7 +61,13 @@ export const LessonCardList = ({
           setContentTypeToDisplay(ContentTypes.EMPTY);
       }
     },
-    [isCurrentFormDirty, setContentTypeToDisplay, setSelectedLesson, openLeaveModal],
+    [
+      isCurrentFormDirty,
+      setContentTypeToDisplay,
+      setSelectedLesson,
+      openLeaveModal,
+      setIsLeavingContent,
+    ],
   );
 
   useEffect(() => {
@@ -70,7 +76,7 @@ export const LessonCardList = ({
       setPendingLesson(null);
       setIsLeavingContent(false);
     }
-  }, [isCurrentFormDirty, pendingLesson, onClickLessonCard]);
+  }, [isCurrentFormDirty, pendingLesson, onClickLessonCard, setIsLeavingContent]);
 
   if (!lessons) {
     return <p>{t("lessonEmptyState")}</p>;

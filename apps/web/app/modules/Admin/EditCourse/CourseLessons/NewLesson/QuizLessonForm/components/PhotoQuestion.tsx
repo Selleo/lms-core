@@ -46,7 +46,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
 
   useEffect(() => {
     setDisplayImageUrl(lessonToEdit?.questions?.[questionIndex]?.photoS3SingedUrl);
-  }, [lessonToEdit]);
+  }, [lessonToEdit, questionIndex]);
 
   const isOptionEmpty =
     !Array.isArray(form.getValues(`questions.${questionIndex}.options`)) ||

@@ -4231,7 +4231,14 @@
                 "type": "string"
               },
               "thumbnailS3SingedUrl": {
-                "type": "string"
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
               },
               "title": {
                 "type": "string"
