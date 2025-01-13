@@ -8,7 +8,6 @@ import { queryClient } from "~/api/queryClient";
 import { coursePricingFormSchema } from "../validators/coursePricingFormSchema";
 
 import type { CoursePricingFormValues } from "../validators/coursePricingFormSchema";
-import type { UpdateCourseBody } from "~/api/generated-api";
 
 type UseCoursePricingFormProps = {
   courseId: string;
@@ -31,10 +30,8 @@ export const useCoursePricingForm = ({
     },
   });
   const onSubmit = async (data: CoursePricingFormValues) => {
-    const { isFree, ...updatedData } = data;
-
     updateCourse({
-      data: updatedData,
+      data,
       courseId,
     }).then(() => {
       queryClient.invalidateQueries(courseQueryOptions(courseId));

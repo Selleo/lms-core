@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Icon } from "~/components/Icon";
@@ -20,11 +20,6 @@ type QuestionSelectorProps = {
 
 const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   const [showOptions, setShowOptions] = useState(false);
-  const [openUpwards, setOpenUpwards] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const cardRef = useRef<HTMLDivElement | null>(null);
-
-  const toggleOptions = () => setShowOptions(!showOptions);
   const { t } = useTranslation();
 
   const onTypeChoose = useCallback(

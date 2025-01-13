@@ -21,7 +21,6 @@ type ScaleQuestionProps = {
 };
 
 const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
-  const questionType = form.getValues(`questions.${questionIndex}.type`);
   const watchedOptions = form.watch(`questions.${questionIndex}.options`);
   const errors = form.formState.errors;
   const { t } = useTranslation();
@@ -65,7 +64,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
       updatedOptions[optionIndex] = { ...updatedOptions[optionIndex], [field]: value };
       form.setValue(`questions.${questionIndex}.options`, updatedOptions, { shouldDirty: true });
     },
-    [form, questionIndex, questionType],
+    [form, questionIndex],
   );
 
   const onDeleteQuestion = () => {

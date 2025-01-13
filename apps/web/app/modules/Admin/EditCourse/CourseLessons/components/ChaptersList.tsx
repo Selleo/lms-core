@@ -91,7 +91,15 @@ const ChapterCard = ({
     setContentTypeToDisplay(ContentTypes.CHAPTER_FORM);
     setSelectedChapter(chapter);
     setSelectedLesson(null);
-  }, [chapter, setContentTypeToDisplay, setSelectedChapter, openLeaveModal]);
+  }, [
+    chapter,
+    setContentTypeToDisplay,
+    setSelectedChapter,
+    openLeaveModal,
+    isCurrentFormDirty,
+    setIsLeavingContent,
+    setSelectedLesson,
+  ]);
 
   const onAccordionClick = useCallback(
     (event: React.MouseEvent) => {
@@ -107,7 +115,7 @@ const ChapterCard = ({
       setPendingChapter(null);
       setIsLeavingContent(false);
     }
-  }, [isCurrentFormDirty, pendingChapter, onClickChapterCard]);
+  }, [isCurrentFormDirty, pendingChapter, onClickChapterCard, setIsLeavingContent]);
 
   useEffect(() => {
     if (!isCurrentFormDirty && isNewLesson) {

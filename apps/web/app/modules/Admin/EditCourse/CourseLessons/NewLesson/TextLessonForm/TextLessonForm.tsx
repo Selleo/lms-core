@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FormTextField } from "~/components/Form/FormTextField";
 import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "~/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
 import { Label } from "~/components/ui/label";
 import DeleteConfirmationModal from "~/modules/Admin/components/DeleteConfirmationModal";
 
