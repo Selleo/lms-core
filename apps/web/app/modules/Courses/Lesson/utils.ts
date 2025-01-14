@@ -1,4 +1,6 @@
-import type { GetLessonByIdResponse } from "~/api/generated-api";
+import { QuestionType } from "~/modules/Admin/EditCourse/CourseLessons/NewLesson/QuizLessonForm/QuizLessonForm.types";
+
+import type { EvaluationQuizBody, GetLessonByIdResponse } from "~/api/generated-api";
 import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 type Questions = NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"];
@@ -16,23 +18,6 @@ type GetUserAnswersResult = {
   briefResponses: Record<string, string> | Record<string, Record<string, string>>;
   detailedResponses: Record<string, string> | Record<string, Record<string, string>>;
 };
-
-type ParseQuizFormDataResult = {
-  questionId: string;
-  answer:
-    | {
-        answerId: string;
-        value: string | null;
-      }[]
-    | {
-        answerId: string;
-        value?: never;
-      }[]
-    | {
-        answerId?: never;
-        value: string | null;
-      }[];
-}[];
 
 export const getUserAnswers = (questions: Questions): GetUserAnswersResult => {
   const groupedQuestions = groupQuestionsByType(questions);
@@ -84,7 +69,7 @@ const prepareAnswers = (
 ): Record<string, string> | Record<string, Record<string, string>> => {
   return questions.reduce(
     (result, question) => {
-      if (question.type === "true_or_false") {
+      if (QuestionType.TRUE_OR_FALSE) {
         result[question.id] =
           question?.options?.reduce(
             (optionMap, option) => {
@@ -95,7 +80,7 @@ const prepareAnswers = (
           ) || {};
       }
 
-      if (question.type === "fill_in_the_blanks_text") {
+      if (question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT) {
         result[question.id ?? ""] =
           question?.options?.reduce(
             (map, { studentAnswer }, index) => {
@@ -109,7 +94,7 @@ const prepareAnswers = (
         return result;
       }
 
-      if (question.type === "fill_in_the_blanks_dnd") {
+      if (question.type === QuestionType.FILL_IN_THE_BLANKS_DND) {
         const maxAnswersAmount = question.description?.match(/\[word]/g)?.length ?? 0;
         result[question.id ?? ""] =
           question?.options?.reduce(
@@ -152,7 +137,7 @@ const prepareAnswers = (
 };
 
 export const parseQuizFormData = (input: QuizForm) => {
-  const result: ParseQuizFormDataResult = [];
+  const result: EvaluationQuizBody["questionsAnswers"] = [];
 
   const processSingleAnswerQuestions = (
     questionMap: Record<string, Record<string, string | null>>,
@@ -166,7 +151,7 @@ export const parseQuizFormData = (input: QuizForm) => {
       if (answerArray.length > 0) {
         result.push({
           questionId,
-          answer: answerArray,
+          answers: answerArray,
         });
       }
     }
@@ -177,12 +162,12 @@ export const parseQuizFormData = (input: QuizForm) => {
       const answers = questionMap[questionId];
       const answerArray = Object.entries(answers)
         .filter(([_, value]) => value)
-        .map(([_, value]) => ({ value }));
+        .map(([_, value]) => ({ value, answerId: "" }));
 
       if (answerArray.length > 0) {
         result.push({
           questionId,
-          answer: answerArray,
+          answers: answerArray,
         });
       }
     }
@@ -198,7 +183,7 @@ export const parseQuizFormData = (input: QuizForm) => {
       if (answerArray.length > 0) {
         result.push({
           questionId,
-          answer: answerArray,
+          answers: answerArray,
         });
       }
     }
@@ -208,7 +193,7 @@ export const parseQuizFormData = (input: QuizForm) => {
     for (const questionId in questionMap) {
       result.push({
         questionId,
-        answer: [
+        answers: [
           {
             answerId: questionId,
             value: questionMap[questionId],

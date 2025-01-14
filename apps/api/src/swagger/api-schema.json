@@ -3683,10 +3683,6 @@
                                 "type": "string"
                               },
                               {
-                                "const": "file",
-                                "type": "string"
-                              },
-                              {
                                 "const": "presentation",
                                 "type": "string"
                               },
@@ -3909,10 +3905,6 @@
                             "anyOf": [
                               {
                                 "const": "text",
-                                "type": "string"
-                              },
-                              {
-                                "const": "file",
                                 "type": "string"
                               },
                               {
@@ -4816,10 +4808,6 @@
                           "type": "string"
                         },
                         {
-                          "const": "file",
-                          "type": "string"
-                        },
-                        {
                           "const": "presentation",
                           "type": "string"
                         },
@@ -4958,10 +4946,6 @@
                       "anyOf": [
                         {
                           "const": "text",
-                          "type": "string"
-                        },
-                        {
-                          "const": "file",
                           "type": "string"
                         },
                         {
@@ -5288,10 +5272,6 @@
                       "anyOf": [
                         {
                           "const": "text",
-                          "type": "string"
-                        },
-                        {
-                          "const": "file",
                           "type": "string"
                         },
                         {
@@ -5686,10 +5666,6 @@
                     "type": "string"
                   },
                   {
-                    "const": "file",
-                    "type": "string"
-                  },
-                  {
                     "const": "presentation",
                     "type": "string"
                   },
@@ -6015,10 +5991,6 @@
                 "anyOf": [
                   {
                     "const": "text",
-                    "type": "string"
-                  },
-                  {
-                    "const": "file",
                     "type": "string"
                   },
                   {
@@ -6738,10 +6710,6 @@
                 "anyOf": [
                   {
                     "const": "text",
-                    "type": "string"
-                  },
-                  {
-                    "const": "file",
                     "type": "string"
                   },
                   {

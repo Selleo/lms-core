@@ -40,7 +40,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
   if (!questions?.length) return null;
 
   const handleOnSubmit = async (data: QuizForm) => {
-    submitQuiz.mutate({ lessonId, answers: parseQuizFormData(data) });
+    submitQuiz.mutate({ lessonId, questionsAnswers: parseQuizFormData(data) });
   };
 
   return (

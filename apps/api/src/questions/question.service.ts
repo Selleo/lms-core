@@ -97,7 +97,7 @@ export class QuestionService {
         // TODO: implement this
         return true;
       })
-      .with(QUESTION_TYPE.SINGLE_CHOICE, () => {
+      .with(QUESTION_TYPE.SINGLE_CHOICE, QUESTION_TYPE.PHOTO_QUESTION_SINGLE_CHOICE, () => {
         if (studentAnswer.answers.length !== 1) {
           throw new ConflictException(question.id, "Single choice must have exactly one answer");
         }
@@ -108,7 +108,7 @@ export class QuestionService {
           this.getAnswerId(answer) === question.correctAnswers[0].answerId
         );
       })
-      .with(QUESTION_TYPE.MULTIPLE_CHOICE, () => {
+      .with(QUESTION_TYPE.MULTIPLE_CHOICE, QUESTION_TYPE.PHOTO_QUESTION_MULTIPLE_CHOICE, () => {
         if (question.correctAnswers.length !== studentAnswer.answers.length) {
           return false;
         }
