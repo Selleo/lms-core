@@ -121,7 +121,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
                     verticalAnchor="middle"
                     className="fill-primary-950 h5 md:h3 translate-x-1/2 translate-y-1/2"
                   >
-                    {t("clientStatisticsView.other.noDataAvaiable")}
+                    {t("clientStatisticsView.other.noDataAvailable")}
                   </Text>
                 ) : null;
               }}

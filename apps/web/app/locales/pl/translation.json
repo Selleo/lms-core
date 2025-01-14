@@ -214,20 +214,20 @@
       "correctAnswers": "Poprawne odpowiedzi",
       "wrongAnswers": "Błędne odpowiedzi",
       "avgQuizScorePercentage": "Średni wynik quizu",
-      "avgQuizCompletitionPercentage": "Średni procent ukończenia kursu",
+      "avgQuizCompletionPercentage": "Średni procent ukończenia kursu",
       "noData": "Brak danych",
       "courses": "Kursy",
       "lessons": "Lekcje",
       "completed": "Zakończone",
       "started": "Rozpoczęte",
-      "noDataAvaiable": "Brak dostępnych danych",
+      "noDataAvailable": "Brak dostępnych danych",
       "rates": "Oceny",
       "numberOf": "Liczba",
-      "noLessonsToContiue": "Brak lekcji do kontynuacji.",
+      "noLessonsToContinue": "Brak lekcji do kontynuacji.",
       "continueLearning": "Kontynuuj naukę w:"
     }
   },
-  "profilWithCalendarView": {
+  "profileWithCalendarView": {
     "header": "Mój profil",
     "button": {
       "settings": "Ustawienia"
@@ -239,7 +239,7 @@
   "adminStatisticsView": {
     "header": "Witaj ponownie,",
     "other": {
-      "courseCompletitionPercentage": "Procent ukończenia kursu",
+      "courseCompletionPercentage": "Procent ukończenia kursu",
       "conversionsAfterFreemiumLessson": "Konwersje po lekcji freemium",
       "avgQuizScore": "Średni wynik quizu",
       "purchasedCourse": "Kupiony kurs",
@@ -372,7 +372,7 @@
   },
   "paymentView": {
     "toast": {
-      "successfull": "Płatność zakończona pomyślnie",
+      "successful": "Płatność zakończona pomyślnie",
       "failed": "Nie udało się utworzyć płatności",
       "somethingWentWrong": "Coś poszło nie tak"
     },
@@ -584,7 +584,7 @@
       "password": "Hasło"
     },
     "other": {
-      "allreadyHaveAccount": "Masz już konto?"
+      "alreadyHaveAccount": "Masz już konto?"
     },
     "button": {
       "createAccount": "Utwórz konto",
@@ -656,11 +656,11 @@
       "view": "Zobacz",
       "readMore": "Czytaj więcej"
     },
-    "enroledCourses": {
+    "enrolledCourses": {
       "header": "Twoje kursy",
       "subHeader": "Kursy, w których jesteś obecnie zapisany"
     },
-    "avaiableCourses": {
+    "availableCourses": {
       "header": "Dostępne kursy",
       "subHeader": "Wszystkie dostępne kursy zawodowe, w które możesz się zapisać",
       "filters": {
@@ -722,6 +722,17 @@
       "other": {
         "courseProgress": "Postęp w kursie:"
       }
+    },
+    "validation": {
+      "answerCannotBeEmpty": "Odpowiedź nie może być pusta.",
+      "atLeastOneOptionMustBeSelected": "Należy wybrać co najmniej jedną opcję dla pytania {{questionId}}.",
+      "answerCannotBeEmptyForDragAndDropQuestion": "Odpowiedź nie może być pusta dla pytania typu przeciągnij i upuść {{questionId}}.",
+      "answerCannotBeEmptyForTextQuestion": "Odpowiedź nie może być pusta dla pytania tekstowego {{questionId}}.",
+      "invalidSelectionForSingleAnswer": "Nieprawidłowy wybór dla pytania jednokrotnego wyboru.",
+      "invalidFormatForMultiAnswer": "Nieprawidłowy format dla pytania wielokrotnego wyboru.",
+      "trueOrFalseRequired": "Wymagana jest odpowiedź prawda lub fałsz.",
+      "photoQuestionMustHaveAnswer": "Wymagana jest odpowiedź na pytanie ze zdjęciem.",
+      "unansweredQuestions": "Wygląda na to, że nie zaznaczyłaś/zaznaczyłeś wszystkich odpowiedzi. Proszę przejrzyj je i spróbuj ponownie!"
     }
   },
   "studentCourseView": {

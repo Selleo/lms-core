@@ -33,7 +33,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
       <div className="w-full h-auto items-center justify-between md:gap-8 2xl:flex-col 2xl:gap-y-4 p-8 gap-y-4 bg-white rounded-lg drop-shadow-card 2xl:max-w-[296px] flex flex-col">
         <div className="text-center md:w-fit 2xl:w-full">
           <h2 className="body-lg-md text-neutral-950">
-            {t("clientStatisticsView.other.noLessonsToContiue")}
+            {t("clientStatisticsView.other.noLessonsToContinue")}
           </h2>
         </div>
         <Icon name="NoData" />

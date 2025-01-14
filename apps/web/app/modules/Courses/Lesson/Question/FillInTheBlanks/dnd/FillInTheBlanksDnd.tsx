@@ -234,7 +234,6 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
 
       for (const word of updatedWords) {
         if (word.blankId !== "blank_preset") {
-          console.log(word);
           setValue(`fillInTheBlanksDnd.${question.id}.${word.blankId}`, word.value);
         }
       }

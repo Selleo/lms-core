@@ -30,7 +30,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
     mode: "onSubmit",
     // Temporary workaround
     defaultValues: getUserAnswers(questions ?? []) as QuizForm,
-    resolver: zodResolver(QuizFormSchema),
+    resolver: zodResolver(QuizFormSchema(t)),
   });
 
   const submitQuiz = useSubmitQuiz({
@@ -50,8 +50,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
         onSubmit={methods.handleSubmit(handleOnSubmit, () => {
           toast({
             variant: "destructive",
-            description:
-              "It seems you haven't checked all the answers yet. Please review them and try again!",
+            description: t("studentLessonView.validation.unansweredQuestions"),
           });
         })}
       >

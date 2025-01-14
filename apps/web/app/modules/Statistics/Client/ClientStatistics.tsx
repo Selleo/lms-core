@@ -106,7 +106,7 @@ export default function ClientStatistics() {
               />
               <AvgPercentScoreChart
                 label={`${userStatistics?.averageStats.courseStats.completionRate}`}
-                title={t("clientStatisticsView.other.avgQuizCompletitionPercentage")}
+                title={t("clientStatisticsView.other.avgQuizCompletionPercentage")}
                 chartConfig={coursesChartConfig}
                 chartData={coursesChartData}
                 isLoading={isLoading}

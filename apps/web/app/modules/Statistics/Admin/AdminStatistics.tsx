@@ -126,14 +126,14 @@ export const AdminStatistics = () => {
         <CourseCompletionPercentageChart
           isLoading={isLoading}
           label={`${statistics?.totalCoursesCompletionStats.completionPercentage}`}
-          title={t("adminStatisticsView.other.courseCompletitionPercentage")}
+          title={t("adminStatisticsView.other.courseCompletionPercentage")}
           chartConfig={coursesCompletionChartConfig}
           chartData={coursesCompletionChartData}
         />
         <ConversionsAfterFreemiumLessonChart
           isLoading={isLoading}
           label={`${statistics?.conversionAfterFreemiumLesson.conversionPercentage}`}
-          title={t("adminStatisticsView.other.conversionsAfterFreemiumLessson")}
+          title={t("adminStatisticsView.other.conversionsAfterFreemiumLesson")}
           chartConfig={conversionsChartConfig}
           chartData={conversionsChartData}
         />
