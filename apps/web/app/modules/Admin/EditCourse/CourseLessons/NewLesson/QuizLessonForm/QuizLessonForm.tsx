@@ -168,6 +168,10 @@ const QuizLessonForm = ({
     [form],
   );
 
+  useEffect(() => {
+    setOpenQuestionIndexes(new Set());
+  }, [lessonToEdit]);
+
   const handleToggleQuestion = (questionIndex: number) => {
     setOpenQuestionIndexes((prev) => {
       const newSet = new Set(prev);
@@ -286,6 +290,7 @@ const QuizLessonForm = ({
                 isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions`, updatedItems, { shouldDirty: true });
+                  setOpenQuestionIndexes(new Set());
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
