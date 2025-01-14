@@ -112,8 +112,7 @@ export const ChapterCard = (
                 buttonColorClass,
               )}
             >
-              {/*TODO: Change icon*/}
-              {buttonText} <Icon name="CarretDown" className="w-3 h-3 ml-1 -rotate-90" />
+              {buttonText} <Icon name="CarretRight" className="w-4 h-4 ml-1" />
             </button>
           </div>
         </Link>

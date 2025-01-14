@@ -89,11 +89,9 @@
       "scormUploadedSuccessfully": "Pakiet SCORM został pomyślnie przesłany"
     }
   },
-
   "studentChapterCardView": {
     "other": {
-      "lessonProgress": "Postęp lekcji:",
-      "quizProgress": "Postęp quizu:"
+      "chapterProgress": "Postęp rozdziału:"
     }
   },
   "navigationSideBar": {

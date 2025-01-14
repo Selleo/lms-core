@@ -22,7 +22,7 @@ import type { UUIDType } from "src/common";
 export class StatisticsService {
   constructor(
     private readonly statisticsRepository: StatisticsRepository,
-    private fileService: FileService,
+    private readonly fileService: FileService,
   ) {}
 
   async getUserStats(userId: UUIDType): Promise<UserStats> {
@@ -38,7 +38,6 @@ export class StatisticsService {
     const nextLesson = await this.getLastLesson(userId);
     const activityStats = await this.statisticsRepository.getActivityStats(userId);
 
-    // TODO: add last lesson
     return {
       courses: this.formatStats(coursesStatsByMonth),
       lessons: this.formatStats(lessonsStatsByMonth),
