@@ -275,7 +275,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
 
                           <Label
                             onClick={() => handleOptionChange(index, "isCorrect", !item.isCorrect)}
-                            className="ml-2 mb-1 mt-1 body-sm text-neutral-950 cursor-pointer"
+                            className="ml-2 align-middle body-sm text-neutral-950 cursor-pointer"
                           >
                             {t("adminCourseView.curriculum.lesson.other.correct")}
                           </Label>

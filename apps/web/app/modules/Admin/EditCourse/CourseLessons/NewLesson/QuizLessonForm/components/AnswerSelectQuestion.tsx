@@ -151,7 +151,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                           )}
                           <Label
                             onClick={() => handleOptionChange(index, "isCorrect", !item.isCorrect)}
-                            className="ml-2 body-sm mt-1 mb-1 text-neutral-950 cursor-pointer"
+                            className="ml-2 body-sm align-middle text-neutral-950 cursor-pointer"
                           >
                             {t("adminCourseView.curriculum.lesson.other.correct")}
                           </Label>
