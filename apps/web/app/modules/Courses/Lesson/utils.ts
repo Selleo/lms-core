@@ -1,24 +1,40 @@
-// TODO: Need to be fixed
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import type { GetLessonByIdResponse } from "~/api/generated-api";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 type Questions = NonNullable<GetLessonByIdResponse["data"]["quizDetails"]>["questions"];
 
-export const getUserAnswers = (
-  questions: Questions,
-): {
-  singleAnswerQuestions: Record<string, Record<string, string>>;
-  multiAnswerQuestions: Record<string, Record<string, string>>;
-  trueOrFalseQuestions: Record<string, Record<string, string>>;
-  photoQuestionSingleChoice: Record<string, Record<string, string>>;
-  photoQuestionMultipleChoice: Record<string, Record<string, string>>;
-  fillInTheBlanksText: Record<string, Record<string, string>>;
-  fillInTheBlanksDnd: Record<string, Record<string, string>>;
-  matchWords: Record<string, Record<string, string>>;
-  scaleQuestions: Record<string, Record<string, string>>;
-  briefResponses: Record<string, string>;
-} => {
+type GetUserAnswersResult = {
+  singleAnswerQuestions: Record<string, Record<string, string>> | Record<string, string>;
+  multiAnswerQuestions: Record<string, Record<string, string>> | Record<string, string>;
+  trueOrFalseQuestions: Record<string, Record<string, string>> | Record<string, string>;
+  photoQuestionSingleChoice: Record<string, Record<string, string>> | Record<string, string>;
+  photoQuestionMultipleChoice: Record<string, Record<string, string>> | Record<string, string>;
+  fillInTheBlanksText: Record<string, Record<string, string>> | Record<string, string>;
+  fillInTheBlanksDnd: Record<string, Record<string, string>> | Record<string, string>;
+  matchWords: Record<string, Record<string, string>> | Record<string, string>;
+  scaleQuestions: Record<string, Record<string, string>> | Record<string, string>;
+  briefResponses: Record<string, string> | Record<string, Record<string, string>>;
+  detailedResponses: Record<string, string> | Record<string, Record<string, string>>;
+};
+
+type ParseQuizFormDataResult = {
+  questionId: string;
+  answer:
+    | {
+        answerId: string;
+        value: string | null;
+      }[]
+    | {
+        answerId: string;
+        value?: never;
+      }[]
+    | {
+        answerId?: never;
+        value: string | null;
+      }[];
+}[];
+
+export const getUserAnswers = (questions: Questions): GetUserAnswersResult => {
   const groupedQuestions = groupQuestionsByType(questions);
 
   return {
@@ -39,7 +55,7 @@ export const getUserAnswers = (
     scaleQuestions: prepareAnswers(groupedQuestions.scale_1_5, "options"),
     briefResponses: prepareAnswers(groupedQuestions.brief_response, "open"),
     detailedResponses: prepareAnswers(groupedQuestions.detailed_response, "open"),
-  };
+  } as const;
 };
 
 const groupQuestionsByType = (questions: Questions) => {
@@ -62,37 +78,63 @@ const groupQuestionsByType = (questions: Questions) => {
   };
 };
 
-const prepareAnswers = (questions: Questions, mode: "options" | "open") => {
+const prepareAnswers = (
+  questions: Questions,
+  mode: "options" | "open",
+): Record<string, string> | Record<string, Record<string, string>> => {
   return questions.reduce(
     (result, question) => {
       if (question.type === "true_or_false") {
-        // @ts-expect-error TODO: Needs to be fixed
-        result[question.id] = question?.options?.reduce(
-          (optionMap, option) => {
-            optionMap[option.id ?? "0"] = option.isStudentAnswer ? `${option.id}` : "";
-            return optionMap;
-          },
-          {} as Record<string, string>,
-        );
+        result[question.id] =
+          question?.options?.reduce(
+            (optionMap, option) => {
+              optionMap[option.id ?? "0"] = option.isStudentAnswer ? `${option.id}` : "";
+              return optionMap;
+            },
+            {} as Record<string, string>,
+          ) || {};
       }
 
       if (question.type === "fill_in_the_blanks_text") {
-        // @ts-expect-error TODO: Needs to be fixed
-        result[question.id ?? ""] = question?.options?.map(({ studentAnswer }, index) => {
-          return { [`${index + 1}`]: studentAnswer ?? null };
-        });
+        result[question.id ?? ""] =
+          question?.options?.reduce(
+            (map, { studentAnswer }, index) => {
+              map[`${index + 1}`] = studentAnswer ?? "";
+
+              return map;
+            },
+            {} as Record<string, string>,
+          ) || {};
+
+        return result;
+      }
+
+      if (question.type === "fill_in_the_blanks_dnd") {
+        const maxAnswersAmount = question.description?.match(/\[word]/g)?.length ?? 0;
+        result[question.id ?? ""] =
+          question?.options?.reduce(
+            (optionMap, option, index) => {
+              if (index < maxAnswersAmount) {
+                optionMap[`${index + 1}`] = option.isStudentAnswer ? `${option.id}` : "";
+              }
+
+              return optionMap;
+            },
+            {} as Record<string, string>,
+          ) || {};
+
+        return result;
       }
 
       if (mode === "options") {
-        // @ts-expect-error TODO: Needs to be fixed
-        result[question.id ?? ""] = question?.options?.reduce(
-          (optionMap, option) => {
-            // @ts-expect-error TODO: Needs to be fixed
-            optionMap[option.id ?? "0"] = option.isStudentAnswer ? `${option.id}` : null;
-            return optionMap;
-          },
-          {} as Record<string, string>,
-        );
+        result[question.id ?? ""] =
+          question?.options?.reduce(
+            (optionMap, option) => {
+              optionMap[option.id ?? "0"] = option.isStudentAnswer ? `${option.id}` : "";
+              return optionMap;
+            },
+            {} as Record<string, string>,
+          ) || {};
       }
 
       if (mode === "open") {
@@ -101,11 +143,90 @@ const prepareAnswers = (questions: Questions, mode: "options" | "open") => {
 
         result[question.id] = isStudentAnswer ? studentAnswer : "";
       }
-
       return result;
     },
     mode === "options"
       ? ({} as Record<string, Record<string, string>>)
       : ({} as Record<string, string>),
   );
+};
+
+export const parseQuizFormData = (input: QuizForm) => {
+  const result: ParseQuizFormDataResult = [];
+
+  const processSingleAnswerQuestions = (
+    questionMap: Record<string, Record<string, string | null>>,
+  ) => {
+    for (const questionId in questionMap) {
+      const answers = questionMap[questionId];
+      const answerArray = Object.entries(answers)
+        .filter(([_, value]) => value)
+        .map(([answerId]) => ({ answerId }));
+
+      if (answerArray.length > 0) {
+        result.push({
+          questionId,
+          answer: answerArray,
+        });
+      }
+    }
+  };
+
+  const processFillInTheBlanks = (questionMap: Record<string, Record<string, string | null>>) => {
+    for (const questionId in questionMap) {
+      const answers = questionMap[questionId];
+      const answerArray = Object.entries(answers)
+        .filter(([_, value]) => value)
+        .map(([_, value]) => ({ value }));
+
+      if (answerArray.length > 0) {
+        result.push({
+          questionId,
+          answer: answerArray,
+        });
+      }
+    }
+  };
+
+  const processBooleanQuestions = (questionMap: Record<string, Record<string, string | null>>) => {
+    for (const questionId in questionMap) {
+      const answers = questionMap[questionId];
+      const answerArray = Object.entries(answers)
+        .filter(([_, value]) => value === "true" || value === "false")
+        .map(([answerId, value]) => ({ answerId, value }));
+
+      if (answerArray.length > 0) {
+        result.push({
+          questionId,
+          answer: answerArray,
+        });
+      }
+    }
+  };
+
+  const processSimpleResponses = (questionMap: Record<string, string>) => {
+    for (const questionId in questionMap) {
+      result.push({
+        questionId,
+        answer: [
+          {
+            answerId: questionId,
+            value: questionMap[questionId],
+          },
+        ],
+      });
+    }
+  };
+
+  processSimpleResponses(input.detailedResponses);
+  processSimpleResponses(input.briefResponses);
+  processSingleAnswerQuestions(input.singleAnswerQuestions);
+  processSingleAnswerQuestions(input.photoQuestionSingleChoice);
+  processSingleAnswerQuestions(input.multiAnswerQuestions);
+  processFillInTheBlanks(input.fillInTheBlanksText);
+  processFillInTheBlanks(input.fillInTheBlanksDnd);
+  processSingleAnswerQuestions(input.photoQuestionMultipleChoice);
+  processBooleanQuestions(input.trueOrFalseQuestions);
+
+  return result;
 };
