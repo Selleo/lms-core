@@ -264,9 +264,8 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                               <Checkbox
                                 id="isCorrect"
                                 name={`questions.${questionIndex}.options.${index}.isCorrect`}
-                                className="w-4 h-4 mt-1"
+                                className="mb-2 mt-2"
                                 checked={item.isCorrect}
-                                isSquareCheck
                                 onCheckedChange={() =>
                                   handleOptionChange(index, "isCorrect", !item.isCorrect)
                                 }
@@ -276,7 +275,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
 
                           <Label
                             onClick={() => handleOptionChange(index, "isCorrect", !item.isCorrect)}
-                            className="ml-2 body-sm text-neutral-950 cursor-pointer"
+                            className="ml-2 mb-1 mt-1 body-sm text-neutral-950 cursor-pointer"
                           >
                             {t("adminCourseView.curriculum.lesson.other.correct")}
                           </Label>
