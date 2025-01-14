@@ -478,8 +478,7 @@ export class ScormService {
     return match(extension)
       .with(".mp4", ".webm", () => LESSON_TYPES.VIDEO)
       .with(".pptx", ".ppt", () => LESSON_TYPES.PRESENTATION)
-      .with(".html", () => LESSON_TYPES.TEXT)
-      .otherwise(() => LESSON_TYPES.FILE);
+      .otherwise(() => LESSON_TYPES.TEXT);
   }
 
   /**

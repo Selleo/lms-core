@@ -80,7 +80,7 @@ export default function RegisterPage() {
           </Button>
         </form>
         <div className="mt-4 text-center text-sm">
-          {t("registerView.other.allreadyHaveAccount")}{" "}
+          {t("registerView.other.alreadyHaveAccount")}{" "}
           <Link to="/auth/login" className="underline">
             {t("registerView.button.signIn")}
           </Link>

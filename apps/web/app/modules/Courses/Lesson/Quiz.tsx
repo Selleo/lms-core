@@ -1,3 +1,4 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "@remix-run/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -6,179 +7,18 @@ import { useSubmitQuiz } from "~/api/mutations";
 import { queryClient } from "~/api/queryClient";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
-import { Questions } from "~/modules/Courses/Lesson/Questions";
-import { getUserAnswers } from "~/modules/Courses/Lesson/utils";
+import { toast } from "~/components/ui/use-toast";
 
+import { Questions } from "./Questions";
+import { QuizFormSchema } from "./schemas";
+import { getUserAnswers, parseQuizFormData } from "./utils";
+
+import type { QuizForm } from "./types";
 import type { GetLessonByIdResponse } from "~/api/generated-api";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
 
 type QuizProps = {
   lesson: GetLessonByIdResponse["data"];
 };
-
-function transformData(input: TQuestionsForm) {
-  const result = [];
-
-  for (const questionId in input.detailedResponses) {
-    result.push({
-      questionId: questionId,
-      answer: [
-        {
-          answerId: questionId,
-          value: input.detailedResponses[questionId],
-        },
-      ],
-    });
-  }
-
-  for (const questionId in input.briefResponses) {
-    result.push({
-      questionId: questionId,
-      answer: [
-        {
-          answerId: questionId,
-          value: input.briefResponses[questionId],
-        },
-      ],
-    });
-  }
-
-  for (const questionId in input.singleAnswerQuestions) {
-    const answers = input.singleAnswerQuestions[questionId];
-    const answerArray = [];
-    for (const answerId in answers) {
-      if (answers[answerId]) {
-        answerArray.push({
-          answerId: answerId,
-        });
-      }
-    }
-    if (answerArray.length > 0) {
-      result.push({
-        questionId: questionId,
-        answer: answerArray,
-      });
-    }
-  }
-
-  for (const questionId in input.photoQuestionSingleChoice) {
-    const answers = input.photoQuestionSingleChoice[questionId];
-    const answerArray = [];
-    for (const answerId in answers) {
-      if (answers[answerId]) {
-        answerArray.push({
-          answerId: answerId,
-        });
-      }
-    }
-    if (answerArray.length > 0) {
-      result.push({
-        questionId: questionId,
-        answer: answerArray,
-      });
-    }
-  }
-
-  for (const questionId in input.multiAnswerQuestions) {
-    const answers = input.multiAnswerQuestions[questionId];
-    const answerArray = [];
-    for (const answerId in answers) {
-      if (answers[answerId]) {
-        answerArray.push({
-          answerId: answerId,
-        });
-      }
-    }
-    if (answerArray.length > 0) {
-      result.push({
-        questionId: questionId,
-        answer: answerArray,
-      });
-    }
-  }
-
-  for (const questionId in input.fillInTheBlanksText) {
-    const answers = input.fillInTheBlanksText[questionId];
-    const answerArray = [];
-
-    for (const [key, value] of Object.entries(answers)) {
-      if (answers[key]) {
-        answerArray.push({
-          value,
-        });
-      }
-    }
-    if (answerArray.length > 0) {
-      result.push({
-        questionId: questionId,
-        answer: answerArray,
-      });
-    }
-  }
-
-  for (const questionId in input.fillInTheBlanksDnd) {
-    const answers = input.fillInTheBlanksDnd[questionId];
-    const answerArray = [];
-
-    for (const [key, value] of Object.entries(answers)) {
-      if (answers[key]) {
-        answerArray.push({
-          answerId: key,
-          value,
-        });
-      }
-    }
-    if (answerArray.length > 0) {
-      result.push({
-        questionId: questionId,
-        answer: answerArray,
-      });
-    }
-  }
-
-  for (const questionId in input.photoQuestionMultipleChoice) {
-    const answers = input.photoQuestionMultipleChoice[questionId];
-    const answerArray = [];
-    for (const answerId in answers) {
-      if (answers[answerId]) {
-        answerArray.push({
-          answerId: answerId,
-        });
-      }
-    }
-    if (answerArray.length > 0) {
-      result.push({
-        questionId: questionId,
-        answer: answerArray,
-      });
-    }
-  }
-
-  for (const questionId in input.trueOrFalseQuestions) {
-    const answers = input.trueOrFalseQuestions[questionId];
-    const answerArray = [];
-
-    for (const answerId in answers) {
-      const value =
-        answers[answerId] === "true" ? "true" : answers[answerId] === "false" ? "false" : null;
-      if (value !== null) {
-        answerArray.push({
-          answerId: answerId,
-          value: value,
-        });
-      }
-    }
-
-    if (answerArray.length > 0) {
-      result.push({
-        questionId: questionId,
-        answer: answerArray,
-      });
-    }
-  }
-
-  return result;
-}
 
 export const Quiz = ({ lesson }: QuizProps) => {
   const { lessonId = "" } = useParams();
@@ -186,9 +26,11 @@ export const Quiz = ({ lesson }: QuizProps) => {
 
   const questions = lesson.quizDetails?.questions;
 
-  const methods = useForm<TQuestionsForm>({
-    mode: "onChange",
-    defaultValues: getUserAnswers(questions ?? []),
+  const methods = useForm<QuizForm>({
+    mode: "onSubmit",
+    // Temporary workaround
+    defaultValues: getUserAnswers(questions ?? []) as QuizForm,
+    resolver: zodResolver(QuizFormSchema(t)),
   });
 
   const submitQuiz = useSubmitQuiz({
@@ -197,16 +39,20 @@ export const Quiz = ({ lesson }: QuizProps) => {
 
   if (!questions?.length) return null;
 
-  const handleOnSubmit = async (data: TQuestionsForm) => {
-    // @ts-expect-error Need to be fixed
-    submitQuiz.mutate({ lessonId, answers: transformData(data) });
+  const handleOnSubmit = async (data: QuizForm) => {
+    submitQuiz.mutate({ lessonId, questionsAnswers: parseQuizFormData(data) });
   };
 
   return (
     <FormProvider {...methods}>
       <form
         className="w-full flex flex-col gap-y-4"
-        onSubmit={methods.handleSubmit(handleOnSubmit)}
+        onSubmit={methods.handleSubmit(handleOnSubmit, () => {
+          toast({
+            variant: "destructive",
+            description: t("studentLessonView.validation.unansweredQuestions"),
+          });
+        })}
       >
         <Questions questions={questions} isQuizCompleted={lesson.quizCompleted} />
         <Button type="submit" className="flex gap-x-2 items-center self-end">

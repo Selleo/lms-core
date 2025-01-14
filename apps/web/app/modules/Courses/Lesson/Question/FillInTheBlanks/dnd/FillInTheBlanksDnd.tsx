@@ -24,7 +24,7 @@ import { WordBank } from "./WordBank";
 
 import type { DndWord } from "./types";
 import type { QuizQuestion, QuizQuestionOption } from "../../types";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 type FillInTheBlanksDndProps = {
   question: QuizQuestion;
@@ -59,7 +59,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
   const { t } = useTranslation();
   const [words, setWords] = useState<DndWord[]>(getAnswers(question.options));
   const [currentlyDraggedWord, setCurrentlyDraggedWord] = useState<DndWord | null>(null);
-  const { setValue } = useFormContext<TQuestionsForm>();
+  const { setValue } = useFormContext<QuizForm>();
 
   const solutionExplanation = question.solutionExplanation;
 
@@ -234,7 +234,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
 
       for (const word of updatedWords) {
         if (word.blankId !== "blank_preset") {
-          setValue(`fillInTheBlanksDnd.${question.id}.${word.id}`, word.value);
+          setValue(`fillInTheBlanksDnd.${question.id}.${word.blankId}`, word.value);
         }
       }
 

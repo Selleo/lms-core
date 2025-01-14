@@ -125,12 +125,12 @@ export default function CoursesPage() {
     {
       name: "title",
       type: "text",
-      placeholder: t("studentCoursesView.avaiableCourses.filters.placeholder.title"),
+      placeholder: t("studentCoursesView.availableCourses.filters.placeholder.title"),
     },
     {
       name: "category",
       type: "select",
-      placeholder: t("studentCoursesView.avaiableCourses.filters.placeholder.categories"),
+      placeholder: t("studentCoursesView.availableCourses.filters.placeholder.categories"),
       options: categories?.map(({ title }) => ({
         value: title,
         label: title,
@@ -139,7 +139,7 @@ export default function CoursesPage() {
     {
       name: "sort",
       type: "select",
-      placeholder: t("studentCoursesView.avaiableCourses.filters.placeholder.sort"),
+      placeholder: t("studentCoursesView.availableCourses.filters.placeholder.sort"),
       options: SORT_OPTIONS,
     },
   ];
@@ -164,10 +164,10 @@ export default function CoursesPage() {
         <div className="flex flex-col gap-y-6">
           <div className="flex flex-col">
             <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-              {t("studentCoursesView.enroledCourses.header")}
+              {t("studentCoursesView.enrolledCourses.header")}
             </h4>
             <p className="text-lg leading-7 text-neutral-800">
-              {t("studentCoursesView.enroledCourses.subHeader")}
+              {t("studentCoursesView.enrolledCourses.subHeader")}
             </p>
           </div>
           <div
@@ -201,10 +201,10 @@ export default function CoursesPage() {
         <div className="flex flex-col">
           <div className="flex flex-col lg:p-0">
             <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-              {t("studentCoursesView.avaiableCourses.header")}
+              {t("studentCoursesView.availableCourses.header")}
             </h4>
             <p className="text-lg leading-7 text-neutral-800">
-              {t("studentCoursesView.avaiableCourses.subHeader")}
+              {t("studentCoursesView.availableCourses.subHeader")}
             </p>
             <div className="flex justify-between gap-2 items-center">
               <SearchFilter

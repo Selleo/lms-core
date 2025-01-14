@@ -75,7 +75,7 @@ export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
                   <AccordionItem value={id} key={id}>
                     <AccordionTrigger
                       className={cn(
-                        "flex hover:bg-neutral-50 gap-x-4 px-6 py-4 text-start border border-neutral-200 [&[data-state=open]>div>div>svg]:rotate-180 [&[data-state=open]>div>div>svg]:duration-200 [&[data-state=open]>div>div>svg]:ease-out data-[state=closed]:border-t-transparent data-[state=closed]:border-x-transparent data-[state=closed]:rounded-none data-[state=open]:rounded-t-lg",
+                        "flex items-start hover:bg-neutral-50 gap-x-4 px-6 py-4 text-start border border-neutral-200 [&[data-state=open]>svg]:rotate-180 [&[data-state=open]>svg]:duration-200 [&[data-state=closed]>svg]:duration-200 [&[data-state=open]>svg]:ease-out [&[data-state=closed]>svg]:ease-out data-[state=closed]:border-t-transparent data-[state=closed]:border-x-transparent data-[state=closed]:rounded-none data-[state=open]:rounded-t-lg",
                         {
                           "data-[state=closed]:border-b-0":
                             last(course?.chapters)?.id === id || activeChapter !== id,
@@ -124,7 +124,6 @@ export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
                               <p className="details text-neutral-800">{startCase(type)}</p>
                             </div>
                             <Icon
-                              // @ts-expect-error - TODO: do we need the 'file' type?
                               name={LessonTypesIcons[type]}
                               className="size-6 text-primary-700"
                             />

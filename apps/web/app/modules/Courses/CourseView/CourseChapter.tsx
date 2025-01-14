@@ -86,6 +86,7 @@ export const CourseChapter = ({ chapter, enrolled }: CourseChapterProps) => {
               <div className="divide-y pl-14 divide-neutral-200 pt-3 pb-4 rounded-b-lg border-b border-x border-primary-500">
                 {chapter?.lessons?.map((lesson) => {
                   if (!lesson) return null;
+
                   return <CourseChapterLesson key={lesson.id} lesson={lesson} />;
                 })}
               </div>

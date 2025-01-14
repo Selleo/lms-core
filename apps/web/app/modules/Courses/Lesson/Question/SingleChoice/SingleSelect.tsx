@@ -6,7 +6,7 @@ import { Label } from "~/components/ui/label";
 import { cn } from "~/lib/utils";
 import { SELECT_OPTION_VARIANTS } from "~/modules/Courses/Lesson/constants";
 
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 type SelectAnswerOptionQuizProps = {
   answer: string | null;
@@ -33,7 +33,7 @@ export const SingleSelect = ({
   questionId,
   optionFieldId = "singleAnswerQuestions",
 }: SelectAnswerOptionQuizProps) => {
-  const { register, setValue, getValues } = useFormContext<TQuestionsForm>();
+  const { register, setValue, getValues } = useFormContext<QuizForm>();
 
   const getAnswerClasses = () => {
     if (isCorrectAnswer === null) return SELECT_OPTION_VARIANTS.default;

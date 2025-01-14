@@ -59,7 +59,7 @@ export function PaymentModal({
   const handlePaymentSuccess = async () => {
     resetClientSecret();
     toast({
-      description: t("paymentView.toast.successfull"),
+      description: t("paymentView.toast.successful"),
     });
   };
 

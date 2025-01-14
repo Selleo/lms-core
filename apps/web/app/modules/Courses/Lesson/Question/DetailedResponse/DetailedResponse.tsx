@@ -6,14 +6,14 @@ import { cn } from "~/lib/utils";
 import { QuestionCard } from "~/modules/Courses/Lesson/Question/QuestionCard";
 
 import type { QuizQuestion } from "~/modules/Courses/Lesson/Question/types";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 export type DetailedResponseProps = {
   question: QuizQuestion;
 };
 export const DetailedResponse = ({ question }: DetailedResponseProps) => {
   const { isAdmin } = useUserRole();
-  const { register } = useFormContext<TQuestionsForm>();
+  const { register } = useFormContext<QuizForm>();
 
   return (
     <QuestionCard

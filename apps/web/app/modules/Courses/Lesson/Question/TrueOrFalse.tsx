@@ -6,7 +6,7 @@ import { cn } from "~/lib/utils";
 import { QuestionCard } from "./QuestionCard";
 
 import type { QuizQuestion } from "./types";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 type TrueOrFalseProps = {
   question: QuizQuestion;
@@ -14,7 +14,7 @@ type TrueOrFalseProps = {
 };
 
 export const TrueOrFalse = ({ question, isCompleted }: TrueOrFalseProps) => {
-  const { register } = useFormContext<TQuestionsForm>();
+  const { register } = useFormContext<QuizForm>();
 
   return (
     <QuestionCard

@@ -1,10 +1,6 @@
-export type TQuestionsForm = {
-  briefResponses: {
-    [key: string]: string;
-  };
-  detailedResponses: {
-    [key: string]: string;
-  };
+export type QuizForm = {
+  briefResponses: Record<string, string>;
+  detailedResponses: Record<string, string>;
   singleAnswerQuestions: {
     [key: string]: Record<string, string | null>;
   };
