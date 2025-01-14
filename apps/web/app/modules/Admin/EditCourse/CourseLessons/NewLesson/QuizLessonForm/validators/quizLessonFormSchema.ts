@@ -8,7 +8,7 @@ export const quizLessonFormSchema = (t: (key: string) => string) =>
     questions: z
       .array(
         z.object({
-          id: z.optional(z.string()),
+          id: z.string(),
           type: z.nativeEnum(QuestionType),
           description: z.optional(z.string()),
           photoS3Key: z.optional(z.string()),
@@ -23,7 +23,7 @@ export const quizLessonFormSchema = (t: (key: string) => string) =>
           options: z
             .array(
               z.object({
-                id: z.optional(z.string()),
+                id: z.string(),
                 optionText: z
                   .string()
                   .min(1, t("adminCourseView.curriculum.lesson.validation.optionTextRequired")),

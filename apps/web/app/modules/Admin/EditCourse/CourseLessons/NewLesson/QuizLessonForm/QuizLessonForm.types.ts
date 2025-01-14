@@ -11,7 +11,7 @@ export enum QuestionIcons {
 }
 
 export type QuestionOption = {
-  id?: string;
+  id: string;
   optionText: string;
   isCorrect: boolean;
   displayOrder: number;
@@ -20,7 +20,7 @@ export type QuestionOption = {
 };
 
 export type Question = {
-  id?: string;
+  id: string;
   type: QuestionType;
   description?: string;
   photoS3Key?: string;

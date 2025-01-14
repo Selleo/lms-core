@@ -167,6 +167,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     if (trimmedWord !== "" && !currentOptions.some((option) => option.optionText === trimmedWord)) {
       const newOption = {
+        id: crypto.randomUUID(),
         optionText: trimmedWord,
         isCorrect: false,
         displayOrder: currentOptions.length + 1,

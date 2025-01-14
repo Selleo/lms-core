@@ -36,8 +36,8 @@ const QuestionWrapper = ({
 
   errors?.questions?.[questionIndex];
   return (
-    <Accordion type="single" collapsible value={isOpen ? `item-${questionIndex}` : undefined}>
-      <AccordionItem value={`item-${questionIndex}`}>
+    <Accordion type="single" collapsible value={isOpen ? `item-${item.id}` : undefined}>
+      <AccordionItem value={`item-${item.id}`}>
         <div
           className={cn(
             "mt-4 rounded-xl border p-2 transition-all duration-300",

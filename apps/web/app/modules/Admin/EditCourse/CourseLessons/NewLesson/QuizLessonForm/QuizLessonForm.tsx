@@ -49,10 +49,7 @@ const QuizLessonForm = ({
     chapterToEdit,
     lessonToEdit,
   });
-
-  const questions = form.watch("questions");
   const { t } = useTranslation();
-  const { isDirty } = form.formState;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [openQuestionIndexes, setOpenQuestionIndexes] = useState<Set<number>>(new Set());
   const {
@@ -66,6 +63,9 @@ const QuizLessonForm = ({
   const [isCanceling, setIsCanceling] = useState(false);
 
   const [isValidated, setIsValidated] = useState(false);
+
+  const questions = form.watch("questions");
+  const { isDirty } = form.formState;
 
   const handleValidationSuccess = () => {
     setIsValidated(true);
@@ -95,7 +95,6 @@ const QuizLessonForm = ({
   const onCancelModal = () => {
     closeLeaveModal();
     setIsCurrectFormDirty(false);
-    form.clearErrors();
   };
 
   const onSaveModal = () => {
@@ -159,20 +158,20 @@ const QuizLessonForm = ({
 
         if (type === QuestionType.MATCH_WORDS) {
           return [
-            { optionText: "", isCorrect: true, displayOrder: 1 },
-            { optionText: "", isCorrect: true, displayOrder: 2 },
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: true, displayOrder: 1 },
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: true, displayOrder: 2 },
           ];
         }
 
         if (singleChoiceTypes.includes(type)) {
           return [
-            { optionText: "", isCorrect: false, displayOrder: 1 },
-            { optionText: "", isCorrect: false, displayOrder: 2 },
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 1 },
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 2 },
           ];
         }
 
         if (!noOptionsRequiredTypes.includes(type)) {
-          return [{ optionText: "", isCorrect: false, displayOrder: 1 }];
+          return [{ sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 1 }];
         }
 
         return [];
@@ -181,6 +180,7 @@ const QuizLessonForm = ({
       const options = getOptionsForQuestionType(questionType);
 
       const newQuestion: Question = {
+        sortableId: crypto.randomUUID(),
         title: "",
         type: questionType as QuestionType,
         displayOrder: questions.length + 1,
@@ -313,24 +313,25 @@ const QuizLessonForm = ({
             {questions && questions.length > 0 && (
               <SortableList
                 items={questions}
-                isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions`, updatedItems, { shouldDirty: true });
                   setOpenQuestionIndexes(new Set());
                 }}
                 className="grid grid-cols-1"
-                renderItem={(item, index: number) => (
-                  <SortableList.Item id={item.displayOrder}>
-                    {renderQuestion(
-                      item,
-                      index,
-                      form,
-                      <SortableList.DragHandle>
-                        <Icon name="DragAndDropIcon" className="cursor-move" />
-                      </SortableList.DragHandle>,
-                    )}
-                  </SortableList.Item>
-                )}
+                renderItem={(item, index: number) => {
+                  return (
+                    <SortableList.Item id={item.sortableId}>
+                      {renderQuestion(
+                        item,
+                        index,
+                        form,
+                        <SortableList.DragHandle>
+                          <Icon name="DragAndDropIcon" className="cursor-move" />
+                        </SortableList.DragHandle>,
+                      )}
+                    </SortableList.Item>
+                  );
+                }}
               />
             )}
 
