@@ -288,9 +288,10 @@ const QuizLessonForm = ({
               <SortableList
                 items={questions}
                 isQuiz
+                openQuestionIndexes={openQuestionIndexes}
+                setOpenQuestionIndexes={setOpenQuestionIndexes}
                 onChange={(updatedItems) => {
                   form.setValue(`questions`, updatedItems, { shouldDirty: true });
-                  setOpenQuestionIndexes(new Set());
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (

@@ -104,11 +104,13 @@ export class AdminChapterRepository {
                   )
                   FROM ${questionAnswerOptions} questionAnswerOptions
                   WHERE questionAnswerOptions.question_id = questions.id
+                  ORDER BY ${questionAnswerOptions.displayOrder}
                 )
               )
             )
             FROM ${questions}
             WHERE ${questions.lessonId} = lessons.id
+            ORDER BY ${questions.displayOrder} 
           )
         )`,
       })

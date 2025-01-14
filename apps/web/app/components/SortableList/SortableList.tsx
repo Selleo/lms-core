@@ -20,6 +20,8 @@ interface SortableListProps<T extends BaseItem> {
   additionalOnChangeAction?(): void;
   renderItem(item: T, index?: number): ReactNode;
   className?: string;
+  openQuestionIndexes?: Set<number>;
+  setOpenQuestionIndexes?: React.Dispatch<React.SetStateAction<Set<number>>>;
 }
 
 /**
@@ -38,6 +40,8 @@ export function SortableList<T extends BaseItem>({
   renderItem,
   className,
   isQuiz = false,
+  openQuestionIndexes,
+  setOpenQuestionIndexes,
 }: SortableListProps<T> & { isQuiz?: boolean }) {
   const [active, setActive] = useState<Active | null>(null);
 
@@ -76,10 +80,53 @@ export function SortableList<T extends BaseItem>({
               ...item,
               displayOrder: index + 1,
             }));
-
             const updatedItem = updatedItemsWithOrder[activeIndex];
             const newPosition = updatedItemsWithOrder.indexOf(updatedItem);
             const newDisplayOrder = newPosition + 1;
+
+            // Check if the required variables are defined
+            if (openQuestionIndexes && setOpenQuestionIndexes) {
+              // Create a copy of the current open question indexes to modify
+              const updatedOpenQuestionIndexes = new Set(openQuestionIndexes);
+
+              // Determine whether the activeIndex and overIndex are currently open
+              const wasActiveOpen = openQuestionIndexes.has(activeIndex);
+              const wasOverOpen = openQuestionIndexes.has(overIndex);
+
+              // Handle the case where both activeIndex and overIndex are already open
+              if (wasActiveOpen && wasOverOpen) {
+                // Remove both indexes temporarily
+                updatedOpenQuestionIndexes.delete(activeIndex);
+                updatedOpenQuestionIndexes.delete(overIndex);
+                // Add them back to maintain their presence
+                updatedOpenQuestionIndexes.add(overIndex);
+                updatedOpenQuestionIndexes.add(activeIndex);
+              } else {
+                // Handle cases where only one of the indexes is open
+                if (wasActiveOpen) {
+                  // Replace the active index with the over index
+                  updatedOpenQuestionIndexes.delete(activeIndex);
+                  updatedOpenQuestionIndexes.add(overIndex);
+                }
+                if (wasOverOpen) {
+                  // Replace the over index with the active index
+                  updatedOpenQuestionIndexes.delete(overIndex);
+                  updatedOpenQuestionIndexes.add(activeIndex);
+                }
+              }
+
+              // Validate the open indexes against the updatedItemsWithOrder array
+              updatedOpenQuestionIndexes.forEach((index) => {
+                // If no item exists in updatedItemsWithOrder with a displayOrder matching index + 1,
+                // remove the index from the set
+                if (!updatedItemsWithOrder.some((item) => item.displayOrder === index + 1)) {
+                  updatedOpenQuestionIndexes.delete(index);
+                }
+              });
+
+              // Update the state with the newly calculated open question indexes
+              setOpenQuestionIndexes(updatedOpenQuestionIndexes);
+            }
 
             onChange(updatedItemsWithOrder, newPosition, newDisplayOrder);
             setActive(null);
@@ -112,10 +159,8 @@ export function SortableList<T extends BaseItem>({
       <SortableContext
         items={
           isQuiz
-            ? // TODO: Needs to be fixed
-              // eslint-disable-next-line
-              items.map((item) => item?.displayOrder?.toString() as any)
-            : items.map((item) => item.id)
+            ? items.map((item) => item?.displayOrder?.toString() || "")
+            : items.map((item) => item.id || "")
         }
       >
         <ul {...(className && { className })} role="application">
