@@ -141,9 +141,8 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                               <Checkbox
                                 id="isCorrect"
                                 name={`questions.${questionIndex}.options.${index}.isCorrect`}
-                                className="w-4 h-4 mt-1"
                                 checked={item.isCorrect}
-                                isSquareCheck
+                                className="mb-2 mt-2"
                                 onCheckedChange={() =>
                                   handleOptionChange(index, "isCorrect", !item.isCorrect)
                                 }
@@ -152,7 +151,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                           )}
                           <Label
                             onClick={() => handleOptionChange(index, "isCorrect", !item.isCorrect)}
-                            className="ml-2 body-sm text-neutral-950 cursor-pointer"
+                            className="ml-2 body-sm align-middle text-neutral-950 cursor-pointer"
                           >
                             {t("adminCourseView.curriculum.lesson.other.correct")}
                           </Label>
