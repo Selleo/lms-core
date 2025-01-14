@@ -1,7 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import { chapterSchema } from "src/chapter/schemas/chapter.schema";
-import { UUIDSchema } from "src/common";
+import { nextLessonSchema } from "src/lesson/lesson.schema";
 
 import type { Static } from "@sinclair/typebox";
 
@@ -46,15 +45,7 @@ export const UserStatsSchema = Type.Object({
   courses: CourseStatsSchema,
   lessons: LessonsStatsSchema,
   streak: StreakSchema,
-  lastLesson: Type.Union([
-    Type.Null(),
-    Type.Object({
-      ...chapterSchema.properties,
-      courseId: UUIDSchema,
-      courseTitle: Type.String(),
-      courseDescription: Type.String(),
-    }),
-  ]),
+  nextLesson: nextLessonSchema,
 });
 
 export const PopularCourseStatsSchema = Type.Object({

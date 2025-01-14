@@ -651,70 +651,20 @@ export interface GetUserStatisticsResponse {
       longest: number;
       activityHistory: object;
     };
-    lastLesson: null | {
-      /** @format uuid */
-      id: string;
-      title: string;
-      lessonCount: number;
-      lessons?: {
-        /** @format uuid */
-        id: string;
-        title: string;
-        type: "text" | "file" | "presentation" | "video" | "quiz";
-        description?: string | null;
-        displayOrder: number;
-        fileS3Key?: string | null;
-        fileType?: string | null;
-        questions?: {
-          /** @format uuid */
-          id?: string;
-          type:
-            | "brief_response"
-            | "detailed_response"
-            | "match_words"
-            | "scale_1_5"
-            | "single_choice"
-            | "multiple_choice"
-            | "true_or_false"
-            | "photo_question_single_choice"
-            | "photo_question_multiple_choice"
-            | "fill_in_the_blanks_text"
-            | "fill_in_the_blanks_dnd";
-          description?: string | null;
-          title: string;
-          displayOrder?: number;
-          solutionExplanation?: string;
-          photoS3Key?: string | null;
-          options?: {
-            /** @format uuid */
-            id?: string;
-            optionText: string;
-            displayOrder: number | null;
-            isStudentAnswer?: boolean | null;
-            isCorrect: boolean;
-            /** @format uuid */
-            questionId?: string;
-            matchedWord?: string | null;
-            scaleAnswer?: number | null;
-          }[];
-        }[];
-        updatedAt?: string;
-      }[];
-      completedLessonCount?: number;
-      chapterProgress?: "completed" | "in_progress" | "not_started";
-      isFreemium?: boolean;
-      enrolled?: boolean;
-      isPublished?: boolean;
-      isSubmitted?: boolean;
-      createdAt?: string;
-      updatedAt?: string;
-      quizCount?: number;
-      displayOrder: number;
+    nextLesson: {
       /** @format uuid */
       courseId: string;
       courseTitle: string;
       courseDescription: string;
-    };
+      courseThumbnail: string;
+      /** @format uuid */
+      lessonId: string;
+      chapterTitle: string;
+      chapterProgress: "not_started" | "in_progress" | "completed";
+      completedLessonCount: number;
+      lessonCount: number;
+      chapterDisplayOrder: number;
+    } | null;
   };
 }
 
@@ -1208,14 +1158,23 @@ export interface RemoveLessonResponse {
 export interface EvaluationQuizBody {
   /** @format uuid */
   lessonId: string;
-  answers: {
+  questionsAnswers: {
     /** @format uuid */
     questionId: string;
-    answer: {
-      /** @format uuid */
-      answerId?: string;
-      value?: string;
-    }[];
+    answers: (
+      | {
+          /** @format uuid */
+          answerId: string;
+        }
+      | {
+          value: string;
+        }
+      | {
+          /** @format uuid */
+          answerId: string;
+          value: string;
+        }
+    )[];
   }[];
 }
 

@@ -21,7 +21,7 @@ const CourseProgress = ({
           "bg-success-500": isCompleted,
           "bg-secondary-500": index < completedLessonCount && !isCompleted,
           "bg-primary-50":
-            (index > completedLessonCount || completedLessonCount === 0) && !isCompleted,
+            (index >= completedLessonCount || completedLessonCount === 0) && !isCompleted,
         })}
       />
     ));

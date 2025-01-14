@@ -4,18 +4,16 @@ import { useTranslation } from "react-i18next";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
-import { useUserRole } from "~/hooks/useUserRole";
 import { ChapterCard } from "~/modules/Statistics/Client/components/ChapterCard";
 
 import type { GetUserStatisticsResponse } from "~/api/generated-api";
 
 type ContinueLearningCardProps = {
   isLoading: boolean;
-  lesson: GetUserStatisticsResponse["data"]["lastLesson"] | undefined;
+  lesson: GetUserStatisticsResponse["data"]["nextLesson"] | undefined;
 };
 
 export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLearningCardProps) => {
-  const { isAdmin } = useUserRole();
   const { t } = useTranslation();
 
   if (isLoading) {
@@ -59,16 +57,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
           {lesson?.courseDescription}
         </p>
       </div>
-      <ChapterCard
-        {...lesson}
-        customHref={`/course/${lesson.courseId}/lesson/${lesson.id}`}
-        isAdmin={isAdmin}
-        isEnrolled={!!lesson.enrolled}
-        // @ts-expect-error Need to fix this
-        itemsCount={lesson.lessonCount}
-        itemsCompletedCount={lesson.completedLessonCount}
-        index={1}
-      />
+      <ChapterCard {...lesson} />
     </div>
   );
 };

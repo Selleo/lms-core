@@ -5,10 +5,22 @@ const project = resolve(process.cwd(), "tsconfig.json");
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
   extends: ["eslint:recommended", "prettier", "eslint-config-turbo"],
-  plugins: ["only-warn", "prettier"],
+  plugins: ["only-warn", "prettier", "import"],
   rules: {
     "prettier/prettier": "error",
     "@typescript-eslint/consistent-type-imports": "error",
+    "import/order": [
+      "error",
+      {
+        groups: ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
+        "newlines-between": "always",
+        alphabetize: {
+          order: "asc",
+          caseInsensitive: true,
+        },
+      },
+    ],
+    "import/no-duplicates": ["error", { considerQueryString: true }],
   },
   globals: {
     React: true,

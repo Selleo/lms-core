@@ -139,17 +139,46 @@ export const lessonForChapterSchema = Type.Array(
   }),
 );
 
-export const answerQuestionsForLessonBody = Type.Object({
-  lessonId: UUIDSchema,
+export const onlyAnswerIdSAnswerSchema = Type.Object({
+  answerId: UUIDSchema,
+});
+
+export const onlyValueAnswerSchema = Type.Object({
+  value: Type.String(),
+});
+
+export const fullAnswerSchema = Type.Object({
+  answerId: UUIDSchema,
+  value: Type.String(),
+});
+
+export const studentQuestionAnswersSchema = Type.Object({
+  questionId: UUIDSchema,
   answers: Type.Array(
-    Type.Object({
-      questionId: UUIDSchema,
-      answer: Type.Array(
-        Type.Object({ answerId: Type.Optional(UUIDSchema), value: Type.Optional(Type.String()) }),
-      ),
-    }),
+    Type.Union([onlyAnswerIdSAnswerSchema, onlyValueAnswerSchema, fullAnswerSchema]),
   ),
 });
+
+export const answerQuestionsForLessonBody = Type.Object({
+  lessonId: UUIDSchema,
+  questionsAnswers: Type.Array(studentQuestionAnswersSchema),
+});
+
+export const nextLessonSchema = Type.Union([
+  Type.Object({
+    courseId: UUIDSchema,
+    courseTitle: Type.String(),
+    courseDescription: Type.String(),
+    courseThumbnail: Type.String(),
+    lessonId: UUIDSchema,
+    chapterTitle: Type.String(),
+    chapterProgress: Type.Enum(PROGRESS_STATUSES),
+    completedLessonCount: Type.Number(),
+    lessonCount: Type.Number(),
+    chapterDisplayOrder: Type.Number(),
+  }),
+  Type.Null(),
+]);
 
 export type AdminLessonWithContentSchema = Static<typeof adminLessonSchema>;
 export type LessonForChapterSchema = Static<typeof lessonForChapterSchema>;
@@ -165,3 +194,8 @@ export type LessonShow = Static<typeof lessonShowSchema>;
 export type LessonSchema = Static<typeof lessonSchema>;
 export type AnswerQuestionBody = Static<typeof answerQuestionsForLessonBody>;
 export type QuestionDetails = Static<typeof questionDetails>;
+export type NextLesson = Static<typeof nextLessonSchema>;
+export type StudentQuestionAnswer = Static<typeof studentQuestionAnswersSchema>;
+export type OnlyAnswerIdAsnwer = Static<typeof onlyAnswerIdSAnswerSchema>;
+export type OnlyValueAnswer = Static<typeof onlyValueAnswerSchema>;
+export type FullAnswer = Static<typeof fullAnswerSchema>;

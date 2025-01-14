@@ -41,80 +41,80 @@ export class QuestionRepository {
               ELSE NULL END`,
         displayOrder: sql<number>`${questions.displayOrder}`,
         options: sql<OptionBody[]>`CASE
-              WHEN ${questions.type} in (${QUESTION_TYPE.BRIEF_RESPONSE}, ${
-                QUESTION_TYPE.DETAILED_RESPONSE
-              }) AND ${isCompleted} THEN
-                ARRAY[json_build_object(
-                  'id', ${studentQuestionAnswers.id},
-                  'optionText', '',
-                  'isCorrect', TRUE,
-                  'displayOrder', 1,
-                  'isStudentAnswer', TRUE,
-                  'studentAnswer', ${studentQuestionAnswers.answer}->>'1'
-                )]
-              ELSE
-              (
-                SELECT ARRAY(
-                  SELECT json_build_object(
-                    'id', qao.id,
-                    'optionText',  
-                      CASE 
-                        WHEN ${!isCompleted} AND ${questions.type} = ${
-                          QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
-                        } THEN NULL
-                        ELSE qao.option_text
-                      END,
-                    'isCorrect', CASE WHEN ${isCompleted} THEN qao.is_correct ELSE NULL END,
-                    'displayOrder',
-                      CASE
-                        WHEN ${isCompleted} THEN qao.display_order
-                        ELSE NULL
-                      END,
-                      'isStudentAnswer',
-                      CASE
-                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                        WHEN ${
-                          studentQuestionAnswers.answer
-                        }->>CAST(qao.display_order AS text) = qao.option_text AND
-                        ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
-                          QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
-                        })
-                        THEN TRUE
+            WHEN ${questions.type} in (${QUESTION_TYPE.BRIEF_RESPONSE}, ${
+              QUESTION_TYPE.DETAILED_RESPONSE
+            }) AND ${isCompleted} THEN
+              ARRAY[json_build_object(
+                'id', ${studentQuestionAnswers.id},
+                'optionText', '',
+                'isCorrect', TRUE,
+                'displayOrder', 1,
+                'isStudentAnswer', TRUE,
+                'studentAnswer', ${studentQuestionAnswers.answer}->>'1'
+              )]
+            ELSE
+            (
+              SELECT ARRAY(
+                SELECT json_build_object(
+                  'id', qao.id,
+                  'optionText',  
+                    CASE 
+                      WHEN ${!isCompleted} AND ${questions.type} = ${
+                        QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                      } THEN NULL
+                      ELSE qao.option_text
+                    END,
+                  'isCorrect', CASE WHEN ${isCompleted} THEN qao.is_correct ELSE NULL END,
+                  'displayOrder',
+                    CASE
+                      WHEN ${isCompleted} THEN qao.display_order
+                      ELSE NULL
+                    END,
+                    'isStudentAnswer',
+                    CASE
+                      WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
                       WHEN ${
                         studentQuestionAnswers.answer
-                      }->>CAST(qao.display_order AS text) = qao.is_correct::text AND
-                        ${questions.type} = ${QUESTION_TYPE.TRUE_OR_FALSE}
-                        THEN TRUE
-                      WHEN EXISTS (
-                        SELECT 1
-                        FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
-                        WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
-                        AND  ${questions.type} NOT IN (${
-                          QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
-                        }, ${QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT})
-                        THEN TRUE
-                        ELSE FALSE
-                      END,
-                    'studentAnswer',  
-                      CASE
-                        WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
-                        ELSE ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
-                      END
-                  )
-                  FROM ${questionAnswerOptions} qao
-                  WHERE qao.question_id = questions.id
-                  ORDER BY
+                      }->>CAST(qao.display_order AS text) = qao.option_text AND
+                      ${questions.type} IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                        QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                      })
+                      THEN TRUE
+                    WHEN ${
+                      studentQuestionAnswers.answer
+                    }->>CAST(qao.display_order AS text) = qao.is_correct::text AND
+                      ${questions.type} = ${QUESTION_TYPE.TRUE_OR_FALSE}
+                      THEN TRUE
+                    WHEN EXISTS (
+                      SELECT 1
+                      FROM jsonb_object_keys(${studentQuestionAnswers.answer}) AS key
+                      WHERE ${studentQuestionAnswers.answer}->key = to_jsonb(qao.option_text))
+                      AND  ${questions.type} NOT IN (${QUESTION_TYPE.FILL_IN_THE_BLANKS_DND}, ${
+                        QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT
+                      })
+                      THEN TRUE
+                      ELSE FALSE
+                    END,
+                  'studentAnswer',  
                     CASE
-                      WHEN ${questions.type} in (${
-                        QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
-                      }) AND ${!isCompleted}
-                        THEN random()
-                      ELSE qao.display_order
+                      WHEN ${studentQuestionAnswers.id} IS NULL THEN NULL
+                      ELSE ${studentQuestionAnswers.answer}->>CAST(qao.display_order AS text)
                     END
                 )
+                FROM ${questionAnswerOptions} qao
+                WHERE qao.question_id = questions.id
+                ORDER BY
+                  CASE
+                    WHEN ${questions.type} in (${
+                      QUESTION_TYPE.FILL_IN_THE_BLANKS_DND
+                    }) AND ${!isCompleted}
+                      THEN random()
+                    ELSE qao.display_order
+                  END
               )
-            END
-          `,
+            )
+          END
+        `,
       })
       .from(questions)
       .leftJoin(
