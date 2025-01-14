@@ -1,6 +1,3 @@
-// TODO: Need to be fixed
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { Link } from "@remix-run/react";
 import { cva } from "class-variance-authority";
 import { t } from "i18next";
@@ -11,15 +8,10 @@ import CardPlaceholder from "~/assets/placeholders/card-placeholder.jpg";
 import { CardBadge } from "~/components/CardBadge";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
-import Viewer from "~/components/RichText/Viever";
 import { Card, CardContent } from "~/components/ui/card";
 import { cn } from "~/lib/utils";
 
-import type { GetUserStatisticsResponse, GetCourseResponse } from "~/api/generated-api";
-
-type ChapterStatus = "not_started" | "in_progress" | "completed";
-
-type ChapterCardProps = GetUserStatisticsResponse["data"]["nextLesson"] | undefined;
+import type { GetUserStatisticsResponse } from "~/api/generated-api";
 
 const buttonVariants = cva("w-full transition", {
   defaultVariants: {
@@ -34,7 +26,9 @@ const buttonVariants = cva("w-full transition", {
   },
 });
 
-const getButtonProps = (chapterProgress: ChapterStatus, isAdmin: boolean, type?: string) => {
+const getButtonProps = (
+  chapterProgress: NonNullable<GetUserStatisticsResponse["data"]["nextLesson"]>["chapterProgress"],
+) => {
   if (chapterProgress === "in_progress") {
     return { text: t("clientStatisticsView.button.continue"), colorClass: "text-secondary-500" };
   }
@@ -54,24 +48,19 @@ const cardBadgeVariant: Record<string, "successOutlined" | "secondary" | "defaul
   not_started: "default",
 };
 
-export const ChapterCard = ({
-  courseId,
-  courseThumbnail,
-  lessonId,
-  chapterTitle,
-  chapterProgress,
-  completedLessonCount,
-  lessonCount,
-  chapterDisplayOrder,
-}: ChapterCardProps) => {
+export const ChapterCard = (
+  chapterDetails: NonNullable<GetUserStatisticsResponse["data"]["nextLesson"]>,
+) => {
   const cardClasses = buttonVariants({
-    variant: chapterProgress,
+    variant: chapterDetails.chapterProgress,
   });
 
-  const { text: buttonText, colorClass: buttonColorClass } = getButtonProps(chapterProgress);
+  const { text: buttonText, colorClass: buttonColorClass } = getButtonProps(
+    chapterDetails.chapterProgress,
+  );
   const { t } = useTranslation();
 
-  const hrefToLessonPage = `course/${courseId}/lesson/${lessonId}`;
+  const hrefToLessonPage = `course/${chapterDetails.courseId}/lesson/${chapterDetails.lessonId}`;
 
   return (
     <Card className={cardClasses}>
@@ -79,8 +68,8 @@ export const ChapterCard = ({
         <Link className="flex flex-col h-full gap-4" to={hrefToLessonPage}>
           <div className="relative">
             <img
-              src={courseThumbnail ?? CardPlaceholder}
-              alt={`Lesson ${chapterDisplayOrder}`}
+              src={chapterDetails.courseThumbnail ?? CardPlaceholder}
+              alt={`Lesson ${chapterDetails.chapterDisplayOrder}`}
               loading="eager"
               decoding="async"
               className="w-full object-cover object-center rounded-lg drop-shadow-sm aspect-video"
@@ -88,17 +77,17 @@ export const ChapterCard = ({
                 (e.target as HTMLImageElement).src = CardPlaceholder;
               }}
             />
-            {chapterProgress && (
+            {chapterDetails.chapterProgress && (
               <CardBadge
-                variant={cardBadgeVariant[chapterProgress]}
+                variant={cardBadgeVariant[chapterDetails.chapterProgress]}
                 className="absolute top-3 left-3"
               >
-                <Icon name={cardBadgeIcon[chapterProgress]} />
-                {startCase(chapterProgress)}
+                <Icon name={cardBadgeIcon[chapterDetails.chapterProgress]} />
+                {startCase(chapterDetails.chapterProgress)}
               </CardBadge>
             )}
             <span className="absolute bottom-0 right-0 -translate-x-1/2 translate-y-1/2 bg-white rounded-full w-8 h-8 flex justify-center items-center text-primary-700">
-              {chapterDisplayOrder.toString().padStart(2, "0")}
+              {chapterDetails.chapterDisplayOrder.toString().padStart(2, "0")}
             </span>
           </div>
           <div className="flex flex-col flex-grow">
@@ -106,20 +95,25 @@ export const ChapterCard = ({
               <div className="flex flex-col h-full bg-white w-full">
                 <CourseProgress
                   label={t("studentChapterCardView.other.chapterProgress")}
-                  isCompleted={chapterProgress === "completed"}
-                  completedLessonCount={completedLessonCount ?? 0}
-                  courseLessonCount={lessonCount}
+                  isCompleted={chapterDetails.chapterProgress === "completed"}
+                  completedLessonCount={chapterDetails.completedLessonCount}
+                  courseLessonCount={chapterDetails.lessonCount}
                 />
               </div>
             </div>
             <div className="flex flex-col gap-y-2 pb-8">
-              <h4 className="font-medium text-sm text-neutral-950 mt-2">{chapterTitle}</h4>
+              <h4 className="font-medium text-sm text-neutral-950 mt-2">
+                {chapterDetails.chapterTitle}
+              </h4>
             </div>
             <button
-              className={cn("text-xs mt-auto inline-flex self-start font-medium", buttonColorClass)}
+              className={cn(
+                "text-xs inline-flex self-start font-medium items-center",
+                buttonColorClass,
+              )}
             >
               {/*TODO: Change icon*/}
-              {buttonText} <Icon name="CarretDown" className="w-3 h-3 ml-1" />
+              {buttonText} <Icon name="CarretDown" className="w-3 h-3 ml-1 -rotate-90" />
             </button>
           </div>
         </Link>
