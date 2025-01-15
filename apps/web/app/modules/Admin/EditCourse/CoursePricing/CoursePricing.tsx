@@ -39,7 +39,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               )}
               onClick={() => setValue("isFree", true)}
             >
-              <div className="mt-[6px]">
+              <div className="mt-1.5">
                 <Input
                   type="radio"
                   name="isFree"
@@ -73,7 +73,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               )}
               onClick={() => setValue("isFree", false)}
             >
-              <div className="mt-[6px]">
+              <div className="mt-1.5">
                 <Input
                   type="radio"
                   name="isFree"

@@ -44,7 +44,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                     )}
                     onClick={() => field.onChange(false)}
                   >
-                    <div className="mt-[6px]">
+                    <div className="mt-1.5">
                       <Input
                         type="radio"
                         name="isPublished"
@@ -81,7 +81,7 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                     )}
                     onClick={() => field.onChange(true)}
                   >
-                    <div className="mt-[6px]">
+                    <div className="mt-1.5">
                       <Input
                         type="radio"
                         name="isPublished"
