@@ -76,24 +76,14 @@ export const quizLessonFormSchema = (t: (key: string) => string) =>
             (question.type === QuestionType.SINGLE_CHOICE ||
               question.type === QuestionType.PHOTO_QUESTION_SINGLE_CHOICE ||
               question.type === QuestionType.MULTIPLE_CHOICE ||
-              question.type === QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE) &&
+              question.type === QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE ||
+              question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
+              question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
             (!question.options || !question.options.some((option) => option.isCorrect === true))
           ) {
             ctx.addIssue({
               path: [index, "options"],
               message: t("adminCourseView.curriculum.lesson.validation.atLeastOneOptionCorrect"),
-              code: z.ZodIssueCode.custom,
-            });
-          }
-
-          if (
-            (question.type === QuestionType.FILL_IN_THE_BLANKS_DND ||
-              question.type === QuestionType.FILL_IN_THE_BLANKS_TEXT) &&
-            question.options?.some((option) => option.isCorrect !== true)
-          ) {
-            ctx.addIssue({
-              path: [index, "options"],
-              message: t("adminCourseView.curriculum.lesson.validation.allOptionsMustBeCorrect"),
               code: z.ZodIssueCode.custom,
             });
           }

@@ -12,7 +12,8 @@
       "goToDashboard": "Go to dashboard",
       "goBack": "Go back",
       "ignore": "Ignore",
-      "clearAll": "Clear All"
+      "clearAll": "Clear All",
+      "validate": "Validate"
     },
     "roles": {
       "admin": "Admin",
@@ -488,7 +489,7 @@
           "atLeastOneOptionRequired": "At least one option is required",
           "imageRequired": "Image is required",
           "descriptionLength": "Description must have at least 10 characters.",
-          "atLeastOneOptionCorrect": "`At least one option must be marked as correct for question.",
+          "atLeastOneOptionCorrect": "At least one option must be marked as correct for question.",
           "allOptionsCorrect": "All options must be correct"
         },
         "toast": {
@@ -550,7 +551,8 @@
           "presentationLessonDescription": "Choose this type if you want to embed presentations files like PPTX.",
           "quizLessonDescription": "This type allows you to build quizzes for your chapter using different types of questions.",
           "leaveContentHeader": "Are you sure you want to leave this question editor?",
-          "leaveContentBody": "It will delete all unsaved progress"
+          "leaveContentBody": "It will delete all unsaved progress",
+          "leaveContentBodyValidate": "If you want to save the changes, you must first validate the form"
         }
       }
     },
@@ -571,6 +573,9 @@
       "paidCourseBody": "Students can purchase and access the course content. Once selected, you can define currency and price.",
       "field": {
         "price": "Price"
+      },
+      "placeholder": {
+        "amount": "Amount"
       }
     }
   },

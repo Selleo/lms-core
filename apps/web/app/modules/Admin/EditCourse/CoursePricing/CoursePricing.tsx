@@ -39,7 +39,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               )}
               onClick={() => setValue("isFree", true)}
             >
-              <div className="mt-2">
+              <div className="mt-[6px]">
                 <Input
                   type="radio"
                   name="isFree"
@@ -50,12 +50,17 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                 />
               </div>
               <Label htmlFor="isFree" className="body-lg-md text-neutral-950 cursor-pointer">
-                <div className="font-medium text-lg text-neutral-950 mb-2">
+                <div className="body-lg-md text-neutral-950 mb-2">
                   {t("adminCourseView.pricing.freeCourseHeader")}
                 </div>
-                <div className="text-sm font-normal">
+                <div
+                  className={cn("body-base", {
+                    "text-neutral-900": !isFree,
+                    "text-neutral-950": isFree,
+                  })}
+                >
                   {t("adminCourseView.pricing.freeCourseBody")}
-                </div>
+                </div>{" "}
               </Label>
             </Card>
 
@@ -68,7 +73,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               )}
               onClick={() => setValue("isFree", false)}
             >
-              <div className="mt-2">
+              <div className="mt-[6px]">
                 <Input
                   type="radio"
                   name="isFree"
@@ -79,11 +84,16 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                 />
               </div>
               <div>
-                <Label htmlFor="paid" className="body-lg-md text-neutral-950 cursor-pointer">
-                  <div className="font-medium text-lg text-neutral-950 mb-2">
+                <Label htmlFor="paid" className={"body-lg-md text-neutral-950 cursor-pointer"}>
+                  <div className="body-lg-md text-neutral-950 mb-2 ">
                     {t("adminCourseView.pricing.paidCourseHeader")}
                   </div>
-                  <div className="text-sm font-normal mb-6">
+                  <div
+                    className={cn("body-base", {
+                      "text-neutral-900": isFree,
+                      "text-neutral-950": !isFree,
+                    })}
+                  >
                     {t("adminCourseView.pricing.paidCourseBody")}
                   </div>
                 </Label>
@@ -107,7 +117,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                             }
                           },
                         })}
-                        placeholder={t("amount")}
+                        placeholder={t("adminCourseView.pricing.placeholder.amount")}
                         type="number"
                         className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance]:textfield"
                         onInput={(e) => {

@@ -65,6 +65,21 @@ const QuizLessonForm = ({
   } = useLeaveModal();
   const [isCanceling, setIsCanceling] = useState(false);
 
+  const [isValidated, setIsValidated] = useState(false);
+
+  const handleValidationSuccess = () => {
+    setIsValidated(true);
+  };
+
+  const handleValidationError = () => {
+    setIsValidated(false);
+    closeLeaveModal();
+  };
+
+  const onValidate = () => {
+    form.handleSubmit(handleValidationSuccess, handleValidationError)();
+  };
+
   const onCloseModal = () => {
     setIsDeleteModalOpen(false);
   };
@@ -80,6 +95,7 @@ const QuizLessonForm = ({
   const onCancelModal = () => {
     closeLeaveModal();
     setIsCurrectFormDirty(false);
+    form.clearErrors();
   };
 
   const onSaveModal = () => {
@@ -110,6 +126,16 @@ const QuizLessonForm = ({
       setIsLeavingContent(false);
     }
   }, [isCurrentFormDirty, isCanceling, onCancel, setIsLeavingContent]);
+
+  useEffect(() => {
+    const handleSubmit = () => {
+      form.handleSubmit(() => setIsValidated(true))();
+    };
+
+    if (isLeaveModalOpen) {
+      handleSubmit();
+    }
+  }, [isLeaveModalOpen, form]);
 
   const addQuestion = useCallback(
     (questionType: QuestionType) => {
@@ -344,6 +370,8 @@ const QuizLessonForm = ({
         open={isLeaveModalOpen || false}
         onClose={onCancelModal}
         onSave={onSaveModal}
+        onValidate={onValidate}
+        isValidated={isValidated}
       />
     </div>
   );
