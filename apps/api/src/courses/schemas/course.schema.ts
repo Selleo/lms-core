@@ -12,8 +12,7 @@ export const courseSchema = Type.Object({
   authorEmail: Type.Optional(Type.String()),
   category: Type.String(),
   courseChapterCount: Type.Number(),
-  completedChapterCount: Type.Number(),
-  enrolled: Type.Optional(Type.Boolean()),
+  // completedChapterCount: Type.Number(),
   enrolledParticipantCount: Type.Number(),
   priceInCents: Type.Number(),
   currency: Type.String(),
@@ -22,14 +21,22 @@ export const courseSchema = Type.Object({
   hasFreeChapters: Type.Optional(Type.Boolean()),
 });
 
+export const studentCourseSchema = Type.Object({
+  ...courseSchema.properties,
+  completedChapterCount: Type.Number(),
+  enrolled: Type.Optional(Type.Boolean()),
+});
+
+export const coursesForTeacherSchema = Type.Object({
+  ...studentCourseSchema.properties,
+  authorId: UUIDSchema,
+  authorEmail: Type.String(),
+});
+
 export const allCoursesSchema = Type.Array(courseSchema);
-export const allCoursesForTeacherSchema = Type.Array(
-  Type.Object({
-    ...courseSchema.properties,
-    authorId: UUIDSchema,
-    authorEmail: Type.String(),
-  }),
-);
+export const allStudentCoursesSchema = Type.Array(studentCourseSchema);
+export const allCoursesForTeacherSchema = Type.Array(coursesForTeacherSchema);
 
 export type AllCoursesResponse = Static<typeof allCoursesSchema>;
+export type AllStudentCoursesResponse = Static<typeof allStudentCoursesSchema>;
 export type AllCoursesForTeacherResponse = Static<typeof allCoursesForTeacherSchema>;

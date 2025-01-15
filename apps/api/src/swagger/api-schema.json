@@ -3239,12 +3239,6 @@
                 "courseChapterCount": {
                   "type": "number"
                 },
-                "completedChapterCount": {
-                  "type": "number"
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 },
@@ -3272,7 +3266,6 @@
                 "author",
                 "category",
                 "courseChapterCount",
-                "completedChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -3354,12 +3347,6 @@
                 "courseChapterCount": {
                   "type": "number"
                 },
-                "completedChapterCount": {
-                  "type": "number"
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 },
@@ -3377,6 +3364,12 @@
                 },
                 "hasFreeChapters": {
                   "type": "boolean"
+                },
+                "completedChapterCount": {
+                  "type": "number"
+                },
+                "enrolled": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -3387,10 +3380,10 @@
                 "author",
                 "category",
                 "courseChapterCount",
-                "completedChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
-                "currency"
+                "currency",
+                "completedChapterCount"
               ]
             }
           },
@@ -3469,12 +3462,6 @@
                 "courseChapterCount": {
                   "type": "number"
                 },
-                "completedChapterCount": {
-                  "type": "number"
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 },
@@ -3492,6 +3479,12 @@
                 },
                 "hasFreeChapters": {
                   "type": "boolean"
+                },
+                "completedChapterCount": {
+                  "type": "number"
+                },
+                "enrolled": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -3502,10 +3495,10 @@
                 "author",
                 "category",
                 "courseChapterCount",
-                "completedChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
-                "currency"
+                "currency",
+                "completedChapterCount"
               ]
             }
           },
@@ -3584,12 +3577,6 @@
                 "courseChapterCount": {
                   "type": "number"
                 },
-                "completedChapterCount": {
-                  "type": "number"
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 },
@@ -3617,7 +3604,6 @@
                 "author",
                 "category",
                 "courseChapterCount",
-                "completedChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -3702,7 +3688,7 @@
                           "status": {
                             "anyOf": [
                               {
-                                "const": "completed",
+                                "const": "not_started",
                                 "type": "string"
                               },
                               {
@@ -3710,7 +3696,7 @@
                                 "type": "string"
                               },
                               {
-                                "const": "not_started",
+                                "const": "completed",
                                 "type": "string"
                               }
                             ]
@@ -4821,7 +4807,7 @@
                     "status": {
                       "anyOf": [
                         {
-                          "const": "completed",
+                          "const": "not_started",
                           "type": "string"
                         },
                         {
@@ -4829,7 +4815,7 @@
                           "type": "string"
                         },
                         {
-                          "const": "not_started",
+                          "const": "completed",
                           "type": "string"
                         }
                       ]

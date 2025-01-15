@@ -54,7 +54,11 @@ import {
   type CourseEnrollmentScope,
 } from "./schemas/courseQuery";
 
-import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas/course.schema";
+import type {
+  AllCoursesForTeacherResponse,
+  AllCoursesResponse,
+  AllStudentCoursesResponse,
+} from "./schemas/course.schema";
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
@@ -102,14 +106,13 @@ export class CourseService {
       const queryDB = trx
         .select({
           id: courses.id,
-          description: sql<string>`${courses.description}`,
           title: courses.title,
+          description: sql<string>`${courses.description}`,
           thumbnailUrl: courses.thumbnailS3Key,
           author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
           category: sql<string>`${categories.title}`,
           enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
           courseChapterCount: courses.chapterCount,
-          completedChapterCount: sql<number>`COALESCE(${studentCourses.finishedChapterCount}, 0)`,
           priceInCents: courses.priceInCents,
           currency: courses.currency,
           isPublished: courses.isPublished,
@@ -118,14 +121,13 @@ export class CourseService {
         .from(courses)
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
-        .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
         .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
         .where(and(...conditions))
         .groupBy(
           courses.id,
           courses.title,
-          courses.thumbnailS3Key,
           courses.description,
+          courses.thumbnailS3Key,
           users.firstName,
           users.lastName,
           categories.title,
@@ -134,13 +136,25 @@ export class CourseService {
           courses.isPublished,
           coursesSummaryStats.freePurchasedCount,
           coursesSummaryStats.paidPurchasedCount,
-          studentCourses.finishedChapterCount,
+          courses.createdAt,
         )
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
       const data = await queryDB;
 
-      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+      const dataWithS3SignedUrls = await Promise.all(
+        data.map(async (item) => {
+          if (!item.thumbnailUrl) return item;
+
+          try {
+            const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+            return { ...item, thumbnailUrl: signedUrl };
+          } catch (error) {
+            console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
+            return item;
+          }
+        }),
+      );
 
       const totalItems = data.length;
 
@@ -158,7 +172,7 @@ export class CourseService {
   async getCoursesForUser(
     query: CoursesQuery,
     userId: string,
-  ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
+  ): Promise<{ data: AllStudentCoursesResponse; pagination: Pagination }> {
     const {
       sort = CourseSortFields.title,
       perPage = DEFAULT_PAGE_SIZE,
@@ -208,7 +222,19 @@ export class CourseService {
         .leftJoin(users, eq(courses.authorId, users.id))
         .where(and(...conditions));
 
-      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+      const dataWithS3SignedUrls = await Promise.all(
+        data.map(async (item) => {
+          if (!item.thumbnailUrl) return item;
+
+          try {
+            const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+            return { ...item, thumbnailUrl: signedUrl };
+          } catch (error) {
+            console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
+            return item;
+          }
+        }),
+      );
 
       return {
         data: dataWithS3SignedUrls,
@@ -224,7 +250,7 @@ export class CourseService {
   async getAvailableCourses(
     query: CoursesQuery,
     currentUserId: UUIDType,
-  ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
+  ): Promise<{ data: AllStudentCoursesResponse; pagination: Pagination }> {
     const {
       sort = CourseSortFields.title,
       perPage = DEFAULT_PAGE_SIZE,
@@ -303,7 +329,19 @@ export class CourseService {
         .leftJoin(users, eq(courses.authorId, users.id))
         .where(and(...conditions));
 
-      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+      const dataWithS3SignedUrls = await Promise.all(
+        data.map(async (item) => {
+          if (!item.thumbnailUrl) return item;
+
+          try {
+            const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+            return { ...item, thumbnailUrl: signedUrl };
+          } catch (error) {
+            console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
+            return item;
+          }
+        }),
+      );
 
       return {
         data: dataWithS3SignedUrls,
@@ -393,10 +431,10 @@ export class CourseService {
                   ${lessons.displayOrder} AS "displayOrder",
                   ${lessons.isExternal} AS "isExternal",
                   CASE
-                    WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN 'completed'
+                    WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN  ${PROGRESS_STATUSES.COMPLETED}
                     WHEN ${studentLessonProgress.completedAt} IS NULL
-                      AND ${studentLessonProgress.completedQuestionCount} > 0 THEN 'in_progress'
-                    ELSE 'not_started'
+                      AND ${studentLessonProgress.completedQuestionCount} > 0 THEN  ${PROGRESS_STATUSES.IN_PROGRESS}
+                    ELSE  ${PROGRESS_STATUSES.NOT_STARTED}
                   END AS status,
                   CASE
                     WHEN ${lessons.type} = ${LESSON_TYPES.QUIZ} THEN COUNT(${questions.id})
@@ -874,22 +912,6 @@ export class CourseService {
     return this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
       courseId,
       dbInstance,
-    );
-  }
-
-  private async addS3SignedUrls(data: AllCoursesResponse): Promise<AllCoursesResponse> {
-    return Promise.all(
-      data.map(async (item) => {
-        if (!item.thumbnailUrl) return item;
-
-        try {
-          const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
-          return { ...item, thumbnailUrl: signedUrl };
-        } catch (error) {
-          console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
-          return item;
-        }
-      }),
     );
   }
 
