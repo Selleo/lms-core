@@ -44,20 +44,24 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                     )}
                     onClick={() => field.onChange(false)}
                   >
-                    <Input
-                      type="radio"
-                      name="isPublished"
-                      checked={field.value === false}
-                      onChange={() => field.onChange(false)}
-                      className="p-1 w-6 h-6"
-                      id="draft"
-                    />
+                    <div className="mt-1.5">
+                      <Input
+                        type="radio"
+                        name="isPublished"
+                        checked={field.value === false}
+                        onChange={() => field.onChange(false)}
+                        className="p-1 w-4 h-4 cursor-pointer"
+                        id="draft"
+                      />
+                    </div>
                     <div>
-                      <Label htmlFor="draft" className="body-lg-md text-neutral-950">
-                        {t("adminCourseView.status.draftHeader")}
+                      <Label htmlFor="draft" className="body-lg-md text-neutral-950 cursor-pointer">
+                        <div className="body-lg-md text-neutral-950 mb-2">
+                          {t("adminCourseView.status.draftHeader")}
+                        </div>
                       </Label>
                       <p
-                        className={cn("mt-1 text-sm", {
+                        className={cn("mt-1 body-base", {
                           "text-black": field.value === false,
                           "text-gray-500": field.value !== false,
                         })}
@@ -77,20 +81,27 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
                     )}
                     onClick={() => field.onChange(true)}
                   >
-                    <Input
-                      type="radio"
-                      name="isPublished"
-                      checked={field.value === true}
-                      onChange={() => field.onChange(true)}
-                      className="p-1 w-6 h-6"
-                      id="published"
-                    />
+                    <div className="mt-1.5">
+                      <Input
+                        type="radio"
+                        name="isPublished"
+                        checked={field.value === true}
+                        onChange={() => field.onChange(true)}
+                        className="p-1 w-4 h-4 cursor-pointer"
+                        id="published"
+                      />
+                    </div>
                     <div>
-                      <Label htmlFor="published" className="body-lg-md text-neutral-950">
-                        {t("adminCourseView.status.publishedHeader")}
+                      <Label
+                        htmlFor="published"
+                        className="body-lg-md text-neutral-950 cursor-pointer"
+                      >
+                        <div className="body-lg-md text-neutral-950 mb-2">
+                          {t("adminCourseView.status.publishedHeader")}
+                        </div>
                       </Label>
                       <p
-                        className={cn("mt-1 text-sm", {
+                        className={cn("mt-1 body-base", {
                           "text-neutral-950": field.value === true,
                           "text-neutral-900": field.value !== true,
                         })}
@@ -104,7 +115,9 @@ const CoursePublishStatus = ({ courseId, isPublished }: CoursePublishStatusProps
               </FormItem>
             )}
           />
-          <Button type="submit">{t("common.button.save")}</Button>
+          <div className="w-20">
+            <Button type="submit">{t("common.button.save")}</Button>
+          </div>
         </form>
       </Form>
     </div>

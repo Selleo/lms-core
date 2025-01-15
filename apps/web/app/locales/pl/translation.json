@@ -12,7 +12,8 @@
       "goToDashboard": "Przejdź do Panelu",
       "goBack": "Wróć",
       "clearAll": "Wyczyść wszystko",
-      "ignore": "Ignoruj"
+      "ignore": "Ignoruj",
+      "validate": "Waliduj"
     },
     "roles": {
       "admin": "Administrator",
@@ -550,7 +551,8 @@
           "presentationLessonDescription": "Wybierz ten typ, jeśli chcesz umieścić pliki prezentacji, takie jak PPTX.",
           "quizLessonDescription": "Ten typ pozwala na tworzenie quizów w ramach kursu z różnymi rodzajami pytań.",
           "leaveContentHeader": "Czy na pewno chcesz opuścić ten edytor pytań?",
-          "leaveContentBody": "Spowoduje to utratę niezapisanych postępów"
+          "leaveContentBody": "Spowoduje to utratę niezapisanych postępów",
+          "leaveContentBodyValidate": "Jeśli chcesz zapisać formularz, musisz najpierw zatwierdzić formularz"
         }
       }
     },
@@ -571,6 +573,9 @@
       "paidCourseBody": "Studenci mogą zakupić kurs i uzyskać dostęp do jego treści. Po wybraniu możesz określić walutę i cenę.",
       "field": {
         "price": "Cena"
+      },
+      "placeholder": {
+        "amount": "Kwota"
       }
     }
   },

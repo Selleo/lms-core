@@ -4,14 +4,16 @@ import { fileURLToPath } from "url";
 import { defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 
+import type { PlaywrightTestConfig } from "@playwright/test";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
-const baseURL = "http://localhost:5173";
+const baseURL = process.env.CI ? "http://localhost:5173" : "https://app.lms.localhost";
 
-export default defineConfig({
+const config: PlaywrightTestConfig = {
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -47,7 +49,10 @@ export default defineConfig({
       testMatch: /.*\.(spec|test)\.ts$/,
     },
   ],
-  webServer: [
+};
+
+if (process.env.CI) {
+  config.webServer = [
     {
       command: "cd ../api && pnpm run start:dev",
       url: "http://localhost:3000/api/healthcheck",
@@ -57,7 +62,6 @@ export default defineConfig({
         DATABASE_URL: `postgresql://test_user:test_password@localhost:54321/test_db`,
         REDIS_HOST: "localhost",
         REDIS_PORT: "6380",
-        NODE_ENV: "test",
         MODE: "test",
       },
       stderr: "pipe",
@@ -67,7 +71,6 @@ export default defineConfig({
       command: "cd ../api && pnpm db:migrate && pnpm db:seed",
       env: {
         DATABASE_URL: `postgresql://test_user:test_password@localhost:54321/test_db`,
-        NODE_ENV: "test",
         MODE: "test",
       },
       reuseExistingServer: false,
@@ -81,17 +84,12 @@ export default defineConfig({
       reuseExistingServer: false,
       env: {
         API_URL: "http://localhost:3000/api",
-        NODE_ENV: "test",
         MODE: "test",
       },
       stderr: "pipe",
       stdout: "pipe",
     },
-    // {
-    //   command: "cd ../reverse-proxy && pnpm run dev",
-    //   url: "http://localhost:2019/config/",
-    //   timeout: 120 * 1000,
-    //   reuseExistingServer: true,
-    // },
-  ],
-});
+  ];
+}
+
+export default defineConfig(config);
