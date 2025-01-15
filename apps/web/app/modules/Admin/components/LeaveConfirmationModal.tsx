@@ -14,9 +14,17 @@ type LeaveConfirmationModalProps = {
   open: boolean;
   onClose: () => void;
   onSave: () => void;
+  onValidate: () => void;
+  isValidated: boolean;
 };
 
-const LeaveConfirmationModal = ({ open, onClose, onSave }: LeaveConfirmationModalProps) => {
+const LeaveConfirmationModal = ({
+  open,
+  onClose,
+  onSave,
+  isValidated,
+  onValidate,
+}: LeaveConfirmationModalProps) => {
   const { t } = useTranslation();
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -31,10 +39,24 @@ const LeaveConfirmationModal = ({ open, onClose, onSave }: LeaveConfirmationModa
             <DialogDescription className="mt-2 text-sm text-neutral-600">
               {t("adminCourseView.curriculum.lesson.other.leaveContentBody")}
             </DialogDescription>
+            {!isValidated && (
+              <DialogDescription className="mt-2 text-sm text-neutral-600">
+                {t("adminCourseView.curriculum.lesson.other.leaveContentBodyValidate")}
+              </DialogDescription>
+            )}
             <div className="flex gap-4 mt-8">
-              <Button onClick={onSave} className="text-white bg-primary-700 py-2 px-4 rounded">
-                {t("common.button.save")}
-              </Button>
+              {!isValidated ? (
+                <Button
+                  onClick={onValidate}
+                  className="text-white bg-primary-700 py-2 px-4 rounded"
+                >
+                  {t("common.button.validate")}
+                </Button>
+              ) : (
+                <Button onClick={onSave} className="text-white bg-primary-700 py-2 px-4 rounded">
+                  {t("common.button.save")}
+                </Button>
+              )}
               <Button
                 onClick={onClose}
                 className="text-primary-800 border border-neutral-300 bg-neutrals-200 py-2 px-4 rounded"
