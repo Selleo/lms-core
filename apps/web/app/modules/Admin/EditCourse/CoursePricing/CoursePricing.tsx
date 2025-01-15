@@ -109,7 +109,6 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                     <div className="mb-2">
                       <PriceInput
                         value={form.getValues("priceInCents")}
-                        // @ts-expect-error test
                         onChange={(value) => setValue("priceInCents", value)}
                         currency={currency}
                         placeholder={t("adminCourseView.pricing.placeholder.amount")}
