@@ -23,7 +23,7 @@ export function useChangeLessonDisplayOrder() {
     onSuccess: () => {
       toast({
         description: t(
-          "adminCourseView.curriculum.lessson.toast.lessonDisplayOrderUpdatedSuccessfully",
+          "adminCourseView.curriculum.lesson.toast.lessonDisplayOrderUpdatedSuccessfully",
         ),
       });
     },
@@ -32,12 +32,12 @@ export function useChangeLessonDisplayOrder() {
         return toast({
           description:
             error.response?.data.message ||
-            t("adminCourseView.curriculum.lessson.toast.errorWhileUpdating"),
+            t("adminCourseView.curriculum.lesson.toast.errorWhileUpdating"),
           variant: "destructive",
         });
       }
       toast({
-        description: error.message || t("adminCourseView.curriculum.lessson.toast.unexpectedError"),
+        description: error.message || t("adminCourseView.curriculum.lesson.toast.unexpectedError"),
         variant: "destructive",
       });
     },
