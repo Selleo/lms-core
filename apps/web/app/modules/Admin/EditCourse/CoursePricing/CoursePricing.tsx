@@ -112,9 +112,19 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                         onChange={(value) => setValue("priceInCents", value)}
                         currency={currency}
                         placeholder={t("adminCourseView.pricing.placeholder.amount")}
-                        className="[&::-moz-appearance]:textfield appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+                        className={cn(
+                          "[&::-moz-appearance]:textfield appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+                          {
+                            "border-error-600": form.formState.errors.priceInCents,
+                          },
+                        )}
                         aria-label={t("adminCourseView.pricing.field.price")}
                       />
+                      {form.formState.errors.priceInCents && (
+                        <p className="text-error-600 text-xs">
+                          {form.formState.errors.priceInCents.message}
+                        </p>
+                      )}
                     </div>
                   </>
                 )}
