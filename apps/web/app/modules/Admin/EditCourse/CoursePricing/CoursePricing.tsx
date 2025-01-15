@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 
+import { PriceInput } from "~/components/PriceInput/PriceInput";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Form } from "~/components/ui/form";
@@ -17,7 +18,7 @@ type CoursePricingProps = {
 
 const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps) => {
   const { form, onSubmit } = useCoursePricingForm({ courseId, priceInCents, currency });
-  const { setValue, register, watch } = form;
+  const { setValue, watch } = form;
   const { t } = useTranslation();
 
   const isFree = watch("isFree");
@@ -105,31 +106,25 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                         {t("adminCourseView.pricing.field.price")}
                       </Label>
                     </div>
-                    <div className="relative mb-2">
-                      <Input
-                        id="priceInCents"
-                        {...register("priceInCents", {
-                          valueAsNumber: true,
-                          onChange: (e) => {
-                            const value = e.target.value;
-                            if (Number(value) <= 0) {
-                              e.target.value = "";
-                            }
-                          },
-                        })}
+                    <div className="mb-2">
+                      <PriceInput
+                        value={form.getValues("priceInCents")}
+                        onChange={(value) => setValue("priceInCents", value)}
+                        currency={currency}
                         placeholder={t("adminCourseView.pricing.placeholder.amount")}
-                        type="number"
-                        className="[&::-moz-appearance]:textfield appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                        onInput={(e) => {
-                          const input = e.target as HTMLInputElement;
-                          if (Number(input.value) <= 0) {
-                            input.value = "";
-                          }
-                        }}
+                        className={cn(
+                          "[&::-moz-appearance]:textfield appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+                          {
+                            "border-error-600": form.formState.errors.priceInCents,
+                          },
+                        )}
+                        aria-label={t("adminCourseView.pricing.field.price")}
                       />
-                      <span className="absolute right-0 top-1/2 -translate-x-4 -translate-y-1/2 cursor-default uppercase">
-                        {currency}
-                      </span>
+                      {form.formState.errors.priceInCents && (
+                        <p className="text-error-600 text-xs">
+                          {form.formState.errors.priceInCents.message}
+                        </p>
+                      )}
                     </div>
                   </>
                 )}

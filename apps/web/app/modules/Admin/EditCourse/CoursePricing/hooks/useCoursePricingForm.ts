@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useUpdateCourse } from "~/api/mutations/admin/useUpdateCourse";
 import { courseQueryOptions } from "~/api/queries/admin/useBetaCourse";
@@ -20,9 +21,10 @@ export const useCoursePricingForm = ({
   priceInCents,
   currency,
 }: UseCoursePricingFormProps) => {
+  const { t } = useTranslation();
   const { mutateAsync: updateCourse } = useUpdateCourse();
   const form = useForm<CoursePricingFormValues>({
-    resolver: zodResolver(coursePricingFormSchema),
+    resolver: zodResolver(coursePricingFormSchema(t)),
     defaultValues: {
       priceInCents: priceInCents || undefined,
       currency: currency || "",
@@ -30,8 +32,9 @@ export const useCoursePricingForm = ({
     },
   });
   const onSubmit = async (data: CoursePricingFormValues) => {
+    const { isFree: _, ...rest } = data;
     updateCourse({
-      data,
+      data: { ...rest },
       courseId,
     }).then(() => {
       queryClient.invalidateQueries(courseQueryOptions(courseId));

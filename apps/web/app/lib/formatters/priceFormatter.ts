@@ -1,25 +1,28 @@
 /**
  * Supported currency codes.
  */
-type CurrencyCode = "USD" | "EUR" | "GBP" | "JPY" | "KRW" | "BHD" | string;
+export type CurrencyCode = "USD" | "EUR" | "GBP" | "JPY" | "KRW" | "BHD" | string;
 
 /**
  * Formats a price in minor units to a localized string representation.
  * @param amount - The price amount in minor units (e.g., cents).
  * @optional currency - The currency code (e.g., 'USD', 'EUR', 'JPY'). Case-insensitive. Default is 'USD'.
  * @param locale - The locale to use for formatting.
+ * @param options - Additional formatting options
+ * @param options.withCurrency - Whether to include the currency symbol. Default is true.
  * @returns The formatted price string.
  */
 export function formatPrice(
   amount: number,
   currency: CurrencyCode = "USD",
   locale: string = "en-US",
+  options: { withCurrency?: boolean } = { withCurrency: true },
 ): string {
   const upperCaseCurrency = currency.toUpperCase() as CurrencyCode;
   const majorUnits = convertToMajorUnits(amount, upperCaseCurrency);
 
   const formatter = new Intl.NumberFormat(locale, {
-    style: "currency",
+    style: options.withCurrency ? "currency" : "decimal",
     currency: upperCaseCurrency,
     minimumFractionDigits: getMinimumFractionDigits(upperCaseCurrency),
     maximumFractionDigits: getMaximumFractionDigits(upperCaseCurrency),
