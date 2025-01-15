@@ -1,34 +1,39 @@
 import { Input } from "~/components/ui/input";
+import { formatPrice, type CurrencyCode } from "~/lib/formatters/priceFormatter";
 
 import type { ChangeEvent, InputHTMLAttributes } from "react";
 
 type PriceInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
   value?: number;
   onChange: (value: number) => void;
-  currency?: string;
+  currency?: CurrencyCode;
   max?: number;
+  locale?: string;
 };
 
 /**
  * Input component for handling price entries with automatic formatting
+ * @component
  * @param {Object} props - Component props
- * @param {number} [props.value] - Value in cents (e.g., 1000 for 10.00)
- * @param {(value: number) => void} props.onChange - Callback triggered on value change, returns value in cents
- * @param {string} [props.currency] - Currency symbol displayed on the right side of input
- * @param {number} [props.max=999999.99] - Maximum allowed value in units (not cents)
- * @param {string} [props.className] - Additional CSS classes
+ * @param {number} [props.value] - Value in minor units (e.g., cents)
+ * @param {(value: number) => void} props.onChange - Callback triggered on value change, returns value in minor units
+ * @param {CurrencyCode} [props.currency] - Currency code (e.g., 'USD', 'EUR')
+ * @param {number} [props.max=999999.99] - Maximum allowed value in major units
+ * @param {string} [props.locale] - Locale for number formatting
  *
  * @example
  * <PriceInput
- *   value={1000} // 10.00
- *   onChange={(value) => console.log(value)} // value will be in cents
- *   currency="PLN"
+ *   value={1000} // $10.00
+ *   onChange={(value) => console.log(value)}
+ *   currency="USD"
+ *   locale="en-US"
  * />
  */
 export const PriceInput = ({
   value,
   onChange,
-  currency,
+  currency = "USD",
+  locale = "en-US",
   max = 999999.99,
   className,
   ...props
@@ -72,15 +77,10 @@ export const PriceInput = ({
       return;
     }
 
-    const priceInCents = Math.round(parseFloat(normalizedValue) * 100);
-    if (!isNaN(priceInCents) && priceInCents >= 0) {
-      onChange(priceInCents);
+    const priceInMinorUnits = Math.round(parseFloat(normalizedValue) * 100);
+    if (!isNaN(priceInMinorUnits) && priceInMinorUnits >= 0) {
+      onChange(priceInMinorUnits);
     }
-  };
-
-  const formatPrice = (cents?: number): string => {
-    if (!cents) return "";
-    return (cents / 100).toFixed(2);
   };
 
   return (
@@ -89,7 +89,7 @@ export const PriceInput = ({
         type="text"
         inputMode="decimal"
         onChange={handleChange}
-        defaultValue={formatPrice(value)}
+        defaultValue={value ? formatPrice(value, currency, locale, { withCurrency: false }) : ""}
         className={className}
         {...props}
       />
