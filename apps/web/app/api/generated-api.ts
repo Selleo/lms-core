@@ -459,7 +459,6 @@ export interface GetCourseResponse {
       chapterProgress?: "completed" | "in_progress" | "not_started";
       isFreemium?: boolean;
       enrolled?: boolean;
-      isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
       updatedAt?: string;
@@ -543,7 +542,6 @@ export interface GetBetaCourseByIdResponse {
       chapterProgress?: "completed" | "in_progress" | "not_started";
       isFreemium?: boolean;
       enrolled?: boolean;
-      isPublished?: boolean;
       isSubmitted?: boolean;
       createdAt?: string;
       updatedAt?: string;
@@ -713,7 +711,6 @@ export interface GetChapterWithLessonResponse {
     chapterProgress?: "completed" | "in_progress" | "not_started";
     isFreemium?: boolean;
     enrolled?: boolean;
-    isPublished?: boolean;
     isSubmitted?: boolean;
     createdAt?: string;
     updatedAt?: string;
@@ -771,7 +768,6 @@ export type BetaCreateChapterBody = {
   chapterProgress?: "completed" | "in_progress" | "not_started";
   isFreemium?: boolean;
   enrolled?: boolean;
-  isPublished?: boolean;
   isSubmitted?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -838,7 +834,6 @@ export type UpdateChapterBody = {
   chapterProgress?: "completed" | "in_progress" | "not_started";
   isFreemium?: boolean;
   enrolled?: boolean;
-  isPublished?: boolean;
   isSubmitted?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -2512,14 +2507,14 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name LessonControllerUpdateLessonDisplayOrder
-     * @request PATCH:/api/lesson/lesson-display-order
+     * @request PATCH:/api/lesson/update-lesson-display-order
      */
     lessonControllerUpdateLessonDisplayOrder: (
       data: UpdateLessonDisplayOrderBody,
       params: RequestParams = {},
     ) =>
       this.request<UpdateLessonDisplayOrderResponse, any>({
-        path: `/api/lesson/lesson-display-order`,
+        path: `/api/lesson/update-lesson-display-order`,
         method: "PATCH",
         body: data,
         type: ContentType.Json,

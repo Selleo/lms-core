@@ -119,7 +119,6 @@ export class ScormService {
             {
               title: chapter.title,
               courseId,
-              isPublished: true,
               isFreemium: false,
             },
             userId,

@@ -69,7 +69,6 @@ export async function createNiceCourses(
           title: chapterData.title,
           authorId: creatorUserId,
           courseId: course.id,
-          isPublished: chapterData.isPublished,
           isFreemium: chapterData.isFreemium,
           createdAt: createdAt,
           updatedAt: createdAt,

@@ -70,3 +70,12 @@ export type CoursesQuery = {
   currentUserRole?: UserRole;
   excludeCourseId?: UUIDType;
 };
+
+export const COURSE_ENROLLMENT_SCOPES = {
+  ALL: "all",
+  ENROLLED: "enrolled",
+  AVAILABLE: "available",
+} as const;
+
+export type CourseEnrollmentScope =
+  (typeof COURSE_ENROLLMENT_SCOPES)[keyof typeof COURSE_ENROLLMENT_SCOPES];

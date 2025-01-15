@@ -46,10 +46,12 @@ import {
 } from "../storage/schema";
 
 import {
+  COURSE_ENROLLMENT_SCOPES,
+  CourseSortFields,
   type CoursesFilterSchema,
   type CourseSortField,
-  CourseSortFields,
   type CoursesQuery,
+  type CourseEnrollmentScope,
 } from "./schemas/courseQuery";
 
 import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas/course.schema";
@@ -421,9 +423,7 @@ export class CourseService {
       })
       .from(chapters)
       .leftJoin(studentChapterProgress, eq(studentChapterProgress.chapterId, chapters.id))
-      .where(
-        and(eq(chapters.courseId, id), eq(chapters.isPublished, true), isNotNull(chapters.title)),
-      )
+      .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
       .orderBy(chapters.displayOrder);
 
     const thumbnailUrl = await this.fileService.getFileUrl(course.thumbnailS3Key);
@@ -503,54 +503,6 @@ export class CourseService {
     };
   }
 
-  async getCourseById(id: string) {
-    const [course] = await this.db
-      .select({
-        id: courses.id,
-        title: courses.title,
-        thumbnailS3Key: sql<string>`${courses.thumbnailS3Key}`,
-        category: categories.title,
-        categoryId: categories.id,
-        description: sql<string>`${courses.description}`,
-        courseChapterCount: courses.chapterCount,
-        priceInCents: courses.priceInCents,
-        isPublished: courses.isPublished,
-        currency: courses.currency,
-      })
-      .from(courses)
-      .innerJoin(categories, eq(courses.categoryId, categories.id))
-      .where(and(eq(courses.id, id)));
-
-    if (!course) throw new NotFoundException("Course not found");
-
-    const courseChapterList = await this.db
-      .select({
-        displayOrder: sql<number>`${lessons.displayOrder}`,
-        id: chapters.id,
-        title: chapters.title,
-        lessonCount: chapters.lessonCount,
-        isFree: chapters.isFreemium,
-      })
-      .from(chapters)
-      .where(
-        and(
-          eq(chapters.courseId, id),
-          eq(chapters.isPublished, true),
-          isNotNull(chapters.id),
-          isNotNull(chapters.title),
-        ),
-      )
-      .orderBy(chapters.displayOrder);
-
-    const thumbnailS3SingedUrl = await this.fileService.getFileUrl(course.thumbnailS3Key);
-
-    return {
-      ...course,
-      thumbnailS3SingedUrl,
-      chapters: courseChapterList,
-    };
-  }
-
   async getTeacherCourses({
     currentUserId,
     authorId,
@@ -559,16 +511,16 @@ export class CourseService {
   }: {
     currentUserId: UUIDType;
     authorId: UUIDType;
-    scope: "all" | "enrolled" | "available";
+    scope: CourseEnrollmentScope;
     excludeCourseId?: UUIDType;
   }): Promise<AllCoursesForTeacherResponse> {
     const conditions = [eq(courses.isPublished, true), eq(courses.authorId, authorId)];
 
-    if (scope === "enrolled") {
+    if (scope === COURSE_ENROLLMENT_SCOPES.ENROLLED) {
       conditions.push(eq(studentCourses.studentId, currentUserId));
     }
 
-    if (scope === "available") {
+    if (scope === COURSE_ENROLLMENT_SCOPES.AVAILABLE) {
       const availableCourseIds = await this.getAvailableCourseIds(
         currentUserId,
         this.db,
@@ -670,23 +622,6 @@ export class CourseService {
         throw new ConflictException("Failed to create course");
       }
 
-      // TODO: its not necessary to create chapters
-
-      // if (createCourseBody.chapters && createCourseBody.chapters.length > 0) {
-      //   const courseChaptersData = createCourseBody.chapters.map((chapterId, index) => ({
-      //     courseId: newCourse.id,
-      //     chapterId,
-      //     displayOrder: index + 1,
-      //   }));
-
-      //   await trx.insert(courseLessons).values(courseChaptersData);
-      // }
-
-      // TODO: its not necessary to create chapters
-      // if (newCourse.imageUrl) {
-      //   newCourse.imageUrl = await this.fileService.getFileUrl(newCourse.imageUrl);
-      // }
-
       await trx.insert(coursesSummaryStats).values({ courseId: newCourse.id, authorId });
 
       return newCourse;
@@ -748,11 +683,6 @@ export class CourseService {
         throw new ConflictException("Failed to update course");
       }
 
-      // TODO: its not necessary to create chapters
-      // if (updatedCourse.imageUrl) {
-      //   updatedCourse.imageUrl = await this.fileService.getFileUrl(updatedCourse.imageUrl);
-      // }
-
       return updatedCourse;
     });
   }
@@ -776,8 +706,8 @@ export class CourseService {
     if (course.enrolled) throw new ConflictException("Course is already enrolled");
 
     /*
-     For Playwright tests to bypass Stripe payment
-     Front-end interfaces, such as Stripe Checkout or the Payment Element, have security measures in place that prevent automated testing, and Stripe APIs are rate limited.
+      For Playwright tests to bypass Stripe payment
+      Front-end interfaces, such as Stripe Checkout or the Payment Element, have security measures in place that prevent automated testing, and Stripe APIs are rate limited.
    */
     const isTest = testKey && testKey === process.env.TEST_KEY;
     if (!isTest && Boolean(course.price)) throw new ForbiddenException();
@@ -805,7 +735,7 @@ export class CourseService {
         })
         .from(chapters)
         .leftJoin(lessons, eq(lessons.chapterId, chapters.id))
-        .where(and(eq(chapters.courseId, courseId), eq(chapters.isPublished, true)))
+        .where(eq(chapters.courseId, courseId))
         .groupBy(chapters.id);
 
       const existingLessonProgress = await this.lessonRepository.getLessonsProgressByCourseId(

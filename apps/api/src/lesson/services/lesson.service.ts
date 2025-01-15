@@ -166,6 +166,7 @@ export class LessonService {
         await this.studentLessonProgressService.markLessonAsCompleted(
           studentQuizAnswers.lessonId,
           userId,
+          undefined,
           true,
           evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
           trx,

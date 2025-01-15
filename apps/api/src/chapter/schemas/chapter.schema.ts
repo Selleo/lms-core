@@ -19,7 +19,6 @@ export const chapterSchema = Type.Object({
   ),
   isFreemium: Type.Optional(Type.Boolean()),
   enrolled: Type.Optional(Type.Boolean()),
-  isPublished: Type.Optional(Type.Boolean()),
   isSubmitted: Type.Optional(Type.Boolean()),
   createdAt: Type.Optional(Type.String()),
   updatedAt: Type.Optional(Type.String()),

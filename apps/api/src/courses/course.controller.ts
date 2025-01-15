@@ -29,7 +29,11 @@ import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { CourseService } from "src/courses/course.service";
 import { allCoursesSchema } from "src/courses/schemas/course.schema";
-import { SortCourseFieldsOptions } from "src/courses/schemas/courseQuery";
+import {
+  SortCourseFieldsOptions,
+  CourseEnrollmentScope,
+  COURSE_ENROLLMENT_SCOPES,
+} from "src/courses/schemas/courseQuery";
 import { CreateCourseBody, createCourseSchema } from "src/courses/schemas/createCourse.schema";
 import {
   commonShowBetaCourseSchema,
@@ -165,11 +169,7 @@ export class CourseController {
       {
         type: "query",
         name: "scope",
-        schema: Type.Union([
-          Type.Literal("all"),
-          Type.Literal("enrolled"),
-          Type.Literal("available"),
-        ]),
+        schema: Type.Enum(COURSE_ENROLLMENT_SCOPES),
       },
       { type: "query", name: "excludeCourseId", schema: UUIDSchema },
     ],
@@ -177,8 +177,7 @@ export class CourseController {
   })
   async getTeacherCourses(
     @Query("authorId") authorId: UUIDType,
-    // TODO: extract to const
-    @Query("scope") scope: "all" | "enrolled" | "available" = "all",
+    @Query("scope") scope: CourseEnrollmentScope = COURSE_ENROLLMENT_SCOPES.ALL,
     @Query("excludeCourseId") excludeCourseId: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<BaseResponse<AllCoursesForTeacherResponse>> {

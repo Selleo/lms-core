@@ -225,7 +225,6 @@ export class QuestionRepository {
     return;
   }
 
-  // TODO: check if it work correctly
   async getQuizQuestionsToEvaluation(lessonId: UUIDType) {
     return this.db
       .select({
