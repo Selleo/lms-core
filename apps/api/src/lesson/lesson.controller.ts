@@ -227,7 +227,7 @@ export class LessonController {
   //     });
   //   }
 
-  @Patch("lesson-display-order")
+  @Patch("update-lesson-display-order")
   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
@@ -252,7 +252,7 @@ export class LessonController {
     await this.adminLessonsService.updateLessonDisplayOrder(body);
 
     return new BaseResponse({
-      message: "Chapter display order updated successfully",
+      message: "Lesson display order updated successfully",
     });
   }
 }

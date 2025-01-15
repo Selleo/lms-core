@@ -14,7 +14,6 @@ export const e2eCourses: NiceCourseData[] = [
     chapters: [
       {
         title: "E2E Testing Lesson",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -26,7 +25,6 @@ export const e2eCourses: NiceCourseData[] = [
       },
       {
         title: "E2E Testing Quiz",
-        isPublished: true,
         isFreemium: true,
         lessons: [
           {

@@ -267,7 +267,6 @@ async function seed() {
     );
     console.log("Created student lesson progress");
 
-    // TODO: change to function working on data from database as in real app
     await createCoursesSummaryStats(createdCourses);
 
     await Promise.all(

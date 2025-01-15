@@ -20,7 +20,6 @@ export const niceCourses: NiceCourseData[] = [
     chapters: [
       {
         title: "HTML Basics: Building the Structure of Your Website",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -163,7 +162,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "HTML Basics: Test Your Knowledge",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -354,7 +352,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "CSS Fundamentals: Put Your Skills to the Test",
-        isPublished: true,
         isFreemium: true,
         lessons: [
           {
@@ -461,7 +458,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "HTML Basics: Building the Structure of Your Website",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -562,7 +558,6 @@ export const niceCourses: NiceCourseData[] = [
     chapters: [
       {
         title: "Java Basics: Building Blocks of Android Development",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -674,7 +669,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Android Development Basics: Test Your Knowledge",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -721,7 +715,6 @@ export const niceCourses: NiceCourseData[] = [
     chapters: [
       {
         title: "Getting Started with Kotlin Programming",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -760,7 +753,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Building Your First App with Kotlin",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -807,7 +799,6 @@ export const niceCourses: NiceCourseData[] = [
     chapters: [
       {
         title: "Arithmetic Essentials: Numbers and Operations",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -859,7 +850,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Geometry Basics: Shapes and Measurements",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -907,7 +897,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Algebra Introduction: Solving for the Unknown",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -950,7 +939,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Mathematics Basics Quiz: Test Your Knowledge",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -1039,7 +1027,6 @@ export const niceCourses: NiceCourseData[] = [
     chapters: [
       {
         title: "Mastering Basic Grammar Rules",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -1092,7 +1079,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Building Vocabulary for Beginners",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -1156,7 +1142,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Mastering Pronunciation and Accent",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -1216,7 +1201,6 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "English Basics Quiz",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {
@@ -1320,7 +1304,7 @@ export const niceCourses: NiceCourseData[] = [
     chapters: [
       {
         title: "Elevate Your Writing: Advanced Clause Strategies",
-        isPublished: true,
+        isFreemium: false,
         lessons: [
           {
             type: LESSON_TYPES.QUIZ,
@@ -1566,7 +1550,7 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Advanced Grammar: Perfecting Sentence Structures",
-        isPublished: true,
+        isFreemium: false,
         lessons: [
           {
             type: LESSON_TYPES.TEXT,
@@ -1636,7 +1620,7 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Vocabulary Expansion: Academic and Formal English",
-        isPublished: true,
+        isFreemium: false,
         lessons: [
           {
             type: LESSON_TYPES.TEXT,
@@ -1700,7 +1684,7 @@ export const niceCourses: NiceCourseData[] = [
       },
       {
         title: "Mastering Idiomatic Expressions",
-        isPublished: true,
+        isFreemium: false,
         lessons: [
           {
             type: LESSON_TYPES.TEXT,
@@ -1759,7 +1743,6 @@ export const niceCourses: NiceCourseData[] = [
     chapters: [
       {
         title: "Understanding AI Basics",
-        isPublished: true,
         isFreemium: false,
         lessons: [
           {

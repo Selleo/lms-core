@@ -1975,7 +1975,7 @@
         }
       }
     },
-    "/api/lesson/lesson-display-order": {
+    "/api/lesson/update-lesson-display-order": {
       "patch": {
         "operationId": "LessonController_updateLessonDisplayOrder",
         "parameters": [],
@@ -3764,9 +3764,6 @@
                     "enrolled": {
                       "type": "boolean"
                     },
-                    "isPublished": {
-                      "type": "boolean"
-                    },
                     "isSubmitted": {
                       "type": "boolean"
                     },
@@ -4149,9 +4146,6 @@
                       "type": "boolean"
                     },
                     "enrolled": {
-                      "type": "boolean"
-                    },
-                    "isPublished": {
                       "type": "boolean"
                     },
                     "isSubmitted": {
@@ -4889,9 +4883,6 @@
               "enrolled": {
                 "type": "boolean"
               },
-              "isPublished": {
-                "type": "boolean"
-              },
               "isSubmitted": {
                 "type": "boolean"
               },
@@ -5187,9 +5178,6 @@
                 "type": "boolean"
               },
               "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
                 "type": "boolean"
               },
               "isSubmitted": {
@@ -5513,9 +5501,6 @@
                 "type": "boolean"
               },
               "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
                 "type": "boolean"
               },
               "isSubmitted": {

@@ -2,13 +2,12 @@ import { Module } from "@nestjs/common";
 
 import { StatisticsModule } from "src/statistics/statistics.module";
 
-import { QuestionController } from "./question.controller";
 import { QuestionRepository } from "./question.repository";
 import { QuestionService } from "./question.service";
 
 @Module({
   imports: [StatisticsModule],
-  controllers: [QuestionController],
+  controllers: [],
   providers: [QuestionService, QuestionRepository],
   exports: [QuestionService, QuestionRepository],
 })
