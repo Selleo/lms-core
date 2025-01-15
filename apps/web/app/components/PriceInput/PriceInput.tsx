@@ -1,7 +1,7 @@
 import { Input } from "~/components/ui/input";
 import { formatPrice, type CurrencyCode } from "~/lib/formatters/priceFormatter";
 
-import type { ChangeEvent, InputHTMLAttributes } from "react";
+import type { ChangeEvent, InputHTMLAttributes, FocusEvent } from "react";
 
 type PriceInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value"> & {
   value?: number;
@@ -32,6 +32,7 @@ type PriceInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | 
 export const PriceInput = ({
   value,
   onChange,
+  onBlur,
   currency = "USD",
   locale = "en-US",
   max = 999999.99,
@@ -83,12 +84,28 @@ export const PriceInput = ({
     }
   };
 
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    onBlur?.(event);
+
+    const value = event.target.value;
+    const numericValue = parseFloat(value);
+
+    /*
+     *  for values like 0, 0.00, 0.000, 00 etc. clear the input
+     */
+    if (numericValue === 0 || value.match(/^0[.,]?0*$/)) {
+      event.target.value = "";
+      onChange(0);
+    }
+  };
+
   return (
     <div className="relative">
       <Input
         type="text"
         inputMode="decimal"
         onChange={handleChange}
+        onBlur={handleBlur}
         defaultValue={value ? formatPrice(value, currency, locale, { withCurrency: false }) : ""}
         className={className}
         {...props}
