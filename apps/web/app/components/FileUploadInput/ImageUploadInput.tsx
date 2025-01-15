@@ -20,6 +20,7 @@ const ImageUploadInput = ({
   fileInputRef,
 }: ImageUploadProps) => {
   const { t } = useTranslation();
+
   return (
     <div className="flex flex-col items-center justify-center gap-y-2">
       <div className="relative flex h-80 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-solid border-gray-300 bg-gray-100">
@@ -50,13 +51,13 @@ const ImageUploadInput = ({
               "text-gray-600": !field.value,
             })}
           >
-            {field.value ? "SVG, PNG, JPG (max. to 20MB)" : "SVG, PNG, JPG or GIF (max. 800x400px)"}
+            {field.value ? "SVG, PNG, JPG (max. to 20MB)" : "PNG, JPG or JPEG (max. 800x400px)"}
           </div>
         </div>
         <input
           ref={fileInputRef}
           type="file"
-          accept=".svg, .png, .jpg, .jpeg, .gif"
+          accept=".png, .jpg, .jpeg"
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) {

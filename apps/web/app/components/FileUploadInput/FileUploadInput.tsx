@@ -135,9 +135,7 @@ const FileUploadInput = ({
               <span className="text-primary-400">Click to replace</span>{" "}
               <span className="text-white">or drag and drop</span>
             </div>
-            <div className="details text-neutral-200">
-              PPT/PPTX, KEY, ODP or PDF (max. to 100MB)
-            </div>
+            <div className="details text-neutral-200">PPT/PPTX (max. to 100MB)</div>
           </div>
           <input
             type="file"
