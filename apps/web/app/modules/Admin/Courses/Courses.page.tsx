@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { categoriesQueryOptions } from "~/api/queries";
 import { ALL_COURSES_QUERY_KEY, useCoursesSuspense } from "~/api/queries/useCourses";
 import { queryClient } from "~/api/queryClient";
+import { Icon } from "~/components/Icon";
 import SortButton from "~/components/TableSortButton/TableSortButton";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
@@ -29,6 +30,13 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import {
+  Tooltip,
+  TooltipArrow,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "~/components/ui/tooltip";
 import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 import { formatPrice } from "~/lib/formatters/priceFormatter";
 import { cn } from "~/lib/utils";
@@ -205,9 +213,23 @@ const Courses = () => {
   return (
     <div className="flex flex-col">
       <div className="flex gap-3 ml-auto">
-        <Link to="new-scorm">
-          <Button variant="outline">{t("adminCoursesView.button.uploadScorm")}</Button>
-        </Link>
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button variant="outline" disabled>
+                {t("adminCoursesView.button.uploadScorm")}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              align="center"
+              className="bg-black text-white text-sm px-2 py-1 rounded shadow-md"
+            >
+              {t("common.tooltip.soon")}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <Link to="/admin/beta-courses/new">
           <Button variant="outline">{t("adminCoursesView.button.createNew")}</Button>
         </Link>
