@@ -256,11 +256,11 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
   });
 
   return (
-    <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
+    <div className="bg-card text-card-foreground rounded-lg border p-8 shadow-sm">
       <div className="details text-primary-700 uppercase">
         {t("studentLessonView.other.question")} {question.displayOrder}
       </div>
-      <div className="h6 text-neutral-950 my-4">{t("studentLessonView.other.fillInTheBlanks")}</div>
+      <div className="h6 my-4 text-neutral-950">{t("studentLessonView.other.fillInTheBlanks")}</div>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}

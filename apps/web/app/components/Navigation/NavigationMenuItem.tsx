@@ -21,19 +21,19 @@ export function NavigationMenuItem({ item, setIsMobileNavOpen }: NavigationMenuI
             to={item.link}
             onClick={() => setIsMobileNavOpen(false)}
             className={({ isActive }) =>
-              cn("flex gap-x-3 items-center py-3.5 px-4 rounded-lg 2xl:p-2", {
+              cn("flex items-center gap-x-3 rounded-lg px-4 py-3.5 2xl:p-2", {
                 "bg-primary-700 text-white": isActive,
                 "bg-white text-neutral-900": !isActive,
               })
             }
           >
             <Icon name={item.iconName} className="size-6" />
-            <span className="2xl:sr-only 3xl:not-sr-only capitalize">{item.label}</span>
+            <span className="3xl:not-sr-only capitalize 2xl:sr-only">{item.label}</span>
           </NavLink>
         </TooltipTrigger>
         <TooltipContent
           side="right"
-          className="hidden 2xl:block 2xl:capitalize 3xl:hidden 2xl:bg-neutral-950 2xl:text-white"
+          className="3xl:hidden hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white"
         >
           {item.label}
         </TooltipContent>

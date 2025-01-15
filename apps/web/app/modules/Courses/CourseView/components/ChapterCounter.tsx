@@ -27,7 +27,7 @@ export const ChapterCounter = ({
   return (
     <div
       className={cn(
-        "md:flex md:flex-col md:pt-4 md:items-center md:gap-y-1 md:not-sr-only sr-only after:block after:w-0.5 after:h-full",
+        "sr-only after:block after:h-full after:w-0.5 md:not-sr-only md:flex md:flex-col md:items-center md:gap-y-1 md:pt-4",
         {
           "after:bg-secondary-200": isChapterStarted,
           "after:bg-primary-200": !isChapterStarted,
@@ -36,7 +36,7 @@ export const ChapterCounter = ({
       )}
     >
       <div
-        className={cn("size-10 relative rounded-full aspect-square", {
+        className={cn("relative aspect-square size-10 rounded-full", {
           "bg-secondary-50": isChapterStarted,
           "bg-primary-50": !isChapterStarted,
           "bg-success-50": isChapterCompleted,
@@ -45,10 +45,10 @@ export const ChapterCounter = ({
         {isChapterStarted ? (
           <Icon
             name={chapterCounterIcon[chapterProgress]}
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
           />
         ) : (
-          <span className="body-base-md text-primary-700 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <span className="body-base-md text-primary-700 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             {chapterNumber}
           </span>
         )}

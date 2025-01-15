@@ -103,8 +103,8 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
   }, [contentTypeToDisplay, selectedChapter, selectedLesson]);
 
   return (
-    <div className="flex h-full rounded-lg gap-x-8 basis-full">
-      <div className="w-full md:max-w-[480px] justify-between h-full flex flex-col">
+    <div className="flex h-full basis-full gap-x-8 rounded-lg">
+      <div className="flex h-full w-full flex-col justify-between md:max-w-[480px]">
         <div className="flex h-full flex-col overflow-y-auto">
           <ChaptersList
             canRefetchChapterList={canRefetchChapterList}
@@ -118,13 +118,13 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
         </div>
         <Button
           onClick={addChapter}
-          className="bg-primary-700 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
+          className="bg-primary-700 rounded-lg px-4 py-2 text-white hover:bg-blue-600"
         >
           <Icon name="Plus" className="mr-2" />
           {t("adminCourseView.curriculum.chapter.button.addChapter")}
         </Button>
       </div>
-      <div className="w-full h-auto overflow-y-auto">{renderContent}</div>
+      <div className="h-auto w-full overflow-y-auto">{renderContent}</div>
     </div>
   );
 };

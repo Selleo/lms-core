@@ -35,41 +35,41 @@ export const CourseChapter = ({ chapter }: CourseChapterProps) => {
   return (
     <Accordion type="single" collapsible>
       <AccordionItem value="item-1">
-        <div className="flex gap-x-4 w-full">
+        <div className="flex w-full gap-x-4">
           <ChapterCounter
             chapterProgress={chapter.chapterProgress}
             displayOrder={chapter.displayOrder}
           />
-          <div className="flex flex-col w-full">
-            <AccordionTrigger className="text-start [&[data-state=open]>div>div>svg]:rotate-180 [&[data-state=open]>div>div>svg]:duration-200 [&[data-state=open]>div>div>svg]:ease-out data-[state=closed]:rounded-lg data-[state=open]:rounded-t-lg data-[state=open]:border-primary-500 data-[state=open]:bg-primary-50 border">
-              <div className="w-full gap-x-1 md:gap-x-4 px-2 py-4 md:p-4 flex items-center">
-                <div className="grid place-items-center w-8 h-8">
-                  <Icon name="CarretDownLarge" className="w-6 h-auto text-primary-700" />
+          <div className="flex w-full flex-col">
+            <AccordionTrigger className="data-[state=open]:border-primary-500 data-[state=open]:bg-primary-50 border text-start data-[state=closed]:rounded-lg data-[state=open]:rounded-t-lg [&[data-state=open]>div>div>svg]:rotate-180 [&[data-state=open]>div>div>svg]:duration-200 [&[data-state=open]>div>div>svg]:ease-out">
+              <div className="flex w-full items-center gap-x-1 px-2 py-4 md:gap-x-4 md:p-4">
+                <div className="grid h-8 w-8 place-items-center">
+                  <Icon name="CarretDownLarge" className="text-primary-700 h-auto w-6" />
                 </div>
-                <div className="flex flex-col w-full">
+                <div className="flex w-full flex-col">
                   <div className="details text-neutral-800">
                     {lessonText} {lessonText && quizText ? "• " : ""} {quizText}
                   </div>
                   <p className="body-base-md text-neutral-950">{chapter.title}</p>
-                  <div className="flex gap-x-1 max-w-[620px] items-center details text-neutral-800">
+                  <div className="details flex max-w-[620px] items-center gap-x-1 text-neutral-800">
                     <span className="pr-2">
                       {chapter.completedLessonCount}/{chapter.lessonCount}
                     </span>
                     {Array.from({ length: chapter.lessonCount }).map((_, index) => {
                       if (!chapter.completedLessonCount) {
                         return (
-                          <span key={index} className="h-1 w-full bg-primary-100 rounded-lg" />
+                          <span key={index} className="bg-primary-100 h-1 w-full rounded-lg" />
                         );
                       }
 
                       if (chapter.completedLessonCount && index < chapter.completedLessonCount) {
                         return (
-                          <span key={index} className="h-1 w-full bg-success-500 rounded-lg" />
+                          <span key={index} className="bg-success-500 h-1 w-full rounded-lg" />
                         );
                       }
 
                       return (
-                        <span key={index} className="h-1 w-full bg-secondary-500 rounded-lg" />
+                        <span key={index} className="bg-secondary-500 h-1 w-full rounded-lg" />
                       );
                     })}
                   </div>
@@ -83,7 +83,7 @@ export const CourseChapter = ({ chapter }: CourseChapterProps) => {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="divide-y pl-14 divide-neutral-200 pt-3 pb-4 rounded-b-lg border-b border-x border-primary-500">
+              <div className="border-primary-500 divide-y divide-neutral-200 rounded-b-lg border-x border-b pb-4 pl-14 pt-3">
                 {chapter?.lessons?.map((lesson) => {
                   if (!lesson) return null;
 

@@ -138,7 +138,7 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
           <FormatType editor={editor} />
         </ToggleGroup>
         <ToggleGroup
-          className="flex flex-row gap-x-1 items-center invisible sm:visible"
+          className="invisible flex flex-row items-center gap-x-1 sm:visible"
           type="multiple"
         >
           <Button

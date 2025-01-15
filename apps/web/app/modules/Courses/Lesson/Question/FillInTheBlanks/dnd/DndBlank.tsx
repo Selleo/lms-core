@@ -21,7 +21,7 @@ export const DndBlank = ({ words, blankId, isCorrect, isStudentAnswer }: DndBlan
     <SortableContext id={blankId} items={words} strategy={rectSwappingStrategy}>
       <div
         ref={setNodeRef}
-        className="min-w-32 h-9 mx-2 bg-white overflow-hidden border rounded-md"
+        className="mx-2 h-9 min-w-32 overflow-hidden rounded-md border bg-white"
       >
         {words.map((word) => (
           <DraggableWord

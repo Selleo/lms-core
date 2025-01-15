@@ -30,10 +30,10 @@ export default function CourseViewPage() {
 
   return (
     <PageWrapper className="max-w-full">
-      <div className="flex flex-col lg:grid lg:grid-cols-[1fr_480px] max-w-full gap-6 w-full">
+      <div className="flex w-full max-w-full flex-col gap-6 lg:grid lg:grid-cols-[1fr_480px]">
         <div className="flex flex-col gap-y-6 overflow-hidden">
           <CourseOverview course={course} />
-          <div className="py-6 px-4 md:p-8 rounded-lg bg-white flex flex-col gap-y-4">
+          <div className="flex flex-col gap-y-4 rounded-lg bg-white px-4 py-6 md:p-8">
             <div className="flex flex-col gap-y-1">
               <h4 className="h6 text-neutral-950">{t("studentCourseView.header")}</h4>
               <p className="body-base-md text-neutral-800">{t("studentCourseView.subHeader")}</p>

@@ -63,17 +63,17 @@ function CreateNewScormCourse() {
   const { t } = useTranslation();
 
   return (
-    <div className="size-full gap-[120px] flex p-20 bg-white">
+    <div className="flex size-full gap-[120px] bg-white p-20">
       <div className="flex-1">
         <FormProvider {...form}>
-          <div className="max-w-2xl mx-auto p-6">
+          <div className="mx-auto max-w-2xl p-6">
             <StepWrapper title={t(stepTitle)} description={t(stepDescription)}>
               <CurrentStep handleBack={prevStep} handleNext={nextStep} />
             </StepWrapper>
           </div>
         </FormProvider>
       </div>
-      <div className="flex-1 h-full bg-primary-50 rounded-2xl flex items-center justify-center">
+      <div className="bg-primary-50 flex h-full flex-1 items-center justify-center rounded-2xl">
         <SideComponent />
       </div>
     </div>

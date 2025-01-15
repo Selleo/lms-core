@@ -46,7 +46,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
   return (
     <FormProvider {...methods}>
       <form
-        className="w-full flex flex-col gap-y-4"
+        className="flex w-full flex-col gap-y-4"
         onSubmit={methods.handleSubmit(handleOnSubmit, () => {
           toast({
             variant: "destructive",
@@ -55,9 +55,9 @@ export const Quiz = ({ lesson }: QuizProps) => {
         })}
       >
         <Questions questions={questions} isQuizCompleted={lesson.quizCompleted} />
-        <Button type="submit" className="flex gap-x-2 items-center self-end">
+        <Button type="submit" className="flex items-center gap-x-2 self-end">
           <span>{t("studentLessonView.button.submit")}</span>
-          <Icon name="ArrowRight" className="w-4 h-auto" />
+          <Icon name="ArrowRight" className="h-auto w-4" />
         </Button>
       </form>
     </FormProvider>

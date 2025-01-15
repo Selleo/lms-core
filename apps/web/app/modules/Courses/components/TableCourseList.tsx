@@ -26,15 +26,15 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
   return (
     <Table className="w-full">
       <TableHeader>
-        <TableRow className="bg-neutral-50 border-none">
-          <TableHead className="w-24 text-sm font-medium text-neutral-950 rounded-s-lg">
+        <TableRow className="border-none bg-neutral-50">
+          <TableHead className="w-24 rounded-s-lg text-sm font-medium text-neutral-950">
             Image
           </TableHead>
           <TableHead className="text-sm font-medium text-neutral-950">Course Name</TableHead>
-          <TableHead className="text-sm font-medium text-neutral-950 hidden md:table-cell">
+          <TableHead className="hidden text-sm font-medium text-neutral-950 md:table-cell">
             Category
           </TableHead>
-          <TableHead className="text-sm font-medium text-neutral-950 hidden lg:table-cell">
+          <TableHead className="hidden text-sm font-medium text-neutral-950 lg:table-cell">
             Description
           </TableHead>
           <TableHead className="w-28 rounded-e-lg"></TableHead>
@@ -52,31 +52,31 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
             enrolled = false,
             priceInCents,
           }) => (
-            <TableRow key={id} className="group hover:bg-primary-50 border-none">
-              <TableCell className="p-4 rounded-s-lg">
+            <TableRow key={id} className="hover:bg-primary-50 group border-none">
+              <TableCell className="rounded-s-lg p-4">
                 <img
                   src={thumbnailUrl || "https://placehold.co/600x400/png"}
                   alt={title}
                   loading="eager"
                   decoding="async"
-                  className="w-16 h-12 object-cover rounded-lg"
+                  className="h-12 w-16 rounded-lg object-cover"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = CardPlaceholder;
                   }}
                 />
               </TableCell>
               <TableCell className="p-4 font-medium">{title}</TableCell>
-              <TableCell className="p-4 hidden md:table-cell">
+              <TableCell className="hidden p-4 md:table-cell">
                 <CategoryChip
                   category={category}
                   className="bg-primary-50 group-hover:bg-white"
                   color="text-primary-950"
                 />
               </TableCell>
-              <TableCell className="p-4 max-w-xs truncate hidden lg:table-cell">
+              <TableCell className="hidden max-w-xs truncate p-4 lg:table-cell">
                 {description}
               </TableCell>
-              <TableCell className="p-4 rounded-e-lg">
+              <TableCell className="rounded-e-lg p-4">
                 <Link to={`/course/${id}`} className="block w-full">
                   <CourseCardButton
                     enrolled={enrolled}

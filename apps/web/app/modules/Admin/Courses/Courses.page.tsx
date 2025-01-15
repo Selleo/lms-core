@@ -205,7 +205,7 @@ const Courses = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex gap-3 ml-auto">
+      <div className="ml-auto flex gap-3">
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger>
@@ -216,7 +216,7 @@ const Courses = () => {
             <TooltipContent
               side="top"
               align="center"
-              className="bg-black text-white text-sm px-2 py-1 rounded shadow-md"
+              className="rounded bg-black px-2 py-1 text-sm text-white shadow-md"
             >
               {t("common.tooltip.soon")}
             </TooltipContent>

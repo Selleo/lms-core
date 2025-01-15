@@ -52,10 +52,10 @@ export const CourseProgressChart = ({
   const isEmptyChart = chartData.every(({ chaptersCount }) => !chaptersCount);
 
   return (
-    <div className="grid place-items-center h-full">
+    <div className="grid h-full place-items-center">
       <ChartContainer
         config={chartConfig}
-        className="mx-auto aspect-square max-h-[250px] size-full"
+        className="mx-auto aspect-square size-full max-h-[250px]"
       >
         <PieChart>
           {!isEmptyChart && (

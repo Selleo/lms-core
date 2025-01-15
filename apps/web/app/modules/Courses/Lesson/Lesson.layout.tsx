@@ -30,13 +30,13 @@ export default function LessonLayout() {
 
   return (
     <div className="flex min-h-dvh flex-col">
-      <div className="flex flex-1 flex-col 2xl:flex-row overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden 2xl:flex-row">
         <Navigation
           menuItems={mapNavigationItems(
             getNavigationConfig(currentUser?.id ?? "", currentUser?.role === "user", t),
           )}
         />
-        <main className="flex-1 overflow-y-auto bg-primary-50">
+        <main className="bg-primary-50 flex-1 overflow-y-auto">
           <RouteGuard>
             <Outlet />
           </RouteGuard>

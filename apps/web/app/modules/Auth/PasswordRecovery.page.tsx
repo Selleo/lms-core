@@ -40,13 +40,13 @@ export default function PasswordRecoveryPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-12 px-4">
+    <div className="flex min-h-screen flex-col items-center justify-center px-4 py-12">
       <div className="mx-auto w-full max-w-md space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight">
             {t("forgotPasswordView.header")}
           </h2>
-          <p className="mt-2 text-center text-sm text-muted-foreground">
+          <p className="text-muted-foreground mt-2 text-center text-sm">
             {t("forgotPasswordView.subHeader")}
           </p>
         </div>
@@ -61,14 +61,14 @@ export default function PasswordRecoveryPage() {
               className={cn({ "border-red-500": errors.email })}
               {...register("email")}
             />
-            {errors.email && <div className="text-red-500 text-sm">{errors.email.message}</div>}
+            {errors.email && <div className="text-sm text-red-500">{errors.email.message}</div>}
           </div>
           <Button type="submit" className="w-full">
             {t("forgotPasswordView.button.resetPassword")}
           </Button>
         </form>
         <div className="flex justify-center">
-          <Link to="/auth/login" className="text-sm font-medium text-muted-foreground">
+          <Link to="/auth/login" className="text-muted-foreground text-sm font-medium">
             {t("forgotPasswordView.button.backToLogin")}
           </Link>
         </div>

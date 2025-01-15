@@ -31,11 +31,11 @@ const Editor = ({ content, placeholder, onChange, id, className }: EditorProps) 
   if (!editor) return <></>;
 
   return (
-    <div className="prose max-w-none w-full border border-neutral-300 overflow-hidden rounded-lg bg-background dark:prose-invert [&_.ProseMirror]:leading-tight">
+    <div className="prose bg-background dark:prose-invert w-full max-w-none overflow-hidden rounded-lg border border-neutral-300 [&_.ProseMirror]:leading-tight">
       <EditorToolbar editor={editor} />
       <div
         className={cn(
-          "min-h-[200px] max-h-[600px] overflow-auto resize-y relative [&_.ProseMirror]:min-h-full [&_.ProseMirror]:max-h-full",
+          "relative max-h-[600px] min-h-[200px] resize-y overflow-auto [&_.ProseMirror]:max-h-full [&_.ProseMirror]:min-h-full",
           className,
         )}
       >

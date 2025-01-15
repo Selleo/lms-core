@@ -23,8 +23,8 @@ const CourseCardButton = ({
   const getButtonLabel = (enrolled: boolean, isAdmin: boolean) => {
     if (enrolled) {
       return (
-        <span className="flex gap-x-2 items-center">
-          <Icon name="ArrowRight" className="w-4 h-4 text-white" />{" "}
+        <span className="flex items-center gap-x-2">
+          <Icon name="ArrowRight" className="h-4 w-4 text-white" />{" "}
           {t("clientStatisticsView.button.continue")}
         </span>
       );

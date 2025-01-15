@@ -40,7 +40,7 @@ const CourseCard = ({
     <Link
       to={isScormCreatePage ? "#" : `/course/${id}`}
       className={cn(
-        "flex flex-col w-full max-w-[320px] overflow-hidden rounded-lg transition hover:shadow-primary h-auto bg-white lg:bg-none border",
+        "hover:shadow-primary flex h-auto w-full max-w-[320px] flex-col overflow-hidden rounded-lg border bg-white transition lg:bg-none",
         {
           "border-secondary-200 hover:border-secondary-500": enrolled,
           "border-primary-200 hover:border-primary-500": !enrolled,
@@ -53,12 +53,12 @@ const CourseCard = ({
           alt="Course"
           loading="eager"
           decoding="async"
-          className="w-full aspect-video object-cover rounded-t-lg"
+          className="aspect-video w-full rounded-t-lg object-cover"
           onError={(e) => {
             (e.target as HTMLImageElement).src = DefaultPhotoCourse;
           }}
         />
-        <div className="absolute top-4 left-4 flex flex-col gap-y-1 right-4">
+        <div className="absolute left-4 right-4 top-4 flex flex-col gap-y-1">
           <CategoryChip
             category={category}
             color={cn({
@@ -74,8 +74,8 @@ const CourseCard = ({
           )}
         </div>
       </div>
-      <div className={cn("flex flex-col flex-grow p-4")}>
-        <div className="flex flex-col flex-grow">
+      <div className={cn("flex flex-grow flex-col p-4")}>
+        <div className="flex flex-grow flex-col">
           {enrolled && (
             <CourseProgress
               label="Course progress:"
@@ -87,14 +87,14 @@ const CourseCard = ({
             <CourseCardTitle title={title} />
           </div>
           {authorEmail && (
-            <div className="flex items-center gap-x-1.5 mt-1 mb-2">
+            <div className="mb-2 mt-1 flex items-center gap-x-1.5">
               <Avatar className="h-4 w-4">
                 <Gravatar email={authorEmail} />
               </Avatar>
               <span className="text-neutral-950">{author}</span>
             </div>
           )}
-          <div className="text-neutral-500 text-sm flex-grow">
+          <div className="flex-grow text-sm text-neutral-500">
             <span className="line-clamp-3">
               <div dangerouslySetInnerHTML={{ __html: description }} />
             </span>

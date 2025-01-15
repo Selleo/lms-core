@@ -34,7 +34,7 @@ export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProp
   };
 
   return (
-    <div className="p-6 flex flex-col gap-8">
+    <div className="flex flex-col gap-8 p-6">
       <input
         type="file"
         accept=".zip"
@@ -44,29 +44,29 @@ export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProp
       />
       <label
         htmlFor="scorm-upload"
-        className="cursor-pointer block border-2 border-dashed rounded-lg p-12 text-center hover:border-primary transition-colors"
+        className="hover:border-primary block cursor-pointer rounded-lg border-2 border-dashed p-12 text-center transition-colors"
       >
         {file ? (
           <div className="space-y-2">
             <p className="font-medium">{file.name}</p>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {(file.size / (1024 * 1024)).toFixed(2)} MB
             </p>
           </div>
         ) : (
           <div className="space-y-2">
             <p className="font-medium">{t("adminScorm.other.uploadFileHeader")}</p>
-            <p className="text-sm text-muted-foreground">{t("adminScorm.other.uploadFileBody")}</p>
+            <p className="text-muted-foreground text-sm">{t("adminScorm.other.uploadFileBody")}</p>
           </div>
         )}
       </label>
 
       {errors.scorm?.file && (
-        <p className="mt-2 text-sm text-destructive">{errors.scorm.file.message}</p>
+        <p className="text-destructive mt-2 text-sm">{errors.scorm.file.message}</p>
       )}
       <div className="flex gap-3">
         <Button variant="outline" onClick={() => navigate(-1)}>
-          <Icon name="ArrowRight" className="w-4 h-4 mr-2 rotate-180" />
+          <Icon name="ArrowRight" className="mr-2 h-4 w-4 rotate-180" />
           <span>{t("common.button.cancel")}</span>
         </Button>
         <Button onClick={handleNext}>{t("adminScorm.other.setUpCourse")}</Button>

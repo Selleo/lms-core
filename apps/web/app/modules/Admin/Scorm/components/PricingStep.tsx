@@ -26,35 +26,35 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
       >
         <div className="space-y-4">
           <Card
-            className={cn("pl-4 flex items-start space-x-4", {
+            className={cn("flex items-start space-x-4 pl-4", {
               "bg-primary-50 border-primary-500": pricingType === "free",
             })}
           >
             <RadioGroupItem value="free" id="free" className="my-5" />
             <Label
               htmlFor="free"
-              className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
+              className="flex size-full flex-1 cursor-pointer flex-col gap-2 py-4"
             >
-              <div className="font-medium text-lg">{t("adminScorm.other.free")}</div>
+              <div className="text-lg font-medium">{t("adminScorm.other.free")}</div>
               <div className="text-sm font-normal">{t("adminScorm.other.freeCourseBody")}</div>
             </Label>
           </Card>
 
           <Card
-            className={cn("px-4 flex items-start space-x-4", {
+            className={cn("flex items-start space-x-4 px-4", {
               "bg-primary-50 border-primary-500": pricingType === "paid",
             })}
           >
             <RadioGroupItem value="paid" id="paid" className="my-5" />
             <div className="flex flex-col py-4">
-              <Label htmlFor="paid" className="flex-1 gap-2 flex flex-col cursor-pointer size-full">
-                <div className="font-medium text-lg">{t("adminScorm.other.paidCourse")}</div>
+              <Label htmlFor="paid" className="flex size-full flex-1 cursor-pointer flex-col gap-2">
+                <div className="text-lg font-medium">{t("adminScorm.other.paidCourse")}</div>
                 <div className="text-sm font-normal">{t("adminScorm.other.paidCourseBody")}</div>
               </Label>
 
               {pricingType === "paid" && (
                 <>
-                  <Label className="text-sm font-medium mt-6" htmlFor="price">
+                  <Label className="mt-6 text-sm font-medium" htmlFor="price">
                     <span className="text-destructive">*</span> {t("adminScorm.field.price")}
                   </Label>
                   <div className="relative">
@@ -66,7 +66,7 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
                       placeholder={t("adminScorm.placeholder.price")}
                       type="number"
                     />
-                    <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4 uppercase">
+                    <span className="absolute right-0 top-1/2 -translate-x-4 -translate-y-1/2 uppercase">
                       {currency}
                     </span>
                   </div>

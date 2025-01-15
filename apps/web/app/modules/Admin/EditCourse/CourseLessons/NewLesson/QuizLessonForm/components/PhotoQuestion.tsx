@@ -131,7 +131,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
-        <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
+        <div className="mt-3 rounded-xl border-0 p-2 transition-all duration-300">
           <div className="ml-14">
             <FormField
               control={form.control}
@@ -139,7 +139,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
               render={({ field }) => (
                 <FormItem className="mt-5 w-1/3">
                   <Label htmlFor="imageUrl" className="body-base-md">
-                    <span className="text-red-500 mr-1">*</span>
+                    <span className="mr-1 text-red-500">*</span>
                     {t("adminCourseView.curriculum.lesson.field.options")}
                   </Label>
                   <FormControl>
@@ -152,7 +152,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                   </FormControl>
                   {isUploading && <p>{t("common.other.uploadingImage")}</p>}
                   {errors?.questions?.[questionIndex]?.photoS3Key && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-sm text-red-500">
                       {errors?.questions?.[questionIndex]?.photoS3Key?.message}
                     </p>
                   )}
@@ -164,9 +164,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
               control={form.control}
               name={`questions.${questionIndex}.type`}
               render={({ field }) => (
-                <FormItem className="w-1/3 mt-4">
+                <FormItem className="mt-4 w-1/3">
                   <Label htmlFor="type" className="body-base-md">
-                    <span className="text-red-500 mr-1">*</span>
+                    <span className="mr-1 text-red-500">*</span>
                     {t("adminCourseView.curriculum.lesson.field.type")}
                   </Label>
                   <FormControl>
@@ -178,13 +178,13 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                     >
                       <SelectTrigger>
                         <SelectValue
-                          className="text-left body-base-md"
+                          className="body-base-md text-left"
                           placeholder={t(
                             "adminCourseView.curriculum.lesson.placeholder.singleChoice",
                           )}
                         />
                         <SelectValue
-                          className="text-left body-base-md"
+                          className="body-base-md text-left"
                           placeholder={t(
                             "adminCourseView.curriculum.lesson.placeholder.multipleChoice",
                           )}
@@ -193,13 +193,13 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                       <SelectContent>
                         <SelectItem
                           value={QuestionType.PHOTO_QUESTION_SINGLE_CHOICE}
-                          className="text-left body-base-md"
+                          className="body-base-md text-left"
                         >
                           {t("adminCourseView.curriculum.lesson.placeholder.singleChoice")}
                         </SelectItem>
                         <SelectItem
                           value={QuestionType.PHOTO_QUESTION_MULTIPLE_CHOICE}
-                          className="text-left body-base-md"
+                          className="body-base-md text-left"
                         >
                           {t("adminCourseView.curriculum.lesson.placeholder.multipleChoice")}
                         </SelectItem>
@@ -214,7 +214,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
           <div className="ml-14 mt-4">
             {!isOptionEmpty && (
               <>
-                <span className="text-red-500 mr-1">*</span>
+                <span className="mr-1 text-red-500">*</span>
                 <Label className="body-sm-md">
                   {t("adminCourseView.curriculum.lesson.field.options")}
                 </Label>
@@ -233,9 +233,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 renderItem={(item, index: number) => (
                   <SortableList.Item id={item.displayOrder}>
                     <div className="mt-2">
-                      <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                         <SortableList.DragHandle>
-                          <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
+                          <Icon name="DragAndDropIcon" className="ml-4 mr-3 cursor-move" />
                         </SortableList.DragHandle>
                         <Input
                           name={`questions.${questionIndex}.options.${index}.optionText`}
@@ -252,7 +252,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                           {questionType === QuestionType.PHOTO_QUESTION_SINGLE_CHOICE ? (
                             <Input
                               type="radio"
-                              className="w-4 h-4 cursor-pointer"
+                              className="h-4 w-4 cursor-pointer"
                               name={`questions.${questionIndex}.options.${index}.isCorrect`}
                               checked={item.isCorrect}
                               onChange={() =>
@@ -275,7 +275,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
 
                           <Label
                             onClick={() => handleOptionChange(index, "isCorrect", !item.isCorrect)}
-                            className="ml-2 align-middle body-sm text-neutral-950 cursor-pointer"
+                            className="body-sm ml-2 cursor-pointer align-middle text-neutral-950"
                           >
                             {t("adminCourseView.curriculum.lesson.other.correct")}
                           </Label>
@@ -285,7 +285,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                                 <div className="group">
                                   <Icon
                                     name="TrashIcon"
-                                    className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
+                                    className="text-error-500 bg-error-50 group-hover:bg-error-600 ml-3 h-7 w-7 cursor-pointer rounded-lg p-1 group-hover:text-white"
                                     onClick={() => handleRemoveOption(index)}
                                   />
                                 </div>
@@ -293,7 +293,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                               <TooltipContent
                                 side="top"
                                 align="center"
-                                className="bg-black ml-4 text-white text-sm rounded shadow-md"
+                                className="ml-4 rounded bg-black text-sm text-white shadow-md"
                               >
                                 {t("common.button.delete")}
                               </TooltipContent>
@@ -308,11 +308,11 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             )}
           </div>
           {errors?.questions?.[questionIndex] && (
-            <p className="text-red-500 text-sm ml-14">
+            <p className="ml-14 text-sm text-red-500">
               {errors?.questions?.[questionIndex]?.options?.message}
             </p>
           )}
-          <div className="mt-4 flex gap-2 mb-4 ml-14">
+          <div className="mb-4 ml-14 mt-4 flex gap-2">
             <Button className="bg-primary-700" type="button" onClick={handleAddOption}>
               {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>

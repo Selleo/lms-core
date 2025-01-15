@@ -52,7 +52,7 @@ export const Badge = ({
   return (
     <div
       className={cn(badgeVariants({ variant, outline }), className, {
-        "flex shrink-0 items-center h-min text-sm font-medium rounded-lg px-2 py-1 gap-x-2":
+        "flex h-min shrink-0 items-center gap-x-2 rounded-lg px-2 py-1 text-sm font-medium":
           children,
       })}
       {...props}

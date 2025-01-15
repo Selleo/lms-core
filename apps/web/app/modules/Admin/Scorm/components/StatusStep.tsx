@@ -77,31 +77,31 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
       >
         <div className="space-y-4">
           <Card
-            className={cn("px-4 flex items-start space-x-4", {
+            className={cn("flex items-start space-x-4 px-4", {
               "bg-primary-50 border-primary-500": status === "draft",
             })}
           >
             <RadioGroupItem value="draft" id="draft" className="my-5" />
             <Label
               htmlFor="draft"
-              className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
+              className="flex size-full flex-1 cursor-pointer flex-col gap-2 py-4"
             >
-              <div className="font-medium text-lg">{t("common.other.draft")}</div>
+              <div className="text-lg font-medium">{t("common.other.draft")}</div>
               <div className="text-sm font-normal">{t("adminScorm.other.draftBody")}</div>
             </Label>
           </Card>
 
           <Card
-            className={cn("px-4 flex items-start space-x-4", {
+            className={cn("flex items-start space-x-4 px-4", {
               "bg-primary-50 border-primary-500": status === "published",
             })}
           >
             <RadioGroupItem value="published" id="published" className="my-5" />
             <Label
               htmlFor="published"
-              className="flex-1 gap-2 flex flex-col cursor-pointer size-full py-4"
+              className="flex size-full flex-1 cursor-pointer flex-col gap-2 py-4"
             >
-              <div className="font-medium text-lg">{t("common.other.publish")}</div>
+              <div className="text-lg font-medium">{t("common.other.publish")}</div>
               <div className="text-sm font-normal">{t("adminScorm.other.publishBody")}</div>
             </Label>
           </Card>

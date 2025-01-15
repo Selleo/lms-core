@@ -264,7 +264,7 @@ const QuizLessonForm = ({
 
   return (
     <div className="w-full max-w-full">
-      <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-8">
+      <div className="w-full max-w-full rounded-lg bg-white p-8 shadow-lg">
         {!lessonToEdit && (
           <Breadcrumb
             lessonLabel="Quiz"
@@ -272,7 +272,7 @@ const QuizLessonForm = ({
             setSelectedLesson={setSelectedLesson}
           />
         )}
-        <div className="h5 text-neutral-950 mb-6">
+        <div className="h5 mb-6 text-neutral-950">
           {lessonToEdit ? (
             <>
               <span className="text-neutral-600">
@@ -292,7 +292,7 @@ const QuizLessonForm = ({
               render={({ field }) => (
                 <FormItem>
                   <Label htmlFor="title" className="body-base-md">
-                    <span className="text-red-500 mr-1">*</span>
+                    <span className="mr-1 text-red-500">*</span>
                     {t("adminCourseView.curriculum.lesson.field.title")}
                   </Label>
                   <FormControl>
@@ -304,7 +304,7 @@ const QuizLessonForm = ({
             />
             <div className="mt-5">
               <Label className="body-base-md">
-                <span className="text-red-500 mr-1 body-base-md">*</span>{" "}
+                <span className="body-base-md mr-1 text-red-500">*</span>{" "}
                 {t("adminCourseView.curriculum.lesson.field.questions")}
                 <span className="text-neutral-600"> ({questions?.length || 0})</span>
               </Label>
@@ -335,7 +335,7 @@ const QuizLessonForm = ({
             )}
 
             <QuestionSelector addQuestion={addQuestion} />
-            <div className="flex space-x-4 mt-4">
+            <div className="mt-4 flex space-x-4">
               <Button type="submit" className="bg-primary-700">
                 {t("common.button.save")}
               </Button>
