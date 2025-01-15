@@ -15,6 +15,9 @@
       "ignore": "Ignoruj",
       "validate": "Waliduj"
     },
+    "tooltip": {
+      "soon": "Dostępne wkrótce"
+    },
     "roles": {
       "admin": "Administrator",
       "teacher": "Nauczyciel",

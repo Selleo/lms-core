@@ -15,6 +15,9 @@
       "clearAll": "Clear All",
       "validate": "Validate"
     },
+    "tooltip": {
+      "soon": "Cooming soon"
+    },
     "roles": {
       "admin": "Admin",
       "teacher": "Teacher",
