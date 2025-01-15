@@ -15,7 +15,7 @@ interface EmptyStateUploadProps {
 
 const contentTypeFormats = {
   [ContentTypes.VIDEO_LESSON_FORM]: "MP4, MOV, MPEG-2, or Hevc (max. 100MB)",
-  [ContentTypes.PRESENTATION_FORM]: "PPT/PPTX, KEY, ODP, or PDF (max. 100MB)",
+  [ContentTypes.PRESENTATION_FORM]: "PPT/PPTX (max. 100MB)",
 };
 
 const EmptyStateUpload = ({
@@ -36,7 +36,9 @@ const EmptyStateUpload = ({
           <span className="text-primary-700">{t("uploadFile.header")}</span>{" "}
           <span className="text-neutral-950">{t("uploadFile.subHeader")}</span>
         </div>
-        <div className="details text-neutral-600">{contentTypeFormats[contentTypeToDisplay]}</div>
+        <div className="details text-center text-neutral-600">
+          {contentTypeFormats[contentTypeToDisplay]}
+        </div>
       </div>
       <input
         type="file"
