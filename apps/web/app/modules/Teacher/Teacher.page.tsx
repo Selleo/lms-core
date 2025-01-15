@@ -25,10 +25,10 @@ export default function TeacherPage() {
         id={id}
         username={`${userDetails?.firstName} ${userDetails?.lastName}`}
       />
-      <div className="flex flex-col xl:flex-row gap-6">
-        <section className="flex flex-col xl:w-full xl:max-w-[480px] gap-y-6 p-6 bg-white rounded-t-2xl rounded-b-lg drop-shadow">
-          <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <Avatar className="w-20 h-20">
+      <div className="flex flex-col gap-6 xl:flex-row">
+        <section className="flex flex-col gap-y-6 rounded-b-lg rounded-t-2xl bg-white p-6 drop-shadow xl:w-full xl:max-w-[480px]">
+          <div className="flex flex-col gap-6 md:flex-row md:items-center">
+            <Avatar className="h-20 w-20">
               <Gravatar email={userDetails?.contactEmail || ""} />
             </Avatar>
             <div className="flex flex-col">
@@ -44,30 +44,30 @@ export default function TeacherPage() {
             </div>
           </div>
           <div className="flex flex-col gap-y-2">
-            <div className="flex gap-x-3 items-center">
+            <div className="flex items-center gap-x-3">
               <span className="text-neutral-900">{t("teacherView.other.about")}</span>
               <div className="bg-primary-200 h-[1px] w-full" />
             </div>
             <p className="body-base mt-2 text-neutral-950">{userDetails?.description}</p>
           </div>
-          <div className="flex xl:mt-auto flex-col gap-y-1 md:gap-y-4">
-            <div className="flex gap-x-3 items-center">
+          <div className="flex flex-col gap-y-1 md:gap-y-4 xl:mt-auto">
+            <div className="flex items-center gap-x-3">
               <span className="text-neutral-900">{t("teacherView.other.contact")}</span>
               <div className="bg-primary-200 h-[1px] w-full" />
             </div>
-            <div className="flex flex-col md:flex-row gap-3 md:*:w-full">
+            <div className="flex flex-col gap-3 md:flex-row md:*:w-full">
               <a
                 href={`tel:${userDetails?.contactPhone}`}
-                className="bg-primary-50 inline-flex gap-x-2 rounded-lg py-2 px-3 body-base-md text-primary-700"
+                className="bg-primary-50 body-base-md text-primary-700 inline-flex gap-x-2 rounded-lg px-3 py-2"
               >
-                <Icon name="Phone" className="w-6 h-6 text-neutral-900" />
+                <Icon name="Phone" className="h-6 w-6 text-neutral-900" />
                 <span>{userDetails?.contactPhone}</span>
               </a>
               <a
                 href={`mailto:${userDetails?.contactEmail}`}
-                className="bg-primary-50 inline-flex gap-x-2 rounded-lg py-2 px-3 body-base-md text-primary-700"
+                className="bg-primary-50 body-base-md text-primary-700 inline-flex gap-x-2 rounded-lg px-3 py-2"
               >
-                <Icon name="Email" className="w-6 h-6 text-neutral-900" />
+                <Icon name="Email" className="h-6 w-6 text-neutral-900" />
                 <span>{userDetails?.contactEmail}</span>
               </a>
             </div>
@@ -76,11 +76,11 @@ export default function TeacherPage() {
             {t("teacherView.button.collapse")}
           </Button>
         </section>
-        <section className="flex flex-col gap-y-6 p-6 bg-white rounded-t-2xl rounded-b-lg drop-shadow">
+        <section className="flex flex-col gap-y-6 rounded-b-lg rounded-t-2xl bg-white p-6 drop-shadow">
           <div className="flex flex-col gap-y-2">
             <h2 className="h5">{t("teacherView.other.courses")}</h2>
             <ButtonGroup
-              className="!w-full !max-w-none flex *:w-full md:!w-min"
+              className="flex !w-full !max-w-none *:w-full md:!w-min"
               buttons={[
                 {
                   children: "Courses",
@@ -95,7 +95,7 @@ export default function TeacherPage() {
             />
             {/*TODO: Add filters*/}
           </div>
-          <div className="flex flex-wrap lg:overflow-y-scroll lg:max-h-[calc(100dvh-260px)] gap-6 xl:gap-4 *:max-w-[250px]">
+          <div className="flex flex-wrap gap-6 *:max-w-[250px] lg:max-h-[calc(100dvh-260px)] lg:overflow-y-scroll xl:gap-4">
             {teacherCourses?.map((course) => <CourseCard key={course.id} {...course} />)}
           </div>
           <Button variant="outline" className="sr-only">

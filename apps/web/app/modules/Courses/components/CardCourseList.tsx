@@ -8,7 +8,7 @@ type CardCourseListProps = {
 
 export const CardCourseList = ({ availableCourses }: CardCourseListProps) => {
   return (
-    <div className="flex gap-6 flex-wrap *:h-auto">
+    <div className="flex flex-wrap gap-6 *:h-auto">
       {availableCourses &&
         availableCourses.map((course) => {
           if (course.enrolled) return null;

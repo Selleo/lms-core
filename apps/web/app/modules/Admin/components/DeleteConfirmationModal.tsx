@@ -43,9 +43,9 @@ const DeleteConfirmationModal = ({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogOverlay className="bg-primary-400 opacity-65" />
-      <DialogContent className="p-12 max-w-[40%]">
+      <DialogContent className="max-w-[40%] p-12">
         <div className="flex items-start gap-4">
-          <Icon name="Warning" className="text-red-500 h-5 w-5 mt-0.5" />
+          <Icon name="Warning" className="mt-0.5 h-5 w-5 text-red-500" />
           <div>
             <DialogTitle className="text-xl font-semibold text-neutral-900">
               {getDialogTitleText()}
@@ -56,16 +56,16 @@ const DeleteConfirmationModal = ({
                 : t("adminCourseView.curriculum.other.removeContentBody")}
             </DialogDescription>
 
-            <div className="flex gap-4 mt-8">
+            <div className="mt-8 flex gap-4">
               <Button
                 onClick={onDelete}
-                className="text-white bg-error-500 hover:bg-error-600 py-2 px-4 rounded"
+                className="bg-error-500 hover:bg-error-600 rounded px-4 py-2 text-white"
               >
                 {t("common.button.delete")}
               </Button>
               <Button
                 onClick={onClose}
-                className="text-primary-800 border border-neutral-300 bg-neutrals-200 py-2 px-4 rounded"
+                className="text-primary-800 bg-neutrals-200 rounded border border-neutral-300 px-4 py-2"
               >
                 {t("common.button.cancel")}
               </Button>

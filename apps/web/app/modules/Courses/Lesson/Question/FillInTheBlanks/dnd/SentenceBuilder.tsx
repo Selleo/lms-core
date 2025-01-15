@@ -11,7 +11,7 @@ export const SentenceBuilder: FC<FillInTheDndBlanksProps> = ({ content, replacem
   const parts = content?.split(/\[word]/g);
 
   return (
-    <div className="flex flex-wrap gap-y-2 text-neutral-900 body-base items-center">
+    <div className="body-base flex flex-wrap items-center gap-y-2 text-neutral-900">
       {parts?.map((part, index) => (
         <Fragment key={index}>
           <Viewer content={part} />

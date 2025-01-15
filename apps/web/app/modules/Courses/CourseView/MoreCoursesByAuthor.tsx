@@ -23,9 +23,9 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
   if (!teacherCourses?.length) return null;
 
   return (
-    <section className="flex flex-col gap-y-6 w-full h-full bg-white p-8 rounded-lg">
+    <section className="flex h-full w-full flex-col gap-y-6 rounded-lg bg-white p-8">
       <div className="flex flex-col">
-        <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
+        <h4 className="pb-1 text-2xl font-bold leading-10 text-neutral-950">
           {t("studentCourseView.otherAuthorCoursesHeader")} {teacherData?.firstName}{" "}
           {teacherData?.lastName}
         </h4>
@@ -33,7 +33,7 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
           {t("studentCourseView.otherAuthorCoursesSubheader")}
         </p>
       </div>
-      <div data-testid="enrolled-courses" className="flex gap-6 w-full">
+      <div data-testid="enrolled-courses" className="flex w-full gap-6">
         {!teacherCourses ||
           (isEmpty(teacherCourses) && (
             <div className="col-span-3 flex gap-8">
@@ -44,14 +44,14 @@ export const MoreCoursesByAuthor = ({ courseId, teacherId }: MoreCoursesByAuthor
                 <p className="text-lg font-bold leading-5 text-neutral-950">
                   {t("studentCourseView.other.cannotFindCourses")}
                 </p>
-                <p className="text-neutral-800 text-base leading-6 font-normal">
+                <p className="text-base font-normal leading-6 text-neutral-800">
                   {t("studentCourseView.other.changeSearchCriteria")}
                 </p>
               </div>
             </div>
           ))}
         {isLoading && (
-          <div className="flex justify-center items-center h-full">
+          <div className="flex h-full items-center justify-center">
             <Loader />
           </div>
         )}

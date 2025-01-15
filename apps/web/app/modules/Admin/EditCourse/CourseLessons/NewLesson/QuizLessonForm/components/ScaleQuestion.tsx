@@ -79,11 +79,11 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
   return (
     <Accordion key={questionIndex} type="single" collapsible>
       <AccordionItem value={`item-${questionIndex}`}>
-        <div className="p-2 mt-3 rounded-xl border-0 transition-all duration-300">
+        <div className="mt-3 rounded-xl border-0 p-2 transition-all duration-300">
           <div className="ml-14">
             {!isOptionEmpty ? (
               <>
-                <span className="text-red-500 mr-1">*</span>
+                <span className="mr-1 text-red-500">*</span>
                 <Label className="body-sm-md">
                   {t("adminCourseView.curriculum.lesson.field.options")}
                 </Label>
@@ -101,11 +101,11 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
                   <SortableList.Item id={item.displayOrder}>
-                    <div className="border mt-2 border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
+                    <div className="mt-2 flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                       <SortableList.DragHandle>
-                        <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
+                        <Icon name="DragAndDropIcon" className="ml-4 mr-3 cursor-move" />
                       </SortableList.DragHandle>
-                      <div className="flex items-center w-full gap-2">
+                      <div className="flex w-full items-center gap-2">
                         <Input
                           type="text"
                           name={`questions.${questionIndex}.options.${index}.optionText`}
@@ -150,7 +150,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                                 <div className="group">
                                   <Icon
                                     name="TrashIcon"
-                                    className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
+                                    className="text-error-500 bg-error-50 group-hover:bg-error-600 ml-3 h-7 w-7 cursor-pointer rounded-lg p-1 group-hover:text-white"
                                     onClick={() => handleRemoveOption(index)}
                                   />
                                 </div>
@@ -158,7 +158,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                               <TooltipContent
                                 side="top"
                                 align="center"
-                                className="bg-black ml-4 text-white text-sm rounded shadow-md"
+                                className="ml-4 rounded bg-black text-sm text-white shadow-md"
                               >
                                 {t("common.button.delete")}
                               </TooltipContent>
@@ -173,11 +173,11 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
             )}
           </div>
           {errors?.questions?.[questionIndex] && (
-            <p className="text-red-500 text-sm ml-14">
+            <p className="ml-14 text-sm text-red-500">
               {errors?.questions?.[questionIndex]?.options?.message}
             </p>
           )}
-          <div className="mt-4 ml-14 flex gap-2">
+          <div className="ml-14 mt-4 flex gap-2">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
               {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>

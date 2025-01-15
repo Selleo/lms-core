@@ -40,7 +40,7 @@ const QuestionWrapper = ({
       <AccordionItem value={`item-${questionIndex}`}>
         <div
           className={cn(
-            "border p-2 mt-4 rounded-xl transition-all duration-300",
+            "mt-4 rounded-xl border p-2 transition-all duration-300",
             errors?.questions?.[questionIndex]
               ? "border-red-500"
               : isOpen && !isOpenQuestion

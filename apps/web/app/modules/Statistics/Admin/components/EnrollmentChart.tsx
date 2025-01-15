@@ -48,33 +48,33 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
 
   if (isLoading) {
     return (
-      <div className="w-full bg-white rounded-lg gap-4 md:col-span-2 drop-shadow-card p-8 flex flex-col">
-        <hgroup className="gap-y-[5px] flex flex-col items-center py-3">
+      <div className="drop-shadow-card flex w-full flex-col gap-4 rounded-lg bg-white p-8 md:col-span-2">
+        <hgroup className="flex flex-col items-center gap-y-[5px] py-3">
           <Skeleton className="h-6 w-[240px] rounded-lg" />
-          <Skeleton className="w-40 h-4 rounded-lg" />
+          <Skeleton className="h-4 w-40 rounded-lg" />
         </hgroup>
-        <div className="w-full h-[273px] flex gap-x-2 items-center">
-          <div className="flex flex-col gap-y-4 h-full mt-6">
+        <div className="flex h-[273px] w-full items-center gap-x-2">
+          <div className="mt-6 flex h-full flex-col gap-y-4">
             {Array.from({ length: 10 }).map((_, index) => (
               <Skeleton key={index} className="h-2 w-3 rounded-lg" />
             ))}
           </div>
-          <div className="flex flex-col gap-y-1 w-full">
-            <div className="flex flex-col w-full gap-y-[23px] relative">
+          <div className="flex w-full flex-col gap-y-1">
+            <div className="relative flex w-full flex-col gap-y-[23px]">
               {Array.from({ length: 10 }).map((_, index) => (
                 <Skeleton key={index} className="h-[1px] w-full" />
               ))}
-              <div className="absolute flex bottom-0 left-2 w-full justify-between">
+              <div className="absolute bottom-0 left-2 flex w-full justify-between">
                 {Array.from({ length: 12 }).map((_, index) => (
                   <div key={index} className={cn("flex gap-x-1", { "hidden md:flex": index > 5 })}>
                     {Array.from({ length: 2 }).map((_, index) => (
-                      <Skeleton key={index} className="w-3 h-[132px] rounded-lg" />
+                      <Skeleton key={index} className="h-[132px] w-3 rounded-lg" />
                     ))}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="flex w-full ml-2 justify-between">
+            <div className="ml-2 flex w-full justify-between">
               {Array.from({ length: 12 }).map((_, index) => (
                 <Skeleton
                   key={index}
@@ -84,28 +84,28 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
             </div>
           </div>
         </div>
-        <div className="flex gap-2 justify-center">
-          <Skeleton className="w-[126px] h-[27px] rounded-lg" />
-          <Skeleton className="w-[126px] h-[27px] rounded-lg" />
+        <div className="flex justify-center gap-2">
+          <Skeleton className="h-[27px] w-[126px] rounded-lg" />
+          <Skeleton className="h-[27px] w-[126px] rounded-lg" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-8 bg-white flex flex-col rounded-lg gap-y-6 drop-shadow-card md:col-span-2 size-full">
+    <div className="drop-shadow-card flex size-full flex-col gap-y-6 rounded-lg bg-white p-8 md:col-span-2">
       <hgroup>
-        <h2 className="body-lg-md text-neutral-950 text-center">
+        <h2 className="body-lg-md text-center text-neutral-950">
           {t("enrollmentChartView.header")}
         </h2>
         <p className="body-sm-md text-center text-neutral-800">
           {t("enrollmentChartView.subHeader")}
         </p>
       </hgroup>
-      <div className="grid mt-2 place-items-center h-full">
+      <div className="mt-2 grid h-full place-items-center">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[224px] w-full h-full"
+          className="mx-auto aspect-square h-full max-h-[224px] w-full"
         >
           <BarChart accessibilityLayer data={parsedData} margin={{ left: -28 }} barCategoryGap={12}>
             <Customized
@@ -138,7 +138,7 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
           </BarChart>
         </ChartContainer>
       </div>
-      <div className="flex gap-2 justify-center">
+      <div className="flex justify-center gap-2">
         <ChartLegendBadge
           label={t("enrollmentChartView.other.enrollments")}
           dotColor={chartConfig.newStudentsCount.color}

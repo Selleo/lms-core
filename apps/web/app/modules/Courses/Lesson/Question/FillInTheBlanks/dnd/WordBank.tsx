@@ -26,7 +26,7 @@ export const WordBank = ({ words }: WordBankProps) => {
     <SortableContext id="blank_preset" items={words} strategy={horizontalListSortingStrategy}>
       <div className="mt-5">
         {t("studentLessonView.other.answers")}
-        <div className="flex items-center flex-wrap min-h-12 rounded-lg min-w-20 gap-2">
+        <div className="flex min-h-12 min-w-20 flex-wrap items-center gap-2 rounded-lg">
           {draggableWords}
         </div>
       </div>

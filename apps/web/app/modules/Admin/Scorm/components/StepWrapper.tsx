@@ -25,13 +25,13 @@ export function StepWrapper({ title, description, children }: PropsWithChildren<
     <div className="space-y-6">
       <div>
         <Button size="sm" variant="outline" onClick={() => navigate(-1)}>
-          <Icon name="ArrowRight" className="w-4 h-4 mr-2 rotate-180" />
+          <Icon name="ArrowRight" className="mr-2 h-4 w-4 rotate-180" />
           <span>{t("adminScorm.button.back")}</span>
         </Button>
       </div>
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold text-neutral-950">{title}</h1>
-        <p className="text-neutral-800 text-lg">{description}</p>
+        <p className="text-lg text-neutral-800">{description}</p>
       </div>
       <Progress currentStep={currentStep} steps={SCORM_CONFIG} />
       {children}

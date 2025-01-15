@@ -62,10 +62,10 @@ export const LessonContent = ({
   };
 
   return (
-    <div className="flex flex-col py-6 h-full w-full items-center">
-      <div className="flex flex-col h-full gap-y-8 px-8 3xl:p-0 3xl:max-w-[1024px] w-full">
+    <div className="flex h-full w-full flex-col items-center py-6">
+      <div className="3xl:p-0 3xl:max-w-[1024px] flex h-full w-full flex-col gap-y-8 px-8">
         <div className="flex w-full items-end">
-          <div className="flex flex-col gap-y-2 w-full">
+          <div className="flex w-full flex-col gap-y-2">
             <p className="body-sm-md text-neutral-800">
               {t("studentLessonView.other.lesson")} {lesson.displayOrder}/{lessonsAmount} -{" "}
               {startCase(lesson.type)}
@@ -75,7 +75,7 @@ export const LessonContent = ({
           <div className="flex gap-x-3">
             {!isFirstLesson && (
               <Button variant="outline" className="gap-x-1" onClick={handlePrevious}>
-                <Icon name="ArrowRight" className="rotate-180 w-4 h-auto" />
+                <Icon name="ArrowRight" className="h-auto w-4 rotate-180" />
                 <span>{t("studentLessonView.button.previous")}</span>
               </Button>
             )}
@@ -86,7 +86,7 @@ export const LessonContent = ({
               // disabled={isNextDisabled}
               onClick={handleMarkLessonAsComplete}
             >
-              <Icon name="ArrowRight" className="w-4 h-auto" />
+              <Icon name="ArrowRight" className="h-auto w-4" />
               <span>
                 {isLastLesson
                   ? t("studentLessonView.button.complete")

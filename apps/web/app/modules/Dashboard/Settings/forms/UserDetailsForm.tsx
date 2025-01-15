@@ -69,13 +69,13 @@ export default function UserForm() {
               {...(currentUserDetails?.description && {
                 defaultValue: currentUserDetails.description,
               })}
-              className={cn("resize-none min-h-[150px]", {
+              className={cn("min-h-[150px] resize-none", {
                 "border-red-500 focus:!ring-red-500": errors.description,
               })}
               {...register("description")}
             />
             {errors.description && (
-              <p className="text-red-500 text-xs mt-1">{errors.description.message}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.description.message}</p>
             )}
           </div>
           <div>
@@ -91,7 +91,7 @@ export default function UserForm() {
               {...register("contactEmail")}
             />
             {errors.contactEmail && (
-              <p className="text-red-500 text-xs mt-1">{errors.contactEmail.message}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.contactEmail.message}</p>
             )}
           </div>
           <div>
@@ -109,7 +109,7 @@ export default function UserForm() {
               {...register("contactPhoneNumber")}
             />
             {errors.contactPhoneNumber && (
-              <p className="text-red-500 text-xs mt-1">{errors.contactPhoneNumber.message}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.contactPhoneNumber.message}</p>
             )}
           </div>
           <div>
@@ -125,7 +125,7 @@ export default function UserForm() {
               {...register("jobTitle")}
             />
             {errors.jobTitle && (
-              <p className="text-red-500 text-xs mt-1">{errors.jobTitle.message}</p>
+              <p className="mt-1 text-xs text-red-500">{errors.jobTitle.message}</p>
             )}
           </div>
         </CardContent>

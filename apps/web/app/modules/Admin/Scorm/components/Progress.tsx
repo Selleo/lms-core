@@ -10,7 +10,7 @@ interface ProgressProps {
 
 export const Progress = ({ currentStep, steps }: ProgressProps) => {
   return (
-    <div className="w-full flex items-center justify-between mb-8">
+    <div className="mb-8 flex w-full items-center justify-between">
       {steps.map((step, index) => {
         const state = (() => {
           if (currentStep === index) return "current";
@@ -24,7 +24,7 @@ export const Progress = ({ currentStep, steps }: ProgressProps) => {
           <div key={step.id} className={cn("flex items-center", { "flex-1": !isLastStep })}>
             <div
               className={cn(
-                "w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ease-in-out bg-primary-50 relative",
+                "bg-primary-50 relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ease-in-out",
                 {
                   "bg-secondary-50": state === "current",
                   "bg-success-50": state === "previous",
@@ -33,48 +33,48 @@ export const Progress = ({ currentStep, steps }: ProgressProps) => {
             >
               <div
                 className={cn(
-                  "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0",
+                  "absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300",
                   {
                     "opacity-100": state === "current",
                   },
                 )}
               >
-                <Icon name="InProgress" className="w-6 h-6" />
+                <Icon name="InProgress" className="h-6 w-6" />
               </div>
 
               <div
                 className={cn(
-                  "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0",
+                  "absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300",
                   {
                     "opacity-100": state === "previous",
                   },
                 )}
               >
-                <div className="text-success-600 border-2 border-success-600 rounded-full p-px w-6 h-6">
+                <div className="text-success-600 border-success-600 h-6 w-6 rounded-full border-2 p-px">
                   <Icon name="Checkmark" />
                 </div>
               </div>
 
               <div
                 className={cn(
-                  "absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0",
+                  "absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300",
                   {
                     "opacity-100": state === "upcoming",
                   },
                 )}
               >
-                <span className="text-sm font-medium text-primary-700">
+                <span className="text-primary-700 text-sm font-medium">
                   {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
             </div>
 
             {!isLastStep && (
-              <div className="flex-1 mx-4">
-                <div className="h-1 rounded-full bg-primary-100">
+              <div className="mx-4 flex-1">
+                <div className="bg-primary-100 h-1 rounded-full">
                   <div
                     className={cn(
-                      "h-full bg-success-200 transition-all duration-500 ease-in-out rounded-full",
+                      "bg-success-200 h-full rounded-full transition-all duration-500 ease-in-out",
                       {
                         "w-full": currentStep > index,
                         "w-0": currentStep <= index,

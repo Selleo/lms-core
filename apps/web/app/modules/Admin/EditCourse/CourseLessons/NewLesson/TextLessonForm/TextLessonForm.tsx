@@ -46,7 +46,7 @@ const TextLessonForm = ({
   };
 
   return (
-    <div className="flex flex-col gap-y-6 p-8 bg-white rounded-lg">
+    <div className="flex flex-col gap-y-6 rounded-lg bg-white p-8">
       <div className="flex flex-col gap-y-1">
         {!lessonToEdit && (
           <Breadcrumb
@@ -98,7 +98,7 @@ const TextLessonForm = ({
             )}
           />
           <div className="flex gap-x-3">
-            <Button type="submit" className="bg-primary-700 hover:bg-blue-600 text-white">
+            <Button type="submit" className="bg-primary-700 text-white hover:bg-blue-600">
               {t("common.button.save")}
             </Button>
             <Button
@@ -106,7 +106,7 @@ const TextLessonForm = ({
               onClick={
                 lessonToEdit ? onClickDelete : () => setContentTypeToDisplay(ContentTypes.EMPTY)
               }
-              className="bg-transparent text-red-500 border border-red-500 hover:bg-red-100"
+              className="border border-red-500 bg-transparent text-red-500 hover:bg-red-100"
             >
               {lessonToEdit ? t("common.button.delete") : t("common.button.cancel")}
             </Button>

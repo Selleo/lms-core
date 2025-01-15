@@ -22,17 +22,17 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
 
   const isFree = watch("isFree");
   return (
-    <div className="flex flex-col p-8 w-full gap-y-6 bg-white max-w-[744px]">
+    <div className="flex w-full max-w-[744px] flex-col gap-y-6 bg-white p-8">
       <div className="flex flex-col gap-y-1.5">
         <h5 className="h5 text-neutral-950">{t("adminCourseView.pricing.header")}</h5>
-        <p className="text-neutral-900 body-base">{t("adminCourseView.pricing.subHeader")}</p>
+        <p className="body-base text-neutral-900">{t("adminCourseView.pricing.subHeader")}</p>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
           <div className="flex flex-col space-y-6">
             <Card
               className={cn(
-                "flex items-start gap-x-4 px-6 py-4 border rounded-md cursor-pointer w-[680px]",
+                "flex w-[680px] cursor-pointer items-start gap-x-4 rounded-md border px-6 py-4",
                 {
                   "bg-primary-50 border-primary-500": isFree === true,
                 },
@@ -45,12 +45,12 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                   name="isFree"
                   checked={isFree === true}
                   onChange={() => setValue("isFree", true)}
-                  className="p-1 w-4 h-4 cursor-pointer"
+                  className="h-4 w-4 cursor-pointer p-1"
                   id="isFree"
                 />
               </div>
-              <Label htmlFor="isFree" className="body-lg-md text-neutral-950 cursor-pointer">
-                <div className="body-lg-md text-neutral-950 mb-2">
+              <Label htmlFor="isFree" className="body-lg-md cursor-pointer text-neutral-950">
+                <div className="body-lg-md mb-2 text-neutral-950">
                   {t("adminCourseView.pricing.freeCourseHeader")}
                 </div>
                 <div
@@ -66,7 +66,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
 
             <Card
               className={cn(
-                "flex items-start gap-x-4 px-6 py-4 border rounded-md cursor-pointer w-[680px]",
+                "flex w-[680px] cursor-pointer items-start gap-x-4 rounded-md border px-6 py-4",
                 {
                   "bg-primary-50 border-primary-500": isFree === false,
                 },
@@ -79,13 +79,13 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                   name="isFree"
                   checked={isFree === false}
                   onChange={() => setValue("isFree", false)}
-                  className="p-1 w-4 h-4 pt-4 cursor-pointer"
+                  className="h-4 w-4 cursor-pointer p-1 pt-4"
                   id="isFree"
                 />
               </div>
               <div>
-                <Label htmlFor="paid" className={"body-lg-md text-neutral-950 cursor-pointer"}>
-                  <div className="body-lg-md text-neutral-950 mb-2 ">
+                <Label htmlFor="paid" className={"body-lg-md cursor-pointer text-neutral-950"}>
+                  <div className="body-lg-md mb-2 text-neutral-950">
                     {t("adminCourseView.pricing.paidCourseHeader")}
                   </div>
                   <div
@@ -119,7 +119,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                         })}
                         placeholder={t("adminCourseView.pricing.placeholder.amount")}
                         type="number"
-                        className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance]:textfield"
+                        className="[&::-moz-appearance]:textfield appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         onInput={(e) => {
                           const input = e.target as HTMLInputElement;
                           if (Number(input.value) <= 0) {
@@ -127,7 +127,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                           }
                         }}
                       />
-                      <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4 uppercase cursor-default">
+                      <span className="absolute right-0 top-1/2 -translate-x-4 -translate-y-1/2 cursor-default uppercase">
                         {currency}
                       </span>
                     </div>

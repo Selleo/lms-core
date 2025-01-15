@@ -85,7 +85,7 @@ export default function ClientStatistics() {
   return (
     <PageWrapper className="2xl:!pt-8">
       <div className="flex flex-col gap-y-6 2xl:gap-y-6">
-        <div className="gap-x-2 flex 2xl:gap-x-4 items-center">
+        <div className="flex items-center gap-x-2 2xl:gap-x-4">
           <p className="h5 2xl:h2 text-neutral-950">
             {t("clientStatisticsView.header")} {user?.firstName}
           </p>
@@ -93,9 +93,9 @@ export default function ClientStatistics() {
             <Gravatar email={user?.email} />
           </Avatar>
         </div>
-        <div className="grid items-center flex-col-reverse 2xl:grid-cols-[1fr_384px] grid-cols-1 gap-y-4 h-full gap-x-7 2xl:h-full">
-          <div className="w-full h-full gap-y-4 2xl:gap-x-4 2xl:gap-y-6 flex flex-col">
-            <div className="flex flex-wrap 2xl:flex-nowrap gap-4 w-full h-full">
+        <div className="grid h-full grid-cols-1 flex-col-reverse items-center gap-x-7 gap-y-4 2xl:h-full 2xl:grid-cols-[1fr_384px]">
+          <div className="flex h-full w-full flex-col gap-y-4 2xl:gap-x-4 2xl:gap-y-6">
+            <div className="flex h-full w-full flex-wrap gap-4 2xl:flex-nowrap">
               <ContinueLearningCard isLoading={isLoading} lesson={userStatistics?.nextLesson} />
               <AvgPercentScoreChart
                 label={`${userStatistics?.quizzes.averageScore}`}
@@ -112,7 +112,7 @@ export default function ClientStatistics() {
                 isLoading={isLoading}
               />
             </div>
-            <div className="flex flex-col 2xl:gap-x-4 2xl:flex-row w-full h-full gap-y-4">
+            <div className="flex h-full w-full flex-col gap-y-4 2xl:flex-row 2xl:gap-x-4">
               <RatesChart
                 resourceName={t("clientStatisticsView.other.courses")}
                 chartData={coursesRatesChartData}

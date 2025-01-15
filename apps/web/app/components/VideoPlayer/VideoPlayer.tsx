@@ -80,7 +80,7 @@ export const VideoPlayer = ({ url, onVideoEnded }: VideoPlayerProps) => {
       <div
         className={cn("absolute inset-0 bg-black transition-opacity duration-200", {
           "opacity-48": !isPlaying,
-          "opacity-0 group-hover:opacity-48": isPlaying,
+          "group-hover:opacity-48 opacity-0": isPlaying,
         })}
       />
 
@@ -97,19 +97,19 @@ export const VideoPlayer = ({ url, onVideoEnded }: VideoPlayerProps) => {
           onClick={handleSeek(-10)}
           className="relative rounded-full p-4 transition-transform duration-200 hover:scale-110"
         >
-          <div className="absolute inset-0 bg-white opacity-32 rounded-full" />
-          <SkipBack className="relative z-10 w-8 h-8 text-white" />
+          <div className="opacity-32 absolute inset-0 rounded-full bg-white" />
+          <SkipBack className="relative z-10 h-8 w-8 text-white" />
         </button>
 
         <button
           onClick={togglePlay}
           className="relative rounded-full p-4 transition-transform duration-200 hover:scale-110"
         >
-          <div className="absolute inset-0 bg-white opacity-32 rounded-full" />
+          <div className="opacity-32 absolute inset-0 rounded-full bg-white" />
           {isPlaying ? (
-            <Pause className="relative z-10 w-8 h-8 text-white" />
+            <Pause className="relative z-10 h-8 w-8 text-white" />
           ) : (
-            <Play className="relative z-10 w-8 h-8 text-white" />
+            <Play className="relative z-10 h-8 w-8 text-white" />
           )}
         </button>
 
@@ -117,8 +117,8 @@ export const VideoPlayer = ({ url, onVideoEnded }: VideoPlayerProps) => {
           onClick={handleSeek(10)}
           className="relative rounded-full p-4 transition-transform duration-200 hover:scale-110"
         >
-          <div className="absolute inset-0 bg-white opacity-32 rounded-full" />
-          <SkipForward className="relative z-10 w-8 h-8 text-white" />
+          <div className="opacity-32 absolute inset-0 rounded-full bg-white" />
+          <SkipForward className="relative z-10 h-8 w-8 text-white" />
         </button>
       </div>
     </div>

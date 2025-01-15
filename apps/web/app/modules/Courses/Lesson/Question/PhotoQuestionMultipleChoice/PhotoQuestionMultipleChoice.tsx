@@ -25,7 +25,7 @@ export const PhotoQuestionMultipleChoice = ({
       <img
         src={question.photoS3Key || "https://placehold.co/960x620/png"}
         alt=""
-        className="w-full h-auto max-w-[960px] rounded-lg"
+        className="h-auto w-full max-w-[960px] rounded-lg"
       />
       <MultipleChoiceOptionList
         options={question.options ?? []}
