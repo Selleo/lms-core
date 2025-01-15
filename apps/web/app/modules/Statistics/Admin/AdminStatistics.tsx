@@ -51,7 +51,7 @@ export const AdminStatistics = () => {
         fill: "var(--primary-300)",
       },
     ],
-    [totalCoursesCompletion, totalCourses],
+    [t, totalCoursesCompletion, totalCourses],
   );
 
   const conversionsChartConfig = {
@@ -78,7 +78,7 @@ export const AdminStatistics = () => {
         fill: "var(--primary-300)",
       },
     ],
-    [purchasedCourses, remainedOnFreemium],
+    [purchasedCourses, remainedOnFreemium, t],
   );
 
   const avgQuizScoreChartConfig = {
@@ -105,7 +105,7 @@ export const AdminStatistics = () => {
         fill: "var(--primary-300)",
       },
     ],
-    [],
+    [t],
   );
 
   return (

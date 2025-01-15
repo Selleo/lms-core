@@ -19,7 +19,7 @@ type CourseChapterProps = {
   enrolled: GetCourseResponse["data"]["enrolled"];
 };
 
-export const CourseChapter = ({ chapter, enrolled }: CourseChapterProps) => {
+export const CourseChapter = ({ chapter }: CourseChapterProps) => {
   const { t } = useTranslation();
   const lessonText = formatWithPlural(
     chapter.lessonCount ?? 0,
