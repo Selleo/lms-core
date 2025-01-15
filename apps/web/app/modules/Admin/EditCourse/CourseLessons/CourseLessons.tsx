@@ -108,7 +108,7 @@ const CourseLessons = ({ chapters, canRefetchChapterList }: CourseLessonsProps) 
         <div className="flex h-full flex-col overflow-y-auto">
           <ChaptersList
             canRefetchChapterList={canRefetchChapterList}
-            chapters={chapters}
+            chapters={chapters?.map((item) => ({ ...item, sortableId: item.id }))}
             setContentTypeToDisplay={setContentTypeToDisplay}
             setSelectedChapter={setSelectedChapter}
             setSelectedLesson={setSelectedLesson}

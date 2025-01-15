@@ -72,6 +72,7 @@ export const useQuizLessonForm = ({
 
             return {
               id: question.id,
+              sortableId: question.id,
               type: question.type as QuestionType,
               description: processedDescription || undefined,
               photoS3Key: question.photoS3Key || undefined,
@@ -79,6 +80,7 @@ export const useQuizLessonForm = ({
               displayOrder: question.displayOrder,
               options: question.options?.map((option: QuestionOption) => ({
                 id: option.id,
+                sortableId: option.id,
                 optionText: option.optionText,
                 isCorrect: option.isCorrect,
                 displayOrder: option.displayOrder,

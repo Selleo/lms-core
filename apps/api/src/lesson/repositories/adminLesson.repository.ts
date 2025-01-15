@@ -214,10 +214,11 @@ export class AdminLessonRepository {
     optionData: AdminOptionBody,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
-    await trx
+    return trx
       .update(questionAnswerOptions)
       .set(optionData)
-      .where(eq(questionAnswerOptions.id, optionId));
+      .where(eq(questionAnswerOptions.id, optionId))
+      .returning();
   }
 
   async insertOption(
@@ -225,10 +226,13 @@ export class AdminLessonRepository {
     optionData: AdminOptionBody,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
-    await trx.insert(questionAnswerOptions).values({
-      questionId,
-      ...optionData,
-    });
+    return trx
+      .insert(questionAnswerOptions)
+      .values({
+        questionId,
+        ...optionData,
+      })
+      .returning();
   }
 
   async deleteOptions(optionIds: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {

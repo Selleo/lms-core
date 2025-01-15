@@ -35,7 +35,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
       form.getValues(`questions.${questionIndex}.options`) || [];
 
     const newOption: QuestionOption = {
-      id: crypto.randomUUID(),
+      sortableId: crypto.randomUUID(),
       optionText: "",
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
@@ -114,7 +114,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                 className="grid grid-cols-1"
                 renderItem={(item, index) => {
                   return (
-                    <SortableList.Item id={item.id ?? item.displayOrder}>
+                    <SortableList.Item id={item.sortableId}>
                       <div className="mt-2">
                         <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
                           <SortableList.DragHandle>

@@ -10,7 +10,7 @@ import type { Active, UniqueIdentifier } from "@dnd-kit/core";
 import type { ReactNode } from "react";
 
 type BaseItem = {
-  id: UniqueIdentifier;
+  sortableId: UniqueIdentifier;
 };
 
 type SortableListProps<T extends BaseItem> = {
@@ -37,7 +37,10 @@ export function SortableList<T extends BaseItem>({
   className,
 }: SortableListProps<T>) {
   const [active, setActive] = useState<Active | null>(null);
-  const activeItem = useMemo(() => items.find((item) => item.id === active?.id), [active, items]);
+  const activeItem = useMemo(
+    () => items.find((item) => item.sortableId === active?.id),
+    [active, items],
+  );
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -52,8 +55,8 @@ export function SortableList<T extends BaseItem>({
         setActive(active);
       }}
       onDragEnd={({ active, over }) => {
-        const activeIndex = items.findIndex(({ id }) => id === active.id);
-        const overIndex = items.findIndex(({ id }) => id === over?.id);
+        const activeIndex = items.findIndex(({ sortableId }) => sortableId === active?.id);
+        const overIndex = items.findIndex(({ sortableId }) => sortableId === over?.id);
 
         const updatedItems = arrayMove(items, activeIndex, overIndex);
 
@@ -62,7 +65,7 @@ export function SortableList<T extends BaseItem>({
           displayOrder: index + 1,
         }));
 
-        const updatedItem = updatedItemsWithOrder.find((item) => item.id === active.id);
+        const updatedItem = updatedItemsWithOrder.find((item) => item.sortableId === active?.id);
 
         const newChapterPosition = updatedItemsWithOrder.indexOf(updatedItem!);
 
@@ -75,10 +78,10 @@ export function SortableList<T extends BaseItem>({
         setActive(null);
       }}
     >
-      <SortableContext items={items}>
+      <SortableContext items={items.map((item) => item.sortableId)}>
         <ul {...(className && { className })} role="application">
           {items.map((item, index) => (
-            <Fragment key={item.id}>{renderItem(item, index)}</Fragment>
+            <Fragment key={item.sortableId}>{renderItem(item, index)}</Fragment>
           ))}
         </ul>
       </SortableContext>

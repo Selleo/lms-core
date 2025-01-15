@@ -57,7 +57,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
       form.getValues(`questions.${questionIndex}.options`) || [];
 
     const newOption: QuestionOption = {
-      id: crypto.randomUUID(),
+      sortableId: crypto.randomUUID(),
       optionText: "",
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
@@ -232,7 +232,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
-                  <SortableList.Item id={item.displayOrder}>
+                  <SortableList.Item id={item.sortableId}>
                     <div className="mt-2">
                       <div className="flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                         <SortableList.DragHandle>
