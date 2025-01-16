@@ -354,13 +354,13 @@ export class CourseService {
     });
   }
 
-  async getCourse(id: string, userId: string): Promise<CommonShowCourse> {
+  async getCourse(id: UUIDType, userId: UUIDType): Promise<CommonShowCourse> {
     const [course] = await this.db
       .select({
         id: courses.id,
         title: courses.title,
         thumbnailS3Key: sql<string>`${courses.thumbnailS3Key}`,
-        category: categories.title,
+        category: sql<string>`${categories.title}`,
         description: sql<string>`${courses.description}`,
         courseChapterCount: courses.chapterCount,
         completedChapterCount: sql<number>`COALESCE(${studentCourses.finishedChapterCount}, 0)`,
@@ -379,13 +379,9 @@ export class CourseService {
           )`,
       })
       .from(courses)
-      .innerJoin(categories, eq(courses.categoryId, categories.id))
-      .innerJoin(users, eq(courses.authorId, users.id))
-      .leftJoin(
-        studentCourses,
-        and(eq(courses.id, studentCourses.courseId), eq(studentCourses.studentId, userId)),
-      )
-      .where(and(eq(courses.id, id)));
+      .leftJoin(categories, eq(courses.categoryId, categories.id))
+      .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
+      .where(and(eq(courses.id, id), eq(studentCourses.studentId, userId)));
 
     if (!course) throw new NotFoundException("Course not found");
 
@@ -460,7 +456,13 @@ export class CourseService {
         `,
       })
       .from(chapters)
-      .leftJoin(studentChapterProgress, eq(studentChapterProgress.chapterId, chapters.id))
+      .leftJoin(
+        studentChapterProgress,
+        and(
+          eq(studentChapterProgress.chapterId, chapters.id),
+          eq(studentChapterProgress.studentId, userId),
+        ),
+      )
       .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
       .orderBy(chapters.displayOrder);
 
