@@ -51,7 +51,7 @@ export const AdminStatistics = () => {
         fill: "var(--primary-300)",
       },
     ],
-    [totalCoursesCompletion, totalCourses],
+    [t, totalCoursesCompletion, totalCourses],
   );
 
   const conversionsChartConfig = {
@@ -78,7 +78,7 @@ export const AdminStatistics = () => {
         fill: "var(--primary-300)",
       },
     ],
-    [purchasedCourses, remainedOnFreemium],
+    [purchasedCourses, remainedOnFreemium, t],
   );
 
   const avgQuizScoreChartConfig = {
@@ -105,12 +105,12 @@ export const AdminStatistics = () => {
         fill: "var(--primary-300)",
       },
     ],
-    [],
+    [t],
   );
 
   return (
-    <PageWrapper className="flex flex-col gap-y-6 xl:gap-y-8 xl:!h-full 2xl:!h-auto">
-      <div className="gap-x-2 flex xl:gap-x-4 items-center">
+    <PageWrapper className="flex flex-col gap-y-6 xl:!h-full xl:gap-y-8 2xl:!h-auto">
+      <div className="flex items-center gap-x-2 xl:gap-x-4">
         <p className="h5 xl:h2 text-neutral-950">
           {t("adminStatisticsView.header")} {user?.firstName}
         </p>
@@ -118,7 +118,7 @@ export const AdminStatistics = () => {
           <Gravatar email={user?.email} />
         </Avatar>
       </div>
-      <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-y-6 md:gap-x-4 xl:grid-cols-4 xl:grid-rows-[minmax(min-content,_auto)] xl:h-full">
+      <div className="grid grid-cols-1 gap-y-4 md:grid-cols-2 md:gap-x-4 md:gap-y-6 xl:h-full xl:grid-cols-4 xl:grid-rows-[minmax(min-content,_auto)]">
         <FiveMostPopularCoursesChart
           data={statistics?.fiveMostPopularCourses}
           isLoading={isLoading}
@@ -126,14 +126,14 @@ export const AdminStatistics = () => {
         <CourseCompletionPercentageChart
           isLoading={isLoading}
           label={`${statistics?.totalCoursesCompletionStats.completionPercentage}`}
-          title={t("adminStatisticsView.other.courseCompletitionPercentage")}
+          title={t("adminStatisticsView.other.courseCompletionPercentage")}
           chartConfig={coursesCompletionChartConfig}
           chartData={coursesCompletionChartData}
         />
         <ConversionsAfterFreemiumLessonChart
           isLoading={isLoading}
           label={`${statistics?.conversionAfterFreemiumLesson.conversionPercentage}`}
-          title={t("adminStatisticsView.other.conversionsAfterFreemiumLessson")}
+          title={t("adminStatisticsView.other.conversionsAfterFreemiumLesson")}
           chartConfig={conversionsChartConfig}
           chartData={conversionsChartData}
         />

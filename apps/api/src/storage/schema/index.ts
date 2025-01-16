@@ -142,13 +142,11 @@ export const chapters = pgTable("chapters", {
   authorId: uuid("author_id")
     .references(() => users.id)
     .notNull(),
-  isPublished: boolean("is_published").notNull().default(false),
   isFreemium: boolean("is_freemium").notNull().default(false),
   displayOrder: integer("display_order"),
   lessonCount: integer("lesson_count").notNull().default(0),
 });
 
-// TODO: add itemCount for this
 export const lessons = pgTable("lessons", {
   ...id,
   ...timestamps,
@@ -194,7 +192,6 @@ export const questionAnswerOptions = pgTable("question_answer_options", {
   scaleAnswer: integer("scale_answer"),
 });
 
-// TODO: add cascade on delete?
 export const studentQuestionAnswers = pgTable(
   "student_question_answers",
   {

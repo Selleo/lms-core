@@ -6,7 +6,7 @@ import { cn } from "~/lib/utils";
 import { QuestionCard } from "./QuestionCard";
 
 import type { QuizQuestion } from "./types";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 type TrueOrFalseProps = {
   question: QuizQuestion;
@@ -14,7 +14,7 @@ type TrueOrFalseProps = {
 };
 
 export const TrueOrFalse = ({ question, isCompleted }: TrueOrFalseProps) => {
-  const { register } = useFormContext<TQuestionsForm>();
+  const { register } = useFormContext<QuizForm>();
 
   return (
     <QuestionCard
@@ -27,7 +27,7 @@ export const TrueOrFalse = ({ question, isCompleted }: TrueOrFalseProps) => {
           <div
             key={index}
             className={cn(
-              "body-base text-neutral-950 w-full gap-x-4 py-3 px-4 border border-neutral-200 rounded-lg flex",
+              "body-base flex w-full gap-x-4 rounded-lg border border-neutral-200 px-4 py-3 text-neutral-950",
               {
                 "border-success-700 bg-success-50": isCorrect && isStudentAnswer,
                 "border-error-700 bg-error-50":

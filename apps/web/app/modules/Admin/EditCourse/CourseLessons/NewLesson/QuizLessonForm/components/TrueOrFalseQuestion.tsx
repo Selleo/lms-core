@@ -29,11 +29,14 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
       form.getValues(`questions.${questionIndex}.options`) || [];
+
     const newOption: QuestionOption = {
+      sortableId: crypto.randomUUID(),
       optionText: "",
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
     };
+
     form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
       shouldDirty: true,
     });
@@ -90,11 +93,11 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
-        <div className={"p-2 rounded-xl border-0 transition-all duration-300"}>
+        <div className={"rounded-xl border-0 p-2 transition-all duration-300"}>
           <div className="ml-14">
             {!isOptionEmpty && (
               <>
-                <span className="text-red-500 mr-1">*</span>
+                <span className="mr-1 text-red-500">*</span>
                 <Label className="body-sm-md">
                   {t("adminCourseView.curriculum.lesson.field.options")}
                 </Label>
@@ -103,17 +106,16 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             {watchedOptions && watchedOptions?.length > 0 && (
               <SortableList
                 items={watchedOptions}
-                isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions.${questionIndex}.options`, updatedItems);
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
-                  <SortableList.Item id={item.displayOrder}>
+                  <SortableList.Item id={item.sortableId}>
                     <div className="mt-2">
-                      <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                         <SortableList.DragHandle>
-                          <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
+                          <Icon name="DragAndDropIcon" className="ml-4 mr-3 cursor-move" />
                         </SortableList.DragHandle>
                         <Input
                           type="text"
@@ -131,10 +133,10 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                             name={`questions.${questionIndex}.options.${index}.isCorrect`}
                             checked={item.isCorrect === true}
                             onChange={() => handleOptionChange(index, "isCorrect", true)}
-                            className="p-1 w-4 h-4 cursor-pointer"
+                            className="h-4 w-4 cursor-pointer p-1"
                           />
                           <Label
-                            className="ml-2 text-neutral-900 body-base cursor-pointer"
+                            className="body-base ml-2 cursor-pointer text-neutral-900"
                             onClick={() => handleOptionChange(index, "isCorrect", true)}
                           >
                             {t("adminCourseView.curriculum.lesson.other.true")}
@@ -144,10 +146,10 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                             name={`questions.${questionIndex}.options.${index}.isCorrect`}
                             checked={item.isCorrect === false}
                             onChange={() => handleOptionChange(index, "isCorrect", false)}
-                            className="p-1 w-4 h-4 ml-3 cursor-pointer"
+                            className="ml-3 h-4 w-4 cursor-pointer p-1"
                           />
                           <Label
-                            className="ml-2 text-neutral-900 body-base cursor-pointer"
+                            className="body-base ml-2 cursor-pointer text-neutral-900"
                             onClick={() => handleOptionChange(index, "isCorrect", false)}
                           >
                             {t("adminCourseView.curriculum.lesson.other.false")}
@@ -159,7 +161,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                                 <div className="group">
                                   <Icon
                                     name="TrashIcon"
-                                    className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
+                                    className="text-error-500 bg-error-50 group-hover:bg-error-600 ml-3 h-7 w-7 cursor-pointer rounded-lg p-1 group-hover:text-white"
                                     onClick={() => handleRemoveOption(index)}
                                   />
                                 </div>
@@ -167,7 +169,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                               <TooltipContent
                                 side="top"
                                 align="center"
-                                className="bg-black ml-4 text-white text-sm rounded shadow-md"
+                                className="ml-4 rounded bg-black text-sm text-white shadow-md"
                               >
                                 {t("common.button.delete")}
                               </TooltipContent>
@@ -182,11 +184,11 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             )}
           </div>
           {errors?.questions?.[questionIndex] && (
-            <p className="text-red-500 text-sm ml-14">
+            <p className="ml-14 text-sm text-red-500">
               {errors?.questions?.[questionIndex]?.options?.message}
             </p>
           )}
-          <div className="mt-4 flex gap-2 mb-4 ml-14">
+          <div className="mb-4 ml-14 mt-4 flex gap-2">
             <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
               {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>

@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { CopyUrlButton } from "~/components/CopyUrlButton";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
+import { useUserRole } from "~/hooks/useUserRole";
+import { cn } from "~/lib/utils";
 import { CourseProgressChart } from "~/modules/Courses/CourseView/components/CourseProgressChart";
 
 import type { GetCourseResponse } from "~/api/generated-api";
@@ -19,6 +21,7 @@ const findFirstNotStartedLessonId = (course: CourseProgressProps["course"]) => {
 };
 
 export const CourseProgress = ({ course }: CourseProgressProps) => {
+  const { isAdmin, isTeacher } = useUserRole();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const nonStartedLessonId = findFirstNotStartedLessonId(course);
@@ -26,36 +29,56 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
     return chapter.lessons.some((lesson) => lesson.id === nonStartedLessonId);
   })?.id;
 
+  const isAdminLike = isAdmin || isTeacher;
+
   return (
     <>
-      <h4 className="h6 text-neutral-950 pb-1">
-        {t("studentCourseView.sideSection.other.courseProgress")}
+      <h4 className="h6 pb-1 text-neutral-950">
+        {isAdminLike
+          ? t("studentCourseView.sideSection.other.options")
+          : t("studentCourseView.sideSection.other.courseProgress")}
       </h4>
-      <CourseProgressChart
-        chaptersCount={course?.courseChapterCount}
-        completedChaptersCount={course?.completedChapterCount}
-      />
+      {!isAdminLike && (
+        <CourseProgressChart
+          chaptersCount={course?.courseChapterCount}
+          completedChaptersCount={course?.completedChapterCount}
+        />
+      )}
       <div className="flex flex-col gap-y-2">
-        <CopyUrlButton className="gap-x-2" variant="outline">
-          <Icon name="Share" className="w-6 h-auto text-primary-800" />
+        <CopyUrlButton
+          className={cn("gap-x-2", {
+            "bg-primary-700 hover:bg-primary-600 text-white hover:text-white": isAdminLike,
+          })}
+          variant="outline"
+        >
+          <Icon
+            name="Share"
+            className={cn("text-primary-800 h-auto w-6", {
+              "text-white": isAdminLike,
+            })}
+          />
           <span>{t("studentCourseView.sideSection.button.shareCourse")}</span>
         </CopyUrlButton>
-        <Button
-          className="gap-x-2"
-          disabled={!nonStartedLessonId}
-          onClick={() =>
-            navigate(`lesson/${nonStartedLessonId}`, {
-              state: { chapterId: notStartedChapterId },
-            })
-          }
-        >
-          <Icon name="Play" className="w-6 h-auto text-white" />
-          <span>{t("studentCourseView.sideSection.button.continueLearning")}</span>
-        </Button>
-        <p className="text-neutral-800 details flex items-center justify-center gap-x-2">
-          <Icon name="Info" className="w-4 h-auto text-neutral-800" />
-          <span>{t("studentCourseView.sideSection.other.informationText")}</span>
-        </p>
+        {!isAdminLike && (
+          <>
+            <Button
+              className="gap-x-2"
+              disabled={!nonStartedLessonId}
+              onClick={() =>
+                navigate(`lesson/${nonStartedLessonId}`, {
+                  state: { chapterId: notStartedChapterId },
+                })
+              }
+            >
+              <Icon name="Play" className="h-auto w-6 text-white" />
+              <span>{t("studentCourseView.sideSection.button.continueLearning")}</span>
+            </Button>
+            <p className="details flex items-center justify-center gap-x-2 text-neutral-800">
+              <Icon name="Info" className="h-auto w-4 text-neutral-800" />
+              <span>{t("studentCourseView.sideSection.other.informationText")}</span>
+            </p>
+          </>
+        )}
       </div>
     </>
   );

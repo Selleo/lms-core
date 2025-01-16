@@ -12,7 +12,7 @@ export function MobileMenuToggle({ isMobileNavOpen, setIsMobileNavOpen }: Mobile
   return (
     <button
       onClick={() => setIsMobileNavOpen((prevState) => !prevState)}
-      className="px-3 py-2 flex w-min gap-x-2 bg-neutral-50 rounded-lg 2xl:sr-only"
+      className="flex w-min gap-x-2 rounded-lg bg-neutral-50 px-3 py-2 2xl:sr-only"
     >
       {isMobileNavOpen ? (
         <>
@@ -30,7 +30,7 @@ export function MobileMenuToggle({ isMobileNavOpen, setIsMobileNavOpen }: Mobile
               fill="#121521"
             />
           </svg>
-          <span className="text-neutral-900 body-sm-md">{t("navigationSideBar.close")}</span>
+          <span className="body-sm-md text-neutral-900">{t("navigationSideBar.close")}</span>
         </>
       ) : (
         <>
@@ -43,7 +43,7 @@ export function MobileMenuToggle({ isMobileNavOpen, setIsMobileNavOpen }: Mobile
           >
             <path d="M3 6H21V8H3V6ZM3 11H21V13H3V11ZM3 16H21V18H3V16Z" fill="black" />
           </svg>
-          <span className="text-neutral-900 body-sm-md">{t("navigationSideBar.menu")}</span>
+          <span className="body-sm-md text-neutral-900">{t("navigationSideBar.menu")}</span>
         </>
       )}
     </button>

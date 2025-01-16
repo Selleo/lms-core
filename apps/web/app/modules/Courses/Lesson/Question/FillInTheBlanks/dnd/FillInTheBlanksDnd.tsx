@@ -24,7 +24,7 @@ import { WordBank } from "./WordBank";
 
 import type { DndWord } from "./types";
 import type { QuizQuestion, QuizQuestionOption } from "../../types";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 type FillInTheBlanksDndProps = {
   question: QuizQuestion;
@@ -59,7 +59,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
   const { t } = useTranslation();
   const [words, setWords] = useState<DndWord[]>(getAnswers(question.options));
   const [currentlyDraggedWord, setCurrentlyDraggedWord] = useState<DndWord | null>(null);
-  const { setValue } = useFormContext<TQuestionsForm>();
+  const { setValue } = useFormContext<QuizForm>();
 
   const solutionExplanation = question.solutionExplanation;
 
@@ -234,7 +234,7 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
 
       for (const word of updatedWords) {
         if (word.blankId !== "blank_preset") {
-          setValue(`fillInTheBlanksDnd.${question.id}.${word.id}`, word.value);
+          setValue(`fillInTheBlanksDnd.${question.id}.${word.blankId}`, word.value);
         }
       }
 
@@ -256,11 +256,11 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
   });
 
   return (
-    <div className="rounded-lg p-8 border bg-card text-card-foreground shadow-sm">
+    <div className="bg-card text-card-foreground rounded-lg border p-8 shadow-sm">
       <div className="details text-primary-700 uppercase">
         {t("studentLessonView.other.question")} {question.displayOrder}
       </div>
-      <div className="h6 text-neutral-950 my-4">{t("studentLessonView.other.fillInTheBlanks")}</div>
+      <div className="h6 my-4 text-neutral-950">{t("studentLessonView.other.fillInTheBlanks")}</div>
       <DndContext
         sensors={sensors}
         collisionDetection={closestCorners}

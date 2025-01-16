@@ -4,26 +4,24 @@ import { useTranslation } from "react-i18next";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
-import { useUserRole } from "~/hooks/useUserRole";
 import { ChapterCard } from "~/modules/Statistics/Client/components/ChapterCard";
 
 import type { GetUserStatisticsResponse } from "~/api/generated-api";
 
 type ContinueLearningCardProps = {
   isLoading: boolean;
-  lesson: GetUserStatisticsResponse["data"]["lastLesson"] | undefined;
+  lesson: GetUserStatisticsResponse["data"]["nextLesson"] | undefined;
 };
 
 export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLearningCardProps) => {
-  const { isAdmin } = useUserRole();
   const { t } = useTranslation();
 
   if (isLoading) {
     return (
-      <div className="w-full h-full p-4 gap-y-4 bg-white rounded-lg drop-shadow-card 2xl:max-w-[296px] flex flex-col">
+      <div className="drop-shadow-card flex h-full w-full flex-col gap-y-4 rounded-lg bg-white p-4 2xl:max-w-[296px]">
         <div className="flex flex-col items-center gap-y-1">
-          <Skeleton className="h-[29px] max-w-[240px] w-full rounded-lg" />
-          <Skeleton className="h-4 max-w-[160px] w-full rounded-lg" />
+          <Skeleton className="h-[29px] w-full max-w-[240px] rounded-lg" />
+          <Skeleton className="h-4 w-full max-w-[160px] rounded-lg" />
         </div>
         <Skeleton className="h-full w-full rounded-lg" />
       </div>
@@ -32,10 +30,10 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
 
   if (!lesson) {
     return (
-      <div className="w-full h-auto items-center justify-between md:gap-8 2xl:flex-col 2xl:gap-y-4 p-8 gap-y-4 bg-white rounded-lg drop-shadow-card 2xl:max-w-[296px] flex flex-col">
+      <div className="drop-shadow-card flex h-auto w-full flex-col items-center justify-between gap-y-4 rounded-lg bg-white p-8 md:gap-8 2xl:max-w-[296px] 2xl:flex-col 2xl:gap-y-4">
         <div className="text-center md:w-fit 2xl:w-full">
           <h2 className="body-lg-md text-neutral-950">
-            {t("clientStatisticsView.other.noLessonsToContiue")}
+            {t("clientStatisticsView.other.noLessonsToContinue")}
           </h2>
         </div>
         <Icon name="NoData" />
@@ -47,7 +45,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
   }
 
   return (
-    <div className="w-full h-auto md:flex-row md:gap-8 2xl:flex-col 2xl:gap-y-4 p-4 gap-y-4 bg-white rounded-lg drop-shadow-card 2xl:max-w-[296px] flex flex-col">
+    <div className="drop-shadow-card flex h-auto w-full flex-col gap-y-4 rounded-lg bg-white p-4 md:flex-row md:gap-8 2xl:max-w-[296px] 2xl:flex-col 2xl:gap-y-4">
       <div className="text-center md:w-fit 2xl:w-full">
         <h2 className="body-lg-md text-neutral-950">
           {t("clientStatisticsView.other.continueLearning")}
@@ -55,20 +53,11 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
         <a href={`/course/${lesson?.courseId}`} className="body-sm-md text-primary-700 underline">
           {lesson?.courseTitle}
         </a>
-        <p className="sr-only md:not-sr-only md:mt-6 md:body-base md:text-neutral-800 2xl:sr-only">
+        <p className="md:body-base sr-only md:not-sr-only md:mt-6 md:text-neutral-800 2xl:sr-only">
           {lesson?.courseDescription}
         </p>
       </div>
-      <ChapterCard
-        {...lesson}
-        customHref={`/course/${lesson.courseId}/lesson/${lesson.id}`}
-        isAdmin={isAdmin}
-        isEnrolled={!!lesson.enrolled}
-        // @ts-expect-error Need to fix this
-        itemsCount={lesson.lessonCount}
-        itemsCompletedCount={lesson.completedLessonCount}
-        index={1}
-      />
+      <ChapterCard {...lesson} />
     </div>
   );
 };

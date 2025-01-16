@@ -17,13 +17,13 @@ export const QuestionCard = ({
 }: QuestionCardProps) => {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col gap-2 p-8 border border-neutral-200 bg-white rounded-lg">
+    <div className="flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white p-8">
       <div className="details text-primary-700 uppercase">
         {t("studentLessonView.other.question")} {questionNumber ?? 0}
       </div>
       <div className="h6 text-neutral-950" dangerouslySetInnerHTML={{ __html: title }} />
       <div className="body-base text-neutral-900">{questionType}</div>
-      <div className="flex flex-col gap-4 mt-4">{children}</div>
+      <div className="mt-4 flex flex-col gap-4">{children}</div>
     </div>
   );
 };

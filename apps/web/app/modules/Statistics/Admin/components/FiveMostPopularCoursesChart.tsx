@@ -62,45 +62,45 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
 
   if (isLoading) {
     return (
-      <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 w-full flex flex-col">
-        <div className="flex flex-col py-[5px] items-center gap-y-[5px] pb-6 md:pb-4">
-          <Skeleton className="bg-neutral-100 rounded-lg w-[240px] h-6" />
-          <Skeleton className="bg-neutral-100 rounded-lg w-40 h-4" />
+      <div className="drop-shadow-card flex w-full flex-col rounded-lg bg-white p-6 md:col-span-2 xl:col-span-2">
+        <div className="flex flex-col items-center gap-y-[5px] py-[5px] pb-6 md:pb-4">
+          <Skeleton className="h-6 w-[240px] rounded-lg bg-neutral-100" />
+          <Skeleton className="h-4 w-40 rounded-lg bg-neutral-100" />
         </div>
-        <div className="md:flex md:gap-x-3 md:size-full">
+        <div className="md:flex md:size-full md:gap-x-3">
           <div className="sr-only md:not-sr-only md:flex md:h-full md:flex-col md:gap-y-10 md:py-2">
             {Array.from({ length: 5 }).map((_, index) => (
-              <div key={index} className="py-1 flex items-center">
-                <Skeleton className="bg-neutral-100 rounded-lg w-40 h-4" />
+              <div key={index} className="flex items-center py-1">
+                <Skeleton className="h-4 w-40 rounded-lg bg-neutral-100" />
               </div>
             ))}
           </div>
-          <div className="flex flex-col py-2 gap-y-3 w-full relative md:gap-y-10">
-            <Skeleton className="bg-neutral-100 rounded-lg w-[93%] h-6" />
-            <Skeleton className="bg-neutral-100 rounded-lg w-[68%] h-6" />
-            <Skeleton className="bg-neutral-100 rounded-lg w-[56%] h-6" />
-            <Skeleton className="bg-neutral-100 rounded-lg w-[40%] h-6" />
-            <Skeleton className="bg-neutral-100 rounded-lg w-[34%] h-6" />
-            <div className="flex justify-between absolute top-0 left-0 w-full h-full">
+          <div className="relative flex w-full flex-col gap-y-3 py-2 md:gap-y-10">
+            <Skeleton className="h-6 w-[93%] rounded-lg bg-neutral-100" />
+            <Skeleton className="h-6 w-[68%] rounded-lg bg-neutral-100" />
+            <Skeleton className="h-6 w-[56%] rounded-lg bg-neutral-100" />
+            <Skeleton className="h-6 w-[40%] rounded-lg bg-neutral-100" />
+            <Skeleton className="h-6 w-[34%] rounded-lg bg-neutral-100" />
+            <div className="absolute left-0 top-0 flex h-full w-full justify-between">
               {Array.from({ length: 21 }).map((_, index) => (
-                <Skeleton key={index} className="w-[1px] h-full" />
+                <Skeleton key={index} className="h-full w-[1px]" />
               ))}
             </div>
           </div>
         </div>
         <div className="flex justify-between pt-2 md:pl-[172px]">
-          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-2" />
-          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-6" />
-          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-6" />
-          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-6" />
-          <Skeleton className="bg-neutral-100 rounded-lg h-2 w-7" />
+          <Skeleton className="h-2 w-2 rounded-lg bg-neutral-100" />
+          <Skeleton className="h-2 w-6 rounded-lg bg-neutral-100" />
+          <Skeleton className="h-2 w-6 rounded-lg bg-neutral-100" />
+          <Skeleton className="h-2 w-6 rounded-lg bg-neutral-100" />
+          <Skeleton className="h-2 w-7 rounded-lg bg-neutral-100" />
         </div>
         <div className="flex flex-col gap-y-2 pt-6 md:sr-only">
-          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
-          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
-          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
-          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
-          <Skeleton className="bg-neutral-100 rounded-lg h-[27px]" />
+          <Skeleton className="h-[27px] rounded-lg bg-neutral-100" />
+          <Skeleton className="h-[27px] rounded-lg bg-neutral-100" />
+          <Skeleton className="h-[27px] rounded-lg bg-neutral-100" />
+          <Skeleton className="h-[27px] rounded-lg bg-neutral-100" />
+          <Skeleton className="h-[27px] rounded-lg bg-neutral-100" />
         </div>
       </div>
     );
@@ -108,21 +108,21 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
 
   if (isEmptyChart) {
     return (
-      <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 gap-y-6 md:gap-y-4 xl:col-span-2 w-full flex flex-col">
+      <div className="drop-shadow-card flex w-full flex-col gap-y-6 rounded-lg bg-white p-6 md:col-span-2 md:gap-y-4 xl:col-span-2">
         <hgroup>
-          <h2 className="body-lg-md text-neutral-950 text-center">
+          <h2 className="body-lg-md text-center text-neutral-950">
             {t("mostPopularCoursesView.header")}
           </h2>
           <p className="body-sm-md text-center text-neutral-800">
             {t("mostPopularCoursesView.subHeader")}
           </p>
         </hgroup>
-        <div className="md:flex md:gap-x-3 md:size-full">
-          <div className="flex py-2 h-full items-center min-h-[200px] md:min-h-[316px] justify-between gap-y-3 w-full relative md:gap-y-10">
+        <div className="md:flex md:size-full md:gap-x-3">
+          <div className="relative flex h-full min-h-[200px] w-full items-center justify-between gap-y-3 py-2 md:min-h-[316px] md:gap-y-10">
             {Array.from({ length: 21 }).map((_, index) => (
-              <div key={index} className="w-[1px] bg-neutral-100 h-full" />
+              <div key={index} className="h-full w-[1px] bg-neutral-100" />
             ))}
-            <div className="flex text-primary-950 h5 md:h3 absolute z-0 top-0 left-0 size-full justify-center items-center">
+            <div className="text-primary-950 h5 md:h3 absolute left-0 top-0 z-0 flex size-full items-center justify-center">
               {t("mostPopularCoursesView.other.noData")}
             </div>
           </div>
@@ -132,9 +132,9 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
   }
 
   return (
-    <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-2 xl:col-span-2 gap-y-6 2xl:gap-y-6 md:gap-y-4 w-full flex flex-col">
+    <div className="drop-shadow-card flex w-full flex-col gap-y-6 rounded-lg bg-white p-6 md:col-span-2 md:gap-y-4 xl:col-span-2 2xl:gap-y-6">
       <hgroup>
-        <h2 className="body-lg-md text-neutral-950 text-center">
+        <h2 className="body-lg-md text-center text-neutral-950">
           {t("mostPopularCoursesView.header")}
         </h2>
         <p className="body-sm-md text-center text-neutral-800">

@@ -6,7 +6,7 @@ import { cn } from "~/lib/utils";
 import { QuestionCard } from "~/modules/Courses/Lesson/Question/QuestionCard";
 
 import type { QuizQuestion } from "~/modules/Courses/Lesson/Question/types";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 export type BriefResponseProps = {
   question: QuizQuestion;
@@ -14,7 +14,7 @@ export type BriefResponseProps = {
 
 export const BriefResponse = ({ question }: BriefResponseProps) => {
   const { isAdmin } = useUserRole();
-  const { register } = useFormContext<TQuestionsForm>();
+  const { register } = useFormContext<QuizForm>();
 
   return (
     <QuestionCard

@@ -21,7 +21,7 @@ const CourseProgress = ({
           "bg-success-500": isCompleted,
           "bg-secondary-500": index < completedLessonCount && !isCompleted,
           "bg-primary-50":
-            (index > completedLessonCount || completedLessonCount === 0) && !isCompleted,
+            (index >= completedLessonCount || completedLessonCount === 0) && !isCompleted,
         })}
       />
     ));
@@ -30,11 +30,11 @@ const CourseProgress = ({
   const courseProgressParts = getCourseProgressParts();
 
   return (
-    <div className="gap-2 flex flex-col">
-      <p className="text-neutral-600 text-xs">
+    <div className="flex flex-col gap-2">
+      <p className="text-xs text-neutral-600">
         {label} {completedLessonCount}/{courseLessonCount}
       </p>
-      <div className="flex justify-between items-center gap-px">{courseProgressParts}</div>
+      <div className="flex items-center justify-between gap-px">{courseProgressParts}</div>
     </div>
   );
 };

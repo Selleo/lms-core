@@ -1,7 +1,7 @@
 import { Type } from "@sinclair/typebox";
 
 import { paginatedResponse, UUIDSchema } from "src/common";
-import { allCoursesSchema } from "src/courses/schemas/course.schema";
+import { allCoursesSchema, allStudentCoursesSchema } from "src/courses/schemas/course.schema";
 import { sortCourseFieldsOptions } from "src/courses/schemas/courseQuery";
 
 export const allCoursesValidation = {
@@ -36,7 +36,7 @@ export const allCoursesValidation = {
 };
 
 export const studentCoursesValidation = {
-  response: paginatedResponse(allCoursesSchema),
+  response: paginatedResponse(allStudentCoursesSchema),
   request: [
     { type: "query" as const, name: "title", schema: Type.String() },
     { type: "query" as const, name: "category", schema: Type.String() },
@@ -62,7 +62,7 @@ export const studentCoursesValidation = {
 };
 
 export const coursesValidation = {
-  response: paginatedResponse(allCoursesSchema),
+  response: paginatedResponse(allStudentCoursesSchema),
   request: [
     { type: "query" as const, name: "title", schema: Type.String() },
     { type: "query" as const, name: "category", schema: Type.String() },

@@ -10,16 +10,9 @@ export const chapterSchema = Type.Object({
   lessonCount: Type.Number(),
   lessons: Type.Optional(Type.Array(lessonSchema)),
   completedLessonCount: Type.Optional(Type.Number()),
-  chapterProgress: Type.Optional(
-    Type.Union([
-      Type.Literal(PROGRESS_STATUSES.COMPLETED),
-      Type.Literal(PROGRESS_STATUSES.IN_PROGRESS),
-      Type.Literal(PROGRESS_STATUSES.NOT_STARTED),
-    ]),
-  ),
+  chapterProgress: Type.Optional(Type.Union([Type.Enum(PROGRESS_STATUSES)])),
   isFreemium: Type.Optional(Type.Boolean()),
   enrolled: Type.Optional(Type.Boolean()),
-  isPublished: Type.Optional(Type.Boolean()),
   isSubmitted: Type.Optional(Type.Boolean()),
   createdAt: Type.Optional(Type.String()),
   updatedAt: Type.Optional(Type.String()),

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq, inArray, sql } from "drizzle-orm";
+import { and, eq, gte, inArray, lte, sql } from "drizzle-orm";
 
 import { DatabasePg, type UUIDType } from "src/common";
 import {
@@ -9,6 +9,8 @@ import {
   questions,
   studentQuestionAnswers,
 } from "src/storage/schema";
+
+import { LESSON_TYPES } from "../lesson.type";
 
 import type {
   AdminOptionBody,
@@ -34,7 +36,7 @@ export class AdminLessonRepository {
     return lesson;
   }
 
-  async updateLesson(id: string, data: UpdateLessonBody) {
+  async updateLesson(id: UUIDType, data: UpdateLessonBody) {
     const [updatedLesson] = await this.db
       .update(lessons)
       .set(data)
@@ -43,24 +45,32 @@ export class AdminLessonRepository {
     return updatedLesson;
   }
 
-  async updateQuizLessonWithQuestionsAndOptions(id: UUIDType, data: UpdateQuizLessonBody) {
-    return this.db
+  async updateQuizLessonWithQuestionsAndOptions(
+    id: UUIDType,
+    data: UpdateQuizLessonBody,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
+    return dbInstance
       .update(lessons)
       .set({
         title: data.title,
-        type: "quiz",
+        type: LESSON_TYPES.QUIZ,
         description: data.description,
         chapterId: data.chapterId,
       })
       .where(eq(lessons.id, id));
   }
 
-  async createQuizLessonWithQuestionsAndOptions(data: CreateQuizLessonBody, displayOrder: number) {
-    const [lesson] = await this.db
+  async createQuizLessonWithQuestionsAndOptions(
+    data: CreateQuizLessonBody,
+    displayOrder: number,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
+    const [lesson] = await dbInstance
       .insert(lessons)
       .values({
         title: data.title,
-        type: "quiz",
+        type: LESSON_TYPES.QUIZ,
         description: data.description,
         chapterId: data?.chapterId,
         displayOrder,
@@ -112,24 +122,24 @@ export class AdminLessonRepository {
       .where(eq(questionAnswerOptions.questionId, questionId));
   }
 
-  async getQuestionStudentAnswers(questionId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
-    const dbInstance = trx ?? this.db;
-
+  async getQuestionStudentAnswers(
+    questionId: UUIDType,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
     return dbInstance
       .select()
       .from(studentQuestionAnswers)
       .where(eq(studentQuestionAnswers.questionId, questionId));
   }
 
-  async removeLesson(lessonId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
-    const dbInstance = trx ?? this.db;
-
+  async removeLesson(lessonId: UUIDType, dbInstance: PostgresJsDatabase<typeof schema> = this.db) {
     return dbInstance.delete(lessons).where(eq(lessons.id, lessonId)).returning();
   }
 
-  async updateLessonCountForChapter(chapterId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
-    const dbInstance = trx ?? this.db;
-
+  async updateLessonCountForChapter(
+    chapterId: UUIDType,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
     return dbInstance.execute(sql`
       UPDATE ${chapters}
       SET lesson_count = (
@@ -141,9 +151,10 @@ export class AdminLessonRepository {
     `);
   }
 
-  async updateLessonDisplayOrder(chapterId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
-    const dbInstance = trx ?? this.db;
-
+  async updateLessonDisplayOrderAfterRemove(
+    chapterId: UUIDType,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
     return dbInstance.execute(sql`
         WITH ranked_chapters AS (
           SELECT id, row_number() OVER (ORDER BY display_order) AS new_display_order
@@ -156,6 +167,33 @@ export class AdminLessonRepository {
         WHERE cc.id = rc.id
           AND cc.chapter_id = ${chapterId}
       `);
+  }
+
+  async updateLessonDisplayOrder(
+    chapterId: UUIDType,
+    lessonId: UUIDType,
+    newDisplayOrder: number,
+    oldDisplayOrder: number,
+  ) {
+    await this.db
+      .update(lessons)
+      .set({
+        displayOrder: sql`CASE
+                WHEN ${eq(lessons.id, lessonId)}
+                  THEN ${newDisplayOrder}
+                WHEN ${newDisplayOrder < oldDisplayOrder}
+                  AND ${gte(lessons.displayOrder, newDisplayOrder)}
+                  AND ${lte(lessons.displayOrder, oldDisplayOrder)}
+                  THEN ${lessons.displayOrder} + 1
+                WHEN ${newDisplayOrder > oldDisplayOrder}
+                  AND ${lte(lessons.displayOrder, newDisplayOrder)}
+                  AND ${gte(lessons.displayOrder, oldDisplayOrder)}
+                  THEN ${lessons.displayOrder} - 1
+                ELSE ${lessons.displayOrder}
+              END
+              `,
+      })
+      .where(eq(lessons.chapterId, chapterId));
   }
 
   async getExistingQuestions(lessonId: UUIDType, trx: PostgresJsDatabase<typeof schema>) {
@@ -176,10 +214,11 @@ export class AdminLessonRepository {
     optionData: AdminOptionBody,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
-    await trx
+    return trx
       .update(questionAnswerOptions)
       .set(optionData)
-      .where(eq(questionAnswerOptions.id, optionId));
+      .where(eq(questionAnswerOptions.id, optionId))
+      .returning();
   }
 
   async insertOption(
@@ -187,10 +226,13 @@ export class AdminLessonRepository {
     optionData: AdminOptionBody,
     trx: PostgresJsDatabase<typeof schema>,
   ) {
-    await trx.insert(questionAnswerOptions).values({
-      questionId,
-      ...optionData,
-    });
+    return trx
+      .insert(questionAnswerOptions)
+      .values({
+        questionId,
+        ...optionData,
+      })
+      .returning();
   }
 
   async deleteOptions(optionIds: UUIDType[], trx: PostgresJsDatabase<typeof schema>) {
@@ -238,42 +280,11 @@ export class AdminLessonRepository {
     return result.id;
   }
 
-  async updateLessonItemDisplayOrder(chapterId: UUIDType, lessonId: UUIDType) {
-    await this.db.transaction(async (trx) => {
-      await trx.execute(sql`
-        UPDATE ${lessons}
-        SET display_order = display_order - 1
-        WHERE chapter_id = ${chapterId}
-          AND display_order > (
-            SELECT display_order
-            FROM ${lessons}
-            WHERE chapter_id = ${chapterId}
-              AND id = ${lessonId}
-          )
-      `);
-
-      await trx.execute(sql`
-        WITH ranked_lesson AS (
-          SELECT id, row_number() OVER (ORDER BY display_order) AS new_display_order
-          FROM ${lessons}
-          WHERE chapter_id = ${chapterId}
-        )
-        UPDATE ${lessons} li
-        SET display_order = rl.new_display_order
-        FROM ranked_lesson rl
-        WHERE li.id = rl.id
-          AND li.chapter_id = ${chapterId}
-      `);
-    });
-  }
-
   async removeQuestionAnswerOptions(
     questionId: UUIDType,
     idsToDelete: UUIDType[],
-    trx?: PostgresJsDatabase<typeof schema>,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
   ) {
-    const dbInstance = trx ?? this.db;
-
     return dbInstance
       .delete(questionAnswerOptions)
       .where(
@@ -287,14 +298,13 @@ export class AdminLessonRepository {
   async upsertQuestionAnswerOptions(
     questionId: UUIDType,
     option: {
-      id?: string;
+      id?: UUIDType;
       optionText: string;
       isCorrect: boolean;
       displayOrder: number;
     },
-    trx?: PostgresJsDatabase<typeof schema>,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
   ) {
-    const dbInstance = trx ?? this.db;
     return dbInstance
       .insert(questionAnswerOptions)
       .values({

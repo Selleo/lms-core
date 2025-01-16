@@ -30,7 +30,7 @@ function CustomDayContent({ dates, ...props }: CustomDayContentProps) {
     );
     return (
       <td className={classes}>
-        <Checkmark className="text-white size-6" />
+        <Checkmark className="size-6 text-white" />
       </td>
     );
   }
@@ -50,7 +50,7 @@ function Calendar({
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("w-min md:w-full max-w-[320px]", className)}
+      className={cn("w-min max-w-[320px] md:w-full", className)}
       classNames={{
         table: "flex flex-col items-center",
         cell: "p-0",

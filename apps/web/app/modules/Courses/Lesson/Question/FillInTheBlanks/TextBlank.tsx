@@ -4,7 +4,7 @@ import { useFormContext } from "react-hook-form";
 import { cn } from "~/lib/utils";
 
 import type { QuizQuestionOption } from "../types";
-import type { TQuestionsForm } from "~/modules/Courses/Lesson/types";
+import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 type TextBlankProps = {
   index: number;
@@ -19,7 +19,7 @@ export const TextBlank = ({
   isQuizSubmitted,
   questionId,
 }: TextBlankProps) => {
-  const { register } = useFormContext<TQuestionsForm>();
+  const { register } = useFormContext<QuizForm>();
   const inputRef = useRef<HTMLInputElement>(null);
   const formFieldId = `${index + 1}`;
 

@@ -22,7 +22,7 @@ import type { AllCategoriesResponse } from "./schemas/category.schema";
 import type { CategoryQuery } from "./schemas/category.types";
 import type { CategoryInsert } from "./schemas/createCategorySchema";
 import type { CategoryUpdateBody } from "./schemas/updateCategorySchema";
-import type { Pagination } from "src/common";
+import type { Pagination, UUIDType } from "src/common";
 
 @Injectable()
 export class CategoryService {
@@ -80,7 +80,7 @@ export class CategoryService {
     });
   }
 
-  public async getCategoryById(id: string) {
+  public async getCategoryById(id: UUIDType) {
     const [category] = await this.db
       .select()
       .from(categories)
@@ -97,7 +97,7 @@ export class CategoryService {
     return newCategory;
   }
 
-  public async updateCategory(id: string, updateCategoryBody: CategoryUpdateBody) {
+  public async updateCategory(id: UUIDType, updateCategoryBody: CategoryUpdateBody) {
     const [existingCategory] = await this.db.select().from(categories).where(eq(categories.id, id));
 
     if (!existingCategory) {

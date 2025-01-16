@@ -21,9 +21,7 @@ export class FileService {
       if (cachedUrl) return cachedUrl;
 
       const signedUrl = await this.s3Service.getSignedUrl(fileKey);
-
       await this.cacheManager.set(fileKey, signedUrl, REDIS_TTL);
-
       return signedUrl;
     } catch (error) {
       console.error("Error in getFileUrl:", error);

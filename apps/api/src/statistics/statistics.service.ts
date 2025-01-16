@@ -9,6 +9,7 @@ import {
   subDays,
 } from "date-fns";
 
+import { FileService } from "src/file/file.service";
 import { StatisticsRepository } from "src/statistics/repositories/statistics.repository";
 
 import type {
@@ -20,7 +21,8 @@ import type { UUIDType } from "src/common";
 @Injectable()
 export class StatisticsService {
   constructor(
-    private readonly statisticsRepository: StatisticsRepository, // private readonly lessonRepository: LessonRepository,
+    private readonly statisticsRepository: StatisticsRepository,
+    private readonly fileService: FileService,
   ) {}
 
   async getUserStats(userId: UUIDType): Promise<UserStats> {
@@ -33,11 +35,9 @@ export class StatisticsService {
     const lessonsTotalStats = this.calculateTotalStats(lessonsStatsByMonth);
 
     const quizStats = await this.statisticsRepository.getQuizStats(userId);
-    // TODO: add last lesson or chapter
-    // const lastLesson = await this.getLastLesson(userId);
+    const nextLesson = await this.getLastLesson(userId);
     const activityStats = await this.statisticsRepository.getActivityStats(userId);
 
-    // TODO: add last lesson
     return {
       courses: this.formatStats(coursesStatsByMonth),
       lessons: this.formatStats(lessonsStatsByMonth),
@@ -53,8 +53,7 @@ export class StatisticsService {
         lessonStats: lessonsTotalStats,
         courseStats: coursesTotalStats,
       },
-      // lastLesson,
-      lastLesson: null,
+      nextLesson,
       streak: {
         current: activityStats.currentStreak ?? 0,
         longest: activityStats.longestStreak ?? 0,
@@ -228,28 +227,13 @@ export class StatisticsService {
     return monthlyStats;
   }
 
-  // private async getLastLesson(userId: UUIDType) {
-  //   //TODO: repair this, maybe change on chapter
-  //   const lastLesson = await this.lessonRepository.getLastInteractedOrNextLessonItemForUser(userId);
-  //   if (!lastLesson) return null;
+  private async getLastLesson(userId: UUIDType) {
+    const nextLesson = await this.statisticsRepository.getNextLessonForStudent(userId);
 
-  //   const [lastLessonDetails] = await this.lessonRepository.getLessonsDetails(
-  //     userId,
-  //     lastLesson.courseId,
-  //     lastLesson.lessonId,
-  //   );
-  //   const lastLessonUserDetails = await this.lessonRepository.getLessonForUser(
-  //     lastLesson.courseId,
-  //     lastLesson.lessonId,
-  //     userId,
-  //   );
+    if (!nextLesson) return null;
 
-  //   return {
-  //     ...lastLessonDetails,
-  //     enrolled: lastLessonUserDetails.enrolled,
-  //     courseId: lastLesson.courseId,
-  //     courseTitle: lastLesson.courseTitle,
-  //     courseDescription: lastLesson.courseDescription,
-  //   };
-  // }
+    const courseThumbnail = await this.fileService.getFileUrl(nextLesson.courseThumbnail);
+
+    return { ...nextLesson, courseThumbnail };
+  }
 }

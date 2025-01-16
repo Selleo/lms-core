@@ -15,24 +15,24 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
   const description = course?.description || "";
 
   return (
-    <Card className="w-full pt-6 lg:pt-0 border-none drop-shadow-primary">
-      <CardContent className="lg:p-8 flex flex-col align-center gap-6 2xl:flex-row">
-        <div className="relative self-center w-full lg:max-w-[320px] aspect-video">
+    <Card className="drop-shadow-primary w-full border-none pt-6 lg:pt-0">
+      <CardContent className="align-center flex flex-col gap-6 lg:p-8 2xl:flex-row">
+        <div className="relative aspect-video w-full self-center lg:max-w-[320px]">
           <img
             src={imageUrl}
             alt={title}
             loading="eager"
             decoding="async"
-            className="w-full h-full object-cover rounded-lg drop-shadow-sm"
+            className="h-full w-full rounded-lg object-cover drop-shadow-sm"
             onError={(e) => {
               (e.target as HTMLImageElement).src = CardPlaceholder;
             }}
           />
         </div>
-        <div className="flex flex-col w-full gap-y-2">
+        <div className="flex w-full flex-col gap-y-2">
           <CategoryChip category={course?.category} className="bg-primary-50" />
           <h5 className="h5">{title}</h5>
-          <Viewer content={description} className="body-base text-neutral-900 mt-2" />
+          <Viewer content={description} className="body-base mt-2 text-neutral-900" />
         </div>
       </CardContent>
     </Card>

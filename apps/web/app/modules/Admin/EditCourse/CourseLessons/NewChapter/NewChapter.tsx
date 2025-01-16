@@ -47,8 +47,8 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
   const saveButtonStyles = "bg-primary-700 hover:bg-blue-600 text-white";
 
   return (
-    <div className="w-full h-min p-8 flex flex-col bg-white rounded-lg gap-y-6">
-      <hgroup className="flex flex-col-reverse w-full gap-y-1">
+    <div className="flex h-min w-full flex-col gap-y-6 rounded-lg bg-white p-8">
+      <hgroup className="flex w-full flex-col-reverse gap-y-1">
         <div className="h5 text-neutral-950">
           {chapter ? (
             <>
@@ -85,7 +85,7 @@ const NewChapter = ({ setContentTypeToDisplay, chapter }: NewChapterProps) => {
               </FormItem>
             )}
           />
-          <div className="flex space-x-4 mt-4">
+          <div className="mt-4 flex space-x-4">
             <Button type="submit" className={saveButtonStyles}>
               {t("common.button.save")}
             </Button>

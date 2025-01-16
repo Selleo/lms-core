@@ -32,13 +32,20 @@ const QuestionWrapper = ({
   const isOpenQuestion =
     questionType === QuestionType.BRIEF_RESPONSE || questionType === QuestionType.DETAILED_RESPONSE;
 
+  const errors = form.formState.errors;
+
+  errors?.questions?.[questionIndex];
   return (
-    <Accordion type="single" collapsible value={isOpen ? `item-${questionIndex}` : undefined}>
-      <AccordionItem value={`item-${questionIndex}`}>
+    <Accordion type="single" collapsible value={isOpen ? `item-${item.sortableId}` : undefined}>
+      <AccordionItem value={`item-${item.sortableId}`}>
         <div
           className={cn(
-            "border p-2 mt-4 rounded-xl transition-all duration-300",
-            isOpen && !isOpenQuestion ? "border-blue-500" : "border-gray-200",
+            "mt-4 rounded-xl border p-2 transition-all duration-300",
+            errors?.questions?.[questionIndex]
+              ? "border-red-500"
+              : isOpen && !isOpenQuestion
+                ? "border-blue-500"
+                : "border-gray-200",
           )}
         >
           <QuestionTitle

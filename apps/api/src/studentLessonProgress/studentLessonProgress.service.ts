@@ -18,6 +18,7 @@ import {
   studentCourses,
   studentLessonProgress,
 } from "src/storage/schema";
+import { USER_ROLES, type UserRole } from "src/user/schemas/userRoles";
 import { PROGRESS_STATUSES } from "src/utils/types/progress.type";
 
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
@@ -35,15 +36,15 @@ export class StudentLessonProgressService {
   async markLessonAsCompleted(
     id: UUIDType,
     studentId: UUIDType,
+    userRole?: UserRole,
     quizCompleted = false,
     completedQuestionCount = 0,
-    trx?: PostgresJsDatabase<typeof schema>,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
   ) {
-    const dbInstance = trx ?? this.db;
-
     const [accessCourseLessonWithDetails] = await this.checkLessonAssignment(id, studentId);
 
-    // TODO: handle block marking when user is teacher or admin
+    if (userRole === USER_ROLES.TEACHER || userRole === USER_ROLES.ADMIN) return;
+
     if (!accessCourseLessonWithDetails.isAssigned && !accessCourseLessonWithDetails.isFreemium)
       throw new UnauthorizedException("You don't have assignment to this lesson");
 
@@ -106,12 +107,12 @@ export class StudentLessonProgressService {
       studentId,
       lesson.chapterLessonCount,
       isCompletedAsFreemium,
-      trx,
+      dbInstance,
     );
 
     if (isCompletedAsFreemium) return;
 
-    await this.checkCourseIsCompletedForUser(lesson.courseId, studentId, trx);
+    await this.checkCourseIsCompletedForUser(lesson.courseId, studentId, dbInstance);
   }
 
   private async updateChapterProgress(
@@ -162,17 +163,23 @@ export class StudentLessonProgressService {
     }
 
     return await dbInstance
-      .update(studentChapterProgress)
-      .set({
+      .insert(studentChapterProgress)
+      .values({
         completedLessonCount: completedLessonCount.count,
+        courseId,
+        chapterId,
+        studentId,
       })
-      .where(
-        and(
-          eq(studentChapterProgress.chapterId, chapterId),
-          eq(studentChapterProgress.studentId, studentId),
-        ),
-      )
-      .returning();
+      .onConflictDoUpdate({
+        target: [
+          studentChapterProgress.studentId,
+          studentChapterProgress.chapterId,
+          studentChapterProgress.courseId,
+        ],
+        set: {
+          completedLessonCount: completedLessonCount.count,
+        },
+      });
   }
 
   private async checkCourseIsCompletedForUser(
@@ -271,8 +278,12 @@ export class StudentLessonProgressService {
       .where(and(eq(studentCourses.studentId, studentId), eq(studentCourses.courseId, courseId)));
   }
 
-  private async checkLessonAssignment(id: UUIDType, userId: UUIDType) {
-    return this.db
+  private async checkLessonAssignment(
+    id: UUIDType,
+    userId: UUIDType,
+    dbInstance: PostgresJsDatabase<typeof schema> = this.db,
+  ) {
+    return dbInstance
       .select({
         isAssigned: sql<boolean>`CASE WHEN ${studentCourses.id} IS NOT NULL THEN TRUE ELSE FALSE END`,
         isFreemium: sql<boolean>`CASE WHEN ${chapters.isFreemium} THEN TRUE ELSE FALSE END`,
@@ -293,6 +304,6 @@ export class StudentLessonProgressService {
         studentCourses,
         and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
       )
-      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
+      .where(eq(lessons.id, id));
   }
 }

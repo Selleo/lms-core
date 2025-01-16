@@ -5,31 +5,20 @@ import { useToast } from "~/components/ui/use-toast";
 
 import { ApiClient } from "../api-client";
 
+import type { EvaluationQuizBody } from "../generated-api";
+
 type SubmitQuizProps = {
   handleOnSuccess: () => void;
 };
 
-type Answer = {
-  lessonId: string;
-  answers: {
-    questionId: string;
-    answer:
-      | {
-          answerId: string;
-          value?: string;
-        }[]
-      | {
-          answerId: string;
-        }[];
-  }[];
-};
+type Answer = EvaluationQuizBody;
 
 export function useSubmitQuiz({ handleOnSuccess }: SubmitQuizProps) {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: async (answer: Answer) => {
-      const response = await ApiClient.api.lessonControllerEvaluationQuiz(answer);
+    mutationFn: async (questionAnswers: Answer) => {
+      const response = await ApiClient.api.lessonControllerEvaluationQuiz(questionAnswers);
 
       return response.data;
     },

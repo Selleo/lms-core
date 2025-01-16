@@ -146,18 +146,18 @@ const ChapterCard = ({
   return (
     <AccordionItem key={chapter.id} value={chapter.id} className="p-0">
       <Card
-        className={cn("mb-4 h-full flex p-4 border", {
+        className={cn("mb-4 flex h-full border p-4", {
           "border-primary-500": isOpen || selectedChapter?.id === chapter.id,
         })}
         onClick={onClickChapterCard}
       >
         <div className="flex w-full">
-          <div className="flex-1 flex flex-col justify-between ml-2">
+          <div className="ml-2 flex flex-1 flex-col justify-between">
             <div className="flex items-center gap-x-3">
               {dragTrigger}
-              <hgroup className="flex flex-col-reverse w-full">
+              <hgroup className="flex w-full flex-col-reverse">
                 <h3 className="body-base-md text-neutral-950">{chapter.title}</h3>
-                <div className="text-neutral-800 body-sm-md">
+                <div className="body-sm-md text-neutral-800">
                   {t("adminCourseView.curriculum.other.chapter")} {chapter.displayOrder} •{" "}
                   {t("adminCourseView.curriculum.other.lesson")} {chapter.lessons.length}
                 </div>
@@ -169,7 +169,7 @@ const ChapterCard = ({
             <AccordionContent className="mt-2 text-gray-700">
               {chapter.lessonCount > 0 ? (
                 <LessonCardList
-                  lessons={chapter.lessons}
+                  lessons={chapter.lessons.map((lesson) => ({ ...lesson, sortableId: lesson.id }))}
                   selectedLesson={selectedLesson}
                   setSelectedLesson={setSelectedLesson}
                   setContentTypeToDisplay={setContentTypeToDisplay}
@@ -178,20 +178,20 @@ const ChapterCard = ({
                 <div className="ml-9">No lessons</div>
               )}
             </AccordionContent>
-            <div className="flex mt-3 justify-between items-center">
+            <div className="mt-3 flex items-center justify-between">
               <div
                 className={cn("flex items-center space-x-2", {
                   "ml-9": !isOpen || chapter.lessons.length === 0,
                 })}
               >
                 <Button variant="outline" onClick={handleAddLessonClick} className="">
-                  <Icon name="Plus" className="mr-2 text-primary-800" />
+                  <Icon name="Plus" className="text-primary-800 mr-2" />
                   {t("adminCourseView.curriculum.lesson.button.addLesson")}
                 </Button>
               </div>
               <div className="flex items-center gap-x-2">
                 <Switch.Root
-                  className={cn("w-11 h-6 rounded-full relative transition-colors", {
+                  className={cn("relative h-6 w-11 rounded-full transition-colors", {
                     "bg-blue-500": chapter.isFree,
                     "bg-gray-200": !chapter.isFree,
                   })}
@@ -200,7 +200,7 @@ const ChapterCard = ({
                 >
                   <Switch.Thumb
                     className={cn(
-                      "block w-4 h-4 bg-white rounded-full transition-transform transform translate-x-1",
+                      "block h-4 w-4 translate-x-1 transform rounded-full bg-white transition-transform",
                       chapter.isFree ? "translate-x-6" : "",
                     )}
                   />
@@ -212,13 +212,13 @@ const ChapterCard = ({
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span>
-                        <Icon name="Info" className="text-neutral-800 w-6 h-auto cursor-default" />
+                        <Icon name="Info" className="h-auto w-6 cursor-default text-neutral-800" />
                       </span>
                     </TooltipTrigger>
                     <TooltipContent
                       side="top"
                       align="center"
-                      className="bg-black text-white text-sm px-2 py-1 rounded shadow-md"
+                      className="rounded bg-black px-2 py-1 text-sm text-white shadow-md"
                     >
                       {t("adminCourseView.curriculum.chapter.other.freemiumToolTip")}
                       <TooltipArrow className="fill-black" />
@@ -234,8 +234,10 @@ const ChapterCard = ({
   );
 };
 
-interface ChaptersListProps {
-  chapters?: Chapter[];
+type DraggableChapter = Chapter & { sortableId: string };
+
+type ChaptersListProps = {
+  chapters?: DraggableChapter[];
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter | null) => void;
   setSelectedLesson: (selectedLesson: Lesson | null) => void;
@@ -243,7 +245,7 @@ interface ChaptersListProps {
   selectedLesson: Lesson | null;
   canRefetchChapterList: boolean;
   isLeaveModalOpen?: boolean;
-}
+};
 
 function getChapterWithLatestLesson(chapters: Chapter[]): string | null {
   let latestTime = 0;
@@ -309,7 +311,7 @@ const ChaptersList = ({
 
             mutation.mutate({
               chapter: {
-                chapterId: updatedItems[newChapterPosition].id,
+                chapterId: updatedItems[newChapterPosition].sortableId,
                 displayOrder: newDisplayOrder,
               },
             });
@@ -317,11 +319,11 @@ const ChaptersList = ({
         }}
         className="grid grid-cols-1"
         renderItem={(chapter) => (
-          <SortableList.Item id={chapter.id}>
+          <SortableList.Item id={chapter.sortableId}>
             <ChapterCard
-              key={chapter.id}
+              key={chapter.sortableId}
               chapter={chapter}
-              isOpen={openItem === chapter.id}
+              isOpen={openItem === chapter.sortableId}
               setContentTypeToDisplay={setContentTypeToDisplay}
               setSelectedChapter={setSelectedChapter}
               setSelectedLesson={setSelectedLesson}

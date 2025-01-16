@@ -1,6 +1,3 @@
-// TODO: Need to be fixed
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { ProgressBadge } from "~/components/Badges/ProgressBadge";
 import { Icon } from "~/components/Icon";
 import { LessonTypes, LessonTypesIcons } from "~/modules/Courses/CourseView/lessonTypes";
@@ -21,16 +18,16 @@ type CourseChapterLessonProps = {
 
 export const CourseChapterLesson = ({ lesson }: CourseChapterLessonProps) => {
   return (
-    <div className="flex gap-x-2 w-full p-2">
-      <Icon name={LessonTypesIcons[lesson.type]} className="size-6 text-primary-700" />
-      <div className="flex flex-col justify-center w-full">
+    <div className="flex w-full gap-x-2 p-2">
+      <Icon name={LessonTypesIcons[lesson.type]} className="text-primary-700 size-6" />
+      <div className="flex w-full flex-col justify-center">
         <p className="body-sm-md text-neutral-950">
           {lesson.title}{" "}
           <span className="text-neutral-800">
             {lesson.quizQuestionCount ? `(${lesson.quizQuestionCount})` : null}
           </span>
         </p>
-        <span className="text-neutral-800 details">{LessonTypes[lesson.type]}</span>
+        <span className="details text-neutral-800">{LessonTypes[lesson.type]}</span>
       </div>
       <ProgressBadge progress={progressBadge[lesson.status]} className="self-center" />
     </div>

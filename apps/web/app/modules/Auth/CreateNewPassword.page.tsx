@@ -67,7 +67,7 @@ export default function CreateNewPasswordPage() {
         data: { password: data.newPassword, createToken: createToken },
       }).then(() => {
         toast({
-          description: t("changePasswordView.toast.passwordCreatedSuccessfully"),
+          description: t("changePasswordView.toast.passwordCreatedsuccessfuly"),
         });
         navigate("/auth/login");
       });
@@ -93,7 +93,7 @@ export default function CreateNewPasswordPage() {
               {...register("newPassword")}
             />
             {errors.newPassword && (
-              <div className="text-red-500 text-sm">{errors.newPassword.message}</div>
+              <div className="text-sm text-red-500">{errors.newPassword.message}</div>
             )}
           </div>
           <div className="grid gap-2">
@@ -111,7 +111,7 @@ export default function CreateNewPasswordPage() {
               {...register("newPasswordConfirmation")}
             />
             {errors.newPasswordConfirmation && (
-              <div className="text-red-500 text-sm">{errors.newPasswordConfirmation.message}</div>
+              <div className="text-sm text-red-500">{errors.newPasswordConfirmation.message}</div>
             )}
           </div>
           <Button type="submit" className="w-full">

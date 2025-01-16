@@ -64,13 +64,13 @@ const AddCourse = () => {
   };
 
   return (
-    <div className="flex h-screen bg-white px-20 py-8 overflow-auto">
-      <div className="w-full flex items-center justify-center">
+    <div className="flex h-screen overflow-auto bg-white px-20 py-8">
+      <div className="flex w-full items-center justify-center">
         <img src={SplashScreenImage} alt="splashScreenImage" className="rounded" />
       </div>
-      <div className="w-full max-w-[820px] flex flex-col gap-y-6 px-8">
+      <div className="flex w-full max-w-[820px] flex-col gap-y-6 px-8">
         <Breadcrumb />
-        <hgroup className="flex flex-col gapy-y-1">
+        <hgroup className="gapy-y-1 flex flex-col">
           <h1 className="h3 text-neutral-950">{t("adminCourseView.settings.header")}</h1>
           <p className="body-lg-md text-neutral-800">{t("adminCourseView.settings.subHeader")}</p>
         </hgroup>
@@ -113,7 +113,7 @@ const AddCourse = () => {
                         <FormControl>
                           <SelectTrigger
                             id="categoryId"
-                            className="border border-neutral-300 focus:border-primary-800 focus:ring-primary-800 rounded-lg data-[placeholder]:body-base"
+                            className="focus:border-primary-800 focus:ring-primary-800 data-[placeholder]:body-base rounded-lg border border-neutral-300"
                           >
                             <SelectValue
                               placeholder={t("adminCourseView.settings.placeholder.category")}
@@ -158,11 +158,11 @@ const AddCourse = () => {
               )}
             />
             {descriptionFieldCharactersLeft <= 0 ? (
-              <p className="text-red-500 text-sm">
+              <p className="text-sm text-red-500">
                 {t("adminCourseView.settings.other.reachedCharactersLimit")}
               </p>
             ) : (
-              <p className="text-neutral-800 mt-1">
+              <p className="mt-1 text-neutral-800">
                 {descriptionFieldCharactersLeft}{" "}
                 {t("adminCourseView.settings.other.charactersLeft")}
               </p>
@@ -192,7 +192,7 @@ const AddCourse = () => {
             {displayThumbnailUrl && (
               <Button
                 onClick={removeThumbnail}
-                className="bg-red-500 text-white py-2 px-6 rounded mb-4 mt-4"
+                className="mb-4 mt-4 rounded bg-red-500 px-6 py-2 text-white"
               >
                 <Icon name="TrashIcon" className="mr-2" />
                 {t("adminCourseView.settings.button.removeThumbnail")}
@@ -200,17 +200,17 @@ const AddCourse = () => {
             )}
 
             <div className="pb-5">
-              <div className="flex space-x-5 mt-5 mb-10">
+              <div className="mb-10 mt-5 flex space-x-5">
                 <Button
                   type="button"
-                  className="bg-white text-primary-800 border-2 rounded px-6 py-2"
+                  className="text-primary-800 rounded border-2 bg-white px-6 py-2"
                   onClick={() => navigate("/admin/courses")}
                 >
                   {t("common.button.cancel")}
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-primary-700 text-white rounded px-6 py-2"
+                  className="bg-primary-700 rounded px-6 py-2 text-white"
                   disabled={!isFormValid || isUploading}
                 >
                   {t("common.button.proceed")}

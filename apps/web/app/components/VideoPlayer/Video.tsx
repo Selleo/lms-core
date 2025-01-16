@@ -13,7 +13,7 @@ export const Video = ({ url, onVideoEnded, isExternalUrl }: VideoPlayerProps) =>
 
   if (isExternalUrl) {
     return (
-      <div className="w-full aspect-video">
+      <div className="aspect-video w-full">
         <ReactPlayer
           url={url}
           controls

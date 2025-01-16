@@ -23,14 +23,12 @@ export class AdminChapterService {
         .from(chapters)
         .where(eq(chapters.courseId, body.courseId));
 
-      // TODO: decide if we need to isPublished
       const [chapter] = await trx
         .insert(chapters)
         .values({
           ...body,
           authorId,
           displayOrder: maxDisplayOrder.displayOrder + 1,
-          isPublished: true,
         })
         .returning();
 
@@ -70,7 +68,7 @@ export class AdminChapterService {
     );
   }
 
-  async updateChapter(id: string, body: UpdateChapterBody) {
+  async updateChapter(id: UUIDType, body: UpdateChapterBody) {
     const [chapter] = await this.adminChapterRepository.updateChapter(id, body);
 
     if (!chapter) throw new NotFoundException("Chapter not found");

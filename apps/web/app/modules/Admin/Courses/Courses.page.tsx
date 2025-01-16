@@ -29,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
 import { formatHtmlString } from "~/lib/formatters/formatHtmlString";
 import { formatPrice } from "~/lib/formatters/priceFormatter";
 import { cn } from "~/lib/utils";
@@ -204,10 +205,24 @@ const Courses = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex gap-3 ml-auto">
-        <Link to="new-scorm">
-          <Button variant="outline">{t("adminCoursesView.button.uploadScorm")}</Button>
-        </Link>
+      <div className="ml-auto flex gap-3">
+        <TooltipProvider delayDuration={0}>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button variant="outline" disabled>
+                {t("adminCoursesView.button.uploadScorm")}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent
+              side="top"
+              align="center"
+              className="rounded bg-black px-2 py-1 text-sm text-white shadow-md"
+            >
+              {t("common.tooltip.soon")}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <Link to="/admin/beta-courses/new">
           <Button variant="outline">{t("adminCoursesView.button.createNew")}</Button>
         </Link>

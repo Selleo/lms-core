@@ -12,7 +12,11 @@
       "goToDashboard": "Go to dashboard",
       "goBack": "Go back",
       "ignore": "Ignore",
-      "clearAll": "Clear All"
+      "clearAll": "Clear All",
+      "validate": "Validate"
+    },
+    "tooltip": {
+      "soon": "Cooming soon"
     },
     "roles": {
       "admin": "Admin",
@@ -91,8 +95,7 @@
   },
   "studentChapterCardView": {
     "other": {
-      "lessonProgress": "Lesson progress:",
-      "quizProgress": "Quiz progress:"
+      "chapterProgress": "Chapter progress:"
     }
   },
   "navigationSideBar": {
@@ -215,20 +218,20 @@
       "correctAnswers": "Correct answers",
       "wrongAnswers": "Wrong answers",
       "avgQuizScorePercentage": "Avg. Percent Score of Quizzes",
-      "avgQuizCompletitionPercentage": "Avg. Percent of Course Competition",
+      "avgQuizCompletionPercentage": "Avg. Percent of Course Competition",
       "noData": "No data",
       "courses": "Courses",
       "lessons": "Lessons",
       "completed": "Completed",
       "started": "Started",
-      "noDataAvaiable": "No data available",
+      "noDataAvailable": "No data available",
       "rates": "Rates",
       "numberOf": "Number of",
-      "noLessonsToContiue": "Currently have no lessons to continue.",
+      "noLessonsToContinue": "Currently have no lessons to continue.",
       "continueLearning": "Continue learning in:"
     }
   },
-  "profilWithCalendarView": {
+  "profileWithCalendarView": {
     "header": "My Profile",
     "button": {
       "settings": "Settings"
@@ -240,9 +243,9 @@
   "adminStatisticsView": {
     "header": "Welcome back,",
     "other": {
-      "courseCompletitionPercentage": "Course Completition Percentage",
-      "conversionsAfterFreemiumLessson": "Conversions After Freemium Lesson",
-      "avgQuizScore": "Avg. Score Across All Quizze",
+      "courseCompletionPercentage": "Course Completion Percentage",
+      "conversionsAfterFreemiumLesson": "Conversions After Freemium Lesson",
+      "avgQuizScore": "Avg. Score Across All Quizzes",
       "purchasedCourse": "Purchased Course",
       "remainedOnFreemium": "Remained on Freemium",
       "correct": "Correct",
@@ -373,7 +376,7 @@
   },
   "paymentView": {
     "toast": {
-      "successfull": "Payment successful",
+      "successful": "Payment successful",
       "failed": "Failed to create payment intent",
       "somethingWentWrong": "Something went wrong"
     },
@@ -486,10 +489,10 @@
         },
         "validation": {
           "optionTextRequired": "Option text is required",
-          "atLeastOneOptionRequired": "At least one option is requred",
+          "atLeastOneOptionRequired": "At least one option is required",
           "imageRequired": "Image is required",
           "descriptionLength": "Description must have at least 10 characters.",
-          "atLeastOneOptionCorrect": "`At least one option must be marked as correct for question.",
+          "atLeastOneOptionCorrect": "At least one option must be marked as correct for question.",
           "allOptionsCorrect": "All options must be correct"
         },
         "toast": {
@@ -551,7 +554,8 @@
           "presentationLessonDescription": "Choose this type if you want to embed presentations files like PPTX.",
           "quizLessonDescription": "This type allows you to build quizzes for your chapter using different types of questions.",
           "leaveContentHeader": "Are you sure you want to leave this question editor?",
-          "leaveContentBody": "It will delete all unsaved progress"
+          "leaveContentBody": "It will delete all unsaved progress",
+          "leaveContentBodyValidate": "If you want to save the changes, you must first validate the form"
         }
       }
     },
@@ -559,7 +563,7 @@
       "header": "Status",
       "subHeader": "Set state for the course",
       "draftHeader": "Draft",
-      "draftBody": "Students cannot purchase or enroll in this course. For those alreadyenrolled, the course will not appear in their Student Course List.",
+      "draftBody": "Students cannot purchase or enroll in this course. For those already enrolled, the course will not appear in their Student Course List.",
       "publishedHeader": "Published",
       "publishedBody": "Students can purchase, enroll in, and access the course content. Once enrolled, the course will be displayed on their Student Dashboard."
     },
@@ -569,9 +573,15 @@
       "freeCourseHeader": "Free",
       "freeCourseBody": "Students can enroll in, and access the course content without paying.",
       "paidCourseHeader": "Paid course",
-      "paidCourseBody": "Students can purchase and access the course content. Once selected, you candefine currency and price.",
+      "paidCourseBody": "Students can purchase and access the course content. Once selected, you can define currency and price.",
       "field": {
         "price": "Price"
+      },
+      "placeholder": {
+        "amount": "Amount"
+      },
+      "validation": {
+        "priceInCents": "Price must be at least 2.00 or free"
       }
     }
   },
@@ -585,7 +595,7 @@
       "password": "Password"
     },
     "other": {
-      "allreadyHaveAccount": "Already have an account?"
+      "alreadyHaveAccount": "Already have an account?"
     },
     "button": {
       "createAccount": "Create an account",
@@ -657,11 +667,11 @@
       "view": "View",
       "readMore": "Read More"
     },
-    "enroledCourses": {
+    "enrolledCourses": {
       "header": "Your Courses",
       "subHeader": "Courses you are currently enrolled in"
     },
-    "avaiableCourses": {
+    "availableCourses": {
       "header": "Available Courses",
       "subHeader": "All available career courses available to enroll",
       "filters": {
@@ -723,6 +733,17 @@
       "other": {
         "courseProgress": "Course progress:"
       }
+    },
+    "validation": {
+      "answerCannotBeEmpty": "Answer cannot be empty.",
+      "atLeastOneOptionMustBeSelected": "At least one option must be selected for question {{questionId}}.",
+      "answerCannotBeEmptyForDragAndDropQuestion": "Answer cannot be empty for drag-and-drop question {{questionId}}.",
+      "answerCannotBeEmptyForTextQuestion": "Answer cannot be empty for text question {{questionId}}.",
+      "invalidSelectionForSingleAnswer": "Invalid selection for a single-answer question.",
+      "invalidFormatForMultiAnswer": "Invalid format for multi-answer questions.",
+      "trueOrFalseRequired": "A true or false response is required.",
+      "photoQuestionMustHaveAnswer": "An answer is required for this photo question.",
+      "unansweredQuestions": "It seems you haven't checked all the answers yet. Please review them and try again!"
     }
   },
   "studentCourseView": {
@@ -745,6 +766,7 @@
         "about": "About",
         "collapse": "Collapse",
         "courseProgress": "Course progress",
+        "options": "Options",
         "remainingChapters": "Remaining chapters",
         "completedChapters": "Completed chapters",
         "noData": "No data",

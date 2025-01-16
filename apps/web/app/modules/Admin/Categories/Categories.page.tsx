@@ -156,7 +156,7 @@ const Categories = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="flex justify-between items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
         <Link to="new">
           <Button variant="outline">{t("adminCategoriesView.button.createNew")}</Button>
         </Link>
@@ -166,7 +166,7 @@ const Categories = () => {
           onChange={handleFilterChange}
           isLoading={isPending}
         />
-        <div className="flex gap-x-2 items-center px-4 py-2 ml-auto">
+        <div className="ml-auto flex items-center gap-x-2 px-4 py-2">
           <p
             className={cn("text-sm", {
               "text-neutral-500": isEmpty(selectedCategories),
@@ -181,12 +181,12 @@ const Categories = () => {
             className="flex items-center gap-x-2"
             disabled={isEmpty(selectedCategories)}
           >
-            <Trash className="w-3 h-3" />
+            <Trash className="h-3 w-3" />
             <span className="text-xs">{t("adminCategoriesView.button.deleteSelected")}</span>
           </Button>
         </div>
       </div>
-      <Table className="bg-neutral-50 border">
+      <Table className="border bg-neutral-50">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

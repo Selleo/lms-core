@@ -125,12 +125,12 @@ export default function CoursesPage() {
     {
       name: "title",
       type: "text",
-      placeholder: t("studentCoursesView.avaiableCourses.filters.placeholder.title"),
+      placeholder: t("studentCoursesView.availableCourses.filters.placeholder.title"),
     },
     {
       name: "category",
       type: "select",
-      placeholder: t("studentCoursesView.avaiableCourses.filters.placeholder.categories"),
+      placeholder: t("studentCoursesView.availableCourses.filters.placeholder.categories"),
       options: categories?.map(({ title }) => ({
         value: title,
         label: title,
@@ -139,7 +139,7 @@ export default function CoursesPage() {
     {
       name: "sort",
       type: "select",
-      placeholder: t("studentCoursesView.avaiableCourses.filters.placeholder.sort"),
+      placeholder: t("studentCoursesView.availableCourses.filters.placeholder.sort"),
       options: SORT_OPTIONS,
     },
   ];
@@ -160,23 +160,23 @@ export default function CoursesPage() {
 
   return (
     <PageWrapper>
-      <div className="flex flex-1 flex-col gap-y-12 h-auto">
+      <div className="flex h-auto flex-1 flex-col gap-y-12">
         <div className="flex flex-col gap-y-6">
           <div className="flex flex-col">
-            <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-              {t("studentCoursesView.enroledCourses.header")}
+            <h4 className="pb-1 text-2xl font-bold leading-10 text-neutral-950">
+              {t("studentCoursesView.enrolledCourses.header")}
             </h4>
             <p className="text-lg leading-7 text-neutral-800">
-              {t("studentCoursesView.enroledCourses.subHeader")}
+              {t("studentCoursesView.enrolledCourses.subHeader")}
             </p>
           </div>
           <div
             data-testid="enrolled-courses"
-            className="flex gap-6 lg:p-8 lg:bg-white w-full lg:rounded-lg drop-shadow-primary"
+            className="drop-shadow-primary flex w-full gap-6 lg:rounded-lg lg:bg-white lg:p-8"
           >
             {!studentCourses ||
               (isEmpty(studentCourses) && (
-                <div className="col-span-3 flex gap-8 ">
+                <div className="col-span-3 flex gap-8">
                   <div>
                     <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
                   </div>
@@ -184,14 +184,14 @@ export default function CoursesPage() {
                     <p className="text-lg font-bold leading-5 text-neutral-950">
                       {t("studentCoursesView.other.cannotFindCourses")}
                     </p>
-                    <p className="text-neutral-800 text-base leading-6 font-normal">
+                    <p className="text-base font-normal leading-6 text-neutral-800">
                       {t("studentCoursesView.other.changeSearchCriteria")}
                     </p>
                   </div>
                 </div>
               ))}
             {isStudentCoursesLoading && (
-              <div className="flex justify-center items-center h-full">
+              <div className="flex h-full items-center justify-center">
                 <Loader />
               </div>
             )}
@@ -200,13 +200,13 @@ export default function CoursesPage() {
         </div>
         <div className="flex flex-col">
           <div className="flex flex-col lg:p-0">
-            <h4 className="text-neutral-950 text-2xl font-bold leading-10 pb-1">
-              {t("studentCoursesView.avaiableCourses.header")}
+            <h4 className="pb-1 text-2xl font-bold leading-10 text-neutral-950">
+              {t("studentCoursesView.availableCourses.header")}
             </h4>
             <p className="text-lg leading-7 text-neutral-800">
-              {t("studentCoursesView.avaiableCourses.subHeader")}
+              {t("studentCoursesView.availableCourses.subHeader")}
             </p>
-            <div className="flex justify-between gap-2 items-center">
+            <div className="flex items-center justify-between gap-2">
               <SearchFilter
                 filters={filterConfig}
                 values={{
@@ -236,7 +236,7 @@ export default function CoursesPage() {
           </div>
           <div
             data-testid="unenrolled-courses"
-            className={cn("lg:p-8 gap-6 rounded-lg drop-shadow-primary lg:bg-white", {
+            className={cn("drop-shadow-primary gap-6 rounded-lg lg:bg-white lg:p-8", {
               "flex flex-wrap": courseListLayout === "card",
               block: courseListLayout === "table",
             })}
@@ -246,7 +246,7 @@ export default function CoursesPage() {
             )}
             {!availableCourses ||
               (isEmpty(availableCourses) && (
-                <div className="col-span-3 flex gap-8 ">
+                <div className="col-span-3 flex gap-8">
                   <div>
                     <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
                   </div>
@@ -254,14 +254,14 @@ export default function CoursesPage() {
                     <p className="text-lg font-bold leading-5 text-neutral-950">
                       {t("studentCoursesView.other.cannotFindCourses")}
                     </p>
-                    <p className="text-neutral-800 text-base leading-6 font-normal">
+                    <p className="text-base font-normal leading-6 text-neutral-800">
                       {t("studentCoursesView.other.changeSearchCriteria")}
                     </p>
                   </div>
                 </div>
               ))}
             {isCoursesLoading && (
-              <div className="flex justify-center items-center h-full">
+              <div className="flex h-full items-center justify-center">
                 <Loader />
               </div>
             )}

@@ -101,7 +101,7 @@ const Breadcrumb = ({
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
-      <BreadcrumbItem className="text-neutral-950 body-base-md">{lessonLabel}</BreadcrumbItem>
+      <BreadcrumbItem className="body-base-md text-neutral-950">{lessonLabel}</BreadcrumbItem>
     </BreadcrumbList>
   );
 };

@@ -242,7 +242,7 @@ export class LessonRepository {
         studentCourses,
         and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
       )
-      .where(and(eq(chapters.isPublished, true), eq(lessons.id, id)));
+      .where(eq(lessons.id, id));
   }
 
   async getQuizResult(lessonId: UUIDType, quizScore: number, userId: UUIDType) {

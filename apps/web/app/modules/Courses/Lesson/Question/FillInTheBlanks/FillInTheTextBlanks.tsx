@@ -11,7 +11,7 @@ export const FillInTheTextBlanks: FC<FillInTheTextBlanksProps> = ({ content, rep
   const parts = content.split(/\[word]/g);
 
   return (
-    <div className="flex flex-wrap text-neutral-900 body-base items-center">
+    <div className="body-base flex flex-wrap items-center text-neutral-900">
       {parts.map((part, index) => (
         <Fragment key={index}>
           <Viewer content={part} />

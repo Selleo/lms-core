@@ -34,8 +34,8 @@ const EditCourse = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      <div className="flex h-full items-center justify-center">
+        <div className="h-32 w-32 animate-spin rounded-full border-b-2 border-t-2 border-gray-900"></div>
       </div>
     );
   }
@@ -43,28 +43,28 @@ const EditCourse = () => {
   return (
     <Tabs
       defaultValue={searchParams.get("tab") ?? "Curriculum"}
-      className="flex flex-col gap-y-4 h-full"
+      className="flex h-full flex-col gap-y-4"
     >
-      <div className="py-6 px-8 flex flex-col gap-y-4 shadow-md w-full border bg-white rounded-lg border-gray-200">
-        <div className="flex justify-between items-center">
-          <h4 className="text-neutral-950 h4 flex items-center">
+      <div className="flex w-full flex-col gap-y-4 rounded-lg border border-gray-200 bg-white px-8 py-6 shadow-md">
+        <div className="flex items-center justify-between">
+          <h4 className="h4 flex items-center text-neutral-950">
             {course?.title || ""}
             {course?.isPublished ? (
-              <span className="ml-2 flex items-center text-success-800 bg-success-50 px-2 py-1 rounded-sm text-sm">
+              <span className="text-success-800 bg-success-50 ml-2 flex items-center rounded-sm px-2 py-1 text-sm">
                 <Icon name="Success" className="mr-1" />
                 {t("common.other.published")}
               </span>
             ) : (
-              <span className="ml-2 flex items-center text-yellow-600 bg-warning-50 px-2 py-1 rounded-sm text-sm">
+              <span className="bg-warning-50 ml-2 flex items-center rounded-sm px-2 py-1 text-sm text-yellow-600">
                 <Icon name="Warning" className="mr-1" />
                 {t("common.other.draft")}
               </span>
             )}
           </h4>
-          <Button className="bg-transparent text-primary-700 border border-neutral-200 flex justify-end">
+          <Button className="text-primary-700 flex justify-end border border-neutral-200 bg-transparent">
             <Icon name="Eye" className="mr-2" />
             {t("adminCourseView.common.preview")}{" "}
-            <Icon name="ArrowDown" className="text-neutral-500 ml-2" />
+            <Icon name="ArrowDown" className="ml-2 text-neutral-500" />
           </Button>
         </div>
         <TabsList className="w-min">

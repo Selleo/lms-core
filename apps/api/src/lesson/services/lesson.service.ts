@@ -70,18 +70,16 @@ export class LessonService {
 
     const questionListWithUrls: QuestionBody[] = await Promise.all(
       questionList.map(async (question) => {
-        if (question.photoS3Key) {
-          if (question.photoS3Key.startsWith("https://")) return question;
+        if (!question.photoS3Key) return question;
 
-          try {
-            const signedUrl = await this.fileService.getFileUrl(question.photoS3Key);
-            return { ...question, photoS3Key: signedUrl };
-          } catch (error) {
-            console.error(`Failed to get signed URL for ${question.photoS3Key}:`, error);
-            return question;
-          }
+        try {
+          const signedUrl = await this.fileService.getFileUrl(question.photoS3Key);
+
+          return { ...question, photoS3Key: signedUrl };
+        } catch (error) {
+          console.error(`Failed to get signed URL for ${question.photoS3Key}:`, error);
+          return question;
         }
-        return question;
       }),
     );
 
@@ -137,7 +135,7 @@ export class LessonService {
     const correctAnswersForQuizQuestions =
       await this.questionRepository.getQuizQuestionsToEvaluation(studentQuizAnswers.lessonId);
 
-    if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.answers.length) {
+    if (correctAnswersForQuizQuestions.length !== studentQuizAnswers.questionsAnswers.length) {
       throw new ConflictException("Quiz is not completed");
     }
 
@@ -168,6 +166,7 @@ export class LessonService {
         await this.studentLessonProgressService.markLessonAsCompleted(
           studentQuizAnswers.lessonId,
           userId,
+          undefined,
           true,
           evaluationResult.correctAnswerCount + evaluationResult.wrongAnswerCount,
           trx,

@@ -32,12 +32,7 @@ const appearance: Appearance = {
   rules: {},
 };
 
-export function PaymentModal({
-  coursePrice,
-  courseCurrency,
-  courseTitle,
-  courseId,
-}: PaymentModalProps) {
+export function PaymentModal({ coursePrice, courseCurrency, courseId }: PaymentModalProps) {
   const { currentUser } = useCurrentUserStore();
   const stripePromise = useStripePromise();
   const { clientSecret, createPaymentIntent, resetClientSecret } = useStripePaymentIntent();
@@ -59,7 +54,7 @@ export function PaymentModal({
   const handlePaymentSuccess = async () => {
     resetClientSecret();
     toast({
-      description: t("paymentView.toast.successfull"),
+      description: t("paymentView.toast.successful"),
     });
   };
 

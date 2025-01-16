@@ -46,26 +46,26 @@ export const CourseCompletionPercentageChart = ({
 
   if (isLoading) {
     return (
-      <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-1 flex items-center flex-col md:gap-y-6 xl:col-span-1 2xl:p-8 w-full h-full">
-        <Skeleton className="max-w-[240px] w-full h-[30px] rounded-lg" />
-        <div className="grid place-items-center h-[250px]">
-          <Skeleton className="aspect-square max-h-[200px] w-full h-full rounded-full" />
+      <div className="drop-shadow-card flex h-full w-full flex-col items-center rounded-lg bg-white p-6 md:col-span-1 md:gap-y-6 xl:col-span-1 2xl:p-8">
+        <Skeleton className="h-[30px] w-full max-w-[240px] rounded-lg" />
+        <div className="grid h-[250px] place-items-center">
+          <Skeleton className="aspect-square h-full max-h-[200px] w-full rounded-full" />
         </div>
-        <div className="flex gap-2 flex-col justify-center">
-          <Skeleton className="w-[126px] h-[27px] rounded-lg" />
-          <Skeleton className="w-[126px] h-[27px] rounded-lg" />
+        <div className="flex flex-col justify-center gap-2">
+          <Skeleton className="h-[27px] w-[126px] rounded-lg" />
+          <Skeleton className="h-[27px] w-[126px] rounded-lg" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="p-6 bg-white rounded-lg drop-shadow-card md:col-span-1 flex flex-col md:gap-y-6 xl:col-span-1 2xl:p-8 w-full h-full">
-      <h2 className="body-lg-md text-neutral-950 text-center">{title}</h2>
+    <div className="drop-shadow-card flex h-full w-full flex-col rounded-lg bg-white p-6 md:col-span-1 md:gap-y-6 xl:col-span-1 2xl:p-8">
+      <h2 className="body-lg-md text-center text-neutral-950">{title}</h2>
       <div className="grid place-items-center">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px] size-full"
+          className="mx-auto aspect-square size-full max-h-[250px]"
         >
           <PieChart>
             {!isEmptyChart && (
@@ -102,7 +102,7 @@ export const CourseCompletionPercentageChart = ({
           </PieChart>
         </ChartContainer>
       </div>
-      <div className="flex flex-col gap-2 justify-center items-center">{chartLegend}</div>
+      <div className="flex flex-col items-center justify-center gap-2">{chartLegend}</div>
     </div>
   );
 };

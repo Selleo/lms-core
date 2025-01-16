@@ -43,7 +43,7 @@ const LessonCard = ({ item, onClickLessonCard, dragTrigger, selectedLesson }: Le
       role="button"
       aria-label={`Lesson: ${item.title}`}
       className={cn(
-        "flex p-3 gap-x-3 bg-white border rounded-lg hover:border-neutral-300 hover:bg-neutral-50",
+        "flex gap-x-3 rounded-lg border bg-white p-3 hover:border-neutral-300 hover:bg-neutral-50",
         {
           "border-neutral-200": selectedLesson?.id !== item.id,
           "border-primary-500 bg-primary-50": selectedLesson?.id === item.id,
@@ -51,8 +51,8 @@ const LessonCard = ({ item, onClickLessonCard, dragTrigger, selectedLesson }: Le
       )}
     >
       {dragTrigger}
-      <div className="flex gap-x-2 items-start">
-        <Icon name={getIcon as IconName} className="size-6 text-primary-700" />
+      <div className="flex items-start gap-x-2">
+        <Icon name={getIcon as IconName} className="text-primary-700 size-6" />
         <hgroup>
           <p className="text-l">
             {item.type === LessonType.QUIZ ? (
@@ -64,7 +64,7 @@ const LessonCard = ({ item, onClickLessonCard, dragTrigger, selectedLesson }: Le
               item.title
             )}
           </p>
-          <p className="text-neutral-600 details">{mappedItemType}</p>
+          <p className="details text-neutral-600">{mappedItemType}</p>
         </hgroup>
       </div>
     </div>

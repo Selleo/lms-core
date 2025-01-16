@@ -351,7 +351,20 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "const": "admin",
+                  "type": "string"
+                },
+                {
+                  "const": "student",
+                  "type": "string"
+                },
+                {
+                  "const": "teacher",
+                  "type": "string"
+                }
+              ]
             }
           },
           {
@@ -1975,7 +1988,7 @@
         }
       }
     },
-    "/api/lesson/lesson-display-order": {
+    "/api/lesson/update-lesson-display-order": {
       "patch": {
         "operationId": "LessonController_updateLessonDisplayOrder",
         "parameters": [],
@@ -3239,12 +3252,6 @@
                 "courseChapterCount": {
                   "type": "number"
                 },
-                "completedChapterCount": {
-                  "type": "number"
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 },
@@ -3272,7 +3279,6 @@
                 "author",
                 "category",
                 "courseChapterCount",
-                "completedChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -3354,12 +3360,6 @@
                 "courseChapterCount": {
                   "type": "number"
                 },
-                "completedChapterCount": {
-                  "type": "number"
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 },
@@ -3377,6 +3377,12 @@
                 },
                 "hasFreeChapters": {
                   "type": "boolean"
+                },
+                "completedChapterCount": {
+                  "type": "number"
+                },
+                "enrolled": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -3387,10 +3393,10 @@
                 "author",
                 "category",
                 "courseChapterCount",
-                "completedChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
-                "currency"
+                "currency",
+                "completedChapterCount"
               ]
             }
           },
@@ -3469,12 +3475,6 @@
                 "courseChapterCount": {
                   "type": "number"
                 },
-                "completedChapterCount": {
-                  "type": "number"
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 },
@@ -3492,6 +3492,12 @@
                 },
                 "hasFreeChapters": {
                   "type": "boolean"
+                },
+                "completedChapterCount": {
+                  "type": "number"
+                },
+                "enrolled": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -3502,10 +3508,10 @@
                 "author",
                 "category",
                 "courseChapterCount",
-                "completedChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
-                "currency"
+                "currency",
+                "completedChapterCount"
               ]
             }
           },
@@ -3584,12 +3590,6 @@
                 "courseChapterCount": {
                   "type": "number"
                 },
-                "completedChapterCount": {
-                  "type": "number"
-                },
-                "enrolled": {
-                  "type": "boolean"
-                },
                 "enrolledParticipantCount": {
                   "type": "number"
                 },
@@ -3617,7 +3617,6 @@
                 "author",
                 "category",
                 "courseChapterCount",
-                "completedChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
                 "currency"
@@ -3683,10 +3682,6 @@
                                 "type": "string"
                               },
                               {
-                                "const": "file",
-                                "type": "string"
-                              },
-                              {
                                 "const": "presentation",
                                 "type": "string"
                               },
@@ -3706,7 +3701,7 @@
                           "status": {
                             "anyOf": [
                               {
-                                "const": "completed",
+                                "const": "not_started",
                                 "type": "string"
                               },
                               {
@@ -3714,7 +3709,7 @@
                                 "type": "string"
                               },
                               {
-                                "const": "not_started",
+                                "const": "completed",
                                 "type": "string"
                               }
                             ]
@@ -3749,7 +3744,7 @@
                     "chapterProgress": {
                       "anyOf": [
                         {
-                          "const": "completed",
+                          "const": "not_started",
                           "type": "string"
                         },
                         {
@@ -3757,7 +3752,7 @@
                           "type": "string"
                         },
                         {
-                          "const": "not_started",
+                          "const": "completed",
                           "type": "string"
                         }
                       ]
@@ -3766,9 +3761,6 @@
                       "type": "boolean"
                     },
                     "enrolled": {
-                      "type": "boolean"
-                    },
-                    "isPublished": {
                       "type": "boolean"
                     },
                     "isSubmitted": {
@@ -3909,10 +3901,6 @@
                             "anyOf": [
                               {
                                 "const": "text",
-                                "type": "string"
-                              },
-                              {
-                                "const": "file",
                                 "type": "string"
                               },
                               {
@@ -4140,7 +4128,7 @@
                     "chapterProgress": {
                       "anyOf": [
                         {
-                          "const": "completed",
+                          "const": "not_started",
                           "type": "string"
                         },
                         {
@@ -4148,7 +4136,7 @@
                           "type": "string"
                         },
                         {
-                          "const": "not_started",
+                          "const": "completed",
                           "type": "string"
                         }
                       ]
@@ -4157,9 +4145,6 @@
                       "type": "boolean"
                     },
                     "enrolled": {
-                      "type": "boolean"
-                    },
-                    "isPublished": {
                       "type": "boolean"
                     },
                     "isSubmitted": {
@@ -4586,308 +4571,11 @@
                   "activityHistory"
                 ]
               },
-              "lastLesson": {
+              "nextLesson": {
                 "anyOf": [
-                  {
-                    "type": "null"
-                  },
                   {
                     "type": "object",
                     "properties": {
-                      "id": {
-                        "format": "uuid",
-                        "type": "string"
-                      },
-                      "title": {
-                        "type": "string"
-                      },
-                      "lessonCount": {
-                        "type": "number"
-                      },
-                      "lessons": {
-                        "type": "array",
-                        "items": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "format": "uuid",
-                              "type": "string"
-                            },
-                            "title": {
-                              "type": "string"
-                            },
-                            "type": {
-                              "anyOf": [
-                                {
-                                  "const": "text",
-                                  "type": "string"
-                                },
-                                {
-                                  "const": "file",
-                                  "type": "string"
-                                },
-                                {
-                                  "const": "presentation",
-                                  "type": "string"
-                                },
-                                {
-                                  "const": "video",
-                                  "type": "string"
-                                },
-                                {
-                                  "const": "quiz",
-                                  "type": "string"
-                                }
-                              ]
-                            },
-                            "description": {
-                              "anyOf": [
-                                {
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "null"
-                                }
-                              ]
-                            },
-                            "displayOrder": {
-                              "type": "number"
-                            },
-                            "fileS3Key": {
-                              "anyOf": [
-                                {
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "null"
-                                }
-                              ]
-                            },
-                            "fileType": {
-                              "anyOf": [
-                                {
-                                  "type": "string"
-                                },
-                                {
-                                  "type": "null"
-                                }
-                              ]
-                            },
-                            "questions": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "format": "uuid",
-                                    "type": "string"
-                                  },
-                                  "type": {
-                                    "anyOf": [
-                                      {
-                                        "const": "brief_response",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "detailed_response",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "match_words",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "scale_1_5",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "single_choice",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "multiple_choice",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "true_or_false",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "photo_question_single_choice",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "photo_question_multiple_choice",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "fill_in_the_blanks_text",
-                                        "type": "string"
-                                      },
-                                      {
-                                        "const": "fill_in_the_blanks_dnd",
-                                        "type": "string"
-                                      }
-                                    ]
-                                  },
-                                  "description": {
-                                    "anyOf": [
-                                      {
-                                        "type": "string"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "title": {
-                                    "type": "string"
-                                  },
-                                  "displayOrder": {
-                                    "type": "number"
-                                  },
-                                  "solutionExplanation": {
-                                    "type": "string"
-                                  },
-                                  "photoS3Key": {
-                                    "anyOf": [
-                                      {
-                                        "type": "string"
-                                      },
-                                      {
-                                        "type": "null"
-                                      }
-                                    ]
-                                  },
-                                  "options": {
-                                    "type": "array",
-                                    "items": {
-                                      "type": "object",
-                                      "properties": {
-                                        "id": {
-                                          "format": "uuid",
-                                          "type": "string"
-                                        },
-                                        "optionText": {
-                                          "type": "string"
-                                        },
-                                        "displayOrder": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number"
-                                            },
-                                            {
-                                              "type": "null"
-                                            }
-                                          ]
-                                        },
-                                        "isStudentAnswer": {
-                                          "anyOf": [
-                                            {
-                                              "type": "boolean"
-                                            },
-                                            {
-                                              "type": "null"
-                                            }
-                                          ]
-                                        },
-                                        "isCorrect": {
-                                          "type": "boolean"
-                                        },
-                                        "questionId": {
-                                          "format": "uuid",
-                                          "type": "string"
-                                        },
-                                        "matchedWord": {
-                                          "anyOf": [
-                                            {
-                                              "type": "string"
-                                            },
-                                            {
-                                              "type": "null"
-                                            }
-                                          ]
-                                        },
-                                        "scaleAnswer": {
-                                          "anyOf": [
-                                            {
-                                              "type": "number"
-                                            },
-                                            {
-                                              "type": "null"
-                                            }
-                                          ]
-                                        }
-                                      },
-                                      "required": [
-                                        "optionText",
-                                        "displayOrder",
-                                        "isCorrect"
-                                      ]
-                                    }
-                                  }
-                                },
-                                "required": [
-                                  "type",
-                                  "title"
-                                ]
-                              }
-                            },
-                            "updatedAt": {
-                              "type": "string"
-                            }
-                          },
-                          "required": [
-                            "id",
-                            "title",
-                            "type",
-                            "displayOrder"
-                          ]
-                        }
-                      },
-                      "completedLessonCount": {
-                        "type": "number"
-                      },
-                      "chapterProgress": {
-                        "anyOf": [
-                          {
-                            "const": "completed",
-                            "type": "string"
-                          },
-                          {
-                            "const": "in_progress",
-                            "type": "string"
-                          },
-                          {
-                            "const": "not_started",
-                            "type": "string"
-                          }
-                        ]
-                      },
-                      "isFreemium": {
-                        "type": "boolean"
-                      },
-                      "enrolled": {
-                        "type": "boolean"
-                      },
-                      "isPublished": {
-                        "type": "boolean"
-                      },
-                      "isSubmitted": {
-                        "type": "boolean"
-                      },
-                      "createdAt": {
-                        "type": "string"
-                      },
-                      "updatedAt": {
-                        "type": "string"
-                      },
-                      "quizCount": {
-                        "type": "number"
-                      },
-                      "displayOrder": {
-                        "type": "number"
-                      },
                       "courseId": {
                         "format": "uuid",
                         "type": "string"
@@ -4897,17 +4585,58 @@
                       },
                       "courseDescription": {
                         "type": "string"
+                      },
+                      "courseThumbnail": {
+                        "type": "string"
+                      },
+                      "lessonId": {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      "chapterTitle": {
+                        "type": "string"
+                      },
+                      "chapterProgress": {
+                        "anyOf": [
+                          {
+                            "const": "not_started",
+                            "type": "string"
+                          },
+                          {
+                            "const": "in_progress",
+                            "type": "string"
+                          },
+                          {
+                            "const": "completed",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "completedLessonCount": {
+                        "type": "number"
+                      },
+                      "lessonCount": {
+                        "type": "number"
+                      },
+                      "chapterDisplayOrder": {
+                        "type": "number"
                       }
                     },
                     "required": [
-                      "id",
-                      "title",
-                      "lessonCount",
-                      "displayOrder",
                       "courseId",
                       "courseTitle",
-                      "courseDescription"
+                      "courseDescription",
+                      "courseThumbnail",
+                      "lessonId",
+                      "chapterTitle",
+                      "chapterProgress",
+                      "completedLessonCount",
+                      "lessonCount",
+                      "chapterDisplayOrder"
                     ]
+                  },
+                  {
+                    "type": "null"
                   }
                 ]
               }
@@ -4918,7 +4647,7 @@
               "courses",
               "lessons",
               "streak",
-              "lastLesson"
+              "nextLesson"
             ]
           }
         },
@@ -5072,10 +4801,6 @@
                           "type": "string"
                         },
                         {
-                          "const": "file",
-                          "type": "string"
-                        },
-                        {
                           "const": "presentation",
                           "type": "string"
                         },
@@ -5095,7 +4820,7 @@
                     "status": {
                       "anyOf": [
                         {
-                          "const": "completed",
+                          "const": "not_started",
                           "type": "string"
                         },
                         {
@@ -5103,7 +4828,7 @@
                           "type": "string"
                         },
                         {
-                          "const": "not_started",
+                          "const": "completed",
                           "type": "string"
                         }
                       ]
@@ -5138,7 +4863,7 @@
               "chapterProgress": {
                 "anyOf": [
                   {
-                    "const": "completed",
+                    "const": "not_started",
                     "type": "string"
                   },
                   {
@@ -5146,7 +4871,7 @@
                     "type": "string"
                   },
                   {
-                    "const": "not_started",
+                    "const": "completed",
                     "type": "string"
                   }
                 ]
@@ -5155,9 +4880,6 @@
                 "type": "boolean"
               },
               "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
                 "type": "boolean"
               },
               "isSubmitted": {
@@ -5214,10 +4936,6 @@
                       "anyOf": [
                         {
                           "const": "text",
-                          "type": "string"
-                        },
-                        {
-                          "const": "file",
                           "type": "string"
                         },
                         {
@@ -5442,7 +5160,7 @@
               "chapterProgress": {
                 "anyOf": [
                   {
-                    "const": "completed",
+                    "const": "not_started",
                     "type": "string"
                   },
                   {
@@ -5450,7 +5168,7 @@
                     "type": "string"
                   },
                   {
-                    "const": "not_started",
+                    "const": "completed",
                     "type": "string"
                   }
                 ]
@@ -5459,9 +5177,6 @@
                 "type": "boolean"
               },
               "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
                 "type": "boolean"
               },
               "isSubmitted": {
@@ -5547,10 +5262,6 @@
                           "type": "string"
                         },
                         {
-                          "const": "file",
-                          "type": "string"
-                        },
-                        {
                           "const": "presentation",
                           "type": "string"
                         },
@@ -5772,7 +5483,7 @@
               "chapterProgress": {
                 "anyOf": [
                   {
-                    "const": "completed",
+                    "const": "not_started",
                     "type": "string"
                   },
                   {
@@ -5780,7 +5491,7 @@
                     "type": "string"
                   },
                   {
-                    "const": "not_started",
+                    "const": "completed",
                     "type": "string"
                   }
                 ]
@@ -5789,9 +5500,6 @@
                 "type": "boolean"
               },
               "enrolled": {
-                "type": "boolean"
-              },
-              "isPublished": {
                 "type": "boolean"
               },
               "isSubmitted": {
@@ -5939,10 +5647,6 @@
                 "anyOf": [
                   {
                     "const": "text",
-                    "type": "string"
-                  },
-                  {
-                    "const": "file",
                     "type": "string"
                   },
                   {
@@ -6271,10 +5975,6 @@
                 "anyOf": [
                   {
                     "const": "text",
-                    "type": "string"
-                  },
-                  {
-                    "const": "file",
                     "type": "string"
                   },
                   {
@@ -6997,10 +6697,6 @@
                     "type": "string"
                   },
                   {
-                    "const": "file",
-                    "type": "string"
-                  },
-                  {
                     "const": "presentation",
                     "type": "string"
                   },
@@ -7268,7 +6964,7 @@
             "format": "uuid",
             "type": "string"
           },
-          "answers": {
+          "questionsAnswers": {
             "type": "array",
             "items": {
               "type": "object",
@@ -7277,32 +6973,63 @@
                   "format": "uuid",
                   "type": "string"
                 },
-                "answer": {
+                "answers": {
                   "type": "array",
                   "items": {
-                    "type": "object",
-                    "properties": {
-                      "answerId": {
-                        "format": "uuid",
-                        "type": "string"
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "answerId": {
+                            "format": "uuid",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "answerId"
+                        ]
                       },
-                      "value": {
-                        "type": "string"
+                      {
+                        "type": "object",
+                        "properties": {
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "value"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "answerId": {
+                            "format": "uuid",
+                            "type": "string"
+                          },
+                          "value": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "answerId",
+                          "value"
+                        ]
                       }
-                    }
+                    ]
                   }
                 }
               },
               "required": [
                 "questionId",
-                "answer"
+                "answers"
               ]
             }
           }
         },
         "required": [
           "lessonId",
-          "answers"
+          "questionsAnswers"
         ]
       },
       "EvaluationQuizResponse": {

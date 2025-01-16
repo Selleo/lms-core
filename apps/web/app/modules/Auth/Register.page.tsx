@@ -43,7 +43,7 @@ export default function RegisterPage() {
             <Label htmlFor="firstName">{t("registerView.field.firstName")}</Label>
             <Input id="firstName" type="text" placeholder="John" {...register("firstName")} />
             {errors.firstName && (
-              <div className="text-red-500 text-sm">
+              <div className="text-sm text-red-500">
                 {t(errors.firstName.message ?? "registerView.validation.firstName")}
               </div>
             )}
@@ -52,7 +52,7 @@ export default function RegisterPage() {
             <Label htmlFor="lastName">{t("registerView.field.lastName")}</Label>
             <Input id="lastName" type="text" placeholder="Doe" {...register("lastName")} />
             {errors.lastName && (
-              <div className="text-red-500 text-sm">
+              <div className="text-sm text-red-500">
                 {t(errors.lastName.message ?? "registerView.validation.lastName")}
               </div>
             )}
@@ -61,7 +61,7 @@ export default function RegisterPage() {
             <Label htmlFor="email">{t("registerView.field.email")}</Label>
             <Input id="email" type="email" placeholder="user@example.com" {...register("email")} />
             {errors.email && (
-              <div className="text-red-500 text-sm">
+              <div className="text-sm text-red-500">
                 {t(errors.email.message ?? "registerView.validation.email")}
               </div>
             )}
@@ -70,7 +70,7 @@ export default function RegisterPage() {
             <Label htmlFor="password">{t("registerView.field.password")}</Label>
             <Input id="password" type="password" {...register("password")} />
             {errors.password && (
-              <div className="text-red-500 text-sm">
+              <div className="text-sm text-red-500">
                 {t(errors.password.message ?? "registerView.validation.password")}
               </div>
             )}
@@ -80,7 +80,7 @@ export default function RegisterPage() {
           </Button>
         </form>
         <div className="mt-4 text-center text-sm">
-          {t("registerView.other.allreadyHaveAccount")}{" "}
+          {t("registerView.other.alreadyHaveAccount")}{" "}
           <Link to="/auth/login" className="underline">
             {t("registerView.button.signIn")}
           </Link>

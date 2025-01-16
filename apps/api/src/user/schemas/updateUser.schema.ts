@@ -6,13 +6,7 @@ export const updateUserSchema = Type.Object({
   firstName: Type.Optional(Type.String()),
   lastName: Type.Optional(Type.String()),
   email: Type.Optional(Type.String({ format: "email" })),
-  role: Type.Optional(
-    Type.Union([
-      Type.Literal(USER_ROLES.ADMIN),
-      Type.Literal(USER_ROLES.STUDENT),
-      Type.Literal(USER_ROLES.TEACHER),
-    ]),
-  ),
+  role: Type.Optional(Type.Enum(USER_ROLES)),
   archived: Type.Optional(Type.Boolean()),
 });
 export const upsertUserDetailsSchema = Type.Object({
