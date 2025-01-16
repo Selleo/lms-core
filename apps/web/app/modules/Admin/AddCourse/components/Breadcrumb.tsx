@@ -21,9 +21,9 @@ const Breadcrumb = () => {
           <Button
             variant="outline"
             onClick={() => navigate("/admin/courses")}
-            className="w-min mr-2"
+            className="mr-2 w-min"
           >
-            <Icon name="ChevronLeft" className="w-3 h-3 mr-2" />
+            <Icon name="ChevronLeft" className="mr-2 h-3 w-3" />
             {t("adminCourseView.settings.breadcrumbs.back")}
           </Button>
         </BreadcrumbLink>
@@ -34,7 +34,7 @@ const Breadcrumb = () => {
         </BreadcrumbLink>
       </BreadcrumbItem>
       <BreadcrumbSeparator />
-      <BreadcrumbItem className="text-neutral-950 body-base-md">
+      <BreadcrumbItem className="body-base-md text-neutral-950">
         {t("adminCourseView.settings.breadcrumbs.createNew")}
       </BreadcrumbItem>
     </BreadcrumbList>

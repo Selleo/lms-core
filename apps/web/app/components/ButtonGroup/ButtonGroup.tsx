@@ -18,7 +18,7 @@ export const ButtonGroup = ({ className, buttons }: ButtonGroupProps) => {
   return (
     <div
       className={cn(
-        "border border-neutral-300 bg-neutral-50 max-w-fit rounded-lg h-min whitespace-nowrap",
+        "h-min max-w-fit whitespace-nowrap rounded-lg border border-neutral-300 bg-neutral-50",
         className,
       )}
     >
@@ -27,7 +27,7 @@ export const ButtonGroup = ({ className, buttons }: ButtonGroupProps) => {
           key={index}
           {...button}
           className={cn({
-            "bg-white text-primary-700 shadow-primary": isActive,
+            "text-primary-700 shadow-primary bg-white": isActive,
             "bg-neutral-50 text-neutral-400": !isActive,
           })}
         />

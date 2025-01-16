@@ -167,6 +167,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
 
     if (trimmedWord !== "" && !currentOptions.some((option) => option.optionText === trimmedWord)) {
       const newOption = {
+        sortableId: crypto.randomUUID(),
         optionText: trimmedWord,
         isCorrect: false,
         displayOrder: currentOptions.length + 1,
@@ -296,18 +297,18 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
   return (
     <Accordion.Root key={questionIndex} type="single" collapsible>
       <Accordion.Item value={`item-${questionIndex}`}>
-        <div className="p-3 rounded-xl border-0 transition-all duration-300">
+        <div className="rounded-xl border-0 p-3 transition-all duration-300">
           <div className="ml-14">
-            <span className="text-red-500 mr-1">*</span>
+            <span className="mr-1 text-red-500">*</span>
             <Label className="body-sm-md">
               {t("adminCourseView.curriculum.lesson.field.words")}
             </Label>
-            <div className="flex flex-wrap gap-2 items-center">
+            <div className="flex flex-wrap items-center gap-2">
               {currentOptions.map((option, index) => (
                 <div
                   key={index}
                   className={cn(
-                    "px-4 rounded-full flex items-center justify-between space-x-2",
+                    "flex items-center justify-between space-x-2 rounded-full px-4",
                     option.isCorrect ? "bg-success-100" : "bg-primary-200",
                   )}
                   draggable={!containsButtonWithWord(option.optionText)}
@@ -319,7 +320,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                   <Button
                     onClick={() => handleRemoveWord(index)}
                     type="button"
-                    className="text-color-black bg-transparent p-0 rounded-full"
+                    className="text-color-black rounded-full bg-transparent p-0"
                   >
                     X
                   </Button>
@@ -330,7 +331,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                   <Button
                     onClick={() => setIsAddingWord(true)}
                     type="button"
-                    className="mt-4 bg-blue-700 text-white rounded-full flex items-center mb-4"
+                    className="mb-4 mt-4 flex items-center rounded-full bg-blue-700 text-white"
                   >
                     <Icon name="Plus" />
                     {t("adminCourseView.curriculum.lesson.button.addWords")}
@@ -339,7 +340,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               </div>
             </div>
             {isAddingWord && (
-              <div className="flex items-center gap-2 mt-4 w-1/3">
+              <div className="mt-4 flex w-1/3 items-center gap-2">
                 <Input
                   type="text"
                   value={newWord}
@@ -353,7 +354,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
                 <Button
                   onClick={() => setIsAddingWord(false)}
                   type="button"
-                  className="bg-red-500 border border-neutral-200 text-red-500 bg-color-transparent"
+                  className="bg-color-transparent border border-neutral-200 bg-red-500 text-red-500"
                 >
                   {t("common.button.cancel")}
                 </Button>
@@ -361,7 +362,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
             )}
             <>
               {errors?.questions?.[questionIndex] && (
-                <p className="text-red-500 text-sm">
+                <p className="text-sm text-red-500">
                   {errors?.questions?.[questionIndex]?.options?.message}
                 </p>
               )}
@@ -372,19 +373,19 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
               render={() => (
                 <FormItem className="mt-5">
                   <Label htmlFor="description" className="body-sm-md">
-                    <span className="text-red-500 mr-1">*</span>
+                    <span className="mr-1 text-red-500">*</span>
                     {t("adminCourseView.curriculum.lesson.field.sentence")}
                   </Label>
                   <FormControl>
                     <EditorContent
                       editor={editor}
-                      className="w-full h-full min-h-[200px] p-4 border border-gray-300 rounded-lg bg-white text-black overflow-y-auto focus:outline-none focus:ring-0 focus:border-none"
+                      className="h-full min-h-[200px] w-full overflow-y-auto rounded-lg border border-gray-300 bg-white p-4 text-black focus:border-none focus:outline-none focus:ring-0"
                       onDrop={handleDrop}
                       onClick={() => editor?.commands.focus()}
                     />
                   </FormControl>
                   {errors?.questions?.[questionIndex]?.description && (
-                    <p className="text-red-500 text-sm">
+                    <p className="text-sm text-red-500">
                       {errors?.questions?.[questionIndex]?.description?.message}
                     </p>
                   )}
@@ -393,7 +394,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
             />
             <Button
               type="button"
-              className="text-error-700 bg-color-white mb-4 border border-neutral-300 mt-4"
+              className="text-error-700 bg-color-white mb-4 mt-4 border border-neutral-300"
               onClick={() => setIsDeleteModalOpen(true)}
             >
               {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}

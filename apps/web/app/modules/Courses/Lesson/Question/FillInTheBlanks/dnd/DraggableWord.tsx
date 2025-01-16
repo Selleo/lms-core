@@ -42,8 +42,8 @@ export const DraggableWord = ({
       className={cn(
         !isDragging
           ? quizWordStyle
-          : "px-2 py-1 bg-gray-100 text-neutral-700 rounded-md blur-[0.3px]",
-        { "-rotate-[6deg] w-max": isOverlay },
+          : "rounded-md bg-gray-100 px-2 py-1 text-neutral-700 blur-[0.3px]",
+        { "w-max -rotate-[6deg]": isOverlay },
       )}
     >
       {word?.studentAnswerText ? word?.studentAnswerText : word.value}

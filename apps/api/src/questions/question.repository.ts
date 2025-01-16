@@ -225,7 +225,6 @@ export class QuestionRepository {
     return;
   }
 
-  // TODO: check if it work correctly
   async getQuizQuestionsToEvaluation(lessonId: UUIDType) {
     return this.db
       .select({
@@ -274,9 +273,9 @@ export class QuestionRepository {
 
   async insertQuizAnswers(
     answers: {
-      questionId: string;
+      questionId: UUIDType;
       answer: unknown;
-      studentId: string;
+      studentId: UUIDType;
       isCorrect: boolean;
     }[],
     trx: PostgresJsDatabase<typeof schema>,

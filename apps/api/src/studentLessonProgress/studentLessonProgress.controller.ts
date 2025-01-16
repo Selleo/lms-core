@@ -6,7 +6,7 @@ import { baseResponse, BaseResponse, UUIDSchema, UUIDType } from "src/common";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
-import { USER_ROLES } from "src/user/schemas/userRoles";
+import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import { StudentLessonProgressService } from "./studentLessonProgress.service";
 
@@ -24,8 +24,13 @@ export class StudentLessonProgressController {
   async markLessonAsCompleted(
     @Query("id") id: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
+    @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<BaseResponse<{ message: string }>> {
-    await this.studentLessonProgressService.markLessonAsCompleted(id, currentUserId);
+    await this.studentLessonProgressService.markLessonAsCompleted(
+      id,
+      currentUserId,
+      currentUserRole,
+    );
 
     return new BaseResponse({ message: "Lesson marked as completed" });
   }

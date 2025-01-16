@@ -93,11 +93,11 @@ const CourseSettings = ({
   };
 
   return (
-    <div className="w-full flex h-full gap-x-6">
+    <div className="flex h-full w-full gap-x-6">
       <div className="w-full basis-full">
-        <div className="p-8 shadow-md border overflow-y-auto bg-white h-full flex flex-col gap-y-6 rounded-lg border-gray-200 w-full">
+        <div className="flex h-full w-full flex-col gap-y-6 overflow-y-auto rounded-lg border border-gray-200 bg-white p-8 shadow-md">
           <div className="flex flex-col gap-y-1">
-            <h5 className="text-neutral-950 h5">{t("adminCourseView.settings.editHeader")}</h5>
+            <h5 className="h5 text-neutral-950">{t("adminCourseView.settings.editHeader")}</h5>
             <p className="body-lg-md text-neutral-800">
               {t("adminCourseView.settings.editSubHeader")}
             </p>
@@ -147,9 +147,9 @@ const CourseSettings = ({
                 maxLength={maxDescriptionFieldLength}
               />
               {descriptionFieldCharactersLeft <= 0 ? (
-                <p className="text-red-500 text-sm">You have reached the character limit.</p>
+                <p className="text-sm text-red-500">You have reached the character limit.</p>
               ) : (
-                <p className="text-neutral-800 mt-1">
+                <p className="mt-1 text-neutral-800">
                   {descriptionFieldCharactersLeft} characters left
                 </p>
               )}
@@ -177,7 +177,7 @@ const CourseSettings = ({
               />
               <div className="flex items-center justify-start gap-x-2">
                 {displayThumbnailUrl && (
-                  <Button onClick={removeThumbnail} className="bg-red-500 text-white py-2 px-6">
+                  <Button onClick={removeThumbnail} className="bg-red-500 px-6 py-2 text-white">
                     <Icon name="TrashIcon" className="mr-2" />
                     {t("adminCourseView.settings.button.removeThumbnail")}
                   </Button>
@@ -192,7 +192,7 @@ const CourseSettings = ({
           </Form>
         </div>
       </div>
-      <div className="max-w-[480px] w-full">
+      <div className="w-full max-w-[480px]">
         <CourseCardPreview
           imageUrl={displayThumbnailUrl}
           title={watchedTitle}

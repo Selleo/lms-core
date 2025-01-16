@@ -58,7 +58,7 @@ export default function LoginPage() {
               className={cn({ "border-red-500": errors.email })}
               {...register("email")}
             />
-            {errors.email && <div className="text-red-500 text-sm">{errors.email.message}</div>}
+            {errors.email && <div className="text-sm text-red-500">{errors.email.message}</div>}
           </div>
           <div className="grid gap-2">
             <div className="flex items-center">
@@ -74,7 +74,7 @@ export default function LoginPage() {
               {...register("password")}
             />
             {errors.password && (
-              <div className="text-red-500 text-sm">{errors.password.message}</div>
+              <div className="text-sm text-red-500">{errors.password.message}</div>
             )}
           </div>
           <FormCheckbox

@@ -49,10 +49,7 @@ const QuizLessonForm = ({
     chapterToEdit,
     lessonToEdit,
   });
-
-  const questions = form.watch("questions");
   const { t } = useTranslation();
-  const { isDirty } = form.formState;
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [openQuestionIndexes, setOpenQuestionIndexes] = useState<Set<number>>(new Set());
   const {
@@ -66,6 +63,9 @@ const QuizLessonForm = ({
   const [isCanceling, setIsCanceling] = useState(false);
 
   const [isValidated, setIsValidated] = useState(false);
+
+  const questions = form.watch("questions");
+  const { isDirty } = form.formState;
 
   const handleValidationSuccess = () => {
     setIsValidated(true);
@@ -95,7 +95,6 @@ const QuizLessonForm = ({
   const onCancelModal = () => {
     closeLeaveModal();
     setIsCurrectFormDirty(false);
-    form.clearErrors();
   };
 
   const onSaveModal = () => {
@@ -159,20 +158,20 @@ const QuizLessonForm = ({
 
         if (type === QuestionType.MATCH_WORDS) {
           return [
-            { optionText: "", isCorrect: true, displayOrder: 1 },
-            { optionText: "", isCorrect: true, displayOrder: 2 },
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: true, displayOrder: 1 },
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: true, displayOrder: 2 },
           ];
         }
 
         if (singleChoiceTypes.includes(type)) {
           return [
-            { optionText: "", isCorrect: false, displayOrder: 1 },
-            { optionText: "", isCorrect: false, displayOrder: 2 },
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 1 },
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 2 },
           ];
         }
 
         if (!noOptionsRequiredTypes.includes(type)) {
-          return [{ optionText: "", isCorrect: false, displayOrder: 1 }];
+          return [{ sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 1 }];
         }
 
         return [];
@@ -181,6 +180,7 @@ const QuizLessonForm = ({
       const options = getOptionsForQuestionType(questionType);
 
       const newQuestion: Question = {
+        sortableId: crypto.randomUUID(),
         title: "",
         type: questionType as QuestionType,
         displayOrder: questions.length + 1,
@@ -264,7 +264,7 @@ const QuizLessonForm = ({
 
   return (
     <div className="w-full max-w-full">
-      <div className="w-full max-w-full bg-white shadow-lg rounded-lg p-8">
+      <div className="w-full max-w-full rounded-lg bg-white p-8 shadow-lg">
         {!lessonToEdit && (
           <Breadcrumb
             lessonLabel="Quiz"
@@ -272,7 +272,7 @@ const QuizLessonForm = ({
             setSelectedLesson={setSelectedLesson}
           />
         )}
-        <div className="h5 text-neutral-950 mb-6">
+        <div className="h5 mb-6 text-neutral-950">
           {lessonToEdit ? (
             <>
               <span className="text-neutral-600">
@@ -292,7 +292,7 @@ const QuizLessonForm = ({
               render={({ field }) => (
                 <FormItem>
                   <Label htmlFor="title" className="body-base-md">
-                    <span className="text-red-500 mr-1">*</span>
+                    <span className="mr-1 text-red-500">*</span>
                     {t("adminCourseView.curriculum.lesson.field.title")}
                   </Label>
                   <FormControl>
@@ -304,7 +304,7 @@ const QuizLessonForm = ({
             />
             <div className="mt-5">
               <Label className="body-base-md">
-                <span className="text-red-500 mr-1 body-base-md">*</span>{" "}
+                <span className="body-base-md mr-1 text-red-500">*</span>{" "}
                 {t("adminCourseView.curriculum.lesson.field.questions")}
                 <span className="text-neutral-600"> ({questions?.length || 0})</span>
               </Label>
@@ -313,29 +313,30 @@ const QuizLessonForm = ({
             {questions && questions.length > 0 && (
               <SortableList
                 items={questions}
-                isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions`, updatedItems, { shouldDirty: true });
                   setOpenQuestionIndexes(new Set());
                 }}
                 className="grid grid-cols-1"
-                renderItem={(item, index: number) => (
-                  <SortableList.Item id={item.displayOrder}>
-                    {renderQuestion(
-                      item,
-                      index,
-                      form,
-                      <SortableList.DragHandle>
-                        <Icon name="DragAndDropIcon" className="cursor-move" />
-                      </SortableList.DragHandle>,
-                    )}
-                  </SortableList.Item>
-                )}
+                renderItem={(item, index: number) => {
+                  return (
+                    <SortableList.Item id={item.sortableId}>
+                      {renderQuestion(
+                        item,
+                        index,
+                        form,
+                        <SortableList.DragHandle>
+                          <Icon name="DragAndDropIcon" className="cursor-move" />
+                        </SortableList.DragHandle>,
+                      )}
+                    </SortableList.Item>
+                  );
+                }}
               />
             )}
 
             <QuestionSelector addQuestion={addQuestion} />
-            <div className="flex space-x-4 mt-4">
+            <div className="mt-4 flex space-x-4">
               <Button type="submit" className="bg-primary-700">
                 {t("common.button.save")}
               </Button>

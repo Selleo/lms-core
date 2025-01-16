@@ -68,7 +68,7 @@ const QuestionTitle = ({
   );
 
   return (
-    <div className="flex items-center gap-2 p-2 border-neutral-200">
+    <div className="flex items-center gap-2 border-neutral-200 p-2">
       {dragTrigger}
       <TooltipProvider delayDuration={0}>
         <Tooltip>
@@ -76,14 +76,14 @@ const QuestionTitle = ({
             <div className="group">
               <Icon
                 name={getIconForQuestionType(questionType)}
-                className="w-5 h-5 text-primary-700"
+                className="text-primary-700 h-5 w-5"
               />
             </div>
           </TooltipTrigger>
           <TooltipContent
             side="top"
             align="center"
-            className="bg-black ml-4 text-white text-sm rounded shadow-md"
+            className="ml-4 rounded bg-black text-sm text-white shadow-md"
           >
             {t(mapQuestionTypeToLabel(questionType))}
           </TooltipContent>
@@ -104,7 +104,7 @@ const QuestionTitle = ({
               <div className="group">
                 <Icon
                   name="TrashIcon"
-                  className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
+                  className="text-error-500 bg-error-50 group-hover:bg-error-600 ml-3 h-7 w-7 cursor-pointer rounded-lg p-1 group-hover:text-white"
                   onClick={handleRemoveQuestion}
                 />
               </div>
@@ -112,7 +112,7 @@ const QuestionTitle = ({
             <TooltipContent
               side="top"
               align="center"
-              className="bg-black ml-4 text-white text-sm rounded shadow-md"
+              className="ml-4 rounded bg-black text-sm text-white shadow-md"
             >
               {t("common.button.delete")}
             </TooltipContent>
@@ -121,7 +121,7 @@ const QuestionTitle = ({
       )}
 
       {handleToggle && !isOpenQuestion && (
-        <AccordionTrigger className="ml-2 mr-2 text-primary-800" onClick={handleToggle}>
+        <AccordionTrigger className="text-primary-800 ml-2 mr-2" onClick={handleToggle}>
           <Icon name={!isOpen ? "ArrowDown" : "ArrowUp"} />
         </AccordionTrigger>
       )}

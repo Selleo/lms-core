@@ -86,27 +86,27 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   return (
     <DropdownMenu onOpenChange={(open) => setShowOptions(open)}>
       <DropdownMenuTrigger asChild>
-        <Button type="button" className="mt-3 mb-4 bg-primary-700">
+        <Button type="button" className="bg-primary-700 mb-4 mt-3">
           {t("adminCourseView.curriculum.lesson.button.addQuestion")}{" "}
           <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-64 p-2 bg-white text-black rounded shadow-lg transition-all duration-200">
-        <DropdownMenuLabel className="p-2 text-left text-black body-base-md w-full">
+      <DropdownMenuContent className="w-64 rounded bg-white p-2 text-black shadow-lg transition-all duration-200">
+        <DropdownMenuLabel className="body-base-md w-full p-2 text-left text-black">
           {t("adminCourseView.curriculum.lesson.other.selectQuestionType")}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <div className="max-h-64 overflow-scroll scrollbar-thin">
+        <div className="scrollbar-thin max-h-64 overflow-scroll">
           {questionTypes.map(({ type, label, icon }) => {
             return (
               <DropdownMenuItem key={label}>
                 <Button
                   key={type}
-                  className="w-full text-left text-black bg-white hover:bg-gray-100 justify-start body-base-md"
+                  className="body-base-md w-full justify-start bg-white text-left text-black hover:bg-gray-100"
                   type="button"
                   onClick={() => onTypeChoose(type)}
                 >
-                  <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
+                  <Icon name={icon as QuestionIcons} className="text-primary-700 mr-2 h-4 w-4" />
                   {label}
                 </Button>
               </DropdownMenuItem>

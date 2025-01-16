@@ -117,7 +117,7 @@ export class LessonController {
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async betaUpdateQuizLesson(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @Body() data: UpdateQuizLessonBody,
     @CurrentUser("userId") userId: UUIDType,
   ): Promise<BaseResponse<{ message: string }>> {
@@ -142,7 +142,7 @@ export class LessonController {
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async betaUpdateLesson(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @Body() data: UpdateLessonBody,
   ): Promise<BaseResponse<{ message: string }>> {
     await this.adminLessonsService.updateLesson(id, data);
@@ -212,8 +212,8 @@ export class LessonController {
   //     response: baseResponse(Type.Object({ message: Type.String() })),
   //   })
   //   async clearQuizProgress(
-  //     @Query("courseId") courseId: string,
-  //     @Query("lessonId") lessonId: string,
+  //     @Query("courseId") courseId: UUIDType,
+  //     @Query("lessonId") lessonId: UUIDType,
   //     @CurrentUser("userId") currentUserId: UUIDType,
   //   ): Promise<BaseResponse<{ message: string }>> {
   //     const result = await this.lessonsService.clearQuizProgress(courseId, lessonId, currentUserId);
@@ -227,7 +227,7 @@ export class LessonController {
   //     });
   //   }
 
-  @Patch("lesson-display-order")
+  @Patch("update-lesson-display-order")
   @Roles(USER_ROLES.TEACHER, USER_ROLES.ADMIN)
   @Validate({
     request: [
@@ -252,7 +252,7 @@ export class LessonController {
     await this.adminLessonsService.updateLessonDisplayOrder(body);
 
     return new BaseResponse({
-      message: "Chapter display order updated successfully",
+      message: "Lesson display order updated successfully",
     });
   }
 }

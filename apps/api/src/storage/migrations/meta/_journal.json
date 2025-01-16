@@ -85,6 +85,13 @@
       "when": 1736261480672,
       "tag": "0011_remove_photo_question_type_column",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1736901318915,
+      "tag": "0012_remove_is_published_from_chapters_table",
+      "breakpoints": true
     }
   ]
 }

@@ -23,7 +23,7 @@ export class ChapterRepository {
         studentCourses,
         and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
       )
-      .where(and(eq(chapters.isPublished, true), eq(chapters.id, id)));
+      .where(eq(chapters.id, id));
   }
 
   async getChapterForUser(id: UUIDType, userId: UUIDType) {
@@ -56,7 +56,7 @@ export class ChapterRepository {
         studentCourses,
         and(eq(studentCourses.courseId, chapters.courseId), eq(studentCourses.studentId, userId)),
       )
-      .where(and(eq(chapters.id, id), eq(chapters.isPublished, true)));
+      .where(eq(chapters.id, id));
 
     return chapter;
   }
@@ -70,7 +70,7 @@ export class ChapterRepository {
         itemsCount: chapters.lessonCount,
       })
       .from(chapters)
-      .where(and(eq(chapters.id, id), eq(chapters.isPublished, true)));
+      .where(eq(chapters.id, id));
 
     return chapter;
   }

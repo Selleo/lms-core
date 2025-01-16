@@ -108,10 +108,10 @@ export default function LessonPage() {
   }
 
   return (
-    <PageWrapper className="max-w-full h-auto">
-      <div className="flex flex-col lg:grid lg:grid-cols-[1fr_480px] h-full max-w-full gap-6 w-full">
-        <div className="w-full bg-white rounded-lg flex flex-col h-full divide-y">
-          <div className="flex items-center py-6 px-12">
+    <PageWrapper className="h-auto max-w-full">
+      <div className="flex h-full w-full max-w-full flex-col gap-6 lg:grid lg:grid-cols-[1fr_480px]">
+        <div className="flex h-full w-full flex-col divide-y rounded-lg bg-white">
+          <div className="flex items-center px-12 py-6">
             <p className="h6 text-neutral-950">
               <span className="text-neutral-800">
                 {t("studentLessonView.other.chapter")} {currentChapter?.displayOrder}:

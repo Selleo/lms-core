@@ -1,8 +1,7 @@
 import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common";
-import { eq, gte, lte, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
-import { lessons, questionAnswerOptions, questions } from "src/storage/schema";
+import { questionAnswerOptions, questions } from "src/storage/schema";
 
 import { LESSON_TYPES } from "../lesson.type";
 import { AdminLessonRepository } from "../repositories/adminLesson.repository";
@@ -73,7 +72,7 @@ export class AdminLessonService {
     return updatedLessonId;
   }
 
-  async updateLesson(id: string, data: UpdateLessonBody) {
+  async updateLesson(id: UUIDType, data: UpdateLessonBody) {
     const lesson = await this.lessonRepository.getLesson(id);
 
     if (!lesson) {
@@ -100,7 +99,7 @@ export class AdminLessonService {
 
     await this.db.transaction(async (trx) => {
       await this.adminLessonRepository.removeLesson(lessonId, trx);
-      await this.adminLessonRepository.updateLessonDisplayOrder(lesson.chapterId, trx);
+      await this.adminLessonRepository.updateLessonDisplayOrderAfterRemove(lesson.chapterId, trx);
       await this.adminLessonRepository.updateLessonCountForChapter(lesson.chapterId, trx);
     });
   }
@@ -116,30 +115,12 @@ export class AdminLessonService {
       throw new NotFoundException("Lesson not found");
     }
 
-    const newDisplayOrder = lessonObject.displayOrder;
-
-    // TODO: extract to repository
-    await this.db.transaction(async (trx) => {
-      await trx
-        .update(lessons)
-        .set({
-          displayOrder: sql`CASE
-            WHEN ${eq(lessons.id, lessonToUpdate.id)}
-              THEN ${newDisplayOrder}
-            WHEN ${newDisplayOrder < oldDisplayOrder}
-              AND ${gte(lessons.displayOrder, newDisplayOrder)}
-              AND ${lte(lessons.displayOrder, oldDisplayOrder)}
-              THEN ${lessons.displayOrder} + 1
-            WHEN ${newDisplayOrder > oldDisplayOrder}
-              AND ${lte(lessons.displayOrder, newDisplayOrder)}
-              AND ${gte(lessons.displayOrder, oldDisplayOrder)}
-              THEN ${lessons.displayOrder} - 1
-            ELSE ${lessons.displayOrder}
-          END
-          `,
-        })
-        .where(eq(lessons.chapterId, lessonToUpdate.chapterId));
-    });
+    await this.adminLessonRepository.updateLessonDisplayOrder(
+      lessonToUpdate.chapterId,
+      lessonToUpdate.id,
+      lessonObject.displayOrder,
+      oldDisplayOrder,
+    );
   }
 
   private async createQuizLessonWithQuestionsAndOptions(
@@ -151,6 +132,7 @@ export class AdminLessonService {
       const lesson = await this.adminLessonRepository.createQuizLessonWithQuestionsAndOptions(
         data,
         displayOrder,
+        trx,
       );
 
       if (!data.questions) return;
@@ -256,9 +238,25 @@ export class AdminLessonService {
               };
 
               if (option.id) {
-                await this.adminLessonRepository.updateOption(option.id, optionData, trx);
+                const result = await this.adminLessonRepository.updateOption(
+                  option.id,
+                  optionData,
+                  trx,
+                );
+                if (!result || result.length === 0) {
+                  throw new BadRequestException(
+                    `Failed to update option with ID: ${option.id} in question ${question.title} - ${question.type}`,
+                  );
+                }
               } else {
-                await this.adminLessonRepository.insertOption(questionId, optionData, trx);
+                const result = await this.adminLessonRepository.insertOption(
+                  questionId,
+                  optionData,
+                  trx,
+                );
+                if (!result || result.length === 0) {
+                  throw new BadRequestException("Failed to insert new option");
+                }
               }
             }
           }

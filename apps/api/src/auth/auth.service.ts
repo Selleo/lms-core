@@ -259,7 +259,7 @@ export class AuthService {
   }
 
   private async sendEmailAndUpdateDatabase(
-    userId: string,
+    userId: UUIDType,
     email: string,
     oldCreateToken: string,
     createToken: string,

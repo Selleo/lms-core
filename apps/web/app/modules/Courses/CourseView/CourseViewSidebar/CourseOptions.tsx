@@ -26,12 +26,12 @@ export const CourseOptions = ({ course }: CourseOptionsProps) => {
 
   return (
     <>
-      <h4 className="h6 text-neutral-950 pb-1">
+      <h4 className="h6 pb-1 text-neutral-950">
         {t("studentCourseView.sideSection.optionHeader")}
       </h4>
       <div className="flex flex-col gap-y-2">
         <CopyUrlButton variant="outline" className="gap-x-2">
-          <Icon name="Share" className="w-6 h-auto text-primary-800" />
+          <Icon name="Share" className="text-primary-800 h-auto w-6" />
           <span>{t("studentCourseView.sideSection.button.shareCourse")}</span>
         </CopyUrlButton>
         {course.priceInCents && course.currency ? (

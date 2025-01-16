@@ -56,7 +56,7 @@ export default function ChangePasswordForm() {
             })}
           />
           {errors.oldPassword && (
-            <p className="text-red-500 text-xs mt-1">{errors.oldPassword.message}</p>
+            <p className="mt-1 text-xs text-red-500">{errors.oldPassword.message}</p>
           )}
           <Label htmlFor="newPassword">{t("changePasswordView.field.newPassword")}</Label>
           <Input
@@ -69,7 +69,7 @@ export default function ChangePasswordForm() {
             })}
           />
           {errors.newPassword && (
-            <p className="text-red-500 text-xs mt-1">{errors.newPassword.message}</p>
+            <p className="mt-1 text-xs text-red-500">{errors.newPassword.message}</p>
           )}
         </CardContent>
         <CardFooter className="border-t px-6 py-4">

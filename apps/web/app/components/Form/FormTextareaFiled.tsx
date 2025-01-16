@@ -35,7 +35,7 @@ export const FormTextareaField = <T extends FieldValues>({
                 {...field}
                 {...props}
                 id={name}
-                className="h-[164px] resize-none placeholder:body-base placeholder:text-neutral-600"
+                className="placeholder:body-base h-[164px] resize-none placeholder:text-neutral-600"
               />
             </FormControl>
             <FormMessage />

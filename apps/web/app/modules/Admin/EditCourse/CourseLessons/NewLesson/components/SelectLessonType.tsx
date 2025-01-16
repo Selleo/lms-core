@@ -40,16 +40,16 @@ const lessonTypes = [
 const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) => {
   const { t } = useTranslation();
   return (
-    <div className="flex flex-col p-8 gap-y-6 bg-white">
+    <div className="flex flex-col gap-y-6 bg-white p-8">
       <h3 className="h5 text-neutral-950">
         {t("adminCourseView.curriculum.lesson.other.chooseType")}:
       </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {lessonTypes.map(({ type, icon, title, description }) => {
           return (
             <div
               key={type}
-              className="px-6 border border-neutral-200 rounded-lg py-4 flex flex-col gap-y-6 hover:border-primary-500"
+              className="hover:border-primary-500 flex flex-col gap-y-6 rounded-lg border border-neutral-200 px-6 py-4"
               role="button"
               onClick={() => setContentTypeToDisplay(type)}
               onKeyDown={(event) => {
@@ -60,7 +60,7 @@ const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) =>
               tabIndex={0}
               aria-label={`Choose ${title} lesson type`}
             >
-              <Icon name={icon as LessonIcons} className="mb-6 size-8 text-primary-700" />
+              <Icon name={icon as LessonIcons} className="text-primary-700 mb-6 size-8" />
               <hgroup className="flex flex-col gap-y-3">
                 <h3 className="h6 text-neutral-950">{t(title)}</h3>
                 <p className="body-sm text-neutral-800">{t(description)}</p>

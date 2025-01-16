@@ -61,13 +61,13 @@ export const SingleSelect = ({
     <label
       htmlFor={answerId}
       className={cn(
-        "flex items-center space-x-3 border *:cursor-pointer border-primary-200 rounded-lg py-3 px-4",
+        "border-primary-200 flex items-center space-x-3 rounded-lg border px-4 py-3 *:cursor-pointer",
         { "cursor-not-allowed": isFieldDisabled },
         classes,
       )}
     >
       <Input
-        className={cn("w-4 h-4", {
+        className={cn("h-4 w-4", {
           "not-sr-only": !isCompleted,
           "sr-only": isInputToggleHidden,
         })}
@@ -113,7 +113,7 @@ export const SingleSelect = ({
         })}
       />
       <Label
-        className="body-base font-normal w-full flex justify-between text-start text-neutral-950"
+        className="body-base flex w-full justify-between text-start font-normal text-neutral-950"
         htmlFor={answerId}
         onClick={(e) => e.stopPropagation()}
       >

@@ -46,13 +46,19 @@ import {
 } from "../storage/schema";
 
 import {
+  COURSE_ENROLLMENT_SCOPES,
+  CourseSortFields,
   type CoursesFilterSchema,
   type CourseSortField,
-  CourseSortFields,
   type CoursesQuery,
+  type CourseEnrollmentScope,
 } from "./schemas/courseQuery";
 
-import type { AllCoursesForTeacherResponse, AllCoursesResponse } from "./schemas/course.schema";
+import type {
+  AllCoursesForTeacherResponse,
+  AllCoursesResponse,
+  AllStudentCoursesResponse,
+} from "./schemas/course.schema";
 import type { CreateCourseBody } from "./schemas/createCourse.schema";
 import type { CommonShowCourse } from "./schemas/showCourseCommon.schema";
 import type { UpdateCourseBody } from "./schemas/updateCourse.schema";
@@ -100,14 +106,13 @@ export class CourseService {
       const queryDB = trx
         .select({
           id: courses.id,
-          description: sql<string>`${courses.description}`,
           title: courses.title,
+          description: sql<string>`${courses.description}`,
           thumbnailUrl: courses.thumbnailS3Key,
           author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
           category: sql<string>`${categories.title}`,
           enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
           courseChapterCount: courses.chapterCount,
-          completedChapterCount: sql<number>`COALESCE(${studentCourses.finishedChapterCount}, 0)`,
           priceInCents: courses.priceInCents,
           currency: courses.currency,
           isPublished: courses.isPublished,
@@ -116,14 +121,13 @@ export class CourseService {
         .from(courses)
         .leftJoin(categories, eq(courses.categoryId, categories.id))
         .leftJoin(users, eq(courses.authorId, users.id))
-        .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
         .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
         .where(and(...conditions))
         .groupBy(
           courses.id,
           courses.title,
-          courses.thumbnailS3Key,
           courses.description,
+          courses.thumbnailS3Key,
           users.firstName,
           users.lastName,
           categories.title,
@@ -132,13 +136,25 @@ export class CourseService {
           courses.isPublished,
           coursesSummaryStats.freePurchasedCount,
           coursesSummaryStats.paidPurchasedCount,
-          studentCourses.finishedChapterCount,
+          courses.createdAt,
         )
         .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
       const data = await queryDB;
 
-      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+      const dataWithS3SignedUrls = await Promise.all(
+        data.map(async (item) => {
+          if (!item.thumbnailUrl) return item;
+
+          try {
+            const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+            return { ...item, thumbnailUrl: signedUrl };
+          } catch (error) {
+            console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
+            return item;
+          }
+        }),
+      );
 
       const totalItems = data.length;
 
@@ -155,8 +171,8 @@ export class CourseService {
 
   async getCoursesForUser(
     query: CoursesQuery,
-    userId: string,
-  ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
+    userId: UUIDType,
+  ): Promise<{ data: AllStudentCoursesResponse; pagination: Pagination }> {
     const {
       sort = CourseSortFields.title,
       perPage = DEFAULT_PAGE_SIZE,
@@ -206,7 +222,19 @@ export class CourseService {
         .leftJoin(users, eq(courses.authorId, users.id))
         .where(and(...conditions));
 
-      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+      const dataWithS3SignedUrls = await Promise.all(
+        data.map(async (item) => {
+          if (!item.thumbnailUrl) return item;
+
+          try {
+            const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+            return { ...item, thumbnailUrl: signedUrl };
+          } catch (error) {
+            console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
+            return item;
+          }
+        }),
+      );
 
       return {
         data: dataWithS3SignedUrls,
@@ -222,7 +250,7 @@ export class CourseService {
   async getAvailableCourses(
     query: CoursesQuery,
     currentUserId: UUIDType,
-  ): Promise<{ data: AllCoursesResponse; pagination: Pagination }> {
+  ): Promise<{ data: AllStudentCoursesResponse; pagination: Pagination }> {
     const {
       sort = CourseSortFields.title,
       perPage = DEFAULT_PAGE_SIZE,
@@ -301,7 +329,19 @@ export class CourseService {
         .leftJoin(users, eq(courses.authorId, users.id))
         .where(and(...conditions));
 
-      const dataWithS3SignedUrls = await this.addS3SignedUrls(data);
+      const dataWithS3SignedUrls = await Promise.all(
+        data.map(async (item) => {
+          if (!item.thumbnailUrl) return item;
+
+          try {
+            const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+            return { ...item, thumbnailUrl: signedUrl };
+          } catch (error) {
+            console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
+            return item;
+          }
+        }),
+      );
 
       return {
         data: dataWithS3SignedUrls,
@@ -314,13 +354,13 @@ export class CourseService {
     });
   }
 
-  async getCourse(id: string, userId: string): Promise<CommonShowCourse> {
+  async getCourse(id: UUIDType, userId: UUIDType): Promise<CommonShowCourse> {
     const [course] = await this.db
       .select({
         id: courses.id,
         title: courses.title,
         thumbnailS3Key: sql<string>`${courses.thumbnailS3Key}`,
-        category: categories.title,
+        category: sql<string>`${categories.title}`,
         description: sql<string>`${courses.description}`,
         courseChapterCount: courses.chapterCount,
         completedChapterCount: sql<number>`COALESCE(${studentCourses.finishedChapterCount}, 0)`,
@@ -339,13 +379,9 @@ export class CourseService {
           )`,
       })
       .from(courses)
-      .innerJoin(categories, eq(courses.categoryId, categories.id))
-      .innerJoin(users, eq(courses.authorId, users.id))
-      .leftJoin(
-        studentCourses,
-        and(eq(courses.id, studentCourses.courseId), eq(studentCourses.studentId, userId)),
-      )
-      .where(and(eq(courses.id, id)));
+      .leftJoin(categories, eq(courses.categoryId, categories.id))
+      .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
+      .where(and(eq(courses.id, id), eq(studentCourses.studentId, userId)));
 
     if (!course) throw new NotFoundException("Course not found");
 
@@ -391,10 +427,10 @@ export class CourseService {
                   ${lessons.displayOrder} AS "displayOrder",
                   ${lessons.isExternal} AS "isExternal",
                   CASE
-                    WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN 'completed'
+                    WHEN ${studentLessonProgress.completedAt} IS NOT NULL THEN  ${PROGRESS_STATUSES.COMPLETED}
                     WHEN ${studentLessonProgress.completedAt} IS NULL
-                      AND ${studentLessonProgress.completedQuestionCount} > 0 THEN 'in_progress'
-                    ELSE 'not_started'
+                      AND ${studentLessonProgress.completedQuestionCount} > 0 THEN  ${PROGRESS_STATUSES.IN_PROGRESS}
+                    ELSE  ${PROGRESS_STATUSES.NOT_STARTED}
                   END AS status,
                   CASE
                     WHEN ${lessons.type} = ${LESSON_TYPES.QUIZ} THEN COUNT(${questions.id})
@@ -420,10 +456,14 @@ export class CourseService {
         `,
       })
       .from(chapters)
-      .leftJoin(studentChapterProgress, eq(studentChapterProgress.chapterId, chapters.id))
-      .where(
-        and(eq(chapters.courseId, id), eq(chapters.isPublished, true), isNotNull(chapters.title)),
+      .leftJoin(
+        studentChapterProgress,
+        and(
+          eq(studentChapterProgress.chapterId, chapters.id),
+          eq(studentChapterProgress.studentId, userId),
+        ),
       )
+      .where(and(eq(chapters.courseId, id), isNotNull(chapters.title)))
       .orderBy(chapters.displayOrder);
 
     const thumbnailUrl = await this.fileService.getFileUrl(course.thumbnailS3Key);
@@ -435,7 +475,7 @@ export class CourseService {
     };
   }
 
-  async getBetaCourseById(id: string) {
+  async getBetaCourseById(id: UUIDType) {
     const [course] = await this.db
       .select({
         id: courses.id,
@@ -503,54 +543,6 @@ export class CourseService {
     };
   }
 
-  async getCourseById(id: string) {
-    const [course] = await this.db
-      .select({
-        id: courses.id,
-        title: courses.title,
-        thumbnailS3Key: sql<string>`${courses.thumbnailS3Key}`,
-        category: categories.title,
-        categoryId: categories.id,
-        description: sql<string>`${courses.description}`,
-        courseChapterCount: courses.chapterCount,
-        priceInCents: courses.priceInCents,
-        isPublished: courses.isPublished,
-        currency: courses.currency,
-      })
-      .from(courses)
-      .innerJoin(categories, eq(courses.categoryId, categories.id))
-      .where(and(eq(courses.id, id)));
-
-    if (!course) throw new NotFoundException("Course not found");
-
-    const courseChapterList = await this.db
-      .select({
-        displayOrder: sql<number>`${lessons.displayOrder}`,
-        id: chapters.id,
-        title: chapters.title,
-        lessonCount: chapters.lessonCount,
-        isFree: chapters.isFreemium,
-      })
-      .from(chapters)
-      .where(
-        and(
-          eq(chapters.courseId, id),
-          eq(chapters.isPublished, true),
-          isNotNull(chapters.id),
-          isNotNull(chapters.title),
-        ),
-      )
-      .orderBy(chapters.displayOrder);
-
-    const thumbnailS3SingedUrl = await this.fileService.getFileUrl(course.thumbnailS3Key);
-
-    return {
-      ...course,
-      thumbnailS3SingedUrl,
-      chapters: courseChapterList,
-    };
-  }
-
   async getTeacherCourses({
     currentUserId,
     authorId,
@@ -559,16 +551,16 @@ export class CourseService {
   }: {
     currentUserId: UUIDType;
     authorId: UUIDType;
-    scope: "all" | "enrolled" | "available";
+    scope: CourseEnrollmentScope;
     excludeCourseId?: UUIDType;
   }): Promise<AllCoursesForTeacherResponse> {
     const conditions = [eq(courses.isPublished, true), eq(courses.authorId, authorId)];
 
-    if (scope === "enrolled") {
+    if (scope === COURSE_ENROLLMENT_SCOPES.ENROLLED) {
       conditions.push(eq(studentCourses.studentId, currentUserId));
     }
 
-    if (scope === "available") {
+    if (scope === COURSE_ENROLLMENT_SCOPES.AVAILABLE) {
       const availableCourseIds = await this.getAvailableCourseIds(
         currentUserId,
         this.db,
@@ -670,23 +662,6 @@ export class CourseService {
         throw new ConflictException("Failed to create course");
       }
 
-      // TODO: its not necessary to create chapters
-
-      // if (createCourseBody.chapters && createCourseBody.chapters.length > 0) {
-      //   const courseChaptersData = createCourseBody.chapters.map((chapterId, index) => ({
-      //     courseId: newCourse.id,
-      //     chapterId,
-      //     displayOrder: index + 1,
-      //   }));
-
-      //   await trx.insert(courseLessons).values(courseChaptersData);
-      // }
-
-      // TODO: its not necessary to create chapters
-      // if (newCourse.imageUrl) {
-      //   newCourse.imageUrl = await this.fileService.getFileUrl(newCourse.imageUrl);
-      // }
-
       await trx.insert(coursesSummaryStats).values({ courseId: newCourse.id, authorId });
 
       return newCourse;
@@ -694,7 +669,7 @@ export class CourseService {
   }
 
   async updateCourse(
-    id: string,
+    id: UUIDType,
     updateCourseBody: UpdateCourseBody,
     image?: Express.Multer.File,
     currentUserId?: UUIDType,
@@ -748,16 +723,11 @@ export class CourseService {
         throw new ConflictException("Failed to update course");
       }
 
-      // TODO: its not necessary to create chapters
-      // if (updatedCourse.imageUrl) {
-      //   updatedCourse.imageUrl = await this.fileService.getFileUrl(updatedCourse.imageUrl);
-      // }
-
       return updatedCourse;
     });
   }
 
-  async enrollCourse(id: string, studentId: string, testKey?: string) {
+  async enrollCourse(id: UUIDType, studentId: UUIDType, testKey?: string) {
     const [course] = await this.db
       .select({
         id: courses.id,
@@ -776,8 +746,8 @@ export class CourseService {
     if (course.enrolled) throw new ConflictException("Course is already enrolled");
 
     /*
-     For Playwright tests to bypass Stripe payment
-     Front-end interfaces, such as Stripe Checkout or the Payment Element, have security measures in place that prevent automated testing, and Stripe APIs are rate limited.
+      For Playwright tests to bypass Stripe payment
+      Front-end interfaces, such as Stripe Checkout or the Payment Element, have security measures in place that prevent automated testing, and Stripe APIs are rate limited.
    */
     const isTest = testKey && testKey === process.env.TEST_KEY;
     if (!isTest && Boolean(course.price)) throw new ForbiddenException();
@@ -805,7 +775,7 @@ export class CourseService {
         })
         .from(chapters)
         .leftJoin(lessons, eq(lessons.chapterId, chapters.id))
-        .where(and(eq(chapters.courseId, courseId), eq(chapters.isPublished, true)))
+        .where(eq(chapters.courseId, courseId))
         .groupBy(chapters.id);
 
       const existingLessonProgress = await this.lessonRepository.getLessonsProgressByCourseId(
@@ -854,7 +824,7 @@ export class CourseService {
     });
   }
 
-  async unenrollCourse(id: string, userId: string) {
+  async unenrollCourse(id: UUIDType, userId: UUIDType) {
     const [course] = await this.db
       .select({
         id: courses.id,
@@ -944,22 +914,6 @@ export class CourseService {
     return this.statisticsRepository.updatePaidPurchasedAfterFreemiumCoursesStats(
       courseId,
       dbInstance,
-    );
-  }
-
-  private async addS3SignedUrls(data: AllCoursesResponse): Promise<AllCoursesResponse> {
-    return Promise.all(
-      data.map(async (item) => {
-        if (!item.thumbnailUrl) return item;
-
-        try {
-          const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
-          return { ...item, thumbnailUrl: signedUrl };
-        } catch (error) {
-          console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
-          return item;
-        }
-      }),
     );
   }
 

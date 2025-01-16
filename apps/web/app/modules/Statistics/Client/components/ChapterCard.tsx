@@ -64,15 +64,15 @@ export const ChapterCard = (
 
   return (
     <Card className={cardClasses}>
-      <CardContent className="p-4 h-full">
-        <Link className="flex flex-col h-full gap-4" to={hrefToLessonPage}>
+      <CardContent className="h-full p-4">
+        <Link className="flex h-full flex-col gap-4" to={hrefToLessonPage}>
           <div className="relative">
             <img
               src={chapterDetails.courseThumbnail ?? CardPlaceholder}
               alt={`Lesson ${chapterDetails.chapterDisplayOrder}`}
               loading="eager"
               decoding="async"
-              className="w-full object-cover object-center rounded-lg drop-shadow-sm aspect-video"
+              className="aspect-video w-full rounded-lg object-cover object-center drop-shadow-sm"
               onError={(e) => {
                 (e.target as HTMLImageElement).src = CardPlaceholder;
               }}
@@ -80,19 +80,19 @@ export const ChapterCard = (
             {chapterDetails.chapterProgress && (
               <CardBadge
                 variant={cardBadgeVariant[chapterDetails.chapterProgress]}
-                className="absolute top-3 left-3"
+                className="absolute left-3 top-3"
               >
                 <Icon name={cardBadgeIcon[chapterDetails.chapterProgress]} />
                 {startCase(chapterDetails.chapterProgress)}
               </CardBadge>
             )}
-            <span className="absolute bottom-0 right-0 -translate-x-1/2 translate-y-1/2 bg-white rounded-full w-8 h-8 flex justify-center items-center text-primary-700">
+            <span className="text-primary-700 absolute bottom-0 right-0 flex h-8 w-8 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full bg-white">
               {chapterDetails.chapterDisplayOrder.toString().padStart(2, "0")}
             </span>
           </div>
-          <div className="flex flex-col flex-grow">
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col h-full bg-white w-full">
+          <div className="flex flex-grow flex-col">
+            <div className="flex items-center justify-between">
+              <div className="flex h-full w-full flex-col bg-white">
                 <CourseProgress
                   label={t("studentChapterCardView.other.chapterProgress")}
                   isCompleted={chapterDetails.chapterProgress === "completed"}
@@ -102,17 +102,17 @@ export const ChapterCard = (
               </div>
             </div>
             <div className="flex flex-col gap-y-2 pb-8">
-              <h4 className="font-medium text-sm text-neutral-950 mt-2">
+              <h4 className="mt-2 text-sm font-medium text-neutral-950">
                 {chapterDetails.chapterTitle}
               </h4>
             </div>
             <button
               className={cn(
-                "text-xs inline-flex self-start font-medium items-center",
+                "inline-flex items-center self-start text-xs font-medium",
                 buttonColorClass,
               )}
             >
-              {buttonText} <Icon name="CarretRight" className="w-4 h-4 ml-1" />
+              {buttonText} <Icon name="CarretRight" className="ml-1 h-4 w-4" />
             </button>
           </div>
         </Link>

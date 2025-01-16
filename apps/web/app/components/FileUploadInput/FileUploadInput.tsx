@@ -68,15 +68,15 @@ const FileUploadInput = ({
     if (contentTypeToDisplay === ContentTypes.VIDEO_LESSON_FORM) {
       return (
         <div className="relative size-full">
-          <video src={videoPreview ?? ""} className="w-full h-auto">
+          <video src={videoPreview ?? ""} className="h-auto w-full">
             <track kind="captions" className="sr-only" />
           </video>
           <label
             htmlFor="file-upload"
-            className="flex flex-col items-center h-full w-full inset-0 absolute justify-center gap-y-3 bg-[rgba(18,21,33,0.8)] border border-neutral-200 rounded-lg"
+            className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-y-3 rounded-lg border border-neutral-200 bg-[rgba(18,21,33,0.8)]"
           >
-            <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
-            <div className="flex flex-col gap-y-1 body-sm">
+            <Icon name="UploadImageIcon" className="text-primary-700 size-10" />
+            <div className="body-sm flex flex-col gap-y-1">
               <div className="text-center">
                 <span className="text-primary-400">Click to replace</span>{" "}
                 <span className="text-white">or drag and drop</span>
@@ -95,7 +95,7 @@ const FileUploadInput = ({
             />
             <Button
               variant="destructive"
-              className="gap-x-1 mt-2"
+              className="mt-2 gap-x-1"
               onClick={() => {
                 setFile(null);
                 setVideoPreview(null);
@@ -109,7 +109,7 @@ const FileUploadInput = ({
     }
 
     return (
-      <div className="w-full h-auto">
+      <div className="h-auto w-full">
         <DocViewer
           documents={docs}
           pluginRenderers={DocViewerRenderers}
@@ -127,17 +127,15 @@ const FileUploadInput = ({
         />
         <label
           htmlFor="file-upload"
-          className="flex flex-col items-center h-full w-full inset-0 absolute justify-center gap-y-3 bg-[rgba(18,21,33,0.8)] border border-neutral-200 rounded-lg"
+          className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-y-3 rounded-lg border border-neutral-200 bg-[rgba(18,21,33,0.8)]"
         >
-          <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
-          <div className="flex flex-col gap-y-1 body-sm">
+          <Icon name="UploadImageIcon" className="text-primary-700 size-10" />
+          <div className="body-sm flex flex-col gap-y-1">
             <div className="text-center">
               <span className="text-primary-400">Click to replace</span>{" "}
               <span className="text-white">or drag and drop</span>
             </div>
-            <div className="details text-neutral-200">
-              PPT/PPTX, KEY, ODP or PDF (max. to 100MB)
-            </div>
+            <div className="details text-neutral-200">PPT/PPTX (max. to 100MB)</div>
           </div>
           <input
             type="file"
@@ -149,7 +147,7 @@ const FileUploadInput = ({
           />
           <Button
             variant="destructive"
-            className="gap-x-1 mt-2"
+            className="mt-2 gap-x-1"
             onClick={() => {
               setFile(null);
               setVideoPreview(null);
@@ -176,7 +174,7 @@ const FileUploadInput = ({
   }
 
   return (
-    <div className="h-[240px] relative w-full max-w-[440px] rounded-lg overflow-hidden border border-neutral-200">
+    <div className="relative h-[240px] w-full max-w-[440px] overflow-hidden rounded-lg border border-neutral-200">
       {filePreview}
     </div>
   );

@@ -10,7 +10,7 @@ import { USER_ROLES } from "../user/schemas/userRoles";
 
 import { seedTruncateAllTables } from "./seed-helpers";
 
-import type { DatabasePg } from "../common";
+import type { DatabasePg, UUIDType } from "../common";
 
 dotenv.config({ path: "./.env" });
 
@@ -31,7 +31,7 @@ async function createOrFindUser(email: string, password: string, userData: any) 
   return newUser;
 }
 
-async function insertCredential(userId: string, password: string) {
+async function insertCredential(userId: UUIDType, password: string) {
   const credentialData = {
     id: faker.string.uuid(),
     userId,

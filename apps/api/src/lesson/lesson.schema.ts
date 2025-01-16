@@ -129,11 +129,7 @@ export const lessonForChapterSchema = Type.Array(
     title: Type.String(),
     type: Type.Enum(LESSON_TYPES),
     displayOrder: Type.Number(),
-    status: Type.Union([
-      Type.Literal(PROGRESS_STATUSES.COMPLETED),
-      Type.Literal(PROGRESS_STATUSES.IN_PROGRESS),
-      Type.Literal(PROGRESS_STATUSES.NOT_STARTED),
-    ]),
+    status: Type.Enum(PROGRESS_STATUSES),
     quizQuestionCount: Type.Union([Type.Number(), Type.Null()]),
     isExternal: Type.Optional(Type.Boolean()),
   }),

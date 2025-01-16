@@ -39,7 +39,7 @@ const User = () => {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex h-full items-center justify-center">
         <Loader />
       </div>
     );
@@ -55,9 +55,9 @@ const User = () => {
 
   return (
     <div className="flex flex-col">
-      <form onSubmit={handleSubmit(onSubmit)} className="rounded-lg h-full">
+      <form onSubmit={handleSubmit(onSubmit)} className="h-full rounded-lg">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl text-neutral-950 font-semibold mb-4">
+          <h2 className="mb-4 text-2xl font-semibold text-neutral-950">
             {t("adminUserView.editUserHeader")}
           </h2>
           <Button type="submit" disabled={!isDirty} className="mr-2">
@@ -67,7 +67,7 @@ const User = () => {
         <div className="space-y-4 pt-4">
           {displayedFields.map((field) => (
             <div key={field} className="flex flex-col gap-y-2">
-              <Label className="text-neutral-600 font-normal">
+              <Label className="font-normal text-neutral-600">
                 {field === "archived"
                   ? t("adminUserView.field.status")
                   : startCase(t(`adminUserView.field.${field}`))}

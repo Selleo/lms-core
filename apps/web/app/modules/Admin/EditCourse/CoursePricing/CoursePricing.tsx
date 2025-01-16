@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 
+import { PriceInput } from "~/components/PriceInput/PriceInput";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Form } from "~/components/ui/form";
@@ -17,22 +18,22 @@ type CoursePricingProps = {
 
 const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps) => {
   const { form, onSubmit } = useCoursePricingForm({ courseId, priceInCents, currency });
-  const { setValue, register, watch } = form;
+  const { setValue, watch } = form;
   const { t } = useTranslation();
 
   const isFree = watch("isFree");
   return (
-    <div className="flex flex-col p-8 w-full gap-y-6 bg-white max-w-[744px]">
+    <div className="flex w-full max-w-[744px] flex-col gap-y-6 bg-white p-8">
       <div className="flex flex-col gap-y-1.5">
         <h5 className="h5 text-neutral-950">{t("adminCourseView.pricing.header")}</h5>
-        <p className="text-neutral-900 body-base">{t("adminCourseView.pricing.subHeader")}</p>
+        <p className="body-base text-neutral-900">{t("adminCourseView.pricing.subHeader")}</p>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
           <div className="flex flex-col space-y-6">
             <Card
               className={cn(
-                "flex items-start gap-x-4 px-6 py-4 border rounded-md cursor-pointer w-[680px]",
+                "flex w-[680px] cursor-pointer items-start gap-x-4 rounded-md border px-6 py-4",
                 {
                   "bg-primary-50 border-primary-500": isFree === true,
                 },
@@ -45,12 +46,12 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                   name="isFree"
                   checked={isFree === true}
                   onChange={() => setValue("isFree", true)}
-                  className="p-1 w-4 h-4 cursor-pointer"
+                  className="h-4 w-4 cursor-pointer p-1"
                   id="isFree"
                 />
               </div>
-              <Label htmlFor="isFree" className="body-lg-md text-neutral-950 cursor-pointer">
-                <div className="body-lg-md text-neutral-950 mb-2">
+              <Label htmlFor="isFree" className="body-lg-md cursor-pointer text-neutral-950">
+                <div className="body-lg-md mb-2 text-neutral-950">
                   {t("adminCourseView.pricing.freeCourseHeader")}
                 </div>
                 <div
@@ -66,7 +67,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
 
             <Card
               className={cn(
-                "flex items-start gap-x-4 px-6 py-4 border rounded-md cursor-pointer w-[680px]",
+                "flex w-[680px] cursor-pointer items-start gap-x-4 rounded-md border px-6 py-4",
                 {
                   "bg-primary-50 border-primary-500": isFree === false,
                 },
@@ -79,13 +80,13 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                   name="isFree"
                   checked={isFree === false}
                   onChange={() => setValue("isFree", false)}
-                  className="p-1 w-4 h-4 pt-4 cursor-pointer"
+                  className="h-4 w-4 cursor-pointer p-1 pt-4"
                   id="isFree"
                 />
               </div>
               <div>
-                <Label htmlFor="paid" className={"body-lg-md text-neutral-950 cursor-pointer"}>
-                  <div className="body-lg-md text-neutral-950 mb-2 ">
+                <Label htmlFor="paid" className={"body-lg-md cursor-pointer text-neutral-950"}>
+                  <div className="body-lg-md mb-2 text-neutral-950">
                     {t("adminCourseView.pricing.paidCourseHeader")}
                   </div>
                   <div
@@ -105,31 +106,25 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                         {t("adminCourseView.pricing.field.price")}
                       </Label>
                     </div>
-                    <div className="relative mb-2">
-                      <Input
-                        id="priceInCents"
-                        {...register("priceInCents", {
-                          valueAsNumber: true,
-                          onChange: (e) => {
-                            const value = e.target.value;
-                            if (Number(value) <= 0) {
-                              e.target.value = "";
-                            }
-                          },
-                        })}
+                    <div className="mb-2">
+                      <PriceInput
+                        value={form.getValues("priceInCents")}
+                        onChange={(value) => setValue("priceInCents", value)}
+                        currency={currency}
                         placeholder={t("adminCourseView.pricing.placeholder.amount")}
-                        type="number"
-                        className="appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-moz-appearance]:textfield"
-                        onInput={(e) => {
-                          const input = e.target as HTMLInputElement;
-                          if (Number(input.value) <= 0) {
-                            input.value = "";
-                          }
-                        }}
+                        className={cn(
+                          "[&::-moz-appearance]:textfield appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+                          {
+                            "border-error-600": form.formState.errors.priceInCents,
+                          },
+                        )}
+                        aria-label={t("adminCourseView.pricing.field.price")}
                       />
-                      <span className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-4 uppercase cursor-default">
-                        {currency}
-                      </span>
+                      {form.formState.errors.priceInCents && (
+                        <p className="text-error-600 text-xs">
+                          {form.formState.errors.priceInCents.message}
+                        </p>
+                      )}
                     </div>
                   </>
                 )}

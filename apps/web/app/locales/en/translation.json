@@ -15,6 +15,9 @@
       "clearAll": "Clear All",
       "validate": "Validate"
     },
+    "tooltip": {
+      "soon": "Cooming soon"
+    },
     "roles": {
       "admin": "Admin",
       "teacher": "Teacher",
@@ -576,6 +579,9 @@
       },
       "placeholder": {
         "amount": "Amount"
+      },
+      "validation": {
+        "priceInCents": "Price must be at least 2.00 or free"
       }
     }
   },
@@ -760,6 +766,7 @@
         "about": "About",
         "collapse": "Collapse",
         "courseProgress": "Course progress",
+        "options": "Options",
         "remainingChapters": "Remaining chapters",
         "completedChapters": "Completed chapters",
         "noData": "No data",
