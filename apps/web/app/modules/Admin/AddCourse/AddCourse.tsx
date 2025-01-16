@@ -120,9 +120,13 @@ const AddCourse = () => {
                             />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent >
+                        <SelectContent>
                           {categories.map((category) => (
-                            <SelectItem value={category.id} key={category.id} data-testid={`category-option-${category.title}`}>
+                            <SelectItem
+                              value={category.id}
+                              key={category.id}
+                              data-testid={`category-option-${category.title}`}
+                            >
                               {category.title}
                             </SelectItem>
                           ))}
