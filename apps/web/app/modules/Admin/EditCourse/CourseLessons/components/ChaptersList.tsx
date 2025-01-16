@@ -144,7 +144,7 @@ const ChapterCard = ({
   );
 
   return (
-    <AccordionItem key={chapter.id} value={chapter.id} className="p-0">
+    <AccordionItem key={chapter.id} data-chapter-id={chapter.id} value={chapter.id} className="p-0">
       <Card
         className={cn("mb-4 h-full flex p-4 border", {
           "border-primary-500": isOpen || selectedChapter?.id === chapter.id,
@@ -317,7 +317,7 @@ const ChaptersList = ({
         }}
         className="grid grid-cols-1"
         renderItem={(chapter) => (
-          <SortableList.Item id={chapter.id}>
+          <SortableList.Item id={chapter.id} data-id={chapter.id}>
             <ChapterCard
               key={chapter.id}
               chapter={chapter}

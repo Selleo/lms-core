@@ -255,6 +255,7 @@ const Courses = () => {
           {table.getRowModel().rows.map((row) => (
             <TableRow
               key={row.id}
+              data-course-id={row.original.id}
               data-state={row.getIsSelected() && "selected"}
               onClick={() => handleRowClick(row.original.id)}
               className="cursor-pointer hover:bg-neutral-100"
