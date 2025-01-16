@@ -14,6 +14,7 @@ export class FileService {
   ) {}
 
   async getFileUrl(fileKey: string): Promise<string> {
+    if (!fileKey) return "https://app.lms.localhost/app/assets/placeholders/card-placeholder.jpg";
     if (fileKey.startsWith("https://")) return fileKey;
 
     try {

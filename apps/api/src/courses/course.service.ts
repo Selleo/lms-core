@@ -331,10 +331,9 @@ export class CourseService {
 
       const dataWithS3SignedUrls = await Promise.all(
         data.map(async (item) => {
-          if (!item.thumbnailUrl) return item;
-
           try {
             const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+
             return { ...item, thumbnailUrl: signedUrl };
           } catch (error) {
             console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
@@ -380,8 +379,11 @@ export class CourseService {
       })
       .from(courses)
       .leftJoin(categories, eq(courses.categoryId, categories.id))
-      .leftJoin(studentCourses, eq(courses.id, studentCourses.courseId))
-      .where(and(eq(courses.id, id), eq(studentCourses.studentId, userId)));
+      .leftJoin(
+        studentCourses,
+        and(eq(courses.id, studentCourses.courseId), eq(studentCourses.studentId, userId)),
+      )
+      .where(eq(courses.id, id));
 
     if (!course) throw new NotFoundException("Course not found");
 
@@ -1042,7 +1044,6 @@ export class CourseService {
     excludeCourseId?: UUIDType,
   ) {
     const conditions = [];
-
     if (authorId) {
       conditions.push(eq(courses.authorId, authorId));
     }

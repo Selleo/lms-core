@@ -171,7 +171,9 @@ const QuizLessonForm = ({
         }
 
         if (!noOptionsRequiredTypes.includes(type)) {
-          return [{ sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 1 }];
+          return [
+            { sortableId: crypto.randomUUID(), optionText: "", isCorrect: false, displayOrder: 1 },
+          ];
         }
 
         return [];

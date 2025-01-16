@@ -90,7 +90,7 @@ export class UserService {
     return user;
   }
 
-  public async getUserDetails(userId: UUIDType): Promise<UserDetails> {
+  public async getUserDetails(userId: UUIDType, userRole: UserRole): Promise<UserDetails> {
     const [userBio]: UserDetails[] = await this.db
       .select({
         firstName: users.firstName,
@@ -105,8 +105,31 @@ export class UserService {
       .leftJoin(users, eq(userDetails.userId, users.id))
       .where(eq(userDetails.userId, userId));
 
-    if (!userBio) {
-      throw new NotFoundException("User details not found");
+    if (!userBio && (USER_ROLES.TEACHER === userRole || USER_ROLES.ADMIN === userRole)) {
+      // TODO: quick
+      // throw new NotFoundException("User details not found");
+      const [user] = await this.db
+        .select({
+          id: users.id,
+          email: users.email,
+          firstName: users.firstName,
+          lastName: users.lastName,
+        })
+        .from(users)
+        .where(eq(users.id, userId));
+
+      const [userBio] = await this.db
+        .insert(userDetails)
+        .values({ userId, contactEmail: user.email })
+        .returning({
+          id: userDetails.id,
+          description: userDetails.description,
+          contactEmail: userDetails.contactEmail,
+          contactPhone: userDetails.contactPhoneNumber,
+          jobTitle: userDetails.jobTitle,
+        });
+
+      return { firstName: user.firstName, lastName: user.lastName, ...userBio };
     }
 
     return userBio;

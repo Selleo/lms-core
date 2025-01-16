@@ -10,13 +10,12 @@ import {
 } from "~/api/queries";
 import { useAvailableCourses } from "~/api/queries/useAvailableCourses";
 import { categoriesQueryOptions, useCategoriesSuspense } from "~/api/queries/useCategories";
-import { allCoursesQueryOptions, useCourses } from "~/api/queries/useCourses";
+import { allCoursesQueryOptions } from "~/api/queries/useCourses";
 import { useStudentCourses } from "~/api/queries/useStudentCourses";
 import { queryClient } from "~/api/queryClient";
 import { ButtonGroup } from "~/components/ButtonGroup/ButtonGroup";
 import { Icon } from "~/components/Icon";
 import { PageWrapper } from "~/components/PageWrapper";
-import { useUserRole } from "~/hooks/useUserRole";
 import { cn } from "~/lib/utils";
 import { SORT_OPTIONS, type SortOption } from "~/types/sorting";
 
@@ -82,7 +81,6 @@ function reducer(state: State, action: Action): State {
 }
 
 export default function CoursesPage() {
-  const { isAdmin, isTeacher } = useUserRole();
   const { t } = useTranslation();
   const [state, dispatch] = useReducer(reducer, {
     searchTitle: undefined,
@@ -97,25 +95,6 @@ export default function CoursesPage() {
     category: state.category,
     sort: state.sort,
   });
-
-  const { data: allCourses, isLoading: isAllCoursesLoading } = useCourses(
-    {
-      title: state.searchTitle,
-      category: state.category,
-      sort: state.sort,
-    },
-    { enabled: isAdmin || isTeacher },
-  );
-
-  const availableCourses = match(isAdmin)
-    .with(true, () => allCourses ?? [])
-    .with(false, () => userAvailableCourses ?? [])
-    .exhaustive();
-
-  const isCoursesLoading = match(isAdmin)
-    .with(true, () => isAllCoursesLoading)
-    .with(false, () => isAvailableCoursesLoading)
-    .exhaustive();
 
   const { data: categories, isLoading: isCategoriesLoading } = useCategoriesSuspense();
 
@@ -241,11 +220,14 @@ export default function CoursesPage() {
               block: courseListLayout === "table",
             })}
           >
-            {availableCourses && !isEmpty(availableCourses) && (
-              <CourseList availableCourses={availableCourses} courseListLayout={courseListLayout} />
+            {userAvailableCourses && !isEmpty(userAvailableCourses) && (
+              <CourseList
+                availableCourses={userAvailableCourses}
+                courseListLayout={courseListLayout}
+              />
             )}
-            {!availableCourses ||
-              (isEmpty(availableCourses) && (
+            {!userAvailableCourses ||
+              (isEmpty(userAvailableCourses) && (
                 <div className="col-span-3 flex gap-8">
                   <div>
                     <Icon name="EmptyCourse" className="mr-2 text-neutral-900" />
@@ -260,7 +242,7 @@ export default function CoursesPage() {
                   </div>
                 </div>
               ))}
-            {isCoursesLoading && (
+            {isAvailableCoursesLoading && (
               <div className="flex h-full items-center justify-center">
                 <Loader />
               </div>

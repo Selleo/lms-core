@@ -4,11 +4,11 @@ import { TableCourseList } from "~/modules/Courses/components/TableCourseList";
 
 import { CardCourseList } from "./CardCourseList";
 
-import type { GetAllCoursesResponse } from "~/api/generated-api";
+import type { GetAvailableCoursesResponse } from "~/api/generated-api";
 import type { CourseListLayout } from "~/types/shared";
 
 export const CourseList: React.FC<{
-  availableCourses: GetAllCoursesResponse["data"];
+  availableCourses: GetAvailableCoursesResponse["data"];
   courseListLayout: CourseListLayout;
 }> = ({ availableCourses, courseListLayout }) =>
   match(courseListLayout)

@@ -103,7 +103,7 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
                   <SortableList.Item id={item.sortableId}>
-                      <div className="mt-2 flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
+                    <div className="mt-2 flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                       <SortableList.DragHandle>
                         <Icon name="DragAndDropIcon" className="ml-4 mr-3 cursor-move" />
                       </SortableList.DragHandle>

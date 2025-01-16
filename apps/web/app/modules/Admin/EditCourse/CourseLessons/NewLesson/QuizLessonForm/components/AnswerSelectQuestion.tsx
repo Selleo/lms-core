@@ -116,9 +116,9 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                   return (
                     <SortableList.Item id={item.sortableId}>
                       <div className="mt-2">
-                        <div className="border border-neutral-200 p-2 pr-3 rounded-xl flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                           <SortableList.DragHandle>
-                            <Icon name="DragAndDropIcon" className="cursor-move ml-4 mr-3" />
+                            <Icon name="DragAndDropIcon" className="ml-4 mr-3 cursor-move" />
                           </SortableList.DragHandle>
                           <Input
                             type="text"
@@ -138,7 +138,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                                 name={`questions.${questionIndex}.options.${index}.isCorrect`}
                                 checked={item.isCorrect === true}
                                 onChange={() => handleOptionChange(index, "isCorrect", true)}
-                                className="w-4 h-4 cursor-pointer"
+                                className="h-4 w-4 cursor-pointer"
                               />
                             ) : (
                               <div className="cursor-pointer">
@@ -157,7 +157,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                               onClick={() =>
                                 handleOptionChange(index, "isCorrect", !item.isCorrect)
                               }
-                              className="ml-2 body-sm align-middle text-neutral-950 cursor-pointer"
+                              className="body-sm ml-2 cursor-pointer align-middle text-neutral-950"
                             >
                               {t("adminCourseView.curriculum.lesson.other.correct")}
                             </Label>
@@ -167,7 +167,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                                   <div className="group">
                                     <Icon
                                       name="TrashIcon"
-                                      className="text-error-500 bg-error-50 ml-3 cursor-pointer w-7 h-7 group-hover:text-white group-hover:bg-error-600 rounded-lg p-1"
+                                      className="text-error-500 bg-error-50 group-hover:bg-error-600 ml-3 h-7 w-7 cursor-pointer rounded-lg p-1 group-hover:text-white"
                                       onClick={() => handleRemoveOption(index)}
                                     />
                                   </div>
@@ -175,7 +175,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                                 <TooltipContent
                                   side="top"
                                   align="center"
-                                  className="bg-black ml-4 text-white text-sm rounded shadow-md"
+                                  className="ml-4 rounded bg-black text-sm text-white shadow-md"
                                 >
                                   {t("common.button.delete")}
                                 </TooltipContent>
