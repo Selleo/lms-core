@@ -169,7 +169,7 @@ const ChapterCard = ({
             <AccordionContent className="mt-2 text-gray-700">
               {chapter.lessonCount > 0 ? (
                 <LessonCardList
-                  lessons={chapter.lessons}
+                  lessons={chapter.lessons.map((lesson) => ({ ...lesson, sortableId: lesson.id }))}
                   selectedLesson={selectedLesson}
                   setSelectedLesson={setSelectedLesson}
                   setContentTypeToDisplay={setContentTypeToDisplay}
@@ -234,8 +234,10 @@ const ChapterCard = ({
   );
 };
 
-interface ChaptersListProps {
-  chapters?: Chapter[];
+type DraggableChapter = Chapter & { sortableId: string };
+
+type ChaptersListProps = {
+  chapters?: DraggableChapter[];
   setContentTypeToDisplay: (contentTypeToDisplay: string) => void;
   setSelectedChapter: (selectedChapter: Chapter | null) => void;
   setSelectedLesson: (selectedLesson: Lesson | null) => void;
@@ -243,7 +245,7 @@ interface ChaptersListProps {
   selectedLesson: Lesson | null;
   canRefetchChapterList: boolean;
   isLeaveModalOpen?: boolean;
-}
+};
 
 function getChapterWithLatestLesson(chapters: Chapter[]): string | null {
   let latestTime = 0;
@@ -309,7 +311,7 @@ const ChaptersList = ({
 
             mutation.mutate({
               chapter: {
-                chapterId: updatedItems[newChapterPosition].id,
+                chapterId: updatedItems[newChapterPosition].sortableId,
                 displayOrder: newDisplayOrder,
               },
             });
@@ -317,11 +319,11 @@ const ChaptersList = ({
         }}
         className="grid grid-cols-1"
         renderItem={(chapter) => (
-          <SortableList.Item id={chapter.id}>
+          <SortableList.Item id={chapter.sortableId}>
             <ChapterCard
-              key={chapter.id}
+              key={chapter.sortableId}
               chapter={chapter}
-              isOpen={openItem === chapter.id}
+              isOpen={openItem === chapter.sortableId}
               setContentTypeToDisplay={setContentTypeToDisplay}
               setSelectedChapter={setSelectedChapter}
               setSelectedLesson={setSelectedLesson}

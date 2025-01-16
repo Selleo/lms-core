@@ -29,11 +29,14 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
       form.getValues(`questions.${questionIndex}.options`) || [];
+
     const newOption: QuestionOption = {
+      sortableId: crypto.randomUUID(),
       optionText: "",
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
     };
+
     form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
       shouldDirty: true,
     });
@@ -103,13 +106,12 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             {watchedOptions && watchedOptions?.length > 0 && (
               <SortableList
                 items={watchedOptions}
-                isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions.${questionIndex}.options`, updatedItems);
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
-                  <SortableList.Item id={item.displayOrder}>
+                  <SortableList.Item id={item.sortableId}>
                     <div className="mt-2">
                       <div className="flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                         <SortableList.DragHandle>

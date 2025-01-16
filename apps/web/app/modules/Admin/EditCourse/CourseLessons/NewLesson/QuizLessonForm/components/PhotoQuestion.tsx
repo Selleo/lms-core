@@ -55,7 +55,9 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
       form.getValues(`questions.${questionIndex}.options`) || [];
+
     const newOption: QuestionOption = {
+      sortableId: crypto.randomUUID(),
       optionText: "",
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
@@ -223,7 +225,6 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             {watchedOptions && watchedOptions?.length > 0 && (
               <SortableList
                 items={watchedOptions}
-                isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions.${questionIndex}.options`, updatedItems, {
                     shouldDirty: true,
@@ -231,7 +232,7 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
-                  <SortableList.Item id={item.displayOrder}>
+                  <SortableList.Item id={item.sortableId}>
                     <div className="mt-2">
                       <div className="flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                         <SortableList.DragHandle>

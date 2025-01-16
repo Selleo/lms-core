@@ -238,9 +238,25 @@ export class AdminLessonService {
               };
 
               if (option.id) {
-                await this.adminLessonRepository.updateOption(option.id, optionData, trx);
+                const result = await this.adminLessonRepository.updateOption(
+                  option.id,
+                  optionData,
+                  trx,
+                );
+                if (!result || result.length === 0) {
+                  throw new BadRequestException(
+                    `Failed to update option with ID: ${option.id} in question ${question.title} - ${question.type}`,
+                  );
+                }
               } else {
-                await this.adminLessonRepository.insertOption(questionId, optionData, trx);
+                const result = await this.adminLessonRepository.insertOption(
+                  questionId,
+                  optionData,
+                  trx,
+                );
+                if (!result || result.length === 0) {
+                  throw new BadRequestException("Failed to insert new option");
+                }
               }
             }
           }

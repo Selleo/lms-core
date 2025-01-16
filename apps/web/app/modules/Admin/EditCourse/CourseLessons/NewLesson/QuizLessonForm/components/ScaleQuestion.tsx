@@ -29,11 +29,14 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
   const handleAddOption = useCallback(() => {
     const currentOptions: QuestionOption[] =
       form.getValues(`questions.${questionIndex}.options`) || [];
+
     const newOption: QuestionOption = {
+      sortableId: crypto.randomUUID(),
       optionText: "",
       isCorrect: false,
       displayOrder: currentOptions.length + 1,
     };
+
     form.setValue(`questions.${questionIndex}.options`, [...currentOptions, newOption], {
       shouldDirty: true,
     });
@@ -92,7 +95,6 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
             {watchedOptions && watchedOptions.length > 0 && (
               <SortableList
                 items={watchedOptions}
-                isQuiz
                 onChange={(updatedItems) => {
                   form.setValue(`questions.${questionIndex}.options`, updatedItems, {
                     shouldDirty: true,
@@ -100,8 +102,8 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
                 }}
                 className="grid grid-cols-1"
                 renderItem={(item, index: number) => (
-                  <SortableList.Item id={item.displayOrder}>
-                    <div className="mt-2 flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
+                  <SortableList.Item id={item.sortableId}>
+                      <div className="mt-2 flex items-center space-x-2 rounded-xl border border-neutral-200 p-2 pr-3">
                       <SortableList.DragHandle>
                         <Icon name="DragAndDropIcon" className="ml-4 mr-3 cursor-move" />
                       </SortableList.DragHandle>

@@ -67,11 +67,11 @@ export class AdminChapterRepository {
   async removeChapter(chapterId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
-    return await dbInstance.delete(chapters).where(eq(chapters.id, chapterId)).returning();
+    return dbInstance.delete(chapters).where(eq(chapters.id, chapterId)).returning();
   }
 
   async getBetaChapterLessons(chapterId: UUIDType): Promise<AdminLessonWithContentSchema[]> {
-    return await this.db
+    return this.db
       .select({
         updatedAt: sql<string>`${lessons.updatedAt}`,
         id: lessons.id,
@@ -104,12 +104,14 @@ export class AdminChapterRepository {
                   )
                   FROM ${questionAnswerOptions} questionAnswerOptions
                   WHERE questionAnswerOptions.question_id = questions.id
+                  ORDER BY ${questionAnswerOptions.displayOrder}
                 )
               )
             )
             FROM ${questions}
             WHERE ${questions.lessonId} = lessons.id
-          )
+            ORDER BY ${questions.displayOrder}
+                 )
         )`,
       })
       .from(lessons)
@@ -118,17 +120,17 @@ export class AdminChapterRepository {
   }
 
   async updateFreemiumStatus(chapterId: string, isFreemium: boolean) {
-    return await this.db.update(chapters).set({ isFreemium }).where(eq(chapters.id, chapterId));
+    return this.db.update(chapters).set({ isFreemium }).where(eq(chapters.id, chapterId));
   }
 
   async updateChapter(id: string, body: UpdateChapterBody) {
-    return await this.db.update(chapters).set(body).where(eq(chapters.id, id)).returning();
+    return this.db.update(chapters).set(body).where(eq(chapters.id, id)).returning();
   }
 
   async updateChapterCountForCourse(courseId: UUIDType, trx?: PostgresJsDatabase<typeof schema>) {
     const dbInstance = trx ?? this.db;
 
-    return await dbInstance
+    return dbInstance
       .update(courses)
       .set({
         chapterCount: sql<number>`(

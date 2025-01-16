@@ -10,10 +10,12 @@ import { ContentTypes } from "~/modules/Admin/EditCourse/EditCourse.types";
 
 import type { Lesson } from "~/modules/Admin/EditCourse/EditCourse.types";
 
+type DraggableLesson = Lesson & { sortableId: string };
+
 type LessonCardListProps = {
   setSelectedLesson: (lesson: Lesson) => void;
   setContentTypeToDisplay: (contentType: string) => void;
-  lessons: Lesson[];
+  lessons: DraggableLesson[];
   selectedLesson: Lesson | null;
 };
 
@@ -89,14 +91,17 @@ export const LessonCardList = ({
         setItems(updatedItems);
 
         await mutation.mutateAsync({
-          lesson: { lessonId: updatedItems[newChapterPosition].id, displayOrder: newDisplayOrder },
+          lesson: {
+            lessonId: updatedItems[newChapterPosition].sortableId,
+            displayOrder: newDisplayOrder,
+          },
         });
       }}
       className="mt-4 grid grid-cols-1 gap-4"
       renderItem={(item) => (
-        <SortableList.Item id={item.id}>
+        <SortableList.Item id={item.sortableId}>
           <LessonCard
-            key={item.id}
+            key={item.sortableId}
             item={item}
             onClickLessonCard={onClickLessonCard}
             selectedLesson={selectedLesson}
