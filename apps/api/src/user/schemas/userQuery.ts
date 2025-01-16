@@ -1,5 +1,7 @@
 import { Type, type Static } from "@sinclair/typebox";
 
+import { USER_ROLES } from "./userRoles";
+
 export const userSortFields = ["title", "createdAt", "role"] as const;
 
 export const UserSortFields: Record<UserSortField, UserSortField> = {
@@ -24,7 +26,7 @@ export type SortUserFieldsOptions = Static<typeof sortUserFieldsOptions>;
 export const usersFilterSchema = Type.Object({
   keyword: Type.Optional(Type.String()),
   archived: Type.Optional(Type.Boolean()),
-  role: Type.Optional(Type.String()),
+  role: Type.Optional(Type.Enum(USER_ROLES)),
 });
 
 export type UsersFilterSchema = Static<typeof usersFilterSchema>;

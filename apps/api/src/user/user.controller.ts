@@ -43,7 +43,7 @@ import {
   type UserResponse,
 } from "./schemas/user.schema";
 import { SortUserFieldsOptions } from "./schemas/userQuery";
-import { USER_ROLES } from "./schemas/userRoles";
+import { USER_ROLES, UserRole } from "./schemas/userRoles";
 import { UserService } from "./user.service";
 
 import type { UsersFilterSchema } from "./schemas/userQuery";
@@ -59,7 +59,7 @@ export class UserController {
   @Validate({
     request: [
       { type: "query", name: "keyword", schema: Type.String() },
-      { type: "query", name: "role", schema: Type.String() },
+      { type: "query", name: "role", schema: Type.Enum(USER_ROLES) },
       { type: "query", name: "archived", schema: Type.String() },
       { type: "query", name: "page", schema: Type.Number({ minimum: 1 }) },
       { type: "query", name: "perPage", schema: Type.Number() },
@@ -69,7 +69,7 @@ export class UserController {
   })
   async getUsers(
     @Query("keyword") keyword: string,
-    @Query("role") role: string,
+    @Query("role") role: UserRole,
     @Query("archived") archived: string,
     @Query("page") page: number,
     @Query("perPage") perPage: number,
@@ -94,7 +94,7 @@ export class UserController {
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonUserSchema),
   })
-  async getUserById(@Query("id") id: string): Promise<BaseResponse<UserResponse>> {
+  async getUserById(@Query("id") id: UUIDType): Promise<BaseResponse<UserResponse>> {
     const user = await this.usersService.getUserById(id);
 
     return new BaseResponse(user);
@@ -106,7 +106,7 @@ export class UserController {
     request: [{ type: "query", name: "userId", schema: UUIDSchema, required: true }],
     response: baseResponse(userDetailsSchema),
   })
-  async getUserDetails(@Query("userId") userId: string): Promise<BaseResponse<UserDetails>> {
+  async getUserDetails(@Query("userId") userId: UUIDType): Promise<BaseResponse<UserDetails>> {
     const userDetails = await this.usersService.getUserDetails(userId);
     return new BaseResponse(userDetails);
   }
@@ -166,7 +166,7 @@ export class UserController {
     ],
   })
   async adminUpdateUser(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @Body() data: UpdateUserBody,
   ): Promise<BaseResponse<Static<typeof commonUserSchema>>> {
     {
@@ -185,7 +185,7 @@ export class UserController {
     ],
   })
   async changePassword(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @Body() data: ChangePasswordBody,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<null> {
@@ -204,7 +204,7 @@ export class UserController {
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
   })
   async deleteUser(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<null> {
     if (currentUserId !== id) {

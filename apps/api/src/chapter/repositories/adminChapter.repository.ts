@@ -119,11 +119,11 @@ export class AdminChapterRepository {
       .orderBy(lessons.displayOrder);
   }
 
-  async updateFreemiumStatus(chapterId: string, isFreemium: boolean) {
+  async updateFreemiumStatus(chapterId: UUIDType, isFreemium: boolean) {
     return this.db.update(chapters).set({ isFreemium }).where(eq(chapters.id, chapterId));
   }
 
-  async updateChapter(id: string, body: UpdateChapterBody) {
+  async updateChapter(id: UUIDType, body: UpdateChapterBody) {
     return this.db.update(chapters).set(body).where(eq(chapters.id, id)).returning();
   }
 

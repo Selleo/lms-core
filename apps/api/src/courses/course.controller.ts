@@ -252,7 +252,7 @@ export class CourseController {
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async enrollCourse(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
     @Headers("x-test-key") testKey: string,
   ): Promise<BaseResponse<{ message: string }>> {
@@ -268,7 +268,7 @@ export class CourseController {
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
   })
   async unenrollCourse(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<null> {
     await this.courseService.unenrollCourse(id, currentUserId);

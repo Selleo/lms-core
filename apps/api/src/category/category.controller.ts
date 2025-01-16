@@ -109,7 +109,7 @@ export class CategoryController {
     ],
   })
   async updateCategory(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @Body() updateCategoryBody: CategoryUpdateBody,
     @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<BaseResponse<CategorySchema>> {

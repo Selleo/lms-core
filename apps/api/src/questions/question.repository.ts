@@ -273,9 +273,9 @@ export class QuestionRepository {
 
   async insertQuizAnswers(
     answers: {
-      questionId: string;
+      questionId: UUIDType;
       answer: unknown;
-      studentId: string;
+      studentId: UUIDType;
       isCorrect: boolean;
     }[],
     trx: PostgresJsDatabase<typeof schema>,

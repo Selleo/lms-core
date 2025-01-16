@@ -351,7 +351,20 @@
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string"
+              "anyOf": [
+                {
+                  "const": "admin",
+                  "type": "string"
+                },
+                {
+                  "const": "student",
+                  "type": "string"
+                },
+                {
+                  "const": "teacher",
+                  "type": "string"
+                }
+              ]
             }
           },
           {
@@ -3731,7 +3744,7 @@
                     "chapterProgress": {
                       "anyOf": [
                         {
-                          "const": "completed",
+                          "const": "not_started",
                           "type": "string"
                         },
                         {
@@ -3739,7 +3752,7 @@
                           "type": "string"
                         },
                         {
-                          "const": "not_started",
+                          "const": "completed",
                           "type": "string"
                         }
                       ]
@@ -4115,7 +4128,7 @@
                     "chapterProgress": {
                       "anyOf": [
                         {
-                          "const": "completed",
+                          "const": "not_started",
                           "type": "string"
                         },
                         {
@@ -4123,7 +4136,7 @@
                           "type": "string"
                         },
                         {
-                          "const": "not_started",
+                          "const": "completed",
                           "type": "string"
                         }
                       ]
@@ -4850,7 +4863,7 @@
               "chapterProgress": {
                 "anyOf": [
                   {
-                    "const": "completed",
+                    "const": "not_started",
                     "type": "string"
                   },
                   {
@@ -4858,7 +4871,7 @@
                     "type": "string"
                   },
                   {
-                    "const": "not_started",
+                    "const": "completed",
                     "type": "string"
                   }
                 ]
@@ -5147,7 +5160,7 @@
               "chapterProgress": {
                 "anyOf": [
                   {
-                    "const": "completed",
+                    "const": "not_started",
                     "type": "string"
                   },
                   {
@@ -5155,7 +5168,7 @@
                     "type": "string"
                   },
                   {
-                    "const": "not_started",
+                    "const": "completed",
                     "type": "string"
                   }
                 ]
@@ -5470,7 +5483,7 @@
               "chapterProgress": {
                 "anyOf": [
                   {
-                    "const": "completed",
+                    "const": "not_started",
                     "type": "string"
                   },
                   {
@@ -5478,7 +5491,7 @@
                     "type": "string"
                   },
                   {
-                    "const": "not_started",
+                    "const": "completed",
                     "type": "string"
                   }
                 ]

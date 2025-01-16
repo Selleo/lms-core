@@ -28,6 +28,7 @@ import { USER_ROLES, type UserRole } from "./schemas/userRoles";
 
 import type { UpsertUserDetailsBody } from "./schemas/updateUser.schema";
 import type { UserDetails } from "./schemas/user.schema";
+import type { UUIDType } from "src/common";
 import type { CreateUserBody } from "src/user/schemas/createUser.schema";
 
 @Injectable()
@@ -69,7 +70,7 @@ export class UserService {
     };
   }
 
-  public async getUserById(id: string) {
+  public async getUserById(id: UUIDType) {
     const [user] = await this.db.select().from(users).where(eq(users.id, id));
 
     if (!user) {
@@ -89,7 +90,7 @@ export class UserService {
     return user;
   }
 
-  public async getUserDetails(userId: string): Promise<UserDetails> {
+  public async getUserDetails(userId: UUIDType): Promise<UserDetails> {
     const [userBio]: UserDetails[] = await this.db
       .select({
         firstName: users.firstName,
@@ -112,7 +113,7 @@ export class UserService {
   }
 
   public async updateUser(
-    id: string,
+    id: UUIDType,
     data: {
       email?: string;
       firstName?: string;
@@ -132,7 +133,7 @@ export class UserService {
     return updatedUser;
   }
 
-  async upsertUserDetails(userId: string, data: UpsertUserDetailsBody) {
+  async upsertUserDetails(userId: UUIDType, data: UpsertUserDetailsBody) {
     const [existingUser] = await this.db.select().from(users).where(eq(users.id, userId));
 
     if (!existingUser) {
@@ -148,7 +149,7 @@ export class UserService {
     return updatedUserDetails;
   }
 
-  async changePassword(id: string, oldPassword: string, newPassword: string) {
+  async changePassword(id: UUIDType, oldPassword: string, newPassword: string) {
     const [existingUser] = await this.db.select().from(users).where(eq(users.id, id));
 
     if (!existingUser) {
@@ -176,7 +177,7 @@ export class UserService {
       .where(eq(credentials.userId, id));
   }
 
-  async resetPassword(id: string, newPassword: string) {
+  async resetPassword(id: UUIDType, newPassword: string) {
     const [existingUser] = await this.db.select().from(users).where(eq(users.id, id));
 
     if (!existingUser) {
@@ -199,7 +200,7 @@ export class UserService {
       .where(eq(credentials.userId, id));
   }
 
-  public async deleteUser(id: string) {
+  public async deleteUser(id: UUIDType) {
     const [deletedUser] = await this.db.delete(users).where(eq(users.id, id)).returning();
 
     if (!deletedUser) {
@@ -207,7 +208,7 @@ export class UserService {
     }
   }
 
-  public async deleteBulkUsers(ids: string[]) {
+  public async deleteBulkUsers(ids: UUIDType[]) {
     const deletedUsers = await this.db.delete(users).where(inArray(users.id, ids)).returning();
 
     if (deletedUsers.length !== ids.length) {

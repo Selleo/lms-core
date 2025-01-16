@@ -171,7 +171,7 @@ export class CourseService {
 
   async getCoursesForUser(
     query: CoursesQuery,
-    userId: string,
+    userId: UUIDType,
   ): Promise<{ data: AllStudentCoursesResponse; pagination: Pagination }> {
     const {
       sort = CourseSortFields.title,
@@ -475,7 +475,7 @@ export class CourseService {
     };
   }
 
-  async getBetaCourseById(id: string) {
+  async getBetaCourseById(id: UUIDType) {
     const [course] = await this.db
       .select({
         id: courses.id,
@@ -669,7 +669,7 @@ export class CourseService {
   }
 
   async updateCourse(
-    id: string,
+    id: UUIDType,
     updateCourseBody: UpdateCourseBody,
     image?: Express.Multer.File,
     currentUserId?: UUIDType,
@@ -727,7 +727,7 @@ export class CourseService {
     });
   }
 
-  async enrollCourse(id: string, studentId: string, testKey?: string) {
+  async enrollCourse(id: UUIDType, studentId: UUIDType, testKey?: string) {
     const [course] = await this.db
       .select({
         id: courses.id,
@@ -824,7 +824,7 @@ export class CourseService {
     });
   }
 
-  async unenrollCourse(id: string, userId: string) {
+  async unenrollCourse(id: UUIDType, userId: UUIDType) {
     const [course] = await this.db
       .select({
         id: courses.id,
