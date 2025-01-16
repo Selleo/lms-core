@@ -1126,7 +1126,8 @@ export const niceCourses: NiceCourseData[] = [
             questions: [
               {
                 type: QUESTION_TYPE.FILL_IN_THE_BLANKS_TEXT,
-                title: "I [word] to the park every day.",
+                title: "Fill in the blanks with the correct word.",
+                description: "I [word] to the park every day.",
                 solutionExplanation: "I <strong>go</strong> to the park every day.",
                 options: [
                   { optionText: "go", isCorrect: true },
@@ -1192,6 +1193,14 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "swimming",
                     isCorrect: true,
+                  },
+                  {
+                    optionText: "swim",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "swam",
+                    isCorrect: false,
                   },
                 ],
               },
@@ -1676,6 +1685,14 @@ export const niceCourses: NiceCourseData[] = [
                     optionText: "support",
                     isCorrect: true,
                   },
+                  {
+                    optionText: "supported",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "supports",
+                    isCorrect: false,
+                  },
                 ],
               },
             ],
@@ -1701,7 +1718,80 @@ export const niceCourses: NiceCourseData[] = [
           {
             type: LESSON_TYPES.QUIZ,
             title: "What does the idiom 'break the ice' mean?",
-            description: "Explain the meaning of the idiom 'break the ice'.",
+            questions: [
+              {
+                type: QUESTION_TYPE.SINGLE_CHOICE,
+                title: "What does the idiom 'break the ice' mean?",
+                description: "Explain the meaning of the idiom 'break the ice'.",
+                options: [
+                  {
+                    optionText: "A way to start a conversation.",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "A way to end a conversation.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "A way to make a person feel better.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "An idiom for a person who is not interested in a conversation.",
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.MULTIPLE_CHOICE,
+                title: "Which of the following is an example of a break the ice expression?",
+                description: "Choose the correct example of a break the ice expression.",
+                options: [
+                  {
+                    optionText: "I'm not interested in talking to you anymore.",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "I don't want to talk to you anymore.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "I'm not interested anymore in talking to you.",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "You're not interested in talking to me anymore.",
+                    isCorrect: false,
+                  },
+                ],
+              },
+              {
+                type: QUESTION_TYPE.FILL_IN_THE_BLANKS_DND,
+                title: "Fill in the blanks with the correct word.",
+                description:
+                  "The break the ice expression is used to [word] a person who is not interested in a conversation.",
+                solutionExplanation:
+                  "The break the ice expression is used to <strong>make</strong> a person feel better.",
+                options: [
+                  {
+                    optionText: "make",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "feel",
+                    isCorrect: true,
+                  },
+                  {
+                    optionText: "start",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "end",
+                    isCorrect: false,
+                  },
+                ],
+              },
+            ],
           },
           {
             type: LESSON_TYPES.VIDEO,
@@ -1723,6 +1813,14 @@ export const niceCourses: NiceCourseData[] = [
                   {
                     optionText: "over the moon",
                     isCorrect: true,
+                  },
+                  {
+                    optionText: "over the mooning",
+                    isCorrect: false,
+                  },
+                  {
+                    optionText: "over the mooned",
+                    isCorrect: false,
                   },
                 ],
               },

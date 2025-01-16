@@ -8,6 +8,7 @@ import { Icon } from "~/components/Icon";
 import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
 import { Video } from "~/components/VideoPlayer/Video";
+import { LessonType } from "~/modules/Admin/EditCourse/EditCourse.types";
 import { Quiz } from "~/modules/Courses/Lesson/Quiz";
 
 import Presentation from "../../../components/Presentation/Presentation";
@@ -36,9 +37,12 @@ export const LessonContent = ({
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (lesson.type === "video") setIsNextDisabled(true);
-    if (lesson.type === "quiz") setIsNextDisabled(!lesson.quizCompleted);
-  }, [lesson.quizCompleted, lesson.type]);
+    if (lesson.type == LessonType.QUIZ || lesson.type == LessonType.VIDEO) {
+      return setIsNextDisabled(!lesson.lessonCompleted);
+    }
+
+    setIsNextDisabled(false);
+  }, [lesson.lessonCompleted, lesson.type]);
 
   const Content = () =>
     match(lesson.type)
@@ -83,7 +87,6 @@ export const LessonContent = ({
             <Button
               disabled={isNextDisabled}
               className="gap-x-1"
-              // disabled={isNextDisabled}
               onClick={handleMarkLessonAsComplete}
             >
               <Icon name="ArrowRight" className="h-auto w-4" />

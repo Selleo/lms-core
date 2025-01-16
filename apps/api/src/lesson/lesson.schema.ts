@@ -115,7 +115,7 @@ export const lessonShowSchema = Type.Object({
   fileType: Type.Union([Type.String(), Type.Null()]),
   fileUrl: Type.Union([Type.String(), Type.Null()]),
   quizDetails: Type.Optional(questionDetails),
-  quizCompleted: Type.Optional(Type.Boolean()),
+  lessonCompleted: Type.Optional(Type.Boolean()),
   displayOrder: Type.Number(),
   isExternal: Type.Optional(Type.Boolean()),
   nextLessonId: Type.Union([UUIDSchema, Type.Null()]),

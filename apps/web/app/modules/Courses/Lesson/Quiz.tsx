@@ -54,7 +54,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
           });
         })}
       >
-        <Questions questions={questions} isQuizCompleted={lesson.quizCompleted} />
+        <Questions questions={questions} isQuizCompleted={lesson.lessonCompleted} />
         <Button type="submit" className="flex items-center gap-x-2 self-end">
           <span>{t("studentLessonView.button.submit")}</span>
           <Icon name="ArrowRight" className="h-auto w-4" />
