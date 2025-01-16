@@ -38,6 +38,7 @@ import {
 } from "~/modules/common/SearchFilter/SearchFilter";
 
 import type { GetUsersResponse } from "~/api/generated-api";
+import type { UserRole } from "~/config/userRoles";
 
 type TUser = GetUsersResponse["data"][number];
 
@@ -50,7 +51,7 @@ const Users = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = React.useState<{
     keyword?: string;
-    role?: string;
+    role?: UserRole;
     archived?: boolean;
     status?: string;
   }>({});

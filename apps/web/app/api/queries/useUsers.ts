@@ -3,10 +3,11 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { ApiClient } from "../api-client";
 
 import type { GetUsersResponse } from "../generated-api";
+import type { UserRole } from "~/config/userRoles";
 
 type UsersParams = {
   keyword?: string;
-  role?: string;
+  role?: UserRole;
   archived?: boolean;
   sort?: string;
 };

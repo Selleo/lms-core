@@ -106,8 +106,11 @@ export class UserController {
     request: [{ type: "query", name: "userId", schema: UUIDSchema, required: true }],
     response: baseResponse(userDetailsSchema),
   })
-  async getUserDetails(@Query("userId") userId: UUIDType): Promise<BaseResponse<UserDetails>> {
-    const userDetails = await this.usersService.getUserDetails(userId);
+  async getUserDetails(
+    @Query("userId") userId: UUIDType,
+    @CurrentUser("role") role: UserRole,
+  ): Promise<BaseResponse<UserDetails>> {
+    const userDetails = await this.usersService.getUserDetails(userId, role);
     return new BaseResponse(userDetails);
   }
 

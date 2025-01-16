@@ -3,7 +3,6 @@ import { last, startCase } from "lodash-es";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { useCourse } from "~/api/queries";
 import CourseProgress from "~/components/CourseProgress";
 import { Icon } from "~/components/Icon";
 import {
@@ -17,8 +16,10 @@ import { CategoryChip } from "~/components/ui/CategoryChip";
 import { cn } from "~/lib/utils";
 import { LessonTypesIcons } from "~/modules/Courses/CourseView/lessonTypes";
 
+import type { GetCourseResponse } from "~/api/generated-api";
+
 type LessonSidebarProps = {
-  courseId: string;
+  course: GetCourseResponse["data"];
   lessonId: string;
 };
 
@@ -28,9 +29,7 @@ const progressBadge = {
   not_started: "NotStartedRounded",
 } as const;
 
-export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
-  const { data: course } = useCourse(courseId);
-
+export const LessonSidebar = ({ course, lessonId }: LessonSidebarProps) => {
   const { state } = useLocation();
   const [activeChapter, setActiveChapter] = useState<string | undefined>(state?.chapterId);
   const { t } = useTranslation();
@@ -101,7 +100,7 @@ export const LessonSidebar = ({ courseId, lessonId }: LessonSidebarProps) => {
                         return (
                           <Link
                             key={id}
-                            to={status === "completed" ? `/course/${courseId}/lesson/${id}` : "#"}
+                            to={status === "completed" ? `/course/${course.id}/lesson/${id}` : "#"}
                             className={cn("flex gap-x-4 px-6 py-2 hover:bg-neutral-50", {
                               "cursor-not-allowed": status === "not_started",
                               "bg-primary-50 border-l-primary-600 border-l-2 last:rounded-es-lg":

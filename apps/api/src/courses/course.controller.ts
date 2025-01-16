@@ -28,7 +28,7 @@ import { Roles } from "src/common/decorators/roles.decorator";
 import { CurrentUser } from "src/common/decorators/user.decorator";
 import { RolesGuard } from "src/common/guards/roles.guard";
 import { CourseService } from "src/courses/course.service";
-import { allCoursesSchema } from "src/courses/schemas/course.schema";
+import { allCoursesForTeacherSchema } from "src/courses/schemas/course.schema";
 import {
   SortCourseFieldsOptions,
   CourseEnrollmentScope,
@@ -174,7 +174,7 @@ export class CourseController {
       },
       { type: "query", name: "excludeCourseId", schema: UUIDSchema },
     ],
-    response: baseResponse(allCoursesSchema),
+    response: baseResponse(allCoursesForTeacherSchema),
   })
   async getTeacherCourses(
     @Query("authorId") authorId: UUIDType,

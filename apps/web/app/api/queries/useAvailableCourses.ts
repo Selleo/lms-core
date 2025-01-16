@@ -2,7 +2,7 @@ import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 
 import { ApiClient } from "../api-client";
 
-import type { GetAllCoursesResponse } from "../generated-api";
+import type { GetAvailableCoursesResponse } from "../generated-api";
 import type { SortOption } from "~/types/sorting";
 
 type CourseParams = {
@@ -27,7 +27,7 @@ export const availableCoursesQueryOptions = (searchParams?: CourseParams) => ({
     });
     return response.data;
   },
-  select: (data: GetAllCoursesResponse) => data.data,
+  select: (data: GetAvailableCoursesResponse) => data.data,
 });
 
 export function useAvailableCourses(searchParams?: CourseParams) {

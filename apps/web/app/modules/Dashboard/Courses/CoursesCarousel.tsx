@@ -8,10 +8,10 @@ import {
 import { cn } from "~/lib/utils";
 import CourseCard from "~/modules/Dashboard/Courses/CourseCard";
 
-import type { GetAllCoursesResponse } from "~/api/generated-api";
+import type { GetAvailableCoursesResponse } from "~/api/generated-api";
 
 type CoursesCarouselProps = {
-  courses?: GetAllCoursesResponse["data"];
+  courses?: GetAvailableCoursesResponse["data"];
   buttonContainerClasses?: string;
 };
 

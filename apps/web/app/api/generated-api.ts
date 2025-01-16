@@ -331,8 +331,6 @@ export interface GetAllCoursesResponse {
     authorEmail?: string;
     category: string;
     courseChapterCount: number;
-    completedChapterCount: number;
-    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
@@ -361,14 +359,14 @@ export interface GetStudentCoursesResponse {
     authorEmail?: string;
     category: string;
     courseChapterCount: number;
-    completedChapterCount: number;
-    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
     hasFreeChapters?: boolean;
+    completedChapterCount: number;
+    enrolled?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -391,14 +389,14 @@ export interface GetAvailableCoursesResponse {
     authorEmail?: string;
     category: string;
     courseChapterCount: number;
-    completedChapterCount: number;
-    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
     hasFreeChapters?: boolean;
+    completedChapterCount: number;
+    enrolled?: boolean;
   }[];
   pagination: {
     totalItems: number;
@@ -416,19 +414,19 @@ export interface GetTeacherCoursesResponse {
     thumbnailUrl: string | null;
     description: string;
     /** @format uuid */
-    authorId?: string;
+    authorId: string;
     author: string;
-    authorEmail?: string;
+    authorEmail: string;
     category: string;
     courseChapterCount: number;
-    completedChapterCount: number;
-    enrolled?: boolean;
     enrolledParticipantCount: number;
     priceInCents: number;
     currency: string;
     isPublished?: boolean;
     createdAt?: string;
     hasFreeChapters?: boolean;
+    completedChapterCount: number;
+    enrolled?: boolean;
   }[];
 }
 
@@ -451,12 +449,12 @@ export interface GetCourseResponse {
         title: string;
         type: "text" | "presentation" | "video" | "quiz";
         displayOrder: number;
-        status: "completed" | "in_progress" | "not_started";
+        status: "not_started" | "in_progress" | "completed";
         quizQuestionCount: number | null;
         isExternal?: boolean;
       }[];
       completedLessonCount?: number;
-      chapterProgress?: "completed" | "in_progress" | "not_started";
+      chapterProgress?: "not_started" | "in_progress" | "completed";
       isFreemium?: boolean;
       enrolled?: boolean;
       isSubmitted?: boolean;
@@ -539,7 +537,7 @@ export interface GetBetaCourseByIdResponse {
         updatedAt?: string;
       }[];
       completedLessonCount?: number;
-      chapterProgress?: "completed" | "in_progress" | "not_started";
+      chapterProgress?: "not_started" | "in_progress" | "completed";
       isFreemium?: boolean;
       enrolled?: boolean;
       isSubmitted?: boolean;
@@ -703,12 +701,12 @@ export interface GetChapterWithLessonResponse {
       title: string;
       type: "text" | "presentation" | "video" | "quiz";
       displayOrder: number;
-      status: "completed" | "in_progress" | "not_started";
+      status: "not_started" | "in_progress" | "completed";
       quizQuestionCount: number | null;
       isExternal?: boolean;
     }[];
     completedLessonCount?: number;
-    chapterProgress?: "completed" | "in_progress" | "not_started";
+    chapterProgress?: "not_started" | "in_progress" | "completed";
     isFreemium?: boolean;
     enrolled?: boolean;
     isSubmitted?: boolean;
@@ -765,7 +763,7 @@ export type BetaCreateChapterBody = {
     }[];
     updatedAt?: string;
   }[];
-  chapterProgress?: "completed" | "in_progress" | "not_started";
+  chapterProgress?: "not_started" | "in_progress" | "completed";
   isFreemium?: boolean;
   enrolled?: boolean;
   isSubmitted?: boolean;
@@ -831,7 +829,7 @@ export type UpdateChapterBody = {
     }[];
     updatedAt?: string;
   }[];
-  chapterProgress?: "completed" | "in_progress" | "not_started";
+  chapterProgress?: "not_started" | "in_progress" | "completed";
   isFreemium?: boolean;
   enrolled?: boolean;
   isSubmitted?: boolean;
@@ -1604,7 +1602,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     userControllerGetUsers: (
       query?: {
         keyword?: string;
-        role?: string;
+        role?: "admin" | "student" | "teacher";
         archived?: string;
         /** @min 1 */
         page?: number;

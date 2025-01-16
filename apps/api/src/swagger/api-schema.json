@@ -3607,6 +3607,12 @@
                 },
                 "hasFreeChapters": {
                   "type": "boolean"
+                },
+                "completedChapterCount": {
+                  "type": "number"
+                },
+                "enrolled": {
+                  "type": "boolean"
                 }
               },
               "required": [
@@ -3614,12 +3620,15 @@
                 "title",
                 "thumbnailUrl",
                 "description",
+                "authorId",
                 "author",
+                "authorEmail",
                 "category",
                 "courseChapterCount",
                 "enrolledParticipantCount",
                 "priceInCents",
-                "currency"
+                "currency",
+                "completedChapterCount"
               ]
             }
           }
