@@ -9,7 +9,7 @@ import { Type } from "@sinclair/typebox";
 import { Validate } from "nestjs-typebox";
 import Stripe from "stripe";
 
-import { BaseResponse, baseResponse } from "src/common";
+import { BaseResponse, baseResponse, UUIDType } from "src/common";
 import { Public } from "src/common/decorators/public.decorator";
 import { Roles } from "src/common/decorators/roles.decorator";
 import { USER_ROLES } from "src/user/schemas/userRoles";
@@ -71,8 +71,8 @@ export class StripeController {
   async createPaymentIntent(
     @Query("amount") amount: number,
     @Query("currency") currency: string,
-    @Query("customerId") customerId: string,
-    @Query("courseId") courseId: string,
+    @Query("customerId") customerId: UUIDType,
+    @Query("courseId") courseId: UUIDType,
   ) {
     return new BaseResponse({
       clientSecret: await this.stripeService.payment(amount, currency, customerId, courseId),

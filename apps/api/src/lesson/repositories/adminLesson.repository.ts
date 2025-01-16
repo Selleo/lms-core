@@ -36,7 +36,7 @@ export class AdminLessonRepository {
     return lesson;
   }
 
-  async updateLesson(id: string, data: UpdateLessonBody) {
+  async updateLesson(id: UUIDType, data: UpdateLessonBody) {
     const [updatedLesson] = await this.db
       .update(lessons)
       .set(data)
@@ -298,7 +298,7 @@ export class AdminLessonRepository {
   async upsertQuestionAnswerOptions(
     questionId: UUIDType,
     option: {
-      id?: string;
+      id?: UUIDType;
       optionText: string;
       isCorrect: boolean;
       displayOrder: number;

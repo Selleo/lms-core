@@ -13,6 +13,7 @@ import {
 
 import type { DatabasePg, UUIDType } from "../common";
 import type { NiceCourseData } from "../utils/types/test-types";
+import type { LessonTypes } from "src/lesson/lesson.type";
 
 export async function createNiceCourses(
   creatorUserIds: UUIDType[],
@@ -188,7 +189,7 @@ const external_presentation_urls = [
   "https://res.cloudinary.com/dinpapxzv/raw/upload/v1727104719/presentation_gp0o3d.pptx",
 ];
 
-function getFileUrl(lessonType: string) {
+function getFileUrl(lessonType: LessonTypes) {
   if (lessonType === LESSON_TYPES.VIDEO) {
     return faker.helpers.arrayElement(external_video_urls);
   } else if (lessonType === LESSON_TYPES.PRESENTATION) {

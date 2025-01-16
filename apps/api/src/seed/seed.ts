@@ -31,7 +31,7 @@ import { createNiceCourses, seedTruncateAllTables } from "./seed-helpers";
 import { admin, students, teachers } from "./users-seed";
 
 import type { UsersSeed } from "./seed.types";
-import type { DatabasePg } from "../common";
+import type { DatabasePg, UUIDType } from "../common";
 
 dotenv.config({ path: "./.env" });
 
@@ -77,7 +77,7 @@ async function createOrFindUser(email: string, password: string, userData: any) 
   return newUser;
 }
 
-async function insertCredential(userId: string, password: string) {
+async function insertCredential(userId: UUIDType, password: string) {
   const credentialData = {
     id: faker.string.uuid(),
     userId,
@@ -88,7 +88,7 @@ async function insertCredential(userId: string, password: string) {
   return (await db.insert(credentials).values(credentialData).returning())[0];
 }
 
-async function insertUserDetails(userId: string) {
+async function insertUserDetails(userId: UUIDType) {
   return await db.insert(userDetails).values({
     userId,
     description: faker.lorem.paragraph(3),
@@ -98,7 +98,7 @@ async function insertUserDetails(userId: string) {
   });
 }
 
-async function createStudentCourses(courses: any[], studentIds: string[]) {
+async function createStudentCourses(courses: any[], studentIds: UUIDType[]) {
   const studentsCoursesList = studentIds.flatMap((studentId) => {
     const courseCount = Math.floor(courses.length * 0.5);
     const selectedCourses = sampleSize(courses, courseCount);
@@ -121,11 +121,11 @@ async function createStudentCourses(courses: any[], studentIds: string[]) {
   return db.insert(studentCourses).values(studentsCoursesList).returning();
 }
 
-async function createLessonProgress(userId: string) {
+async function createLessonProgress(userId: UUIDType) {
   const courseLessonsList = await db
     .select({
-      lessonId: sql<string>`${lessons.id}`,
-      chapterId: sql<string>`${chapters.id}`,
+      lessonId: sql<UUIDType>`${lessons.id}`,
+      chapterId: sql<UUIDType>`${chapters.id}`,
       createdAt: sql<string>`${courses.createdAt}`,
       lessonType: sql<string>`${lessons.type}`,
     })
@@ -163,7 +163,7 @@ async function createCoursesSummaryStats(courses: any[] = []) {
   return db.insert(coursesSummaryStats).values(createdCoursesSummaryStats);
 }
 
-async function createQuizAttempts(userId: string) {
+async function createQuizAttempts(userId: UUIDType) {
   const quizzes = await db
     .select({ courseId: courses.id, lessonId: lessons.id, questionCount: count(questions.id) })
     .from(courses)

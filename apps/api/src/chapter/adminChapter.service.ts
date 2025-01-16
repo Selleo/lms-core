@@ -68,7 +68,7 @@ export class AdminChapterService {
     );
   }
 
-  async updateChapter(id: string, body: UpdateChapterBody) {
+  async updateChapter(id: UUIDType, body: UpdateChapterBody) {
     const [chapter] = await this.adminChapterRepository.updateChapter(id, body);
 
     if (!chapter) throw new NotFoundException("Chapter not found");

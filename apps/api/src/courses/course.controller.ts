@@ -50,6 +50,7 @@ import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 import type {
   AllCoursesForTeacherResponse,
   AllCoursesResponse,
+  AllStudentCoursesResponse,
 } from "src/courses/schemas/course.schema";
 import type { CoursesFilterSchema } from "src/courses/schemas/courseQuery";
 import type {
@@ -115,7 +116,7 @@ export class CourseController {
     @Query("perPage") perPage: number,
     @Query("sort") sort: SortCourseFieldsOptions,
     @CurrentUser("userId") currentUserId: UUIDType,
-  ): Promise<PaginatedResponse<AllCoursesResponse>> {
+  ): Promise<PaginatedResponse<AllStudentCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
       category,
@@ -145,7 +146,7 @@ export class CourseController {
     @Query("sort") sort: SortCourseFieldsOptions,
     @Query("excludeCourseId") excludeCourseId: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
-  ): Promise<PaginatedResponse<AllCoursesResponse>> {
+  ): Promise<PaginatedResponse<AllStudentCoursesResponse>> {
     const filters: CoursesFilterSchema = {
       title,
       category,
@@ -251,7 +252,7 @@ export class CourseController {
     response: baseResponse(Type.Object({ message: Type.String() })),
   })
   async enrollCourse(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
     @Headers("x-test-key") testKey: string,
   ): Promise<BaseResponse<{ message: string }>> {
@@ -267,7 +268,7 @@ export class CourseController {
     request: [{ type: "query", name: "id", schema: UUIDSchema }],
   })
   async unenrollCourse(
-    @Query("id") id: string,
+    @Query("id") id: UUIDType,
     @CurrentUser("userId") currentUserId: UUIDType,
   ): Promise<null> {
     await this.courseService.unenrollCourse(id, currentUserId);
