@@ -51,7 +51,7 @@ const QuizLessonForm = ({
   });
   const { t } = useTranslation();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [openQuestionIndexes, setOpenQuestionIndexes] = useState<Set<number>>(new Set());
+  const [openQuestionIndexes, setOpenQuestionIndexes] = useState<Set<string>>(new Set());
   const {
     isLeaveModalOpen,
     closeLeaveModal,
@@ -189,27 +189,23 @@ const QuizLessonForm = ({
 
       form.setValue("questions", [...questions, newQuestion], { shouldDirty: true });
 
-      setOpenQuestionIndexes((prev) => new Set(prev).add(questions.length));
+      setOpenQuestionIndexes((prev) => new Set(prev).add(newQuestion.sortableId));
     },
     [form],
   );
 
-  useEffect(() => {
-    setOpenQuestionIndexes(new Set());
-  }, [lessonToEdit]);
 
-  const handleToggleQuestion = (questionIndex: number) => {
+  const handleToggleQuestion = (sortableId: string) => {
     setOpenQuestionIndexes((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(questionIndex)) {
-        newSet.delete(questionIndex);
+      const newSet = new Set(prev); 
+      if (newSet.has(sortableId)) {
+        newSet.delete(sortableId);
       } else {
-        newSet.add(questionIndex);
+        newSet.add(sortableId);
       }
-      return newSet;
+      return newSet; 
     });
   };
-
   const renderQuestion = useCallback(
     (
       question: Question,
@@ -225,8 +221,8 @@ const QuizLessonForm = ({
           form={form}
           dragTrigger={dragTrigger}
           item={question}
-          isOpen={openQuestionIndexes.has(questionIndex)}
-          handleToggle={() => handleToggleQuestion(questionIndex)}
+          isOpen={openQuestionIndexes.has(question.sortableId)}
+          handleToggle={() => handleToggleQuestion(question.sortableId)}
         >
           {match(question.type)
             .with(QuestionType.SINGLE_CHOICE, QuestionType.MULTIPLE_CHOICE, () => (

@@ -110,8 +110,8 @@ export class AdminChapterRepository {
             )
             FROM ${questions}
             WHERE ${questions.lessonId} = lessons.id
-            ORDER BY ${questions.displayOrder}
-                 )
+            ORDER BY ${questions.displayOrder} 
+          )
         )`,
       })
       .from(lessons)
