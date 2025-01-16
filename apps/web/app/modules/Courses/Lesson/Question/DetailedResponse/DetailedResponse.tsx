@@ -10,8 +10,9 @@ import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 export type DetailedResponseProps = {
   question: QuizQuestion;
+  isCompleted?: boolean;
 };
-export const DetailedResponse = ({ question }: DetailedResponseProps) => {
+export const DetailedResponse = ({ question, isCompleted = false }: DetailedResponseProps) => {
   const { isAdmin } = useUserRole();
   const { register } = useFormContext<QuizForm>();
 
@@ -22,11 +23,13 @@ export const DetailedResponse = ({ question }: DetailedResponseProps) => {
       questionNumber={question.displayOrder}
     >
       <Textarea
+        data-testid="detailed-response"
         {...register(`detailedResponses.${question.id}`)}
         placeholder="Type your answer here"
         rows={5}
         className={cn({
           "cursor-not-allowed": isAdmin,
+          "pointer-events-none": isCompleted,
         })}
       />
     </QuestionCard>

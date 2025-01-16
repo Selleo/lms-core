@@ -10,9 +10,10 @@ import type { QuizForm } from "~/modules/Courses/Lesson/types";
 
 export type BriefResponseProps = {
   question: QuizQuestion;
+  isCompleted?: boolean;
 };
 
-export const BriefResponse = ({ question }: BriefResponseProps) => {
+export const BriefResponse = ({ question, isCompleted = false }: BriefResponseProps) => {
   const { isAdmin } = useUserRole();
   const { register } = useFormContext<QuizForm>();
 
@@ -23,11 +24,13 @@ export const BriefResponse = ({ question }: BriefResponseProps) => {
       questionNumber={question.displayOrder}
     >
       <Textarea
+        data-testid="brief-response"
         {...register(`briefResponses.${question.id}`)}
         placeholder="Type your answer here"
         rows={5}
         className={cn({
           "cursor-not-allowed": isAdmin,
+          "pointer-events-none": isCompleted,
         })}
       />
     </QuestionCard>

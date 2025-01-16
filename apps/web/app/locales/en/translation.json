@@ -775,6 +775,7 @@
       "button": {
         "shareCourse": "Share this course",
         "continueLearning": "Continue learning",
+        "startLearning": "Start learning",
         "enrollCourse": "Enroll to the course",
         "goToTeacherPage": "Go to teacher page"
       }

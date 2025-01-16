@@ -52,6 +52,7 @@ export const TextBlank = ({
     <input
       key={index}
       type="text"
+      data-testid={`text-blank-${formFieldId}`}
       className={textBlankClasses}
       {...(studentAnswer?.studentAnswer && { defaultValue: studentAnswer.studentAnswer })}
       disabled={!!isDisabled}

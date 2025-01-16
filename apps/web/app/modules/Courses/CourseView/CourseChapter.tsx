@@ -56,7 +56,10 @@ export const CourseChapter = ({ chapter }: CourseChapterProps) => {
                       {chapter.completedLessonCount}/{chapter.lessonCount}
                     </span>
                     {Array.from({ length: chapter.lessonCount }).map((_, index) => {
-                      if (!chapter.completedLessonCount) {
+                      if (
+                        typeof chapter?.completedLessonCount === "number" &&
+                        index >= chapter.completedLessonCount
+                      ) {
                         return (
                           <span key={index} className="h-1 w-full rounded-lg bg-primary-100" />
                         );

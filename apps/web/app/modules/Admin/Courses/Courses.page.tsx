@@ -163,7 +163,7 @@ const Courses = () => {
       accessorKey: "state",
       header: t("adminCoursesView.field.state"),
       cell: ({ row }) => (
-        <Badge variant={row.original.isPublished ? "secondary" : "outline"}>
+        <Badge variant={row.original.isPublished ? "secondary" : "outline"} className="w-max">
           {row.original.isPublished ? "Published" : "Draft"}
         </Badge>
       ),

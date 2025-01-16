@@ -47,11 +47,11 @@ import {
 
 import {
   COURSE_ENROLLMENT_SCOPES,
-  CourseSortFields,
+  type CourseEnrollmentScope,
   type CoursesFilterSchema,
   type CourseSortField,
+  CourseSortFields,
   type CoursesQuery,
-  type CourseEnrollmentScope,
 } from "./schemas/courseQuery";
 
 import type {

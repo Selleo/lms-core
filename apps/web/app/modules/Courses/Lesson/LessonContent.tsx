@@ -71,8 +71,10 @@ export const LessonContent = ({
         <div className="flex w-full items-end">
           <div className="flex w-full flex-col gap-y-2">
             <p className="body-sm-md text-neutral-800">
-              {t("studentLessonView.other.lesson")} {lesson.displayOrder}/{lessonsAmount} -{" "}
-              {startCase(lesson.type)}
+              {t("studentLessonView.other.lesson")}{" "}
+              <span data-testid="current-lesson-number">{lesson.displayOrder}</span>/
+              <span data-testid="lessons-count">{lessonsAmount}</span> -{" "}
+              <span data-testid="lesson-type">{startCase(lesson.type)}</span>
             </p>
             <p className="h4 text-neutral-950">{lesson.title}</p>
           </div>

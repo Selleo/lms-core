@@ -1,5 +1,3 @@
-import { t } from "i18next";
-
 import { routeAccessConfig } from "./routeAccessConfig";
 
 import type { UserRole } from "./userRoles";
@@ -57,24 +55,6 @@ export const getNavigationConfig = (
   {
     label: t("navigationSideBar.profile"),
     path: `teachers/${userId}`,
-    iconName: "User",
-  },
-];
-
-export const adminNavigationConfig: NavigationItem[] = [
-  {
-    label: t("navigationSideBar.courses"),
-    path: "admin/courses",
-    iconName: "Course",
-  },
-  {
-    label: t("navigationSideBar.categories"),
-    path: "admin/categories",
-    iconName: "Category",
-  },
-  {
-    label: t("navigationSideBar.users"),
-    path: "admin/users",
     iconName: "User",
   },
 ];

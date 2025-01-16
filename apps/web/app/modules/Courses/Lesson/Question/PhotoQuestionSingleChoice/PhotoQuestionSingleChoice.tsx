@@ -21,6 +21,7 @@ export const PhotoQuestionSingleChoice = ({
       title={question.title}
       questionType="Single select question."
       questionNumber={question.displayOrder}
+      data-testid="photo-question-single-choice"
     >
       <img
         src={question.photoS3Key || "https://placehold.co/960x620/png"}

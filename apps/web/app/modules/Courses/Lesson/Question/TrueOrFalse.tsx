@@ -36,6 +36,7 @@ export const TrueOrFalse = ({ question, isCompleted }: TrueOrFalseProps) => {
                   (isCorrect && !isStudentAnswer && isCompleted),
                 "has-[input:checked]:bg-primary-50 [&]:has-[input:checked]:border-primary-500":
                   !isCompleted,
+                "pointer-events-none": isCompleted,
               },
             )}
           >

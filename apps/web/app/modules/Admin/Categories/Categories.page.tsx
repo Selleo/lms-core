@@ -114,7 +114,7 @@ const Categories = () => {
       cell: ({ row }) => {
         const isArchived = row.original.archived;
         return (
-          <Badge variant={isArchived ? "outline" : "secondary"} className="mx">
+          <Badge variant={isArchived ? "outline" : "secondary"} className="w-max">
             {isArchived ? t("common.other.archived") : t("common.other.active")}
           </Badge>
         );
