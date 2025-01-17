@@ -196,16 +196,15 @@ const QuizLessonForm = ({
     [form],
   );
 
-
   const handleToggleQuestion = (sortableId: string) => {
     setOpenQuestionIndexes((prev) => {
-      const newSet = new Set(prev); 
+      const newSet = new Set(prev);
       if (newSet.has(sortableId)) {
         newSet.delete(sortableId);
       } else {
         newSet.add(sortableId);
       }
-      return newSet; 
+      return newSet;
     });
   };
   const renderQuestion = useCallback(

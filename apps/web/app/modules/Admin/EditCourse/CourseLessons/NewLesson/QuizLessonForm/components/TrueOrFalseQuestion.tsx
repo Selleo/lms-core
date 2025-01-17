@@ -120,6 +120,7 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
                         <Input
                           type="text"
                           value={item.optionText}
+                          name={`questions.${questionIndex}.options.${index}.optionText`}
                           onChange={(e) =>
                             handleOptionChange(index as number, "optionText", e.target.value)
                           }
@@ -189,7 +190,12 @@ const TrueOrFalseQuestion = ({ form, questionIndex }: TrueOrFalseQuestionProps) 
             </p>
           )}
           <div className="mb-4 ml-14 mt-4 flex gap-2">
-            <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
+            <Button
+              type="button"
+              data-testid={`add-options-button-${questionIndex}`}
+              className="bg-primary-700"
+              onClick={handleAddOption}
+            >
               {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>
             <Button

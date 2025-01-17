@@ -314,7 +314,12 @@ const PhotoQuestion = ({ form, questionIndex, lessonToEdit }: PhotoQuestionProps
             </p>
           )}
           <div className="mb-4 ml-14 mt-4 flex gap-2">
-            <Button className="bg-primary-700" type="button" onClick={handleAddOption}>
+            <Button
+              className="bg-primary-700"
+              data-testid={`add-options-button-${questionIndex}`}
+              type="button"
+              onClick={handleAddOption}
+            >
               {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>
             <Button
