@@ -30,7 +30,7 @@ const EmptyStateUpload = ({
       htmlFor="file-upload"
       className="flex h-[240px] w-full max-w-[440px] flex-col items-center justify-center gap-y-3 rounded-lg border border-neutral-200 bg-white"
     >
-      <Icon name="UploadImageIcon" className="text-primary-700 size-10" />
+      <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
       <div className="body-sm flex flex-col gap-y-1">
         <div className="text-center">
           <span className="text-primary-700">{t("uploadFile.header")}</span>{" "}

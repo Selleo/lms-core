@@ -52,7 +52,7 @@ export const TableCourseList = ({ availableCourses }: CardCourseListProps) => {
             enrolled = false,
             priceInCents,
           }) => (
-            <TableRow key={id} className="hover:bg-primary-50 group border-none">
+            <TableRow key={id} className="group border-none hover:bg-primary-50">
               <TableCell className="rounded-s-lg p-4">
                 <img
                   src={thumbnailUrl || "https://placehold.co/600x400/png"}

@@ -23,7 +23,7 @@ export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
   const shouldShowCourseOptions = !isAdmin && !isTeacher && !course?.enrolled;
 
   return (
-    <section className="3xl:top-12 sticky left-0 top-6 flex h-min flex-col gap-y-6 rounded-b-lg rounded-t-2xl bg-white p-8 drop-shadow xl:w-full xl:max-w-[480px]">
+    <section className="sticky left-0 top-6 flex h-min flex-col gap-y-6 rounded-b-lg rounded-t-2xl bg-white p-8 drop-shadow xl:w-full xl:max-w-[480px] 3xl:top-12">
       {shouldShowCourseOptions ? (
         <CourseOptions course={course} />
       ) : (
@@ -53,7 +53,7 @@ export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
       <div className="flex flex-col gap-y-2">
         <div className="flex items-center gap-x-3">
           <span className="text-neutral-900">{t("studentCourseView.sideSection.other.about")}</span>
-          <div className="bg-primary-200 h-[1px] w-full" />
+          <div className="h-[1px] w-full bg-primary-200" />
         </div>
         <p className="body-sm mt-2 text-neutral-950">{userDetails?.description}</p>
       </div>

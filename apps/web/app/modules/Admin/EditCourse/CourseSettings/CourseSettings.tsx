@@ -117,7 +117,7 @@ const CourseSettings = ({
                   render={({ field }) => (
                     <FormItem className="flex flex-col gap-y-1.5">
                       <Label htmlFor="categoryId">
-                        <span className="text-error-600 mr-1">*</span>
+                        <span className="mr-1 text-error-600">*</span>
                         {t("adminCourseView.settings.field.category")}
                       </Label>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>

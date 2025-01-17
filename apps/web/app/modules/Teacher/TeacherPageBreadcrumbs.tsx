@@ -15,7 +15,7 @@ type TeacherPageBreadcrumbsProps = {
 export const TeacherPageBreadcrumbs = ({ id, username }: TeacherPageBreadcrumbsProps) => {
   const { t } = useTranslation();
   return (
-    <div className="bg-primary-50 mb-4">
+    <div className="mb-4 bg-primary-50">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href={`/`}>{t("teacherView.breadcrumbs.dashboard")}</BreadcrumbLink>

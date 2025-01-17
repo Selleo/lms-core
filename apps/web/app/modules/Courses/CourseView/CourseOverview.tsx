@@ -15,7 +15,7 @@ export default function CourseOverview({ course }: CourseOverviewProps) {
   const description = course?.description || "";
 
   return (
-    <Card className="drop-shadow-primary w-full border-none pt-6 lg:pt-0">
+    <Card className="w-full border-none pt-6 drop-shadow-primary lg:pt-0">
       <CardContent className="align-center flex flex-col gap-6 lg:p-8 2xl:flex-row">
         <div className="relative aspect-video w-full self-center lg:max-w-[320px]">
           <img

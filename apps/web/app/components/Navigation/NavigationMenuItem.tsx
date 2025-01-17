@@ -28,12 +28,12 @@ export function NavigationMenuItem({ item, setIsMobileNavOpen }: NavigationMenuI
             }
           >
             <Icon name={item.iconName} className="size-6" />
-            <span className="3xl:not-sr-only capitalize 2xl:sr-only">{item.label}</span>
+            <span className="capitalize 2xl:sr-only 3xl:not-sr-only">{item.label}</span>
           </NavLink>
         </TooltipTrigger>
         <TooltipContent
           side="right"
-          className="3xl:hidden hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white"
+          className="hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white 3xl:hidden"
         >
           {item.label}
         </TooltipContent>

@@ -49,7 +49,7 @@ const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) =>
           return (
             <div
               key={type}
-              className="hover:border-primary-500 flex flex-col gap-y-6 rounded-lg border border-neutral-200 px-6 py-4"
+              className="flex flex-col gap-y-6 rounded-lg border border-neutral-200 px-6 py-4 hover:border-primary-500"
               role="button"
               onClick={() => setContentTypeToDisplay(type)}
               onKeyDown={(event) => {
@@ -60,7 +60,7 @@ const SelectLessonType = ({ setContentTypeToDisplay }: SelectLessonTypeProps) =>
               tabIndex={0}
               aria-label={`Choose ${title} lesson type`}
             >
-              <Icon name={icon as LessonIcons} className="text-primary-700 mb-6 size-8" />
+              <Icon name={icon as LessonIcons} className="mb-6 size-8 text-primary-700" />
               <hgroup className="flex flex-col gap-y-3">
                 <h3 className="h6 text-neutral-950">{t(title)}</h3>
                 <p className="body-sm text-neutral-800">{t(description)}</p>

@@ -67,7 +67,7 @@ export const LessonContent = ({
 
   return (
     <div className="flex h-full w-full flex-col items-center py-6">
-      <div className="3xl:p-0 3xl:max-w-[1024px] flex h-full w-full flex-col gap-y-8 px-8">
+      <div className="flex h-full w-full flex-col gap-y-8 px-8 3xl:max-w-[1024px] 3xl:p-0">
         <div className="flex w-full items-end">
           <div className="flex w-full flex-col gap-y-2">
             <p className="body-sm-md text-neutral-800">

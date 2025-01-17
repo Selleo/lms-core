@@ -75,7 +75,7 @@ const FileUploadInput = ({
             htmlFor="file-upload"
             className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-y-3 rounded-lg border border-neutral-200 bg-[rgba(18,21,33,0.8)]"
           >
-            <Icon name="UploadImageIcon" className="text-primary-700 size-10" />
+            <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
             <div className="body-sm flex flex-col gap-y-1">
               <div className="text-center">
                 <span className="text-primary-400">Click to replace</span>{" "}
@@ -129,7 +129,7 @@ const FileUploadInput = ({
           htmlFor="file-upload"
           className="absolute inset-0 flex h-full w-full flex-col items-center justify-center gap-y-3 rounded-lg border border-neutral-200 bg-[rgba(18,21,33,0.8)]"
         >
-          <Icon name="UploadImageIcon" className="text-primary-700 size-10" />
+          <Icon name="UploadImageIcon" className="size-10 text-primary-700" />
           <div className="body-sm flex flex-col gap-y-1">
             <div className="text-center">
               <span className="text-primary-400">Click to replace</span>{" "}

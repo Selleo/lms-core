@@ -46,26 +46,26 @@ export default function TeacherPage() {
           <div className="flex flex-col gap-y-2">
             <div className="flex items-center gap-x-3">
               <span className="text-neutral-900">{t("teacherView.other.about")}</span>
-              <div className="bg-primary-200 h-[1px] w-full" />
+              <div className="h-[1px] w-full bg-primary-200" />
             </div>
             <p className="body-base mt-2 text-neutral-950">{userDetails?.description}</p>
           </div>
           <div className="flex flex-col gap-y-1 md:gap-y-4 xl:mt-auto">
             <div className="flex items-center gap-x-3">
               <span className="text-neutral-900">{t("teacherView.other.contact")}</span>
-              <div className="bg-primary-200 h-[1px] w-full" />
+              <div className="h-[1px] w-full bg-primary-200" />
             </div>
             <div className="flex flex-col gap-3 md:flex-row md:*:w-full">
               <a
                 href={`tel:${userDetails?.contactPhone}`}
-                className="bg-primary-50 body-base-md text-primary-700 inline-flex gap-x-2 rounded-lg px-3 py-2"
+                className="body-base-md inline-flex gap-x-2 rounded-lg bg-primary-50 px-3 py-2 text-primary-700"
               >
                 <Icon name="Phone" className="h-6 w-6 text-neutral-900" />
                 <span>{userDetails?.contactPhone}</span>
               </a>
               <a
                 href={`mailto:${userDetails?.contactEmail}`}
-                className="bg-primary-50 body-base-md text-primary-700 inline-flex gap-x-2 rounded-lg px-3 py-2"
+                className="body-base-md inline-flex gap-x-2 rounded-lg bg-primary-50 px-3 py-2 text-primary-700"
               >
                 <Icon name="Email" className="h-6 w-6 text-neutral-900" />
                 <span>{userDetails?.contactEmail}</span>

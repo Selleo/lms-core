@@ -80,7 +80,7 @@ export const VideoPlayer = ({ url, onVideoEnded }: VideoPlayerProps) => {
       <div
         className={cn("absolute inset-0 bg-black transition-opacity duration-200", {
           "opacity-48": !isPlaying,
-          "group-hover:opacity-48 opacity-0": isPlaying,
+          "opacity-0 group-hover:opacity-48": isPlaying,
         })}
       />
 
@@ -97,7 +97,7 @@ export const VideoPlayer = ({ url, onVideoEnded }: VideoPlayerProps) => {
           onClick={handleSeek(-10)}
           className="relative rounded-full p-4 transition-transform duration-200 hover:scale-110"
         >
-          <div className="opacity-32 absolute inset-0 rounded-full bg-white" />
+          <div className="absolute inset-0 rounded-full bg-white opacity-32" />
           <SkipBack className="relative z-10 h-8 w-8 text-white" />
         </button>
 
@@ -105,7 +105,7 @@ export const VideoPlayer = ({ url, onVideoEnded }: VideoPlayerProps) => {
           onClick={togglePlay}
           className="relative rounded-full p-4 transition-transform duration-200 hover:scale-110"
         >
-          <div className="opacity-32 absolute inset-0 rounded-full bg-white" />
+          <div className="absolute inset-0 rounded-full bg-white opacity-32" />
           {isPlaying ? (
             <Pause className="relative z-10 h-8 w-8 text-white" />
           ) : (
@@ -117,7 +117,7 @@ export const VideoPlayer = ({ url, onVideoEnded }: VideoPlayerProps) => {
           onClick={handleSeek(10)}
           className="relative rounded-full p-4 transition-transform duration-200 hover:scale-110"
         >
-          <div className="opacity-32 absolute inset-0 rounded-full bg-white" />
+          <div className="absolute inset-0 rounded-full bg-white opacity-32" />
           <SkipForward className="relative z-10 h-8 w-8 text-white" />
         </button>
       </div>

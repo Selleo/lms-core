@@ -113,7 +113,7 @@ const AddCourse = () => {
                         <FormControl>
                           <SelectTrigger
                             id="categoryId"
-                            className="focus:border-primary-800 focus:ring-primary-800 data-[placeholder]:body-base rounded-lg border border-neutral-300"
+                            className="data-[placeholder]:body-base rounded-lg border border-neutral-300 focus:border-primary-800 focus:ring-primary-800"
                           >
                             <SelectValue
                               placeholder={t("adminCourseView.settings.placeholder.category")}
@@ -208,14 +208,14 @@ const AddCourse = () => {
               <div className="mb-10 mt-5 flex space-x-5">
                 <Button
                   type="button"
-                  className="text-primary-800 rounded border-2 bg-white px-6 py-2"
+                  className="rounded border-2 bg-white px-6 py-2 text-primary-800"
                   onClick={() => navigate("/admin/courses")}
                 >
                   {t("common.button.cancel")}
                 </Button>
                 <Button
                   type="submit"
-                  className="bg-primary-700 rounded px-6 py-2 text-white"
+                  className="rounded bg-primary-700 px-6 py-2 text-white"
                   disabled={!isFormValid || isUploading}
                 >
                   {t("common.button.proceed")}

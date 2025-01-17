@@ -18,7 +18,7 @@ export const QuestionCard = ({
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-2 rounded-lg border border-neutral-200 bg-white p-8">
-      <div className="details text-primary-700 uppercase">
+      <div className="details uppercase text-primary-700">
         {t("studentLessonView.other.question")} {questionNumber ?? 0}
       </div>
       <div className="h6 text-neutral-950" dangerouslySetInnerHTML={{ __html: title }} />

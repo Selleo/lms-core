@@ -167,7 +167,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
                                   <div className="group">
                                     <Icon
                                       name="TrashIcon"
-                                      className="text-error-500 bg-error-50 group-hover:bg-error-600 ml-3 h-7 w-7 cursor-pointer rounded-lg p-1 group-hover:text-white"
+                                      className="ml-3 h-7 w-7 cursor-pointer rounded-lg bg-error-50 p-1 text-error-500 group-hover:bg-error-600 group-hover:text-white"
                                       onClick={() => handleRemoveOption(index)}
                                     />
                                   </div>
@@ -206,7 +206,7 @@ const AnswerSelectQuestion = ({ form, questionIndex }: AnswerSelectQuestionProps
             </Button>
             <Button
               type="button"
-              className="text-error-700 bg-color-white border border-neutral-300"
+              className="bg-color-white border border-neutral-300 text-error-700"
               onClick={() => setIsDeleteModalOpen(true)}
             >
               {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}

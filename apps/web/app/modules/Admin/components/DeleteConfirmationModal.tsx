@@ -59,13 +59,13 @@ const DeleteConfirmationModal = ({
             <div className="mt-8 flex gap-4">
               <Button
                 onClick={onDelete}
-                className="bg-error-500 hover:bg-error-600 rounded px-4 py-2 text-white"
+                className="rounded bg-error-500 px-4 py-2 text-white hover:bg-error-600"
               >
                 {t("common.button.delete")}
               </Button>
               <Button
                 onClick={onClose}
-                className="text-primary-800 bg-neutrals-200 rounded border border-neutral-300 px-4 py-2"
+                className="bg-neutrals-200 rounded border border-neutral-300 px-4 py-2 text-primary-800"
               >
                 {t("common.button.cancel")}
               </Button>

@@ -86,7 +86,7 @@ export const ChapterCard = (
                 {startCase(chapterDetails.chapterProgress)}
               </CardBadge>
             )}
-            <span className="text-primary-700 absolute bottom-0 right-0 flex h-8 w-8 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full bg-white">
+            <span className="absolute bottom-0 right-0 flex h-8 w-8 -translate-x-1/2 translate-y-1/2 items-center justify-center rounded-full bg-white text-primary-700">
               {chapterDetails.chapterDisplayOrder.toString().padStart(2, "0")}
             </span>
           </div>

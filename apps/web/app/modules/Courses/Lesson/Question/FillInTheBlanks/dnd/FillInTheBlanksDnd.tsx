@@ -256,8 +256,8 @@ export const FillInTheBlanksDnd: FC<FillInTheBlanksDndProps> = ({ question, isCo
   });
 
   return (
-    <div className="bg-card text-card-foreground rounded-lg border p-8 shadow-sm">
-      <div className="details text-primary-700 uppercase">
+    <div className="rounded-lg border bg-card p-8 text-card-foreground shadow-sm">
+      <div className="details uppercase text-primary-700">
         {t("studentLessonView.other.question")} {question.displayOrder}
       </div>
       <div className="h6 my-4 text-neutral-950">{t("studentLessonView.other.fillInTheBlanks")}</div>
