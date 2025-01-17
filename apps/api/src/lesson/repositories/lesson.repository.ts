@@ -36,7 +36,7 @@ export class LessonRepository {
         fileUrl: lessons.fileS3Key,
         fileType: lessons.fileType,
         displayOrder: sql<number>`${lessons.displayOrder}`,
-        quizCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
+        lessonCompleted: sql<boolean>`${studentLessonProgress.completedAt} IS NOT NULL`,
         quizScore: sql<number | null>`${studentLessonProgress.quizScore}`,
         isExternal: sql<boolean>`${lessons.isExternal}`,
         isFreemium: sql<boolean>`${chapters.isFreemium}`,

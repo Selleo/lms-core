@@ -64,7 +64,7 @@ export class LessonService {
 
     const questionList = await this.questionRepository.getQuestionsForLesson(
       lesson.id,
-      lesson.quizCompleted,
+      lesson.lessonCompleted,
       userId,
     );
 
@@ -83,7 +83,7 @@ export class LessonService {
       }),
     );
 
-    if (isStudent && lesson.quizCompleted && isNumber(lesson.quizScore)) {
+    if (isStudent && lesson.lessonCompleted && isNumber(lesson.quizScore)) {
       const [quizResult] = await this.lessonRepository.getQuizResult(
         lesson.id,
         lesson.quizScore,

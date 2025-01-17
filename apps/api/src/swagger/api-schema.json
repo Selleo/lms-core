@@ -5934,7 +5934,7 @@
                   "score"
                 ]
               },
-              "quizCompleted": {
+              "lessonCompleted": {
                 "type": "boolean"
               },
               "displayOrder": {

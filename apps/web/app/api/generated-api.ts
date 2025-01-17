@@ -923,7 +923,7 @@ export interface GetLessonByIdResponse {
       wrongAnswerCount: number | null;
       score: number | null;
     };
-    quizCompleted?: boolean;
+    lessonCompleted?: boolean;
     displayOrder: number;
     isExternal?: boolean;
     nextLessonId: string | null;
