@@ -42,7 +42,7 @@ const CourseCard = ({
     <Link
       to={isScormCreatePage ? "#" : `/course/${id}`}
       className={cn(
-        "hover:shadow-primary flex h-auto w-full max-w-[320px] flex-col overflow-hidden rounded-lg border bg-white transition lg:bg-none",
+        "flex h-auto w-full max-w-[320px] flex-col overflow-hidden rounded-lg border bg-white transition hover:shadow-primary lg:bg-none",
         {
           "border-secondary-200 hover:border-secondary-500": enrolled,
           "border-primary-200 hover:border-primary-500": !enrolled,

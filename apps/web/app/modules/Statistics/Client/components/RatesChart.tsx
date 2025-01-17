@@ -46,7 +46,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
 
   if (isLoading) {
     return (
-      <div className="drop-shadow-card flex w-full flex-col gap-4 rounded-lg bg-white p-8">
+      <div className="flex w-full flex-col gap-4 rounded-lg bg-white p-8 drop-shadow-card">
         <hgroup className="flex flex-col items-center gap-y-[5px] py-3">
           <Skeleton className="h-6 w-[240px] rounded-lg" />
           <Skeleton className="h-4 w-40 rounded-lg" />
@@ -91,7 +91,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
   }
 
   return (
-    <div className="drop-shadow-card flex w-full flex-col gap-4 rounded-lg bg-white p-8">
+    <div className="flex w-full flex-col gap-4 rounded-lg bg-white p-8 drop-shadow-card">
       <hgroup>
         <h2 className="body-lg-md text-center text-neutral-950">
           {resourceName} {t("clientStatisticsView.other.rates")}
@@ -119,7 +119,7 @@ export const RatesChart = ({ isLoading = false, resourceName, chartData }: Rates
                     x={0}
                     textAnchor="middle"
                     verticalAnchor="middle"
-                    className="fill-primary-950 h5 md:h3 translate-x-1/2 translate-y-1/2"
+                    className="h5 md:h3 translate-x-1/2 translate-y-1/2 fill-primary-950"
                   >
                     {t("clientStatisticsView.other.noDataAvailable")}
                   </Text>

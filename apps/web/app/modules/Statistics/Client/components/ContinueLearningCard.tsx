@@ -18,7 +18,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
 
   if (isLoading) {
     return (
-      <div className="drop-shadow-card flex h-full w-full flex-col gap-y-4 rounded-lg bg-white p-4 2xl:max-w-[296px]">
+      <div className="flex h-full w-full flex-col gap-y-4 rounded-lg bg-white p-4 drop-shadow-card 2xl:max-w-[296px]">
         <div className="flex flex-col items-center gap-y-1">
           <Skeleton className="h-[29px] w-full max-w-[240px] rounded-lg" />
           <Skeleton className="h-4 w-full max-w-[160px] rounded-lg" />
@@ -30,7 +30,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
 
   if (!lesson) {
     return (
-      <div className="drop-shadow-card flex h-auto w-full flex-col items-center justify-between gap-y-4 rounded-lg bg-white p-8 md:gap-8 2xl:max-w-[296px] 2xl:flex-col 2xl:gap-y-4">
+      <div className="flex h-auto w-full flex-col items-center justify-between gap-y-4 rounded-lg bg-white p-8 drop-shadow-card md:gap-8 2xl:max-w-[296px] 2xl:flex-col 2xl:gap-y-4">
         <div className="text-center md:w-fit 2xl:w-full">
           <h2 className="body-lg-md text-neutral-950">
             {t("clientStatisticsView.other.noLessonsToContinue")}
@@ -45,7 +45,7 @@ export const ContinueLearningCard = ({ isLoading = false, lesson }: ContinueLear
   }
 
   return (
-    <div className="drop-shadow-card flex h-auto w-full flex-col gap-y-4 rounded-lg bg-white p-4 md:flex-row md:gap-8 2xl:max-w-[296px] 2xl:flex-col 2xl:gap-y-4">
+    <div className="flex h-auto w-full flex-col gap-y-4 rounded-lg bg-white p-4 drop-shadow-card md:flex-row md:gap-8 2xl:max-w-[296px] 2xl:flex-col 2xl:gap-y-4">
       <div className="text-center md:w-fit 2xl:w-full">
         <h2 className="body-lg-md text-neutral-950">
           {t("clientStatisticsView.other.continueLearning")}

@@ -17,7 +17,7 @@ const Breadcrumb = () => {
   return (
     <BreadcrumbList>
       <BreadcrumbItem>
-        <BreadcrumbLink className="text-primary-800 body-base-md cursor-pointer">
+        <BreadcrumbLink className="body-base-md cursor-pointer text-primary-800">
           <Button
             variant="outline"
             onClick={() => navigate("/admin/courses")}

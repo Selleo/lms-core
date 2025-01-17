@@ -35,7 +35,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               className={cn(
                 "flex w-[680px] cursor-pointer items-start gap-x-4 rounded-md border px-6 py-4",
                 {
-                  "bg-primary-50 border-primary-500": isFree === true,
+                  "border-primary-500 bg-primary-50": isFree === true,
                 },
               )}
               onClick={() => setValue("isFree", true)}
@@ -69,7 +69,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               className={cn(
                 "flex w-[680px] cursor-pointer items-start gap-x-4 rounded-md border px-6 py-4",
                 {
-                  "bg-primary-50 border-primary-500": isFree === false,
+                  "border-primary-500 bg-primary-50": isFree === false,
                 },
               )}
               onClick={() => setValue("isFree", false)}
@@ -121,7 +121,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                         aria-label={t("adminCourseView.pricing.field.price")}
                       />
                       {form.formState.errors.priceInCents && (
-                        <p className="text-error-600 text-xs">
+                        <p className="text-xs text-error-600">
                           {form.formState.errors.priceInCents.message}
                         </p>
                       )}

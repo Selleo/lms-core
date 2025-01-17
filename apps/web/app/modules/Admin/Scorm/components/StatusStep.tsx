@@ -78,7 +78,7 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
         <div className="space-y-4">
           <Card
             className={cn("flex items-start space-x-4 px-4", {
-              "bg-primary-50 border-primary-500": status === "draft",
+              "border-primary-500 bg-primary-50": status === "draft",
             })}
           >
             <RadioGroupItem value="draft" id="draft" className="my-5" />
@@ -93,7 +93,7 @@ export function StatusStep({ handleBack, handleNext: _ }: StepComponentProps) {
 
           <Card
             className={cn("flex items-start space-x-4 px-4", {
-              "bg-primary-50 border-primary-500": status === "published",
+              "border-primary-500 bg-primary-50": status === "published",
             })}
           >
             <RadioGroupItem value="published" id="published" className="my-5" />

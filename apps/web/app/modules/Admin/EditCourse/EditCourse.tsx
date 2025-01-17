@@ -50,18 +50,18 @@ const EditCourse = () => {
           <h4 className="h4 flex items-center text-neutral-950">
             {course?.title || ""}
             {course?.isPublished ? (
-              <span className="text-success-800 bg-success-50 ml-2 flex items-center rounded-sm px-2 py-1 text-sm">
+              <span className="ml-2 flex items-center rounded-sm bg-success-50 px-2 py-1 text-sm text-success-800">
                 <Icon name="Success" className="mr-1" />
                 {t("common.other.published")}
               </span>
             ) : (
-              <span className="bg-warning-50 ml-2 flex items-center rounded-sm px-2 py-1 text-sm text-yellow-600">
+              <span className="ml-2 flex items-center rounded-sm bg-warning-50 px-2 py-1 text-sm text-yellow-600">
                 <Icon name="Warning" className="mr-1" />
                 {t("common.other.draft")}
               </span>
             )}
           </h4>
-          <Button className="text-primary-700 flex justify-end border border-neutral-200 bg-transparent">
+          <Button className="flex justify-end border border-neutral-200 bg-transparent text-primary-700">
             <Icon name="Eye" className="mr-2" />
             {t("adminCourseView.common.preview")}{" "}
             <Icon name="ArrowDown" className="ml-2 text-neutral-500" />

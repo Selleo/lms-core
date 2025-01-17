@@ -1,3 +1,4 @@
+/** @type {import('prettier').Config} */
 module.exports = {
   trailingComma: "all",
   singleQuote: false,
@@ -10,5 +11,13 @@ module.exports = {
   arrowParens: "always",
   quoteProps: "as-needed",
   endOfLine: "lf",
-  plugins: ["prettier-plugin-tailwindcss"],
+  overrides: [
+    {
+      files: ["apps/web/**/*.{ts,tsx,js,jsx}"],
+      options: {
+        plugins: ["prettier-plugin-tailwindcss"],
+        tailwindConfig: "./apps/web/tailwind.config.ts",
+      },
+    },
+  ],
 };

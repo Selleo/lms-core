@@ -86,7 +86,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
   return (
     <DropdownMenu onOpenChange={(open) => setShowOptions(open)}>
       <DropdownMenuTrigger asChild>
-        <Button type="button" className="bg-primary-700 mb-4 mt-3">
+        <Button type="button" className="mb-4 mt-3 bg-primary-700">
           {t("adminCourseView.curriculum.lesson.button.addQuestion")}{" "}
           <Icon name={showOptions ? "ArrowUp" : "ArrowDown"} className="text-color-white ml-2" />
         </Button>
@@ -106,7 +106,7 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
                   type="button"
                   onClick={() => onTypeChoose(type)}
                 >
-                  <Icon name={icon as QuestionIcons} className="text-primary-700 mr-2 h-4 w-4" />
+                  <Icon name={icon as QuestionIcons} className="mr-2 h-4 w-4 text-primary-700" />
                   {label}
                 </Button>
               </DropdownMenuItem>

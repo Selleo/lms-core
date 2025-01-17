@@ -21,7 +21,7 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
   const { t } = useTranslation();
   if (isLoading) {
     return (
-      <div className="drop-shadow-card flex h-full w-full flex-col gap-6 rounded-lg md:flex-row 2xl:max-w-[384px] 2xl:flex-col 2xl:divide-y 2xl:divide-neutral-100 2xl:bg-white 2xl:p-8">
+      <div className="flex h-full w-full flex-col gap-6 rounded-lg drop-shadow-card md:flex-row 2xl:max-w-[384px] 2xl:flex-col 2xl:divide-y 2xl:divide-neutral-100 2xl:bg-white 2xl:p-8">
         <div className="w-full rounded-lg bg-white p-8 md:max-w-[352px] 2xl:p-0">
           <div className="flex items-center">
             <Skeleton className="h-4 w-20 rounded-lg" />
@@ -52,7 +52,7 @@ export const ProfileWithCalendar = ({ user, isLoading = true, streak }: ProfileW
   }
 
   return (
-    <div className="2xl:divide-primary-200 drop-shadow-card flex size-full flex-col gap-6 rounded-lg md:flex-row 2xl:max-w-[384px] 2xl:flex-col 2xl:gap-6 2xl:divide-y 2xl:bg-white 2xl:p-8">
+    <div className="flex size-full flex-col gap-6 rounded-lg drop-shadow-card md:flex-row 2xl:max-w-[384px] 2xl:flex-col 2xl:gap-6 2xl:divide-y 2xl:divide-primary-200 2xl:bg-white 2xl:p-8">
       <div className="w-full gap-y-6 rounded-lg bg-white p-6 md:p-8 2xl:p-0">
         <span className="body-lg-md text-neutral-900">{t("profileWithCalendarView.header")}</span>
         <div className="flex flex-col items-center gap-6">

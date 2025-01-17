@@ -24,7 +24,7 @@ export const Progress = ({ currentStep, steps }: ProgressProps) => {
           <div key={step.id} className={cn("flex items-center", { "flex-1": !isLastStep })}>
             <div
               className={cn(
-                "bg-primary-50 relative flex h-10 w-10 items-center justify-center rounded-full transition-all duration-300 ease-in-out",
+                "relative flex h-10 w-10 items-center justify-center rounded-full bg-primary-50 transition-all duration-300 ease-in-out",
                 {
                   "bg-secondary-50": state === "current",
                   "bg-success-50": state === "previous",
@@ -50,7 +50,7 @@ export const Progress = ({ currentStep, steps }: ProgressProps) => {
                   },
                 )}
               >
-                <div className="text-success-600 border-success-600 h-6 w-6 rounded-full border-2 p-px">
+                <div className="h-6 w-6 rounded-full border-2 border-success-600 p-px text-success-600">
                   <Icon name="Checkmark" />
                 </div>
               </div>
@@ -63,7 +63,7 @@ export const Progress = ({ currentStep, steps }: ProgressProps) => {
                   },
                 )}
               >
-                <span className="text-primary-700 text-sm font-medium">
+                <span className="text-sm font-medium text-primary-700">
                   {String(index + 1).padStart(2, "0")}
                 </span>
               </div>
@@ -71,10 +71,10 @@ export const Progress = ({ currentStep, steps }: ProgressProps) => {
 
             {!isLastStep && (
               <div className="mx-4 flex-1">
-                <div className="bg-primary-100 h-1 rounded-full">
+                <div className="h-1 rounded-full bg-primary-100">
                   <div
                     className={cn(
-                      "bg-success-200 h-full rounded-full transition-all duration-500 ease-in-out",
+                      "h-full rounded-full bg-success-200 transition-all duration-500 ease-in-out",
                       {
                         "w-full": currentStep > index,
                         "w-0": currentStep <= index,

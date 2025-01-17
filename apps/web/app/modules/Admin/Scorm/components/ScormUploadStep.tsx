@@ -44,25 +44,25 @@ export function ScormUploadStep({ handleNext, handleBack: _ }: StepComponentProp
       />
       <label
         htmlFor="scorm-upload"
-        className="hover:border-primary block cursor-pointer rounded-lg border-2 border-dashed p-12 text-center transition-colors"
+        className="block cursor-pointer rounded-lg border-2 border-dashed p-12 text-center transition-colors hover:border-primary"
       >
         {file ? (
           <div className="space-y-2">
             <p className="font-medium">{file.name}</p>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               {(file.size / (1024 * 1024)).toFixed(2)} MB
             </p>
           </div>
         ) : (
           <div className="space-y-2">
             <p className="font-medium">{t("adminScorm.other.uploadFileHeader")}</p>
-            <p className="text-muted-foreground text-sm">{t("adminScorm.other.uploadFileBody")}</p>
+            <p className="text-sm text-muted-foreground">{t("adminScorm.other.uploadFileBody")}</p>
           </div>
         )}
       </label>
 
       {errors.scorm?.file && (
-        <p className="text-destructive mt-2 text-sm">{errors.scorm.file.message}</p>
+        <p className="mt-2 text-sm text-destructive">{errors.scorm.file.message}</p>
       )}
       <div className="flex gap-3">
         <Button variant="outline" onClick={() => navigate(-1)}>

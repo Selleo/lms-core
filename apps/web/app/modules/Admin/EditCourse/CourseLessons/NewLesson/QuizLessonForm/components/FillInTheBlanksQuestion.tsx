@@ -394,7 +394,7 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
             />
             <Button
               type="button"
-              className="text-error-700 bg-color-white mb-4 mt-4 border border-neutral-300"
+              className="bg-color-white mb-4 mt-4 border border-neutral-300 text-error-700"
               onClick={() => setIsDeleteModalOpen(true)}
             >
               {t("adminCourseView.curriculum.lesson.button.deleteQuestion")}

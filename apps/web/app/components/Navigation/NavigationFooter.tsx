@@ -19,7 +19,7 @@ export function NavigationFooter({ setIsMobileNavOpen }: NavigationFooterProps) 
   return (
     <menu className="grid w-full grid-cols-2 gap-2 md:grid-cols-6 md:gap-4 2xl:flex 2xl:flex-col 2xl:gap-2 2xl:self-end">
       <li className="col-span-2 md:col-span-6 2xl:hidden">
-        <Separator className="3xl:my-2 bg-primary-200 2xl:h-[1px]" />
+        <Separator className="bg-primary-200 2xl:h-[1px] 3xl:my-2" />
       </li>
       <li className="col-span-2 md:col-span-3">
         <Tooltip>
@@ -35,12 +35,12 @@ export function NavigationFooter({ setIsMobileNavOpen }: NavigationFooterProps) 
               }
             >
               <Icon name="Settings" className="size-6" />
-              <span className="3xl:not-sr-only 2xl:sr-only">{t("navigationSideBar.settings")}</span>
+              <span className="2xl:sr-only 3xl:not-sr-only">{t("navigationSideBar.settings")}</span>
             </NavLink>
           </TooltipTrigger>
           <TooltipContent
             side="right"
-            className="3xl:hidden hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white"
+            className="hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white 3xl:hidden"
           >
             {t("navigationSideBar.settings")}
           </TooltipContent>
@@ -61,12 +61,12 @@ export function NavigationFooter({ setIsMobileNavOpen }: NavigationFooterProps) 
               className="flex w-full items-center gap-x-3 rounded-lg bg-white px-4 py-3.5 text-neutral-900 2xl:p-2"
             >
               <Icon name="Logout" className="size-6" />
-              <span className="3xl:not-sr-only 2xl:sr-only">{t("navigationSideBar.logout")}</span>
+              <span className="2xl:sr-only 3xl:not-sr-only">{t("navigationSideBar.logout")}</span>
             </button>
           </TooltipTrigger>
           <TooltipContent
             side="right"
-            className="3xl:hidden hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white"
+            className="hidden 2xl:block 2xl:bg-neutral-950 2xl:capitalize 2xl:text-white 3xl:hidden"
           >
             {t("navigationSideBar.logout")}
           </TooltipContent>

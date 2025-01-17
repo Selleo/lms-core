@@ -49,7 +49,7 @@ export const LessonSidebar = ({ course, lessonId }: LessonSidebarProps) => {
       <div className="flex flex-col gap-y-12">
         <div className="flex flex-col gap-y-4 px-8 pt-8">
           <div className="flex justify-between">
-            <CategoryChip category={course.category} className="bg-primary-50 body-sm-md" />
+            <CategoryChip category={course.category} className="body-sm-md bg-primary-50" />
           </div>
           <h1 className="h6 text-neutral-950">{course.title}</h1>
           <CourseProgress
@@ -93,7 +93,7 @@ export const LessonSidebar = ({ course, lessonId }: LessonSidebarProps) => {
                         iconClasses="w-6 h-auto shrink-0"
                       />
                       <div className="body-base-md w-full text-start text-neutral-950">{title}</div>
-                      <Icon name="CarretDownLarge" className="text-primary-700 size-6" />
+                      <Icon name="CarretDownLarge" className="size-6 text-primary-700" />
                     </AccordionTrigger>
                     <AccordionContent className="flex flex-col rounded-b-lg border border-t-0">
                       {lessons?.map(({ id, title, status, type }) => {
@@ -103,7 +103,7 @@ export const LessonSidebar = ({ course, lessonId }: LessonSidebarProps) => {
                             to={status === "completed" ? `/course/${course.id}/lesson/${id}` : "#"}
                             className={cn("flex gap-x-4 px-6 py-2 hover:bg-neutral-50", {
                               "cursor-not-allowed": status === "not_started",
-                              "bg-primary-50 border-l-primary-600 border-l-2 last:rounded-es-lg":
+                              "border-l-2 border-l-primary-600 bg-primary-50 last:rounded-es-lg":
                                 lessonId === id,
                             })}
                           >
@@ -124,7 +124,7 @@ export const LessonSidebar = ({ course, lessonId }: LessonSidebarProps) => {
                             </div>
                             <Icon
                               name={LessonTypesIcons[type]}
-                              className="text-primary-700 size-6"
+                              className="size-6 text-primary-700"
                             />
                           </Link>
                         );

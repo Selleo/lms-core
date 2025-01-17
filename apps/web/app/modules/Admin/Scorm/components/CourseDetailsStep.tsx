@@ -38,7 +38,7 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
           </Label>
           <Input {...register("details.title")} placeholder={t("adminScorm.placeholder.title")} />
           {errors.details?.title && (
-            <p className="text-destructive text-sm">{errors.details.title.message}</p>
+            <p className="text-sm text-destructive">{errors.details.title.message}</p>
           )}
         </div>
 
@@ -66,7 +66,7 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
           />
 
           {errors.details?.category && (
-            <p className="text-destructive text-sm">{errors.details.category.message}</p>
+            <p className="text-sm text-destructive">{errors.details.category.message}</p>
           )}
         </div>
       </div>
@@ -82,12 +82,12 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
           maxLength={180}
         />
         <div className="flex justify-start">
-          <span className="text-muted-foreground text-sm">
+          <span className="text-sm text-muted-foreground">
             {180 - (courseDescription?.length || 0)} {t("adminScorm.other.charactersLeft")}
           </span>
         </div>
         {errors.details?.description && (
-          <p className="text-destructive text-sm">{errors.details.description.message}</p>
+          <p className="text-sm text-destructive">{errors.details.description.message}</p>
         )}
       </div>
 
@@ -105,13 +105,13 @@ export function CourseDetailsStep({ handleBack, handleNext }: StepComponentProps
         />
         <Label
           htmlFor="thumbnail-upload"
-          className="hover:border-primary block cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-colors"
+          className="block cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-colors hover:border-primary"
         >
           <div className="space-y-2">
             <p className="font-medium">
               {t("uploadFile.header")} {t("uploadFile.subHeader")}
             </p>
-            <p className="text-muted-foreground text-sm">SVG, PNG, JPG (max. to 50MB)</p>
+            <p className="text-sm text-muted-foreground">SVG, PNG, JPG (max. to 50MB)</p>
           </div>
         </Label>
       </div>

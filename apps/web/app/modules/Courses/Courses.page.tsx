@@ -151,7 +151,7 @@ export default function CoursesPage() {
           </div>
           <div
             data-testid="enrolled-courses"
-            className="drop-shadow-primary flex w-full gap-6 lg:rounded-lg lg:bg-white lg:p-8"
+            className="flex w-full gap-6 drop-shadow-primary lg:rounded-lg lg:bg-white lg:p-8"
           >
             {!studentCourses ||
               (isEmpty(studentCourses) && (
@@ -215,7 +215,7 @@ export default function CoursesPage() {
           </div>
           <div
             data-testid="unenrolled-courses"
-            className={cn("drop-shadow-primary gap-6 rounded-lg lg:bg-white lg:p-8", {
+            className={cn("gap-6 rounded-lg drop-shadow-primary lg:bg-white lg:p-8", {
               "flex flex-wrap": courseListLayout === "card",
               block: courseListLayout === "table",
             })}

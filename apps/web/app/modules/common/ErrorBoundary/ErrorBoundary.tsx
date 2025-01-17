@@ -16,7 +16,7 @@ const CustomErrorBoundary = ({ stack, message }: ErrorBoundaryProps) => {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center bg-gray-100">
       <div className="container">
-        <h1 className="text-primary-700 mb-4 text-2xl font-bold">
+        <h1 className="mb-4 text-2xl font-bold text-primary-700">
           {t("common.error.somethingWentWrong")}
         </h1>
         {message && <p className="mb-4 text-gray-600">{message}</p>}
@@ -25,14 +25,14 @@ const CustomErrorBoundary = ({ stack, message }: ErrorBoundaryProps) => {
       <div className="flex justify-center gap-2">
         <Button
           onClick={() => navigate(-1)}
-          className="bg-primary hover:bg-primary-500 mt-6 rounded px-4 py-2 text-white transition-colors"
+          className="mt-6 rounded bg-primary px-4 py-2 text-white transition-colors hover:bg-primary-500"
         >
           <ArrowBigLeft />
           <span>{t("common.button.goBack")}</span>
         </Button>
         <Button
           onClick={() => navigate("/")}
-          className="border-primary text-primary mt-6 rounded border bg-transparent px-4 py-2 transition-colors"
+          className="mt-6 rounded border border-primary bg-transparent px-4 py-2 text-primary transition-colors"
         >
           {t("common.button.goToDashboard")}
         </Button>

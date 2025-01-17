@@ -62,7 +62,7 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
 
   if (isLoading) {
     return (
-      <div className="drop-shadow-card flex w-full flex-col rounded-lg bg-white p-6 md:col-span-2 xl:col-span-2">
+      <div className="flex w-full flex-col rounded-lg bg-white p-6 drop-shadow-card md:col-span-2 xl:col-span-2">
         <div className="flex flex-col items-center gap-y-[5px] py-[5px] pb-6 md:pb-4">
           <Skeleton className="h-6 w-[240px] rounded-lg bg-neutral-100" />
           <Skeleton className="h-4 w-40 rounded-lg bg-neutral-100" />
@@ -108,7 +108,7 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
 
   if (isEmptyChart) {
     return (
-      <div className="drop-shadow-card flex w-full flex-col gap-y-6 rounded-lg bg-white p-6 md:col-span-2 md:gap-y-4 xl:col-span-2">
+      <div className="flex w-full flex-col gap-y-6 rounded-lg bg-white p-6 drop-shadow-card md:col-span-2 md:gap-y-4 xl:col-span-2">
         <hgroup>
           <h2 className="body-lg-md text-center text-neutral-950">
             {t("mostPopularCoursesView.header")}
@@ -122,7 +122,7 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
             {Array.from({ length: 21 }).map((_, index) => (
               <div key={index} className="h-full w-[1px] bg-neutral-100" />
             ))}
-            <div className="text-primary-950 h5 md:h3 absolute left-0 top-0 z-0 flex size-full items-center justify-center">
+            <div className="h5 md:h3 absolute left-0 top-0 z-0 flex size-full items-center justify-center text-primary-950">
               {t("mostPopularCoursesView.other.noData")}
             </div>
           </div>
@@ -132,7 +132,7 @@ export const FiveMostPopularCoursesChart = ({ data, isLoading }: MostPopularCour
   }
 
   return (
-    <div className="drop-shadow-card flex w-full flex-col gap-y-6 rounded-lg bg-white p-6 md:col-span-2 md:gap-y-4 xl:col-span-2 2xl:gap-y-6">
+    <div className="flex w-full flex-col gap-y-6 rounded-lg bg-white p-6 drop-shadow-card md:col-span-2 md:gap-y-4 xl:col-span-2 2xl:gap-y-6">
       <hgroup>
         <h2 className="body-lg-md text-center text-neutral-950">
           {t("mostPopularCoursesView.header")}

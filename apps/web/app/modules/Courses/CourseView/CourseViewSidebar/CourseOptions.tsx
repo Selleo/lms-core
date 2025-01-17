@@ -31,7 +31,7 @@ export const CourseOptions = ({ course }: CourseOptionsProps) => {
       </h4>
       <div className="flex flex-col gap-y-2">
         <CopyUrlButton variant="outline" className="gap-x-2">
-          <Icon name="Share" className="text-primary-800 h-auto w-6" />
+          <Icon name="Share" className="h-auto w-6 text-primary-800" />
           <span>{t("studentCourseView.sideSection.button.shareCourse")}</span>
         </CopyUrlButton>
         {course.priceInCents && course.currency ? (

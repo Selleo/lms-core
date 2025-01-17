@@ -31,7 +31,7 @@ const Editor = ({ content, placeholder, onChange, id, className }: EditorProps) 
   if (!editor) return <></>;
 
   return (
-    <div className="prose bg-background dark:prose-invert w-full max-w-none overflow-hidden rounded-lg border border-neutral-300 [&_.ProseMirror]:leading-tight">
+    <div className="prose w-full max-w-none overflow-hidden rounded-lg border border-neutral-300 bg-background dark:prose-invert [&_.ProseMirror]:leading-tight">
       <EditorToolbar editor={editor} />
       <div
         className={cn(

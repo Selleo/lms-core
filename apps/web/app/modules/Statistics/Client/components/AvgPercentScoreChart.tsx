@@ -46,7 +46,7 @@ export const AvgPercentScoreChart = ({
 
   if (isLoading) {
     return (
-      <div className="drop-shadow-card flex h-auto w-full flex-col items-center gap-6 rounded-lg bg-white p-8 md:w-[calc(50%-8px)]">
+      <div className="flex h-auto w-full flex-col items-center gap-6 rounded-lg bg-white p-8 drop-shadow-card md:w-[calc(50%-8px)]">
         <Skeleton className="h-[30px] w-full max-w-[240px] rounded-lg" />
         <div className="grid h-[250px] place-items-center">
           <Skeleton className="aspect-square h-full max-h-[200px] w-full rounded-full" />
@@ -60,7 +60,7 @@ export const AvgPercentScoreChart = ({
   }
 
   return (
-    <div className="drop-shadow-card flex w-full flex-col gap-6 rounded-lg bg-white px-8 py-8 md:w-[calc(50%-8px)]">
+    <div className="flex w-full flex-col gap-6 rounded-lg bg-white px-8 py-8 drop-shadow-card md:w-[calc(50%-8px)]">
       <h2 className="body-lg-md text-center text-neutral-950">{title}</h2>
       <div className="grid h-full place-items-center">
         <ChartContainer
@@ -90,7 +90,7 @@ export const AvgPercentScoreChart = ({
                         textAnchor="middle"
                         dominantBaseline="middle"
                       >
-                        <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
+                        <tspan x={viewBox.cx} y={viewBox.cy} className="h3 fill-primary-950">
                           {isEmptyChart ? t("clientStatisticsView.other.noData") : `${label}%`}
                         </tspan>
                       </text>

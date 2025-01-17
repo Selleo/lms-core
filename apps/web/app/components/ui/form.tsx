@@ -125,7 +125,7 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-muted-foreground text-sm", className)}
+      className={cn("text-sm text-muted-foreground", className)}
       {...props}
     />
   );
@@ -147,7 +147,7 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("details-md text-error-600 flex items-center gap-x-1.5", className)}
+      className={cn("details-md flex items-center gap-x-1.5 text-error-600", className)}
       {...props}
     >
       <svg
