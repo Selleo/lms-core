@@ -48,18 +48,18 @@ const LeaveConfirmationModal = ({
               {!isValidated ? (
                 <Button
                   onClick={onValidate}
-                  className="bg-primary-700 rounded px-4 py-2 text-white"
+                  className="rounded bg-primary-700 px-4 py-2 text-white"
                 >
                   {t("common.button.validate")}
                 </Button>
               ) : (
-                <Button onClick={onSave} className="bg-primary-700 rounded px-4 py-2 text-white">
+                <Button onClick={onSave} className="rounded bg-primary-700 px-4 py-2 text-white">
                   {t("common.button.save")}
                 </Button>
               )}
               <Button
                 onClick={onClose}
-                className="text-primary-800 bg-neutrals-200 rounded border border-neutral-300 px-4 py-2"
+                className="bg-neutrals-200 rounded border border-neutral-300 px-4 py-2 text-primary-800"
               >
                 {t("common.button.ignore")}
               </Button>

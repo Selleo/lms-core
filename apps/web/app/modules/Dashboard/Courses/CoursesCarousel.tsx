@@ -28,7 +28,7 @@ export const CoursesCarousel = ({
       return (
         <CarouselItem
           key={course.id}
-          className="xs:max-w-[320px] mr-3 w-full max-w-[calc(100%-24px)] shrink-0 *:h-full sm:mr-6 sm:last:mr-0"
+          className="mr-3 w-full max-w-[calc(100%-24px)] shrink-0 *:h-full xs:max-w-[320px] sm:mr-6 sm:last:mr-0"
         >
           <CourseCard {...course} />
         </CarouselItem>

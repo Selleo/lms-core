@@ -73,7 +73,7 @@ function CreateNewScormCourse() {
           </div>
         </FormProvider>
       </div>
-      <div className="bg-primary-50 flex h-full flex-1 items-center justify-center rounded-2xl">
+      <div className="flex h-full flex-1 items-center justify-center rounded-2xl bg-primary-50">
         <SideComponent />
       </div>
     </div>

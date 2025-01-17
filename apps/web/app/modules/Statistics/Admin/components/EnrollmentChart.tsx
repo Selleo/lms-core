@@ -48,7 +48,7 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
 
   if (isLoading) {
     return (
-      <div className="drop-shadow-card flex w-full flex-col gap-4 rounded-lg bg-white p-8 md:col-span-2">
+      <div className="flex w-full flex-col gap-4 rounded-lg bg-white p-8 drop-shadow-card md:col-span-2">
         <hgroup className="flex flex-col items-center gap-y-[5px] py-3">
           <Skeleton className="h-6 w-[240px] rounded-lg" />
           <Skeleton className="h-4 w-40 rounded-lg" />
@@ -93,7 +93,7 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
   }
 
   return (
-    <div className="drop-shadow-card flex size-full flex-col gap-y-6 rounded-lg bg-white p-8 md:col-span-2">
+    <div className="flex size-full flex-col gap-y-6 rounded-lg bg-white p-8 drop-shadow-card md:col-span-2">
       <hgroup>
         <h2 className="body-lg-md text-center text-neutral-950">
           {t("enrollmentChartView.header")}
@@ -115,7 +115,7 @@ export const EnrollmentChart = ({ data, isLoading = false }: EnrollmentChartProp
                     x={0}
                     textAnchor="middle"
                     verticalAnchor="middle"
-                    className="fill-primary-950 h5 md:h3 translate-x-1/2 translate-y-1/2"
+                    className="h5 md:h3 translate-x-1/2 translate-y-1/2 fill-primary-950"
                   >
                     {t("enrollmentChartView.other.noData")}
                   </Text>

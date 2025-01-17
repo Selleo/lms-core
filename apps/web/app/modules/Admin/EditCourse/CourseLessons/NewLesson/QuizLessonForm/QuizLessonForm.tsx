@@ -196,16 +196,15 @@ const QuizLessonForm = ({
     [form],
   );
 
-
   const handleToggleQuestion = (sortableId: string) => {
     setOpenQuestionIndexes((prev) => {
-      const newSet = new Set(prev); 
+      const newSet = new Set(prev);
       if (newSet.has(sortableId)) {
         newSet.delete(sortableId);
       } else {
         newSet.add(sortableId);
       }
-      return newSet; 
+      return newSet;
     });
   };
   const renderQuestion = useCallback(
@@ -341,13 +340,13 @@ const QuizLessonForm = ({
                 <Button
                   type="button"
                   onClick={onClickDelete}
-                  className="text-error-700 bg-color-white border border-neutral-300"
+                  className="bg-color-white border border-neutral-300 text-error-700"
                 >
                   {t("common.button.delete")}
                 </Button>
               ) : (
                 <Button
-                  className="text-error-700 bg-color-white border border-neutral-300"
+                  className="bg-color-white border border-neutral-300 text-error-700"
                   type="button"
                   onClick={onCancel}
                 >

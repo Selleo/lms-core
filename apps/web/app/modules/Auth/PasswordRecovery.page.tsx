@@ -46,7 +46,7 @@ export default function PasswordRecoveryPage() {
           <h2 className="mt-6 text-center text-3xl font-bold tracking-tight">
             {t("forgotPasswordView.header")}
           </h2>
-          <p className="text-muted-foreground mt-2 text-center text-sm">
+          <p className="mt-2 text-center text-sm text-muted-foreground">
             {t("forgotPasswordView.subHeader")}
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function PasswordRecoveryPage() {
           </Button>
         </form>
         <div className="flex justify-center">
-          <Link to="/auth/login" className="text-muted-foreground text-sm font-medium">
+          <Link to="/auth/login" className="text-sm font-medium text-muted-foreground">
             {t("forgotPasswordView.button.backToLogin")}
           </Link>
         </div>

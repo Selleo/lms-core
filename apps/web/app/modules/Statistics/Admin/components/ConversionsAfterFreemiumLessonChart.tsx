@@ -46,7 +46,7 @@ export const ConversionsAfterFreemiumLessonChart = ({
 
   if (isLoading) {
     return (
-      <div className="drop-shadow-card flex h-full w-full flex-col items-center rounded-lg bg-white p-6 md:col-span-1 md:gap-y-6 xl:col-span-1 2xl:p-8">
+      <div className="flex h-full w-full flex-col items-center rounded-lg bg-white p-6 drop-shadow-card md:col-span-1 md:gap-y-6 xl:col-span-1 2xl:p-8">
         <Skeleton className="h-[30px] w-full max-w-[240px] rounded-lg" />
         <div className="grid h-[250px] place-items-center">
           <Skeleton className="aspect-square h-full max-h-[200px] w-full rounded-full" />
@@ -60,7 +60,7 @@ export const ConversionsAfterFreemiumLessonChart = ({
   }
 
   return (
-    <div className="drop-shadow-card flex h-full w-full flex-col rounded-lg bg-white p-6 md:col-span-1 md:gap-y-6 xl:col-span-1 2xl:p-8">
+    <div className="flex h-full w-full flex-col rounded-lg bg-white p-6 drop-shadow-card md:col-span-1 md:gap-y-6 xl:col-span-1 2xl:p-8">
       <h2 className="body-lg-md text-center text-neutral-950">{title}</h2>
       <div className="grid place-items-center">
         <ChartContainer
@@ -90,7 +90,7 @@ export const ConversionsAfterFreemiumLessonChart = ({
                         textAnchor="middle"
                         dominantBaseline="middle"
                       >
-                        <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
+                        <tspan x={viewBox.cx} y={viewBox.cy} className="h3 fill-primary-950">
                           {isEmptyChart ? t("adminStatisticsView.other.noData") : `${label}%`}
                         </tspan>
                       </text>

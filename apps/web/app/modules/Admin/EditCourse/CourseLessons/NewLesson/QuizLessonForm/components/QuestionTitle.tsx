@@ -76,7 +76,7 @@ const QuestionTitle = ({
             <div className="group">
               <Icon
                 name={getIconForQuestionType(questionType)}
-                className="text-primary-700 h-5 w-5"
+                className="h-5 w-5 text-primary-700"
               />
             </div>
           </TooltipTrigger>
@@ -104,7 +104,7 @@ const QuestionTitle = ({
               <div className="group">
                 <Icon
                   name="TrashIcon"
-                  className="text-error-500 bg-error-50 group-hover:bg-error-600 ml-3 h-7 w-7 cursor-pointer rounded-lg p-1 group-hover:text-white"
+                  className="ml-3 h-7 w-7 cursor-pointer rounded-lg bg-error-50 p-1 text-error-500 group-hover:bg-error-600 group-hover:text-white"
                   onClick={handleRemoveQuestion}
                 />
               </div>
@@ -121,7 +121,7 @@ const QuestionTitle = ({
       )}
 
       {handleToggle && !isOpenQuestion && (
-        <AccordionTrigger className="text-primary-800 ml-2 mr-2" onClick={handleToggle}>
+        <AccordionTrigger className="ml-2 mr-2 text-primary-800" onClick={handleToggle}>
           <Icon name={!isOpen ? "ArrowDown" : "ArrowUp"} />
         </AccordionTrigger>
       )}

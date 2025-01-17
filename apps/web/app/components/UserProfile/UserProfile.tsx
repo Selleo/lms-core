@@ -8,7 +8,7 @@ export const UserProfile = () => {
   } = useCurrentUserSuspense();
 
   return (
-    <div className="bg-primary-50 mt-auto flex w-full max-w-[268px] items-center justify-between rounded-md p-[18px]">
+    <div className="mt-auto flex w-full max-w-[268px] items-center justify-between rounded-md bg-primary-50 p-[18px]">
       <div className="flex min-w-0 gap-x-2">
         <Avatar>
           <Gravatar email={email} />

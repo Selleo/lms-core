@@ -185,7 +185,7 @@ const ChapterCard = ({
                 })}
               >
                 <Button variant="outline" onClick={handleAddLessonClick} className="">
-                  <Icon name="Plus" className="text-primary-800 mr-2" />
+                  <Icon name="Plus" className="mr-2 text-primary-800" />
                   {t("adminCourseView.curriculum.lesson.button.addLesson")}
                 </Button>
               </div>

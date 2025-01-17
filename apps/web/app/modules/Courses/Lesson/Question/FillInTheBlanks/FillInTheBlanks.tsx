@@ -15,8 +15,8 @@ export const FillInTheBlanks = ({ question, isCompleted }: FillInTheBlanksProps)
   if (!question.description) return null;
 
   return (
-    <Card className="drop-shadow-primary flex flex-col gap-4 border-none p-8">
-      <div className="details text-primary-700 uppercase">Question {question.displayOrder}</div>
+    <Card className="flex flex-col gap-4 border-none p-8 drop-shadow-primary">
+      <div className="details uppercase text-primary-700">Question {question.displayOrder}</div>
       <div className="h6 text-neutral-950">Fill in the blanks.</div>
       <FillInTheTextBlanks
         content={question.description}

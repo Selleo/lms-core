@@ -39,7 +39,7 @@ const ImageUploadInput = ({
           <Icon name="UploadImageIcon" />
 
           <div className="mt-2 flex items-center justify-center">
-            <span className={`text-primary-400 text-lg font-semibold`}>
+            <span className={`text-lg font-semibold text-primary-400`}>
               {field.value ? t("uploadFile.replace") : t("uploadFile.header")}
             </span>
             <span className="ml-2 text-lg font-semibold">{t("uploadFile.subHeader")}</span>

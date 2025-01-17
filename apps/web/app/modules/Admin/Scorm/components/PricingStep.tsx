@@ -27,7 +27,7 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
         <div className="space-y-4">
           <Card
             className={cn("flex items-start space-x-4 pl-4", {
-              "bg-primary-50 border-primary-500": pricingType === "free",
+              "border-primary-500 bg-primary-50": pricingType === "free",
             })}
           >
             <RadioGroupItem value="free" id="free" className="my-5" />
@@ -42,7 +42,7 @@ export function PricingStep({ handleBack, handleNext }: StepComponentProps) {
 
           <Card
             className={cn("flex items-start space-x-4 px-4", {
-              "bg-primary-50 border-primary-500": pricingType === "paid",
+              "border-primary-500 bg-primary-50": pricingType === "paid",
             })}
           >
             <RadioGroupItem value="paid" id="paid" className="my-5" />

@@ -27,7 +27,7 @@ export const ButtonGroup = ({ className, buttons }: ButtonGroupProps) => {
           key={index}
           {...button}
           className={cn({
-            "text-primary-700 shadow-primary bg-white": isActive,
+            "bg-white text-primary-700 shadow-primary": isActive,
             "bg-neutral-50 text-neutral-400": !isActive,
           })}
         />

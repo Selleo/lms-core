@@ -58,7 +58,7 @@ export const PaymentForm = ({ price, currency, onPaymentSuccess, courseId }: Pay
       <PaymentElement options={{ layout: "tabs" }} />
       <Button
         disabled={!stripe || processing}
-        className="bg-secondary-500 w-full rounded-lg py-2 text-white"
+        className="w-full rounded-lg bg-secondary-500 py-2 text-white"
       >
         {processing ? (
           <Loader className="animate-spin" />
@@ -67,7 +67,7 @@ export const PaymentForm = ({ price, currency, onPaymentSuccess, courseId }: Pay
         )}
       </Button>
       {error && (
-        <div className="border-destructive text-destructive rounded-sm border px-2 py-1 text-sm">
+        <div className="rounded-sm border border-destructive px-2 py-1 text-sm text-destructive">
           {error}
         </div>
       )}

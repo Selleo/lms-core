@@ -41,10 +41,10 @@ export const CourseChapter = ({ chapter }: CourseChapterProps) => {
             displayOrder={chapter.displayOrder}
           />
           <div className="flex w-full flex-col">
-            <AccordionTrigger className="data-[state=open]:border-primary-500 data-[state=open]:bg-primary-50 border text-start data-[state=closed]:rounded-lg data-[state=open]:rounded-t-lg [&[data-state=open]>div>div>svg]:rotate-180 [&[data-state=open]>div>div>svg]:duration-200 [&[data-state=open]>div>div>svg]:ease-out">
+            <AccordionTrigger className="border text-start data-[state=closed]:rounded-lg data-[state=open]:rounded-t-lg data-[state=open]:border-primary-500 data-[state=open]:bg-primary-50 [&[data-state=open]>div>div>svg]:rotate-180 [&[data-state=open]>div>div>svg]:duration-200 [&[data-state=open]>div>div>svg]:ease-out">
               <div className="flex w-full items-center gap-x-1 px-2 py-4 md:gap-x-4 md:p-4">
                 <div className="grid h-8 w-8 place-items-center">
-                  <Icon name="CarretDownLarge" className="text-primary-700 h-auto w-6" />
+                  <Icon name="CarretDownLarge" className="h-auto w-6 text-primary-700" />
                 </div>
                 <div className="flex w-full flex-col">
                   <div className="details text-neutral-800">
@@ -58,18 +58,18 @@ export const CourseChapter = ({ chapter }: CourseChapterProps) => {
                     {Array.from({ length: chapter.lessonCount }).map((_, index) => {
                       if (!chapter.completedLessonCount) {
                         return (
-                          <span key={index} className="bg-primary-100 h-1 w-full rounded-lg" />
+                          <span key={index} className="h-1 w-full rounded-lg bg-primary-100" />
                         );
                       }
 
                       if (chapter.completedLessonCount && index < chapter.completedLessonCount) {
                         return (
-                          <span key={index} className="bg-success-500 h-1 w-full rounded-lg" />
+                          <span key={index} className="h-1 w-full rounded-lg bg-success-500" />
                         );
                       }
 
                       return (
-                        <span key={index} className="bg-secondary-500 h-1 w-full rounded-lg" />
+                        <span key={index} className="h-1 w-full rounded-lg bg-secondary-500" />
                       );
                     })}
                   </div>
@@ -83,7 +83,7 @@ export const CourseChapter = ({ chapter }: CourseChapterProps) => {
               </div>
             </AccordionTrigger>
             <AccordionContent>
-              <div className="border-primary-500 divide-y divide-neutral-200 rounded-b-lg border-x border-b pb-4 pl-14 pt-3">
+              <div className="divide-y divide-neutral-200 rounded-b-lg border-x border-b border-primary-500 pb-4 pl-14 pt-3">
                 {chapter?.lessons?.map((lesson) => {
                   if (!lesson) return null;
 

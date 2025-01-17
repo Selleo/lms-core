@@ -47,13 +47,13 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
       <div className="flex flex-col gap-y-2">
         <CopyUrlButton
           className={cn("gap-x-2", {
-            "bg-primary-700 hover:bg-primary-600 text-white hover:text-white": isAdminLike,
+            "bg-primary-700 text-white hover:bg-primary-600 hover:text-white": isAdminLike,
           })}
           variant="outline"
         >
           <Icon
             name="Share"
-            className={cn("text-primary-800 h-auto w-6", {
+            className={cn("h-auto w-6 text-primary-800", {
               "text-white": isAdminLike,
             })}
           />

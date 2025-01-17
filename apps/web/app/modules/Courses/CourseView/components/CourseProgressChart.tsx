@@ -80,7 +80,7 @@ export const CourseProgressChart = ({
                       textAnchor="middle"
                       dominantBaseline="middle"
                     >
-                      <tspan x={viewBox.cx} y={viewBox.cy} className="fill-primary-950 h3">
+                      <tspan x={viewBox.cx} y={viewBox.cy} className="h3 fill-primary-950">
                         {isEmptyChart
                           ? t("studentCourseView.sideSection.other.noData")
                           : `${completedChaptersCount}/${chaptersCount}`}

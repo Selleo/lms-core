@@ -37,7 +37,7 @@ export default function DashboardLayout() {
             getNavigationConfig(currentUser?.id ?? "", currentUser?.role === "user", t),
           )}
         />
-        <main className="bg-primary-50 flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto bg-primary-50">
           <RouteGuard>
             <Outlet />
           </RouteGuard>

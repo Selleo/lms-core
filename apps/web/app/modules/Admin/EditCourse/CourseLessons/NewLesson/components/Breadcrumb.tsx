@@ -86,7 +86,7 @@ const Breadcrumb = ({
       <BreadcrumbItem>
         <BreadcrumbLink
           onClick={onClickBack}
-          className="text-primary-800 body-base-md cursor-pointer"
+          className="body-base-md cursor-pointer text-primary-800"
         >
           {t("adminCourseView.curriculum.lesson.breadcrumbs.back")}
         </BreadcrumbLink>
