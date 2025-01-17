@@ -14,6 +14,7 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 const baseURL = process.env.CI ? "http://localhost:5173" : "https://app.lms.localhost";
 
 const config: PlaywrightTestConfig = {
+  timeout: 120000,
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

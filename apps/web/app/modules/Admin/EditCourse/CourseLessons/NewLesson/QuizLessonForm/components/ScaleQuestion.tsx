@@ -180,7 +180,12 @@ const ScaleQuestion = ({ form, questionIndex }: ScaleQuestionProps) => {
             </p>
           )}
           <div className="ml-14 mt-4 flex gap-2">
-            <Button type="button" className="bg-primary-700" onClick={handleAddOption}>
+            <Button
+              type="button"
+              data-testid={`add-options-button-${questionIndex}`}
+              className="bg-primary-700"
+              onClick={handleAddOption}
+            >
               {t("adminCourseView.curriculum.lesson.button.addOption")}
             </Button>
             <Button

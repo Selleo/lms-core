@@ -342,19 +342,25 @@ const FillInTheBlanksQuestion = ({ form, questionIndex }: FillInTheBlankQuestion
             {isAddingWord && (
               <div className="mt-4 flex w-1/3 items-center gap-2">
                 <Input
+                  data-testid="new-word-input"
                   type="text"
                   value={newWord}
                   onChange={(e) => setNewWord(e.target.value)}
                   placeholder={t("adminCourseView.curriculum.lesson.placeholder.enterWord")}
                   className="flex-1"
                 />
-                <Button onClick={handleAddWord} type="button" className="bg-blue-700 text-white">
+                <Button
+                  onClick={handleAddWord}
+                  data-testid="add-word"
+                  type="button"
+                  className="bg-blue-700 text-white"
+                >
                   {t("common.button.add")}
                 </Button>
                 <Button
                   onClick={() => setIsAddingWord(false)}
                   type="button"
-                  className="bg-color-transparent border border-neutral-200 bg-red-500 text-red-500"
+                  className="bg-color-transparent border border-neutral-200 bg-red-500 text-white"
                 >
                   {t("common.button.cancel")}
                 </Button>
