@@ -122,7 +122,11 @@ const AddCourse = () => {
                         </FormControl>
                         <SelectContent>
                           {categories.map((category) => (
-                            <SelectItem value={category.id} key={category.id}>
+                            <SelectItem
+                              value={category.id}
+                              key={category.id}
+                              data-testid={`category-option-${category.title}`}
+                            >
                               {category.title}
                             </SelectItem>
                           ))}
@@ -191,6 +195,7 @@ const AddCourse = () => {
             />
             {displayThumbnailUrl && (
               <Button
+                name="thumbnail"
                 onClick={removeThumbnail}
                 className="mb-4 mt-4 rounded bg-red-500 px-6 py-2 text-white"
               >
