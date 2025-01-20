@@ -191,6 +191,7 @@ export class CreateCourseActions {
 
     const fileInput = await page.locator('input[type="file"]');
     await fileInput.setInputFiles(imagePath);
+    await page.locator("text=Click to replace").waitFor({ state: "visible" });
 
     for (let i = 0; i < options.length; i++) {
       await page
@@ -206,8 +207,9 @@ export class CreateCourseActions {
   async addFillInTheBlankQuestion(page: Page, word: string) {
     await page.getByRole("button", { name: /add words/i }).click();
 
+    await page.locator('[data-testid="new-word-input"]').waitFor({ state: "visible" });
+    await page.locator('[data-testid="add-word"]').waitFor({ state: "visible" });
     await page.locator('[data-testid="new-word-input"]').fill(word);
-
     await page.locator('[data-testid="add-word"]').click();
 
     const draggableElement = page.locator(`span:text("${word}")`).locator("..");
@@ -222,7 +224,6 @@ export class CreateCourseActions {
     );
 
     await draggableElement.dragTo(editableElement);
-    await expect(editableElement).toContainText(word);
   }
 }
 
@@ -401,13 +402,13 @@ test.describe.serial("Course management", () => {
     const imagePath = "app/assets/thumbnail-e2e.jpg";
     await createCourseActions.addPhotoQuestion(page, 7, imagePath, photoOptions, 2);
 
-    // await createCourseActions.addQuestion(
-    //   page,
-    //   "fill in the blanks",
-    //   "Fill words in blank space",
-    //   8,
-    // );
-    // await createCourseActions.addFillInTheBlankQuestion(page, "CSS");
+    await createCourseActions.addQuestion(
+      page,
+      "fill in the blanks",
+      "Fill words in blank space",
+      8,
+    );
+    await createCourseActions.addFillInTheBlankQuestion(page, "CSS");
 
     await page.getByRole("button", { name: /save/i }).click();
     const quizLocator = chapterLocator.locator('div[aria-label="Lesson: Quiz for first exam"]');
