@@ -96,77 +96,84 @@ export class CourseService {
 
     const { sortOrder, sortedField } = getSortOptions(sort);
 
-    return await this.db.transaction(async (trx) => {
-      const conditions = this.getFiltersConditions(filters, false);
+    const conditions = this.getFiltersConditions(filters, false);
 
-      if (currentUserRole === USER_ROLES.TEACHER && currentUserId) {
-        conditions.push(eq(courses.authorId, currentUserId));
-      }
+    if (currentUserRole === USER_ROLES.TEACHER && currentUserId) {
+      conditions.push(eq(courses.authorId, currentUserId));
+    }
+    console.log("siema");
 
-      const queryDB = trx
-        .select({
-          id: courses.id,
-          title: courses.title,
-          description: sql<string>`${courses.description}`,
-          thumbnailUrl: courses.thumbnailS3Key,
-          author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
-          category: sql<string>`${categories.title}`,
-          enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
-          courseChapterCount: courses.chapterCount,
-          priceInCents: courses.priceInCents,
-          currency: courses.currency,
-          isPublished: courses.isPublished,
-          createdAt: courses.createdAt,
-        })
-        .from(courses)
-        .leftJoin(categories, eq(courses.categoryId, categories.id))
-        .leftJoin(users, eq(courses.authorId, users.id))
-        .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
-        .where(and(...conditions))
-        .groupBy(
-          courses.id,
-          courses.title,
-          courses.description,
-          courses.thumbnailS3Key,
-          users.firstName,
-          users.lastName,
-          categories.title,
-          courses.priceInCents,
-          courses.currency,
-          courses.isPublished,
-          coursesSummaryStats.freePurchasedCount,
-          coursesSummaryStats.paidPurchasedCount,
-          courses.createdAt,
-        )
-        .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
+    console.log(conditions);
 
-      const data = await queryDB;
+    const queryDB = this.db
+      .select({
+        id: courses.id,
+        title: courses.title,
+        description: sql<string>`${courses.description}`,
+        thumbnailUrl: courses.thumbnailS3Key,
+        author: sql<string>`CONCAT(${users.firstName} || ' ' || ${users.lastName})`,
+        category: sql<string>`${categories.title}`,
+        enrolledParticipantCount: sql<number>`COALESCE(${coursesSummaryStats.freePurchasedCount} + ${coursesSummaryStats.paidPurchasedCount}, 0)`,
+        courseChapterCount: courses.chapterCount,
+        priceInCents: courses.priceInCents,
+        currency: courses.currency,
+        isPublished: courses.isPublished,
+        createdAt: courses.createdAt,
+      })
+      .from(courses)
+      .leftJoin(categories, eq(courses.categoryId, categories.id))
+      .leftJoin(users, eq(courses.authorId, users.id))
+      .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
+      .where(and(...conditions))
+      .groupBy(
+        courses.id,
+        courses.title,
+        courses.description,
+        courses.thumbnailS3Key,
+        users.firstName,
+        users.lastName,
+        categories.title,
+        courses.priceInCents,
+        courses.currency,
+        courses.isPublished,
+        coursesSummaryStats.freePurchasedCount,
+        coursesSummaryStats.paidPurchasedCount,
+        courses.createdAt,
+      )
+      .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
-      const dataWithS3SignedUrls = await Promise.all(
-        data.map(async (item) => {
-          if (!item.thumbnailUrl) return item;
+    const data = await queryDB;
 
-          try {
-            const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
-            return { ...item, thumbnailUrl: signedUrl };
-          } catch (error) {
-            console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
-            return item;
-          }
-        }),
-      );
+    const test2 = await this.db.select().from(courses);
 
-      const totalItems = data.length;
+    console.log({ test2 });
 
-      return {
-        data: dataWithS3SignedUrls,
-        pagination: {
-          totalItems,
-          page,
-          perPage,
-        },
-      };
-    });
+    console.log("response prepare", data);
+
+    const dataWithS3SignedUrls = await Promise.all(
+      data.map(async (item) => {
+        if (!item.thumbnailUrl) return item;
+
+        try {
+          const signedUrl = await this.fileService.getFileUrl(item.thumbnailUrl);
+          return { ...item, thumbnailUrl: signedUrl };
+        } catch (error) {
+          console.error(`Failed to get signed URL for ${item.thumbnailUrl}:`, error);
+          return item;
+        }
+      }),
+    );
+
+    const totalItems = data.length;
+
+    return {
+      data: dataWithS3SignedUrls,
+      pagination: {
+        totalItems,
+        page,
+        perPage,
+      },
+    };
   }
 
   async getCoursesForUser(

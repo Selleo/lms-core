@@ -863,7 +863,7 @@
         }
       }
     },
-    "/api/course": {
+    "/api/course/all": {
       "get": {
         "operationId": "CourseController_getAllCourses",
         "parameters": [
@@ -996,31 +996,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetAllCoursesResponse"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "operationId": "CourseController_createCourse",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCourseBody"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CreateCourseResponse"
                 }
               }
             }
@@ -1358,7 +1333,7 @@
         }
       }
     },
-    "/api/course/course": {
+    "/api/course": {
       "get": {
         "operationId": "CourseController_getCourse",
         "parameters": [
@@ -1378,6 +1353,31 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetCourseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "CourseController_createCourse",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCourseBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateCourseResponse"
                 }
               }
             }

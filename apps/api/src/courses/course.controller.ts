@@ -63,7 +63,7 @@ import type {
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
-  @Get()
+  @Get("all")
   @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @Validate(allCoursesValidation)
   async getAllCourses(
@@ -187,7 +187,7 @@ export class CourseController {
     return new BaseResponse(await this.courseService.getTeacherCourses(query));
   }
 
-  @Get("course")
+  @Get()
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),

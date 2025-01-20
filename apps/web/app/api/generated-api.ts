@@ -1907,7 +1907,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name CourseControllerGetAllCourses
-     * @request GET:/api/course
+     * @request GET:/api/course/all
      */
     courseControllerGetAllCourses: (
       query?: {
@@ -1937,25 +1937,9 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetAllCoursesResponse, any>({
-        path: `/api/course`,
+        path: `/api/course/all`,
         method: "GET",
         query: query,
-        format: "json",
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name CourseControllerCreateCourse
-     * @request POST:/api/course
-     */
-    courseControllerCreateCourse: (data: CreateCourseBody, params: RequestParams = {}) =>
-      this.request<CreateCourseResponse, any>({
-        path: `/api/course`,
-        method: "POST",
-        body: data,
-        type: ContentType.Json,
         format: "json",
         ...params,
       }),
@@ -2070,7 +2054,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @name CourseControllerGetCourse
-     * @request GET:/api/course/course
+     * @request GET:/api/course
      */
     courseControllerGetCourse: (
       query: {
@@ -2080,9 +2064,25 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       params: RequestParams = {},
     ) =>
       this.request<GetCourseResponse, any>({
-        path: `/api/course/course`,
+        path: `/api/course`,
         method: "GET",
         query: query,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @name CourseControllerCreateCourse
+     * @request POST:/api/course
+     */
+    courseControllerCreateCourse: (data: CreateCourseBody, params: RequestParams = {}) =>
+      this.request<CreateCourseResponse, any>({
+        path: `/api/course`,
+        method: "POST",
+        body: data,
+        type: ContentType.Json,
         format: "json",
         ...params,
       }),
