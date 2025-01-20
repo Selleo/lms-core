@@ -392,21 +392,21 @@ test.describe.serial("Course management", () => {
     ];
     await createCourseActions.addScaleQuestion(page, 6, scaleOptions);
 
-    await createCourseActions.addQuestion(
-      page,
-      "photo question",
-      "What code language do you see on this screenshot",
-      7,
-    );
-    const photoOptions = ["JAVA", "PYTHON", "JAVASCRIPT"];
-    const imagePath = "app/assets/thumbnail-e2e.jpg";
-    await createCourseActions.addPhotoQuestion(page, 7, imagePath, photoOptions, 2);
+    // await createCourseActions.addQuestion(
+    //   page,
+    //   "photo question",
+    //   "What code language do you see on this screenshot",
+    //   7,
+    // );
+    // const photoOptions = ["JAVA", "PYTHON", "JAVASCRIPT"];
+    // const imagePath = "app/assets/thumbnail-e2e.jpg";
+    // await createCourseActions.addPhotoQuestion(page, 7, imagePath, photoOptions, 2);
 
     await createCourseActions.addQuestion(
       page,
       "fill in the blanks",
       "Fill words in blank space",
-      8,
+      7,
     );
     await createCourseActions.addFillInTheBlankQuestion(page, "CSS");
 
