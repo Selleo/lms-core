@@ -406,7 +406,7 @@ test.describe.serial("Course management", () => {
       page,
       "fill in the blanks",
       "Fill words in blank space",
-      8,
+      7,
     );
     await createCourseActions.addFillInTheBlankQuestion(page, "CSS");
 
