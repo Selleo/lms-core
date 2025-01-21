@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-import { AuthFixture } from "e2e/fixture/auth.fixture";
-
 import type { Locator, Page } from "@playwright/test";
 
 export class CreateCourseActions {
@@ -233,23 +231,13 @@ test.describe.serial("Course management", () => {
   let newChapterId: string;
   const expectedTitle = "CSS Fundamentals";
   // Page have to be defined here to use it inside beforeAll, we need it to login as a Admin.
-  let page: Page;
 
-  test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
-    const authFixture = new AuthFixture(page);
-    await page.goto("/");
-    await authFixture.logout();
-    await page.waitForURL("/auth/login");
-    await authFixture.login("admin@example.com", "password");
-  });
-
-  test.beforeEach(async () => {
+  test.beforeEach(async ({ page }) => {
     await page.goto("/admin/courses");
     createCourseActions = new CreateCourseActions(page);
   });
 
-  test("should click cancel button and back to the course list", async () => {
+  test("should click cancel button and back to the course list", async ({ page }) => {
     await createCourseActions.navigateToNewCoursePage(page);
 
     await page.getByRole("button", { name: /cancel/i }).click();
@@ -259,7 +247,7 @@ test.describe.serial("Course management", () => {
     expect(currentUrl).toMatch("/admin/courses");
   });
 
-  test("should disable the proceed button when form is incomplete", async () => {
+  test("should disable the proceed button when form is incomplete", async ({ page }) => {
     await createCourseActions.navigateToNewCoursePage(page);
 
     const proceedButton = page.getByRole("button", { name: /proceed/i });
@@ -270,7 +258,7 @@ test.describe.serial("Course management", () => {
     await expect(proceedButton).not.toBeDisabled();
   });
 
-  test("should create a new course with chapter and lesson", async () => {
+  test("should create a new course with chapter and lesson", async ({ page }) => {
     await createCourseActions.navigateToNewCoursePage(page);
 
     await createCourseActions.fillCourseForm(page, expectedTitle);
@@ -415,7 +403,7 @@ test.describe.serial("Course management", () => {
     await expect(quizLocator).toBeVisible();
   });
 
-  test("should check if course occurs on course list", async () => {
+  test("should check if course occurs on course list", async ({ page }) => {
     await createCourseActions.openCourse(newCourseId);
 
     await createCourseActions.verifyCoursePage(page, newCourseId, expectedTitle);
