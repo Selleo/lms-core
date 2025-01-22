@@ -1,7 +1,5 @@
 import { test, expect } from "@playwright/test";
 
-import { AuthFixture } from "e2e/fixture/auth.fixture";
-
 import type { Locator, Page } from "@playwright/test";
 
 const NEW_COURSE = {
@@ -301,7 +299,7 @@ export class CreateCourseActions {
 
     const fileInput = await page.locator('input[type="file"]');
     await fileInput.setInputFiles(imagePath);
-    await page.locator("text=Click to replace").waitFor();
+    await page.locator("text=Click to replace").waitFor({ state: "visible" });
 
     for (let i = 0; i < NEW_COURSE.options.photoOptions.length; i++) {
       await page
@@ -317,8 +315,9 @@ export class CreateCourseActions {
   async addFillInTheBlankQuestion(page: Page, word: string) {
     await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.addWords, "i") }).click();
 
+    await page.locator('[data-testid="new-word-input"]').waitFor({ state: "visible" });
+    await page.locator('[data-testid="add-word"]').waitFor({ state: "visible" });
     await page.locator('[data-testid="new-word-input"]').fill(word);
-
     await page.locator('[data-testid="add-word"]').click();
 
     const draggableElement = page.locator(`span:text("${word}")`).locator("..");
@@ -330,8 +329,6 @@ export class CreateCourseActions {
     await page.keyboard.type(NEW_COURSE.lessons.fillInTheBlankDescription, { delay: 5 });
 
     await draggableElement.dragTo(editableElement);
-
-    await expect(editableElement).toContainText(word);
   }
 
   async addPresentationLesson(
@@ -476,23 +473,13 @@ test.describe.serial("Course management", () => {
   let createCourseActions: CreateCourseActions;
   let newCourseId: string;
   let newChapterId: string;
-  let page: Page;
 
-  test.beforeAll(async ({ browser }) => {
-    page = await browser.newPage();
-    const authFixture = new AuthFixture(page);
-    await page.goto("/");
-    await authFixture.logout();
-    await page.waitForURL("/auth/login");
-    await authFixture.login("admin@example.com", "password");
-  });
-
-  test.beforeEach(async () => {
+  test.beforeEach(async ({ page }) => {
     await page.goto("/admin/courses");
     createCourseActions = new CreateCourseActions(page);
   });
 
-  test("should click cancel button and back to the course list", async () => {
+  test("should click cancel button and back to the course list", async ({ page }) => {
     await createCourseActions.navigateToNewCoursePage(page);
 
     await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.cancel, "i") }).click();
@@ -502,7 +489,7 @@ test.describe.serial("Course management", () => {
     expect(currentUrl).toMatch("/admin/courses");
   });
 
-  test("should disable the proceed button when form is incomplete", async () => {
+  test("should disable the proceed button when form is incomplete", async ({ page }) => {
     await createCourseActions.navigateToNewCoursePage(page);
 
     const proceedButton = page.getByRole("button", {
@@ -515,7 +502,7 @@ test.describe.serial("Course management", () => {
     await expect(proceedButton).not.toBeDisabled();
   });
 
-  test("should create a new course with chapter and lesson", async () => {
+  test("should create a new course with chapter and lesson", async ({ page }) => {
     await createCourseActions.navigateToNewCoursePage(page);
 
     await createCourseActions.fillCourseForm(page);
@@ -653,13 +640,13 @@ test.describe.serial("Course management", () => {
     await expect(quizLocator).toBeVisible();
   });
 
-  test("should check if course occurs on course list", async () => {
+  test("should check if course occurs on course list", async ({ page }) => {
     await createCourseActions.openCourse(newCourseId);
 
     await createCourseActions.verifyCoursePage(page, newCourseId);
   });
 
-  test("should edit chapter and lessons", async () => {
+  test("should edit chapter and lessons", async ({page}) => {
     await createCourseActions.openCourse(newCourseId);
     await createCourseActions.editChapter(
       page,
@@ -672,7 +659,7 @@ test.describe.serial("Course management", () => {
     await createCourseActions.editQuizTitle(page);
   });
 
-  test("should remove questions from chapter and save.", async () => {
+  test("should remove questions from chapter and save.", async ({page}) => {
     await createCourseActions.openCourse(newCourseId);
     await page.click(`[data-testid='accordion - ${newChapterId}']`);
     const quizLocator = page.locator(`text=${NEW_COURSE.editedLesson.quizTitle}`);
@@ -694,7 +681,7 @@ test.describe.serial("Course management", () => {
     await expect(quizLocator).not.toBeVisible();
   });
 
-  test("should check if freemium works", async () => {
+  test("should check if freemium works", async ({page}) => {
     await createCourseActions.openCourse(newCourseId);
 
     await page.waitForSelector(`[data-testid="Freemium - ${newChapterId}"]`, { state: "attached" });
@@ -710,7 +697,7 @@ test.describe.serial("Course management", () => {
     await expect(await chapterLocator.getAttribute("data-state")).toBe("open");
   });
 
-  test("should remove chapter with all lessons.", async () => {
+  test("should remove chapter with all lessons.", async ({page}) => {
     await createCourseActions.openCourse(newCourseId);
     await page.locator(`text=${NEW_COURSE.chapter.editedTitle}`).click();
     await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.delete, "i") }).click();

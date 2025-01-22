@@ -77,15 +77,15 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
               <div className="mt-1.5">
                 <Input
                   type="radio"
-                  name="isFree"
+                  name="isPaid"
                   checked={isFree === false}
                   onChange={() => setValue("isFree", false)}
                   className="h-4 w-4 cursor-pointer p-1 pt-4"
-                  id="isFree"
+                  id="isPaid"
                 />
               </div>
               <div>
-                <Label htmlFor="paid" className={"body-lg-md cursor-pointer text-neutral-950"}>
+                <Label htmlFor="isPaid" className={"body-lg-md cursor-pointer text-neutral-950"}>
                   <div className="body-lg-md mb-2 text-neutral-950">
                     {t("adminCourseView.pricing.paidCourseHeader")}
                   </div>
@@ -118,6 +118,7 @@ const CoursePricing = ({ courseId, priceInCents, currency }: CoursePricingProps)
                             "border-error-600": form.formState.errors.priceInCents,
                           },
                         )}
+                        id="price"
                         aria-label={t("adminCourseView.pricing.field.price")}
                       />
                       {form.formState.errors.priceInCents && (

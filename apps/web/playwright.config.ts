@@ -14,7 +14,6 @@ dotenv.config({ path: path.resolve(__dirname, ".env") });
 const baseURL = process.env.CI ? "http://localhost:5173" : "https://app.lms.localhost";
 
 const config: PlaywrightTestConfig = {
-  timeout: 120000,
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -40,12 +39,24 @@ const config: PlaywrightTestConfig = {
       testMatch: /.*\.setup\.ts/,
     },
     {
-      name: "chromium",
+      name: "chromium-student",
+      testDir: "./e2e/tests/student",
       dependencies: ["setup"],
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 1920, height: 1080 },
         storageState: "e2e/.auth/user.json",
+      },
+      testMatch: /.*\.(spec|test)\.ts$/,
+    },
+    {
+      name: "chromium-admin",
+      testDir: "./e2e/tests/admin",
+      dependencies: ["setup"],
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+        storageState: "e2e/.auth/admin.json",
       },
       testMatch: /.*\.(spec|test)\.ts$/,
     },
