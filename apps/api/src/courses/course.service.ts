@@ -930,7 +930,7 @@ export class CourseService {
           if (!lesson.fileS3Key.startsWith("https://")) {
             try {
               const signedUrl = await this.fileService.getFileUrl(lesson.fileS3Key);
-              updatedLesson.fileS3Key = signedUrl;
+              return { ...updatedLesson, fileS3SignedUrl: signedUrl };
             } catch (error) {
               console.error(`Failed to get signed URL for ${lesson.fileS3Key}:`, error);
             }

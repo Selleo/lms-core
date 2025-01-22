@@ -4,6 +4,119 @@ import { AuthFixture } from "e2e/fixture/auth.fixture";
 
 import type { Locator, Page } from "@playwright/test";
 
+const NEW_COURSE = {
+  title: "CSS Fundamentals",
+  description: "This course takes you through a css course, it lets you learn the basics.",
+  chapter: {
+    title: "CSS Introduction",
+    editedTitle: "Edited CSS Introduction",
+  },
+  label: {
+    title: "Title",
+    description: "Description",
+    category: "Category",
+  },
+  button: {
+    addChapter: "add chapter",
+    createNew: "create new",
+    save: "save",
+    delete: "delete",
+    removePresentation: "remove presentation",
+    addLesson: "add lesson",
+    removeVideo: "remove video",
+    addQuestion: "add question",
+    addWords: "add words",
+    cancel: "cancel",
+    proceed: "proceed",
+  },
+  lessons: {
+    quizTitle: "Quiz for first exam",
+    fillInTheBlankDescription:
+      "The most popular programing language used to styling components is ",
+    textLessonTitle: "Introduction to CSS",
+    textLessonDescription:
+      "CSS is a style sheet language used for describing the presentation of a document written in HTML.",
+    presentationLessonTitle: "HTML tags presentation",
+    presentationLessonDescription: "This presentation presents knowledge about tags in html",
+    videoLessonTitle: "Video for CSS course",
+    videoLessonDescription: "This video presents knowledge about tags in html",
+  },
+  dialog: {
+    deleteQuiz: "Are you sure you want to delete this quiz lesson from chapter?",
+    deleteChapter: "Are you sure you want to delete this chapter?",
+  },
+  editedLesson: {
+    quizTitle: "Edited Quiz for first exam",
+    textLessonTitle: "Edited Introduction to CSS",
+    presentationLessonTitle: "Edited HTML tags presentation",
+    videoLessonTitle: "Edited Video for CSS course",
+    textLessonDescription:
+      "Edited CSS is a style sheet language used for describing the presentation of a document written in HTML.",
+    videoLessonDescription: "Edited This video presents knowledge about tags in html",
+    presentationLessonDescription: "Edited This presentation presents knowledge about tags in html",
+  },
+  lessonType: {
+    text: "Text",
+    presentation: "Presentation",
+    video: "Video",
+    quiz: "Quiz",
+  },
+  questionType: {
+    freeText: "free text",
+    shortAnswer: "short answer",
+    singleChoice: "single choice",
+    mutlipleChoice: "multiple choice",
+    trueOrFalse: "true or false",
+    matching: "matching",
+    scale: "scale 1 to 5",
+    photoQuestion: "photo question",
+    fillInTheBlanks: "fill in the blanks",
+  },
+  questions: {
+    freeText: "Describe what is your CSS and HTML level",
+    shortAnswer: "Describe what would you like to learn with this course",
+    singleChoice: "Which css tag is most popular, choose one correct answer",
+    multipleChoice: "Which of the following are valid CSS properties?",
+    trueOrFalse: "Which of the following statements about CSS are true?",
+    matching: "Match the CSS property with its effect",
+    scale: "How would you rate your CSS knowledge on a scale from 1 to 5?",
+    photoQuestion: "What code language do you see on this screenshot",
+    fillInTheBlank: "Fill words in blank space",
+  },
+  options: {
+    singleChoice: [
+      { text: "<div></div>", isCorrect: true },
+      { text: "<p></p>", isCorrect: false },
+      { text: "<h1></h1>", isCorrect: false },
+    ],
+    multipleChoice: [
+      { text: "color", isCorrect: true },
+      { text: "font-size", isCorrect: true },
+      { text: "text-align-center", isCorrect: false },
+      { text: "background-image-url", isCorrect: false },
+    ],
+    trueOrFalse: [
+      "CSS allows direct manipulation of a website's database.",
+      "CSS enables styling HTML elements, such as colors, fonts, and page layouts.",
+      "CSS only works in web browsers that support JavaScript.",
+    ],
+    matching: [
+      { optionText: "Affects the spacing inside an element.", matchedWord: "Padding" },
+      {
+        optionText: "Defines how an element is positioned relative to its container.",
+        matchedWord: "Position",
+      },
+      { optionText: "Adds shadow effects to an element.", matchedWord: "Box shadow" },
+    ],
+    scale: [
+      "Beginner (I have basic knowledge and am still learning CSS)",
+      "Intermediate (I understand the basics but am still learning more advanced techniques)",
+      "Expert (I have advanced knowledge and can create complex styles)",
+    ],
+    photoOptions: ["JAVA", "PYTHON", "JAVASCRIPT"],
+  },
+} as const;
+
 export class CreateCourseActions {
   constructor(private readonly page: Page) {}
 
@@ -13,28 +126,26 @@ export class CreateCourseActions {
     await this.page.waitForURL(`/admin/beta-courses/${courseId}`);
   }
 
-  async verifyCoursePage(page: Page, courseId: string, expectedTitle: string): Promise<void> {
+  async verifyCoursePage(page: Page, courseId: string): Promise<void> {
     const currentUrl = await page.url();
     expect(currentUrl).toMatch(`/admin/beta-courses/${courseId}`);
 
     const courseTitle = await page.locator("h4").textContent();
-    expect(courseTitle).toMatch(expectedTitle);
+    expect(courseTitle).toMatch(NEW_COURSE.title);
   }
 
   async navigateToNewCoursePage(page: Page): Promise<void> {
-    await page.getByRole("button", { name: /create new/i }).click();
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.createNew, "i") }).click();
     await page.waitForURL("/admin/beta-courses/new");
   }
 
-  async fillCourseForm(page: Page, expectedTitle: string): Promise<void> {
-    await page.getByLabel("Title").fill(expectedTitle);
+  async fillCourseForm(page: Page): Promise<void> {
+    await page.getByLabel(NEW_COURSE.label.title).fill(NEW_COURSE.title);
 
-    await page.getByLabel("Category").click();
+    await page.getByLabel(NEW_COURSE.label.category).click();
     await page.locator('[data-testid="category-option-E2E Testing"]').click();
 
-    await page
-      .getByLabel("Description")
-      .fill("This course takes you through a css course, it lets you learn the basics.");
+    await page.getByLabel(NEW_COURSE.label.description).fill(NEW_COURSE.description);
 
     const fileInput = await page.locator('input[type="file"]');
     const filePath = "app/assets/thumbnail-e2e.jpg";
@@ -42,8 +153,8 @@ export class CreateCourseActions {
   }
 
   async addChapter(page: Page, chapterTitle: string): Promise<string> {
-    await page.getByRole("button", { name: /add chapter/i }).click();
-    await page.getByLabel("Title").fill(chapterTitle);
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.addChapter, "i") }).click();
+    await page.getByLabel(NEW_COURSE.label.title).fill(chapterTitle);
 
     const createChapterResponsePromise = page.waitForResponse(
       (response) => {
@@ -54,7 +165,7 @@ export class CreateCourseActions {
       { timeout: 60000 },
     );
 
-    await page.getByRole("button", { name: /save/i }).click();
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
     const createChapterResponse = await createChapterResponsePromise;
     const createChapterResJson = await createChapterResponse.json();
     return createChapterResJson.data.id;
@@ -66,13 +177,15 @@ export class CreateCourseActions {
     lessonTitle: string,
     lessonDescription: string,
   ): Promise<void> {
-    await chapterLocator.getByRole("button", { name: /add lesson/i }).click();
+    await chapterLocator
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.addLesson, "i") })
+      .click();
 
-    const buttonWithText = await page.locator('h3:has-text("Text")');
+    const buttonWithText = await page.locator(`h3:has-text("${NEW_COURSE.lessonType.text}")`);
     const lessonButton = buttonWithText.locator("..");
     await lessonButton.click();
 
-    await page.getByLabel("Title").fill(lessonTitle);
+    await page.getByLabel(NEW_COURSE.label.title).fill(lessonTitle);
 
     const descriptionField = page.locator("#description");
     const editorInput = descriptionField.locator('div[contenteditable="true"]');
@@ -80,15 +193,17 @@ export class CreateCourseActions {
     await editorInput.click();
     await page.keyboard.type(lessonDescription, { delay: 5 });
     await expect(editorInput).toHaveText(lessonDescription);
-    await page.getByRole("button", { name: /save/i }).click();
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
   }
 
   async addQuiz(page: Page, chapterLocator: Locator): Promise<void> {
-    await chapterLocator.getByRole("button", { name: /add lesson/i }).click();
-    const buttonWithText = await page.locator('h3:has-text("Quiz")');
+    await chapterLocator
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.addLesson, "i") })
+      .click();
+    const buttonWithText = await page.locator(`h3:has-text("${NEW_COURSE.lessonType.quiz}")`);
     const lessonButton = buttonWithText.locator("..");
     await lessonButton.click();
-    await page.getByLabel("Title").fill("Quiz for first exam");
+    await page.getByLabel(NEW_COURSE.label.title).fill(NEW_COURSE.lessons.quizTitle);
   }
 
   async addQuestion(
@@ -97,8 +212,12 @@ export class CreateCourseActions {
     questionTitle: string,
     questionIndex: number,
   ): Promise<void> {
-    await expect(page.getByRole("button", { name: /add question/i })).toBeVisible();
-    await page.getByRole("button", { name: /add question/i }).click();
+    await expect(
+      page.getByRole("button", { name: new RegExp(NEW_COURSE.button.addQuestion, "i") }),
+    ).toBeVisible();
+    await page
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.addQuestion, "i") })
+      .click();
     await expect(page.getByRole("button", { name: new RegExp(questionType, "i") })).toBeVisible();
     await page.getByRole("button", { name: new RegExp(questionType, "i") }).click();
     await page.locator(`input[name="questions.${questionIndex}.title"]`).fill(questionTitle);
@@ -106,9 +225,11 @@ export class CreateCourseActions {
 
   async addOptionsAndFillAnswerQuestion(
     questionIndex: number,
-    options: { text: string; isCorrect: boolean }[],
     multipleChoice: boolean = false,
   ): Promise<void> {
+    const options = multipleChoice
+      ? NEW_COURSE.options.multipleChoice
+      : NEW_COURSE.options.singleChoice;
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
       const optionTextLocator = `input[name="questions.${questionIndex}.options.${i}.optionText"]`;
@@ -137,31 +258,21 @@ export class CreateCourseActions {
     await page.getByTestId(`add-options-button-${questionIndex}`).click();
     await page.getByTestId(`add-options-button-${questionIndex}`).click();
 
-    const options = [
-      "CSS allows direct manipulation of a website's database.",
-      "CSS enables styling HTML elements, such as colors, fonts, and page layouts.",
-      "CSS only works in web browsers that support JavaScript.",
-    ];
-
-    for (let i = 0; i < options.length; i++) {
+    for (let i = 0; i < NEW_COURSE.options.trueOrFalse.length; i++) {
       await page
         .locator(`input[name="questions.${questionIndex}.options.${i}.optionText"]`)
-        .fill(options[i]);
+        .fill(NEW_COURSE.options.trueOrFalse[i]);
     }
     await page
       .locator(`input[name="questions.${questionIndex}.options.${correctAnswerIndex}.isCorrect"]`)
       .first()
       .click();
   }
-  async addMatchingQuestion(
-    page: Page,
-    questionIndex: number,
-    options: { optionText: string; matchedWord: string }[],
-  ): Promise<void> {
+  async addMatchingQuestion(page: Page, questionIndex: number): Promise<void> {
     await page.getByTestId(`add-options-button-${questionIndex}`).click();
 
-    for (let i = 0; i < options.length; i++) {
-      const option = options[i];
+    for (let i = 0; i < NEW_COURSE.options.matching.length; i++) {
+      const option = NEW_COURSE.options.matching[i];
       await page
         .locator(`input[name="questions.${questionIndex}.options.${i}.optionText"]`)
         .fill(option.optionText);
@@ -170,32 +281,32 @@ export class CreateCourseActions {
         .fill(option.matchedWord);
     }
   }
-  async addScaleQuestion(page: Page, questionIndex: number, options: string[]): Promise<void> {
+  async addScaleQuestion(page: Page, questionIndex: number): Promise<void> {
     await page.getByTestId(`add-options-button-${questionIndex}`).click();
     await page.getByTestId(`add-options-button-${questionIndex}`).click();
 
-    for (let i = 0; i < options.length; i++) {
+    for (let i = 0; i < NEW_COURSE.options.scale.length; i++) {
       await page
         .locator(`input[name="questions.${questionIndex}.options.${i}.optionText"]`)
-        .fill(options[i]);
+        .fill(NEW_COURSE.options.scale[i]);
     }
   }
   async addPhotoQuestion(
     page: Page,
     questionIndex: number,
     imagePath: string,
-    options: string[],
     correctOptionIndex: number,
   ): Promise<void> {
     await page.getByTestId(`add-options-button-${questionIndex}`).click();
 
     const fileInput = await page.locator('input[type="file"]');
     await fileInput.setInputFiles(imagePath);
+    await page.locator("text=Click to replace").waitFor();
 
-    for (let i = 0; i < options.length; i++) {
+    for (let i = 0; i < NEW_COURSE.options.photoOptions.length; i++) {
       await page
         .locator(`input[name="questions.${questionIndex}.options.${i}.optionText"]`)
-        .fill(options[i]);
+        .fill(NEW_COURSE.options.photoOptions[i]);
     }
 
     await page
@@ -204,7 +315,7 @@ export class CreateCourseActions {
   }
 
   async addFillInTheBlankQuestion(page: Page, word: string) {
-    await page.getByRole("button", { name: /add words/i }).click();
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.addWords, "i") }).click();
 
     await page.locator('[data-testid="new-word-input"]').fill(word);
 
@@ -216,14 +327,148 @@ export class CreateCourseActions {
     const editableElement = page.locator('div[contenteditable="true"]');
     await editableElement.click();
 
-    await page.keyboard.type(
-      "The most popular programing language used to styling components is ",
-      { delay: 5 },
-    );
+    await page.keyboard.type(NEW_COURSE.lessons.fillInTheBlankDescription, { delay: 5 });
 
     await draggableElement.dragTo(editableElement);
 
     await expect(editableElement).toContainText(word);
+  }
+
+  async addPresentationLesson(
+    page: Page,
+    chapterLocator: Locator,
+    lessonTitle: string,
+    lessonDescription: string,
+  ) {
+    await chapterLocator
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.addLesson, "i") })
+      .click();
+
+    const buttonWithText = await page.locator(
+      `h3:has-text("${NEW_COURSE.lessonType.presentation}")`,
+    );
+    const lessonButton = buttonWithText.locator("..");
+    await lessonButton.click();
+
+    await page.getByLabel(NEW_COURSE.label.title).fill(lessonTitle);
+    const fileInput = await page.locator('input[type="file"]');
+    const filePath = "app/assets/presentation-e2e.pptx";
+    await fileInput.setInputFiles(filePath);
+    await page.getByLabel(NEW_COURSE.label.description).fill(lessonDescription);
+
+    await page
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.removePresentation, "i") })
+      .waitFor({ state: "visible" });
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
+
+    await expect(chapterLocator.locator(`div[aria-label="Lesson: ${lessonTitle}"]`)).toBeVisible();
+  }
+  async addVideoLesson(
+    page: Page,
+    chapterLocator: Locator,
+    lessonTitle: string,
+    lessonDescription: string,
+  ) {
+    await chapterLocator
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.addLesson, "i") })
+      .click();
+
+    const buttonWithTextVideo = await page.locator(`h3:has-text("${NEW_COURSE.lessonType.video}")`);
+    const lessonVideoButton = buttonWithTextVideo.locator("..");
+    await lessonVideoButton.click();
+
+    await page.getByLabel(NEW_COURSE.label.title).fill(lessonTitle);
+    const fileInputVideo = await page.locator('input[type="file"]');
+    const filePathVideo = "app/assets/video-e2e.mp4";
+    await fileInputVideo.setInputFiles(filePathVideo);
+    await page.getByLabel(NEW_COURSE.label.description).fill(lessonDescription);
+
+    await page
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.removeVideo, "i") })
+      .waitFor({ state: "visible" });
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
+
+    await expect(chapterLocator.locator(`div[aria-label="Lesson: ${lessonTitle}"]`)).toBeVisible();
+  }
+  async editChapter(page: Page, chapterName: string, newChapterTitle: string) {
+    await page.locator(`text=${chapterName}`).click();
+    await page.getByLabel(NEW_COURSE.label.title).fill(newChapterTitle);
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
+    await page.locator(`text=${newChapterTitle}`).waitFor({ state: "visible" });
+  }
+
+  async editTextLesson(page: Page) {
+    const lessonLocator = page.locator(`text=${NEW_COURSE.lessons.textLessonTitle}`);
+    await lessonLocator.click();
+    await page.getByLabel(NEW_COURSE.label.title).fill(NEW_COURSE.editedLesson.textLessonTitle);
+    const descriptionField = page.locator("#description");
+    const editorInput = descriptionField.locator('div[contenteditable="true"]');
+    await expect(editorInput).toBeVisible();
+    await editorInput.click();
+    await page.keyboard.type(NEW_COURSE.editedLesson.textLessonDescription, { delay: 5 });
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
+    await page
+      .locator(`text=${NEW_COURSE.editedLesson.textLessonTitle}`)
+      .waitFor({ state: "visible" });
+  }
+
+  async editPresentationLesson(page: Page) {
+    const lessonLocator = page.locator(`text=${NEW_COURSE.lessons.presentationLessonTitle}`);
+    await lessonLocator.click();
+    await page
+      .getByLabel(NEW_COURSE.label.title)
+      .fill(NEW_COURSE.editedLesson.presentationLessonTitle);
+    const removeButton = page.getByRole("button", {
+      name: new RegExp(NEW_COURSE.button.removePresentation, "i"),
+    });
+    await removeButton.click();
+    await removeButton.waitFor({ state: "hidden" });
+
+    const fileInputVideo = await page.locator('input[type="file"]');
+    const filePathVideo = "app/assets/presentation-e2e.pptx";
+    await fileInputVideo.setInputFiles(filePathVideo);
+
+    await removeButton.waitFor({ state: "visible" });
+    await page
+      .getByLabel(NEW_COURSE.label.description)
+      .fill(NEW_COURSE.editedLesson.presentationLessonDescription);
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
+    await page
+      .locator(`text=${NEW_COURSE.editedLesson.presentationLessonTitle}`)
+      .waitFor({ state: "visible" });
+  }
+
+  async editQuizTitle(page: Page) {
+    const lessonLocator = page.locator(`text=${NEW_COURSE.lessons.quizTitle}`);
+    await lessonLocator.click();
+    await page.getByLabel(NEW_COURSE.label.title).fill(NEW_COURSE.editedLesson.quizTitle);
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
+    await page.locator(`text=${NEW_COURSE.editedLesson.quizTitle}`).waitFor({ state: "visible" });
+  }
+
+  async editVideoLesson(page: Page) {
+    const lessonLocator = page.locator(`text=${NEW_COURSE.lessons.videoLessonTitle}`);
+    await lessonLocator.click();
+    await page.getByLabel(NEW_COURSE.label.title).fill(NEW_COURSE.editedLesson.videoLessonTitle);
+    const removeButton = page.getByRole("button", {
+      name: new RegExp(NEW_COURSE.button.removeVideo, "i"),
+    });
+    await removeButton.click();
+    await removeButton.waitFor({ state: "hidden" });
+
+    const fileInputVideo = await page.locator('input[type="file"]');
+    const filePathVideo = "app/assets/video-e2e.mp4";
+    await fileInputVideo.setInputFiles(filePathVideo);
+
+    await removeButton.waitFor({ state: "visible" });
+    await page
+      .getByLabel(NEW_COURSE.label.description)
+      .fill(NEW_COURSE.editedLesson.videoLessonDescription);
+
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
+    await page
+      .locator(`text=${NEW_COURSE.editedLesson.videoLessonTitle}`)
+      .waitFor({ state: "visible" });
   }
 }
 
@@ -231,8 +476,6 @@ test.describe.serial("Course management", () => {
   let createCourseActions: CreateCourseActions;
   let newCourseId: string;
   let newChapterId: string;
-  const expectedTitle = "CSS Fundamentals";
-  // Page have to be defined here to use it inside beforeAll, we need it to login as a Admin.
   let page: Page;
 
   test.beforeAll(async ({ browser }) => {
@@ -252,7 +495,7 @@ test.describe.serial("Course management", () => {
   test("should click cancel button and back to the course list", async () => {
     await createCourseActions.navigateToNewCoursePage(page);
 
-    await page.getByRole("button", { name: /cancel/i }).click();
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.cancel, "i") }).click();
     await page.waitForURL("/admin/courses");
 
     const currentUrl = await page.url();
@@ -262,20 +505,24 @@ test.describe.serial("Course management", () => {
   test("should disable the proceed button when form is incomplete", async () => {
     await createCourseActions.navigateToNewCoursePage(page);
 
-    const proceedButton = page.getByRole("button", { name: /proceed/i });
+    const proceedButton = page.getByRole("button", {
+      name: new RegExp(NEW_COURSE.button.proceed, "i"),
+    });
 
     await expect(proceedButton).toBeDisabled();
 
-    await createCourseActions.fillCourseForm(page, expectedTitle);
+    await createCourseActions.fillCourseForm(page);
     await expect(proceedButton).not.toBeDisabled();
   });
 
   test("should create a new course with chapter and lesson", async () => {
     await createCourseActions.navigateToNewCoursePage(page);
 
-    await createCourseActions.fillCourseForm(page, expectedTitle);
+    await createCourseActions.fillCourseForm(page);
 
-    const proceedButton = page.getByRole("button", { name: /proceed/i });
+    const proceedButton = page.getByRole("button", {
+      name: new RegExp(NEW_COURSE.button.proceed, "i"),
+    });
 
     await expect(proceedButton).not.toBeDisabled();
 
@@ -294,9 +541,9 @@ test.describe.serial("Course management", () => {
     newCourseId = courseResJson.data.id;
 
     await page.waitForURL(`admin/beta-courses/${newCourseId}`);
-    await createCourseActions.verifyCoursePage(page, newCourseId, expectedTitle);
+    await createCourseActions.verifyCoursePage(page, newCourseId);
 
-    newChapterId = await createCourseActions.addChapter(page, "CSS Introduction");
+    newChapterId = await createCourseActions.addChapter(page, NEW_COURSE.chapter.title);
 
     const chapterLocator = page.locator(`[data-chapter-id="${newChapterId}"]`);
     await expect(chapterLocator).toBeVisible();
@@ -304,120 +551,179 @@ test.describe.serial("Course management", () => {
     await createCourseActions.addTextLesson(
       page,
       chapterLocator,
-      "Introduction to CSS",
-      "CSS is a style sheet language used for describing the presentation of a document written in HTML.",
+      NEW_COURSE.lessons.textLessonTitle,
+      NEW_COURSE.lessons.textLessonDescription,
+    );
+    await expect(
+      chapterLocator.locator(`div[aria-label="Lesson: ${NEW_COURSE.lessons.textLessonTitle}"]`),
+    ).toBeVisible();
+
+    await createCourseActions.addPresentationLesson(
+      page,
+      chapterLocator,
+      NEW_COURSE.lessons.presentationLessonTitle,
+      NEW_COURSE.lessons.presentationLessonDescription,
     );
 
-    const lessonLocator = chapterLocator.locator('div[aria-label="Lesson: Introduction to CSS"]');
-    await expect(lessonLocator).toBeVisible();
+    await createCourseActions.addVideoLesson(
+      page,
+      chapterLocator,
+      NEW_COURSE.lessons.videoLessonTitle,
+      NEW_COURSE.lessons.presentationLessonTitle,
+    );
 
     await createCourseActions.addQuiz(page, chapterLocator);
 
     await createCourseActions.addQuestion(
       page,
-      "free text",
-      "Describe what is your CSS and HTML level",
+      NEW_COURSE.questionType.freeText,
+      NEW_COURSE.questions.freeText,
       0,
     );
     await createCourseActions.addQuestion(
       page,
-      "short answer",
-      "Describe what would you like to learn with this course",
+      NEW_COURSE.questionType.shortAnswer,
+      NEW_COURSE.questions.shortAnswer,
       1,
     );
 
     await createCourseActions.addQuestion(
       page,
-      "single choice",
-      "Which css tag is most popular, choose one correct answer",
+      NEW_COURSE.questionType.singleChoice,
+      NEW_COURSE.questions.singleChoice,
       2,
     );
-    await createCourseActions.addOptionsAndFillAnswerQuestion(2, [
-      { text: "<div></div>", isCorrect: true },
-      { text: "<p></p>", isCorrect: false },
-      { text: "<h1></h1>", isCorrect: false },
-    ]);
+    await createCourseActions.addOptionsAndFillAnswerQuestion(2);
 
     await createCourseActions.addQuestion(
       page,
-      "multiple choice",
-      "Which of the following are valid CSS properties?",
+      NEW_COURSE.questionType.mutlipleChoice,
+      NEW_COURSE.questions.multipleChoice,
       3,
     );
-    await createCourseActions.addOptionsAndFillAnswerQuestion(
-      3,
-      [
-        { text: "color", isCorrect: true },
-        { text: "font-size", isCorrect: true },
-        { text: "text-align-center", isCorrect: false },
-        { text: "background-image-url", isCorrect: false },
-      ],
-      true,
-    );
+    await createCourseActions.addOptionsAndFillAnswerQuestion(3, true);
 
     await createCourseActions.addQuestion(
       page,
-      "true or false",
-      "Which of the following statements about CSS are true?",
+      NEW_COURSE.questionType.trueOrFalse,
+      NEW_COURSE.questions.trueOrFalse,
       4,
     );
     await createCourseActions.addTrueOrFalseQuestion(page, 4, 1);
 
     await createCourseActions.addQuestion(
       page,
-      "matching",
-      "Match the CSS property with its effect",
+      NEW_COURSE.questionType.matching,
+      NEW_COURSE.questions.matching,
       5,
     );
-    const matchingOptions = [
-      { optionText: "Affects the spacing inside an element.", matchedWord: "Padding" },
-      {
-        optionText: "Defines how an element is positioned relative to its container.",
-        matchedWord: "Position",
-      },
-      { optionText: "Adds shadow effects to an element.", matchedWord: "Box shadow" },
-    ];
-    await createCourseActions.addMatchingQuestion(page, 5, matchingOptions);
+    await createCourseActions.addMatchingQuestion(page, 5);
 
     await createCourseActions.addQuestion(
       page,
-      "scale 1 to 5",
-      "How would you rate your CSS knowledge on a scale from 1 to 5?",
+      NEW_COURSE.questionType.scale,
+      NEW_COURSE.questions.scale,
       6,
     );
-    const scaleOptions = [
-      "Beginner (I have basic knowledge and am still learning CSS)",
-      "Intermediate (I understand the basics but am still learning more advanced techniques)",
-      "Expert (I have advanced knowledge and can create complex styles)",
-    ];
-    await createCourseActions.addScaleQuestion(page, 6, scaleOptions);
+
+    await createCourseActions.addScaleQuestion(page, 6);
 
     await createCourseActions.addQuestion(
       page,
-      "photo question",
-      "What code language do you see on this screenshot",
+      NEW_COURSE.questionType.photoQuestion,
+
+      NEW_COURSE.questions.photoQuestion,
       7,
     );
-    const photoOptions = ["JAVA", "PYTHON", "JAVASCRIPT"];
     const imagePath = "app/assets/thumbnail-e2e.jpg";
-    await createCourseActions.addPhotoQuestion(page, 7, imagePath, photoOptions, 2);
+    await createCourseActions.addPhotoQuestion(page, 7, imagePath, 2);
 
     await createCourseActions.addQuestion(
       page,
-      "fill in the blanks",
-      "Fill words in blank space",
+      NEW_COURSE.questionType.fillInTheBlanks,
+      NEW_COURSE.questions.fillInTheBlank,
       8,
     );
     await createCourseActions.addFillInTheBlankQuestion(page, "CSS");
-    await page.getByRole("button", { name: /save/i }).click();
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
 
-    const quizLocator = chapterLocator.locator('div[aria-label="Lesson: Quiz for first exam"]');
+    const quizLocator = chapterLocator.locator(
+      `div[aria-label="Lesson: ${NEW_COURSE.lessons.quizTitle}"]`,
+    );
     await expect(quizLocator).toBeVisible();
   });
 
   test("should check if course occurs on course list", async () => {
     await createCourseActions.openCourse(newCourseId);
 
-    await createCourseActions.verifyCoursePage(page, newCourseId, expectedTitle);
+    await createCourseActions.verifyCoursePage(page, newCourseId);
+  });
+
+  test("should edit chapter and lessons", async () => {
+    await createCourseActions.openCourse(newCourseId);
+    await createCourseActions.editChapter(
+      page,
+      NEW_COURSE.chapter.title,
+      NEW_COURSE.chapter.editedTitle,
+    );
+    await createCourseActions.editTextLesson(page);
+    await createCourseActions.editPresentationLesson(page);
+    await createCourseActions.editVideoLesson(page);
+    await createCourseActions.editQuizTitle(page);
+  });
+
+  test("should remove questions from chapter and save.", async () => {
+    await createCourseActions.openCourse(newCourseId);
+    await page.click(`[data-testid='accordion - ${newChapterId}']`);
+    const quizLocator = page.locator(`text=${NEW_COURSE.editedLesson.quizTitle}`);
+    await quizLocator.waitFor();
+    await quizLocator.click();
+
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.delete, "i") }).click();
+    const dialogLocator = page.locator(
+      `div[role="dialog"]:has(h2:text("${NEW_COURSE.dialog.deleteQuiz}"))`,
+    );
+    await dialogLocator.waitFor();
+
+    await dialogLocator
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.delete, "i") })
+      .click();
+
+    await page.waitForTimeout(2000);
+
+    await expect(quizLocator).not.toBeVisible();
+  });
+
+  test("should check if freemium works", async () => {
+    await createCourseActions.openCourse(newCourseId);
+
+    await page.waitForSelector(`[data-testid="Freemium - ${newChapterId}"]`, { state: "attached" });
+    await page.locator(`[data-testid="Freemium - ${newChapterId}"]`).click();
+
+    await page.waitForTimeout(3000);
+
+    const chapterLocator = page.locator(`[data-chapter-id="${newChapterId}"]`);
+    await chapterLocator.waitFor({ state: "visible" });
+    await expect(
+      await page.locator(`[data-testid="Freemium - ${newChapterId}"]`).getAttribute("data-state"),
+    ).toBe("checked");
+    await expect(await chapterLocator.getAttribute("data-state")).toBe("open");
+  });
+
+  test("should remove chapter with all lessons.", async () => {
+    await createCourseActions.openCourse(newCourseId);
+    await page.locator(`text=${NEW_COURSE.chapter.editedTitle}`).click();
+    await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.delete, "i") }).click();
+    const dialogLocator = page.locator(
+      `div[role="dialog"]:has(h2:text("${NEW_COURSE.dialog.deleteChapter}"))`,
+    );
+    await dialogLocator.waitFor();
+    await dialogLocator
+      .getByRole("button", { name: new RegExp(NEW_COURSE.button.delete, "i") })
+      .click();
+
+    await page.waitForTimeout(2000);
+
+    await expect(page.locator(`text=${NEW_COURSE.chapter.editedTitle}`)).not.toBeVisible();
   });
 });

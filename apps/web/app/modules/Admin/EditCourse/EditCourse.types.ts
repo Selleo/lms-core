@@ -10,6 +10,7 @@ export interface Lesson {
   title: string;
   description: string;
   fileS3Key?: string;
+  fileS3SignedUrl?: string;
   fileType?: string;
   chapterId?: string;
   questions?: Question[];
