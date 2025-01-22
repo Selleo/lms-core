@@ -1,9 +1,21 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import type { Locator, Page } from "@playwright/test";
 
 export class CreateCourseActions {
   constructor(private readonly page: Page) {}
+
+  private async handleFileUpload(page: Page, filePath: string): Promise<void> {
+    const fileInput = page.locator('input[type="file"]');
+    await fileInput.waitFor({ state: "attached" });
+
+    const [fileChooser] = await Promise.all([
+      page.waitForEvent("filechooser", { timeout: 10000 }),
+      fileInput.click({ force: true }),
+    ]);
+
+    await fileChooser.setFiles(filePath);
+  }
 
   async openCourse(courseId: string): Promise<void> {
     const rowSelector = `[data-course-id="${courseId}"]`;
@@ -34,9 +46,7 @@ export class CreateCourseActions {
       .getByLabel("Description")
       .fill("This course takes you through a css course, it lets you learn the basics.");
 
-    const fileInput = await page.locator('input[type="file"]');
-    const filePath = "app/assets/thumbnail-e2e.jpg";
-    await fileInput.setInputFiles(filePath);
+    await this.handleFileUpload(page, "app/assets/thumbnail-e2e.jpg");
   }
 
   async addChapter(page: Page, chapterTitle: string): Promise<string> {
@@ -127,6 +137,7 @@ export class CreateCourseActions {
       }
     }
   }
+
   async addTrueOrFalseQuestion(
     page: Page,
     questionIndex: number,
@@ -151,6 +162,7 @@ export class CreateCourseActions {
       .first()
       .click();
   }
+
   async addMatchingQuestion(
     page: Page,
     questionIndex: number,
@@ -178,6 +190,7 @@ export class CreateCourseActions {
         .fill(options[i]);
     }
   }
+
   async addPhotoQuestion(
     page: Page,
     questionIndex: number,
@@ -187,9 +200,7 @@ export class CreateCourseActions {
   ): Promise<void> {
     await page.getByTestId(`add-options-button-${questionIndex}`).click();
 
-    const fileInput = await page.locator('input[type="file"]');
-    await fileInput.setInputFiles(imagePath);
-    await page.locator("text=Click to replace").waitFor({ state: "visible" });
+    await this.handleFileUpload(page, imagePath);
 
     for (let i = 0; i < options.length; i++) {
       await page
@@ -230,7 +241,6 @@ test.describe.serial("Course management", () => {
   let newCourseId: string;
   let newChapterId: string;
   const expectedTitle = "CSS Fundamentals";
-  // Page have to be defined here to use it inside beforeAll, we need it to login as a Admin.
 
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/courses");
@@ -380,27 +390,27 @@ test.describe.serial("Course management", () => {
     ];
     await createCourseActions.addScaleQuestion(page, 6, scaleOptions);
 
-    // await createCourseActions.addQuestion(
-    //   page,
-    //   "photo question",
-    //   "What code language do you see on this screenshot",
-    //   7,
-    // );
-    // const photoOptions = ["JAVA", "PYTHON", "JAVASCRIPT"];
-    // const imagePath = "app/assets/thumbnail-e2e.jpg";
-    // await createCourseActions.addPhotoQuestion(page, 7, imagePath, photoOptions, 2);
+    await createCourseActions.addQuestion(
+      page,
+      "photo question",
+      "What code language do you see on this screenshot",
+      7,
+    );
+    const photoOptions = ["JAVA", "PYTHON", "JAVASCRIPT"];
+    const imagePath = "app/assets/thumbnail-e2e.jpg";
+    await createCourseActions.addPhotoQuestion(page, 7, imagePath, photoOptions, 2);
 
     await createCourseActions.addQuestion(
       page,
       "fill in the blanks",
       "Fill words in blank space",
-      7,
+      8,
     );
     await createCourseActions.addFillInTheBlankQuestion(page, "CSS");
 
     await page.getByRole("button", { name: /save/i }).click();
-    const quizLocator = chapterLocator.locator('div[aria-label="Lesson: Quiz for first exam"]');
-    await expect(quizLocator).toBeVisible();
+
+    await expect(page.getByText("Quiz for first exam")).toBeVisible({ timeout: 10000 });
   });
 
   test("should check if course occurs on course list", async ({ page }) => {

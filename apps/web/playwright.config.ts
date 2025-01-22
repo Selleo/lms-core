@@ -32,6 +32,10 @@ const config: PlaywrightTestConfig = {
         "--disable-features=IsolateOrigins,site-per-process",
       ],
     },
+    // screenshot: {
+    // mode: "only-on-failure",
+    // fullPage: true,
+    // },
   },
   projects: [
     {

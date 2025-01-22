@@ -22,7 +22,10 @@ const ImageUploadInput = ({
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col items-center justify-center gap-y-2">
+    <div
+      className="flex flex-col items-center justify-center gap-y-2"
+      data-testid="image-upload-container"
+    >
       <div className="relative flex h-80 w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-lg border-2 border-solid border-gray-300 bg-gray-100">
         {field.value && (
           <img

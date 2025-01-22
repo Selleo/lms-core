@@ -85,35 +85,6 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: /home/runner/.cache/ms-playwright
 
-    #   - name: Setup Caddy
-    #     run: |
-    #       sudo apt-get update
-    #       sudo apt-get install -y debian-keyring debian-archive-keyring apt-transport-https curl
-    #       curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-    #       curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-    #       sudo apt-get update
-    #       sudo apt-get install caddy=2.8.4
-
-    #   - name: Setup hosts
-    #     run: |
-    #       echo "127.0.0.1 app.lms.localhost" | sudo tee -a /etc/hosts
-
-    #   - name: Debug Caddy
-    #     working-directory: ./apps/reverse-proxy
-    #     run: |
-    #       caddy version
-    #       caddy adapt --config Caddyfile
-    #       caddy validate --config Caddyfile
-
-    #   - name: Start Caddy
-    #     working-directory: ./apps/reverse-proxy
-    #     run: |
-    #       sudo caddy run --config Caddyfile &
-
-    #   - name: Ensure Caddy is running
-    #     run: |
-    #       pgrep -af caddy || exit 1
-
       - name: Run tests
         run: pnpm playwright test
         working-directory: ./apps/web
@@ -123,3 +94,12 @@ jobs:
           REDIS_HOST: localhost
           REDIS_PORT: 6380
           NODE_ENV: test
+      # - name: Upload test results
+        # if: always()
+        # uses: actions/upload-artifact@v3
+        # with:
+          # name: playwright-report
+          # path: |
+            # playwright-report/
+            # test-results/
+          # retention-days: 30
