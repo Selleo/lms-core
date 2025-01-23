@@ -16,11 +16,10 @@ async function bootstrap() {
   });
 
   setupValidation();
-
   app.use(cookieParser());
   app.setGlobalPrefix("api");
   app.enableCors({
-    origin: process.env.CORS_ORIGIN,
+    origin: process.env.NODE_ENV === "test" ? "http://localhost:5173" : process.env.CORS_ORIGIN,
     credentials: true,
   });
 

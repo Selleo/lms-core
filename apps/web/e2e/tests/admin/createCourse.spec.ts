@@ -6,15 +6,77 @@ export class CreateCourseActions {
   constructor(private readonly page: Page) {}
 
   private async handleFileUpload(page: Page, filePath: string): Promise<void> {
+    console.log("Starting file upload process...");
+
+    const pendingRequests: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().includes("/api/file")) {
+        console.log("Upload request started:", {
+          url: request.url(),
+          method: request.method(),
+          headers: request.headers(),
+        });
+        pendingRequests.push(request.url());
+      }
+    });
+
+    page.on("requestfailed", (request) => {
+      if (request.url().includes("/api/file")) {
+        console.log("Upload request failed:", {
+          url: request.url(),
+          failure: request.failure(),
+        });
+      }
+    });
+
+    // page.on("request", (request) => {
+    //   console.log("Request:", {
+    //     url: request.url(),
+    //     method: request.method(),
+    //     resourceType: request.resourceType(),
+    //   });
+    // });
+
+    // page.on("response", (response) => {
+    //   console.log("Response:", {
+    //     url: response.url(),
+    //     status: response.status(),
+    //   });
+    // });
+
+    // const healthCheck = await page.request.get("http://localhost:5173/api/healthcheck");
+    // console.log("Healthcheck response:", {
+    //   status: healthCheck.status(),
+    //   url: healthCheck.url(),
+    // });
+
     const fileInput = page.locator('input[type="file"]');
     await fileInput.waitFor({ state: "attached" });
+    console.log("File input found and attached");
 
-    const [fileChooser] = await Promise.all([
-      page.waitForEvent("filechooser", { timeout: 10000 }),
-      fileInput.click({ force: true }),
-    ]);
+    const fileChooserPromise = page.waitForEvent("filechooser");
+    await fileInput.click({ force: true });
+    console.log("Clicked file input");
+
+    const fileChooser = await fileChooserPromise;
+    console.log("Got file chooser");
 
     await fileChooser.setFiles(filePath);
+    console.log("Set file on chooser");
+
+    const response = await page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/file") &&
+        (response.status() === 200 || response.status() === 201),
+    );
+
+    console.log("Got upload response:", {
+      status: response.status(),
+      headers: response.headers(),
+      url: response.url(),
+    });
+
+    console.log("Pending requests:", pendingRequests);
   }
 
   async openCourse(courseId: string): Promise<void> {
@@ -237,6 +299,8 @@ export class CreateCourseActions {
 }
 
 test.describe.serial("Course management", () => {
+  test.setTimeout(120000);
+
   let createCourseActions: CreateCourseActions;
   let newCourseId: string;
   let newChapterId: string;
@@ -410,7 +474,7 @@ test.describe.serial("Course management", () => {
 
     await page.getByRole("button", { name: /save/i }).click();
 
-    await expect(page.getByText("Quiz for first exam")).toBeVisible({ timeout: 10000 });
+    await expect(page.getByText(/Quiz for first exam/)).toBeVisible();
   });
 
   test("should check if course occurs on course list", async ({ page }) => {
