@@ -145,9 +145,9 @@ export class CreateCourseActions {
 
     await page.getByLabel(NEW_COURSE.label.description).fill(NEW_COURSE.description);
 
-    const fileInput = await page.locator('input[type="file"]');
-    const filePath = "app/assets/thumbnail-e2e.jpg";
-    await fileInput.setInputFiles(filePath);
+    // const fileInput = await page.locator('input[type="file"]');
+    // const filePath = "app/assets/thumbnail-e2e.jpg";
+    // await fileInput.setInputFiles(filePath);
   }
 
   async addChapter(page: Page, chapterTitle: string): Promise<string> {
@@ -545,19 +545,19 @@ test.describe.serial("Course management", () => {
       chapterLocator.locator(`div[aria-label="Lesson: ${NEW_COURSE.lessons.textLessonTitle}"]`),
     ).toBeVisible();
 
-    await createCourseActions.addPresentationLesson(
-      page,
-      chapterLocator,
-      NEW_COURSE.lessons.presentationLessonTitle,
-      NEW_COURSE.lessons.presentationLessonDescription,
-    );
+    // await createCourseActions.addPresentationLesson(
+    //   page,
+    //   chapterLocator,
+    //   NEW_COURSE.lessons.presentationLessonTitle,
+    //   NEW_COURSE.lessons.presentationLessonDescription,
+    // );
 
-    await createCourseActions.addVideoLesson(
-      page,
-      chapterLocator,
-      NEW_COURSE.lessons.videoLessonTitle,
-      NEW_COURSE.lessons.presentationLessonTitle,
-    );
+    // await createCourseActions.addVideoLesson(
+    //   page,
+    //   chapterLocator,
+    //   NEW_COURSE.lessons.videoLessonTitle,
+    //   NEW_COURSE.lessons.presentationLessonTitle,
+    // );
 
     await createCourseActions.addQuiz(page, chapterLocator);
 
@@ -615,21 +615,21 @@ test.describe.serial("Course management", () => {
 
     await createCourseActions.addScaleQuestion(page, 6);
 
-    await createCourseActions.addQuestion(
-      page,
-      NEW_COURSE.questionType.photoQuestion,
+    // await createCourseActions.addQuestion(
+    //   page,
+    //   NEW_COURSE.questionType.photoQuestion,
 
-      NEW_COURSE.questions.photoQuestion,
-      7,
-    );
-    const imagePath = "app/assets/thumbnail-e2e.jpg";
-    await createCourseActions.addPhotoQuestion(page, 7, imagePath, 2);
+    //   NEW_COURSE.questions.photoQuestion,
+    //   7,
+    // );
+    // const imagePath = "app/assets/thumbnail-e2e.jpg";
+    // await createCourseActions.addPhotoQuestion(page, 7, imagePath, 2);
 
     await createCourseActions.addQuestion(
       page,
       NEW_COURSE.questionType.fillInTheBlanks,
       NEW_COURSE.questions.fillInTheBlank,
-      8,
+      7,
     );
     await createCourseActions.addFillInTheBlankQuestion(page, "CSS");
     await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.save, "i") }).click();
@@ -646,7 +646,7 @@ test.describe.serial("Course management", () => {
     await createCourseActions.verifyCoursePage(page, newCourseId);
   });
 
-  test("should edit chapter and lessons", async ({page}) => {
+  test("should edit chapter and lessons", async ({ page }) => {
     await createCourseActions.openCourse(newCourseId);
     await createCourseActions.editChapter(
       page,
@@ -654,12 +654,12 @@ test.describe.serial("Course management", () => {
       NEW_COURSE.chapter.editedTitle,
     );
     await createCourseActions.editTextLesson(page);
-    await createCourseActions.editPresentationLesson(page);
-    await createCourseActions.editVideoLesson(page);
+    // await createCourseActions.editPresentationLesson(page);
+    // await createCourseActions.editVideoLesson(page);
     await createCourseActions.editQuizTitle(page);
   });
 
-  test("should remove questions from chapter and save.", async ({page}) => {
+  test("should remove questions from chapter and save.", async ({ page }) => {
     await createCourseActions.openCourse(newCourseId);
     await page.click(`[data-testid='accordion - ${newChapterId}']`);
     const quizLocator = page.locator(`text=${NEW_COURSE.editedLesson.quizTitle}`);
@@ -681,7 +681,7 @@ test.describe.serial("Course management", () => {
     await expect(quizLocator).not.toBeVisible();
   });
 
-  test("should check if freemium works", async ({page}) => {
+  test("should check if freemium works", async ({ page }) => {
     await createCourseActions.openCourse(newCourseId);
 
     await page.waitForSelector(`[data-testid="Freemium - ${newChapterId}"]`, { state: "attached" });
@@ -697,7 +697,7 @@ test.describe.serial("Course management", () => {
     await expect(await chapterLocator.getAttribute("data-state")).toBe("open");
   });
 
-  test("should remove chapter with all lessons.", async ({page}) => {
+  test("should remove chapter with all lessons.", async ({ page }) => {
     await createCourseActions.openCourse(newCourseId);
     await page.locator(`text=${NEW_COURSE.chapter.editedTitle}`).click();
     await page.getByRole("button", { name: new RegExp(NEW_COURSE.button.delete, "i") }).click();

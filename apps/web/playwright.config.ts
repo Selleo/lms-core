@@ -60,6 +60,17 @@ const config: PlaywrightTestConfig = {
       },
       testMatch: /.*\.(spec|test)\.ts$/,
     },
+    {
+      name: "chromium-teacher",
+      testDir: "./e2e/tests/teacher",
+      dependencies: ["setup"],
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1920, height: 1080 },
+        storageState: "e2e/.auth/teacher.json",
+      },
+      testMatch: /.*\.(spec|test)\.ts$/,
+    },
   ],
 };
 
