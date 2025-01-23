@@ -11,27 +11,36 @@ const __dirname = path.dirname(__filename);
 
 dotenv.config({ path: path.resolve(__dirname, ".env") });
 
+// const baseURL = "http://localhost:5173";
 const baseURL = process.env.CI ? "http://localhost:5173" : "https://app.lms.localhost";
 
 const config: PlaywrightTestConfig = {
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 0 : 0,
   workers: process.env.CI ? 1 : undefined,
   use: {
     baseURL,
     ignoreHTTPSErrors: true,
     launchOptions: {
       args: [
+        "--disable-gpu",
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
         "--ignore-certificate-errors",
         "--ignore-certificate-errors-spki-list",
         "--ignore-ssl-errors",
         "--disable-web-security",
         "--allow-insecure-localhost",
         "--disable-features=IsolateOrigins,site-per-process",
+        "--disable-dev-shm-usage",
+        "--disable-features=VizDisplayCompositor",
       ],
     },
+    trace: "retain-on-failure",
+    video: "retain-on-failure",
+    screenshot: "only-on-failure",
   },
   projects: [
     {
@@ -66,7 +75,7 @@ const config: PlaywrightTestConfig = {
 if (process.env.CI) {
   config.webServer = [
     {
-      command: "cd ../api && pnpm run start:dev",
+      command: "cd ../api && NODE_ENV=test pnpm run start:dev",
       url: "http://localhost:3000/api/healthcheck",
       timeout: 120 * 1000,
       reuseExistingServer: false,
@@ -75,6 +84,7 @@ if (process.env.CI) {
         REDIS_HOST: "localhost",
         REDIS_PORT: "6380",
         MODE: "test",
+        NODE_ENV: "test",
       },
       stderr: "pipe",
       stdout: "pipe",
@@ -90,13 +100,12 @@ if (process.env.CI) {
       stdout: "pipe",
     },
     {
-      command: "cd ../web && pnpm run dev",
+      command: "cd ../web && pnpm build --mode test && pnpm run preview",
       url: "http://localhost:5173/",
       timeout: 120 * 1000,
       reuseExistingServer: false,
       env: {
         API_URL: "http://localhost:3000/api",
-        MODE: "test",
       },
       stderr: "pipe",
       stdout: "pipe",

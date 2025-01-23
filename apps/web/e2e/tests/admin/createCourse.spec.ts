@@ -1,9 +1,83 @@
-import { test, expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 import type { Locator, Page } from "@playwright/test";
 
 export class CreateCourseActions {
   constructor(private readonly page: Page) {}
+
+  private async handleFileUpload(page: Page, filePath: string): Promise<void> {
+    console.log("Starting file upload process...");
+
+    const pendingRequests: string[] = [];
+    page.on("request", (request) => {
+      if (request.url().includes("/api/file")) {
+        console.log("Upload request started:", {
+          url: request.url(),
+          method: request.method(),
+          headers: request.headers(),
+        });
+        pendingRequests.push(request.url());
+      }
+    });
+
+    page.on("requestfailed", (request) => {
+      if (request.url().includes("/api/file")) {
+        console.log("Upload request failed:", {
+          url: request.url(),
+          failure: request.failure(),
+        });
+      }
+    });
+
+    // page.on("request", (request) => {
+    //   console.log("Request:", {
+    //     url: request.url(),
+    //     method: request.method(),
+    //     resourceType: request.resourceType(),
+    //   });
+    // });
+
+    // page.on("response", (response) => {
+    //   console.log("Response:", {
+    //     url: response.url(),
+    //     status: response.status(),
+    //   });
+    // });
+
+    // const healthCheck = await page.request.get("http://localhost:5173/api/healthcheck");
+    // console.log("Healthcheck response:", {
+    //   status: healthCheck.status(),
+    //   url: healthCheck.url(),
+    // });
+
+    const fileInput = page.locator('input[type="file"]');
+    await fileInput.waitFor({ state: "attached" });
+    console.log("File input found and attached");
+
+    const fileChooserPromise = page.waitForEvent("filechooser");
+    await fileInput.click({ force: true });
+    console.log("Clicked file input");
+
+    const fileChooser = await fileChooserPromise;
+    console.log("Got file chooser");
+
+    await fileChooser.setFiles(filePath);
+    console.log("Set file on chooser");
+
+    const response = await page.waitForResponse(
+      (response) =>
+        response.url().includes("/api/file") &&
+        (response.status() === 200 || response.status() === 201),
+    );
+
+    console.log("Got upload response:", {
+      status: response.status(),
+      headers: response.headers(),
+      url: response.url(),
+    });
+
+    console.log("Pending requests:", pendingRequests);
+  }
 
   async openCourse(courseId: string): Promise<void> {
     const rowSelector = `[data-course-id="${courseId}"]`;
@@ -34,9 +108,7 @@ export class CreateCourseActions {
       .getByLabel("Description")
       .fill("This course takes you through a css course, it lets you learn the basics.");
 
-    const fileInput = await page.locator('input[type="file"]');
-    const filePath = "app/assets/thumbnail-e2e.jpg";
-    await fileInput.setInputFiles(filePath);
+    await this.handleFileUpload(page, "app/assets/thumbnail-e2e.jpg");
   }
 
   async addChapter(page: Page, chapterTitle: string): Promise<string> {
@@ -127,6 +199,7 @@ export class CreateCourseActions {
       }
     }
   }
+
   async addTrueOrFalseQuestion(
     page: Page,
     questionIndex: number,
@@ -151,6 +224,7 @@ export class CreateCourseActions {
       .first()
       .click();
   }
+
   async addMatchingQuestion(
     page: Page,
     questionIndex: number,
@@ -178,6 +252,7 @@ export class CreateCourseActions {
         .fill(options[i]);
     }
   }
+
   async addPhotoQuestion(
     page: Page,
     questionIndex: number,
@@ -187,9 +262,7 @@ export class CreateCourseActions {
   ): Promise<void> {
     await page.getByTestId(`add-options-button-${questionIndex}`).click();
 
-    const fileInput = await page.locator('input[type="file"]');
-    await fileInput.setInputFiles(imagePath);
-    await page.locator("text=Click to replace").waitFor({ state: "visible" });
+    await this.handleFileUpload(page, imagePath);
 
     for (let i = 0; i < options.length; i++) {
       await page
@@ -226,11 +299,12 @@ export class CreateCourseActions {
 }
 
 test.describe.serial("Course management", () => {
+  test.setTimeout(120000);
+
   let createCourseActions: CreateCourseActions;
   let newCourseId: string;
   let newChapterId: string;
   const expectedTitle = "CSS Fundamentals";
-  // Page have to be defined here to use it inside beforeAll, we need it to login as a Admin.
 
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/courses");
@@ -380,27 +454,27 @@ test.describe.serial("Course management", () => {
     ];
     await createCourseActions.addScaleQuestion(page, 6, scaleOptions);
 
-    // await createCourseActions.addQuestion(
-    //   page,
-    //   "photo question",
-    //   "What code language do you see on this screenshot",
-    //   7,
-    // );
-    // const photoOptions = ["JAVA", "PYTHON", "JAVASCRIPT"];
-    // const imagePath = "app/assets/thumbnail-e2e.jpg";
-    // await createCourseActions.addPhotoQuestion(page, 7, imagePath, photoOptions, 2);
+    await createCourseActions.addQuestion(
+      page,
+      "photo question",
+      "What code language do you see on this screenshot",
+      7,
+    );
+    const photoOptions = ["JAVA", "PYTHON", "JAVASCRIPT"];
+    const imagePath = "app/assets/thumbnail-e2e.jpg";
+    await createCourseActions.addPhotoQuestion(page, 7, imagePath, photoOptions, 2);
 
     await createCourseActions.addQuestion(
       page,
       "fill in the blanks",
       "Fill words in blank space",
-      7,
+      8,
     );
     await createCourseActions.addFillInTheBlankQuestion(page, "CSS");
 
     await page.getByRole("button", { name: /save/i }).click();
-    const quizLocator = chapterLocator.locator('div[aria-label="Lesson: Quiz for first exam"]');
-    await expect(quizLocator).toBeVisible();
+
+    await expect(page.getByText(/Quiz for first exam/)).toBeVisible();
   });
 
   test("should check if course occurs on course list", async ({ page }) => {

@@ -12,7 +12,7 @@ export const requestManager = {
 
 export const ApiClient = new API({
   baseURL: import.meta.env.MODE === "test" ? "http://localhost:3000" : import.meta.env.VITE_APP_URL,
-  secure: true,
+  secure: import.meta.env.MODE !== "test",
   withCredentials: true,
 });
 
