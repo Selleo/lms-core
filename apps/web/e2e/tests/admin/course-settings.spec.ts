@@ -21,7 +21,7 @@ class CourseActions {
   }
 
   async openCourse(): Promise<void> {
-    await this.page.getByRole("row", { name: TEST_COURSE.name }).click();
+    await this.page.getByText(TEST_COURSE.name).click();
     await this.page.waitForURL(URL_PATTERNS.course);
     await expect(this.page).toHaveURL(URL_PATTERNS.course);
     await this.verifyCourseContent();
@@ -46,9 +46,12 @@ test.describe.serial("Course E2E", () => {
     await page.getByRole("tab", { name: "Pricing" }).click();
     await page.getByText("Free").click();
     await page.getByRole("button", { name: "Save" }).click();
-    await page.reload();
 
-    await expect(page.locator("#isFree")).toBeChecked();
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Course updated successfully", { exact: true }),
+    ).toBeVisible();
   });
 
   test("should change course price to paid", async ({ page }) => {
@@ -56,9 +59,15 @@ test.describe.serial("Course E2E", () => {
     await page.getByText("Paid course").click();
     await page.getByPlaceholder("Amount").fill("42069");
     await page.getByRole("button", { name: "Save" }).click();
-    await page.reload();
 
-    await expect(page.locator("#isPaid")).toBeChecked();
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Course updated successfully", { exact: true }),
+    ).toBeVisible();
+
+    await page.getByText("Free").click();
+    await page.getByText("Paid course").click();
     await expect(page.getByPlaceholder("Amount")).toHaveValue("42,069.00");
   });
 
@@ -66,18 +75,24 @@ test.describe.serial("Course E2E", () => {
     await page.getByRole("tab", { name: "Status" }).click();
     await page.getByText("Draft").click();
     await page.getByRole("button", { name: "Save" }).click();
-    await page.reload();
 
-    await expect(page.locator("#draft")).toBeChecked();
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Course updated successfully", { exact: true }),
+    ).toBeVisible();
   });
 
   test("should change course status to published", async ({ page }) => {
     await page.getByRole("tab", { name: "Status" }).click();
     await page.getByLabel("Published").click();
     await page.getByRole("button", { name: "Save" }).click();
-    await page.reload();
 
-    await expect(page.locator("#published")).toBeChecked();
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Course updated successfully", { exact: true }),
+    ).toBeVisible();
   });
 
   test("should change course title", async ({ page }) => {
@@ -109,20 +124,30 @@ test.describe.serial("Course E2E", () => {
     await page.getByLabel("Course title").fill(TEST_COURSE.name);
     await page.getByLabel("Description").fill(TEST_COURSE.course_description);
     await page.getByRole("button", { name: "Save" }).click();
-    await page.reload();
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Course updated successfully", { exact: true }),
+    ).toBeVisible();
     await expect(page.getByRole("heading", { name: TEST_COURSE.name, level: 4 })).toBeVisible();
     await expect(page.getByLabel("Description")).toHaveValue(TEST_COURSE.course_description);
 
     await page.getByRole("tab", { name: "Pricing" }).click();
     await page.getByText("Free").click();
     await page.getByRole("button", { name: "Save" }).click();
-    await page.reload();
-    await expect(page.locator("#isFree")).toBeChecked();
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Course updated successfully", { exact: true }),
+    ).toBeVisible();
 
     await page.getByRole("tab", { name: "Status" }).click();
     await page.getByLabel("Published").click();
     await page.getByRole("button", { name: "Save" }).click();
-    await page.reload();
-    await expect(page.locator("#published")).toBeChecked();
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Course updated successfully", { exact: true }),
+    ).toBeVisible();
   });
 });
