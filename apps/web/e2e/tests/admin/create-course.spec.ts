@@ -474,7 +474,7 @@ test.describe.serial("Course management", () => {
   let newCourseId: string;
   let newChapterId: string;
 
-  test.setTimeout(120000)
+  test.setTimeout(120000);
 
   test.beforeEach(async ({ page }) => {
     await page.goto("/admin/courses");
