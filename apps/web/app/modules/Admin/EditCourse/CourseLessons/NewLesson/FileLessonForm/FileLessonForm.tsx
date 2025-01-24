@@ -49,12 +49,16 @@ const FileLessonForm = ({
   });
   const [isUploading, setIsUploading] = useState(false);
   const { mutateAsync: uploadFile } = useUploadFile();
-  const [url, setUrl] = useState(lessonToEdit?.fileS3Key || "");
   const fileType = form.watch("fileType");
   const { t } = useTranslation();
 
   const isExternalUrl = form.watch("isExternal");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [displayFileUrl, setDisplayFileUrl] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    setDisplayFileUrl(lessonToEdit?.fileS3SignedUrl);
+  }, [lessonToEdit]);
 
   const onCloseModal = () => {
     setIsModalOpen(false);
@@ -70,7 +74,7 @@ const FileLessonForm = ({
 
       try {
         const result = await uploadFile({ file, resource: "lesson" });
-        setUrl(result.fileUrl);
+        setDisplayFileUrl(result.fileUrl);
         form.setValue("fileS3Key", result.fileKey);
         const fileType = getFileTypeFromName(file.name);
 
@@ -90,7 +94,7 @@ const FileLessonForm = ({
     const isExternalUrlValue = value === "external" ? true : false;
     form.setValue("isExternal", isExternalUrlValue);
     form.setValue("fileS3Key", "");
-    setUrl("");
+    setDisplayFileUrl("");
   };
 
   useEffect(() => {
@@ -182,7 +186,7 @@ const FileLessonForm = ({
                   handleFileUpload={handleFileUpload}
                   isUploading={isUploading}
                   contentTypeToDisplay={contentTypeToDisplay}
-                  url={url}
+                  url={displayFileUrl}
                 />
               </FormControl>
               <FormMessage />

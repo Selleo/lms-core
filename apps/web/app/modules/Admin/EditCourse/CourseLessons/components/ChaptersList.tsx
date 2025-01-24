@@ -162,7 +162,11 @@ const ChapterCard = ({
                   {t("adminCourseView.curriculum.other.lesson")} {chapter.lessons.length}
                 </div>
               </hgroup>
-              <AccordionTrigger className="cursor-pointer p-2" onClick={onAccordionClick}>
+              <AccordionTrigger
+                className="cursor-pointer p-2"
+                data-testid={`accordion - ${chapter.id}`}
+                onClick={onAccordionClick}
+              >
                 <Icon name={isOpen ? "ArrowUp" : "ArrowDown"} className="text-gray-600" />
               </AccordionTrigger>
             </div>
@@ -191,6 +195,7 @@ const ChapterCard = ({
               </div>
               <div className="flex items-center gap-x-2">
                 <Switch.Root
+                  data-testid={`Freemium - ${chapter.id}`}
                   className={cn("relative h-6 w-11 rounded-full transition-colors", {
                     "bg-blue-500": chapter.isFree,
                     "bg-gray-200": !chapter.isFree,
