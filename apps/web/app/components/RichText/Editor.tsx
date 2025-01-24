@@ -1,3 +1,5 @@
+import { TaskItem } from "@tiptap/extension-task-item";
+import { TaskList } from "@tiptap/extension-task-list";
 import { EditorContent, useEditor } from "@tiptap/react";
 // eslint-disable-next-line import/no-named-as-default
 import StarterKit from "@tiptap/starter-kit";
@@ -16,7 +18,19 @@ type EditorProps = {
 
 const Editor = ({ content, placeholder, onChange, id, className }: EditorProps) => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [
+      StarterKit,
+      TaskList,
+      TaskItem.configure({
+        nested: true,
+        HTMLAttributes: {
+          class: "flex items-start gap-2 [&_p]:inline [&_p]:m-0",
+        },
+        onReadOnlyChecked: (_node, _checked) => {
+          return true;
+        },
+      }),
+    ],
     content: content,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());

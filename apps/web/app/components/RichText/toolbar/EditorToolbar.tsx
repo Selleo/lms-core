@@ -9,6 +9,7 @@ import {
   Redo,
   Strikethrough,
   Undo,
+  CheckSquare,
 } from "lucide-react";
 
 import { Button } from "~/components/ui/button";
@@ -135,6 +136,22 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
             </TooltipTrigger>
             <TooltipContent>Horizontal Rule: Inserts a horizontal line</TooltipContent>
           </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger>
+              <Button
+                size="sm"
+                className={`bg-transparent text-black ${
+                  editor.isActive("taskList") ? "bg-blue-100" : "hover:bg-blue-100"
+                }`}
+                onClick={handleToggle(() => editor.chain().focus().toggleTaskList().run())}
+              >
+                <CheckSquare className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>Checkbox: Adds a checklist</TooltipContent>
+          </Tooltip>
+
           <FormatType editor={editor} />
         </ToggleGroup>
         <ToggleGroup
