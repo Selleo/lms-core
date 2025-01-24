@@ -1,11 +1,9 @@
-import { TaskItem } from "@tiptap/extension-task-item";
-import { TaskList } from "@tiptap/extension-task-list";
 import { EditorContent, useEditor } from "@tiptap/react";
-// eslint-disable-next-line import/no-named-as-default
-import StarterKit from "@tiptap/starter-kit";
 
 import { cn } from "~/lib/utils";
 
+import { plugins } from "./plugins";
+import { defaultClasses } from "./styles";
 import EditorToolbar from "./toolbar/EditorToolbar";
 
 type EditorProps = {
@@ -18,19 +16,7 @@ type EditorProps = {
 
 const Editor = ({ content, placeholder, onChange, id, className }: EditorProps) => {
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      TaskList,
-      TaskItem.configure({
-        nested: true,
-        HTMLAttributes: {
-          class: "flex items-start gap-2 [&_p]:inline [&_p]:m-0",
-        },
-        onReadOnlyChecked: (_node, _checked) => {
-          return true;
-        },
-      }),
-    ],
+    extensions: [...plugins],
     content: content,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
@@ -44,6 +30,8 @@ const Editor = ({ content, placeholder, onChange, id, className }: EditorProps) 
 
   if (!editor) return <></>;
 
+  const editorClasses = cn("h-full", defaultClasses.ul, defaultClasses.ol, defaultClasses.taskList);
+
   return (
     <div className="prose w-full max-w-none overflow-hidden rounded-lg border border-neutral-300 bg-background dark:prose-invert [&_.ProseMirror]:leading-tight">
       <EditorToolbar editor={editor} />
@@ -53,7 +41,12 @@ const Editor = ({ content, placeholder, onChange, id, className }: EditorProps) 
           className,
         )}
       >
-        <EditorContent id={id} editor={editor} placeholder={placeholder} className="h-full" />
+        <EditorContent
+          id={id}
+          editor={editor}
+          placeholder={placeholder}
+          className={editorClasses}
+        />
       </div>
     </div>
   );

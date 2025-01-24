@@ -1,22 +1,15 @@
-import { TaskItem } from "@tiptap/extension-task-item";
-import { TaskList } from "@tiptap/extension-task-list";
 import { EditorContent, useEditor } from "@tiptap/react";
-// eslint-disable-next-line import/no-named-as-default
-import StarterKit from "@tiptap/starter-kit";
 
 import { cn } from "~/lib/utils";
+
+import { plugins } from "./plugins";
+import { defaultClasses } from "./styles";
 
 type ViewerProps = {
   content: string;
   style?: "default" | "prose";
   className?: string;
   variant?: "default" | "lesson";
-};
-
-const defaultClasses = {
-  ul: "[&>div>ul]:list-disc [&>div>ul]:list-inside [&>div>ul>li>p]:inline [&_ul]:list-disc [&_ul]:ml-6 [&_ul>li>p]:inline",
-  ol: "[&>div>ol]:list-decimal [&>div>ol]:list-inside [&>div>ol>li>p]:inline",
-  taskList: "[&_[data-type='taskList']]:list-none [&_[data-type='taskList']]:pl-0",
 };
 
 const lessonVariantClasses = {
@@ -29,21 +22,7 @@ const lessonVariantClasses = {
 
 const Viewer = ({ content, style, className, variant = "default" }: ViewerProps) => {
   const editor = useEditor({
-    extensions: [
-      StarterKit,
-      TaskList.configure({
-        HTMLAttributes: {
-          class: "list-none",
-        },
-      }),
-      TaskItem.configure({
-        nested: true,
-        HTMLAttributes: {
-          class: "flex items-start gap-2",
-        },
-        onReadOnlyChecked: (_node, _checked) => true,
-      }),
-    ],
+    extensions: [...plugins],
     content: content,
     editable: false,
   });
