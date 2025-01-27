@@ -1,19 +1,15 @@
 import { EditorContent, useEditor } from "@tiptap/react";
-// eslint-disable-next-line import/no-named-as-default
-import StarterKit from "@tiptap/starter-kit";
 
 import { cn } from "~/lib/utils";
+
+import { plugins } from "./plugins";
+import { defaultClasses } from "./styles";
 
 type ViewerProps = {
   content: string;
   style?: "default" | "prose";
   className?: string;
   variant?: "default" | "lesson";
-};
-
-const defaultClasses = {
-  ul: "[&>div>ul]:list-disc [&>div>ul]:list-inside [&>div>ul>li>p]:inline",
-  ol: "[&>div>ol]:list-decimal [&>div>ol]:list-inside [&>div>ol>li>p]:inline",
 };
 
 const lessonVariantClasses = {
@@ -26,7 +22,7 @@ const lessonVariantClasses = {
 
 const Viewer = ({ content, style, className, variant = "default" }: ViewerProps) => {
   const editor = useEditor({
-    extensions: [StarterKit],
+    extensions: [...plugins],
     content: content,
     editable: false,
   });
@@ -49,7 +45,12 @@ const Viewer = ({ content, style, className, variant = "default" }: ViewerProps)
         ]
       : [];
 
-  const editorClasses = cn(defaultClasses.ul, defaultClasses.ol, ...variantClasses);
+  const editorClasses = cn(
+    defaultClasses.ul,
+    defaultClasses.ol,
+    defaultClasses.taskList,
+    ...variantClasses,
+  );
 
   return (
     <article className={classNames}>

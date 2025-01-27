@@ -57,6 +57,8 @@
     "@tiptap/extension-document": "2.10.3",
     "@tiptap/extension-highlight": "2.10.3",
     "@tiptap/extension-paragraph": "2.10.3",
+    "@tiptap/extension-task-item": "^2.11.3",
+    "@tiptap/extension-task-list": "^2.11.3",
     "@tiptap/extension-text": "2.10.3",
     "@tiptap/extension-text-style": "2.10.3",
     "@tiptap/pm": "2.9.1",
