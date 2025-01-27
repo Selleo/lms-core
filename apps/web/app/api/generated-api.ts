@@ -1914,8 +1914,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         title?: string;
         category?: string;
         author?: string;
-        "creationDateRange[0]"?: string;
-        "creationDateRange[1]"?: string;
+        creationDateRange?: string[];
         isPublished?: string;
         sort?:
           | "title"

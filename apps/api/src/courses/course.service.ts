@@ -101,9 +101,6 @@ export class CourseService {
     if (currentUserRole === USER_ROLES.TEACHER && currentUserId) {
       conditions.push(eq(courses.authorId, currentUserId));
     }
-    console.log("siema");
-
-    console.log(conditions);
 
     const queryDB = this.db
       .select({
@@ -142,13 +139,9 @@ export class CourseService {
       )
       .orderBy(sortOrder(this.getColumnToSortBy(sortedField as CourseSortField)));
 
-    const data = await queryDB;
-
-    const test2 = await this.db.select().from(courses);
-
-    console.log({ test2 });
-
-    console.log("response prepare", data);
+    const dynamicQuery = queryDB.$dynamic();
+    const paginatedQuery = addPagination(dynamicQuery, page, perPage);
+    const data = await paginatedQuery;
 
     const dataWithS3SignedUrls = await Promise.all(
       data.map(async (item) => {
@@ -164,7 +157,13 @@ export class CourseService {
       }),
     );
 
-    const totalItems = data.length;
+    const [{ totalItems }] = await this.db
+      .select({ totalItems: countDistinct(courses.id) })
+      .from(courses)
+      .leftJoin(categories, eq(courses.categoryId, categories.id))
+      .leftJoin(users, eq(courses.authorId, users.id))
+      .leftJoin(coursesSummaryStats, eq(courses.id, coursesSummaryStats.courseId))
+      .where(and(...conditions));
 
     return {
       data: dataWithS3SignedUrls,

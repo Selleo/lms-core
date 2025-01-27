@@ -70,8 +70,7 @@ export class CourseController {
     @Query("title") title: string,
     @Query("category") category: string,
     @Query("author") author: string,
-    @Query("creationDateRange[0]") creationDateRangeStart: string,
-    @Query("creationDateRange[1]") creationDateRangeEnd: string,
+    @Query("creationDateRange") creationDateRange: string[],
     @Query("isPublished") isPublished: boolean,
     @Query("sort") sort: SortCourseFieldsOptions,
     @Query("page") page: number,
@@ -79,6 +78,7 @@ export class CourseController {
     @CurrentUser("userId") currentUserId: UUIDType,
     @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
+    const [creationDateRangeStart, creationDateRangeEnd] = creationDateRange || [];
     const filters: CoursesFilterSchema = {
       title,
       category,

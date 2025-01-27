@@ -892,19 +892,14 @@
             }
           },
           {
-            "name": "creationDateRange[0]",
+            "name": "creationDateRange",
             "required": false,
             "in": "query",
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "creationDateRange[1]",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
