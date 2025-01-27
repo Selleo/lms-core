@@ -142,7 +142,7 @@ const Users = () => {
       cell: ({ row }) => {
         const isArchived = row.original.archived;
         return (
-          <Badge variant={isArchived ? "outline" : "secondary"} className="mx">
+          <Badge variant={isArchived ? "outline" : "secondary"} className="w-max">
             {isArchived ? t("common.other.archived") : t("common.other.active")}
           </Badge>
         );
@@ -235,8 +235,8 @@ const Users = () => {
               onClick={() => handleRowClick(row.original.id)}
               className="cursor-pointer hover:bg-neutral-100"
             >
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
+              {row.getVisibleCells().map((cell, index) => (
+                <TableCell key={cell.id} className={cn({ "!w-12": index === 0 })}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
               ))}

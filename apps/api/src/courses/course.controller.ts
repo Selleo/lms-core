@@ -30,9 +30,9 @@ import { RolesGuard } from "src/common/guards/roles.guard";
 import { CourseService } from "src/courses/course.service";
 import { allCoursesForTeacherSchema } from "src/courses/schemas/course.schema";
 import {
-  SortCourseFieldsOptions,
-  CourseEnrollmentScope,
   COURSE_ENROLLMENT_SCOPES,
+  CourseEnrollmentScope,
+  SortCourseFieldsOptions,
 } from "src/courses/schemas/courseQuery";
 import { CreateCourseBody, createCourseSchema } from "src/courses/schemas/createCourse.schema";
 import {

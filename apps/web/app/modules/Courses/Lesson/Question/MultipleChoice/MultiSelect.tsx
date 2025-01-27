@@ -65,7 +65,7 @@ export const MultiSelect = ({
       htmlFor={answerId}
       className={cn(
         "flex items-center space-x-3 rounded-lg border border-primary-200 px-4 py-3 *:cursor-pointer",
-        { "cursor-not-allowed": isFieldDisabled },
+        { "pointer-events-none cursor-not-allowed": isFieldDisabled },
         classes,
       )}
     >

@@ -18,6 +18,7 @@ export const SingleChoice = ({ question, isCompleted = false }: SingleChoiceProp
       title={question.title}
       questionType="Single Choice question"
       questionNumber={question.displayOrder}
+      data-testid="single-choice"
     >
       <SingleChoiceOptionList
         options={question.options || []}

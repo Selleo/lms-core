@@ -35,10 +35,10 @@ export const Question = ({ question, isCompleted }: QuestionProps) => {
 
   switch (true) {
     case isBriefResponse:
-      return <BriefResponse question={question} />;
+      return <BriefResponse question={question} isCompleted={isCompleted} />;
 
     case isDetailedResponse:
-      return <DetailedResponse question={question} />;
+      return <DetailedResponse question={question} isCompleted={isCompleted} />;
 
     case isTextFillInTheBlanks:
       return <FillInTheBlanks question={question} isCompleted={isCompleted} />;

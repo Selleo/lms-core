@@ -21,10 +21,13 @@ export function NavigationMenuItem({ item, setIsMobileNavOpen }: NavigationMenuI
             to={item.link}
             onClick={() => setIsMobileNavOpen(false)}
             className={({ isActive }) =>
-              cn("flex items-center gap-x-3 rounded-lg px-4 py-3.5 2xl:p-2", {
-                "bg-primary-700 text-white": isActive,
-                "bg-white text-neutral-900": !isActive,
-              })
+              cn(
+                "flex gap-x-3 items-center py-3.5 px-4 rounded-lg 2xl:p-2 hover:bg-primary-700 hover:text-white",
+                {
+                  "bg-primary-700 text-white": isActive,
+                  "bg-white text-neutral-900": !isActive,
+                },
+              )
             }
           >
             <Icon name={item.iconName} className="size-6" />

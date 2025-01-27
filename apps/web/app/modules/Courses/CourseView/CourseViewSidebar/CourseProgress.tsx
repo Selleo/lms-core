@@ -29,6 +29,10 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
     return chapter.lessons.some((lesson) => lesson.id === nonStartedLessonId);
   })?.id;
 
+  const hasCourseProgress = course.chapters.some(
+    ({ completedLessonCount }) => completedLessonCount,
+  );
+
   const isAdminLike = isAdmin || isTeacher;
 
   return (
@@ -71,7 +75,13 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
               }
             >
               <Icon name="Play" className="h-auto w-6 text-white" />
-              <span>{t("studentCourseView.sideSection.button.continueLearning")}</span>
+              <span>
+                {t(
+                  hasCourseProgress
+                    ? "studentCourseView.sideSection.button.continueLearning"
+                    : "studentCourseView.sideSection.button.startLearning",
+                )}
+              </span>
             </Button>
             <p className="details flex items-center justify-center gap-x-2 text-neutral-800">
               <Icon name="Info" className="h-auto w-4 text-neutral-800" />
