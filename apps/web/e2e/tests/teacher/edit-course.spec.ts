@@ -42,6 +42,16 @@ test.describe("Teacher edit course", () => {
     await page.getByLabel(TEST_EDIT_COURSE.label.title).fill("Edited chapter");
     await page.getByRole("button", { name: new RegExp(TEST_EDIT_COURSE.button.save, "i") }).click();
 
+    await page
+      .getByRole("heading", { name: "Edited chapter", level: 3 })
+      .waitFor({ state: "visible" });
+
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Chapter updated successfully", { exact: true }),
+    ).toBeVisible();
+
     const chapterTitle = await page.locator("ul li h3").first().innerText();
     expect(chapterTitle).toBe("Edited chapter");
   });

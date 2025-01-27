@@ -6,6 +6,7 @@
   "scripts": {
     "build": "remix vite:build",
     "dev": "vite dev",
+    "dev:test": "VITE_E2E=true vite dev",
     "dev_ssr": "node ./server.js",
     "lint": "eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
     "lint-tsc": "tsc --noEmit && eslint --ignore-path .gitignore --cache --cache-location ./node_modules/.cache/eslint .",
