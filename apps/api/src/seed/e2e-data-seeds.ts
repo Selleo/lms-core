@@ -119,6 +119,12 @@ export const e2eCourses: NiceCourseData[] = [
                 description: "E2E testing is used to test the [word] of an application.",
                 solutionExplanation:
                   "E2E testing is used to test the <strong>workflow</strong> of an application.",
+                options: [
+                  {
+                    optionText: "workflow",
+                    isCorrect: true,
+                  },
+                ],
               },
             ],
           },
