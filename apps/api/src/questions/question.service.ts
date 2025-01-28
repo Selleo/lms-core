@@ -190,12 +190,12 @@ export class QuestionService {
   }
 
   private questionAnswerToString(answers: string[]): SQL<unknown> {
-    const convertedAnswers = answers.reduce((acc, answer, index) => {
-      acc.push(`'${index + 1}'`, `'${answer}'`);
-      return acc;
-    }, [] as string[]);
+    const convertedAnswers: (SQL<unknown> | string)[] = answers.flatMap((answer, index) => [
+      sql`(${index + 1}::int)`,
+      sql`${answer}::text`,
+    ]);
 
-    return sql`json_build_object(${sql.raw(convertedAnswers.join(","))})`;
+    return sql`json_build_object(${sql.join(convertedAnswers, sql`, `)})`;
   }
 
   private isAnswerWithId(answer: unknown): answer is OnlyAnswerIdAsnwer | FullAnswer {
