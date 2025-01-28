@@ -5,7 +5,7 @@ import type { NiceCourseData } from "../utils/types/test-types";
 
 export const e2eCourses: NiceCourseData[] = [
   {
-    title: "For E2E Testing",
+    title: "E2E Test: Automated Course for Full-Stack Development",
     description:
       "This course is specifically generated for end-to-end testing purposes. It includes mock content to simulate a comprehensive learning experience in full-stack web development. Topics cover front-end frameworks like React and Next.js, back-end technologies such as Node.js and Nest.js, and database integration. This course ensures thorough testing of user interactions, workflows, and application features.",
     isPublished: true,

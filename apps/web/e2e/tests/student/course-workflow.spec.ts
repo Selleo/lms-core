@@ -10,10 +10,7 @@ const URL_PATTERNS = {
 } as const;
 
 const goToCoursePage = async (page: Page) => {
-  await page
-    .getByRole("link", { name: "E2E Test: Automated Course for Full-Stack Development" })
-    .getByRole("button")
-    .click();
+  await page.getByText("E2E Test: Automated Course for Full-Stack Development").click();
 };
 
 const navigateTroughTextLesson = async (page: Page, nextButton: Locator) => {
@@ -135,12 +132,21 @@ test.describe("Course Workflow", () => {
 
     const enrollButton = page.locator('button:has-text("Enroll to the course")');
 
-    if ((await enrollButton.count()) > 0) {
+    if ((await enrollButton.count()) > 0 && (await enrollButton.isVisible())) {
       await enrollButton.click();
     }
     await page.waitForLoadState("networkidle");
 
-    await page.getByRole("button", { name: "Continue learning" }).click();
+    await page.waitForTimeout(1000);
+
+    const startLearningButton = page.locator('button:has-text("Start learning")');
+    await page.waitForLoadState("networkidle");
+
+    if ((await startLearningButton.count()) > 0 && (await startLearningButton.isVisible())) {
+      await startLearningButton.click();
+    } else {
+      await page.getByRole("button", { name: "Continue learning" }).click();
+    }
 
     await page.waitForURL(URL_PATTERNS.lesson);
     await page.waitForLoadState("networkidle");
@@ -152,6 +158,8 @@ test.describe("Course Workflow", () => {
       for (let i = Number(currentLessonNumber) ?? 1; i <= Number(lessonsCount) ?? 0; i++) {
         const nextButtonLocator = page.locator('button:has-text("Next")');
         const completeButtonLocator = page.locator('button:has-text("Complete")');
+
+        await page.waitForTimeout(250);
 
         const nextButton =
           (await nextButtonLocator.count()) > 0 ? nextButtonLocator : completeButtonLocator;

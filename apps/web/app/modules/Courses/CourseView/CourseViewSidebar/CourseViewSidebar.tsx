@@ -20,7 +20,7 @@ export const CourseViewSidebar = ({ course }: CourseViewSidebar) => {
   const { isAdminLike } = useUserRole();
   const { t } = useTranslation();
 
-  const shouldShowCourseOptions = !course?.enrolled && isAdminLike;
+  const shouldShowCourseOptions = !course?.enrolled && !isAdminLike;
 
   return (
     <section className="sticky left-0 top-6 flex h-min flex-col gap-y-6 rounded-b-lg rounded-t-2xl bg-white p-8 drop-shadow xl:w-full xl:max-w-[480px] 3xl:top-12">
