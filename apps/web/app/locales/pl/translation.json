@@ -515,6 +515,7 @@
           "questions": "Pytania",
           "options": "Opcje",
           "image": "Obrazek",
+          "solutionExpectation": "Wyjaśnienie odpowiedzi",
           "type": "Typ",
           "words": "Słowa",
           "sentence": "Zdanie"
@@ -526,7 +527,8 @@
           "matchedWords": "Dopasowane słowa",
           "singleChoice": "Pojedynczy wybór",
           "multipleChoice": "Wielokrotny wybór",
-          "enterWord": "Wprowadź słowo"
+          "enterWord": "Wprowadź słowo",
+          "solutionExpectation": "Wyjaśnienie odpowiedzi"
         },
         "other": {
           "chooseType": "Wybierz typ",
@@ -548,6 +550,7 @@
           "briefResponse": "Krótka odpowiedź",
           "detailedResponse": "Odpowiedź rozwinięta",
           "scale1_5": "Skala 1 do 5",
+          "sorting": "Sortowanie",
           "selectQuestionType": "Wybierz typ pytania",
           "textLessonDescription": "Ten typ pozwala na tworzenie treści tekstowych za pomocą edytora tekstu.",
           "videoLessonDescription": "Wybierz ten typ, jeśli chcesz umieścić pliki wideo, takie jak MP4.",

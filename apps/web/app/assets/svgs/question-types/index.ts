@@ -7,3 +7,4 @@ export { default as PhotoQuestion } from "./photo-question.svg?react";
 export { default as TrueOrFalse } from "./true-or-false.svg?react";
 export { default as Equal } from "./equal.svg?react";
 export { default as Questionnaire } from "./questionnaire.svg?react";
+export { default as Sorting } from "./sorting.svg?react";

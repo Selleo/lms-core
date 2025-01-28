@@ -81,6 +81,11 @@ const QuestionSelector = ({ addQuestion }: QuestionSelectorProps) => {
       label: t("adminCourseView.curriculum.lesson.other.scale1_5"),
       icon: QuestionIcons.Scale_1_5,
     },
+    {
+      type: QuestionType.SORTING,
+      label: t("adminCourseView.curriculum.lesson.other.sorting"),
+      icon: QuestionIcons.Sorting,
+    },
   ];
 
   return (

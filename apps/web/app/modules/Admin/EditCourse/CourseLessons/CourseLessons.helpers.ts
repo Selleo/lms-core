@@ -49,4 +49,5 @@ export const mapQuestionTypeToLabel = (questionType: QuestionType): string =>
     )
     .with(QuestionType.MATCH_WORDS, () => "adminCourseView.curriculum.lesson.other.matchWords")
     .with(QuestionType.SCALE_1_5, () => "adminCourseView.curriculum.lesson.other.scale1_5")
+    .with(QuestionType.SORTING, () => "adminCourseView.curriculum.lesson.other.sorting")
     .otherwise(() => "");

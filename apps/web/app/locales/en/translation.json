@@ -514,6 +514,7 @@
           "video": "Upload video",
           "questions": "Questions",
           "options": "Options",
+          "solutionExpectation": "solutionExpectation",
           "image": "Image",
           "type": "Type",
           "words": "Words",
@@ -526,7 +527,8 @@
           "matchedWords": "Matched words",
           "singleChoice": "Single choice",
           "multipleChoice": "Multiple choice",
-          "enterWord": "Enter a word"
+          "enterWord": "Enter a word",
+          "solutionExpectation": "solutionExpectation"
         },
         "other": {
           "chooseType": "Choose type",
@@ -548,6 +550,7 @@
           "briefResponse": "Short answer",
           "detailedResponse": "Free text",
           "scale1_5": "Scale 1 to 5",
+          "sorting": "Sorting",
           "selectQuestionType": "Select question type",
           "textLessonDescription": "This type allows you to create text-based content via a rich text editor.",
           "videoLessonDescription": "Choose this type if you want to embed video content files like MP4.",

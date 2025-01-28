@@ -23,6 +23,7 @@ import PhotoQuestion from "./components/PhotoQuestion";
 import QuestionSelector from "./components/QuestionSelector";
 import QuestionWrapper from "./components/QuestionWrapper";
 import ScaleQuestion from "./components/ScaleQuestion";
+import SortingQuestion from "./components/SotingQuestion";
 import TrueOrFalseQuestion from "./components/TrueOrFalseQuestion";
 import { useQuizLessonForm } from "./hooks/useQuizLessonForm";
 
@@ -251,6 +252,13 @@ const QuizLessonForm = ({
             ))
             .with(QuestionType.SCALE_1_5, () => (
               <ScaleQuestion questionIndex={questionIndex} form={form} />
+            ))
+            .with(QuestionType.SORTING, () => (
+              <SortingQuestion
+                questionIndex={questionIndex}
+                form={form}
+                lessonToEdit={lessonToEdit}
+              />
             ))
             .otherwise(() => null)}
         </QuestionWrapper>
