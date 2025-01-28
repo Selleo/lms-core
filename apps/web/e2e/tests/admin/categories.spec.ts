@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 const NEW_CATEGORY = {
-  title: "Software development E2E",
+  title: `Software development E2E ${new Date().toISOString()}`,
   button: {
     createNew: "create new",
     createCategory: "create category",
@@ -26,6 +26,13 @@ test.describe("Admin categories", () => {
     await page
       .getByRole("button", { name: new RegExp(NEW_CATEGORY.button.createCategory, "i") })
       .click();
+
+    await expect(
+      page
+        .getByRole("status", { includeHidden: true })
+        .getByText("Category created successfully", { exact: true }),
+    ).toBeVisible();
+
     await page.goto("/admin/categories");
     const createdCategoryRow = page.locator(`td div.max-w-md:has-text("${NEW_CATEGORY.title}")`);
     await expect(createdCategoryRow).toBeVisible();

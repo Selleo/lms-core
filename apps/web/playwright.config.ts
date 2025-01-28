@@ -18,7 +18,7 @@ const config: PlaywrightTestConfig = {
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  workers: 3,
   use: {
     baseURL,
     ignoreHTTPSErrors: true,
@@ -48,6 +48,7 @@ const config: PlaywrightTestConfig = {
         storageState: "e2e/.auth/user.json",
       },
       testMatch: /.*\.(spec|test)\.ts$/,
+      fullyParallel: false,
     },
     {
       name: "chromium-admin",
@@ -59,6 +60,7 @@ const config: PlaywrightTestConfig = {
         storageState: "e2e/.auth/admin.json",
       },
       testMatch: /.*\.(spec|test)\.ts$/,
+      fullyParallel: false,
     },
     {
       name: "chromium-teacher",
@@ -70,6 +72,7 @@ const config: PlaywrightTestConfig = {
         storageState: "e2e/.auth/teacher.json",
       },
       testMatch: /.*\.(spec|test)\.ts$/,
+      fullyParallel: false,
     },
   ],
 };
@@ -101,7 +104,7 @@ if (process.env.CI) {
       stdout: "pipe",
     },
     {
-      command: "cd ../web && pnpm run dev",
+      command: "cd ../web && pnpm run dev:test",
       url: "http://localhost:5173/",
       timeout: 120 * 1000,
       reuseExistingServer: false,

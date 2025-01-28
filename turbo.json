@@ -23,6 +23,11 @@
       "persistent": true,
       "dependsOn": ["@repo/email-templates#build"]
     },
+    "dev:test": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": ["@repo/email-templates#build"]
+    },
     "@repo/email-templates#build": {
       "cache": false,
       "outputs": ["dist/**"]

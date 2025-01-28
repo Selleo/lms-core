@@ -19,6 +19,7 @@ test.describe("Student navigation", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
   });
+
   test("should check student navigation", async ({ page }) => {
     await page
       .getByRole("button", { name: new RegExp(TEST_NAVIGATION.button.dashboard, "i") })

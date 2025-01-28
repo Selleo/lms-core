@@ -5,7 +5,7 @@ import type { NiceCourseData } from "../utils/types/test-types";
 
 export const e2eCourses: NiceCourseData[] = [
   {
-    title: "E2E Test: Automated Course for Full-Stack Development",
+    title: "For E2E Testing",
     description:
       "This course is specifically generated for end-to-end testing purposes. It includes mock content to simulate a comprehensive learning experience in full-stack web development. Topics cover front-end frameworks like React and Next.js, back-end technologies such as Node.js and Nest.js, and database integration. This course ensures thorough testing of user interactions, workflows, and application features.",
     isPublished: true,
@@ -23,21 +23,21 @@ export const e2eCourses: NiceCourseData[] = [
             description: `
               <h2>Understanding End-to-End (E2E) Testing</h2>
               <p>End-to-end (E2E) testing is a comprehensive testing method designed to verify the workflow of an application from start to finish. It ensures that all components of the system work together as expected.</p>
-              
+
               <h3>Benefits of E2E Testing</h3>
               <ul>
                 <li>Improved user experience by simulating real-world scenarios.</li>
                 <li>Detection of integration issues between components.</li>
                 <li>Verification of critical application workflows.</li>
               </ul>
-              
+
               <h3>Common Tools for E2E Testing</h3>
               <ol>
                 <li><strong>Cypress:</strong> A popular tool for fast and reliable testing.</li>
                 <li><strong>Playwright:</strong> Supports cross-browser testing and advanced features.</li>
                 <li><strong>Selenium:</strong> A versatile tool for automating web browsers.</li>
               </ol>
-              
+
               <h3>Why Use E2E Testing?</h3>
               <p>By using E2E testing, developers can identify issues that might not surface in unit or integration tests, providing a higher level of confidence in the application’s overall quality.</p>
             `,
