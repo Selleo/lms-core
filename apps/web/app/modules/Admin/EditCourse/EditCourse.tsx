@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "@remix-run/react";
+import { Link, useParams, useSearchParams } from "@remix-run/react";
 import { useTranslation } from "react-i18next";
 
 import { useBetaCourseById } from "~/api/queries/admin/useBetaCourse";
@@ -61,10 +61,14 @@ const EditCourse = () => {
               </span>
             )}
           </h4>
-          <Button className="flex justify-end border border-neutral-200 bg-transparent text-primary-700">
-            <Icon name="Eye" className="mr-2" />
-            {t("adminCourseView.common.preview")}{" "}
-            <Icon name="ArrowDown" className="ml-2 text-neutral-500" />
+          <Button
+            asChild
+            className="flex justify-end border border-neutral-200 bg-transparent text-primary-700"
+          >
+            <Link to={`/course/${course?.id}`}>
+              <Icon name="Eye" className="mr-2" />
+              {t("adminCourseView.common.preview")}{" "}
+            </Link>
           </Button>
         </div>
         <TabsList className="w-min">

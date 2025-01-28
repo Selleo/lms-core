@@ -21,7 +21,7 @@ const findFirstNotStartedLessonId = (course: CourseProgressProps["course"]) => {
 };
 
 export const CourseProgress = ({ course }: CourseProgressProps) => {
-  const { isAdmin, isTeacher } = useUserRole();
+  const { isAdminLike } = useUserRole();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const nonStartedLessonId = findFirstNotStartedLessonId(course);
@@ -32,8 +32,6 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
   const hasCourseProgress = course.chapters.some(
     ({ completedLessonCount }) => completedLessonCount,
   );
-
-  const isAdminLike = isAdmin || isTeacher;
 
   return (
     <>
@@ -63,32 +61,32 @@ export const CourseProgress = ({ course }: CourseProgressProps) => {
           />
           <span>{t("studentCourseView.sideSection.button.shareCourse")}</span>
         </CopyUrlButton>
-        {!isAdminLike && (
-          <>
-            <Button
-              className="gap-x-2"
-              disabled={!nonStartedLessonId}
-              onClick={() =>
-                navigate(`lesson/${nonStartedLessonId}`, {
-                  state: { chapterId: notStartedChapterId },
-                })
-              }
-            >
-              <Icon name="Play" className="h-auto w-6 text-white" />
-              <span>
-                {t(
-                  hasCourseProgress
+        <>
+          <Button
+            className="gap-x-2"
+            disabled={!nonStartedLessonId}
+            onClick={() =>
+              navigate(`lesson/${nonStartedLessonId}`, {
+                state: { chapterId: notStartedChapterId },
+              })
+            }
+          >
+            <Icon name="Play" className="h-auto w-6 text-white" />
+            <span>
+              {t(
+                isAdminLike
+                  ? "adminCourseView.common.preview"
+                  : hasCourseProgress
                     ? "studentCourseView.sideSection.button.continueLearning"
                     : "studentCourseView.sideSection.button.startLearning",
-                )}
-              </span>
-            </Button>
-            <p className="details flex items-center justify-center gap-x-2 text-neutral-800">
-              <Icon name="Info" className="h-auto w-4 text-neutral-800" />
-              <span>{t("studentCourseView.sideSection.other.informationText")}</span>
-            </p>
-          </>
-        )}
+              )}
+            </span>
+          </Button>
+          <p className="details flex items-center justify-center gap-x-2 text-neutral-800">
+            <Icon name="Info" className="h-auto w-4 text-neutral-800" />
+            <span>{t("studentCourseView.sideSection.other.informationText")}</span>
+          </p>
+        </>
       </div>
     </>
   );
