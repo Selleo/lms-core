@@ -19,6 +19,7 @@ import { RolesGuard } from "src/common/guards/roles.guard";
 import { USER_ROLES, UserRole } from "src/user/schemas/userRoles";
 
 import {
+  AnswerQuestionBody,
   answerQuestionsForLessonBody,
   CreateLessonBody,
   createLessonSchema,
@@ -29,7 +30,6 @@ import {
   updateLessonSchema,
   UpdateQuizLessonBody,
   updateQuizLessonSchema,
-  AnswerQuestionBody,
 } from "./lesson.schema";
 import { AdminLessonService } from "./services/adminLesson.service";
 import { LessonService } from "./services/lesson.service";
@@ -45,7 +45,6 @@ export class LessonController {
   ) {}
 
   @Get(":id")
-  @Roles(...Object.values(USER_ROLES))
   @Validate({
     response: baseResponse(lessonShowSchema),
   })

@@ -8,6 +8,7 @@ import { queryClient } from "~/api/queryClient";
 import { Icon } from "~/components/Icon";
 import { Button } from "~/components/ui/button";
 import { toast } from "~/components/ui/use-toast";
+import { useUserRole } from "~/hooks/useUserRole";
 
 import { Questions } from "./Questions";
 import { QuizFormSchema } from "./schemas";
@@ -23,6 +24,7 @@ type QuizProps = {
 export const Quiz = ({ lesson }: QuizProps) => {
   const { lessonId = "" } = useParams();
   const { t } = useTranslation();
+  const { isAdminLike } = useUserRole();
 
   const questions = lesson.quizDetails?.questions;
 
@@ -55,7 +57,7 @@ export const Quiz = ({ lesson }: QuizProps) => {
         })}
       >
         <Questions questions={questions} isQuizCompleted={lesson.lessonCompleted} />
-        <Button type="submit" className="flex items-center gap-x-2 self-end">
+        <Button type="submit" className="flex items-center gap-x-2 self-end" disabled={isAdminLike}>
           <span>{t("studentLessonView.button.submit")}</span>
           <Icon name="ArrowRight" className="h-auto w-4" />
         </Button>

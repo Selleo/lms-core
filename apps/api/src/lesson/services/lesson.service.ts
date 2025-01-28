@@ -43,7 +43,7 @@ export class LessonService {
 
     if (!lesson) throw new NotFoundException("Lesson not found");
 
-    if (!lesson.isFreemium && !lesson.isEnrolled)
+    if (isStudent && !lesson.isFreemium && !lesson.isEnrolled)
       throw new UnauthorizedException("You don't have access");
 
     if (lesson.type === LESSON_TYPES.TEXT && !lesson.fileUrl) return lesson;

@@ -8,6 +8,7 @@ import { Icon } from "~/components/Icon";
 import Viewer from "~/components/RichText/Viever";
 import { Button } from "~/components/ui/button";
 import { Video } from "~/components/VideoPlayer/Video";
+import { useUserRole } from "~/hooks/useUserRole";
 import { LessonType } from "~/modules/Admin/EditCourse/EditCourse.types";
 import { Quiz } from "~/modules/Courses/Lesson/Quiz";
 
@@ -35,8 +36,11 @@ export const LessonContent = ({
   const [isNextDisabled, setIsNextDisabled] = useState(false);
   const { mutate: markLessonAsCompleted } = useMarkLessonAsCompleted();
   const { t } = useTranslation();
+  const { isAdminLike } = useUserRole();
 
   useEffect(() => {
+    if (isAdminLike) return;
+
     if (lesson.type == LessonType.QUIZ || lesson.type == LessonType.VIDEO) {
       return setIsNextDisabled(!lesson.lessonCompleted);
     }
@@ -62,6 +66,9 @@ export const LessonContent = ({
 
   const handleMarkLessonAsComplete = () => {
     handleNext();
+
+    if (isAdminLike) return;
+
     markLessonAsCompleted({ lessonId: lesson.id });
   };
 

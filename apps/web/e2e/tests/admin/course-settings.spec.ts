@@ -1,8 +1,9 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 const TEST_COURSE = {
-  name: "For E2E Testing",
-  course_description: "DO NOT DELETE THIS COURSE.",
+  name: "E2E Test: Automated Course for Full-Stack Development",
+  course_description:
+    "This course is specifically generated for end-to-end testing purposes. It includes mock content to simulate a comprehensive learning experience in full-stack web development. Topics cover front-end frameworks like React and Next.js, back-end technologies such as Node.js and Nest.js, and database integration. This course ensures thorough testing of user interactions, workflows, and application features.",
 } as const;
 
 const URL_PATTERNS = {

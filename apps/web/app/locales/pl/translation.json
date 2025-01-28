@@ -206,6 +206,7 @@
   "clientStatisticsView": {
     "header": "Witaj ponownie,",
     "button": {
+      "enroll": "Zapisz się",
       "searchCourses": "Szukaj kursów",
       "continue": "Kontynuuj",
       "start": "Rozpocznij",
