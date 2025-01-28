@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FormTextField } from "~/components/Form/FormTextField";
+import { Icon } from "~/components/Icon";
 import Editor from "~/components/RichText/Editor";
 import { Button } from "~/components/ui/button";
 import { Form, FormControl, FormField, FormItem } from "~/components/ui/form";
@@ -69,20 +70,24 @@ const TextLessonForm = ({
         </div>
       </div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-y-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col">
+          <div className="flex items-center">
+            <span className="mr-1 text-red-500">*</span>
+            <Label htmlFor="title" className="mr-2">
+              {t("adminCourseView.curriculum.lesson.field.title")}
+            </Label>
+          </div>
           <FormTextField
             control={form.control}
             name="title"
-            label={t("adminCourseView.curriculum.lesson.field.title")}
             placeholder={t("adminCourseView.curriculum.lesson.placeholder.title")}
-            required
           />
           <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
               <FormItem>
-                <Label htmlFor="description" className="body-base-md text-neutral-950">
+                <Label htmlFor="description" className="body-base-md mt-6 text-neutral-950">
                   <span className="text-red-500">*</span>{" "}
                   {t("adminCourseView.curriculum.lesson.field.description")}
                 </Label>
@@ -97,16 +102,22 @@ const TextLessonForm = ({
               </FormItem>
             )}
           />
+          {form.formState.errors.description && (
+            <p className="details-md flex items-center gap-x-1.5 text-error-600">
+              <Icon name="Warning" />
+              {form.formState.errors.description.message}
+            </p>
+          )}
           <div className="flex gap-x-3">
-            <Button type="submit" className="bg-primary-700 text-white hover:bg-blue-600">
-              {t("common.button.save")}
+            <Button type="submit" className="mt-6 bg-primary-700 text-white hover:bg-blue-600">
+              {t("adminCourseView.curriculum.lesson.button.saveLesson")}
             </Button>
             <Button
               type="button"
               onClick={
                 lessonToEdit ? onClickDelete : () => setContentTypeToDisplay(ContentTypes.EMPTY)
               }
-              className="border border-red-500 bg-transparent text-red-500 hover:bg-red-100"
+              className="mt-6 border border-red-500 bg-transparent text-red-500 hover:bg-red-100"
             >
               {lessonToEdit ? t("common.button.delete") : t("common.button.cancel")}
             </Button>

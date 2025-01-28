@@ -482,7 +482,8 @@
           "addQuestion": "Add question",
           "addOption": "Add option",
           "deleteQuestion": "Delete question",
-          "addWords": "Add words"
+          "addWords": "Add words",
+          "saveLesson": "Save"
         },
         "breadcrumbs": {
           "back": "Back"
@@ -493,7 +494,9 @@
           "imageRequired": "Image is required",
           "descriptionLength": "Description must have at least 10 characters.",
           "atLeastOneOptionCorrect": "At least one option must be marked as correct for question.",
-          "allOptionsCorrect": "All options must be correct"
+          "allOptionsCorrect": "All options must be correct",
+          "titleRequired": "Title is required",
+          "descriptionRequired": "Description is required"
         },
         "toast": {
           "lessonDisplayOrderUpdatedSuccessfully": "Lesson display order updated successfully",
@@ -501,10 +504,10 @@
           "unexpectedError": "An unexpected error occurred.",
           "lessonCreatedSuccessfully": "Lesson created successfully",
           "fileLessonCreatedSuccessfully": "File item created successfully",
-          "textLessonCreatedSuccessfully": "Text block created successfully",
+          "textLessonCreatedSuccessfully": "Text lesson created successfully",
           "quizLessonCreatedSuccessfully": "Quiz created successfully",
           "lessonUpdatedSuccessfully": "Lesson updated successfully",
-          "textLessonUpdatedSuccessfully": "Text block updated successfully",
+          "textLessonUpdatedSuccessfully": "Text lesson updated successfully",
           "fileLessonUpdatedSuccessfully": "File item updated successfully",
           "questionOptionsUpdatedSuccessfully": "Question options updated successfully"
         },
