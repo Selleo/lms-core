@@ -10,8 +10,8 @@ import type { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import type { DatabasePg } from "src/common";
 
 type User = InferSelectModel<typeof users>;
-export type UserWithCredentials = User & { credentials?: Credential };
 type Credential = InferInsertModel<typeof credentials>;
+export type UserWithCredentials = User & { credentials?: Credential };
 
 export const credentialFactory = Factory.define<Credential>(() => ({
   id: faker.string.uuid(),

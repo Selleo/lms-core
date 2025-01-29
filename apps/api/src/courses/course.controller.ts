@@ -63,15 +63,14 @@ import type {
 export class CourseController {
   constructor(private readonly courseService: CourseService) {}
 
-  @Get()
+  @Get("all")
   @Roles(USER_ROLES.ADMIN, USER_ROLES.TEACHER)
   @Validate(allCoursesValidation)
   async getAllCourses(
     @Query("title") title: string,
     @Query("category") category: string,
     @Query("author") author: string,
-    @Query("creationDateRange[0]") creationDateRangeStart: string,
-    @Query("creationDateRange[1]") creationDateRangeEnd: string,
+    @Query("creationDateRange") creationDateRange: string[],
     @Query("isPublished") isPublished: boolean,
     @Query("sort") sort: SortCourseFieldsOptions,
     @Query("page") page: number,
@@ -79,6 +78,7 @@ export class CourseController {
     @CurrentUser("userId") currentUserId: UUIDType,
     @CurrentUser("role") currentUserRole: UserRole,
   ): Promise<PaginatedResponse<AllCoursesResponse>> {
+    const [creationDateRangeStart, creationDateRangeEnd] = creationDateRange || [];
     const filters: CoursesFilterSchema = {
       title,
       category,
@@ -187,7 +187,7 @@ export class CourseController {
     return new BaseResponse(await this.courseService.getTeacherCourses(query));
   }
 
-  @Get("course")
+  @Get()
   @Validate({
     request: [{ type: "query", name: "id", schema: UUIDSchema, required: true }],
     response: baseResponse(commonShowCourseSchema),

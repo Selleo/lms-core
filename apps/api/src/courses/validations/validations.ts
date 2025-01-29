@@ -12,13 +12,8 @@ export const allCoursesValidation = {
     { type: "query" as const, name: "author", schema: Type.String() },
     {
       type: "query" as const,
-      name: "creationDateRange[0]",
-      schema: Type.String(),
-    },
-    {
-      type: "query" as const,
-      name: "creationDateRange[1]",
-      schema: Type.String(),
+      name: "creationDateRange",
+      schema: Type.Array(Type.String()),
     },
     {
       type: "query" as const,
