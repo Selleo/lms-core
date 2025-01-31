@@ -1,6 +1,8 @@
 <div align="center">
 
-# LMS Core Project
+<img src="https://github.com/Selleo/lms-core/blob/master/product-logo/apps/web/app/assets/menitngo_logo.png?raw=true" alt"" />
+
+# Mentingo LMS Core Project
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/) [![Node.js](https://img.shields.io/badge/Node.js-20.15.0-brightgreen.svg)](https://nodejs.org/) [![pnpm](https://img.shields.io/badge/pnpm-supported-blue.svg)](https://pnpm.io/) [![NestJS](https://img.shields.io/badge/NestJS-10.x-red.svg)](https://nestjs.com/) [![Remix](https://img.shields.io/badge/Remix-Latest-purple.svg)](https://remix.run/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 </br>

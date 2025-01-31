@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
 import { useLoginUser } from "~/api/mutations/useLoginUser";
+import LogoUrl from "~/assets/menitngo_logo_light_transparent.svg";
 import { FormCheckbox } from "~/components/Form/FormCheckbox";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
@@ -43,6 +44,12 @@ export default function LoginPage() {
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle role="heading" className="text-2xl">
+          <img
+              src={LogoUrl}
+              alt=""
+              loading="eager"
+              decoding="async"
+            />
           {t("loginView.header")}
         </CardTitle>
         <CardDescription>{t("loginView.subHeader")}</CardDescription>
