@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "@remix-run/react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 import { useCreateBetaTextLesson } from "~/api/mutations/admin/useBetaCreateTextLesson";
 import { useDeleteLesson } from "~/api/mutations/admin/useDeleteLesson";
@@ -35,9 +36,10 @@ export const useTextLessonForm = ({
   const { mutateAsync: createTextBlock } = useCreateBetaTextLesson();
   const { mutateAsync: updateTextBlockItem } = useUpdateTextLesson();
   const { mutateAsync: deleteLesson } = useDeleteLesson();
+  const { t } = useTranslation();
 
   const form = useForm<TextLessonFormValues>({
-    resolver: zodResolver(textLessonFormSchema),
+    resolver: zodResolver(textLessonFormSchema(t)),
     defaultValues: {
       title: lessonToEdit?.title || "",
       description: lessonToEdit?.description || "",
