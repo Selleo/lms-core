@@ -14,7 +14,7 @@ import {
   PasswordRecoveryEmail,
   WelcomeEmail,
 } from "@repo/email-templates";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import { and, eq, isNull, lte, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
