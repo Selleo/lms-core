@@ -1,6 +1,6 @@
 import { ConflictException, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { omit } from "lodash";
 import { nanoid } from "nanoid";

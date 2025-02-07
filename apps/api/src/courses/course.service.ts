@@ -360,6 +360,11 @@ export class CourseService {
   }
 
   async getCourse(id: UUIDType, userId: UUIDType): Promise<CommonShowCourse> {
+    //TODO: to remove
+    const testDeployment = "test";
+
+    testDeployment;
+
     const [course] = await this.db
       .select({
         id: courses.id,

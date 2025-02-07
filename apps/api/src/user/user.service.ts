@@ -6,7 +6,7 @@ import {
   UnauthorizedException,
 } from "@nestjs/common";
 import { CreatePasswordEmail } from "@repo/email-templates";
-import * as bcrypt from "bcrypt";
+import * as bcrypt from "bcryptjs";
 import { and, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
