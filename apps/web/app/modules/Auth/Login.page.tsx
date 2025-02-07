@@ -44,12 +44,7 @@ export default function LoginPage() {
     <Card className="mx-auto max-w-sm">
       <CardHeader>
         <CardTitle role="heading" className="text-2xl">
-          <img
-              src={LogoUrl}
-              alt=""
-              loading="eager"
-              decoding="async"
-            />
+          <img src={LogoUrl} alt="" loading="eager" decoding="async" />
           {t("loginView.header")}
         </CardTitle>
         <CardDescription>{t("loginView.subHeader")}</CardDescription>
