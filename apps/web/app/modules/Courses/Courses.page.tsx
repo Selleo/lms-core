@@ -95,6 +95,7 @@ export default function CoursesPage() {
     category: state.category,
     sort: state.sort,
   });
+  console.log({ userAvailableCourses });
 
   const { data: categories, isLoading: isCategoriesLoading } = useCategoriesSuspense();
 
