@@ -483,7 +483,8 @@
           "addQuestion": "Dodaj pytanie",
           "addOption": "Dodaj opcję",
           "deleteQuestion": "Usuń pytanie",
-          "addWords": "Dodaj słowa"
+          "addWords": "Dodaj słowa",
+          "saveLesson": "Zapisz lekcje"
         },
         "breadcrumbs": {
           "back": "Wstecz"
@@ -494,7 +495,9 @@
           "imageRequired": "Obrazek jest wymagany",
           "descriptionLength": "Opis musi mieć co najmniej 10 znaków.",
           "atLeastOneOptionCorrect": "Przynajmniej jedna opcja musi być oznaczona jako poprawna.",
-          "allOptionsCorrect": "Wszystkie opcje muszą być poprawne"
+          "allOptionsCorrect": "Wszystkie opcje muszą być poprawne",
+          "titleRequired": "Tytuł jest wymagany",
+          "descriptionRequired": "Opis jest wymagany"
         },
         "toast": {
           "lessonDisplayOrderUpdatedSuccessfully": "Kolejność wyświetlania lekcji została pomyślnie zaktualizowana",
@@ -502,16 +505,16 @@
           "unexpectedError": "Wystąpił nieoczekiwany błąd.",
           "lessonCreatedSuccessfully": "Lekcja utworzona pomyślnie",
           "fileLessonCreatedSuccessfully": "Plik utworzony pomyślnie",
-          "textLessonCreatedSuccessfully": "Blok tekstowy utworzony pomyślnie",
+          "textLessonCreatedSuccessfully": "Lekcja tekstowa utworzona pomyślnie",
           "quizLessonCreatedSuccessfully": "Quiz utworzony pomyślnie",
           "lessonUpdatedSuccessfully": "Lekcja zaktualizowana pomyślnie",
-          "textLessonUpdatedSuccessfully": "Blok tekstowy zaktualizowany pomyślnie",
+          "textLessonUpdatedSuccessfully": "Lekcja tekstowa zaktualizowany pomyślnie",
           "fileLessonUpdatedSuccessfully": "Plik zaktualizowany pomyślnie",
           "questionOptionsUpdatedSuccessfully": "Opcje pytania zostały pomyślnie zaktualizowane"
         },
         "field": {
           "title": "Tytuł",
-          "description": "Opis",
+          "description": "Treść lekcji",
           "video": "Prześlij wideo",
           "questions": "Pytania",
           "options": "Opcje",
