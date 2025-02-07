@@ -26,7 +26,12 @@ export class LocalAdapter extends EmailAdapter {
     this.transporter = nodemailer.createTransport({
       host,
       port,
+      secure: false,
       ignoreTLS: true,
+      tls: {
+        rejectUnauthorized: false,
+      },
+      auth: undefined,
     });
   }
 
