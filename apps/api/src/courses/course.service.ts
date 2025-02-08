@@ -360,7 +360,7 @@ export class CourseService {
   }
 
   async getCourse(id: UUIDType, userId: UUIDType): Promise<CommonShowCourse> {
-    //TODO: to remove
+    //TODO: to removegpf
     const testDeployment = "test";
 
     testDeployment;
