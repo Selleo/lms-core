@@ -307,6 +307,55 @@ lms-core
 </br>
 <div align="center">
 
+## Deployment
+
+</div>
+
+### Deploying to Fly.io
+
+To deploy the project to Fly.io, follow these steps:
+
+1. Install the Fly CLI:
+   ```bash
+   curl -L https://fly.io/install.sh | sh
+   ```
+
+2. Authenticate with Fly.io:
+   ```bash
+   fly auth login
+   ```
+
+3. Initialize the Fly.io application:
+   ```bash
+   fly launch
+   ```
+
+4. Deploy the application:
+   ```bash
+   fly deploy
+   ```
+
+5. Set up the database:
+   ```bash
+   fly postgres create
+   fly postgres attach --app lms-core
+   ```
+
+6. Run database migrations:
+   ```bash
+   fly ssh console -C "pnpm db:migrate"
+   ```
+
+7. Seed the database:
+   ```bash
+   fly ssh console -C "pnpm db:seed"
+   ```
+
+Your application should now be running on Fly.io.
+
+</br>
+<div align="center">
+
 ## Contributing
 
 </div>
