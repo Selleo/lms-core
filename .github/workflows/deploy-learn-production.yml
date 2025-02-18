@@ -59,9 +59,11 @@ jobs:
             SMTP_PASSWORD
             EMAIL_ADAPTER
             SES_EMAIL
+            STRIPE_PUBLISHABLE_KEY
+            STRIPE_SECRET_KEY
+            STRIPE_WEBHOOK_SECRET
             REDIS_URL
             CORS_ORIGIN
-            USERS_PASSWORD
 
           paths: |
             /learn/production/api/terraform/
@@ -97,9 +99,11 @@ jobs:
             SMTP_PASSWORD
             EMAIL_ADAPTER
             SES_EMAIL
+            STRIPE_PUBLISHABLE_KEY
+            STRIPE_SECRET_KEY
+            STRIPE_WEBHOOK_SECRET
             REDIS_URL
             CORS_ORIGIN
-            USERS_PASSWORD
 
           paths: |
             /learn/production/api/terraform/
@@ -135,9 +139,11 @@ jobs:
             SMTP_PASSWORD
             EMAIL_ADAPTER
             SES_EMAIL
+            STRIPE_PUBLISHABLE_KEY
+            STRIPE_SECRET_KEY
+            STRIPE_WEBHOOK_SECRET
             REDIS_URL
             CORS_ORIGIN
-            USERS_PASSWORD
 
           paths: |
             /learn/production/api/terraform/
