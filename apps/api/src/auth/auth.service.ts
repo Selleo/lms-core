@@ -201,7 +201,7 @@ export class AuthService {
       subject: "Password recovery",
       text: emailTemplate.text,
       html: emailTemplate.html,
-      from: "godfather@selleo.com",
+      from: process.env.SES_EMAIL || "",
     });
   }
 
@@ -279,7 +279,7 @@ export class AuthService {
           subject: "Account creation reminder",
           text: emailTemplate.text,
           html: emailTemplate.html,
-          from: "godfather@selleo.com",
+          from: process.env.SES_EMAIL || "",
         });
 
         await transaction.delete(createTokens).where(eq(createTokens.createToken, oldCreateToken));
