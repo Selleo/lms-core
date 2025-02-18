@@ -77,46 +77,6 @@ jobs:
           container-name: learn-api
           image: ${{ env.IMAGE }}
 
-      - name: Render secrets from parameter store for seed
-        id: render-secrets-seed
-        uses: Selleo/amazon-ecs-render-task-definition-secrets@v1.0.0
-        with:
-          region: eu-central-1
-          task-definition: .github/tasks/learn/task-seed.json
-          envs: |
-            NODE_ENV
-            DATABASE_URL
-            AWS_REGION
-            AWS_BUCKET_NAME
-            AWS_ACCESS_KEY_ID
-            AWS_SECRET_ACCESS_KEY
-            JWT_SECRET
-            JWT_REFRESH_SECRET
-            JWT_EXPIRATION_TIME
-            SMTP_HOST     
-            SMTP_PORT
-            SMTP_USER
-            SMTP_PASSWORD
-            EMAIL_ADAPTER
-            SES_EMAIL
-            STRIPE_PUBLISHABLE_KEY
-            STRIPE_SECRET_KEY
-            STRIPE_WEBHOOK_SECRET
-            REDIS_URL
-            CORS_ORIGIN
-
-          paths: |
-            /learn/production/api/terraform/
-            /learn/production/api/editable/
-
-      - name: Fill in the new image ID in the Amazon ECS task definition for seed
-        id: task-def-seed
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ steps.render-secrets-seed.outputs.task-definition }}
-          container-name: learn-api-seed
-          image: ${{ env.IMAGE }}
-
       - name: Render secrets from parameter store for migrate
         id: render-secrets-migrate
         uses: Selleo/amazon-ecs-render-task-definition-secrets@v1.0.0
@@ -161,15 +121,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2.3.0
         with:
           task-definition: ${{ steps.task-def-migrate.outputs.task-definition }}
-          cluster: ict-shared-dea0cd56
-          run-task: true
-          run-task-launch-type: EC2
-          wait-for-task-stopped: true
-
-      - name: ECS Run seeds
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2.3.0
-        with:
-          task-definition: ${{ steps.task-def-seed.outputs.task-definition }}
           cluster: ict-shared-dea0cd56
           run-task: true
           run-task-launch-type: EC2
