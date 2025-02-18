@@ -2,8 +2,8 @@ name: Deploy Learn (Production)
 
 on:
   push:
-    branches:
-      - "learn"
+    tags:
+      - 'learn-v*'
 
 jobs:
   deploy_api:
@@ -23,6 +23,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
 
+      - name: Set tag
+        run: echo "IMAGE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2.0.1
@@ -31,7 +34,6 @@ jobs:
         id: build-image
         env:
           ECR_URL: ${{ steps.login-ecr.outputs.registry }}/learn/production/api
-          IMAGE_TAG: api-${{ github.sha }}
         run: |
           docker build -f ./api.Dockerfile --build-arg VERSION=$IMAGE_TAG -t $ECR_URL:$IMAGE_TAG .
           docker push $ECR_URL:$IMAGE_TAG
@@ -151,6 +153,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: eu-central-1
 
+      - name: Set tag
+        run: echo "IMAGE_TAG=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2.0.1
@@ -159,7 +164,6 @@ jobs:
         id: build-image
         env:
           ECR_URL: ${{ steps.login-ecr.outputs.registry }}/learn/production/ui
-          IMAGE_TAG: ui-${{ github.sha }}
           VITE_STRIPE_PUBLISHABLE_KEY: ${{secrets.STRIPE_PUBLISHABLE_KEY}}
           VITE_SENTRY_AUTH_TOKEN: ${{secrets.SENTRY_AUTH_TOKEN}}
           VITE_SENTRY_ORG: ${{secrets.SENTRY_ORG}}
