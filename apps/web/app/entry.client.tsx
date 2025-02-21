@@ -4,19 +4,15 @@
  * For more information, see https://remix.run/file-conventions/entry.client
  */
 import {
-  RemixBrowser,
   createRoutesFromChildren,
   matchRoutes,
+  RemixBrowser,
   useLocation,
   useNavigationType,
 } from "@remix-run/react";
 import * as Sentry from "@sentry/react";
-import { startTransition, StrictMode, useEffect } from "react";
+import { StrictMode, useEffect } from "react";
 import { hydrateRoot } from "react-dom/client";
-
-import i18next from "../i18n";
-
-import { Providers } from "./modules/Global/Providers";
 
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -43,21 +39,11 @@ Sentry.init({
   },
 });
 
-const hydrate = async () => {
-  await i18next;
-
-  startTransition(() => {
-    hydrateRoot(
-      document,
-      <StrictMode>
-        <Sentry.ErrorBoundary fallback={<div>An error occurred</div>}>
-          <Providers>
-            <RemixBrowser />
-          </Providers>
-        </Sentry.ErrorBoundary>
-      </StrictMode>,
-    );
-  });
-};
-
-hydrate();
+hydrateRoot(
+  document,
+  <StrictMode>
+    <Sentry.ErrorBoundary fallback={<div>An error occurred</div>}>
+      <RemixBrowser />
+    </Sentry.ErrorBoundary>
+  </StrictMode>,
+);
