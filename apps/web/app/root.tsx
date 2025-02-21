@@ -13,6 +13,7 @@ import { Toaster } from "~/components/ui/toaster";
 
 import "./index.css";
 import CustomErrorBoundary from "./modules/common/ErrorBoundary/ErrorBoundary";
+import { Providers } from "./modules/Global/Providers";
 
 import type { LinksFunction } from "@remix-run/node";
 
@@ -39,8 +40,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-export default function App() {
-  return <Outlet />;
+export default function Root() {
+  return (
+    <Providers>
+      <Outlet />
+    </Providers>
+  );
 }
 
 export function HydrateFallback() {

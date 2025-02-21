@@ -1,42 +1,20 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { lazy, Suspense, useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { I18nextProvider } from "react-i18next";
 
+import i18n from "../../../i18n";
 import { queryClient } from "../../api/queryClient";
 import { ThemeProvider } from "../Theme/ThemeProvider";
 
-const ReactQueryDevtools = lazy(() =>
-  import("@tanstack/react-query-devtools").then(({ ReactQueryDevtools }) => ({
-    default: ReactQueryDevtools,
-  })),
-);
-
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [mounted, setMounted] = useState(false);
-
-  /*
-   * awful hack but this is the only way (I found) to make react-query devtools work in our remix
-   */
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
-    <ThemeProvider>
+    <I18nextProvider i18n={i18n}>
       <QueryClientProvider client={queryClient}>
-        {children}
-
-        {mounted && process.env.NODE_ENV === "development" && (
-          <>
-            {createPortal(
-              <Suspense fallback={null}>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </Suspense>,
-              document.body,
-            )}
-          </>
-        )}
+        <ThemeProvider>
+          {children}
+          {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
+        </ThemeProvider>
       </QueryClientProvider>
-    </ThemeProvider>
+    </I18nextProvider>
   );
 }

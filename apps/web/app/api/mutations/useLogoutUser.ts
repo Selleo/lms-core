@@ -5,6 +5,7 @@ import { AxiosError } from "axios";
 import { useToast } from "~/components/ui/use-toast";
 
 import { requestManager, ApiClient } from "../api-client";
+import { currentUserQueryOptions } from "../queries";
 import { queryClient } from "../queryClient";
 
 import { useAuthStore } from "./../../modules/Auth/authStore";
@@ -23,6 +24,7 @@ export function useLogoutUser() {
       return response.data;
     },
     onSuccess: () => {
+      queryClient.cancelQueries(currentUserQueryOptions);
       queryClient.clear();
       navigate("/auth/login");
     },

@@ -20,6 +20,7 @@ ApiClient.instance.interceptors.request.use((config) => {
   const isAuthEndpoint =
     config.url?.includes("/login") ||
     config.url?.includes("/refresh") ||
+    config.url?.includes("/forgot-password") ||
     config.url?.includes("/register");
 
   if (!isAuthEndpoint && !useAuthStore.getState().isLoggedIn) {

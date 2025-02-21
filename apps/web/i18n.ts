@@ -1,11 +1,11 @@
-import i18next from "i18next";
+import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
 import enTranslations from "app/locales/en/translation.json";
 import plTranslations from "app/locales/pl/translation.json";
 
 // eslint-disable-next-line import/no-named-as-default-member
-i18next.use(initReactI18next).init({
+i18n.use(initReactI18next).init({
   fallbackLng: "en",
   lng: import.meta.env.VITE_E2E === "true" ? "en" : "pl",
   ns: ["translation"],
@@ -23,4 +23,4 @@ i18next.use(initReactI18next).init({
   },
 });
 
-export default i18next;
+export default i18n;
