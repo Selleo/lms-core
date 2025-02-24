@@ -1,33 +1,18 @@
-import { BadRequestException, ConflictException, Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable } from "@nestjs/common";
 
 import { S3Service } from "src/s3/s3.service";
 
-import { MAX_FILE_SIZE, REDIS_TTL } from "./file.constants";
-
-import type { createCache } from "cache-manager";
+import { MAX_FILE_SIZE } from "./file.constants";
 
 @Injectable()
 export class FileService {
-  constructor(
-    private readonly s3Service: S3Service,
-    @Inject("CACHE_MANAGER") private cacheManager: ReturnType<typeof createCache>,
-  ) {}
+  constructor(private readonly s3Service: S3Service) {}
 
   async getFileUrl(fileKey: string): Promise<string> {
     if (!fileKey) return "https://app.lms.localhost/app/assets/placeholders/card-placeholder.jpg";
     if (fileKey.startsWith("https://")) return fileKey;
 
-    try {
-      const cachedUrl = await this.cacheManager.get<string>(fileKey);
-      if (cachedUrl) return cachedUrl;
-
-      const signedUrl = await this.s3Service.getSignedUrl(fileKey);
-      await this.cacheManager.set(fileKey, signedUrl, REDIS_TTL);
-      return signedUrl;
-    } catch (error) {
-      console.error("Error in getFileUrl:", error);
-      return this.s3Service.getSignedUrl(fileKey);
-    }
+    return await this.s3Service.getSignedUrl(fileKey);
   }
 
   async uploadFile(file: Express.Multer.File, resource: string) {
