@@ -1,5 +1,7 @@
 import { NestFactory } from "@nestjs/core";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
+import * as Sentry from "@sentry/node";
+import { nodeProfilingIntegration } from "@sentry/profiling-node";
 import cookieParser from "cookie-parser";
 import { patchNestJsSwagger, applyFormats } from "nestjs-typebox";
 
@@ -11,6 +13,13 @@ patchNestJsSwagger();
 applyFormats();
 
 async function bootstrap() {
+  Sentry.init({
+    dsn: process.env.SENTRY_DSN,
+    integrations: [nodeProfilingIntegration()],
+    tracesSampleRate: 1.0,
+    profilesSampleRate: 1.0,
+  });
+
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
   });

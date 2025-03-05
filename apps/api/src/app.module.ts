@@ -1,7 +1,7 @@
 import { DrizzlePostgresModule } from "@knaadh/nestjs-drizzle-postgres";
 import { Module } from "@nestjs/common";
 import { ConditionalModule, ConfigModule, ConfigService } from "@nestjs/config";
-import { APP_GUARD } from "@nestjs/core";
+import { APP_GUARD, APP_INTERCEPTOR } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { ScheduleModule } from "@nestjs/schedule";
 
@@ -26,6 +26,7 @@ import { LessonModule } from "./lesson/lesson.module";
 import { QuestionsModule } from "./questions/question.module";
 import { S3Module } from "./s3/s3.module";
 import { ScormModule } from "./scorm/scorm.module";
+import { SentryInterceptor } from "./sentry/sentry.interceptor";
 import { StatisticsModule } from "./statistics/statistics.module";
 import * as schema from "./storage/schema";
 import { StripeModule } from "./stripe/stripe.module";
@@ -86,6 +87,10 @@ import { UserModule } from "./user/user.module";
   ],
   controllers: [],
   providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SentryInterceptor,
+    },
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
