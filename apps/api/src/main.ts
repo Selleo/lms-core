@@ -6,7 +6,6 @@ import cookieParser from "cookie-parser";
 import { patchNestJsSwagger, applyFormats } from "nestjs-typebox";
 
 import { AppModule } from "./app.module";
-import { SentryInterceptor } from "./sentry/sentry.interceptor";
 import { exportSchemaToFile } from "./utils/save-swagger-to-file";
 import { setupValidation } from "./utils/setup-validation";
 
