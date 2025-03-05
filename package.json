@@ -34,5 +34,10 @@
   "packageManager": "pnpm@10.2.1",
   "engines": {
     "node": ">=20"
+  },
+  "workspaces": {
+    "nohoist": [
+      "*"
+    ]
   }
 }
