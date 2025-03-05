@@ -6,8 +6,8 @@ import type { CallHandler, ExecutionContext, NestInterceptor } from "@nestjs/com
 import type { Observable } from "rxjs";
 
 @Injectable()
-export class SentryInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler<any>): Observable<any> {
+export class SentryInterceptor<T> implements NestInterceptor<T> {
+  intercept(context: ExecutionContext, next: CallHandler<T>): Observable<T> {
     return next.handle().pipe(
       catchError((error) => {
         Sentry.captureException(error);

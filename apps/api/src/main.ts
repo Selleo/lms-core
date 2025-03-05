@@ -24,8 +24,6 @@ async function bootstrap() {
     rawBody: true,
   });
 
-  app.useGlobalInterceptors(new SentryInterceptor());
-
   setupValidation();
 
   app.use(cookieParser());
