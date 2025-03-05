@@ -60,6 +60,8 @@ jobs:
             SMTP_USER
             SMTP_PASSWORD
             EMAIL_ADAPTER
+            SENTRY_DSN
+            SENTRY_ENVIRONMENT
             SES_EMAIL
             STRIPE_PUBLISHABLE_KEY
             STRIPE_SECRET_KEY
@@ -100,6 +102,8 @@ jobs:
             SMTP_USER
             SMTP_PASSWORD
             EMAIL_ADAPTER
+            SENTRY_DSN
+            SENTRY_ENVIRONMENT
             SES_EMAIL
             STRIPE_PUBLISHABLE_KEY
             STRIPE_SECRET_KEY
