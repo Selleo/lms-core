@@ -26,13 +26,13 @@ import { LessonModule } from "./lesson/lesson.module";
 import { QuestionsModule } from "./questions/question.module";
 import { S3Module } from "./s3/s3.module";
 import { ScormModule } from "./scorm/scorm.module";
+import { SentryInterceptor } from "./sentry/sentry.interceptor";
 import { StatisticsModule } from "./statistics/statistics.module";
 import * as schema from "./storage/schema";
 import { StripeModule } from "./stripe/stripe.module";
 import { StudentLessonProgressModule } from "./studentLessonProgress/studentLessonProgress.module";
 import { TestConfigModule } from "./test-config/test-config.module";
 import { UserModule } from "./user/user.module";
-import { SentryInterceptor } from "./sentry/sentry.interceptor";
 
 @Module({
   imports: [
@@ -89,7 +89,7 @@ import { SentryInterceptor } from "./sentry/sentry.interceptor";
   providers: [
     {
       provide: APP_INTERCEPTOR,
-      useClass: SentryInterceptor
+      useClass: SentryInterceptor,
     },
     {
       provide: APP_GUARD,

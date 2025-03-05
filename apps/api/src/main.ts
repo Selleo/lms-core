@@ -19,6 +19,7 @@ async function bootstrap() {
     tracesSampleRate: 1.0,
     profilesSampleRate: 1.0,
   });
+
   const app = await NestFactory.create(AppModule, {
     rawBody: true,
   });
