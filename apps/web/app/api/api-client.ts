@@ -1,3 +1,4 @@
+import { authService } from "~/modules/Auth/authService";
 import { useAuthStore } from "~/modules/Auth/authStore";
 
 import { API } from "./generated-api";
@@ -44,7 +45,8 @@ ApiClient.instance.interceptors.response.use(
     ) {
       error.config._retry = true;
       try {
-        await ApiClient.api.authControllerRefreshTokens();
+        authService.logout();
+        await authService.refreshToken();
         return ApiClient.instance(error.config);
       } catch {
         requestManager.abortAll();
