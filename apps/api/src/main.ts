@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { patchNestJsSwagger, applyFormats } from "nestjs-typebox";
 
 import { AppModule } from "./app.module";
+import { environmentValidation } from "./utils/environment-validation";
 import { exportSchemaToFile } from "./utils/save-swagger-to-file";
 import { setupValidation } from "./utils/setup-validation";
 
@@ -18,6 +19,7 @@ async function bootstrap() {
     integrations: [nodeProfilingIntegration()],
     tracesSampleRate: 1.0,
     profilesSampleRate: 1.0,
+    environment: environmentValidation(String(process.env.NODE_ENV)),
   });
 
   const app = await NestFactory.create(AppModule, {
