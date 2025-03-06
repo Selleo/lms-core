@@ -63,19 +63,14 @@ export class StatisticsService {
   }
 
   async getTeacherStats(userId: UUIDType) {
-    const [
-      fiveMostPopularCourses,
-      [totalCoursesCompletionStats],
-      [conversionAfterFreemiumLesson],
-      courseStudentsStats,
-      [avgQuizScore],
-    ] = await Promise.all([
-      this.statisticsRepository.getFiveMostPopularCourses(userId),
-      this.statisticsRepository.getTotalCoursesCompletion(userId),
-      this.statisticsRepository.getConversionAfterFreemiumLesson(userId),
-      this.statisticsRepository.getCourseStudentsStats(userId),
-      this.statisticsRepository.getAvgQuizScore(userId),
-    ]);
+    const fiveMostPopularCourses =
+      await this.statisticsRepository.getFiveMostPopularCourses(userId);
+    const [totalCoursesCompletionStats] =
+      await this.statisticsRepository.getTotalCoursesCompletion(userId);
+    const [conversionAfterFreemiumLesson] =
+      await this.statisticsRepository.getConversionAfterFreemiumLesson(userId);
+    const courseStudentsStats = await this.statisticsRepository.getCourseStudentsStats(userId);
+    const [avgQuizScore] = await this.statisticsRepository.getAvgQuizScore(userId);
 
     return {
       fiveMostPopularCourses,
