@@ -3,8 +3,8 @@ import { Injectable } from "@nestjs/common";
 import { AI_MENTOR_CONFIGURATION_GENERATION_MODE, AI_MENTOR_TYPE } from "@repo/shared";
 import { Value } from "@sinclair/typebox/value";
 
-import { PromptService } from "src/ai/services/prompt.service";
 import { AiRuntimeService } from "src/ai/services/ai-runtime.service";
+import { PromptService } from "src/ai/services/prompt.service";
 import { loadAiSdk } from "src/ai/utils/ai-esm";
 import { AI_TELEMETRY_FUNCTION_IDS, buildAiTelemetry } from "src/ai/utils/ai-telemetry";
 import { OPENAI_MODELS } from "src/ai/utils/ai.type";

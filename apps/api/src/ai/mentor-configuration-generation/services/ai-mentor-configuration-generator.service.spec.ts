@@ -12,8 +12,8 @@ import { AI_MENTOR_CONFIGURATION_GENERATION_PURPOSE } from "../ai-mentor-configu
 
 import { AiMentorConfigurationGeneratorService } from "./ai-mentor-configuration-generator.service";
 
-import type { PromptService } from "src/ai/services/prompt.service";
 import type { AiRuntimeService } from "src/ai/services/ai-runtime.service";
+import type { PromptService } from "src/ai/services/prompt.service";
 
 jest.mock("@langfuse/tracing", () => ({
   observe: (callback: () => unknown) => callback,

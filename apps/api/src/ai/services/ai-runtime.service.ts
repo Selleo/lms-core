@@ -14,18 +14,19 @@ import {
   type ValidateAiJudgeConfigurationOptions,
 } from "@japro/luma-sdk";
 import { Injectable, Logger } from "@nestjs/common";
+import { AI_MENTOR_TYPE } from "@repo/shared";
 import { Value } from "@sinclair/typebox/value";
 
 import { LUMA_CONFIGURATION_CACHE_TTL_MS } from "src/ai/ai-runtime.constants";
 import { AI_RUNTIME_SOURCES } from "src/ai/ai-runtime.types";
 import {
-  generatedAiMentorRoleplayConfigurationFieldsSchema,
-  generatedAiMentorTeacherConfigurationFieldsSchema,
-} from "src/ai/mentor-configuration-generation/schemas/ai-mentor-configuration-generation.schema";
-import {
   aiJudgeConfigurationValidatorStructuredOutputSchema,
   referencedAiJudgeConfigurationStructuredOutputSchema,
 } from "src/ai/judge-configuration-generation/schemas/ai-judge-configuration-generation.schema";
+import {
+  generatedAiMentorRoleplayConfigurationFieldsSchema,
+  generatedAiMentorTeacherConfigurationFieldsSchema,
+} from "src/ai/mentor-configuration-generation/schemas/ai-mentor-configuration-generation.schema";
 import { loadAiSdk, loadOpenAiSdk } from "src/ai/utils/ai-esm";
 import { AI_TELEMETRY_FUNCTION_IDS, buildAiTelemetry } from "src/ai/utils/ai-telemetry";
 import { aiJudgeJudgementSchema, generateTranslationSchema } from "src/ai/utils/ai.schema";
@@ -37,11 +38,11 @@ import type { OpenAIProvider } from "@ai-sdk/openai";
 import type { AiMentorChatStreamResult, AiStreamTextResult } from "src/ai/ai-chat.types";
 import type { AiRuntimeSource } from "src/ai/ai-runtime.types";
 import type { AiJudgeModelResult } from "src/ai/judge-configuration/judge-configuration.types";
-import type { GeneratedAiMentorConfigurationFields } from "src/ai/mentor-configuration-generation/schemas/ai-mentor-configuration-generation.schema";
 import type {
   AiJudgeConfigurationValidatorStructuredOutput,
   ReferencedAiJudgeConfiguration,
 } from "src/ai/judge-configuration-generation/schemas/ai-judge-configuration-generation.schema";
+import type { GeneratedAiMentorConfigurationFields } from "src/ai/mentor-configuration-generation/schemas/ai-mentor-configuration-generation.schema";
 
 @Injectable()
 export class AiRuntimeService {
@@ -253,7 +254,7 @@ export class AiRuntimeService {
         const luma = await this.getLumaClient();
         const result = await luma.ai.generateMentorConfiguration(input);
         const schema =
-          input.configurationType === "teacher"
+          input.configurationType === AI_MENTOR_TYPE.TEACHER
             ? generatedAiMentorTeacherConfigurationFieldsSchema
             : generatedAiMentorRoleplayConfigurationFieldsSchema;
 
