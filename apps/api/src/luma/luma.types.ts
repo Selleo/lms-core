@@ -1,6 +1,9 @@
 import type {
   createLumaClient,
   GeneratedCourseBundleResponse,
+  GeneratedCourseAiMentorConfiguration,
+  GeneratedCourseAiMentorRoleplayConfiguration,
+  GeneratedCourseAiMentorTeacherConfiguration,
   GeneratedCourseResponse,
 } from "@japro/luma-sdk";
 import type { CourseGenerationSyncStatus } from "@repo/shared";
@@ -38,6 +41,11 @@ export type LumaGeneratedCourseQuestionType =
 export type LumaGeneratedCourseChapter = GeneratedCourseResponse["chapters"][number];
 export type LumaGeneratedCourseLesson = LumaGeneratedCourseChapter["lessons"][number];
 export type LumaGeneratedCourseAiMentor = NonNullable<LumaGeneratedCourseLesson["aiMentor"]>;
+export type LumaGeneratedCourseAiMentorConfiguration = GeneratedCourseAiMentorConfiguration;
+export type LumaGeneratedCourseAiMentorTeacherConfiguration =
+  GeneratedCourseAiMentorTeacherConfiguration;
+export type LumaGeneratedCourseAiMentorRoleplayConfiguration =
+  GeneratedCourseAiMentorRoleplayConfiguration;
 export type LumaGeneratedCourseQuestion = NonNullable<
   LumaGeneratedCourseLesson["questions"]
 >[number];
