@@ -348,4 +348,43 @@ describe("AiRuntimeService", () => {
     );
     expect(validateCore).toHaveBeenCalledTimes(1);
   });
+
+  it("uses the shared quality evaluator capability for AI Mentor configuration validation", async () => {
+    const service = new AiRuntimeService({} as EnvService);
+    const validation = { summary: "The mentor behavior is ready.", issues: [] };
+    const validateCore = jest.fn();
+    const validateMentorConfiguration = jest.fn().mockResolvedValue(validation);
+    jest.spyOn(service, "resolveSource").mockResolvedValue(AI_RUNTIME_SOURCES.LUMA);
+    Object.defineProperty(service, "getLumaClient", {
+      configurable: true,
+      value: jest.fn().mockResolvedValue({ ai: { validateMentorConfiguration } }),
+    });
+
+    const result = await service.validateMentorConfiguration(authoringInput, validateCore);
+
+    expect(service.resolveSource).toHaveBeenCalledWith(AiCapability.AiJudgeConfigurationValidator);
+    expect(validateMentorConfiguration).toHaveBeenCalledWith(authoringInput);
+    expect(validateCore).not.toHaveBeenCalled();
+    expect(result).toEqual(validation);
+  });
+
+  it("falls back to Core when Luma AI Mentor configuration validation is invalid", async () => {
+    const service = new AiRuntimeService({} as EnvService);
+    const coreValidation = { summary: "Core mentor validation result.", issues: [] };
+    const validateCore = jest.fn().mockResolvedValue(coreValidation);
+    jest.spyOn(service, "resolveSource").mockResolvedValue(AI_RUNTIME_SOURCES.LUMA);
+    Object.defineProperty(service, "getLumaClient", {
+      configurable: true,
+      value: jest.fn().mockResolvedValue({
+        ai: {
+          validateMentorConfiguration: jest.fn().mockResolvedValue({ summary: "Missing issues" }),
+        },
+      }),
+    });
+
+    await expect(
+      service.validateMentorConfiguration(authoringInput, validateCore),
+    ).resolves.toEqual(coreValidation);
+    expect(validateCore).toHaveBeenCalledTimes(1);
+  });
 });
