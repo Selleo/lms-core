@@ -4,6 +4,7 @@ import {
   createLumaClient,
   type AiRuntimeConfiguration,
   type GenerateAiJudgeConfigurationOptions,
+  type GenerateAiMentorConfigurationOptions,
   type GenerateTranslationsOptions,
   type GenerateTranslationsResponse,
   type MentorChatOptions,
@@ -11,8 +12,10 @@ import {
   type TranscribeDictationOptions,
   type TranscribeDictationResponse,
   type ValidateAiJudgeConfigurationOptions,
+  type ValidateAiMentorConfigurationOptions,
 } from "@japro/luma-sdk";
 import { Injectable, Logger } from "@nestjs/common";
+import { AI_MENTOR_TYPE } from "@repo/shared";
 import { Value } from "@sinclair/typebox/value";
 
 import { LUMA_CONFIGURATION_CACHE_TTL_MS } from "src/ai/ai-runtime.constants";
@@ -21,6 +24,11 @@ import {
   aiJudgeConfigurationValidatorStructuredOutputSchema,
   referencedAiJudgeConfigurationStructuredOutputSchema,
 } from "src/ai/judge-configuration-generation/schemas/ai-judge-configuration-generation.schema";
+import {
+  aiMentorConfigurationValidatorModelResultSchema,
+  generatedAiMentorRoleplayConfigurationFieldsSchema,
+  generatedAiMentorTeacherConfigurationFieldsSchema,
+} from "src/ai/mentor-configuration-generation/schemas/ai-mentor-configuration-generation.schema";
 import { loadAiSdk, loadOpenAiSdk } from "src/ai/utils/ai-esm";
 import { AI_TELEMETRY_FUNCTION_IDS, buildAiTelemetry } from "src/ai/utils/ai-telemetry";
 import { aiJudgeJudgementSchema, generateTranslationSchema } from "src/ai/utils/ai.schema";
@@ -36,6 +44,10 @@ import type {
   AiJudgeConfigurationValidatorStructuredOutput,
   ReferencedAiJudgeConfiguration,
 } from "src/ai/judge-configuration-generation/schemas/ai-judge-configuration-generation.schema";
+import type {
+  AiMentorConfigurationValidatorModelResult,
+  GeneratedAiMentorConfigurationFields,
+} from "src/ai/mentor-configuration-generation/schemas/ai-mentor-configuration-generation.schema";
 
 @Injectable()
 export class AiRuntimeService {
@@ -235,6 +247,38 @@ export class AiRuntimeService {
     return generateCoreConfiguration();
   }
 
+  async generateMentorConfiguration(
+    input: GenerateAiMentorConfigurationOptions,
+    generateCoreConfiguration: () => Promise<GeneratedAiMentorConfigurationFields>,
+  ): Promise<GeneratedAiMentorConfigurationFields> {
+    if (
+      (await this.resolveSource(AiCapability.AiMentorConfigurationGenerator)) ===
+      AI_RUNTIME_SOURCES.LUMA
+    ) {
+      try {
+        const luma = await this.getLumaClient();
+        const result = await luma.ai.generateMentorConfiguration(input);
+        const schema =
+          input.configurationType === AI_MENTOR_TYPE.TEACHER
+            ? generatedAiMentorTeacherConfigurationFieldsSchema
+            : generatedAiMentorRoleplayConfigurationFieldsSchema;
+
+        if (!Value.Check(schema, result))
+          throw new Error("Luma AI Mentor configuration generator returned an invalid result");
+
+        return result as GeneratedAiMentorConfigurationFields;
+      } catch (error) {
+        this.logger.warn(
+          `Luma AI Mentor configuration generation failed; falling back to core generation: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
+      }
+    }
+
+    return generateCoreConfiguration();
+  }
+
   async validateJudgeConfiguration(
     input: ValidateAiJudgeConfigurationOptions,
     validateCoreConfiguration: () => Promise<AiJudgeConfigurationValidatorStructuredOutput>,
@@ -253,6 +297,33 @@ export class AiRuntimeService {
       } catch (error) {
         this.logger.warn(
           `Luma AI Judge configuration validation failed; falling back to core validation: ${
+            error instanceof Error ? error.message : String(error)
+          }`,
+        );
+      }
+    }
+
+    return validateCoreConfiguration();
+  }
+
+  async validateMentorConfiguration(
+    input: ValidateAiMentorConfigurationOptions,
+    validateCoreConfiguration: () => Promise<AiMentorConfigurationValidatorModelResult>,
+  ): Promise<AiMentorConfigurationValidatorModelResult> {
+    if (
+      (await this.resolveSource(AiCapability.AiJudgeConfigurationValidator)) ===
+      AI_RUNTIME_SOURCES.LUMA
+    ) {
+      try {
+        const luma = await this.getLumaClient();
+        const result = await luma.ai.validateMentorConfiguration(input);
+        if (!Value.Check(aiMentorConfigurationValidatorModelResultSchema, result))
+          throw new Error("Luma AI Mentor configuration validator returned an invalid result");
+
+        return result;
+      } catch (error) {
+        this.logger.warn(
+          `Luma AI Mentor configuration validation failed; falling back to core validation: ${
             error instanceof Error ? error.message : String(error)
           }`,
         );
