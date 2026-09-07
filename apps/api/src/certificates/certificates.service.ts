@@ -24,7 +24,7 @@ import {
   isSupportedLanguage,
 } from "@repo/shared";
 import { addDays, addMonths, addYears, format } from "date-fns";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { escape } from "lodash";
 import puppeteer, { type Page, type Browser } from "puppeteer";
 import { match } from "ts-pattern";
@@ -37,6 +37,7 @@ import { resolveTenantOrigin } from "src/common/helpers/resolveTenantOrigin";
 import { DEFAULT_PAGE_SIZE, parsePagination } from "src/common/pagination";
 import { canUpdateCourseByAuthor } from "src/common/permissions/course-permission.utils";
 import {
+  getGroupManagerCourseScopeCondition,
   getGroupManagerLearnerScopeCondition,
   shouldApplyGroupManagerScope,
 } from "src/common/permissions/group-manager-scope.utils";
@@ -170,7 +171,14 @@ export class CertificatesService implements OnModuleDestroy {
     const [course] = await this.db
       .select({ authorId: courses.authorId })
       .from(courses)
-      .where(eq(courses.id, courseId));
+      .where(
+        and(
+          eq(courses.id, courseId),
+          getGroupManagerCourseScopeCondition(currentUser, courses.id, [
+            PERMISSIONS.COURSE_STATISTICS,
+          ]),
+        ),
+      );
 
     if (!course) throw new NotFoundException("adminCourseView.errors.notFound.course");
 
