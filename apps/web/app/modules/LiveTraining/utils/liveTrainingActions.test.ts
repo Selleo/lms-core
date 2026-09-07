@@ -1,4 +1,9 @@
-import { LIVE_TRAINING_DELIVERY_TYPES, LIVE_TRAINING_STATUSES, PERMISSIONS } from "@repo/shared";
+import {
+  LIVE_TRAINING_DELIVERY_TYPES,
+  LIVE_TRAINING_SESSION_STATUSES,
+  LIVE_TRAINING_STATUSES,
+  PERMISSIONS,
+} from "@repo/shared";
 
 import { deriveLiveTrainingUiActions } from "./liveTrainingActions";
 
@@ -13,6 +18,26 @@ const liveTraining = {
 } as unknown as LiveTrainingDetails;
 
 describe("deriveLiveTrainingUiActions", () => {
+  it("blocks editing while a session is waiting or active", () => {
+    const actions = deriveLiveTrainingUiActions({
+      liveTraining: {
+        ...liveTraining,
+        currentSession: { status: LIVE_TRAINING_SESSION_STATUSES.ACTIVE },
+      } as LiveTrainingDetails,
+      currentUserId: "author-id",
+      permissions: [
+        PERMISSIONS.LIVE_TRAINING_UPDATE,
+        PERMISSIONS.LIVE_TRAINING_DELETE,
+        PERMISSIONS.USER_MANAGE,
+      ],
+    });
+
+    expect(actions.canShowEdit).toBe(false);
+    expect(actions.canShowDelete).toBe(false);
+    expect(actions.canEditMaterials).toBe(false);
+    expect(actions.canManagePeople).toBe(false);
+  });
+
   it("allows Group Managers to view scoped session data without session management actions", () => {
     const actions = deriveLiveTrainingUiActions({
       liveTraining,

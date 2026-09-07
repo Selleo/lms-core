@@ -921,6 +921,7 @@
       "participants": "Participants",
       "viewerMic": "Microphone du spectateur",
       "viewerCamera": "Caméra de visualisation",
+      "editBlockedDuringSession": "Pour modifier ce paramètre, terminez d'abord la session en cours.",
       "scheduleTooltip": "Temps de formation prévu",
       "timezoneTooltip": "Fuseau horaire de la formation",
       "maxParticipantsTooltip": "Nombre maximum de participants",
@@ -5329,6 +5330,8 @@
       "invalidLessonType": "Seules les leçons de formation en direct peuvent avoir des tâches de formation en direct.",
       "deleteAssignedToLesson": "Cette Live Training est liée à une leçon. Supprimez d'abord la leçon avant de supprimer la formation en direct.",
       "liveKitNotConfigured": "LiveKit n'est pas configuré.",
+      "liveKitRoomNotAvailable": "La salle LiveKit de cette session n'est pas disponible.",
+      "activeSessionUpdateForbidden": "Cette formation en direct ne peut pas être modifiée pendant une session en cours.",
       "maxParticipantsReached": "Le nombre maximum de participants a été atteint.",
       "maxParallelSessionsReached": "Le nombre maximum de sessions de formation en direct actives a été atteint."
     }

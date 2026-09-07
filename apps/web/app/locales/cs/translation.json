@@ -921,6 +921,7 @@
       "participants": "Účastníci",
       "viewerMic": "Mikrofon diváka",
       "viewerCamera": "Kamera diváka",
+      "editBlockedDuringSession": "Chcete-li toto nastavení změnit, nejprve ukončete aktuální relaci.",
       "scheduleTooltip": "Plánovaný čas školení",
       "timezoneTooltip": "Časové pásmo školení",
       "maxParticipantsTooltip": "Maximum účastníků",
@@ -5589,6 +5590,8 @@
       "invalidLessonType": "Přiřazení Živé školení lze přidat pouze k lekcím Živé školení.",
       "deleteAssignedToLesson": "Tento Živé školení je propojen s lekcí. Nejdříve smažte lekci a až potom Živé školení.",
       "liveKitNotConfigured": "LiveKit není nakonfigurován.",
+      "liveKitRoomNotAvailable": "Místnost LiveKit pro tuto relaci není dostupná.",
+      "activeSessionUpdateForbidden": "Toto živé školení nelze během probíhající relace měnit.",
       "maxParticipantsReached": "Bylo dosaženo maximálního počtu účastníků.",
       "maxParallelSessionsReached": "Bylo dosaženo maximálního počtu aktivních relací Živé školení."
     }

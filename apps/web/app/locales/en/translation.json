@@ -918,6 +918,7 @@
       "participants": "Participants",
       "viewerMic": "Viewer microphone",
       "viewerCamera": "Viewer camera",
+      "editBlockedDuringSession": "To change this setting, end the current session first.",
       "scheduleTooltip": "Planned training time",
       "timezoneTooltip": "Training timezone",
       "maxParticipantsTooltip": "Maximum participants",
@@ -5607,6 +5608,8 @@
       "invalidLessonType": "Only Live Training lessons can have Live Training assignments.",
       "deleteAssignedToLesson": "This Live Training is linked to a lesson. Delete the lesson first before deleting the Live Training.",
       "liveKitNotConfigured": "LiveKit is not configured.",
+      "liveKitRoomNotAvailable": "The LiveKit room for this session is not available.",
+      "activeSessionUpdateForbidden": "This Live Training cannot be changed while a session is in progress.",
       "maxParticipantsReached": "The maximum number of participants has been reached.",
       "maxParallelSessionsReached": "The maximum number of active Live Training sessions has been reached."
     }
