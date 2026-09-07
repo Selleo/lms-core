@@ -915,6 +915,7 @@
       "participants": "Dalyviai",
       "viewerMic": "Žiūrovo mikrofonas",
       "viewerCamera": "Žiūrovo kamera",
+      "editBlockedDuringSession": "Norėdami pakeisti šį nustatymą, pirmiausia užbaikite dabartinę sesiją.",
       "scheduleTooltip": "Planuojamas mokymų laikas",
       "timezoneTooltip": "Mokymų laiko juosta",
       "maxParticipantsTooltip": "Maksimalus dalyvių skaičius",
@@ -5585,6 +5586,8 @@
       "invalidLessonType": "Tiesioginiai mokymai priskyrimus galima pridėti tik prie Tiesioginiai mokymai pamokų.",
       "deleteAssignedToLesson": "Šis Tiesioginiai mokymai susietas su pamoka. Pirmiausia ištrinkite pamoką, tada Tiesioginiai mokymai.",
       "liveKitNotConfigured": "LiveKit nėra sukonfigūruotas.",
+      "liveKitRoomNotAvailable": "Šiai sesijai skirtas LiveKit kambarys nepasiekiamas.",
+      "activeSessionUpdateForbidden": "Šio tiesioginio mokymo negalima keisti, kol vyksta sesija.",
       "maxParticipantsReached": "Pasiektas maksimalus dalyvių skaičius.",
       "maxParallelSessionsReached": "Pasiektas maksimalus aktyvių Tiesioginiai mokymai sesijų skaičius."
     }

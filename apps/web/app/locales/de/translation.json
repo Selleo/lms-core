@@ -916,6 +916,7 @@
       "participants": "Teilnehmer",
       "viewerMic": "Zuschauermikrofon",
       "viewerCamera": "Zuschauerkamera",
+      "editBlockedDuringSession": "Um diese Einstellung zu ändern, beende zuerst die aktuelle Sitzung.",
       "scheduleTooltip": "Geplante Schulungszeit",
       "timezoneTooltip": "Schulungszeitzone",
       "maxParticipantsTooltip": "Maximale Teilnehmerzahl",
@@ -5581,6 +5582,8 @@
       "invalidLessonType": "Live-Schulungszuweisungen können nur zu Live-Schulungslektionen hinzugefügt werden.",
       "deleteAssignedToLesson": "Dieses Live-Schulung ist mit einer Lektion verknüpft. Lösche zuerst die Lektion, bevor du das Live-Schulung löschst.",
       "liveKitNotConfigured": "LiveKit ist nicht konfiguriert.",
+      "liveKitRoomNotAvailable": "Der LiveKit-Raum für diese Sitzung ist nicht verfügbar.",
+      "activeSessionUpdateForbidden": "Dieses Live-Training kann während einer laufenden Sitzung nicht geändert werden.",
       "maxParticipantsReached": "Die maximale Teilnehmerzahl wurde erreicht.",
       "maxParallelSessionsReached": "Die maximale Anzahl aktiver Live-Schulungssitzungen wurde erreicht."
     }

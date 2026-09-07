@@ -49,6 +49,7 @@ import { OutboxPublisher } from "src/outbox/outbox.publisher";
 import { DB } from "src/storage/db/db.providers";
 import { calendarEvents, courses, liveTrainingLinks, liveTrainings } from "src/storage/schema";
 
+import { LiveTrainingSessionsRepository } from "./live-training-sessions/live-training-sessions.repository";
 import { LiveTrainingRepository } from "./live-training.repository";
 
 import type {
@@ -84,6 +85,7 @@ export class LiveTrainingService {
     private readonly fileService: FileService,
     private readonly envService: EnvService,
     private readonly outboxPublisher: OutboxPublisher,
+    private readonly liveTrainingSessionsRepository: LiveTrainingSessionsRepository,
   ) {}
 
   async getLiveTrainings(
@@ -532,6 +534,7 @@ export class LiveTrainingService {
     }
 
     this.assertCanDeleteLiveTraining(row.authorId, currentUser);
+    await this.assertNoOpenSession(row.id);
     const linkedLessonCount = await this.liveTrainingRepository.getLinkedLessonCount(row.id);
 
     if (linkedLessonCount > 0) {
@@ -851,7 +854,17 @@ export class LiveTrainingService {
       throw new NotFoundException("liveTraining.errors.notFound");
     }
 
+    await this.assertNoOpenSession(row.id);
+
     return row;
+  }
+
+  private async assertNoOpenSession(id: UUIDType) {
+    const currentSession = await this.liveTrainingSessionsRepository.getCurrentSessionRow(id);
+
+    if (currentSession) {
+      throw new BadRequestException("liveTraining.errors.activeSessionUpdateForbidden");
+    }
   }
 
   private async canSeeLiveTraining(
