@@ -113,6 +113,7 @@ export class CertificateRepository {
     courseId: UUIDType,
     learnerScope: SQL | undefined,
     language: SupportedLanguages,
+    groupId?: UUIDType,
     search?: string,
     page = 1,
     perPage = 20,
@@ -145,6 +146,17 @@ export class CertificateRepository {
         )
       : undefined;
 
+    const groupCondition = groupId
+      ? exists(
+          this.db
+            .select({ id: groupUsers.id })
+            .from(groupUsers)
+            .where(
+              and(eq(groupUsers.userId, studentCourses.studentId), eq(groupUsers.groupId, groupId)),
+            ),
+        )
+      : undefined;
+
     const matchedLearners = this.db
       .select({
         studentCourseId: studentCourses.id,
@@ -162,6 +174,7 @@ export class CertificateRepository {
           eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
           isNull(users.deletedAt),
           learnerScope,
+          groupCondition,
           searchCondition,
         ),
       )
@@ -180,6 +193,7 @@ export class CertificateRepository {
           eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
           isNull(users.deletedAt),
           learnerScope,
+          groupCondition,
           searchCondition,
         ),
       );
@@ -194,12 +208,14 @@ export class CertificateRepository {
           eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
           isNull(users.deletedAt),
           learnerScope,
+          groupCondition,
         ),
       );
 
     const queryRows = await this.db
       .select({
         studentCourseId: matchedLearners.studentCourseId,
+        certificateId: certificates.id,
         learnerName: sql<string | null>`
           CASE
             WHEN ${matchedLearners.studentCourseId} IS NULL THEN NULL
@@ -459,10 +475,11 @@ export class CertificateRepository {
     return certificate;
   }
 
-  async findOwnedCertificateByIdForRender(
-    userId: string,
+  async findCertificateByIdForRender(
+    userId: string | null,
     certificateId: string,
     language: SupportedLanguages,
+    learnerScope?: SQL,
   ) {
     const [certificate] = await this.db
       .select({
@@ -490,9 +507,10 @@ export class CertificateRepository {
       .where(
         and(
           eq(certificates.id, certificateId),
-          eq(certificates.userId, userId),
+          userId ? eq(certificates.userId, userId) : undefined,
           eq(certificates.status, CERTIFICATE_STATUSES.ACTIVE),
           isNull(users.deletedAt),
+          learnerScope,
         ),
       );
 

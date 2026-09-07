@@ -1,4 +1,6 @@
 import { TabsList } from "@radix-ui/react-tabs";
+import { PERMISSIONS } from "@repo/shared";
+import { Download } from "lucide-react";
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { useTranslation } from "react-i18next";
 import { match } from "ts-pattern";
@@ -8,6 +10,7 @@ import { useCourseStatisticsFilter } from "~/api/queries/admin/useCourseLearning
 import { useCourseStatistics } from "~/api/queries/admin/useCourseStatistics";
 import { useCourseStudentsAiMentorResults } from "~/api/queries/admin/useCourseStudentsAiMentorResults";
 import { useAIConfigured } from "~/api/queries/useAIConfigured";
+import { Button } from "~/components/ui/button";
 import { Card, CardContent, CardHeader } from "~/components/ui/card";
 import {
   Select,
@@ -18,6 +21,7 @@ import {
 } from "~/components/ui/select";
 import { Tabs, TabsContent, TabsTrigger } from "~/components/ui/tabs";
 import { TooltipProvider } from "~/components/ui/tooltip";
+import { usePermissions } from "~/hooks/usePermissions";
 import { LessonType } from "~/modules/Admin/EditCourse/EditCourse.types";
 import {
   SearchFilter,
@@ -26,6 +30,7 @@ import {
 } from "~/modules/common/SearchFilter/SearchFilter";
 import { CourseStudentsLearningTimeTable } from "~/modules/Courses/CourseView/CourseAdminStatistics/components/CourseStudentsLearningTimeTable";
 import { useLanguageStore } from "~/modules/Dashboard/Settings/Language/LanguageStore";
+import { useDownloadSummaryReport } from "~/modules/Statistics/Admin/hooks/useDownloadSummaryReport";
 
 import { COURSE_STATISTICS_HANDLES } from "../../../../../e2e/data/statistics/handles";
 
@@ -74,6 +79,17 @@ export function CourseAdminStatistics({ course, canManageCourse }: CourseAdminSt
   const { t } = useTranslation();
   const language = useLanguageStore((state) => state.language);
   const courseId = course?.id || "";
+  const { downloadReport, isDownloading } = useDownloadSummaryReport();
+  const { hasAccess: canViewStatistics } = usePermissions({
+    required: [
+      PERMISSIONS.COURSE_UPDATE,
+      PERMISSIONS.COURSE_UPDATE_OWN,
+      PERMISSIONS.MANAGED_GROUP_RESULTS_READ,
+    ],
+  });
+  const { hasAccess: canDownloadCourseReport } = usePermissions({
+    required: [PERMISSIONS.REPORT_READ, PERMISSIONS.MANAGED_GROUP_RESULTS_READ],
+  });
 
   const [groupId, setGroupId] = useState<string | undefined>(undefined);
 
@@ -145,7 +161,7 @@ export function CourseAdminStatistics({ course, canManageCourse }: CourseAdminSt
 
   const { data: aiMentorResultsPreview } = useCourseStudentsAiMentorResults({
     id: courseId,
-    enabled: canManageCourse && Boolean(courseId),
+    enabled: canViewStatistics && Boolean(courseId),
     query: {
       page: 1,
       perPage: 1,
@@ -227,8 +243,9 @@ export function CourseAdminStatistics({ course, canManageCourse }: CourseAdminSt
   const handleGroupFilterChange = (_name: string, value: FilterValue) => {
     const nextGroupId = value as string | undefined;
 
-    setGroupId(nextGroupId);
     startTransition(() => {
+      setGroupId(nextGroupId);
+
       const updateGroupId = <T,>(setter: React.Dispatch<React.SetStateAction<T>>) => {
         setter((prev) => {
           if (!nextGroupId) {
@@ -292,10 +309,25 @@ export function CourseAdminStatistics({ course, canManageCourse }: CourseAdminSt
     <TooltipProvider>
       <Card data-testid={COURSE_STATISTICS_HANDLES.ROOT}>
         <CardHeader>
-          <h6 className="h6">{t("adminCourseView.statistics.title")}</h6>
-          <p className="body-base-md title-neutral-800">
-            {t("adminCourseView.statistics.subtitle")}
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h6 className="h6">{t("adminCourseView.statistics.title")}</h6>
+              <p className="body-base-md title-neutral-800">
+                {t("adminCourseView.statistics.subtitle")}
+              </p>
+            </div>
+            {canDownloadCourseReport && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => void downloadReport(courseId)}
+                disabled={isDownloading}
+              >
+                <Download className="mr-2 size-4" />
+                {t("adminStatisticsView.other.downloadReport")}
+              </Button>
+            )}
+          </div>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-8">
@@ -489,7 +521,11 @@ export function CourseAdminStatistics({ course, canManageCourse }: CourseAdminSt
               />
             </TabsContent>
             <TabsContent value={CourseAdminStatisticsTabs.certificates}>
-              <CourseCertificateRowsTable courseId={courseId} search={certificateSearch} />
+              <CourseCertificateRowsTable
+                courseId={courseId}
+                groupId={groupId}
+                search={certificateSearch}
+              />
             </TabsContent>
           </Tabs>
         </CardContent>

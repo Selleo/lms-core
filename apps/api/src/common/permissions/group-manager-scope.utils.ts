@@ -1,7 +1,7 @@
 import { COURSE_ENROLLMENT, LIVE_TRAINING_LINK_ENTITY_TYPES, PERMISSIONS } from "@repo/shared";
 import { and, eq, sql } from "drizzle-orm";
 
-import { groupManagerGroups } from "src/storage/schema";
+import { groupCourses, groupManagerGroups } from "src/storage/schema";
 
 import { hasAnyPermission, hasPermission } from "./permission.utils";
 
@@ -60,13 +60,24 @@ export const getGroupManagerCourseScopeCondition = (
 
   return sql`EXISTS (
     SELECT 1
-    FROM student_courses sc_scope
-    INNER JOIN group_users gu_scope ON gu_scope.user_id = sc_scope.student_id
-    INNER JOIN group_manager_groups gmg_scope ON gmg_scope.group_id = gu_scope.group_id
+    FROM ${groupManagerGroups} gmg_scope
     WHERE gmg_scope.manager_user_id = ${currentUser.userId}
       AND gmg_scope.tenant_id = ${currentUser.tenantId}
-      AND sc_scope.course_id = ${courseId}
-      AND sc_scope.status = ${COURSE_ENROLLMENT.ENROLLED}
+      AND (
+        EXISTS (
+          SELECT 1
+          FROM ${groupCourses} gc_scope
+          WHERE gc_scope.group_id = gmg_scope.group_id
+            AND gc_scope.course_id = ${courseId}
+        )
+        OR EXISTS (
+          SELECT 1
+          FROM student_courses sc_scope
+          INNER JOIN group_users gu_scope ON gu_scope.user_id = sc_scope.student_id
+          WHERE gu_scope.group_id = gmg_scope.group_id
+            AND sc_scope.course_id = ${courseId}
+        )
+      )
   )`;
 };
 

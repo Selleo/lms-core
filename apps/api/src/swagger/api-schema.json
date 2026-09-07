@@ -8753,6 +8753,15 @@
             }
           },
           {
+            "name": "groupId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
             "name": "search",
             "required": false,
             "in": "query",
@@ -13769,6 +13778,15 @@
                   "type": "string"
                 }
               ]
+            }
+          },
+          {
+            "name": "courseId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
             }
           }
         ],
@@ -53873,6 +53891,17 @@
                 "items": {
                   "type": "object",
                   "properties": {
+                    "certificateId": {
+                      "anyOf": [
+                        {
+                          "format": "uuid",
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
                     "learnerName": {
                       "type": "string"
                     },
@@ -53953,6 +53982,7 @@
                     }
                   },
                   "required": [
+                    "certificateId",
                     "learnerName",
                     "learnerEmail",
                     "groups",

@@ -40,6 +40,7 @@ import {
   chapters,
   courses,
   groups,
+  groupManagerGroups,
   groupUsers,
   lessons,
   studentCourses,
@@ -110,6 +111,23 @@ export class AiRepository {
       .where(and(...conditions));
 
     return thread;
+  }
+
+  async isLearnerManagedByUser(learnerId: UUIDType, managerUserId: UUIDType) {
+    const [managedLearner] = await this.db
+      .select({ id: groupUsers.id })
+      .from(groupUsers)
+      .innerJoin(
+        groupManagerGroups,
+        and(
+          eq(groupManagerGroups.groupId, groupUsers.groupId),
+          eq(groupManagerGroups.managerUserId, managerUserId),
+        ),
+      )
+      .where(eq(groupUsers.userId, learnerId))
+      .limit(1);
+
+    return Boolean(managedLearner);
   }
 
   async findLessonIdByThreadId(threadId: UUIDType) {

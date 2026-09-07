@@ -25,17 +25,29 @@ import type { ITEMS_PER_PAGE_OPTIONS } from "~/components/Pagination/Pagination"
 
 type CourseCertificateRowsTableProps = {
   courseId: string;
+  groupId?: string;
   search?: string;
 };
 
-export function CourseCertificateRowsTable({ courseId, search }: CourseCertificateRowsTableProps) {
+export function CourseCertificateRowsTable({
+  courseId,
+  groupId,
+  search,
+}: CourseCertificateRowsTableProps) {
   const { t } = useTranslation();
 
   const language = useLanguageStore((state) => state.language);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(20);
 
-  const { data, isFetching } = useCourseCertificateRows(courseId, language, search, page, perPage);
+  const { data, isFetching } = useCourseCertificateRows(
+    courseId,
+    language,
+    groupId,
+    search,
+    page,
+    perPage,
+  );
   const rows = data?.data ?? [];
   const { data: globalSettings } = useGlobalSettings();
   const [preview, setPreview] = useState<CourseCertificateRow | null>(null);
@@ -108,7 +120,7 @@ export function CourseCertificateRowsTable({ courseId, search }: CourseCertifica
 
       <Dialog open={Boolean(preview)} onOpenChange={(open) => !open && setPreview(null)}>
         <DialogContent
-          className="max-w-6xl overflow-hidden p-0"
+          className="flex w-[min(1120px,95vw)] items-center justify-center max-w-none overflow-hidden border-0 bg-transparent p-0 shadow-none"
           noCloseButton
           aria-describedby={undefined}
         >
@@ -118,6 +130,7 @@ export function CourseCertificateRowsTable({ courseId, search }: CourseCertifica
           {preview && (
             <div className="relative">
               <CertificatePreview
+                certificateId={preview.certificateId ?? undefined}
                 studentName={preview.learnerName}
                 courseName={preview.courseTitle}
                 completionDate={preview.issuedAt ?? undefined}
@@ -126,7 +139,7 @@ export function CourseCertificateRowsTable({ courseId, search }: CourseCertifica
                 certificateBackgroundImageUrl={globalSettings?.certificateBackgroundImage}
                 platformLogo={globalSettings?.platformLogoS3Key}
                 initialColor={preview.certificateFontColor}
-                showDownloadButton={false}
+                showDownloadButton={Boolean(preview.certificateId)}
                 showShareButton={false}
                 onClose={() => setPreview(null)}
               />
