@@ -9895,6 +9895,78 @@ export interface UpdateTenantResponse {
   };
 }
 
+export interface UpdateTenantApiKeysBody {
+  name:
+    | "MICROSOFT_CLIENT_ID"
+    | "MICROSOFT_CLIENT_SECRET"
+    | "MICROSOFT_CALENDAR_CLIENT_ID"
+    | "MICROSOFT_CALENDAR_CLIENT_SECRET"
+    | "MICROSOFT_OAUTH_ENABLED"
+    | "OPENAI_API_KEY"
+    | "BUNNY_STREAM_API_KEY"
+    | "BUNNY_STREAM_READ_ONLY_API_KEY"
+    | "BUNNY_STREAM_LIBRARY_ID"
+    | "BUNNY_STREAM_CDN_URL"
+    | "BUNNY_STREAM_TOKEN_SIGNING_KEY"
+    | "GOOGLE_CLIENT_ID"
+    | "GOOGLE_CLIENT_SECRET"
+    | "GOOGLE_OAUTH_ENABLED"
+    | "VITE_GOOGLE_OAUTH_ENABLED"
+    | "VITE_MICROSOFT_OAUTH_ENABLED"
+    | "STRIPE_WEBHOOK_SECRET"
+    | "STRIPE_SECRET_KEY"
+    | "VITE_STRIPE_PUBLISHABLE_KEY"
+    | "SLACK_CLIENT_ID"
+    | "SLACK_CLIENT_SECRET"
+    | "SLACK_OAUTH_ENABLED"
+    | "VITE_SLACK_OAUTH_ENABLED"
+    | "LUMA_API_KEY"
+    | "LIVEKIT_URL"
+    | "LIVEKIT_API_KEY"
+    | "LIVEKIT_API_SECRET";
+  /**
+   * Tenant environment value. Stored encrypted; never returned in responses.
+   * @maxLength 4096
+   */
+  value: string;
+}
+
+export interface UpdateTenantApiKeysResponse {
+  data: {
+    /** @format uuid */
+    tenantId: string;
+    updatedKeys: (
+      | "MICROSOFT_CLIENT_ID"
+      | "MICROSOFT_CLIENT_SECRET"
+      | "MICROSOFT_CALENDAR_CLIENT_ID"
+      | "MICROSOFT_CALENDAR_CLIENT_SECRET"
+      | "MICROSOFT_OAUTH_ENABLED"
+      | "OPENAI_API_KEY"
+      | "BUNNY_STREAM_API_KEY"
+      | "BUNNY_STREAM_READ_ONLY_API_KEY"
+      | "BUNNY_STREAM_LIBRARY_ID"
+      | "BUNNY_STREAM_CDN_URL"
+      | "BUNNY_STREAM_TOKEN_SIGNING_KEY"
+      | "GOOGLE_CLIENT_ID"
+      | "GOOGLE_CLIENT_SECRET"
+      | "GOOGLE_OAUTH_ENABLED"
+      | "VITE_GOOGLE_OAUTH_ENABLED"
+      | "VITE_MICROSOFT_OAUTH_ENABLED"
+      | "STRIPE_WEBHOOK_SECRET"
+      | "STRIPE_SECRET_KEY"
+      | "VITE_STRIPE_PUBLISHABLE_KEY"
+      | "SLACK_CLIENT_ID"
+      | "SLACK_CLIENT_SECRET"
+      | "SLACK_OAUTH_ENABLED"
+      | "VITE_SLACK_OAUTH_ENABLED"
+      | "LUMA_API_KEY"
+      | "LIVEKIT_URL"
+      | "LIVEKIT_API_KEY"
+      | "LIVEKIT_API_SECRET"
+    )[];
+  };
+}
+
 export interface DeactivateTenantResponse {
   data: {
     /** @format uuid */
@@ -18265,6 +18337,28 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, void>({
         path: `/api/integration/tenants/${tenantId}`,
         method: "DELETE",
+        ...params,
+      }),
+
+    /**
+     * @description Sets or replaces a supported tenant environment value by name. Uses the same supported names as the environment settings API. Only integration API keys owned by a managing tenant with tenant management permission can use this endpoint. Values are encrypted and never returned. The tenant in the path is authoritative, regardless of X-Tenant-Id.
+     *
+     * @tags Integration
+     * @name IntegrationControllerUpdateTenantApiKeys
+     * @summary Update a tenant environment value
+     * @request PATCH:/api/integration/tenants/{tenantId}/api-keys
+     */
+    integrationControllerUpdateTenantApiKeys: (
+      tenantId: string,
+      data: UpdateTenantApiKeysBody,
+      params: RequestParams = {},
+    ) =>
+      this.request<UpdateTenantApiKeysResponse, void>({
+        path: `/api/integration/tenants/${tenantId}/api-keys`,
+        method: "PATCH",
+        body: data,
+        type: ContentType.Json,
+        format: "json",
         ...params,
       }),
 
