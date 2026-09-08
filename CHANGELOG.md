@@ -1,3 +1,27 @@
+<a name="v4.19.1"></a>
+
+## [v4.19.1] - 08.09.2026
+
+### Features:
+
+- let integrations update tenant environment settings ([#1963](https://github.com/Selleo/mentingo/issues/1963))
+
+- generate AI Mentor settings with the organization’s selected AI provider ([#1926](https://github.com/Selleo/mentingo/issues/1926))
+
+### Bug Fixes:
+
+- keep AI Mentor transcripts readable while improving pronunciation ([#1960](https://github.com/Selleo/mentingo/issues/1960))
+
+- correct group manager statistics for more accurate reporting ([#1956](https://github.com/Selleo/mentingo/issues/1956))
+
+- prevent live training issues when settings are changed during an active session ([#1957](https://github.com/Selleo/mentingo/issues/1957))
+
+### Chores:
+
+- open the relevant course directly from mention notifications ([#1962](https://github.com/Selleo/mentingo/issues/1962))
+
+- improve drag-and-drop support for uploading multiple files ([#1961](https://github.com/Selleo/mentingo/issues/1961))
+
 <a name="v4.19.0"></a>
 
 ## [v4.19.0] - 04.09.2026
@@ -57,6 +81,8 @@
 - improve learner experience with required video progress ([#1936](https://github.com/Selleo/mentingo/issues/1936))
 
 ### Documentation:
+
+- update changelog for version v4.19.0
 
 - update bunny configuration information ([#1951](https://github.com/Selleo/mentingo/issues/1951))
 
@@ -1886,27 +1912,11 @@
 
 - implement admin notifications about finished course ([#630](https://github.com/Selleo/mentingo/issues/630))
 
-### Bug Fixes:
-
-- archiving user and change default filter to archived user ([#643](https://github.com/Selleo/mentingo/issues/643))
-
-### Documentation:
-
-- update changelog for version v3.4.0
-
-<a name="v3.3.0"></a>
-
-## [v3.3.0] - 16.09.2025
-
-### Features:
-
 - generate certificates ([#538](https://github.com/Selleo/mentingo/issues/538))
 
 ### Bug Fixes:
 
-- failing api tests and api e2e tests
-
-- mfa after sso login
+- archiving user and change default filter to archived user ([#643](https://github.com/Selleo/mentingo/issues/643))
 
 - add fetch depth of 0 to deploy ([#645](https://github.com/Selleo/mentingo/issues/645))
 
@@ -1914,7 +1924,7 @@
 
 ### Documentation:
 
-- update changelog for version v3.3.0
+- update changelog for version v3.4.0
 
 - update changelog for version learn-v2025.09.12
 
@@ -3278,7 +3288,8 @@ Extend NotifyAdminsHandler to support both UserRegisteredEvent and UserPasswordC
 
 - add afterAll hook for cleaning up test context
 
-[Unreleased]: https://github.com/Selleo/mentingo/compare/v4.19.0...HEAD
+[Unreleased]: https://github.com/Selleo/mentingo/compare/v4.19.1...HEAD
+[v4.19.1]: https://github.com/Selleo/mentingo/compare/v4.19.0...v4.19.1
 [v4.19.0]: https://github.com/Selleo/mentingo/compare/v4.18.0...v4.19.0
 [v4.18.0]: https://github.com/Selleo/mentingo/compare/v4.17.1...v4.18.0
 [v4.17.1]: https://github.com/Selleo/mentingo/compare/v4.17.0...v4.17.1
@@ -3330,8 +3341,7 @@ Extend NotifyAdminsHandler to support both UserRegisteredEvent and UserPasswordC
 [v3.7.0]: https://github.com/Selleo/mentingo/compare/v3.6.0...v3.7.0
 [v3.6.0]: https://github.com/Selleo/mentingo/compare/v3.5.0...v3.6.0
 [v3.5.0]: https://github.com/Selleo/mentingo/compare/v3.4.0...v3.5.0
-[v3.4.0]: https://github.com/Selleo/mentingo/compare/v3.3.0...v3.4.0
-[v3.3.0]: https://github.com/Selleo/mentingo/compare/v3.2.1...v3.3.0
+[v3.4.0]: https://github.com/Selleo/mentingo/compare/v3.2.1...v3.4.0
 [v3.2.1]: https://github.com/Selleo/mentingo/compare/v3.2.0...v3.2.1
 [v3.2.0]: https://github.com/Selleo/mentingo/compare/v3.1.0...v3.2.0
 [v3.1.0]: https://github.com/Selleo/mentingo/compare/v3.0.6...v3.1.0
