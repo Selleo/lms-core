@@ -157,6 +157,37 @@ describe("AiRuntimeService", () => {
     expect(result.source).toBe(AI_RUNTIME_SOURCES.LUMA);
   });
 
+  it("preserves reserved markers and Unicode at every HTTP byte split", async () => {
+    const raw = "⟦say:zero przecinek cztery siedem⟧0,47⟦/say⟧ złoty 🧑🏽‍💻";
+    const bytes = Buffer.from(raw, "utf8");
+    const service = new AiRuntimeService({} as EnvService);
+    for (let split = 0; split <= bytes.length; split += 1) {
+      const chunks = (async function* () {
+        yield bytes.subarray(0, split);
+        yield bytes.subarray(split);
+      })();
+      let decoded = "";
+      for await (const text of service["readLumaTextStream"](chunks)) decoded += text;
+      expect(decoded).toBe(raw);
+    }
+    const chunks = (async function* () {
+      for (let index = 0; index < bytes.length; index += 1) yield bytes.subarray(index, index + 1);
+    })();
+    let decoded = "";
+    for await (const text of service["readLumaTextStream"](chunks)) decoded += text;
+    expect(decoded).toBe(raw);
+  });
+
+  it("flushes an incomplete final UTF-8 sequence without dropping preceding text", async () => {
+    const service = new AiRuntimeService({} as EnvService);
+    const chunks = (async function* () {
+      yield Buffer.from([0x41, 0xe2]);
+    })();
+    let decoded = "";
+    for await (const text of service["readLumaTextStream"](chunks)) decoded += text;
+    expect(decoded).toBe("A\uFFFD");
+  });
+
   it("does not fall back to Core when an interrupted Luma stream is aborted", async () => {
     const service = new AiRuntimeService({} as EnvService);
     const abortController = new AbortController();

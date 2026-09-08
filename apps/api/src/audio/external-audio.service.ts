@@ -42,7 +42,7 @@ import { AiRepository } from "src/ai/repositories/ai.repository";
 import { AiService } from "src/ai/services/ai.service";
 import { ThreadService } from "src/ai/services/thread.service";
 import { OPENAI_MODELS, THREAD_STATUS } from "src/ai/utils/ai.type";
-import { stripVoiceControlTags } from "src/ai/utils/voiceControlTags";
+import { stripVoiceControlTags, VoiceMarkupDisplayParser } from "src/ai/utils/voiceControlTags";
 import { ExternalAudioSessionStore } from "src/audio/external-audio-session.store";
 import { hasAnyPermission } from "src/common/permissions/permission.utils";
 import { EnvService } from "src/env/services/env.service";
@@ -816,6 +816,7 @@ export class ExternalAudioService {
 
         let responseText = "";
         let pendingDeltaChunk = "";
+        const displayParser = new VoiceMarkupDisplayParser();
         let seq = 1;
         for await (const delta of stream.textStream) {
           if (shouldForwardMentorText && session.audioOutputErrors.has(payload.jobId)) {
@@ -826,6 +827,10 @@ export class ExternalAudioService {
 
           responseText += delta;
           pendingDeltaChunk += delta;
+          this.emitMentorResponseDelta(sessionId, {
+            text: displayParser.push(delta),
+            jobId: payload.jobId,
+          });
 
           if (!this.shouldFlushMentorDeltaChunk(pendingDeltaChunk)) {
             continue;
@@ -834,10 +839,6 @@ export class ExternalAudioService {
           if (shouldForwardMentorText) {
             seq = this.sendMentorTextDeltaChunk(session, payload.jobId, pendingDeltaChunk, seq);
           }
-          this.emitMentorResponseDelta(sessionId, {
-            text: this.sanitizeMentorResponseDelta(pendingDeltaChunk),
-            jobId: payload.jobId,
-          });
           pendingDeltaChunk = "";
         }
 
@@ -879,12 +880,10 @@ export class ExternalAudioService {
         if (shouldForwardMentorText && pendingDeltaChunk.length > 0) {
           seq = this.sendMentorTextDeltaChunk(session, payload.jobId, pendingDeltaChunk, seq);
         }
-        if (pendingDeltaChunk.length > 0) {
-          this.emitMentorResponseDelta(sessionId, {
-            text: this.sanitizeMentorResponseDelta(pendingDeltaChunk),
-            jobId: payload.jobId,
-          });
-        }
+        this.emitMentorResponseDelta(sessionId, {
+          text: displayParser.finish(),
+          jobId: payload.jobId,
+        });
 
         if (shouldForwardMentorText) {
           session.socket.sendMentorTextEnd({
@@ -895,7 +894,7 @@ export class ExternalAudioService {
         }
 
         this.emitMentorResponseCompleted(sessionId, {
-          text: stripVoiceControlTags(responseText.trim()),
+          text: stripVoiceControlTags(responseText),
           jobId: payload.jobId,
           reason: "complete",
         });
@@ -1011,47 +1010,11 @@ export class ExternalAudioService {
   }
 
   private shouldFlushMentorDeltaChunk(chunk: string): boolean {
-    if (this.hasIncompleteVoiceControlTag(chunk)) {
-      return false;
-    }
-
     if (chunk.length >= ExternalAudioService.MENTOR_DELTA_FLUSH_MAX_CHARS) {
       return true;
     }
 
     return /[.!?]\s*$/.test(chunk) || /\s$/.test(chunk);
-  }
-
-  private hasIncompleteVoiceControlTag(text: string): boolean {
-    const lastOpeningBracket = text.lastIndexOf("<");
-    const lastClosingBracket = text.lastIndexOf(">");
-    if (lastOpeningBracket > lastClosingBracket) {
-      const trailingTag = text.slice(lastOpeningBracket);
-      if (/^<\/?(?:emotion|break|spell)\b/i.test(trailingTag)) {
-        return true;
-      }
-    }
-
-    const normalizedText = text.toLowerCase();
-    const lastSpellOpening = normalizedText.lastIndexOf("<spell");
-    const lastSpellClosing = normalizedText.lastIndexOf("</spell>");
-    if (lastSpellOpening > lastSpellClosing) {
-      return true;
-    }
-
-    return normalizedText.lastIndexOf("[laughter") > normalizedText.lastIndexOf("]");
-  }
-
-  private sanitizeMentorResponseDelta(text: string): string {
-    const leadingWhitespace = text.match(/^\s*/)?.[0] ?? "";
-    const trailingWhitespace = text.match(/\s*$/)?.[0] ?? "";
-    const strippedText = stripVoiceControlTags(text);
-
-    if (!strippedText) {
-      return "";
-    }
-
-    return `${leadingWhitespace}${strippedText}${trailingWhitespace}`;
   }
 
   private sendMentorTextDeltaChunk(

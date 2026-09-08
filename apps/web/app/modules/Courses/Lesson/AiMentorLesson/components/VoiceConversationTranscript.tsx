@@ -1,4 +1,5 @@
 import { LEARNER_TRANSCRIPT_STATUSES } from "@repo/shared";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useCurrentUserSuspense } from "~/api/queries";
@@ -19,26 +20,30 @@ type VoiceConversationTranscriptProps = {
   mentorAvatarUrl?: string | null;
 };
 
-const NO_LEADING_SPACE_PATTERN = /^[,.;:!?…)}\]]/u;
-const NO_TRAILING_SPACE_PATTERN = /[([{]$/u;
-
-function getWordPrefix(words: MentorSpeechPresentation["words"], index: number): string {
-  if (index === 0) {
-    return "";
+function getDisplaySegments(text: string, words: MentorSpeechPresentation["words"]) {
+  const segments: Array<{ text: string; wordIndex: number | null; offset: number }> = [];
+  let cursor = 0;
+  for (const [wordIndex, word] of words.entries()) {
+    if (!word.text) continue;
+    const start = text.indexOf(word.text, cursor);
+    if (start < 0) break;
+    const end = start + word.text.length;
+    // Never highlight a coincidental substring of a word or decimal expression.
+    const before = text.slice(Math.max(0, start - 2), start);
+    const after = text.slice(end, end + 2);
+    if (
+      (/^[\p{L}\p{N}_]/u.test(word.text) && /[\p{L}\p{N}_]$|\d[.,]$/u.test(before)) ||
+      (/[\p{L}\p{N}_]$/u.test(word.text) && /^[\p{L}\p{N}_]|^[.,]\d/u.test(after))
+    )
+      break;
+    if (start > cursor)
+      segments.push({ text: text.slice(cursor, start), wordIndex: null, offset: cursor });
+    segments.push({ text: text.slice(start, end), wordIndex, offset: start });
+    cursor = end;
   }
-
-  const word = words[index]?.text ?? "";
-  const previousWord = words[index - 1]?.text ?? "";
-  if (
-    /^\s/u.test(word) ||
-    /\s$/u.test(previousWord) ||
-    NO_LEADING_SPACE_PATTERN.test(word) ||
-    NO_TRAILING_SPACE_PATTERN.test(previousWord)
-  ) {
-    return "";
-  }
-
-  return " ";
+  if (cursor < text.length)
+    segments.push({ text: text.slice(cursor), wordIndex: null, offset: cursor });
+  return segments;
 }
 
 function MentorAvatar({
@@ -58,20 +63,19 @@ function MentorAvatar({
   );
 }
 
-function MentorTimedText({ speech }: { speech: MentorSpeechPresentation }) {
+function MentorTimedText({ speech, text }: { speech: MentorSpeechPresentation; text: string }) {
+  const segments = useMemo(() => getDisplaySegments(text, speech.words), [text, speech.words]);
   return (
-    <span aria-hidden="true">
-      {speech.words.map((word, index) => (
+    <span aria-hidden="true" className="whitespace-pre-wrap">
+      {segments.map((segment) => (
         <span
-          key={`${word.startMs}-${word.endMs}-${index}`}
-          className={cn("rounded px-0.5 py-0.5", {
-            "bg-primary-100 text-primary-950": index === speech.activeWordIndex,
-            "text-neutral-900": speech.activeWordIndex === null || index < speech.activeWordIndex,
-            "text-neutral-400": speech.activeWordIndex !== null && index > speech.activeWordIndex,
+          key={segment.offset}
+          className={cn("rounded py-0.5", {
+            "bg-primary-100 text-primary-950":
+              segment.wordIndex !== null && segment.wordIndex === speech.activeWordIndex,
           })}
         >
-          {getWordPrefix(speech.words, index)}
-          {word.text}
+          {segment.text}
         </span>
       ))}
     </span>
@@ -140,7 +144,7 @@ export function VoiceConversationTranscript({
               {hasMentorSpeech && mentorSpeech ? (
                 <>
                   <span className="sr-only">{mentorResponse}</span>
-                  <MentorTimedText speech={mentorSpeech} />
+                  <MentorTimedText speech={mentorSpeech} text={mentorResponse} />
                 </>
               ) : (
                 mentorResponse

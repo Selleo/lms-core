@@ -274,3 +274,95 @@ describe("ExternalAudioService recovery", () => {
     service.clearSession("session-2");
   });
 });
+
+describe("ExternalAudioService voice markup streaming", () => {
+  it.each(["core", "luma"])(
+    "keeps raw %s speech markup separate from display events across character chunks",
+    async (source) => {
+      const raw = "⟦emotion:neutral⟧Wynik: ⟦say:zero przecinek cztery siedem⟧0,47⟦/say⟧. <button";
+      const display = "Wynik: 0,47. <button";
+      const socket = {
+        sendMentorTextDelta: jest.fn(),
+        sendMentorTextEnd: jest.fn(),
+        sendMentorTextError: jest.fn(),
+      };
+      const realtimePublisher = { emitToRoom: jest.fn() };
+      const sessionStore = new ExternalAudioSessionStore();
+      sessionStore.set({
+        sessionId: "session-1",
+        socket: socket as unknown as LumaSocket,
+        currentUser,
+        threadId: "thread-1",
+        lessonId: "lesson-1",
+        userId: currentUser.userId,
+        sessionRunId: "run-1",
+        recoveryState: "connected",
+        recoveryAttempt: 0,
+        recoveryRequestPending: false,
+        lastSentAudioSeq: 0,
+        unacknowledgedChunks: new Map(),
+        deferredOperations: [],
+        recoveryTimeout: null,
+        recoveryRetryTimeout: null,
+        clientDisconnectTimeout: null,
+        activeTurnId: null,
+        audioOutputErrors: new Map(),
+        pendingInterruption: false,
+        interruptedTurnIds: new Set(),
+        activeMentorStream: null,
+      });
+      const service = new ExternalAudioService(
+        {} as never,
+        {} as never,
+        {
+          streamMessage: jest.fn().mockResolvedValue({
+            source,
+            textStream: (async function* () {
+              for (const character of raw) yield character;
+            })(),
+          }),
+        } as never,
+        {} as never,
+        {} as never,
+        sessionStore,
+        {
+          runWithTenant: async (_tenantId: string, callback: () => Promise<void>) => callback(),
+        } as never,
+        realtimePublisher as never,
+      );
+      await service["handleLearnerTranscription"]("session-1", {
+        jobId: "turn-1",
+        data: {
+          text: "Ile?",
+          status: "final",
+          turnId: "turn-1",
+          segmentId: "segment-1",
+          revision: 1,
+        },
+      } as never);
+
+      const visibleDeltas = realtimePublisher.emitToRoom.mock.calls
+        .filter(([event]) => event === VOICE_SOCKET_EVENT.MENTOR_RESPONSE_DELTA)
+        .map(([, , payload]) => payload.text)
+        .join("");
+      expect(visibleDeltas).toBe(display);
+      expect(realtimePublisher.emitToRoom).toHaveBeenCalledWith(
+        VOICE_SOCKET_EVENT.MENTOR_RESPONSE_COMPLETED,
+        "session-1",
+        { text: display, jobId: "turn-1", reason: "complete" },
+      );
+      if (source === "core") {
+        expect(
+          socket.sendMentorTextDelta.mock.calls.map(([payload]) => payload.text).join(""),
+        ).toBe(raw);
+        expect(socket.sendMentorTextEnd).toHaveBeenCalledWith({
+          type: "mentor.text.end",
+          jobId: "turn-1",
+          reason: "complete",
+        });
+      } else {
+        expect(socket.sendMentorTextDelta).not.toHaveBeenCalled();
+      }
+    },
+  );
+});

@@ -57,7 +57,8 @@ const VAD_CONFIG = {
   positiveSpeechThreshold: 0.42,
   negativeSpeechThreshold: 0.24,
   minSpeechMs: 120,
-  voiceMentorRedemptionMs: 300,
+  voiceMentorNegativeSpeechThreshold: 0.18,
+  voiceMentorRedemptionMs: 600,
   redemptionMs: 700,
   preSpeechPadMs: 500,
 } as const;
@@ -260,7 +261,9 @@ export class RealtimePCMStreamerWorklet {
       startOnLoad: false,
       submitUserSpeechOnPause: true,
       positiveSpeechThreshold: VAD_CONFIG.positiveSpeechThreshold,
-      negativeSpeechThreshold: VAD_CONFIG.negativeSpeechThreshold,
+      negativeSpeechThreshold: this.keepClientVadTurnOpen
+        ? VAD_CONFIG.voiceMentorNegativeSpeechThreshold
+        : VAD_CONFIG.negativeSpeechThreshold,
       minSpeechMs: VAD_CONFIG.minSpeechMs,
       redemptionMs: this.keepClientVadTurnOpen
         ? VAD_CONFIG.voiceMentorRedemptionMs
