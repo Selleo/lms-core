@@ -43,10 +43,12 @@ export class ReportRepository {
   async getAllStudentCourseData(
     language: SupportedLanguages,
     currentUser: CurrentUserType,
+    courseId?: string,
   ): Promise<StudentCourseReportRow[]> {
     const conditions = [
       eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
       isNull(users.deletedAt),
+      courseId ? eq(studentCourses.courseId, courseId) : undefined,
     ];
 
     const canViewOnlyCreatedCourses = hasPermission(

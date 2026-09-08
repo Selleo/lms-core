@@ -14,6 +14,7 @@ vi.mock("~/api/queries/useCourseCertificateRows", () => ({
     data: {
       data: [
         {
+          certificateId: "certificate-id",
           learnerName: "Alex Learner",
           learnerEmail: "alex@example.com",
           groups: ["Sales"],

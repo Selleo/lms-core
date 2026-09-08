@@ -392,12 +392,19 @@ describe("Group Manager authorization outcomes (e2e)", () => {
       .set("Cookie", cookie)
       .expect(200);
 
-    expect(learningTimeResponse.body.data.users).toEqual([
-      expect.objectContaining({
-        id: fixture.assignedLearner.id,
-        totalSeconds: 120,
-      }),
-    ]);
+    expect(learningTimeResponse.body.data.users).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: fixture.assignedLearner.id,
+          totalSeconds: 120,
+        }),
+        expect.objectContaining({
+          id: notStartedLearner.id,
+          totalSeconds: 0,
+        }),
+      ]),
+    );
+    expect(learningTimeResponse.body.data.users).toHaveLength(2);
   });
 
   it("scopes quiz and AI Mentor outcomes to authorized learners", async () => {
@@ -703,7 +710,7 @@ describe("Group Manager authorization outcomes (e2e)", () => {
       .expect(200);
   });
 
-  it("lists every certificate outcome without identifiers or download permission", async () => {
+  it("lists every certificate outcome with identifiers and download permission", async () => {
     const activeLearner = await createUser("active-certificate");
     const expiredLearner = await createUser("expired-certificate");
     const revokedLearner = await createUser("revoked-certificate");
@@ -769,7 +776,11 @@ describe("Group Manager authorization outcomes (e2e)", () => {
       [expiredLearner.email]: COURSE_CERTIFICATE_STATUSES.EXPIRED,
       [revokedLearner.email]: COURSE_CERTIFICATE_STATUSES.REVOKED,
     });
-    expect(response.body.data.data.every((row: object) => !("certificateId" in row))).toBe(true);
+    expect(
+      response.body.data.data.find(
+        (row: { learnerEmail: string }) => row.learnerEmail === activeLearner.email,
+      ).certificateId,
+    ).toBe(activeCertificate.id);
     expect(fileServiceMock.getFileUrl).toHaveBeenCalledTimes(1);
     expect(fileServiceMock.getFileUrl).toHaveBeenCalledWith("certificate-signature.png");
     expect(
@@ -782,7 +793,7 @@ describe("Group Manager authorization outcomes (e2e)", () => {
       .post("/api/certificates/download")
       .set("Cookie", cookie)
       .send({ certificateId: activeCertificate.id, language: "en" })
-      .expect(403);
+      .expect(201);
   });
 
   it("exports only authorized learner rows and only shared managed-group names", async () => {

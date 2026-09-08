@@ -7,7 +7,6 @@ import { getSortOptions } from "src/common/helpers/getSortOptions";
 import { getUserNameSearchCondition } from "src/common/helpers/getUserNameSearchCondition";
 import { DEFAULT_PAGE_SIZE } from "src/common/pagination";
 import {
-  getGroupManagerGroupScopeCondition,
   getGroupManagerLearnerScopeCondition,
   shouldApplyGroupManagerScope,
 } from "src/common/permissions/group-manager-scope.utils";
@@ -17,7 +16,7 @@ import { IMAGE_QUALITY } from "src/file/image-variants/image-variant.constants";
 import { LearningTimeRepository } from "src/learning-time/learning-time.repository";
 import { LocalizationService } from "src/localization/localization.service";
 import { QUEUE_NAMES, QueueService } from "src/queue";
-import { groups, groupUsers, lessonLearningTime, users } from "src/storage/schema";
+import { groups, groupUsers, lessonLearningTime, studentCourses, users } from "src/storage/schema";
 import { WsGateway } from "src/websocket";
 
 import type { createCache } from "cache-manager";
@@ -317,7 +316,7 @@ export class LearningTimeService implements OnModuleInit {
     if (currentUser) {
       const managerScope = getGroupManagerLearnerScopeCondition(
         currentUser,
-        lessonLearningTime.userId,
+        studentCourses.studentId,
         [PERMISSIONS.COURSE_STATISTICS],
       );
 
@@ -336,7 +335,7 @@ export class LearningTimeService implements OnModuleInit {
           SELECT 1
           FROM ${groupUsers}
           INNER JOIN ${groups} ON ${groups.id} = ${groupUsers.groupId}
-          WHERE ${groupUsers.userId} = ${lessonLearningTime.userId}
+          WHERE ${groupUsers.userId} = ${studentCourses.studentId}
             AND ${groupNameSearchCondition}
         )`,
       );
@@ -348,7 +347,7 @@ export class LearningTimeService implements OnModuleInit {
 
     if (query.userId || query.groupId) {
       if (!availableUserIds.length) conditions.push(sql`FALSE`);
-      const usersCondition = inArray(lessonLearningTime.userId, availableUserIds);
+      const usersCondition = inArray(studentCourses.studentId, availableUserIds);
       if (availableUserIds.length && usersCondition) {
         conditions.push(usersCondition);
       }
@@ -393,20 +392,14 @@ export class LearningTimeService implements OnModuleInit {
     language?: SupportedLanguages,
     currentUser?: CurrentUserType,
   ) {
-    const conditions: SQL[] = [];
-
-    if (currentUser) {
-      const managerScope = getGroupManagerGroupScopeCondition(currentUser, groups.id, [
-        PERMISSIONS.COURSE_STATISTICS,
-      ]);
-
-      if (managerScope) conditions.push(managerScope);
-    }
-    const groupOptions = await this.learningTimeRepository.getGroupsInCourse(
-      courseId,
-      language,
-      conditions,
-    );
+    const groupOptions =
+      currentUser && shouldApplyGroupManagerScope(currentUser, [PERMISSIONS.COURSE_STATISTICS])
+        ? await this.learningTimeRepository.getManagedGroups(
+            currentUser.userId,
+            currentUser.tenantId,
+            language,
+          )
+        : await this.learningTimeRepository.getGroupsInCourse(courseId, language);
 
     return { groups: groupOptions };
   }

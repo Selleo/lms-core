@@ -98,6 +98,7 @@ export const certificateDashboardSummarySchema = Type.Object({
 export const courseCertificateStatusSchema = Type.Enum(COURSE_CERTIFICATE_STATUSES);
 
 export const courseCertificateRowSchema = Type.Object({
+  certificateId: Type.Union([UUIDSchema, Type.Null()]),
   learnerName: Type.String(),
   learnerEmail: Type.String(),
   groups: Type.Array(Type.String()),

@@ -7432,6 +7432,7 @@ export interface MarkLessonAsCompletedResponse {
 export interface GetCourseCertificateRowsResponse {
   data: {
     data: {
+      certificateId: string | null;
       learnerName: string;
       learnerEmail: string;
       groups: string[];
@@ -15617,6 +15618,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: {
         /** @default "en" */
         language?: "en" | "pl" | "de" | "lt" | "cs" | "es" | "fr";
+        /** @format uuid */
+        groupId?: string;
         search?: string;
         /** @min 1 */
         page?: number;
@@ -17932,6 +17935,8 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       query?: {
         /** @default "en" */
         language?: "en" | "pl" | "de" | "lt" | "cs" | "es" | "fr";
+        /** @format uuid */
+        courseId?: string;
       },
       params: RequestParams = {},
     ) =>

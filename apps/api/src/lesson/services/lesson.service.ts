@@ -234,6 +234,7 @@ export class LessonService {
     }
 
     if (lesson.type === LESSON_TYPES.AI_MENTOR) {
+      const existingThread = await this.aiService.getExistingThreadForLesson(id, effectiveUserId);
       let avatarUrl = undefined;
 
       if (lesson.aiMentor?.avatarReferenceUrl) {
@@ -248,6 +249,9 @@ export class LessonService {
           name: lesson.aiMentor?.name ?? "AI Mentor",
           avatarReferenceUrl: avatarUrl,
         },
+        threadId: existingThread?.id,
+        userLanguage: existingThread?.userLanguage,
+        status: existingThread?.status,
       } as LessonShow;
     }
 

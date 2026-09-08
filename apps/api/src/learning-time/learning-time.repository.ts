@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@nestjs/common";
 import { COURSE_ENROLLMENT, type SupportedLanguages } from "@repo/shared";
-import { and, countDistinct, eq, isNull, ne, sql } from "drizzle-orm";
+import { and, countDistinct, eq, isNotNull, isNull, ne, or, sql } from "drizzle-orm";
 
 import { DatabasePg } from "src/common";
 import { addPagination, DEFAULT_PAGE_SIZE } from "src/common/pagination";
@@ -9,6 +9,7 @@ import { LocalizationService } from "src/localization/localization.service";
 import {
   chapters,
   courses,
+  groupCourses,
   groups,
   groupManagerGroups,
   groupUsers,
@@ -127,11 +128,16 @@ export class LearningTimeRepository {
 
   async getTotalLearningTimePerStudentCount(courseId: UUIDType, conditions: SQL<unknown>[] = []) {
     const [{ totalItems }] = await this.db
-      .select({ totalItems: countDistinct(lessonLearningTime.userId) })
-      .from(lessonLearningTime)
-      .leftJoin(users, eq(users.id, lessonLearningTime.userId))
+      .select({ totalItems: countDistinct(studentCourses.studentId) })
+      .from(studentCourses)
+      .innerJoin(users, eq(users.id, studentCourses.studentId))
       .where(
-        and(eq(lessonLearningTime.courseId, courseId), isNull(users.deletedAt), ...conditions),
+        and(
+          eq(studentCourses.courseId, courseId),
+          eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
+          isNull(users.deletedAt),
+          ...conditions,
+        ),
       );
 
     return totalItems ?? 0;
@@ -176,10 +182,10 @@ export class LearningTimeRepository {
   ) {
     return this.db
       .select({
-        id: lessonLearningTime.userId,
+        id: studentCourses.studentId,
         name: sql<string>`${users.firstName} || ' ' || ${users.lastName}`,
         studentAvatarKey: users.avatarReference,
-        totalSeconds: sql<number>`SUM(${lessonLearningTime.totalSeconds})::INTEGER`,
+        totalSeconds: sql<number>`COALESCE(SUM(${lessonLearningTime.totalSeconds}), 0)::INTEGER`,
         groups: sql<Array<{ id: string; name: string }>>`(
           SELECT json_agg(
             json_build_object(
@@ -196,11 +202,25 @@ export class LearningTimeRepository {
           WHERE ${groupUsers.userId} = ${users.id}
         )`,
       })
-      .from(lessonLearningTime)
-      .innerJoin(users, eq(lessonLearningTime.userId, users.id))
-      .where(and(eq(lessonLearningTime.courseId, courseId), isNull(users.deletedAt), ...conditions))
+      .from(studentCourses)
+      .innerJoin(users, eq(users.id, studentCourses.studentId))
+      .leftJoin(
+        lessonLearningTime,
+        and(
+          eq(lessonLearningTime.userId, studentCourses.studentId),
+          eq(lessonLearningTime.courseId, studentCourses.courseId),
+        ),
+      )
+      .where(
+        and(
+          eq(studentCourses.courseId, courseId),
+          eq(studentCourses.status, COURSE_ENROLLMENT.ENROLLED),
+          isNull(users.deletedAt),
+          ...conditions,
+        ),
+      )
       .groupBy(
-        lessonLearningTime.userId,
+        studentCourses.studentId,
         users.firstName,
         users.lastName,
         users.email,
@@ -234,26 +254,50 @@ export class LearningTimeRepository {
       );
   }
 
-  async getGroupsInCourse(
-    courseId: UUIDType,
+  async getGroupsInCourse(courseId: UUIDType, language?: SupportedLanguages) {
+    return this.db
+      .select({
+        id: groups.id,
+        name: this.localizationService.getLocalizedSqlField(groups.name, language, groups),
+      })
+      .from(groups)
+      .leftJoin(
+        groupCourses,
+        and(eq(groupCourses.groupId, groups.id), eq(groupCourses.courseId, courseId)),
+      )
+      .leftJoin(groupUsers, eq(groupUsers.groupId, groups.id))
+      .leftJoin(
+        studentCourses,
+        and(eq(studentCourses.studentId, groupUsers.userId), eq(studentCourses.courseId, courseId)),
+      )
+      .leftJoin(users, eq(studentCourses.studentId, users.id))
+      .where(
+        and(
+          or(
+            isNotNull(groupCourses.id),
+            and(isNotNull(studentCourses.studentId), isNull(users.deletedAt)),
+          ),
+        ),
+      )
+      .groupBy(groups.id);
+  }
+
+  async getManagedGroups(
+    managerUserId: UUIDType,
+    tenantId: UUIDType,
     language?: SupportedLanguages,
-    conditions: SQL[] = [],
   ) {
     return this.db
       .select({
         id: groups.id,
         name: this.localizationService.getLocalizedSqlField(groups.name, language, groups),
       })
-      .from(studentCourses)
-      .innerJoin(users, eq(studentCourses.studentId, users.id))
-      .innerJoin(groupUsers, eq(users.id, groupUsers.userId))
-      .innerJoin(groups, eq(groupUsers.groupId, groups.id))
+      .from(groupManagerGroups)
+      .innerJoin(groups, eq(groupManagerGroups.groupId, groups.id))
       .where(
         and(
-          eq(studentCourses.courseId, courseId),
-          ne(studentCourses.status, COURSE_ENROLLMENT.NOT_ENROLLED),
-          isNull(users.deletedAt),
-          ...conditions,
+          eq(groupManagerGroups.managerUserId, managerUserId),
+          eq(groupManagerGroups.tenantId, tenantId),
         ),
       )
       .groupBy(groups.id);

@@ -24,7 +24,7 @@ import {
   isSupportedLanguage,
 } from "@repo/shared";
 import { addDays, addMonths, addYears, format } from "date-fns";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { escape } from "lodash";
 import puppeteer, { type Page, type Browser } from "puppeteer";
 import { match } from "ts-pattern";
@@ -37,6 +37,7 @@ import { resolveTenantOrigin } from "src/common/helpers/resolveTenantOrigin";
 import { DEFAULT_PAGE_SIZE, parsePagination } from "src/common/pagination";
 import { canUpdateCourseByAuthor } from "src/common/permissions/course-permission.utils";
 import {
+  getGroupManagerCourseScopeCondition,
   getGroupManagerLearnerScopeCondition,
   shouldApplyGroupManagerScope,
 } from "src/common/permissions/group-manager-scope.utils";
@@ -50,7 +51,7 @@ import { OutboxPublisher } from "src/outbox/outbox.publisher";
 import { S3Service } from "src/s3/s3.service";
 import { SettingsService } from "src/settings/settings.service";
 import { DB, DB_ADMIN } from "src/storage/db/db.providers";
-import { courses, studentCourses } from "src/storage/schema";
+import { certificates, courses, studentCourses } from "src/storage/schema";
 
 import { CertificateRepository } from "./certificate.repository";
 import {
@@ -170,7 +171,14 @@ export class CertificatesService implements OnModuleDestroy {
     const [course] = await this.db
       .select({ authorId: courses.authorId })
       .from(courses)
-      .where(eq(courses.id, courseId));
+      .where(
+        and(
+          eq(courses.id, courseId),
+          getGroupManagerCourseScopeCondition(currentUser, courses.id, [
+            PERMISSIONS.COURSE_STATISTICS,
+          ]),
+        ),
+      );
 
     if (!course) throw new NotFoundException("adminCourseView.errors.notFound.course");
 
@@ -186,6 +194,7 @@ export class CertificatesService implements OnModuleDestroy {
     courseId: UUIDType,
     language: SupportedLanguages,
     currentUser: CurrentUserType,
+    groupId?: UUIDType,
     search?: string,
     page?: number,
     perPage?: number,
@@ -198,18 +207,15 @@ export class CertificatesService implements OnModuleDestroy {
       [PERMISSIONS.COURSE_STATISTICS],
     );
 
-    const { rows, hasScopedLearner, totalItems } =
-      await this.certificateRepository.getCourseCertificateRows(
-        courseId,
-        learnerScope,
-        language,
-        search,
-        page ?? 1,
-        perPage ?? DEFAULT_PAGE_SIZE,
-      );
-
-    if (learnerScope && !hasScopedLearner)
-      throw new NotFoundException("adminCourseView.errors.notFound.course");
+    const { rows, totalItems } = await this.certificateRepository.getCourseCertificateRows(
+      courseId,
+      learnerScope,
+      language,
+      groupId,
+      search,
+      page ?? 1,
+      perPage ?? DEFAULT_PAGE_SIZE,
+    );
 
     const certificateSignature = rows[0]?.certificateSignature;
     const certificateSignatureUrl = certificateSignature
@@ -580,16 +586,20 @@ export class CertificatesService implements OnModuleDestroy {
   }
 
   async downloadCertificate(
-    userId: UUIDType,
+    currentUser: CurrentUserType,
     certificateId: UUIDType,
     language?: SupportedLanguages,
     baseUrl?: string | null,
   ): Promise<{ pdfBuffer: Buffer; filename: string }> {
     const shareLanguage = this.normalizeLanguage(language);
-    const certificate = await this.certificateRepository.findOwnedCertificateByIdForRender(
-      userId,
+    const learnerScope = getGroupManagerLearnerScopeCondition(currentUser, certificates.userId, [
+      PERMISSIONS.COURSE_STATISTICS,
+    ]);
+    const certificate = await this.certificateRepository.findCertificateByIdForRender(
+      learnerScope ? null : currentUser.userId,
       certificateId,
       shareLanguage,
+      learnerScope,
     );
 
     if (!certificate?.tenantId) {

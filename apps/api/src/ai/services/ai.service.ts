@@ -154,6 +154,10 @@ export class AiService {
     )();
   }
 
+  async getExistingThreadForLesson(lessonId: UUIDType, userId: UUIDType) {
+    return this.threadService.findExistingThreadForLesson(lessonId, userId);
+  }
+
   async getPracticeThreadWithSetup(data: {
     practiceSessionId: UUIDType;
     userId: UUIDType;

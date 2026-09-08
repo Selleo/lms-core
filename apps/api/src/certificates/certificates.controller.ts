@@ -66,6 +66,7 @@ export class CertificatesController {
     request: [
       { type: "param", name: "courseId", schema: UUIDSchema },
       { type: "query", name: "language", schema: supportedLanguagesSchema },
+      { type: "query", name: "groupId", schema: Type.Optional(UUIDSchema) },
       { type: "query", name: "search", schema: Type.Optional(Type.String()) },
       { type: "query", name: "page", schema: Type.Optional(Type.Number({ minimum: 1 })) },
       { type: "query", name: "perPage", schema: Type.Optional(Type.Number({ minimum: 1 })) },
@@ -75,6 +76,7 @@ export class CertificatesController {
   async getCourseCertificateRows(
     @Param("courseId") courseId: UUIDType,
     @Query("language") language: SupportedLanguages,
+    @Query("groupId") groupId: UUIDType | undefined,
     @Query("search") search: string | undefined,
     @Query("page") page = 1,
     @Query("perPage") perPage = 20,
@@ -85,6 +87,7 @@ export class CertificatesController {
         courseId,
         language,
         currentUser,
+        groupId,
         search,
         page,
         perPage,
@@ -180,7 +183,7 @@ export class CertificatesController {
   }
 
   @Post("download")
-  @RequirePermission(PERMISSIONS.CERTIFICATE_RENDER)
+  @RequirePermission(PERMISSIONS.CERTIFICATE_RENDER, PERMISSIONS.MANAGED_GROUP_RESULTS_READ)
   @Validate({
     request: [{ type: "body", schema: downloadCertificateSchema }],
   })
@@ -194,7 +197,7 @@ export class CertificatesController {
     const requestBaseUrl = getRequestBaseUrl(req);
 
     const { pdfBuffer, filename } = await this.certificatesService.downloadCertificate(
-      currentUser.userId,
+      currentUser,
       certificateId,
       language,
       requestBaseUrl,
