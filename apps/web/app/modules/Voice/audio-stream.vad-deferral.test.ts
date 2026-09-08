@@ -6,6 +6,7 @@ import { RealtimePCMStreamerWorklet, type StreamProtocol } from "./audio-stream"
 type VadCallbacks = {
   preSpeechPadMs: number;
   redemptionMs: number;
+  negativeSpeechThreshold: number;
   onFrameProcessed: (probabilities: { isSpeech: number }, frame: Float32Array) => void;
   onSpeechRealStart: () => void;
   onSpeechEnd: () => void;
@@ -215,7 +216,8 @@ describe("RealtimePCMStreamerWorklet VAD end deferral", () => {
     });
     internals.endpointingMode = VOICE_ENDPOINTING_MODE.CLIENT_VAD;
 
-    expect(callbacks.redemptionMs).toBe(300);
+    expect(callbacks.redemptionMs).toBe(600);
+    expect(callbacks.negativeSpeechThreshold).toBe(0.18);
     expect(callbacks.preSpeechPadMs).toBe(500);
 
     callbacks.onFrameProcessed({ isSpeech: 0 }, silentFrame());
@@ -241,5 +243,6 @@ describe("RealtimePCMStreamerWorklet VAD end deferral", () => {
     const { callbacks } = await createHarness();
 
     expect(callbacks.redemptionMs).toBe(700);
+    expect(callbacks.negativeSpeechThreshold).toBe(0.24);
   });
 });

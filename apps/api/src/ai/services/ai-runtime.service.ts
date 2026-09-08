@@ -1,3 +1,5 @@
+import { StringDecoder } from "node:string_decoder";
+
 import {
   AiCapability,
   AiCapabilityProvider,
@@ -380,12 +382,15 @@ export class AiRuntimeService {
   }
 
   private async *readLumaTextStream(stream: AsyncIterable<Buffer>): AsyncIterable<string> {
+    const decoder = new StringDecoder("utf8");
     for await (const chunk of stream) {
-      const text = chunk.toString("utf8");
+      const text = decoder.write(chunk);
       if (text) {
         yield text;
       }
     }
+    const remaining = decoder.end();
+    if (remaining) yield remaining;
   }
 
   private async getLumaConfiguration(): Promise<AiRuntimeConfiguration | null> {

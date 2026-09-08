@@ -163,7 +163,7 @@ export class PromptService implements OnModuleInit {
       });
     }
 
-    history.unshift(...metaMessages.reverse());
+    history.unshift(...metaMessages);
 
     const { lessonId } = await this.aiRepository.findLessonIdByThreadId(threadId);
     const lastHistoryEntry = history[history.length - 1];
