@@ -36,6 +36,7 @@ AI-assisted authoring prepares reviewable Mentor behavior and completion-conditi
 - Mark the lesson complete when the check passes and show a retake path afterward.
 - Show AI mentor result rows and read-only conversation previews in course statistics.
 - Support microphone entry and voice mentor actions when the relevant voice configuration is available.
+- Review the latest 12 conversation messages in voice mode, including earlier chat messages on entry, in a compact scroll area below the mentor orb.
 
 ## End-User Value
 
@@ -123,6 +124,8 @@ During voice mode, the learner's assistant message is updated as the model produ
   -- Practice creation publishes a durable outbox event. A dedicated BullMQ worker creates the structured Roleplay configuration through the shared AI Mentor configuration generator, derives the Judge from that configuration, creates the thread and welcome message, and marks the session ready or failed.
 
 ## Test Evidence
+
+Voice transcript tests verify the recent-message limit, replacement of streamed replies in place, and karaoke highlighting only on the current mentor reply. Live learner partials update one temporary message; the final transcript replaces that same message using the voice turn identity, including when the chat update arrives later. The finalization effect runs once when a new final transcript arrives, including when no partial was displayed, and never on existing messages when entering voice mode. Scrolling follows new messages instantly, pauses when the learner scrolls back, and resumes at the bottom. A soft top fade appears only where older content is above the viewport. Browser preview checks at desktop and mobile sizes verify that the capped transcript stays below the orb; these checks use sample messages, not live provider audio.
 
 Shared protocol fixtures verify complete and incremental display decoding at every chunk split, including escaped delimiters, malformed and unfinished spans, Unicode, and literal HTML. Voice streaming tests verify raw protocol forwarding and display-only deltas/completion for Core and Luma model routes. Transcript component tests ensure alignment cannot replace canonical display text with spoken wording or remove punctuation and unfinished HTML examples.
 

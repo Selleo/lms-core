@@ -27,7 +27,7 @@ interface LessonFormProps {
   mentorName: string;
   mentorAvatarUrl?: string | null;
   handleSubmit: () => void;
-  onLearnerTranscription?: (text: string) => void;
+  onLearnerTranscription?: (text: string, turnId?: string) => void;
   onMentorResponseDelta?: (text: string) => void;
   onMentorResponseCompleted?: (text: string) => void;
   onAudioOutputCompleted?: () => void;
@@ -113,7 +113,7 @@ export const LessonForm = ({
 
       setLatestResponse("");
       voiceModeUI.onLearnerTranscriptionReceived();
-      onLearnerTranscription?.(revision.text);
+      onLearnerTranscription?.(revision.text, revision.turnId);
     },
     onMentorResponseDelta: (text) => {
       setLatestResponse((previous) => previous + text);
@@ -374,6 +374,7 @@ export const LessonForm = ({
       </form>
 
       <VoiceMentorModeOverlay
+        messages={messages}
         open={isVoiceMentorMode}
         state={voiceModeUI.voiceModeState}
         voiceLevel={voiceLevel}

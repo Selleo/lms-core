@@ -49,6 +49,7 @@ export type ExternalAudioSession = {
   recoveryRetryTimeout: ExternalAudioTimeout;
   clientDisconnectTimeout: ExternalAudioTimeout;
   activeTurnId: string | null;
+  pendingTtsTrigger: boolean;
   audioOutputErrors: Map<string, AudioOutputErrorData>;
   pendingInterruption: boolean;
   interruptedTurnIds: Set<string>;

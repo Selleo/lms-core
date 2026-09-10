@@ -16,6 +16,7 @@ import {
   type AudioOutputErrorPayload,
   type AudioOutputCompletePayload,
   type AudioOutputAlignmentPayload,
+  type AudioOutputChunkPayload,
   type AudioOutputInterruptedPayload,
   type AudioProtocolErrorPayload,
   type AudioReconnectPayload,
@@ -53,7 +54,6 @@ import { REALTIME_PUBLISHER, type RealtimePublisher } from "src/websocket/realti
 
 import type {
   AiMentorTTSPreset,
-  AudioSpeechEventPayload,
   AudioOutputAlignmentEventPayload,
   ClientSpeechBoundaryPayload,
   MentorResponseDeltaEventPayload,
@@ -83,7 +83,7 @@ type VoiceMentorSocketHandlers = {
   audioReconnectError: (payload: AudioProtocolErrorPayload) => void;
   learnerTranscription: (payload: LearnerTranscriptionPayload) => Promise<void>;
   audioOutputAlignment: (payload: AudioOutputAlignmentPayload) => void;
-  audioOutputChunk: (payload: { data: AudioSpeechEventPayload }) => void;
+  audioOutputChunk: (payload: AudioOutputChunkPayload) => void;
   audioOutputInterrupted: (payload: AudioOutputInterruptedPayload) => void;
   audioOutputError: (payload: AudioOutputErrorPayload) => void;
   audioOutputComplete: (payload: AudioOutputCompletePayload) => void;
@@ -279,7 +279,7 @@ export class ExternalAudioService {
   async triggerTTS(sessionId: string, payload: SendTTSTriggerBody) {
     const session = this.sessionStore.get(sessionId);
     if (session) {
-      session.activeTurnId = `tts-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      session.pendingTtsTrigger = true;
       session.socket.sendTTSTrigger(payload);
       return true;
     }
@@ -362,6 +362,7 @@ export class ExternalAudioService {
       recoveryRetryTimeout: null,
       clientDisconnectTimeout: null,
       activeTurnId: null,
+      pendingTtsTrigger: false,
       audioOutputErrors: new Map(),
       pendingInterruption: false,
       interruptedTurnIds: new Set(),
@@ -467,7 +468,11 @@ export class ExternalAudioService {
         );
       },
       audioOutputChunk: (payload) => {
-        if (!session.activeTurnId) {
+        if (session.pendingTtsTrigger) {
+          session.activeTurnId = payload.jobId;
+          session.pendingTtsTrigger = false;
+        }
+        if (!session.activeTurnId || payload.jobId !== session.activeTurnId) {
           return;
         }
 
@@ -476,7 +481,7 @@ export class ExternalAudioService {
           codec: payload.data.codec,
           chunkBase64: payload.data.chunkBase64,
           sampleRate: payload.data.sampleRate,
-          turnId: session.activeTurnId,
+          turnId: payload.jobId,
         };
         this.realtimePublisher.emitToRoom(
           VOICE_SOCKET_EVENT.AUDIO_SPEECH,
@@ -785,6 +790,7 @@ export class ExternalAudioService {
     const voiceDeliveryContext = this.resolveVoiceDeliveryContext(payload.data.timing);
 
     session.activeTurnId = payload.jobId ?? null;
+    session.pendingTtsTrigger = false;
     const voiceTurnWasInterrupted = session.pendingInterruption;
     session.pendingInterruption = false;
     const abortController = new AbortController();
