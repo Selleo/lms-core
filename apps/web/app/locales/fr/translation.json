@@ -35,6 +35,7 @@
     "from": "Commencées à partir du",
     "to": "Commencées jusqu’au",
     "listError": "Impossible de charger les conversations.",
+    "errors": { "invalidDateRange": "La date de fin doit être postérieure à la date de début." },
     "empty": "Aucune conversation pour le moment.",
     "types": {
       "practice": "Session de pratique",

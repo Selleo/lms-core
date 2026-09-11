@@ -7876,7 +7876,7 @@ export interface JudgeThreadResponse {
   };
 }
 
-export interface GetAdminAiThreadsResponse {
+export interface GetAdminAiThreadSummariesResponse {
   data: {
     /** @format uuid */
     id: string;
@@ -7908,7 +7908,7 @@ export interface GetAdminAiThreadsResponse {
   appliedFilters?: object;
 }
 
-export interface GetAdminAiThreadResponse {
+export interface GetAdminAiThreadDetailsResponse {
   data: {
     /** @format uuid */
     id: string;
@@ -16226,10 +16226,10 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name AdminAiThreadsControllerGetAdminAiThreads
+     * @name AdminAiThreadsControllerGetAdminAiThreadSummaries
      * @request GET:/api/admin/ai-threads
      */
-    adminAiThreadsControllerGetAdminAiThreads: (
+    adminAiThreadsControllerGetAdminAiThreadSummaries: (
       query?: {
         /**
          * @min 1
@@ -16255,7 +16255,7 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {},
     ) =>
-      this.request<GetAdminAiThreadsResponse, any>({
+      this.request<GetAdminAiThreadSummariesResponse, any>({
         path: `/api/admin/ai-threads`,
         method: "GET",
         query: query,
@@ -16266,17 +16266,17 @@ export class API<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @name AdminAiThreadsControllerGetAdminAiThread
+     * @name AdminAiThreadsControllerGetAdminAiThreadDetails
      * @request GET:/api/admin/ai-threads/{threadId}
      */
-    adminAiThreadsControllerGetAdminAiThread: (
+    adminAiThreadsControllerGetAdminAiThreadDetails: (
       threadId: string,
       query?: {
         language?: "en" | "pl" | "de" | "lt" | "cs" | "es" | "fr";
       },
       params: RequestParams = {},
     ) =>
-      this.request<GetAdminAiThreadResponse, any>({
+      this.request<GetAdminAiThreadDetailsResponse, any>({
         path: `/api/admin/ai-threads/${threadId}`,
         method: "GET",
         query: query,

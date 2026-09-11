@@ -1,3 +1,4 @@
+import { AI_THREAD_STATUSES } from "@repo/shared";
 import { Archive, CheckCircle2, Clock3 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -5,9 +6,9 @@ import { Badge } from "~/components/ui/badge";
 import { cn } from "~/lib/utils";
 
 const presentation = {
-  active: { variant: "inProgress", icon: Clock3 },
-  completed: { variant: "success", icon: CheckCircle2 },
-  archived: { variant: "notStarted", icon: Archive },
+  [AI_THREAD_STATUSES.ACTIVE]: { variant: "inProgress", icon: Clock3 },
+  [AI_THREAD_STATUSES.COMPLETED]: { variant: "success", icon: CheckCircle2 },
+  [AI_THREAD_STATUSES.ARCHIVED]: { variant: "notStarted", icon: Archive },
 } as const;
 
 export function ConversationStatus({
@@ -23,9 +24,9 @@ export function ConversationStatus({
     return (
       <span
         className={cn("inline-flex items-center gap-1 whitespace-nowrap text-xs", {
-          "text-warning-800": status === "active",
-          "text-success-700": status === "completed",
-          "text-neutral-500": status === "archived",
+          "text-warning-800": status === AI_THREAD_STATUSES.ACTIVE,
+          "text-success-700": status === AI_THREAD_STATUSES.COMPLETED,
+          "text-neutral-500": status === AI_THREAD_STATUSES.ARCHIVED,
         })}
       >
         <StatusIcon className="size-3.5" aria-hidden="true" />

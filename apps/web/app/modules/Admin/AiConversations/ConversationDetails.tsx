@@ -6,13 +6,13 @@ import { AI_CONVERSATIONS_HANDLES } from "../../../../e2e/data/ai-conversations/
 
 import { ConversationStatus } from "./ConversationStatus";
 
-import type { GetAdminAiThreadResponse } from "~/api/generated-api";
+import type { GetAdminAiThreadDetailsResponse } from "~/api/generated-api";
 
 export function ConversationDetails({
   thread,
   onEvaluation,
 }: {
-  thread: GetAdminAiThreadResponse["data"];
+  thread: GetAdminAiThreadDetailsResponse["data"];
   onEvaluation: () => void;
 }) {
   const { t, i18n } = useTranslation();

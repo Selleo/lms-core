@@ -35,6 +35,7 @@
     "from": "Pradėti nuo",
     "to": "Pradėti iki",
     "listError": "Nepavyko įkelti pokalbių.",
+    "errors": { "invalidDateRange": "Pabaigos data turi būti vėlesnė už pradžios datą." },
     "empty": "Pokalbių dar nėra.",
     "types": {
       "practice": "Praktikos sesija",

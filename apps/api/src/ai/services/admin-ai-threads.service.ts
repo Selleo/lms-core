@@ -3,70 +3,108 @@ import { BadRequestException, Injectable, NotFoundException } from "@nestjs/comm
 import { AdminAiThreadsRepository } from "src/ai/repositories/admin-ai-threads.repository";
 import { FileService } from "src/file/file.service";
 
-import type { AdminAiThreadPagination, AdminAiThreadQuery } from "src/ai/admin-ai-threads.schema";
+import type {
+  AdminAiThreadEvaluation,
+  AdminAiThreadPagination,
+  AdminAiThreadQuery,
+} from "src/ai/admin-ai-threads.schema";
+import type { UUIDType } from "src/common";
 
 @Injectable()
 export class AdminAiThreadsService {
   constructor(
-    private readonly repository: AdminAiThreadsRepository,
+    private readonly adminAiThreadsRepository: AdminAiThreadsRepository,
     private readonly fileService: FileService,
   ) {}
 
-  async list(query: AdminAiThreadQuery) {
-    if (query.from && query.to && new Date(query.from) >= new Date(query.to)) {
-      throw new BadRequestException("The end date must follow the start date");
+  async getThreadSummaries(adminAiThreadQuery: AdminAiThreadQuery) {
+    if (
+      adminAiThreadQuery.from &&
+      adminAiThreadQuery.to &&
+      new Date(adminAiThreadQuery.from) >= new Date(adminAiThreadQuery.to)
+    ) {
+      throw new BadRequestException("aiConversations.errors.invalidDateRange");
     }
-    const result = await this.repository.list(query);
-    const references = [
+    const paginatedThreadSummaries =
+      await this.adminAiThreadsRepository.getThreadSummaries(adminAiThreadQuery);
+    const avatarReferences = [
       ...new Set(
-        result.data
-          .map((thread) => thread.owner.avatarReference)
-          .filter((reference): reference is string => Boolean(reference)),
+        paginatedThreadSummaries.data
+          .map((threadSummary) => threadSummary.owner.avatarReference)
+          .filter((avatarReference): avatarReference is string => Boolean(avatarReference)),
       ),
     ];
-    const pictures = new Map(
+    const avatarUrlsByReference = new Map(
       await Promise.all(
-        references.map(
-          async (reference) => [reference, await this.fileService.getFileUrl(reference)] as const,
+        avatarReferences.map(
+          async (avatarReference) =>
+            [avatarReference, await this.fileService.getFileUrl(avatarReference)] as const,
         ),
       ),
     );
     return {
-      ...result,
-      data: result.data.map(({ owner, ...thread }) => ({
-        ...thread,
+      ...paginatedThreadSummaries,
+      data: paginatedThreadSummaries.data.map(({ owner: threadOwner, ...threadSummary }) => ({
+        ...threadSummary,
         owner: {
-          id: owner.id,
-          firstName: owner.firstName,
-          lastName: owner.lastName,
-          profilePictureUrl: owner.avatarReference
-            ? (pictures.get(owner.avatarReference) ?? null)
+          id: threadOwner.id,
+          firstName: threadOwner.firstName,
+          lastName: threadOwner.lastName,
+          profilePictureUrl: threadOwner.avatarReference
+            ? (avatarUrlsByReference.get(threadOwner.avatarReference) ?? null)
             : null,
         },
       })),
     };
   }
 
-  async get(id: string, query: AdminAiThreadQuery = {}) {
-    const thread = await this.repository.find(id, query);
-    if (!thread) throw new NotFoundException("Conversation not found");
-    const { owner, ...metadata } = thread;
+  async getThread(threadId: UUIDType, adminAiThreadQuery: AdminAiThreadQuery = {}) {
+    const threadSummary = await this.adminAiThreadsRepository.findThreadSummaryById(
+      threadId,
+      adminAiThreadQuery,
+    );
+    if (!threadSummary) throw new NotFoundException("common.toast.notFound");
+    const { owner: threadOwner, ...threadMetadata } = threadSummary;
     return {
-      ...metadata,
+      ...threadMetadata,
       owner: {
-        id: owner.id,
-        firstName: owner.firstName,
-        lastName: owner.lastName,
-        profilePictureUrl: owner.avatarReference
-          ? await this.fileService.getFileUrl(owner.avatarReference)
+        id: threadOwner.id,
+        firstName: threadOwner.firstName,
+        lastName: threadOwner.lastName,
+        profilePictureUrl: threadOwner.avatarReference
+          ? await this.fileService.getFileUrl(threadOwner.avatarReference)
           : null,
       },
-      evaluation: await this.repository.evaluation(id),
+      evaluation: await this.buildThreadEvaluation(threadId),
     };
   }
 
-  async messages(id: string, query: AdminAiThreadPagination) {
-    if (!(await this.repository.find(id))) throw new NotFoundException("Conversation not found");
-    return this.repository.messages(id, query.page, query.perPage);
+  async getThreadMessages(threadId: UUIDType, adminAiThreadPagination: AdminAiThreadPagination) {
+    const threadSummary = await this.adminAiThreadsRepository.findThreadSummaryById(threadId);
+    if (!threadSummary) throw new NotFoundException("common.toast.notFound");
+    return this.adminAiThreadsRepository.getThreadMessages(
+      threadId,
+      adminAiThreadPagination.page,
+      adminAiThreadPagination.perPage,
+    );
+  }
+
+  private async buildThreadEvaluation(threadId: UUIDType): Promise<AdminAiThreadEvaluation | null> {
+    const judgement = await this.adminAiThreadsRepository.findThreadJudgementByThreadId(threadId);
+    if (!judgement) return null;
+
+    const [judgementCriteria, judgementBlockingErrors] = await Promise.all([
+      this.adminAiThreadsRepository.getThreadJudgementCriteria(judgement.id),
+      this.adminAiThreadsRepository.getThreadJudgementBlockingErrors(judgement.id),
+    ]);
+
+    return {
+      passed: judgement.passed,
+      score: judgement.earnedPoints,
+      maxScore: judgement.maxScore,
+      percentage: judgement.percentage,
+      criteria: judgementCriteria,
+      blockingErrors: judgementBlockingErrors,
+    };
   }
 }

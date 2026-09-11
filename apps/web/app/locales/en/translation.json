@@ -35,6 +35,7 @@
     "from": "Started from",
     "to": "Started until",
     "listError": "Could not load conversations.",
+    "errors": { "invalidDateRange": "The end date must be after the start date." },
     "empty": "No conversations yet.",
     "types": {
       "practice": "Practice session",

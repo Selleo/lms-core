@@ -8,7 +8,7 @@ export function useAdminAiThread(threadId: string, language: SupportedLanguages)
   return useQuery({
     queryKey: ["admin-ai-thread", threadId, language],
     queryFn: async () =>
-      (await ApiClient.api.adminAiThreadsControllerGetAdminAiThread(threadId, { language })).data
-        .data,
+      (await ApiClient.api.adminAiThreadsControllerGetAdminAiThreadDetails(threadId, { language }))
+        .data.data,
   });
 }

@@ -9679,7 +9679,7 @@
     },
     "/api/admin/ai-threads": {
       "get": {
-        "operationId": "AdminAiThreadsController_getAdminAiThreads",
+        "operationId": "AdminAiThreadsController_getAdminAiThreadSummaries",
         "parameters": [
           {
             "name": "page",
@@ -9818,7 +9818,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetAdminAiThreadsResponse"
+                  "$ref": "#/components/schemas/GetAdminAiThreadSummariesResponse"
                 }
               }
             }
@@ -9828,7 +9828,7 @@
     },
     "/api/admin/ai-threads/{threadId}": {
       "get": {
-        "operationId": "AdminAiThreadsController_getAdminAiThread",
+        "operationId": "AdminAiThreadsController_getAdminAiThreadDetails",
         "parameters": [
           {
             "name": "threadId",
@@ -9882,7 +9882,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetAdminAiThreadResponse"
+                  "$ref": "#/components/schemas/GetAdminAiThreadDetailsResponse"
                 }
               }
             }
@@ -56792,7 +56792,7 @@
           "data"
         ]
       },
-      "GetAdminAiThreadsResponse": {
+      "GetAdminAiThreadSummariesResponse": {
         "type": "object",
         "properties": {
           "data": {
@@ -56989,7 +56989,7 @@
           "pagination"
         ]
       },
-      "GetAdminAiThreadResponse": {
+      "GetAdminAiThreadDetailsResponse": {
         "type": "object",
         "properties": {
           "data": {

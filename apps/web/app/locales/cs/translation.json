@@ -35,6 +35,7 @@
     "from": "Zahájeno od",
     "to": "Zahájeno do",
     "listError": "Konverzace se nepodařilo načíst.",
+    "errors": { "invalidDateRange": "Datum ukončení musí být pozdější než datum zahájení." },
     "empty": "Zatím žádné konverzace.",
     "types": {
       "practice": "Cvičná relace",

@@ -1,4 +1,4 @@
-import type { LocalizedText, SupportedLanguages } from "@repo/shared";
+import type { LocalizedText, MessageRole, SupportedLanguages } from "@repo/shared";
 import type { SQL } from "drizzle-orm";
 import type { UUIDType } from "src/common";
 import type {
@@ -24,7 +24,7 @@ export type AiMentorPracticeGenerationInput = {
 };
 
 export type AiPracticeReplayMessage = {
-  role: string;
+  role: MessageRole;
   content: string;
   tokenCount: number;
 };

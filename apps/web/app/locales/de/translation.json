@@ -35,6 +35,7 @@
     "from": "Begonnen ab",
     "to": "Begonnen bis",
     "listError": "Gespräche konnten nicht geladen werden.",
+    "errors": { "invalidDateRange": "Das Enddatum muss nach dem Startdatum liegen." },
     "empty": "Noch keine Gespräche.",
     "types": {
       "practice": "Übungssitzung",

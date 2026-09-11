@@ -1,4 +1,5 @@
 import { Link, useNavigate, useParams, useSearchParams } from "@remix-run/react";
+import { AI_THREAD_STATUSES, AI_THREAD_TYPES } from "@repo/shared";
 import { parseISO } from "date-fns";
 import { ChevronLeft, ChevronRight, MessageSquareText, SlidersHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -24,7 +25,7 @@ import { AI_CONVERSATIONS_HANDLES } from "../../../../e2e/data/ai-conversations/
 
 import {
   AI_CONVERSATIONS_PATH,
-  cleanConversationSearchParams,
+  removeLegacyConversationFilters,
   readConversationFilters,
   updateConversationFilters,
 } from "./aiConversations.utils";
@@ -37,7 +38,7 @@ export default function AiConversationsPage() {
   const { t, i18n } = useTranslation();
   const { threadId } = useParams();
   const [rawSearchParams] = useSearchParams();
-  const searchParams = cleanConversationSearchParams(rawSearchParams);
+  const searchParams = removeLegacyConversationFilters(rawSearchParams);
   const rawSearch = rawSearchParams.toString();
   const navigate = useNavigate();
   const [searchResetKey, setSearchResetKey] = useState(0);
@@ -49,7 +50,7 @@ export default function AiConversationsPage() {
     const raw = new URLSearchParams(rawSearch);
     if (raw.has("userId") || raw.has("ownerName")) {
       const path = threadId ? `${AI_CONVERSATIONS_PATH}/${threadId}` : AI_CONVERSATIONS_PATH;
-      navigate(`${path}?${cleanConversationSearchParams(raw).toString()}`, { replace: true });
+      navigate(`${path}?${removeLegacyConversationFilters(raw).toString()}`, { replace: true });
     }
   }, [rawSearch, threadId, navigate]);
   const language = useLanguageStore((state) => state.language);
@@ -65,7 +66,7 @@ export default function AiConversationsPage() {
       name: "type",
       type: "select",
       placeholder: t("aiConversations.allTypes"),
-      options: (["practice", "ai-mentor"] as const).map((value) => ({
+      options: [AI_THREAD_TYPES.PRACTICE, AI_THREAD_TYPES.AI_MENTOR].map((value) => ({
         value,
         label: t(`aiConversations.types.${value}`),
       })),
@@ -74,7 +75,11 @@ export default function AiConversationsPage() {
       name: "status",
       type: "select",
       placeholder: t("aiConversations.allStatuses"),
-      options: (["active", "completed", "archived"] as const).map((value) => ({
+      options: [
+        AI_THREAD_STATUSES.ACTIVE,
+        AI_THREAD_STATUSES.COMPLETED,
+        AI_THREAD_STATUSES.ARCHIVED,
+      ].map((value) => ({
         value,
         label: t(`aiConversations.statuses.${value}`),
       })),

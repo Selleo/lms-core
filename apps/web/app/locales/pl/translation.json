@@ -35,6 +35,7 @@
     "from": "Rozpoczęte od",
     "to": "Rozpoczęte do",
     "listError": "Nie udało się wczytać rozmów.",
+    "errors": { "invalidDateRange": "Data końcowa musi przypadać po dacie początkowej." },
     "empty": "Brak rozmów.",
     "types": {
       "practice": "Sesja treningowa",

@@ -1,15 +1,19 @@
-import { SUPPORTED_LANGUAGES } from "@repo/shared";
+import {
+  AI_THREAD_STATUSES,
+  AI_THREAD_TYPES,
+  MESSAGE_ROLE,
+  SUPPORTED_LANGUAGES,
+} from "@repo/shared";
 import { Type, type Static } from "@sinclair/typebox";
 
 import { AI_JUDGE_CRITERION_STATUS } from "src/ai/judge-configuration/judge-configuration.types";
-import { THREAD_STATUS } from "src/ai/utils/ai.type";
 import { UUIDSchema } from "src/common";
 
 const nullableString = Type.Union([Type.String(), Type.Null()]);
 const nullableId = Type.Union([UUIDSchema, Type.Null()]);
 export const adminAiThreadTypeSchema = Type.Union([
-  Type.Literal("practice"),
-  Type.Literal("ai-mentor"),
+  Type.Literal(AI_THREAD_TYPES.PRACTICE),
+  Type.Literal(AI_THREAD_TYPES.AI_MENTOR),
 ]);
 export const adminAiThreadPaginationSchema = Type.Object({
   page: Type.Optional(Type.Integer({ minimum: 1, default: 1 })),
@@ -19,7 +23,7 @@ export const adminAiThreadQuerySchema = Type.Object({
   ...adminAiThreadPaginationSchema.properties,
   userId: Type.Optional(UUIDSchema),
   type: Type.Optional(adminAiThreadTypeSchema),
-  status: Type.Optional(Type.Enum(THREAD_STATUS)),
+  status: Type.Optional(Type.Enum(AI_THREAD_STATUSES)),
   search: Type.Optional(Type.String({ maxLength: 200 })),
   from: Type.Optional(Type.String({ format: "date-time" })),
   to: Type.Optional(Type.String({ format: "date-time" })),
@@ -41,7 +45,7 @@ export const adminAiThreadSummarySchema = Type.Object({
     lastName: Type.String(),
     profilePictureUrl: nullableString,
   }),
-  status: Type.Enum(THREAD_STATUS),
+  status: Type.Enum(AI_THREAD_STATUSES),
   language: Type.String(),
   createdAt: Type.String(),
   lastActivityAt: Type.String(),
@@ -75,7 +79,7 @@ export const adminAiThreadDetailSchema = Type.Intersect([
 ]);
 export const adminAiThreadMessageSchema = Type.Object({
   id: UUIDSchema,
-  role: Type.Union([Type.Literal("user"), Type.Literal("assistant")]),
+  role: Type.Union([Type.Literal(MESSAGE_ROLE.USER), Type.Literal(MESSAGE_ROLE.MENTOR)]),
   content: Type.String(),
   createdAt: Type.String(),
 });

@@ -4,6 +4,7 @@ import request from "supertest";
 
 import { AI_JUDGE_CRITERION_STATUS } from "src/ai/judge-configuration/judge-configuration.types";
 import { AiRepository } from "src/ai/repositories/ai.repository";
+import { AiPracticeService } from "src/ai/services/ai-practice.service";
 import { AiService } from "src/ai/services/ai.service";
 import { JudgeService } from "src/ai/services/judge.service";
 import { THREAD_STATUS } from "src/ai/utils/ai.type";
@@ -149,14 +150,16 @@ describe("AiController (e2e)", () => {
       .from(aiMentorJudgements)
       .where(eq(aiMentorJudgements.threadId, previous.id));
     expect(judgement.earnedPoints).toBe(1);
+    const prepareReplay = jest
+      .spyOn(app.get(AiService), "preparePracticeReplay")
+      .mockResolvedValue([{ role: "assistant", content: "New welcome", tokenCount: 2 }]);
+    const practiceService = app.get(AiPracticeService);
+    const viewer = { userId: owner.id, tenantId: owner.tenantId, permissions: [] };
     const outcomes = await Promise.allSettled([
-      aiRepository.replayPracticeConversation(session.id, previous.id, [
-        { role: "mentor", content: "New welcome", tokenCount: 2 },
-      ]),
-      aiRepository.replayPracticeConversation(session.id, previous.id, [
-        { role: "mentor", content: "Other welcome", tokenCount: 2 },
-      ]),
+      practiceService.replay(session.id, viewer as never),
+      practiceService.replay(session.id, viewer as never),
     ]);
+    prepareReplay.mockRestore();
     expect(outcomes.filter((result) => result.status === "fulfilled")).toHaveLength(1);
     expect(outcomes.filter((result) => result.status === "rejected")).toHaveLength(1);
     const rejected = outcomes.find((result) => result.status === "rejected");

@@ -1,4 +1,4 @@
-import { ConflictException, Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { COURSE_ENROLLMENT } from "@repo/shared";
 import { and, asc, eq, getTableColumns, inArray, not, or, sql } from "drizzle-orm";
 import { sum } from "drizzle-orm/sql/functions/aggregate";
@@ -7,7 +7,6 @@ import {
   AI_MENTOR_PRACTICE_STATUSES,
   type AiPracticeJudgeConfigurationGraph,
   type AiPracticeMentorConfigurationGraph,
-  type AiPracticeReplayMessage,
 } from "src/ai/ai-practice.types";
 import {
   buildAiJudgeBlockingErrorEvaluationsSql,
@@ -142,8 +141,8 @@ export class AiRepository {
     return lessonId ?? { lessonId: null };
   }
 
-  async createThread(data: ThreadBody) {
-    const [thread] = await this.db
+  async createThread(data: ThreadBody, dbInstance: DatabasePg = this.db) {
+    const [thread] = await dbInstance
       .insert(aiMentorThreads)
       .values(data)
       .returning({
@@ -252,10 +251,10 @@ export class AiRepository {
     return newSummary;
   }
 
-  async insertMessage(data: ThreadMessageBody) {
-    return this.db
+  async insertMessage(data: ThreadMessageBody, dbInstance: DatabasePg = this.db) {
+    return dbInstance
       .insert(aiMentorThreadMessages)
-      .values({ ...data, createdAt: sql`clock_timestamp()` })
+      .values({ ...data, createdAt: sql`CLOCK_TIMESTAMP()` })
       .returning();
   }
 
@@ -542,48 +541,32 @@ export class AiRepository {
     });
   }
 
-  async replayPracticeConversation(
+  async lockPracticeSession(sessionId: UUIDType, transaction: DatabasePg) {
+    const [session] = await transaction
+      .select()
+      .from(aiMentorPracticeSessions)
+      .where(eq(aiMentorPracticeSessions.id, sessionId))
+      .for("update");
+    return session;
+  }
+
+  async archiveCompletedPracticeThread(
     sessionId: UUIDType,
     expectedThreadId: UUIDType,
-    messages: AiPracticeReplayMessage[],
+    transaction: DatabasePg,
   ) {
-    return this.db.transaction(async (trx) => {
-      const [session] = await trx
-        .select()
-        .from(aiMentorPracticeSessions)
-        .where(eq(aiMentorPracticeSessions.id, sessionId))
-        .for("update");
-      if (!session || session.status !== AI_MENTOR_PRACTICE_STATUSES.READY)
-        throw new ConflictException("common.toast.somethingWentWrong");
-      const [previous] = await trx
-        .update(aiMentorThreads)
-        .set({ status: THREAD_STATUS.ARCHIVED })
-        .where(
-          and(
-            eq(aiMentorThreads.id, expectedThreadId),
-            eq(aiMentorThreads.practiceSessionId, sessionId),
-            eq(aiMentorThreads.status, THREAD_STATUS.COMPLETED),
-          ),
-        )
-        .returning();
-      if (!previous) throw new ConflictException("common.toast.somethingWentWrong");
-      const [thread] = await trx
-        .insert(aiMentorThreads)
-        .values({
-          practiceSessionId: sessionId,
-          userId: session.userId,
-          userLanguage: session.language,
-          status: THREAD_STATUS.ACTIVE,
-        })
-        .returning();
-      await trx.insert(aiMentorThreadMessages).values(
-        messages.map((message) => ({
-          ...message,
-          threadId: thread.id,
-        })),
-      );
-      return thread;
-    });
+    const [archivedThread] = await transaction
+      .update(aiMentorThreads)
+      .set({ status: THREAD_STATUS.ARCHIVED })
+      .where(
+        and(
+          eq(aiMentorThreads.id, expectedThreadId),
+          eq(aiMentorThreads.practiceSessionId, sessionId),
+          eq(aiMentorThreads.status, THREAD_STATUS.COMPLETED),
+        ),
+      )
+      .returning();
+    return archivedThread;
   }
 
   async findJudgeRubricByThreadId(

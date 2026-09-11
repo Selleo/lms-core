@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import { AI_THREAD_TYPES } from "@repo/shared";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -171,7 +172,7 @@ export function ConversationReader({
               evaluation={thread.evaluation}
               open={evaluationOpen}
               onOpenChange={setEvaluationOpen}
-              context={thread.type === "practice" ? "practice" : "lesson"}
+              context={thread.type === AI_THREAD_TYPES.PRACTICE ? "practice" : "lesson"}
             />
           )}
         </>

@@ -21,12 +21,13 @@ import {
   PaginatedResponse,
   paginatedResponse,
   UUIDSchema,
+  UUIDType,
 } from "src/common";
 import { RequirePermission } from "src/common/decorators/require-permission.decorator";
 
 @Controller("admin/ai-threads")
 export class AdminAiThreadsController {
-  constructor(private readonly service: AdminAiThreadsService) {}
+  constructor(private readonly adminAiThreadsService: AdminAiThreadsService) {}
 
   @Get()
   @RequirePermission(PERMISSIONS.AI_THREAD_READ)
@@ -38,19 +39,29 @@ export class AdminAiThreadsController {
     })),
     response: paginatedResponse(Type.Array(adminAiThreadSummarySchema)),
   })
-  async getAdminAiThreads(
-    @Query("page") page?: number,
-    @Query("perPage") perPage?: number,
-    @Query("userId") userId?: string,
-    @Query("type") type?: AdminAiThreadQuery["type"],
-    @Query("status") status?: AdminAiThreadQuery["status"],
-    @Query("search") search?: string,
-    @Query("from") from?: string,
-    @Query("to") to?: string,
-    @Query("language") language?: SupportedLanguages,
+  async getAdminAiThreadSummaries(
+    @Query("page") pageNumber?: number,
+    @Query("perPage") resultsPerPage?: number,
+    @Query("userId") ownerUserId?: string,
+    @Query("type") threadType?: AdminAiThreadQuery["type"],
+    @Query("status") threadStatus?: AdminAiThreadQuery["status"],
+    @Query("search") titleSearch?: string,
+    @Query("from") startedAtOrAfter?: string,
+    @Query("to") startedBefore?: string,
+    @Query("language") contentLanguage?: SupportedLanguages,
   ): Promise<PaginatedResponse<AdminAiThreadSummary[]>> {
     return new PaginatedResponse(
-      await this.service.list({ page, perPage, userId, type, status, search, from, to, language }),
+      await this.adminAiThreadsService.getThreadSummaries({
+        page: pageNumber,
+        perPage: resultsPerPage,
+        userId: ownerUserId,
+        type: threadType,
+        status: threadStatus,
+        search: titleSearch,
+        from: startedAtOrAfter,
+        to: startedBefore,
+        language: contentLanguage,
+      }),
     );
   }
 
@@ -63,11 +74,11 @@ export class AdminAiThreadsController {
     ],
     response: baseResponse(adminAiThreadDetailSchema),
   })
-  async getAdminAiThread(
-    @Param("threadId") threadId: string,
+  async getAdminAiThreadDetails(
+    @Param("threadId") threadId: UUIDType,
     @Query("language") language?: SupportedLanguages,
   ): Promise<BaseResponse<AdminAiThreadDetail>> {
-    return new BaseResponse(await this.service.get(threadId, { language }));
+    return new BaseResponse(await this.adminAiThreadsService.getThread(threadId, { language }));
   }
 
   @Get(":threadId/messages")
@@ -84,10 +95,15 @@ export class AdminAiThreadsController {
     response: paginatedResponse(Type.Array(adminAiThreadMessageSchema)),
   })
   async getAdminAiThreadMessages(
-    @Param("threadId") threadId: string,
-    @Query("page") page?: number,
-    @Query("perPage") perPage?: number,
+    @Param("threadId") threadId: UUIDType,
+    @Query("page") pageNumber?: number,
+    @Query("perPage") resultsPerPage?: number,
   ): Promise<PaginatedResponse<AdminAiThreadMessage[]>> {
-    return new PaginatedResponse(await this.service.messages(threadId, { page, perPage }));
+    return new PaginatedResponse(
+      await this.adminAiThreadsService.getThreadMessages(threadId, {
+        page: pageNumber,
+        perPage: resultsPerPage,
+      }),
+    );
   }
 }

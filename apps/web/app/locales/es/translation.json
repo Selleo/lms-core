@@ -35,6 +35,7 @@
     "from": "Iniciadas desde",
     "to": "Iniciadas hasta",
     "listError": "No se pudieron cargar las conversaciones.",
+    "errors": { "invalidDateRange": "La fecha final debe ser posterior a la fecha inicial." },
     "empty": "Aún no hay conversaciones.",
     "types": {
       "practice": "Sesión de práctica",

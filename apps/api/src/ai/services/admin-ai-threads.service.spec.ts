@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from "@nestjs/common";
+import { NotFoundException } from "@nestjs/common";
 import { PERMISSIONS, SYSTEM_ROLE_PERMISSIONS, SYSTEM_ROLE_SLUGS } from "@repo/shared";
 
 import { AdminAiThreadsController } from "src/ai/admin-ai-threads.controller";
@@ -9,15 +9,17 @@ import type { AdminAiThreadsRepository } from "src/ai/repositories/admin-ai-thre
 import type { FileService } from "src/file/file.service";
 
 describe("Admin AI conversations", () => {
-  const repository = {
-    find: jest.fn(),
-    list: jest.fn(),
-    evaluation: jest.fn(),
-    messages: jest.fn(),
+  const adminAiThreadsRepository = {
+    findThreadSummaryById: jest.fn(),
+    getThreadSummaries: jest.fn(),
+    findThreadJudgementByThreadId: jest.fn(),
+    getThreadJudgementCriteria: jest.fn(),
+    getThreadJudgementBlockingErrors: jest.fn(),
+    getThreadMessages: jest.fn(),
   };
   const fileService = { getFileUrl: jest.fn() };
-  const service = new AdminAiThreadsService(
-    repository as unknown as AdminAiThreadsRepository,
+  const adminAiThreadsService = new AdminAiThreadsService(
+    adminAiThreadsRepository as unknown as AdminAiThreadsRepository,
     fileService as unknown as FileService,
   );
   const owner = { id: "owner", firstName: "First", lastName: "Last", avatarReference: null };
@@ -26,8 +28,8 @@ describe("Admin AI conversations", () => {
 
   it("protects every read route with the Admin-only permission", () => {
     for (const method of [
-      "getAdminAiThreads",
-      "getAdminAiThread",
+      "getAdminAiThreadSummaries",
+      "getAdminAiThreadDetails",
       "getAdminAiThreadMessages",
     ] as const) {
       expect(
@@ -42,41 +44,78 @@ describe("Admin AI conversations", () => {
 
   it("rejects reversed and empty date intervals before querying", async () => {
     await expect(
-      service.list({ from: "2026-09-10T00:00:00Z", to: "2026-09-09T00:00:00Z" }),
-    ).rejects.toThrow(BadRequestException);
+      adminAiThreadsService.getThreadSummaries({
+        from: "2026-09-10T00:00:00Z",
+        to: "2026-09-09T00:00:00Z",
+      }),
+    ).rejects.toThrow("aiConversations.errors.invalidDateRange");
     await expect(
-      service.list({ from: "2026-09-10T00:00:00Z", to: "2026-09-10T00:00:00Z" }),
-    ).rejects.toThrow(BadRequestException);
-    expect(repository.list).not.toHaveBeenCalled();
+      adminAiThreadsService.getThreadSummaries({
+        from: "2026-09-10T00:00:00Z",
+        to: "2026-09-10T00:00:00Z",
+      }),
+    ).rejects.toThrow("aiConversations.errors.invalidDateRange");
+    expect(adminAiThreadsRepository.getThreadSummaries).not.toHaveBeenCalled();
   });
 
   it("does not expose evaluation or messages when a thread is absent from tenant scope", async () => {
-    repository.find.mockResolvedValue(undefined);
-    await expect(service.get("other-tenant-thread")).rejects.toThrow(NotFoundException);
-    await expect(service.messages("other-tenant-thread", {})).rejects.toThrow(NotFoundException);
-    expect(repository.evaluation).not.toHaveBeenCalled();
-    expect(repository.messages).not.toHaveBeenCalled();
+    adminAiThreadsRepository.findThreadSummaryById.mockResolvedValue(undefined);
+    await expect(adminAiThreadsService.getThread("other-tenant-thread")).rejects.toThrow(
+      NotFoundException,
+    );
+    await expect(
+      adminAiThreadsService.getThreadMessages("other-tenant-thread", {}),
+    ).rejects.toThrow(NotFoundException);
+    expect(adminAiThreadsRepository.findThreadJudgementByThreadId).not.toHaveBeenCalled();
+    expect(adminAiThreadsRepository.getThreadMessages).not.toHaveBeenCalled();
   });
 
   it("reads the selected archived attempt's saved result without source initialization", async () => {
-    repository.find.mockResolvedValue({ id: "old-attempt", status: "archived", owner });
-    repository.evaluation.mockResolvedValue({ passed: true, score: 4, maxScore: 5 });
-    expect(await service.get("old-attempt", { language: "en" })).toEqual({
+    adminAiThreadsRepository.findThreadSummaryById.mockResolvedValue({
+      id: "old-attempt",
+      status: "archived",
+      owner,
+    });
+    adminAiThreadsRepository.findThreadJudgementByThreadId.mockResolvedValue({
+      id: "saved-judgement",
+      passed: true,
+      earnedPoints: 4,
+      maxScore: 5,
+      percentage: 80,
+    });
+    adminAiThreadsRepository.getThreadJudgementCriteria.mockResolvedValue([]);
+    adminAiThreadsRepository.getThreadJudgementBlockingErrors.mockResolvedValue([]);
+    expect(await adminAiThreadsService.getThread("old-attempt", { language: "en" })).toEqual({
       id: "old-attempt",
       status: "archived",
       owner: { id: "owner", firstName: "First", lastName: "Last", profilePictureUrl: null },
-      evaluation: { passed: true, score: 4, maxScore: 5 },
+      evaluation: {
+        passed: true,
+        score: 4,
+        maxScore: 5,
+        percentage: 80,
+        criteria: [],
+        blockingErrors: [],
+      },
     });
-    expect(repository.evaluation).toHaveBeenCalledWith("old-attempt");
+    expect(adminAiThreadsRepository.findThreadJudgementByThreadId).toHaveBeenCalledWith(
+      "old-attempt",
+    );
+    expect(adminAiThreadsRepository.getThreadJudgementCriteria).toHaveBeenCalledWith(
+      "saved-judgement",
+    );
+    expect(adminAiThreadsRepository.getThreadJudgementBlockingErrors).toHaveBeenCalledWith(
+      "saved-judgement",
+    );
   });
 
   it("resolves shared avatar references once per page and omits storage keys", async () => {
-    repository.list.mockResolvedValue({
+    adminAiThreadsRepository.getThreadSummaries.mockResolvedValue({
       data: [1, 2].map((id) => ({ id, owner: { ...owner, avatarReference: "avatars/owner" } })),
       pagination: { page: 1, perPage: 20, totalItems: 2 },
     });
     fileService.getFileUrl.mockResolvedValue("https://signed-avatar");
-    const result = await service.list({});
+    const result = await adminAiThreadsService.getThreadSummaries({});
     expect(fileService.getFileUrl).toHaveBeenCalledTimes(1);
     expect(result.data[0].owner).toEqual({
       id: "owner",
