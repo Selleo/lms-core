@@ -18,6 +18,7 @@ import { LEARNING_HANDLES } from "../../../../../../e2e/data/learning/handles";
 
 import { VoiceConversationTranscript } from "./VoiceConversationTranscript";
 
+import type { UIMessage } from "@ai-sdk/react";
 import type {
   LearnerTranscriptRevision,
   MentorSpeechPresentation,
@@ -40,6 +41,7 @@ type VoiceMentorModeOverlayProps = {
   mentorSpeech: MentorSpeechPresentation | null;
   mentorName: string;
   mentorAvatarUrl?: string | null;
+  messages?: UIMessage[];
   hasTaskDescription: boolean;
   taskDescription: string;
   onJudge: () => void;
@@ -62,6 +64,7 @@ export function VoiceMentorModeOverlay({
   mentorSpeech,
   mentorName,
   mentorAvatarUrl,
+  messages,
   hasTaskDescription,
   taskDescription,
   onJudge,
@@ -265,6 +268,7 @@ export function VoiceMentorModeOverlay({
                 </div>
 
                 <VoiceConversationTranscript
+                  messages={messages}
                   learnerTranscript={learnerTranscript}
                   mentorResponse={response}
                   mentorSpeech={mentorSpeech}
