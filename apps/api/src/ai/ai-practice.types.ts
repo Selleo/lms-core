@@ -23,6 +23,12 @@ export type AiMentorPracticeGenerationInput = {
   language: SupportedLanguages;
 };
 
+export type AiPracticeReplayMessage = {
+  role: string;
+  content: string;
+  tokenCount: number;
+};
+
 export type AiPracticeJudgeConfigurationGraph = {
   configuration: Omit<
     typeof aiJudgeConfigurations.$inferInsert,

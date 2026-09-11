@@ -10,6 +10,34 @@ import type { AiJudgeConfigurationGeneratorService } from "src/ai/judge-configur
 import type { AiMentorConfigurationGeneratorService } from "src/ai/mentor-configuration-generation/services/ai-mentor-configuration-generator.service";
 
 describe("AiPracticeService", () => {
+  it("does not change the completed attempt when replacement setup fails", async () => {
+    const session = {
+      id: "session",
+      userId: "owner",
+      status: "ready",
+      threadStatus: "completed",
+      threadId: "old",
+    };
+    const repository = {
+      findPracticeSessionById: jest.fn().mockResolvedValue(session),
+      replayPracticeConversation: jest.fn(),
+    };
+    const service = new AiPracticeService(
+      repository as never,
+      {} as never,
+      {} as never,
+      {} as never,
+      {
+        preparePracticeReplay: jest.fn().mockRejectedValue(new Error("provider unavailable")),
+      } as never,
+      {} as never,
+    );
+    await expect(service.replay("session", { userId: "owner" } as never)).rejects.toThrow(
+      "provider unavailable",
+    );
+    expect(repository.replayPracticeConversation).not.toHaveBeenCalled();
+  });
+
   it("generates the practice Judge configuration once without semantic validation", async () => {
     const sessionId = "00000000-0000-0000-0000-000000000001";
     const scenario = "Practice negotiating a delivery deadline with a customer.";
@@ -143,10 +171,12 @@ describe("AiPracticeService", () => {
           threadId: "00000000-0000-0000-0000-000000000005",
           threadStatus: "active",
         }),
-      resetPracticeConversation: jest.fn().mockResolvedValue(undefined),
+      replayPracticeConversation: jest.fn().mockResolvedValue(undefined),
     };
     const aiService = {
-      getPracticeThreadWithSetup: jest.fn().mockResolvedValue(undefined),
+      preparePracticeReplay: jest
+        .fn()
+        .mockResolvedValue([{ role: "mentor", content: "Welcome", tokenCount: 1 }]),
     };
     const service = new AiPracticeService(
       repository as never,
@@ -162,12 +192,12 @@ describe("AiPracticeService", () => {
       tenantId: "00000000-0000-0000-0000-000000000003",
     } as never);
 
-    expect(repository.resetPracticeConversation).toHaveBeenCalledWith(sessionId);
-    expect(aiService.getPracticeThreadWithSetup).toHaveBeenCalledWith({
-      practiceSessionId: sessionId,
-      userId,
-      userLanguage: "en",
-    });
+    expect(aiService.preparePracticeReplay).toHaveBeenCalledWith(session.threadId, userId);
+    expect(repository.replayPracticeConversation).toHaveBeenCalledWith(
+      sessionId,
+      session.threadId,
+      [{ role: "mentor", content: "Welcome", tokenCount: 1 }],
+    );
     expect(replayed.threadStatus).toBe("active");
     expect(replayed.evaluation).toBeNull();
   });

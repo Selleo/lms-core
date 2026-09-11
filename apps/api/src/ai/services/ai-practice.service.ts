@@ -129,12 +129,9 @@ export class AiPracticeService {
     )
       throw new ConflictException("common.toast.somethingWentWrong");
 
-    await this.aiRepository.resetPracticeConversation(session.id);
-    await this.aiService.getPracticeThreadWithSetup({
-      practiceSessionId: session.id,
-      userId: session.userId,
-      userLanguage: session.language,
-    });
+    if (!session.threadId) throw new ConflictException("common.toast.somethingWentWrong");
+    const messages = await this.aiService.preparePracticeReplay(session.threadId, session.userId);
+    await this.aiRepository.replayPracticeConversation(session.id, session.threadId, messages);
 
     const replayed = await this.aiRepository.findPracticeSessionById(session.id);
     if (!replayed) throw new NotFoundException("common.toast.notFound");
