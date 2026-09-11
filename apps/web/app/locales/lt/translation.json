@@ -1983,6 +1983,7 @@
         "live_training_start": "Gali pradėti gyvų mokymų sesijas.",
         "live_training_end": "Gali užbaigti gyvų mokymų sesijas.",
         "live_training_statistics": "Gali peržiūrėti gyvų mokymų lankomumą ir statistiką.",
+        "ai_thread_read": "Gali peržiūrėti visus pokalbius su DI ir jų išsaugotus vertinimus.",
         "activity_log_read": "Gali peržiūrėti veiklos žurnalus."
       }
     },

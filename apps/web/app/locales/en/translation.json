@@ -1985,6 +1985,7 @@
         "live_training_start": "Start live training sessions.",
         "live_training_end": "End live training sessions.",
         "live_training_statistics": "View live training attendance and statistics.",
+        "ai_thread_read": "View all AI conversations and their saved evaluations.",
         "activity_log_read": "View activity logs.",
         "course_ai_generation": "Generate course structure and content with AI tools."
       }

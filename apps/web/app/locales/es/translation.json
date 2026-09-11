@@ -1976,6 +1976,7 @@
         "live_training_start": "Iniciar sesiones de entrenamiento en vivo.",
         "live_training_end": "Finalizar las sesiones de entrenamiento en vivo.",
         "live_training_statistics": "Vea la asistencia y las estadísticas de entrenamiento en vivo.",
+        "ai_thread_read": "Ver todas las conversaciones con IA y sus evaluaciones guardadas.",
         "activity_log_read": "Ver registros de actividad.",
         "course_ai_generation": "Genere la estructura y el contenido del curso con herramientas de inteligencia artificial."
       }

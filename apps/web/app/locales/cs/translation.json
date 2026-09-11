@@ -1989,6 +1989,7 @@
         "live_training_start": "Může spouštět relace živého školení.",
         "live_training_end": "Může ukončovat relace živého školení.",
         "live_training_statistics": "Může zobrazit docházku a statistiky živých školení.",
+        "ai_thread_read": "Může zobrazit všechny konverzace s AI a jejich uložená hodnocení.",
         "activity_log_read": "Může zobrazit protokoly aktivit."
       }
     },

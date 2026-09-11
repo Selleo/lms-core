@@ -2201,6 +2201,7 @@
         "live_training_start": "Może rozpoczynać sesje szkolenia live.",
         "live_training_end": "Może kończyć sesje szkolenia live.",
         "live_training_statistics": "Może przeglądać obecność i statystyki szkoleń live.",
+        "ai_thread_read": "Może przeglądać wszystkie rozmowy z AI i ich zapisane oceny.",
         "activity_log_read": "Może przeglądać dziennik aktywności.",
         "course_ai_generation": "Może generować strukturę i treści kursu za pomocą narzędzi AI."
       }

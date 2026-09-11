@@ -1983,6 +1983,7 @@
         "live_training_start": "Démarrez des sessions de formation en direct.",
         "live_training_end": "Terminez les sessions de formation en direct.",
         "live_training_statistics": "Consultez la participation aux formations en direct et les statistiques.",
+        "ai_thread_read": "Afficher toutes les conversations avec l’IA et leurs évaluations enregistrées.",
         "activity_log_read": "Afficher les journaux d'activité.",
         "course_ai_generation": "Générez une structure et du contenu de cours avec des outils d'IA."
       }
